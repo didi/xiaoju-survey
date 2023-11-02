@@ -1,0 +1,18 @@
+.btn {
+  display: flex;
+  flex-direction: column;
+  width: 50px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  color: #4a4c5b;
+  cursor: pointer;
+
+  .iconfont {
+    font-size: 20px;
+  }
+
+  .btn-txt {
+    font-size: 12px;
+  }
+}

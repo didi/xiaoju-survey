@@ -1,0 +1,26 @@
+.mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.box {
+  width: 6rem;
+  background: #fff;
+  padding: 0.56rem 0.44rem 0.32rem;
+}
+
+.title {
+  font-size: .3rem;
+  color: #4a4c5b;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: 600;
+}

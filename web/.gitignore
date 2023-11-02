@@ -1,0 +1,27 @@
+.DS_Store
+node_modules
+/dist
+/output
+
+# local env files
+# .env.*.local 提交 .env.development.local，使得用户能够在本地修改
+.env.production.local
+.env.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.history

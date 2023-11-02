@@ -1,0 +1,13 @@
+{
+  "name": "user",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^5.7.0"
+  },
+  "devDependencies": {}
+}

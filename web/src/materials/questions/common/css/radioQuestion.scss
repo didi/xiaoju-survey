@@ -1,0 +1,96 @@
+@import './default.scss';
+.question-form-item {
+    position: relative;
+    padding: 0.2rem 0 0.8rem;
+  
+    .component-wrapper {
+      padding: 0 0.4rem;
+    }
+    .noPadding{
+      padding: 0;
+    }
+  
+    &.no-padding {
+      .component-wrapper {
+        padding: 0;
+      }
+    }
+  
+    &.no-out-padding {
+      padding: 0 0 0.2rem;
+    }
+  
+    .clear {
+      clear: both;
+    }
+  
+    &.question-type-section {
+      padding-bottom: 0;
+      .module-title {
+        padding-bottom: 0;
+      }
+    }
+    &.horizon {
+      display: flex;
+      .module-title .m-title {
+        width: 1.2rem;
+        margin-right: 8px;
+        text-align: justify;
+        position: relative;
+        &::before {
+          content: ':';
+          display: block;
+          position: absolute;
+          right: -5px;
+        }
+        &::after {
+          content: '';
+          display: inline-block;
+          width: 100%;
+        }
+      }
+      .component-wrapper {
+        flex: 1;
+      }
+      &.hasError {
+        margin-bottom: 0.4rem;
+      }
+      .module-err-tip {
+        position: absolute;
+        padding: 0;
+        margin-top: -5px;
+        left: 0;
+        .tip-text {
+          padding-top: 0;
+        }
+      }
+    }
+    &.hasError {
+      .item-border {
+        border-color: $error-color;
+      }
+      /*由于错误提示可能多行，因此有错误时取消margin，让错误提示撑开边距*/
+      margin-bottom: 0;
+    }
+  
+    &.special .module-err-tip {
+      padding: 0.12rem 0.75rem 0;
+    }
+    &.spliter {
+      border-bottom: 0.12rem solid $spliter-color;
+    }
+  
+    &:last-child {
+      border-bottom: 0;
+    }
+    .sort-tip {
+      font-size: 0.26rem;
+      line-height: 0.26rem;
+      opacity: 0.5;
+      margin-top: -0.24rem;
+      margin-bottom: 0.4rem;
+      padding-left: 0.4rem;
+      color: #92949d;
+    }
+  }
+  

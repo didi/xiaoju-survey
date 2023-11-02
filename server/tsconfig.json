@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target":"ES2020",
+        "rootDir": "./src/",
+        "outDir": "./build/",
+        "declaration": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "incremental":true,
+        "tsBuildInfoFile": "./build/tsconfig.tsbuildinfo"
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

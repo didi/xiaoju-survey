@@ -1,0 +1,174 @@
+{
+	"temp": {
+		"key": "default",
+		"name": "默认分类",
+		"list": [{
+			"src": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.jpg",
+			"title": "1"
+		}]
+},
+	"activity": {
+		"key": "activity",
+		"name": "节日",
+		"list": [{
+			"src": "/imgs/skin/Ixx8hqiwwk1660979120801.jpg",
+			"title": "1"
+		}]
+	},
+	"creative": {
+		"key": "creative",
+		"name": "创意",
+		"list": [{
+			"src": "/imgs/skin/PLwNH1rAie1558430219772.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/NnXsAOhBNm1558430219312.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/ujpUoWqhw31558430220124.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/5OCvbjqJQm1558430220362.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/0k7Jg7In8I1558430221154.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/UH0A8DbTai1558430221033.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/FRIzPC6ZtN1558430221344.jpg",
+			"title": "7"
+		}]
+	},
+	"scenery": {
+		"key": "scenery",
+		"name": "风景",
+		"list": [{
+			"src": "/imgs/skin/SyiLRcukyE1558430525760.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/sqYig4AcWr1558430525663.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/ElNeqJT2I21558430526165.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/CxQkSU6AY21558430526163.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/VTUwbp6vY61558430527320.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/SHs0K703Yn1558430527218.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/oVTedX9V4s1558430527671.jpg",
+			"title": "7"
+		}]
+	},
+	"transportation": {
+		"key": "transportation",
+		"name": "交通",
+		"list": [{
+			"src": "/imgs/skin/XYKqJZuMig1558430904735.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/GnPatsr48Z1558430904680.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/UqIvVvEXAK1558430905204.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/PUssufh5uI1558430905104.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/O409pRTDlW1558430905738.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/A9FzlbYXqI1558430905739.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/HN9YGctDeF1558430906686.jpg",
+			"title": "7"
+		}]
+	},
+	"delicacy": {
+		"key": "delicacy",
+		"name": "美食",
+		"list": [{
+			"src": "/imgs/skin/lE6PSclCcU1558434536703.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/OnSdbm7u6n1558434536641.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/N9Z2ZuyO731558434537314.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/YP9PoW8pX51558434537301.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/zUtDv378bg1558434538351.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/gY1JljCow21558434538303.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/oOjHPbABdd1558434538864.jpg",
+			"title": "7"
+		}]
+	},
+	"business": {
+		"key": "business",
+		"name": "商务",
+		"list": [{
+			"src": "/imgs/skin/3ABKqvDaVn1558514860472.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/OewuaQmWoq1558514860285.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/HuVqqtbFjs1558514860570.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/icSlqsr0uZ1558514860875.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/Qu9rg33wmq1558514861015.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/145gBCRtNP1558514861211.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/ykWLFV0QWj1558514861444.jpg",
+			"title": "7"
+		}]
+	},
+	"campus": {
+		"key": "campus",
+		"name": "校园",
+		"list": [{
+			"src": "/imgs/skin/4aWi5JxG471558514268698.jpg",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/j8C2OBP7WK1558514268563.jpg",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/q3uJoQhYsR1558514268877.jpg",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/W5PPlNsmsr1558514269088.jpg",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/6xQk1IAmKt1558514269874.jpg",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/XQE2iyF0rj1558514269935.jpg",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/POHlQiSwPR1558514270379.jpg",
+			"title": "7"
+		}]
+	}
+}

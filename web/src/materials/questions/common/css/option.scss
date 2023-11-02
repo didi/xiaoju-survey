@@ -1,0 +1,230 @@
+@import "./default.scss";
+
+.question-preview .radio-wrapper {
+    font-size: 14px;
+    .radio-box {
+        .draggHandle {
+            cursor: move;
+        }
+        #sortDraggable {
+            user-select: none;
+            padding-right: 0.08rem;
+            .sortable-drag,
+            .sortable-ghost {
+                .radio-item {
+                    border-color: $primary-color;
+                    border-radius: 0.04rem;
+                }
+            }
+            .sortable-fallback {
+                .radio-item {
+                    background-color: $primary-color;
+                }
+            }
+        }
+        .radio-item {
+            position: relative;
+            display: inline-flex;
+            width: 50%;
+            box-sizing: border-box;
+            vertical-align: top;
+            // padding: 0.1rem 0.2rem 0.1rem 0.35rem;
+            margin-bottom: 0.36rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            align-items: center;
+            .item-input {
+                position: relative;
+                vertical-align: top;
+                width: 0.32rem;
+                height: 0.32rem;
+                margin: 0 0.24rem 0 0;
+                border: 1px solid $border-color;
+                border-radius: 100%;
+                background-color: #fff;
+                cursor: pointer;
+            }
+
+            .item-title {
+                flex: 1;
+                vertical-align: top;
+                color: $font-color;
+                font-size: $font-size;
+                overflow: hidden;
+                word-wrap: break-word;
+                cursor: pointer;
+                padding: 9px 0;
+                .label-img {
+                    display: block;
+                    width: 1.7rem;
+                    height: 1.7rem;
+                    margin-top: 0.25rem;
+                }
+                .render-html {
+                    display: block;
+                    margin: 5px 0;
+                }
+            }
+            .center-text {
+                span {
+                    display: inline-block;
+                    text-align: center;
+                }
+            }
+
+            &.lastchild,
+            &.last2child {
+                margin-bottom: 0;
+            }
+            &.is-checked {
+                .item-title {
+                    color: $primary-color;
+                }
+                .item-input {
+                    background-color: $primary-color;
+                    border-color: $primary-color;
+                }
+                .text-checked {
+                    font-size: 0.20rem;
+                    line-height: 0.32rem;
+                    color: #fff;
+                    text-align: center;
+                }
+                .checked:before {
+                    display: inline-block;
+                    margin-left: 0.05rem;
+                    font-size: 0.20rem;
+                    line-height: 0.32rem;
+                    color: #fff;
+                    content: '✓';
+                }
+                transition: all 0.3s ease-in-out;
+            }
+            &:not(.is-checked) {
+                background-color: transparent;
+                .item-title {
+                    color: $font-color;
+                }
+                transition: all 0.3s ease-in-out;
+            }
+            &.freezing-right {
+                background-color: $primary-color-light;
+            }
+            &.freezing-wrong {
+                background-color: #fafbfc;
+            }
+            .answer {
+                color: $normal-color;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                .answer-circle {
+                    display: inline-block;
+                    width: 0.3rem;
+                    height: 0.3rem;
+                    text-align: center;
+                    line-height: 0.3rem;
+                    border-radius: 0.15rem;
+                    margin-right: 0.1rem;
+                    vertical-align: sub;
+                    &.success {
+                        color: white;
+                        background: #05c98a;
+                    }
+                    &.error {
+                        color: white;
+                        background: #ff612c;
+                    }
+                }
+            }
+        }
+        .vertical {
+            width: 100%;
+            &.radio-item.last2child {
+                margin-bottom: 0.36rem;
+            }
+        }
+        .option-jumpto-tip {
+            position: relative;
+            display: block;
+            color: $placeholder-color;
+            font-size: 12px;
+            margin-top: 12px;
+        }
+    }
+
+    .nest-box {
+        display: flex;
+        justify-content: space-around;
+        .radio-outer {
+            flex: 1;
+            display: inline-block;
+            text-align: center;
+            .radio-item {
+                display: inline-block;
+                margin-bottom: 0;
+                .item-input {
+                    margin-right: 0;
+                }
+                .item-title {
+                    visibility: hidden;
+                    opacity: 0;
+                    display: block;
+                    height: 0.3rem;
+                    font-size: 0.23rem;
+                    margin-top: 0.05rem;
+                    margin-bottom: 0.06rem;
+                    color: $font-color;
+                }
+            }
+        }
+        &.radio-box {
+            padding: 0;
+        }
+    }
+    .showScoreItem {
+        font-size: 12px;
+        display: inline-block;
+        position: absolute;
+        bottom: -18px;
+        left: 40px;
+        color: $placeholder-color;
+    }
+}
+.radio {
+    .radio-box .radio-item.enable-hover:hover {
+        border: 1px dashed $placeholder-color;
+    }
+}
+.optionRelyTips {
+    text-indent: 16px;
+    width: 100%;
+    height: 15px;
+    font-size: 14px;
+    line-height: 15px;
+    color: #aaa;
+}
+
+.answer-tip {
+    position: relative;
+    color: $font-color;
+    font-size: 13px;
+    background: #f8f9fb;
+    margin-top: 0.15rem;
+    padding: 15px;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 0.2rem solid transparent;
+        border-top: 0.2rem solid #f3f4f7;
+        border-left: 0.2rem solid #f3f4f7;
+    }
+    p {
+        display: flex;
+    }
+    .answer {
+        flex: 3;
+    }
+}

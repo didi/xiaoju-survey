@@ -1,0 +1,62 @@
+<template>
+  <div class="main">
+    <div class="nav" v-if="$slots.hasOwnProperty('nav')">
+      <slot name="nav"></slot>
+    </div>
+    <div class="body">
+      <slot v-if="$slots.hasOwnProperty('body')" name="body"></slot>
+      <template v-else>
+        <div class="left" v-if="$slots.hasOwnProperty('left')">
+          <slot name="left"></slot>
+        </div>
+        <div class="center" v-if="$slots.hasOwnProperty('center')">
+          <slot name="center"></slot>
+        </div>
+        <div class="right" v-if="$slots.hasOwnProperty('right')">
+          <slot name="right"></slot>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: 'commonTemplate',
+};
+</script>
+<style lang="scss" scoped>
+.main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .nav {
+    flex-basis: 56px;
+  }
+
+  .body {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+    .left,
+    .center,
+    .right {
+      height: 100%;
+    }
+
+    .left,
+    .right {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .center {
+      flex: 1;
+    }
+  }
+}
+</style>

@@ -1,0 +1,180 @@
+{
+  "bannerConf": {
+    "titleConfig": {
+      "mainTitle": "<h3 style=\"text-align: center\">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与！</span></p>",
+      "subTitle": ""
+    },
+    "bannerConfig": {
+      "bgImage": "//img-hxy021.didistatic.com/static/starimg/img/BP0HXOXDv01698311607854.jpg",
+      "videoLink": "",
+      "postImg": ""
+    }
+  },
+  "dataConf": {
+    "dataList": [
+      {
+        "isRequired": true,
+        "showIndex": true,
+        "showType": true,
+        "showSpliter": true,
+        "type": "text",
+        "valid": "",
+        "field": "data458",
+        "title": "姓名",
+        "placeholder": "",
+        "randomSort": false,
+        "checked": false,
+        "minNum": "",
+        "maxNum": "",
+        "maxPhotos": 5,
+        "star": 5,
+        "timeStep": {
+          "hour": 1,
+          "min": 10
+        },
+        "nps": {
+          "leftText": "极不满意",
+          "rightText": "极满意"
+        },
+        "exclude": false,
+        "relTypes": {
+          "textarea": "多行文本框",
+          "text": "单行输入框"
+        },
+        "placeholderDesc": "",
+        "mhLimit": 0,
+        "addressType": 3,
+        "isAuto": false,
+        "jumpTo": "",
+        "startDate": "",
+        "endDate": "",
+        "othersKeyMap": {},
+        "textRange": {
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          },
+          "max": {
+            "placeholder": "500",
+            "value": 500
+          }
+        }
+      },
+      {
+        "isRequired": true,
+        "showIndex": true,
+        "showType": true,
+        "showSpliter": true,
+        "type": "radio",
+        "placeholderDesc": "",
+        "field": "data515",
+        "title": "选择您感兴趣的课程进行报名",
+        "placeholder": "",
+        "valid": "",
+        "randomSort": false,
+        "checked": false,
+        "minNum": "",
+        "maxNum": "",
+        "options": [
+          {
+            "text": "课程1",
+            "hash": "115019",
+            "imageUrl": "",
+            "others": false,
+            "mustOthers": false,
+            "othersKey": "",
+            "placeholderDesc": ""
+          },
+          {
+            "text": "课程2",
+            "hash": "115020",
+            "imageUrl": "",
+            "others": false,
+            "mustOthers": false,
+            "othersKey": "",
+            "placeholderDesc": ""
+          },
+          {
+            "text": "课程3",
+            "hash": "115021",
+            "imageUrl": "",
+            "others": false,
+            "mustOthers": false,
+            "othersKey": "",
+            "placeholderDesc": ""
+          },
+          {
+            "text": "课程4",
+            "hash": "115022",
+            "imageUrl": "",
+            "others": false,
+            "mustOthers": false,
+            "othersKey": "",
+            "placeholderDesc": ""
+          }
+        ],
+        "timeStep": {
+          "hour": 1,
+          "min": 10
+        },
+        "maxPhotos": 5,
+        "nps": {
+          "leftText": "极不满意",
+          "rightText": "极满意"
+        },
+        "star": 5,
+        "exclude": false,
+        "addressType": 3,
+        "isAuto": false,
+        "urlKey": "",
+        "defaultProps": {
+          "children": "children",
+          "label": "name",
+          "id": "id"
+        },
+        "startDate": "",
+        "endDate": "",
+        "othersKeyMap": {},
+        "textRange": {
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          },
+          "max": {
+            "placeholder": "500",
+            "value": 500
+          }
+        }
+      }
+    ]
+  },
+  "submitConf": {
+    "submitTitle": "提交",
+    "confirmAgain": {
+      "is_again": true,
+      "again_text": "确认要提交吗？"
+    },
+    "msgContent": {
+      "msg_200": "提交成功",
+      "msg_9001": "您来晚了，感谢支持问卷~",
+      "msg_9002": "请勿多次提交！",
+      "msg_9003": "您来晚了，已经满额！",
+      "msg_9004": "提交失败！"
+    },
+    "link": ""
+  },
+  "bottomConf": {
+    "logoImage": "",
+    "logoImageWidth": "33%"
+  },
+  "baseConf": {
+    "begTime": "2018-05-22 17:17:48",
+    "endTime": "2028-05-22 17:17:48",
+    "tLimit": "0",
+    "language": "chinese"
+  },
+  "skinConf": {
+    "skinColor": "#4a4c5b",
+    "inputBgColor": "#ffffff"
+  }
+}

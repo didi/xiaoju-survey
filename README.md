@@ -2,14 +2,13 @@
 
 **XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
 
-## 简介
-平台在集团内部已沉淀了**40+**种题型，累积精选模板**100+**，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，沉淀了数据表格、分题统计、交叉分析、多渠道分析等在线报表能力，快速满足回收数据专业化线上分析，协助业务挖掘数据价值。
-
+# 简介
 本次开源主要围绕问卷生命周期提供了完整的产品化能力：
 
 - 问卷管理：创、编、投、收、数据分析
 
 - 多样化题型：单行输入框、多行输入框、单项选择、多项选择、判断题、评分、投票
+
   _(更多题型将陆续开放，也欢迎您参与共建提交自定义题型)_
 
 - 用户管理：登录、注册、权限管理
@@ -20,7 +19,7 @@
 
 _**(个人和企业用户均可快速构建特定领域的调研类解决方案。)**_
 
-## 项目优势
+# 项目优势
 **一、具备全面的综合性和专业性**
 
 - [制定了问卷标准化协议规范](https://xiaojusurvey.didi.cn/docs/agreement/%E3%80%8A%E9%97%AE%E5%8D%B7Meta%E5%8D%8F%E8%AE%AE%E3%80%8B)
@@ -65,51 +64,50 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
   前后端分离，提供Docker化方案，提供了完善的部署指导手册。
 
-## 快速启动
+# 快速启动
 
-### 复制工程
+复制工程
 ```shell
 git clone http://github.com/didi/xiaoju-survey
 ```
 
-## 启动
+## 后端启动
 
-### 后端启动
-
-#### 安装数据库
+### 安装数据库
 详情查看 [环境准备](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B#%E5%AE%89%E8%A3%85%E6%95%B0%E6%8D%AE%E5%BA%93)
 
-#### 安装依赖
+### 安装依赖
 ```shell
 cd server
 sh init.sh
 ```
 
-#### 启动
+### 启动
 ```shell
 npm run dev
 ```
 
-### 前端启动
-#### 安装依赖
+## 前端启动
+### 安装依赖
 ```shell
 cd web
 npm install
 ```
-#### 启动
+### 启动
 ```shell
 npm run serve
 ```
 
-## 访问
-### 问卷管理端
+# 访问
+问卷管理端
 
 [http://localhost:8080/management](http://localhost:8080)
 
-### 问卷投放端
-创建并发布问卷：
+问卷投放端
+创建并发布问卷
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
 
-## 交流群
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/NSVCeskQL81698905740736.png"  width="200" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+
+# 交流群
+[<img src="https://img-hxy021.didistatic.com/static/starimg/img/NSVCeskQL81698905740736.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)

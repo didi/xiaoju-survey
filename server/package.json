@@ -6,14 +6,14 @@
   "scripts": {
     "copy": "cp -rf ./src/ ./build/",
     "build": "tsc",
-    "launch": "npm run build && node ./build/index.js",
+    "launch:local": "npm run build && SERVER_ENV=local node ./build/index.js",
+    "launch:dev": "npm run build && SERVER_ENV=dev node ./build/index.js",
     "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
     "start:preonline": "npm run copy && npm run build && SERVER_ENV=preonline node ./build/index.js",
     "start:online": "npm run copy && npm run build && SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
-    "watch": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch' --watch ./src",
-    "dev": "SERVER_ENV=dev && npm run watch",
-    "local": "SERVER_ENV=local && npm run watch"
+    "local": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch:local' --watch ./src",
+    "dev": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch:dev' --watch ./src"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",

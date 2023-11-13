@@ -6,12 +6,14 @@
   "scripts": {
     "copy": "cp -rf ./src/ ./build/",
     "build": "tsc",
-    "launch": "npm run build && SERVER_ENV=local node ./build/index.js",
-    "start:stable": "SERVER_ENV=stable node ./build/index.js",
-    "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
-    "start:online": "SERVER_ENV=online node ./build/index.js",
+    "launch": "npm run build && node ./build/index.js",
+    "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
+    "start:preonline": "npm run copy && npm run build && SERVER_ENV=preonline node ./build/index.js",
+    "start:online": "npm run copy && npm run build && SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
-    "dev": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch' --watch ./src"
+    "watch": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch' --watch ./src",
+    "dev": "SERVER_ENV=dev && npm run watch",
+    "local": "SERVER_ENV=local && npm run watch"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
@@ -33,7 +35,7 @@
     "mongodb-memory-server": "^9.0.1"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.14.4"
+    "node": ">=14.21.0",
+    "npm": ">=6.14.17"
   }
 }

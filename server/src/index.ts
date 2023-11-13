@@ -16,6 +16,6 @@ app.use(KoaBodyparser({
 }))
 
 app.use(getRouter().routes())
-const port = 8080
+const port = process.env.PORT || 3000
 app.listen(port)
 process.stdout.write(`${os.EOL}server run: http://127.0.0.1:${port} ${os.EOL}`)

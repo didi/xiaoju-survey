@@ -4,14 +4,13 @@
   "description": "survey server template",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "copy": "cp -rf ./src/ ./build/",
     "build": "tsc",
     "launch": "npm run build && SERVER_ENV=local node ./build/index.js",
     "start:stable": "SERVER_ENV=stable node ./build/index.js",
     "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
     "start:online": "SERVER_ENV=online node ./build/index.js",
-    "start": "npm run copy && npm run launch",
+    "start": "npm run start:online",
     "dev": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch' --watch ./src"
   },
   "devDependencies": {
@@ -22,13 +21,19 @@
     "@types/koa": "^2.13.8",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
+    "joi": "^17.9.2",
+    "jsonwebtoken": "^9.0.1",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.1",
     "koa-pino-logger": "^4.0.0",
-    "koa-router": "^12.0.0"
+    "koa-router": "^12.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "mongodb": "^5.7.0",
+    "mongodb-memory-server": "^9.0.1"
   },
   "engines": {
-    "node": ">=14.15.4",
-    "npm": ">=6.14.10"
+    "node": ">=14.0.0",
+    "npm": ">=6.14.4"
   }
 }

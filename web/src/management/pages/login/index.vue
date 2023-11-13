@@ -3,7 +3,7 @@
     class="login-page"
     :style="{
       background: `url('/imgs/create/background.jpg') no-repeat bottom right`,
-      'background-size': 'cover'
+      'background-size': 'cover',
     }"
   >
     <div class="login-top">
@@ -29,13 +29,18 @@
 
         <el-form-item class="button-group">
           <el-button
+            :loading="loginPending"
             size="small"
             type="primary"
             class="button"
             @click="submitForm('ruleForm', 'login')"
             >登录</el-button
           >
-          <el-button size="small" class="button register-button" @click="submitForm('ruleForm', 'register')"
+          <el-button
+            :loading="registerPending"
+            size="small"
+            class="button register-button"
+            @click="submitForm('ruleForm', 'register')"
             >注册</el-button
           >
         </el-form-item>
@@ -74,6 +79,8 @@ export default {
           },
         ],
       },
+      loginPending: false,
+      registerPending: false,
     };
   },
   methods: {
@@ -85,10 +92,12 @@ export default {
               login,
               register,
             };
+            this[`${type}Pending`] = true;
             const res = await submitTypes[type]({
               username: this.ruleForm.name,
               password: this.ruleForm.password,
             });
+            this[`${type}Pending`] = false;
             if (res.code !== CODE_MAP.SUCCESS) {
               this.$message.error(res.errmsg);
               throw new Error('登录/注册失败' + res.errmsg);
@@ -105,6 +114,7 @@ export default {
             }
             this.$router.replace(redirect);
           } catch (error) {
+            this[`${type}Pending`] = false;
             console.log(error);
           }
           return true;
@@ -145,7 +155,7 @@ export default {
     width: 500px;
     height: 300px;
     background: #fff;
-    box-shadow:  4px 0 20px 0 rgba(82, 82, 102, 0.15);
+    box-shadow: 4px 0 20px 0 rgba(82, 82, 102, 0.15);
     margin-top: -150px;
     .button-group {
       margin-top: 40px;

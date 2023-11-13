@@ -25,6 +25,13 @@ module.exports = defineConfig({
     },
   },
   devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        pathRewrite: false,
+      },
+    },
     setupMiddlewares(middlewares, devServer) {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined');
@@ -34,12 +41,7 @@ module.exports = defineConfig({
       });
       return middlewares;
     },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-    },
+    open: true,
   },
   chainWebpack: (config) => {
     config.module

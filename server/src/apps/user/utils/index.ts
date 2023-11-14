@@ -1,5 +1,4 @@
-import { SURVEY_STATUS } from '../types/index'
-import { CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import * as Joi  from 'joi'
 export function getStatusObject({status}:{status:SURVEY_STATUS}) {
   return {

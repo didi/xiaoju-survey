@@ -1,6 +1,6 @@
 import { mongo } from '../db/mongo'
 import { surveyKeyStoreService } from './surveyKeyStoreService'
-import {CommonError} from '../types/index'
+import {CommonError} from '../../../types/index'
 
 class SurveyPublishService {
     async get({surveyPath}:{surveyPath:string}) { 

@@ -7,7 +7,7 @@ import {
 } from 'crypto';
 import { mongo } from '../db/mongo'
 import { getStatusObject } from '../utils/index'
-import { SURVEY_STATUS, CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import { getConfig } from '../config/index'
 const config = getConfig()
 

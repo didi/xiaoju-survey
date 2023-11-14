@@ -1,6 +1,6 @@
 import { rpcInvote } from '../../../rpc'
 import { Request } from 'koa'
-import { UserType, CommonError } from '../types/index'
+import { UserType, CommonError } from '../../../types/index'
 
 class UserService {
     async checkLogin({ req }: { req: Request }) {

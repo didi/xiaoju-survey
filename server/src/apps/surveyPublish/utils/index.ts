@@ -1,5 +1,5 @@
-import { SURVEY_STATUS } from '../types/index'
-import { CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
+
 import * as Joi  from 'joi'
 
 export function getMapByKey({data,key}:{data:Array<any>,key:string}) {

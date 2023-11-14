@@ -1,4 +1,3 @@
-import { CommonError } from '../types/index'
 
 export function participle({ content, minLen, maxLen }: { content: string, minLen?: number, maxLen?: number }) {
     const keys: Array<string> = []

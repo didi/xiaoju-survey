@@ -1,6 +1,6 @@
 import { mongo } from '../db/mongo'
 import { getStatusObject, getMapByKey } from '../utils/index'
-import { SURVEY_STATUS, CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import { surveyKeyStoreService } from './surveyKeyStoreService'
 import * as moment from 'moment'
 

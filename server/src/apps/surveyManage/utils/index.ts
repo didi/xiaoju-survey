@@ -1,5 +1,4 @@
-import { SURVEY_STATUS } from '../types/index'
-import { CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import { hex2Base58 } from './base58'
 import * as Joi  from 'joi'
 

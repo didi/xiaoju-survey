@@ -1,6 +1,6 @@
 import { mongo } from '../db/mongo'
 import { rpcInvote } from '../../../rpc'
-import { SURVEY_STATUS, QUESTION_TYPE, CommonError, UserType, DICT_TYPE } from '../types/index'
+import { SURVEY_STATUS, QUESTION_TYPE, CommonError, UserType, DICT_TYPE } from '../../../types/index'
 import { getStatusObject, genSurveyPath, getMapByKey, hanleSensitiveDate } from '../utils/index'
 import * as path from "path";
 import * as _ from "lodash";

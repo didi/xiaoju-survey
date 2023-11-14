@@ -1,4 +1,5 @@
 import { getConfig } from '../config/index'
+import { getMongoMemoryUri } from '../../../getMongoMemoryUri'
 
 import MongoService from '../../../utils/mongoService'
 

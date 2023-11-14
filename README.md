@@ -81,11 +81,12 @@ git clone http://github.com/didi/xiaoju-survey
 ### 安装依赖
 ```shell
 cd server
-sh init.sh
 ```
 
 ### 启动
 ```shell
+npm run local // 无需安装mongo
+或
 npm run dev
 ```
 

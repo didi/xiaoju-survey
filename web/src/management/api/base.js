@@ -6,7 +6,7 @@ import { Message } from 'element-ui';
 
 const instance = axios.create({
   baseURL: '/api',
-  timeout: 3000,
+  timeout: 10000,
 });
 
 instance.interceptors.response.use(

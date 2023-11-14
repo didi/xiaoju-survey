@@ -1,6 +1,6 @@
 import { mongo } from '../db/mongo'
 import { getStatusObject } from '../utils/index'
-import { SURVEY_STATUS, HISTORY_TYPE, UserType } from '../types/index'
+import { SURVEY_STATUS, HISTORY_TYPE, UserType } from '../../../types/index'
 
 class SurveyHistoryService {
     async addHistory(surveyData: { surveyId: string, configData: any, type: HISTORY_TYPE, userData: UserType }) {

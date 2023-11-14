@@ -1,7 +1,7 @@
 import { 
     createHash 
 } from 'crypto';
-import { CommonError } from '../types/index'
+import { CommonError } from '../../../types/index'
 
 const hash256 = (text) => {
     return createHash('sha256').update(text).digest('hex')

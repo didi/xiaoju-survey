@@ -1,5 +1,5 @@
 import { mongo } from '../db/mongo'
-import { DICT_TYPE } from '../types/index'
+import { DICT_TYPE } from '../../../types'
 import { participle } from '../utils/index'
 
 class SecurityService {

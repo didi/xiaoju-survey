@@ -18,6 +18,7 @@
   </div>
 </div>
 
+<br />
 
 &ensp;&ensp;**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
 
@@ -89,23 +90,61 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
 复制工程
 ```shell
-git clone http://github.com/didi/xiaoju-survey
+git clone git@github.com:didi/xiaoju-survey.git
 ```
 
-## 后端启动
+## 服务端启动
 
-### 安装数据库
-详情查看 [环境准备](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B#%E5%AE%89%E8%A3%85%E6%95%B0%E6%8D%AE%E5%BA%93)
+### 方案一、快速启动，无需安装数据库
+_便于快速预览工程，对于正式项目需要使用方案二。_
 
-### 安装依赖
+#### 1、安装依赖
 ```shell
 cd server
+npm install
 ```
 
-### 启动
+#### 2、启动
 ```shell
-npm run local // 无需安装mongo
-或
+npm run local
+```
+
+:cyclone:TIPS：
+
+服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
+> 1、数据保存在内存中，重启服务会更新数据。<br />2、在启动内存服务器的新实例时，如果找不到MongoDB二进制文件会自动下载，因此首次运行可能需要一些时间。
+
+### 方案二、(推荐)
+
+#### 1、启动数据库
+
+项目使用MongoDB：
+
+> 没有安装可以查看 [MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
+
+```
+mongod --dbpath ~/data/db --logpath ~/data/log/mongodb/mongo.log --fork
+```
+验证启动
+```
+ps aux | grep -v grep | grep mongod
+```
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/q2kOGoR8MV1700072541114.jpg"  width="800" />
+
+> 工程默认的mongo链接如下，需要修改可查看[配置修改指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E9%85%8D%E7%BD%AE)：
+
+```
+mongodb://localhost:27017
+```
+
+#### 2、安装依赖
+```shell
+cd server
+npm install
+```
+
+#### 3、启动
+```shell
 npm run dev
 ```
 
@@ -120,15 +159,16 @@ npm install
 npm run serve
 ```
 
-# 访问
-问卷管理端
+## 访问
+### 问卷管理端
 
 [http://localhost:8080/management](http://localhost:8080)
 
-问卷投放端
-创建并发布问卷
+### 问卷投放端
+创建并发布问卷。
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
+
 
 
 # 交流群

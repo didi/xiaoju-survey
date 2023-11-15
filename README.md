@@ -1,8 +1,27 @@
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/j8lBA6yy201698840712358.jpg"  width="300" />](https://xiaojusurvey.didi.cn)
+<div align=center>
+  <p>
+    <img src="https://img-hxy021.didistatic.com/static/starimg/img/j8lBA6yy201698840712358.jpg"  width="300" align='center' />
+  </p>
+  <div>
+    <a href="https://github.com/didi/xiaoju-survey/pulls">
+        <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
+    </a>
+    <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
+        <img src="https://img.shields.io/github/last-commit/didi/xiaoju-survey?color=red" alt="commit">
+    </a>
+    <a href="https://github.com/didi/xiaoju-survey/issues">
+        <img src="https://img.shields.io/github/issues/didi/xiaoju-survey" alt="issues">
+    </a>
+    <a href="https://xiaojusurvey.didi.cn">
+        <img src="https://img.shields.io/badge/help-%E6%96%87%E6%A1%A3-blue" alt="docs">
+    </a>
+  </div>
+</div>
 
-**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
 
-系统已沉淀40+种题型，累积精选模板100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
+&ensp;&ensp;**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
+
+&ensp;&ensp;系统已沉淀40+种题型，累积精选模板100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
 
 # 简介
 本次开源主要围绕问卷生命周期提供了完整的产品化能力：
@@ -28,7 +47,7 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
   领域标准保障概念互通，是全系统的基础和核心。基于实际业务经验，沉淀了两大类：
   - 业务描述：问卷协议、题型协议
-  - 物料描述：题型物料协议，包含题型和设置器 
+  - 物料描述：题型物料协议，包含题型和设置器
 
 - [制定了问卷UI/UX规范](https://xiaojusurvey.didi.cn/docs/design/%E3%80%8A%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E3%80%8B)
 
@@ -113,4 +132,8 @@ npm run serve
 
 
 # 交流群
+## 微信
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="300" />
+
+## QQ
 [<img src="https://img-hxy021.didistatic.com/static/starimg/img/NSVCeskQL81698905740736.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)

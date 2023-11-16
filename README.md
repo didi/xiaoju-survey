@@ -109,10 +109,10 @@ npm install
 npm run local
 ```
 
-:cyclone:TIPS：
+:cyclone:NOTE：
 
 服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
-> 1、数据保存在内存中，重启服务会更新数据。<br />2、在启动内存服务器的新实例时，如果找不到MongoDB二进制文件会自动下载，因此首次运行可能需要一些时间。
+> 1、数据保存在内存中，重启服务会更新数据。<br />2、启动内存服务器新实例时，如果找不到MongoDB二进制文件会自动下载，因此首次可能需要一些时间。
 
 ### 方案二、(推荐)
 

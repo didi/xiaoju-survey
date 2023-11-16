@@ -20,7 +20,7 @@
         "type": "text",
         "valid": "",
         "field": "data631",
-        "title": "标题3",
+        "title": "标题1",
         "placeholder": "",
         "sLimit": 1,
         "randomSort": false,
@@ -85,7 +85,7 @@
         "innerType": "radio",
         "placeholderDesc": "",
         "field": "data606",
-        "title": "标题1",
+        "title": "标题2",
         "placeholder": "",
         "randomSort": false,
         "checked": false,
@@ -93,7 +93,7 @@
         "maxNum": "",
         "options": [
           {
-            "text": "甜的",
+            "text": "选项1",
             "imageUrl": "",
             "others": false,
             "mustOthers": false,
@@ -102,7 +102,7 @@
             "hash": "115019"
           },
           {
-            "text": "咸的",
+            "text": "选项2",
             "imageUrl": "",
             "others": false,
             "mustOthers": false,

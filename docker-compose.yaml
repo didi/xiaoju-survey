@@ -1,0 +1,33 @@
+version: '3.6'
+services:
+
+  mongo:
+    image: mongo:4
+    container_name: xiaoju-survey-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    ports:
+      - "27017:27017" # 数据库端口
+    volumes:
+      - mongo-volume:/data/db
+
+
+  xiaoju-survey:
+    image: "xiaoju-survey-app"  # docker build -t xiaoju-survey-app . 后即可获得该镜像
+    container_name: xiaoju-survey
+    restart: always
+    ports:
+      - "3000:3000" # API端口
+    environment:
+      xiaojuSurveyMongoUrl: mongodb://root:123456@mongo:27017 # 这里和上面mongo镜像的用户名密码保持一致即可
+      xiaojuSurveyJwtSecret: surveyEngineJwtSecret
+      xiaojuSurveyJwtExpiresIn: 8h
+    links:
+      - mongo:mongo
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-volume:

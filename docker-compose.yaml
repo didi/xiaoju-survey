@@ -5,6 +5,9 @@ services:
     image: mongo:4
     container_name: xiaoju-survey-mongo
     restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME} # 默认使用系统的环境变量
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD} # 默认使用系统的环境变量
     ports:
       - "27017:27017" # 数据库端口
     volumes:
@@ -18,7 +21,7 @@ services:
     ports:
       - "3000:3000" # API端口
     environment:
-      xiaojuSurveyMongoUrl: mongodb://mongo:27017 # 这里和上面mongo镜像的用户名密码保持一致即可
+      xiaojuSurveyMongoUrl: ${xiaojuSurveyMongoUrl} # 默认使用系统的环境变量
       xiaojuSurveyJwtSecret: surveyEngineJwtSecret
       xiaojuSurveyJwtExpiresIn: 8h
     links:

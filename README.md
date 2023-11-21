@@ -1,8 +1,28 @@
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/j8lBA6yy201698840712358.jpg"  width="300" />](https://xiaojusurvey.didi.cn)
+<div align=center>
+  <p>
+    <img src="https://img-hxy021.didistatic.com/static/starimg/img/j8lBA6yy201698840712358.jpg"  width="300" align='center' />
+  </p>
+  <div>
+    <a href="https://github.com/didi/xiaoju-survey/pulls">
+        <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
+    </a>
+    <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
+        <img src="https://img.shields.io/github/last-commit/didi/xiaoju-survey?color=red" alt="commit">
+    </a>
+    <a href="https://github.com/didi/xiaoju-survey/issues">
+        <img src="https://img.shields.io/github/issues/didi/xiaoju-survey" alt="issues">
+    </a>
+    <a href="https://xiaojusurvey.didi.cn">
+        <img src="https://img.shields.io/badge/help-%E6%96%87%E6%A1%A3-blue" alt="docs">
+    </a>
+  </div>
+</div>
 
-**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
+<br />
 
-系统已沉淀40+种题型，累积精选模板100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
+&ensp;&ensp;**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
+
+&ensp;&ensp;系统已沉淀40+种题型，累积精选模板100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
 
 # 简介
 本次开源主要围绕问卷生命周期提供了完整的产品化能力：
@@ -28,7 +48,7 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
   领域标准保障概念互通，是全系统的基础和核心。基于实际业务经验，沉淀了两大类：
   - 业务描述：问卷协议、题型协议
-  - 物料描述：题型物料协议，包含题型和设置器 
+  - 物料描述：题型物料协议，包含题型和设置器
 
 - [制定了问卷UI/UX规范](https://xiaojusurvey.didi.cn/docs/design/%E3%80%8A%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83%E3%80%8B)
 
@@ -70,23 +90,61 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
 复制工程
 ```shell
-git clone http://github.com/didi/xiaoju-survey
+git clone git@github.com:didi/xiaoju-survey.git
 ```
 
-## 后端启动
+## 服务端启动
 
-### 安装数据库
-详情查看 [环境准备](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B#%E5%AE%89%E8%A3%85%E6%95%B0%E6%8D%AE%E5%BA%93)
+### 方案一、快速启动，无需安装数据库
+_便于快速预览工程，对于正式项目需要使用方案二。_
 
-### 安装依赖
+#### 1、安装依赖
 ```shell
 cd server
+npm install
 ```
 
-### 启动
+#### 2、启动
 ```shell
-npm run local // 无需安装mongo
-或
+npm run local
+```
+
+:cyclone:NOTE：
+
+服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
+> 1、数据保存在内存中，重启服务会更新数据。<br />2、启动内存服务器新实例时，如果找不到MongoDB二进制文件会自动下载，因此首次可能需要一些时间。
+
+### 方案二、(推荐)
+
+#### 1、启动数据库
+
+项目使用MongoDB：
+
+> 没有安装可以查看 [MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
+
+```
+mongod --dbpath ~/data/db --logpath ~/data/log/mongodb/mongo.log --fork
+```
+验证启动
+```
+ps aux | grep -v grep | grep mongod
+```
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/q2kOGoR8MV1700072541114.jpg"  width="800" />
+
+> 工程默认的mongo链接如下，需要修改可查看[配置修改指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E9%85%8D%E7%BD%AE)：
+
+```
+mongodb://localhost:27017
+```
+
+#### 2、安装依赖
+```shell
+cd server
+npm install
+```
+
+#### 3、启动
+```shell
 npm run dev
 ```
 
@@ -101,16 +159,21 @@ npm install
 npm run serve
 ```
 
-# 访问
-问卷管理端
+## 访问
+### 问卷管理端
 
 [http://localhost:8080/management](http://localhost:8080)
 
-问卷投放端
-创建并发布问卷
+### 问卷投放端
+创建并发布问卷。
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
 
 
+
 # 交流群
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/NSVCeskQL81698905740736.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+## 微信
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="300" />
+
+## QQ
+[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)

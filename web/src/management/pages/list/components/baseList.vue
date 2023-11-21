@@ -117,6 +117,11 @@ export default {
         if (res.code === CODE_MAP.SUCCESS) {
           this.total = res.data.count;
           this.data = res.data.data;
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.errmsg,
+          });
         }
       } catch (error) {
         this.$message({

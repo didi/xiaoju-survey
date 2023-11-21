@@ -1,6 +1,6 @@
 import { mongo } from '../db/mongo'
 import { getStatusObject, getMapByKey } from '../utils/index'
-import { SURVEY_STATUS, CommonError } from '../types/index'
+import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import { surveyKeyStoreService } from './surveyKeyStoreService'
 import * as moment from 'moment'
 
@@ -62,11 +62,14 @@ class SurveySubmitService {
             const configData = dataListMap[field]
             if (configData && /vote/.exec(configData.type)) {
                 const voteData = (await surveyKeyStoreService.get({ surveyPath: surveySubmitData.surveyPath, key: field, type: 'vote' })) || { total: 0 }
-                voteData.total++;
-                if (!voteData[surveySubmitData.data[field]]) {
-                    voteData[surveySubmitData.data[field]] = 1
-                } else {
-                    voteData[surveySubmitData.data[field]]++;
+                const fields = Array.isArray(surveySubmitData.data[field]) ? surveySubmitData.data[field] : [surveySubmitData.data[field]]
+                for (const field of fields) {
+                    voteData.total++;
+                    if (!voteData[field]) {
+                        voteData[field] = 1
+                    } else {
+                        voteData[field]++;
+                    }
                 }
                 await surveyKeyStoreService.set({ surveyPath: surveySubmitData.surveyPath, key: field, data: voteData, type: 'vote' })
             }

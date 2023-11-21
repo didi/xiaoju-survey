@@ -4,7 +4,7 @@
   "description": "survey server template",
   "main": "index.js",
   "scripts": {
-    "copy": "cp -rf ./src/ ./build/",
+    "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
     "build": "tsc",
     "launch:local": "npm run build && SERVER_ENV=local node ./build/index.js",
     "launch:dev": "npm run build && SERVER_ENV=dev node ./build/index.js",

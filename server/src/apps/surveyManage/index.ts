@@ -3,7 +3,7 @@ import { Request, Response } from 'koa'
 import { surveyService } from './service/surveyService'
 import { userService } from './service/userService'
 import { surveyHistoryService } from './service/surveyHistoryService'
-import { HISTORY_TYPE } from './types/index'
+import { HISTORY_TYPE } from '../../types/index'
 import { getValidateValue } from './utils/index'
 import * as Joi  from 'joi'
 

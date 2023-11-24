@@ -14,8 +14,8 @@
           :poster="bannerConf.bannerConfig.postImg"
           preload="auto"
           controls
+          :src="bannerConf.bannerConfig.videoLink" 
         >
-          <source :src="bannerConf.bannerConfig.videoLink" type="video/mp4" />
         </video>
       </div>
     </div>

@@ -1,14 +1,16 @@
 <template>
-  <div class="question-logo" @click="onSelect">
-    <img
-      v-if="logoImg !== ''"
-      :style="{ width: bottomConf.logoImageWidth }"
-      class="bottom-logo"
-      :src="logoImg"
-    />
-    <div class="logo-placeholder-wrapper" v-else>
-      <div class="logo-placeholder">LOGO</div>
-      <div class="no-logo-tip">若不配置logo，该图片将不会在问卷中展示</div>
+  <div class="container">
+    <div class="question-logo" @click="onSelect">
+      <img
+        v-if="logoImg !== ''"
+        :style="{ width: bottomConf.logoImageWidth  }"
+        class="bottom-logo"
+        :src="logoImg"
+      />
+      <div class="logo-placeholder-wrapper" v-else>
+        <div class="logo-placeholder">LOGO</div>
+        <div class="no-logo-tip">若不配置logo，该图片将不会在问卷中展示</div>
+      </div>
     </div>
   </div>
 </template>
@@ -36,11 +38,16 @@ export default {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.container{
+  display: flex;
+  justify-content: center;
+}
 .question-logo {
-  position: relative;
+  max-width: 300px;
   text-align: center;
   padding: 0 0 0.6rem;
   margin-top: -0.2rem;
+  cursor: pointer;
 }
 
 .logo-placeholder-wrapper {

@@ -1,7 +1,9 @@
 <template>
-  <div class="not-found">
-    <h1>404</h1>
-    <p>问卷找不到啦～</p>
+  <div class="container">
+    <img src="/imgs/nodata.png" alt="" class="ui-404"> 
+    <div class="ui-title">     
+      <div class="ui-maintitle">问卷找不到啦~</div>     
+    </div>
   </div>
 </template>
 
@@ -12,21 +14,29 @@ export default {
 </script>
 
 <style scoped>
-.not-found {
+.container {
   text-align: center;
   margin-top: 20vh;
   font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
 }
-
-h1 {
-  font-size: 5rem;
-  color: #ff5722;
-  margin: 0;
+.ui-404{
+  width: 75%;
+  max-width: 300px;
+  margin: .4rem auto 0;
+  display: block;
 }
-
-p {
-  font-size: 1.5rem;
-  color: #555;
-  margin: 10px 0;
+.ui-title {
+    margin-top: .3rem;
+    text-align: center;
+    font-size: .5rem;
+}
+.ui-title .ui-subtitle {
+    padding-top: 10px;
+    font-size: 12px;
+    color: #909090;
 }
 </style>

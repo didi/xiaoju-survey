@@ -27,7 +27,7 @@
         </video>
         <div
           class="video-modal"
-          :style="`background-image:url(${bannerConf.bannerConfig.posterImg})`"
+          :style="`background-image:url(${bannerConf.bannerConfig.postImg})`"
         ></div>
         <div class="iconfont icon-kaishi play-icon" @click="play()"></div>
       </div>
@@ -72,6 +72,12 @@ export default {
       }
       window.open(formatLink(jumpLink));
     },
+    play() {
+      const video = document.getElementById("video");
+      document.querySelector('.play-icon').style.display = 'none';
+      document.querySelector(".video-modal").style.display = 'none';
+      video.play();
+  },
   },
 };
 </script>

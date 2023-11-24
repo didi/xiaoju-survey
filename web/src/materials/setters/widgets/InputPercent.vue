@@ -30,9 +30,6 @@ export default {
       immediate: true,
       handler(newVal) {
         let val = parseFloat(newVal);
-        if (isNaN(val)) {
-          val = 50;
-        }
         if (val === this.value) {
           return;
         }

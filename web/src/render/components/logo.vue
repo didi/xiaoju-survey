@@ -1,10 +1,12 @@
 <template>
+  <div class="container">
   <div v-if="logoImage" class="logo-wrapper">
     <img
       :style="{ width: !isMobile ? '20%' : logoImageWidth || '20%' }"
       :src="logoImage"
     />
   </div>
+  </div> 
 </template>
 <script>
 export default {
@@ -23,8 +25,12 @@ export default {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
+.container{
+  display: flex;
+  justify-content: center;
+}
 .logo-wrapper {
-  position: relative;
+  max-width: 300px;
   text-align: center;
   font-size: 0;
   padding: 0.1rem 0 0.5rem;

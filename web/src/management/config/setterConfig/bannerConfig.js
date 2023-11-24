@@ -22,7 +22,7 @@ export default [
       {
         label: '视频海报地址',
         type: 'Input',
-        key: 'bannerConfig.posterImg',
+        key: 'bannerConfig.postImg',
         direction: 'horizon',
       },
     ],

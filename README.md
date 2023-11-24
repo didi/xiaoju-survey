@@ -88,6 +88,9 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
 # 快速启动
 
+Node版本>=14.21.0，
+[查看环境准备指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
+
 复制工程
 ```shell
 git clone git@github.com:didi/xiaoju-survey.git

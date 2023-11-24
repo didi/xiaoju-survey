@@ -118,7 +118,7 @@ class SurveyService {
             owner: condition.userData.username
         }
         const data = await surveyMeta.find(cond)
-            .sort({ updateDate: -1 })
+            .sort({ createDate: -1 })
             .limit(condition.pageSize)
             .skip((condition.pageNum - 1) * condition.pageSize)
             .toArray()

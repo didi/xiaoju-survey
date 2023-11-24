@@ -79,7 +79,6 @@ export default {
         clientTime: Date.now(),
       };
       result.encryptType = 'base64';
-      console.log(result.data)
       result.data = btoa(encodeURIComponent(result.data));
       return result;
     },

@@ -30,6 +30,7 @@ export default {
   computed: {},
   created() {
     this.init();
+    this.$store.dispatch('getEncryptInfo');
   },
   beforeCreate() {},
   methods: {

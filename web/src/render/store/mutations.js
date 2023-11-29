@@ -40,4 +40,7 @@ export default {
   setQuestionSeq(state, data) {
     state.questionSeq = data;
   },
+  setEncryptInfo(state, data) {
+    state.encryptInfo = data;
+  },
 };

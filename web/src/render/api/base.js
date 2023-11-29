@@ -38,11 +38,11 @@ const getSignByData = (sourceData) => {
 
 // 请求中间件，对所有请求都生成签名
 instance.interceptors.request.use((request) => {
-  let data;
+  let data = {};
   if (request.method === 'get') {
-    data = request.params;
+    data = request.params || data;
   } else if (request.method === 'post') {
-    data = request.data;
+    data = request.data || data;
   }
   const sign = getSignByData(data);
   data.sign = sign;

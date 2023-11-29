@@ -22,3 +22,11 @@ export function getValidateValue<T=any>(validationResult:Joi.ValidationResult<T>
   }
   return validationResult.value;
 }
+
+export function randomCode(length) {
+  let charList:Array<string> = []
+  for(let i=0;i<length;i++) {
+    charList.push(Math.floor(Math.random()*16).toString(16))
+  }
+  return charList.join('')
+}

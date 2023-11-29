@@ -33,6 +33,15 @@ export default class SurveyPublish {
       data: data,
     }
   }
+
+  @SurveyServer({ type: 'http', method: 'get', routerName: '/getEncryptInfo' })
+  async getEncryptInfo({ req, res }: { req: Request, res: Response }) {
+    const data = await surveySubmitService.getEncryptInfo()
+    return {
+      code: 200,
+      data: data,
+    }
+  }
   // 提交问卷
   @SurveyServer({ type: 'http', method: 'post', routerName: '/submit' })
   async submit({ req, res }: { req: Request, res: Response }) {
@@ -43,6 +52,7 @@ export default class SurveyPublish {
       surveyPath: Joi.string().required(),
       data: Joi.string().required(),
       encryptType: Joi.string(),
+      sessionId: Joi.string(),
     }).validate(req.body, { allowUnknown: true }));
     await surveySubmitService.submit({ surveySubmitData })
     return {

@@ -1,10 +1,49 @@
 import { mongo } from '../db/mongo'
-import { getStatusObject, getMapByKey } from '../utils/index'
+import { getStatusObject, getMapByKey, randomCode } from '../utils/index'
 import { SURVEY_STATUS, CommonError } from '../../../types/index'
 import { surveyKeyStoreService } from './surveyKeyStoreService'
+import { getConfig } from '../config/index'
+import * as CryptoJS from 'crypto-js'
+import * as aes from 'crypto-js/aes';
 import * as moment from 'moment'
+const config = getConfig()
 
 class SurveySubmitService {
+
+    async addSessionData(data) {
+        const surveySession = await mongo.getCollection({ collectionName: 'surveySession' });
+        const surveySessionRes = await surveySession.insertOne({
+            data,
+            expireDate: Date.now() + config.session.expireTime
+        })
+        return {
+            sessionId: surveySessionRes.insertedId.toString(),
+            ...data
+        }
+    }
+
+    async getSessionData(sessionId) {
+        const surveySession = await mongo.getCollection({ collectionName: 'surveySession' });
+        const sessionObjectId = mongo.getObjectIdByStr(sessionId)
+        const surveySessionRes = await surveySession.findOne({ _id: sessionObjectId })
+        await surveySession.deleteMany({ expireDate: { $lt: Date.now() } })
+        return { sessionId, data: surveySessionRes.data }
+    }
+
+    async getEncryptInfo() {
+        const encryptType = config.encrypt.type
+        let data = {}
+        if (encryptType === 'aes') {
+            data = await this.addSessionData({
+                code: randomCode(config.encrypt.aesCodelength)
+            })
+        }
+        return {
+            encryptType,
+            data
+        }
+    }
+
     async submit({ surveySubmitData }: { surveySubmitData: any }) {
         const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
         const surveyMetaRes = mongo.convertId2StringByDoc(
@@ -19,6 +58,9 @@ class SurveySubmitService {
         const surveySubmit = await mongo.getCollection({ collectionName: 'surveySubmit' });
         if (surveySubmitData.encryptType === 'base64') {
             surveySubmitData.data = JSON.parse(decodeURIComponent(Buffer.from(surveySubmitData.data, "base64").toString()))
+        } else if (surveySubmitData.encryptType === 'aes') {
+            const sessionData = await this.getSessionData(surveySubmitData.sessionId)
+            surveySubmitData.data = JSON.parse(decodeURIComponent(aes.decrypt(surveySubmitData.data, sessionData.data.code).toString(CryptoJS.enc.Utf8)))
         } else {
             surveySubmitData.data = JSON.parse(surveySubmitData.data)
         }

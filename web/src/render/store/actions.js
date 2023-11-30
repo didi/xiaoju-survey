@@ -1,6 +1,7 @@
 import moment from 'moment';
 import adapter from '../adapter';
-import { queryVote } from '@/render/api/survey';
+import { queryVote, getEncryptInfo } from '@/render/api/survey';
+import { CODE_MAP } from '@/management/api/base';
 
 export default {
   // 初始化
@@ -32,7 +33,10 @@ export default {
       const todayStr = momentNow.format('yyyy-MM-DD');
       const momentStartTime = moment(`${todayStr} ${answerBegTime}`);
       const momentEndTime = moment(`${todayStr} ${answerEndTime}`);
-      if (momentNow.isBefore(momentStartTime) || momentNow.isAfter(momentEndTime)) {
+      if (
+        momentNow.isBefore(momentStartTime) ||
+        momentNow.isAfter(momentEndTime)
+      ) {
         commit('setRouter', 'errorPage');
         commit('setErrorInfo', {
           errorType: 'overTime',
@@ -99,6 +103,12 @@ export default {
 
     if (voteRes.code === 200) {
       commit('setVoteMap', voteRes.data);
+    }
+  },
+  async getEncryptInfo({ commit }) {
+    const res = await getEncryptInfo();
+    if (res.code === CODE_MAP.SUCCESS) {
+      commit('setEncryptInfo', res.data);
     }
   },
 };

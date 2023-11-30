@@ -15,6 +15,7 @@ import Header from '../components/header.vue';
 import submit from '../components/submit.vue';
 import mainRenderer from '../components/mainRenderer';
 import { submitForm } from '@/render/api/survey';
+import encrypt from '../utils/encrypt';
 
 export default {
   name: 'indexPage',
@@ -45,6 +46,9 @@ export default {
     },
     renderData() {
       return this.$store.getters.renderData;
+    },
+    encryptInfo() {
+      return this.$store.state.encryptInfo;
     },
   },
   methods: {
@@ -78,8 +82,14 @@ export default {
         difTime: Date.now() - this.$store.state.enterTime,
         clientTime: Date.now(),
       };
-      result.encryptType = 'base64';
-      result.data = btoa(encodeURIComponent(result.data));
+      result.encryptType = this.encryptInfo?.encryptType || 'base64';
+      result.data = encrypt[result.encryptType]({
+        data: result.data,
+        code: this.encryptInfo?.data?.code,
+      });
+      if (this.encryptInfo?.data?.sessionId) {
+        result.sessionId = this.encryptInfo.data.sessionId;
+      }
       return result;
     },
     async submitForm() {

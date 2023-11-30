@@ -20,3 +20,7 @@ export const queryVote = ({ surveyPath, voteKeyList }) => {
     },
   });
 };
+
+export const getEncryptInfo = () => {
+  return axios.get('/surveyPublish/getEncryptInfo');
+};

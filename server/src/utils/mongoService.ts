@@ -1,5 +1,4 @@
 import { Collection, MongoClient, ObjectId } from 'mongodb'
-import { getMongoMemoryUri } from './getMongoMemoryUri'
 import { CommonError } from '../types'
 
 
@@ -13,10 +12,6 @@ class MongoService {
     }
 
     async getCollection({ collectionName }): Promise<Collection> {
-        if (process.env.SERVER_ENV === 'local') {
-            const uri = await getMongoMemoryUri()
-            this.client = new MongoClient(uri);
-        }
         try {
             // 设置一个6秒的计时器
             const timeoutPromise = new Promise((resolve, reject) => {

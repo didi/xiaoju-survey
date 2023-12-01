@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
 export default {
   name: 'banner',

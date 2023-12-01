@@ -8,9 +8,9 @@
     "build": "tsc",
     "launch:local": "npm run build && SERVER_ENV=local node ./build/index.js",
     "launch:dev": "npm run build && SERVER_ENV=dev node ./build/index.js",
-    "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
-    "start:preonline": "npm run copy && npm run build && SERVER_ENV=preonline node ./build/index.js",
-    "start:online": "npm run copy && npm run build && SERVER_ENV=online node ./build/index.js",
+    "start:stable": "SERVER_ENV=stable node ./build/index.js",
+    "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
+    "start:online": "SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
     "local": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch:local' --watch ./src",
     "dev": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch:dev' --watch ./src"

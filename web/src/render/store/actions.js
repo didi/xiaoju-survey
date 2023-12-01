@@ -1,4 +1,8 @@
 import moment from 'moment';
+// 引入中文
+import 'moment/locale/zh-cn'
+// 设置中文
+moment.locale('zh-cn');
 import adapter from '../adapter';
 import { queryVote, getEncryptInfo } from '@/render/api/survey';
 import { CODE_MAP } from '@/management/api/base';

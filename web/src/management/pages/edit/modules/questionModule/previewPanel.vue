@@ -39,14 +39,13 @@
 </template>
 
 <script>
-// import _cloneDeep from 'lodash/cloneDeep'
 import materialGroup from './components/materialGroup.vue';
 import banner from './components/banner.vue';
 import mainTitle from './components/mainTitle.vue';
 import submit from './components/submit.vue';
 import logo from './components/logo.vue';
 import { mapState, mapGetters } from 'vuex';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
 export default {
   name: 'mainOperation',

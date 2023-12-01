@@ -14,7 +14,7 @@ import { mapState } from 'vuex';
 import success from './components/success';
 import overTime from './components/overTime';
 import { EDIT_STATUS_MAP } from './enum';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
 export default {
   name: 'ResultConfigPreivew',

@@ -1,8 +1,4 @@
-import _forEach from 'lodash/forEach';
-import _get from 'lodash/get';
-import _isArray from 'lodash/isArray';
-import _keys from 'lodash/keys';
-import _set from 'lodash/set';
+import { forEach as _forEach, get as _get, isArray as _isArray, keys as _keys, set as _set } from 'lodash';
 
 const regexpMap = {
   nd: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,

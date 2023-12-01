@@ -1,5 +1,4 @@
-import _forEach from 'lodash/forEach';
-import _trim from 'lodash/trim';
+import { forEach as _forEach, trim as _trim  } from 'lodash';
 import { escapeFilterXSS } from '@/common/xss';
 
 // 获取选项的hash

@@ -1,5 +1,4 @@
-import _get from 'lodash/get';
-import _last from 'lodash/last';
+import { get as _get, last as _last } from 'lodash';
 
 export default function handleQuestionSeq(questionConfig) {
   const dataList = _get(questionConfig, 'dataConf.dataList', []);

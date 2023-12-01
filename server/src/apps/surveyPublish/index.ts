@@ -57,7 +57,7 @@ export default class SurveyPublish {
     await surveySubmitService.submit({ surveySubmitData })
     return {
       code: 200,
-      msg: "报名成功",
+      msg: "提交成功",
     }
   }
 }

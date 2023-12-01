@@ -30,7 +30,7 @@
 <script>
 import ChannelRow from './components/channelRow';
 import empty from '@/management/components/empty';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 import leftMenu from '@/management/components/leftMenu.vue';
 import { mapState } from 'vuex';
 

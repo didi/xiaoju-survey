@@ -25,8 +25,13 @@
 <script>
 import { getSurveyHistory } from '@/management/api/survey';
 import moment from 'moment';
+// 引入中文
+import 'moment/locale/zh-cn'
+// 设置中文
+moment.locale('zh-cn');
+
 import { mapState } from 'vuex';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
 const getItemData = (item) => ({
   operator: item?.operator?.username || '未知用户',

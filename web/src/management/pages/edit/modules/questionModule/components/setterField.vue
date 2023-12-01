@@ -32,9 +32,7 @@
   </el-form>
 </template>
 <script>
-import _get from 'lodash/get';
-import _pick from 'lodash/pick';
-import _isFunction from 'lodash/isFunction';
+import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash';
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue';
 import setterLoader from '@/materials/setters/setterLoader';

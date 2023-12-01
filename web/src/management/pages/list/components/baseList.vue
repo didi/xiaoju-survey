@@ -71,8 +71,12 @@
 </template>
 
 <script>
-import _ from 'lodash';
+import { get, map } from 'lodash';
 import moment from 'moment';
+// 引入中文
+import 'moment/locale/zh-cn'
+// 设置中文
+moment.locale('zh-cn');
 import empty from '@/management/components/empty';
 import ModifyDialog from './modify';
 import Tag from './tag';
@@ -99,8 +103,8 @@ export default {
   },
   computed: {
     fieldList() {
-      const fieldInfo = _.map(this.fields, (f) => {
-        return _.get(fieldConfig, f, null);
+      const fieldInfo = map(this.fields, (f) => {
+        return get(fieldConfig, f, null);
       });
       return fieldInfo;
     },
@@ -132,14 +136,14 @@ export default {
       }
     },
     lget(row, field) {
-      const data = _.get(row, field.key);
+      const data = get(row, field.key);
       if (field.key === 'updateDate') {
         return moment(data).format('YYYY-MM-DD HH:mm:ss');
       }
       return data;
     },
     getStatus(data) {
-      return _.get(data, 'curStatus.id', 'new');
+      return get(data, 'curStatus.id', 'new');
     },
     getToolConfig() {
       const funcList = [

@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/survey',
     name: 'survey',
-    component: () => import('../pages/list/index.vue'),
+    component: () => import(/* webpackChunkName: "survey" */'../pages/list/index.vue'),
     meta: {
       needLogin: true,
       title: '问卷列表',
@@ -23,7 +23,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () => import('../pages/edit/index.vue'),
+    component: () => import(/* webpackChunkName: "editPage" */'../pages/edit/index.vue'),
     children: [
       {
         path: '',
@@ -31,7 +31,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () => import('../pages/edit/pages/edit.vue'),
+        component: () => import(/* webpackChunkName: "QuestionEditIndex" */'../pages/edit/pages/edit.vue'),
       },
       {
         path: 'setting',
@@ -39,7 +39,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () => import('../pages/edit/pages/setting.vue'),
+        component: () => import(/* webpackChunkName: "QuestionEditSetting" */'../pages/edit/pages/setting.vue'),
       },
       {
         path: 'resultConfig',
@@ -47,7 +47,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () => import('../pages/edit/pages/resultConfig.vue'),
+        component: () => import(/* webpackChunkName: "QuestionEditResultConfig" */'../pages/edit/pages/resultConfig.vue'),
       },
     ],
   },
@@ -57,7 +57,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () => import('../pages/analysis/index.vue'),
+    component: () => import(/* webpackChunkName: "analysisPage" */'../pages/analysis/index.vue'),
   },
   {
     path: '/survey/:id/publishResult',
@@ -65,7 +65,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () => import('../pages/publishResult/index.vue'),
+    component: () => import(/* webpackChunkName: "publishResultPage" */'../pages/publishResult/index.vue'),
   },
   {
     path: '/create',
@@ -74,13 +74,13 @@ const routes = [
       needLogin: true,
       title: '创建问卷',
     },
-    component: () => import('../pages/create/index.vue'),
+    component: () => import(/* webpackChunkName: "create" */'../pages/create/index.vue'),
   },
   {
     path: '/login',
     name: 'login',
     title: '登陆',
-    component: () => import('../pages/login/index.vue'),
+    component: () => import(/* webpackChunkName: "login" */'../pages/login/index.vue'),
   },
 ];
 

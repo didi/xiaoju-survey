@@ -22,6 +22,10 @@
 <script>
 // 要注意，element的format和moment的format的D是不同的
 import moment from 'moment';
+// 引入中文
+import 'moment/locale/zh-cn'
+// 设置中文
+moment.locale('zh-cn');
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
 export default {
   name: 'QuestionTime',

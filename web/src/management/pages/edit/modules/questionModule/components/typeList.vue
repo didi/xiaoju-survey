@@ -46,7 +46,7 @@ import questionMenuConfig, {
 } from '@/management/config/questionMenuConfig';
 import { getQuestionByType } from '@/management/utils/index';
 import { mapState, mapActions } from 'vuex';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 
 export default {
   name: 'QuestionTypeList',

@@ -1,7 +1,6 @@
 import { getNewField } from '@/management/utils';
-import _cloneDeep from 'lodash/cloneDeep';
+import { cloneDeep as _cloneDeep, get as _get } from 'lodash';
 import { getSurveyById } from '@/management/api/survey';
-import _get from 'lodash/get';
 
 export default {
   init({ state, dispatch }) {

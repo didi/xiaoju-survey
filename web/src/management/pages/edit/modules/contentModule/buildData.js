@@ -1,5 +1,4 @@
-import _pick from 'lodash/pick';
-import _get from 'lodash/get';
+import { pick as _pick, get as _get } from 'lodash';
 
 // 生成需要保存到接口的数据
 export default function (schema) {

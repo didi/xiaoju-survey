@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@/management/store/index';
 import router from '@/management/router/index';
-import _get from 'lodash/get';
+import { get as _get } from 'lodash';
 import { Message } from 'element-ui';
 
 const instance = axios.create({

@@ -34,7 +34,7 @@
 <script>
 import { CODE_MAP } from '@/management/api/base';
 import { updateSurvey } from '@/management/api/survey';
-import _pick from 'lodash/pick';
+import { pick as _pick } from 'lodash';
 
 export default {
   name: 'modifyDialog',

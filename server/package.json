@@ -12,7 +12,7 @@
     "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
     "start:online": "SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
-    "local": "ts-node scripts/run-local.ts",
+    "local": "npx ts-node scripts/run-local.ts",
     "dev": "npm run copy && nodemon -e js,mjs,json,ts  --exec 'npm run launch:dev' --watch ./src"
   },
   "devDependencies": {

@@ -82,13 +82,25 @@ class SurveyService {
         const surveyMetaUpdateRes = await surveyMeta.updateOne({
             _id,
             owner: surveyParams.userData.username,
-        }, {
+        }, [{
             $set: {
                 remark: surveyParams.remark,
                 title: surveyParams.title,
                 updateDate: Date.now(),
             }
-        })
+        }, {
+            $set: {
+                "curStatus": {
+                    $cond: {
+                        if: {
+                            $eq: ["$curStatus.status", "new"]
+                        },
+                        then: "$curStatus",
+                        else: getStatusObject({ status: SURVEY_STATUS.editing })
+                    }
+                }
+            }
+        }])
         if (surveyMetaUpdateRes.matchedCount < 1) {
             throw new CommonError("更新问卷信息失败，问卷不存在或您不是该问卷所有者")
         }
@@ -129,20 +141,20 @@ class SurveyService {
     getListHeadByDataList(dataList) {
         const listHead = dataList.map(surveyItem => {
             let othersCode;
-            if(surveyItem.type === 'radio-star') {
+            if (surveyItem.type === 'radio-star') {
                 const rangeConfigKeys = Object.keys(surveyItem.rangeConfig)
-                if(rangeConfigKeys.length>0) {
-                    othersCode = [{code: `${surveyItem.field}_custom`, option: "填写理由"}]
+                if (rangeConfigKeys.length > 0) {
+                    othersCode = [{ code: `${surveyItem.field}_custom`, option: "填写理由" }]
                 }
             } else {
                 othersCode = (surveyItem.options || [])
-                .filter(optionItem => optionItem.othersKey)
-                .map((optionItem) => {
-                    return {
-                        code: optionItem.othersKey,
-                        option: optionItem.text
-                    }
-                })
+                    .filter(optionItem => optionItem.othersKey)
+                    .map((optionItem) => {
+                        return {
+                            code: optionItem.othersKey,
+                            option: optionItem.text
+                        }
+                    })
             }
             return {
                 field: surveyItem.field,
@@ -164,7 +176,7 @@ class SurveyService {
         return listHead
     }
 
-    async data(condition: { userData:UserType,surveyId: string, pageNum: number, pageSize: number, isShowSecret: boolean }) {
+    async data(condition: { userData: UserType, surveyId: string, pageNum: number, pageSize: number, isShowSecret: boolean }) {
         const surveyObjectId = mongo.getObjectIdByStr(condition.surveyId)
         const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
         const surveyMetaData = await surveyMeta.findOne({ _id: surveyObjectId })
@@ -185,15 +197,15 @@ class SurveyService {
         const listBody = surveySubmitData.map((surveySubmitResList) => {
             const data = surveySubmitResList.data
             const dataKeys = Object.keys(data)
-            for(const itemKey of dataKeys) {
-                if(typeof itemKey !== 'string') {continue}
-                if(itemKey.indexOf("data")!==0) {continue}
+            for (const itemKey of dataKeys) {
+                if (typeof itemKey !== 'string') { continue }
+                if (itemKey.indexOf("data") !== 0) { continue }
                 const itemConfigKey = itemKey.split("_")[0];
                 const itemConfig = dataListMap[itemConfigKey];
                 // 题目删除会出现，数据列表报错
-                if(!itemConfig) {continue}
-                const doSecretData = (data)=>{
-                    if(itemConfig.isSecret && condition.isShowSecret) {
+                if (!itemConfig) { continue }
+                const doSecretData = (data) => {
+                    if (itemConfig.isSecret && condition.isShowSecret) {
                         return hanleSensitiveDate(data)
                     } else {
                         return data;
@@ -201,7 +213,7 @@ class SurveyService {
                 }
                 data[itemKey] = doSecretData(data[itemKey])
                 // 处理选项
-                if(itemConfig.type === 'radio-star' && !data[`${itemConfigKey}_custom`]) {
+                if (itemConfig.type === 'radio-star' && !data[`${itemConfigKey}_custom`]) {
                     data[`${itemConfigKey}_custom`] = data[`${itemConfigKey}_${data[itemConfigKey]}`]
                 }
                 if (!itemConfig?.options?.length) { continue }
@@ -255,13 +267,30 @@ class SurveyService {
 
     async saveConf(surveyData: { surveyId: string, configData: any }) {
         const surveyConf = await mongo.getCollection({ collectionName: 'surveyConf' });
+        const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
         const saveRes = await surveyConf.updateOne({
             pageId: surveyData.surveyId
         }, {
             $set: {
-                code: surveyData.configData
+                code: surveyData.configData,
             }
         })
+        const _id = mongo.getObjectIdByStr(surveyData.surveyId)
+        surveyMeta.updateOne({
+            _id,
+        }, [{
+            $set: {
+                "curStatus": {
+                    $cond: {
+                        if: {
+                            $eq: ["$curStatus.status", "new"]
+                        },
+                        then: "$curStatus",
+                        else: getStatusObject({ status: SURVEY_STATUS.editing })
+                    }
+                }
+            }
+        }])
         return saveRes
     }
 

@@ -127,7 +127,7 @@ class SurveyService {
     }
 
     getListHeadByDataList(dataList) {
-        return dataList.map(surveyItem => {
+        const listHead = dataList.map(surveyItem => {
             let othersCode;
             if(surveyItem.type === 'radio-star') {
                 const rangeConfigKeys = Object.keys(surveyItem.rangeConfig)
@@ -151,6 +151,17 @@ class SurveyService {
                 othersCode
             }
         })
+        listHead.push({
+            field: 'difTime',
+            title: '答题耗时（秒）',
+            type: 'text',
+        })
+        listHead.push({
+            field: 'createDate',
+            title: '提交时间',
+            type: 'text',
+        })
+        return listHead
     }
 
     async data(condition: { userData:UserType,surveyId: string, pageNum: number, pageSize: number, isShowSecret: boolean }) {
@@ -203,7 +214,11 @@ class SurveyService {
                     data[itemKey] = getText(data[itemKey])
                 }
             }
-            return data
+            return {
+                ...data,
+                difTime:  (surveySubmitResList.difTime / 1000).toFixed(2),
+                createDate:  moment(surveySubmitResList.createDate).format("YYYY-MM-DD HH:mm:ss") 
+            }
         })
         const total = await surveySubmit.countDocuments({ pageId: condition.surveyId });
         return {

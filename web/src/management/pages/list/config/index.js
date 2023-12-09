@@ -33,7 +33,11 @@ export const fieldConfig = {
     width: 200,
     tip: true,
   },
-
+  state: {
+    key: 'state',
+    width: 140,
+    comp: 'state',
+  },
   creator: {
     key: 'creator',
     width: 140,
@@ -48,4 +52,13 @@ export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',
   img: '/imgs/icons/list-empty.png',
+};
+
+
+export const statusMaps = {
+  new: '未发布',
+  editing: '修改中',
+  published: '已发布',
+  removed: '',
+  pausing: '',
 };

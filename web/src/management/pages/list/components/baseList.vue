@@ -80,6 +80,7 @@ moment.locale('zh-cn');
 import empty from '@/management/components/empty';
 import ModifyDialog from './modify';
 import Tag from './tag';
+import State from './state';
 import ToolBar from './toolBar';
 import { fieldConfig, thead, noListDataConfig } from '../config';
 import { CODE_MAP } from '@/management/api/base';
@@ -90,7 +91,7 @@ export default {
   name: 'BaseList',
   data() {
     return {
-      fields: ['type', 'title', 'remark', 'creator', 'updateDate'],
+      fields: ['type', 'title', 'remark', 'creator', 'state', 'updateDate'],
       showModify: false,
       loading: false,
       theadDict: thead,
@@ -213,6 +214,7 @@ export default {
     ModifyDialog,
     Tag,
     ToolBar,
+    State,
   },
 };
 </script>

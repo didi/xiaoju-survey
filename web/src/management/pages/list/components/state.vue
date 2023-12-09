@@ -1,0 +1,50 @@
+<template>
+  <div :class="['list-state', 'list-state-' + value.curStatus.id]">
+    <span class="list-state-badge" />
+    <span>{{ statusMaps[value.curStatus.id] }}</span>
+  </div>
+</template>
+<script>
+import { statusMaps } from '../config';
+export default {
+  name: 'State',
+  props: {
+    value: Object,
+  },
+  data() {
+    return {
+      statusMaps,
+    };
+  },
+};
+</script>
+<style lang="scss" rel="stylesheet/scss" scoped>
+.list-state {
+  display: flex;
+  align-items: center;
+  &-new {
+    color: $normal-color;
+    .list-state-badge {
+      background: $normal-color;
+    }
+  }
+  &-published {
+    color: #0dbd93;
+    .list-state-badge {
+      background: #0dbd93;
+    }
+  }
+  &-editing {
+    color: $primary-color;
+    .list-state-badge {
+      background: $primary-color;
+    }
+  }
+  &-badge {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+}
+</style>

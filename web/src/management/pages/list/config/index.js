@@ -13,7 +13,8 @@ export const thead = {
   owner: '所有者',
   creator: '创建人',
   tags: '标签',
-  updateDate: '时间',
+  updateDate: '更新时间',
+  createDate: '创建时间',
   collectCount: '回收数',
 };
 
@@ -33,7 +34,11 @@ export const fieldConfig = {
     width: 200,
     tip: true,
   },
-
+  state: {
+    key: 'state',
+    width: 140,
+    comp: 'state',
+  },
   creator: {
     key: 'creator',
     width: 140,
@@ -42,10 +47,23 @@ export const fieldConfig = {
     key: 'updateDate',
     minWidth: 200,
   },
+  createDate: {
+    key: 'createDate',
+    minWidth: 200,
+  },
 };
 
 export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',
   img: '/imgs/icons/list-empty.png',
+};
+
+
+export const statusMaps = {
+  new: '未发布',
+  editing: '修改中',
+  published: '已发布',
+  removed: '',
+  pausing: '',
 };

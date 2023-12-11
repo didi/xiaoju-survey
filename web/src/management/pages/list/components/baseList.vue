@@ -80,6 +80,7 @@ moment.locale('zh-cn');
 import empty from '@/management/components/empty';
 import ModifyDialog from './modify';
 import Tag from './tag';
+import State from './state';
 import ToolBar from './toolBar';
 import { fieldConfig, thead, noListDataConfig } from '../config';
 import { CODE_MAP } from '@/management/api/base';
@@ -90,7 +91,7 @@ export default {
   name: 'BaseList',
   data() {
     return {
-      fields: ['type', 'title', 'remark', 'creator', 'updateDate'],
+      fields: ['type', 'title', 'remark', 'creator', 'state', 'updateDate', 'createDate'],
       showModify: false,
       loading: false,
       theadDict: thead,
@@ -137,8 +138,11 @@ export default {
     },
     lget(row, field) {
       const data = get(row, field.key);
-      if (field.key === 'updateDate') {
+      if (field.key === 'createDate') {
         return moment(data).format('YYYY-MM-DD HH:mm:ss');
+      } else if (field.key === 'updateDate') {
+        const updateDate = get(row, 'curStatus.date');
+        return moment(updateDate).format('YYYY-MM-DD HH:mm:ss');
       }
       return data;
     },
@@ -213,6 +217,7 @@ export default {
     ModifyDialog,
     Tag,
     ToolBar,
+    State,
   },
 };
 </script>

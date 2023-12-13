@@ -9,7 +9,7 @@ async function startServerAndRunScript() {
   console.log('MongoDB Memory Server started:', mongoUri);
 
   // 通过 nodemon 运行另一个脚本，并传递 MongoDB 连接 URL 作为环境变量
-  const nodemon = exec(`npm run copy && nodemon -e js,mjs,json,ts  --exec 'xiaojuSurveyMongoUrl=${mongoUri} npm run launch:local' --watch ./src`);
+  const nodemon = exec(`nodemon -e js,mjs,json,ts  --exec 'xiaojuSurveyMongoUrl=${mongoUri} npm run launch:local' --watch ./src`);
 
   nodemon.stdout?.on('data', (data) => {
     console.log(data);

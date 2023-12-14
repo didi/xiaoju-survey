@@ -6,22 +6,23 @@
   "scripts": {
     "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
     "build": "tsc",
-    "launch:local": "SERVER_ENV=local npx ts-node ./src/index.ts",
-    "launch:dev": "SERVER_ENV=dev npx ts-node ./src/index.ts",
     "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
     "start:preonline": "npm run copy && npm run build && SERVER_ENV=preonline node ./build/index.js",
     "start:online": "npm run copy && npm run build && SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
     "local": "npx ts-node scripts/run-local.ts",
-    "dev": "nodemon -e js,mjs,json,ts  --exec 'npm run launch:dev' --watch ./src"
+    "dev": "npx ts-node-dev ./src/index.ts"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.1",
     "@types/koa": "^2.13.8",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
+    "cross-env": "^7.0.3",
     "mongodb-memory-server": "^9.0.1",
     "nodemon": "^2.0.20",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {

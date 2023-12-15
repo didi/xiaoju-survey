@@ -12,6 +12,8 @@ services:
       - "27017:27017" # 数据库端口
     volumes:
       - mongo-volume:/data/db # xiaoju-survey-data/db/data:/data/db
+    networks:
+      - xiaoju-survey
 
   xiaoju-survey:
     image: "xiaojusurvey/xiaoju-survey:1.0.0"
@@ -20,13 +22,20 @@ services:
     ports:
       - "8080:3000" # API端口
     environment:
-      xiaojuSurveyMongoUrl: ${xiaojuSurveyMongoUrl} # 默认使用系统的环境变量
+      xiaojuSurveyMongoUrl: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@xiaoju-survey-mongo:27017  # docker-compose 会根据容器名称自动处理
       xiaojuSurveyJwtSecret: surveyEngineJwtSecret
       xiaojuSurveyJwtExpiresIn: 8h
     links:
       - mongo:mongo
     depends_on:
       - mongo
+    networks:
+      - xiaoju-survey
 
 volumes:
   mongo-volume:
+
+networks:
+  xiaoju-survey:
+    name:  xiaoju-survey
+    driver: bridge

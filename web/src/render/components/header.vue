@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { get  as _get} from 'lodash';
+import { get as _get } from 'lodash';
 import { formatLink } from '../utils/index.js';
 
 export default {
@@ -73,11 +73,11 @@ export default {
       window.open(formatLink(jumpLink));
     },
     play() {
-      const video = document.getElementById("video");
+      const video = document.getElementById('video');
       document.querySelector('.play-icon').style.display = 'none';
-      document.querySelector(".video-modal").style.display = 'none';
+      document.querySelector('.video-modal').style.display = 'none';
       video.play();
-  },
+    },
   },
 };
 </script>

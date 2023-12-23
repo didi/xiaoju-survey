@@ -28,6 +28,8 @@ RUN cd /xiaoju-survey/server && npm install
 RUN cd /xiaoju-survey/web && npm run build
 RUN cd /xiaoju-survey && cp -af ./web/dist/* ./server/src/apps/ui/public/
 
+RUN cd /xiaoju-survey/server && npm run copy && npm run build
+
 # 暴露端口 需要跟server的port一致
 EXPOSE 3000
 

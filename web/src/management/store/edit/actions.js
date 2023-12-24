@@ -3,10 +3,10 @@ import { cloneDeep as _cloneDeep, get as _get } from 'lodash';
 import { getSurveyById } from '@/management/api/survey';
 
 export default {
-  init({ state, dispatch }) {
+  async init({ state, dispatch }) {
     const metaData = _get(state, 'schema.metaData');
     if (!metaData || metaData._id !== state.surveyId) {
-      dispatch('getSchemaFromRemote');
+      await dispatch('getSchemaFromRemote');
     }
     dispatch('resetState');
   },

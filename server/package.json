@@ -6,7 +6,7 @@
   "scripts": {
     "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
     "build": "tsc",
-    "start:stable": "SERVER_ENV=stable node ./build/index.js",
+    "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
     "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
     "start:online": "SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",

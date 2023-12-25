@@ -4,11 +4,10 @@
   "description": "survey server template",
   "main": "index.js",
   "scripts": {
-    "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
     "build": "tsc",
-    "start:stable": "npm run copy && npm run build && SERVER_ENV=stable node ./build/index.js",
-    "start:preonline": "npm run copy && npm run build && SERVER_ENV=preonline node ./build/index.js",
-    "start:online": "npm run copy && npm run build && SERVER_ENV=online node ./build/index.js",
+    "start:stable": "npm run build && SERVER_ENV=stable node ./build/index.js",
+    "start:preonline": "npm run build && SERVER_ENV=preonline node ./build/index.js",
+    "start:online": "npm run build && SERVER_ENV=online node ./build/index.js",
     "start": "npm run start:online",
     "local": "npx ts-node scripts/run-local.ts",
     "dev": "npx ts-node-dev ./src/index.ts"
@@ -35,7 +34,8 @@
     "koa-router": "^12.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "mongodb": "^5.7.0"
+    "mongodb": "^5.7.0",
+    "svg-captcha": "^1.4.0"
   },
   "engines": {
     "node": ">=14.21.0",

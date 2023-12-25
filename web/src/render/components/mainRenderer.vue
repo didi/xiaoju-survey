@@ -20,7 +20,6 @@ import materialGroup from './materialGroup';
 export default {
   name: 'mainRenderer',
   computed: {
-    // ...mapState('questionData'),
     questionData() {
       return this.$store.state.questionData;
     },

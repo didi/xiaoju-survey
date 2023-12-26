@@ -1,39 +1,37 @@
 import * as Router from 'koa-router';
-import { Context } from 'koa'
-import { SurveyServerConfigKey } from './decorator';
-
-import Ui from './apps/ui/index'
-import SurveyManage from './apps/surveyManage/index'
-import SurveyPublish from './apps/surveyPublish/index'
-import User from './apps/user/index'
+import { Context } from 'koa';
+import { RouterOptions, surveyAppKey, surveyServerKey } from './decorator';
+import { glob } from 'glob';
+import * as path from 'path';
+import appRegistry from './registry';
 
 
-function loadAppRouter(app, appRouter) {
-    const appServerConfigMap = app[SurveyServerConfigKey]
-    for (const [serveName, serveValue] of appServerConfigMap) {
-        const middleware = async (ctx: Context) => {
-            const data = await app[serveName]({ req: ctx.request, res: ctx.response })
-            return ctx.body = data
-        }
-        const method = serveValue.method || 'all'
-        const routerName = serveValue.routerName || `/${serveName}`
-        appRouter[method](routerName, middleware)
+export async function initRouter(app) {
+  const rootRouter = new Router();
+  const entries = await glob(path.join(__dirname, './apps/*/index.ts'));
+
+  for (const entry of entries) {
+    const module = await import(entry);
+    const instance = new module.default();
+
+    const moduleRouter = new Router();
+
+    const serverConfig: Map<string, RouterOptions> = instance[surveyServerKey];
+    
+    for (const [serverName, serverValue] of serverConfig.entries()) {
+      if (serverValue.routerName) {
+        const method = serverValue.method || 'get';
+        moduleRouter[method](serverValue.routerName, async (ctx: Context, next) => {
+          const ret = await instance[serverName]({ req: ctx.request, res: ctx.response }, next);
+          ctx.body = ret;
+        });
+      }
     }
-    return appRouter
-}
+    rootRouter.use(module.default[surveyAppKey], moduleRouter.routes());
 
-export function getRouter() {
-    const rootRouter = new Router()
-    const apiAppMap = {
-        surveyManage: new SurveyManage(),
-        surveyPublish: new SurveyPublish(),
-        user: new User(),
-    }
-    for (const [apiAppName, apiApp] of Object.entries(apiAppMap)) {
-        const appRouter = new Router()
-        loadAppRouter(apiApp, appRouter)
-        rootRouter.use(`/api/${apiAppName}`, appRouter.routes(), rootRouter.allowedMethods())
-    }
-    loadAppRouter(new Ui(), rootRouter)
-    return rootRouter
+    appRegistry.registerApp(instance.constructor.name.toLowerCase(), instance);
+
+  }
+  // console.log(rootRouter);
+  app.use(rootRouter.routes());
 }

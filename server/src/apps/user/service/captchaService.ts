@@ -27,6 +27,14 @@ class CaptchaService {
     });
     return captcha.toLowerCase() === captchaData?.text?.toLowerCase();
   }
+
+  async deleteCaptcha({ id }) {
+    const captchaDb = await mongo.getCollection({ collectionName: 'captcha' });
+    const _id = mongo.getObjectIdByStr(id)
+    await captchaDb.deleteOne({
+      _id
+    })
+  }
 }
 
 export const captchaService = new CaptchaService()

@@ -23,6 +23,8 @@ export default class User {
             username: userInfo.username,
             password: userInfo.password,
         })
+        // 删除验证码
+        captchaService.deleteCaptcha({ id: userInfo.captchaId })
         return {
             code: 200,
             data: userRegisterRes,
@@ -45,6 +47,8 @@ export default class User {
             username: userInfo.username,
             password: userInfo.password,
         })
+        // 删除验证码
+        captchaService.deleteCaptcha({ id: userInfo.captchaId })
         return {
             code: 200,
             data,
@@ -61,9 +65,13 @@ export default class User {
     }
 
     @SurveyServer({ type: 'http', method: 'post', routerName: '/captcha' })
-    async refreshCaptcha() {
+    async refreshCaptcha({ req }) {
         const captchaData = captchaService.createCaptcha()
         const res = await captchaService.addCaptchaData({ text: captchaData.text })
+        if (req.body && req.body.captchaId) {
+            // 删除验证码
+            captchaService.deleteCaptcha({ id: req.body.captchaId })
+        }
         return {
             code: 200,
             data: {

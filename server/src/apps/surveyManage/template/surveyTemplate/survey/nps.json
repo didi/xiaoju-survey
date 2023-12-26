@@ -68,7 +68,6 @@
         "valid": "",
         "title": "标题1",
         "answer": "",
-        "othersKeyMap": {},
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -118,7 +117,6 @@
         "type": "radio-star",
         "title": "标题2",
         "answer": "",
-        "othersKeyMap": {},
         "options": [],
         "textRange": {
           "min": {

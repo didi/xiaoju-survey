@@ -48,7 +48,6 @@
         "jumpTo": "",
         "startDate": "",
         "endDate": "",
-        "othersKeyMap": {},
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -134,7 +133,6 @@
         },
         "startDate": "",
         "endDate": "",
-        "othersKeyMap": {},
         "textRange": {
           "min": {
             "placeholder": "0",

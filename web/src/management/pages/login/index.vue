@@ -155,7 +155,7 @@ export default {
       });
     },
     async refreshCaptcha() {
-      const res = await refreshCaptcha();
+      const res = await refreshCaptcha({ captchaId: this.formData.captchaId });
       if (res.code === 200) {
         const { id, img } = res.data;
         this.formData.captchaId = id;

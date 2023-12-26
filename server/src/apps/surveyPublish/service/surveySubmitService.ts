@@ -46,7 +46,7 @@ class SurveySubmitService {
     };
   }
 
-  async submit({ surveySubmitData }: { surveySubmitData: any }) {
+  async submit({ surveySubmitData }) {
     const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
     const surveyMetaRes = mongo.convertId2StringByDoc(
       await surveyMeta.findOne({ surveyPath: surveySubmitData.surveyPath })

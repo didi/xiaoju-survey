@@ -1,4 +1,10 @@
-import { forEach as _forEach, get as _get, isArray as _isArray, keys as _keys, set as _set } from 'lodash';
+import {
+  forEach as _forEach,
+  get as _get,
+  isArray as _isArray,
+  keys as _keys,
+  set as _set,
+} from 'lodash';
 
 const regexpMap = {
   nd: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
@@ -261,7 +267,7 @@ export default function (questionConfig) {
         }
       } else {
         _forEach(options, (item) => {
-          const othersKey = `${field}_${item.hash}`
+          const othersKey = `${field}_${item.hash}`;
           const { mustOthers } = item;
           if (mustOthers) {
             _set(validMap, othersKey, generateValidArr(true, ''));

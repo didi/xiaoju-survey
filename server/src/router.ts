@@ -27,7 +27,6 @@ export async function initRouter(app) {
         });
       }
     }
-
     rootRouter.use(module.default[surveyAppKey], moduleRouter.routes());
 
     appRegistry.registerApp(instance.constructor.name.toLowerCase(), instance);

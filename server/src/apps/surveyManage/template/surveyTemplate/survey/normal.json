@@ -40,7 +40,6 @@
         "addressType": 3,
         "isAuto": false,
         "urlKey": "",
-        "othersKeyMap": {},
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -103,7 +102,6 @@
         "exclude": false,
         "addressType": 3,
         "isAuto": false,
-        "othersKeyMap": {},
         "textRange": {
           "min": {
             "placeholder": "0",

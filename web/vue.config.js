@@ -1,8 +1,7 @@
 const { defineConfig } = require('@vue/cli-service');
-const Webpack = require('webpack')
+const Webpack = require('webpack');
 // 分析打包时间
-const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin')
-
+const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
 
 module.exports = defineConfig({
   transpileDependencies: true,
@@ -47,19 +46,23 @@ module.exports = defineConfig({
     open: true,
   },
   configureWebpack: {
-    plugins: [new Webpack.IgnorePlugin({resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })],
+    plugins: [
+      new Webpack.IgnorePlugin({
+        resourceRegExp: /^\.\/locale$/,
+        contextRegExp: /moment$/,
+      }),
+    ],
   },
   chainWebpack: (config) => {
     config.module
       .rule('js')
       .test(/\.jsx?$/)
-      .exclude
-        .add(/node_modules/)
-        .end()
+      .exclude.add(/node_modules/)
+      .end()
       .use('babel-loader')
       .loader('babel-loader')
       .end();
-    
+
     config.optimization.splitChunks({
       cacheGroups: {
         setterWidgets: {
@@ -82,41 +85,40 @@ module.exports = defineConfig({
         element: {
           name: 'chunk-element-ui',
           test: /[\\/]node_modules[\\/]element-ui[\\/]/,
-          chunks: "all",
+          chunks: 'all',
           priority: 3,
           reuseExistingChunk: true,
-          enforce: true
+          enforce: true,
         },
         moment: {
           name: 'chunk-moment',
           test: /[\\/]node_modules[\\/]moment[\\/]/,
-          chunks: "all",
+          chunks: 'all',
           priority: 3,
           reuseExistingChunk: true,
-          enforce: true
+          enforce: true,
         },
         '@wangeditor': {
           name: 'chunk-wangeditor',
           test: /[\\/]node_modules[\\/]@wangeditor[\\/]/,
-          chunks: "all",
+          chunks: 'all',
           priority: 3,
           reuseExistingChunk: true,
-          enforce: true
+          enforce: true,
         },
         common: {
           //抽取所有入口页面都需要的公共chunk
-          name: "chunk-common",
-          chunks: "initial",
+          name: 'chunk-common',
+          chunks: 'initial',
           minChunks: 2,
           maxInitialRequests: 5,
           minSize: 0,
           priority: 1,
           reuseExistingChunk: true,
-          enforce: true
-        }
+          enforce: true,
+        },
       },
     });
-    config.plugin('speed')
-      .use(SpeedMeasureWebpackPlugin)
+    config.plugin('speed').use(SpeedMeasureWebpackPlugin);
   },
 });

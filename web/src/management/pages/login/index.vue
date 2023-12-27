@@ -130,7 +130,6 @@ export default {
             this[`${type}Pending`] = false;
             if (res.code !== CODE_MAP.SUCCESS) {
               this.$message.error(res.errmsg);
-              this.refreshCaptcha();
               throw new Error('登录/注册失败' + res.errmsg);
             }
             this.$store.dispatch('user/login', {

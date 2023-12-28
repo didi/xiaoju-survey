@@ -7,6 +7,7 @@ export function getStatusObject({ status }: { status: SURVEY_STATUS }) {
     date: Date.now(),
   };
 }
+
 export function getValidateValue<T = unknown>(validationResult: Joi.ValidationResult<T>): T {
   if (validationResult.error) {
     throw new CommonError(validationResult.error.details.map(e => e.message).join());

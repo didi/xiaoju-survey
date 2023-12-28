@@ -1,5 +1,6 @@
 import { mongo } from '../db/mongo';
 import { create } from 'svg-captcha';
+
 class CaptchaService {
 
   createCaptcha() {
@@ -38,3 +39,4 @@ class CaptchaService {
 }
 
 export const captchaService = new CaptchaService();
+

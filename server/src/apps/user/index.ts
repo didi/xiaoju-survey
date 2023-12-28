@@ -1,16 +1,15 @@
+
 import { SurveyApp, SurveyServer } from '../../decorator';
-import { Request, Response } from 'koa';
 import * as Joi from 'joi';
 import { userService } from './service/userService';
 import { captchaService } from './service/captchaService';
 import { getValidateValue } from './utils/index';
-
 import { CommonError } from '../../types/index';
 
 @SurveyApp('/api/user')
 export default class User {
   @SurveyServer({ type: 'http', method: 'post', routerName: '/register' })
-  async register({ req }: { req: Request, res: Response }) {
+  async register({ req }) {
     const userInfo = getValidateValue(Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
@@ -34,7 +33,7 @@ export default class User {
   }
 
   @SurveyServer({ type: 'http', method: 'post', routerName: '/login' })
-  async login({ req }: { req: Request, res: Response }) {
+  async login({ req }) {
     const userInfo = getValidateValue(Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),

@@ -21,12 +21,11 @@ COPY . /xiaoju-survey
 RUN npm config set registry https://registry.npmjs.org/
 
 # 安装项目依赖
-RUN cd /xiaoju-survey/web && npm install
-RUN cd /xiaoju-survey/server && npm install
+RUN cd /xiaoju-survey/web && npm install && npm run build
 
-# 构建项目,并把产物推送到服务公共目录
-RUN cd /xiaoju-survey/web && npm run build
-RUN cd /xiaoju-survey && cp -af ./web/dist/* ./server/src/apps/ui/public/
+RUN cd /xiaoju-survey/server && npm install && npm run build
+
+RUN cd /xiaoju-survey && mkdir -p ./build/apps/ui/public/ && cp -af ./web/dist/* ./server/build/apps/ui/public/
 
 # 暴露端口 需要跟server的port一致
 EXPOSE 3000

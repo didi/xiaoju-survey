@@ -1,5 +1,5 @@
-import { mongo } from '../db/mongo'
-import { create } from 'svg-captcha'
+import { mongo } from '../db/mongo';
+import { create } from 'svg-captcha';
 class CaptchaService {
 
   createCaptcha() {
@@ -9,7 +9,7 @@ class CaptchaService {
       noise: 3, // 干扰线数量
       color: true, // 启用彩色
       background: '#f0f0f0', // 背景色
-    })
+    });
   }
 
   async addCaptchaData({ text }) {
@@ -30,11 +30,11 @@ class CaptchaService {
 
   async deleteCaptcha({ id }) {
     const captchaDb = await mongo.getCollection({ collectionName: 'captcha' });
-    const _id = mongo.getObjectIdByStr(id)
+    const _id = mongo.getObjectIdByStr(id);
     await captchaDb.deleteOne({
       _id
-    })
+    });
   }
 }
 
-export const captchaService = new CaptchaService()
+export const captchaService = new CaptchaService();

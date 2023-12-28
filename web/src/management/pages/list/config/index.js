@@ -59,7 +59,6 @@ export const noListDataConfig = {
   img: '/imgs/icons/list-empty.png',
 };
 
-
 export const statusMaps = {
   new: '未发布',
   editing: '修改中',

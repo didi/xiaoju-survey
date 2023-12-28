@@ -1,19 +1,29 @@
 type ServerType = 'http' | 'websocket' | 'rpc'
-export interface ServerValue {
+export interface RouterOptions {
   type: ServerType,
-  method: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options';
-  routerName: string;
+  method?: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options';
+  routerName?: string;
 }
 
-export const SurveyServerConfigKey = Symbol('appConfig') // vm环境和worker环境上下文不一致导致不能使用Symbol
-export function SurveyServer(surveyServer) {
-  return function (target: any, propertyKey: string, _descriptor: PropertyDescriptor) {
-    if (!target[SurveyServerConfigKey]) {
-      target[SurveyServerConfigKey] = new Map<string, ServerValue>()
+export const surveyServerKey = Symbol('surveyServer'); // vm环境和worker环境上下文不一致导致不能使用Symbol
+export const surveyAppKey = Symbol('surveyApp');
+
+export function SurveyApp(routerName) {
+  return (target: unknown) => {
+    if (!target[surveyAppKey]) {
+      target[surveyAppKey] = routerName;
     }
-    target[SurveyServerConfigKey].set(
+  };
+}
+
+export function SurveyServer(options: RouterOptions) {
+  return function(target: unknown, propertyKey: string) {
+    if (!target[surveyServerKey]) {
+      target[surveyServerKey] = new Map<string, RouterOptions>();
+    }
+    target[surveyServerKey].set(
       propertyKey,
-      surveyServer
-    )
-  }
+      options
+    );
+  };
 }

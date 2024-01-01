@@ -1,6 +1,4 @@
-import { 
-  createHash 
-} from 'crypto';
+import { createHash } from 'crypto';
 import { CommonError } from '../../../types/index';
 
 const hash256 = (text) => {
@@ -17,7 +15,6 @@ const undefinedToString = (data) => {
   }
   return res;
 };
-  
 const getSignByData = (sourceData, ts) => {
   const data = undefinedToString(sourceData);
   const keysArr = Object.keys(data);
@@ -33,16 +30,15 @@ const getSignByData = (sourceData, ts) => {
 };
 
 export const checkSign = (sourceData) => {
-  const sign = sourceData.sign; 
-  if(!sign) {
+  const sign = sourceData.sign;
+  if (!sign) {
     throw new CommonError('请求签名不存在');
   }
   delete sourceData.sign;
   const [inSign, ts] = sign.split('.');
   const realSign = getSignByData(sourceData, ts);
-  if(inSign!==realSign) {
+  if (inSign !== realSign) {
     throw new CommonError('请求签名异常');
   }
   return true;
 };
-  

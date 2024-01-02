@@ -3,9 +3,8 @@ import { rpcInvote } from '../../../rpc';
 import { SURVEY_STATUS, QUESTION_TYPE, CommonError, UserType, DICT_TYPE } from '../../../types/index';
 import { getStatusObject, genSurveyPath } from '../utils/index';
 import * as path from 'path';
-import { keyBy, merge } from 'lodash';
+import { keyBy, merge, cloneDeep } from 'lodash';
 import * as moment from 'moment';
-import { getFile } from '../utils/index';
 import { DataItem } from '../../../types/survey';
 
 class SurveyService {
@@ -19,7 +18,7 @@ class SurveyService {
 
   async getBannerData() {
     const bannerConfPath = path.resolve(__dirname, '../template/banner/index.json');
-    return require(bannerConfPath);
+    return await import(bannerConfPath);
   }
 
   async getCodeData({
@@ -31,10 +30,8 @@ class SurveyService {
       `../template/surveyTemplate/survey/${questionType}.json`,
     );
 
-    const [baseConfStr, templateConfStr] = await Promise.all([getFile(baseConfPath), getFile(templateConfPath)]);
-
-    const baseConf = JSON.parse(baseConfStr);
-    const templateConf = JSON.parse(templateConfStr);
+    const baseConf = cloneDeep(await import(baseConfPath));
+    const templateConf = cloneDeep(await import(templateConfPath));
     const codeData = merge(baseConf, templateConf);
     const nowMoment = moment();
     codeData.baseConf.begTime = nowMoment.format('YYYY-MM-DD HH:mm:ss');

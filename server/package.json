@@ -4,6 +4,7 @@
   "description": "survey server template",
   "main": "index.js",
   "scripts": {
+    "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
     "build": "tsc",
     "start:stable": "SERVER_ENV=stable node ./build/index.js",
     "start:preonline": "SERVER_ENV=preonline node ./build/index.js",

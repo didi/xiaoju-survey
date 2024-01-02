@@ -25,7 +25,7 @@ export default class Security {
   @SurveyServer({ type: 'rpc' })
   isDataSensitive(data) {
     if (!isString(data)) {
-      return data;
+      return false;
     }
     const $ = load(data);
     const text = $.text();

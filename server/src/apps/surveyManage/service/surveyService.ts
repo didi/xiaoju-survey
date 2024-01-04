@@ -1,11 +1,10 @@
 import { mongo } from '../db/mongo';
 import { rpcInvote } from '../../../rpc';
 import { SURVEY_STATUS, QUESTION_TYPE, CommonError, UserType, DICT_TYPE } from '../../../types/index';
-import { getStatusObject, genSurveyPath, hanleSensitiveDate } from '../utils/index';
+import { getStatusObject, genSurveyPath } from '../utils/index';
 import * as path from 'path';
-import * as _ from 'lodash';
+import { keyBy, merge, cloneDeep } from 'lodash';
 import * as moment from 'moment';
-import { getFile } from '../utils/index';
 import { DataItem } from '../../../types/survey';
 
 class SurveyService {
@@ -19,7 +18,7 @@ class SurveyService {
 
   async getBannerData() {
     const bannerConfPath = path.resolve(__dirname, '../template/banner/index.json');
-    return require(bannerConfPath);
+    return await import(bannerConfPath);
   }
 
   async getCodeData({
@@ -31,11 +30,9 @@ class SurveyService {
       `../template/surveyTemplate/survey/${questionType}.json`,
     );
 
-    const [baseConfStr, templateConfStr] = await Promise.all([getFile(baseConfPath), getFile(templateConfPath)]);
-
-    const baseConf = JSON.parse(baseConfStr);
-    const templateConf = JSON.parse(templateConfStr);
-    const codeData = _.merge(baseConf, templateConf);
+    const baseConf = cloneDeep(await import(baseConfPath));
+    const templateConf = cloneDeep(await import(templateConfPath));
+    const codeData = merge(baseConf, templateConf);
     const nowMoment = moment();
     codeData.baseConf.begTime = nowMoment.format('YYYY-MM-DD HH:mm:ss');
     codeData.baseConf.endTime = nowMoment.add(10, 'years').format('YYYY-MM-DD HH:mm:ss');
@@ -192,49 +189,50 @@ class SurveyService {
     const publishConf = await surveyPublish.findOne({ pageId: condition.surveyId });
     const dataList = publishConf?.code?.dataConf?.dataList || [];
     const listHead = this.getListHeadByDataList(dataList);
-    const dataListMap = _.keyBy(dataList, 'field');
+    const dataListMap = keyBy(dataList, 'field');
     const surveySubmit = await mongo.getCollection({ collectionName: 'surveySubmit' });
-    const surveySubmitData = await surveySubmit.find({ pageId: condition.surveyId })
+    const surveySubmitDataList = await surveySubmit.find({ pageId: condition.surveyId })
       .sort({ createDate: -1 })
       .limit(condition.pageSize)
       .skip((condition.pageNum - 1) * condition.pageSize)
       .toArray();
-    const listBody = surveySubmitData.map((surveySubmitResList) => {
-      const data = surveySubmitResList.data;
+
+    const listBody = surveySubmitDataList.map(submitedData => {
+      const data = submitedData.data;
+      const secretKeys = submitedData.secretKeys;
       const dataKeys = Object.keys(data);
+
       for (const itemKey of dataKeys) {
         if (typeof itemKey !== 'string') { continue; }
         if (itemKey.indexOf('data') !== 0) { continue; }
+        // 获取题目id
         const itemConfigKey = itemKey.split('_')[0];
+        // 获取题目
         const itemConfig: DataItem = dataListMap[itemConfigKey];
         // 题目删除会出现，数据列表报错
         if (!itemConfig) { continue; }
-        const doSecretData = (data) => {
-          if (condition.isShowSecret) {
-            return hanleSensitiveDate(data);
-          } else {
-            return data;
-          }
-        };
-        data[itemKey] = doSecretData(data[itemKey]);
-        // 处理选项
+        // 处理选项的更多输入框
         if (itemConfig.type === 'radio-star' && !data[`${itemConfigKey}_custom`]) {
           data[`${itemConfigKey}_custom`] = data[`${itemConfigKey}_${data[itemConfigKey]}`];
         }
-        if (!itemConfig?.options?.length) { continue; }
-        const options = itemConfig.options;
-        const optionsMap = _.keyBy(options, 'hash');
-        const getText = e => doSecretData(optionsMap?.[e]?.text || e);
-        if (Array.isArray(data[itemKey])) {
-          data[itemKey] = data[itemKey].map(getText);
-        } else {
-          data[itemKey] = getText(data[itemKey]);
+        // 解密数据
+        if (secretKeys.includes(itemKey)) {
+          data[itemKey] = Array.isArray(data[itemKey]) ? data[itemKey].map(item => rpcInvote('security.decryptData', item)) : rpcInvote('security.decryptData', data[itemKey]);
+        }
+        // 将选项id还原成选项文案
+        if (Array.isArray(itemConfig.options) && itemConfig.options.length > 0) {
+          const optionTextMap = keyBy(itemConfig.options, 'hash');
+          data[itemKey] = Array.isArray(data[itemKey]) ? data[itemKey].map(item => optionTextMap[item]?.text || item).join(',') : optionTextMap[data[itemKey]]?.text || data[itemKey];
+        }
+        // 数据脱敏
+        if (condition.isShowSecret && rpcInvote('security.isDataSensitive', data[itemKey])) {
+          data[itemKey] = rpcInvote('security.desensitiveData', data[itemKey]);
         }
       }
       return {
         ...data,
-        difTime: (surveySubmitResList.difTime / 1000).toFixed(2),
-        createDate: moment(surveySubmitResList.createDate).format('YYYY-MM-DD HH:mm:ss') 
+        difTime: (submitedData.difTime / 1000).toFixed(2),
+        createDate: moment(submitedData.createDate).format('YYYY-MM-DD HH:mm:ss')
       };
     });
     const total = await surveySubmit.countDocuments({ pageId: condition.surveyId });

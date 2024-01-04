@@ -8,7 +8,9 @@ import appRegistry from './registry';
 
 export async function initRouter(app) {
   const rootRouter = new Router();
-  const entries = await glob(path.join(__dirname, './apps/*/index.{ts,js}'));
+  const jsEntries = await glob(path.join(__dirname, './apps/*/index.js'));
+  const tsEntries = await glob(path.join(__dirname, './apps/*/index.ts'));
+  const entries = Array.isArray(jsEntries) && jsEntries.length > 0 ? jsEntries : tsEntries;
 
   for (const entry of entries) {
     const module = await import(entry);

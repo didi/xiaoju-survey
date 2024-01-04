@@ -49,7 +49,7 @@ export default class User {
       username: userInfo.username,
       password: userInfo.password,
     });
-      // 删除验证码
+    // 删除验证码
     captchaService.deleteCaptcha({ id: userInfo.captchaId });
     return {
       code: 200,

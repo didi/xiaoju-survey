@@ -14,3 +14,5 @@ export function participle({ content, minLen, maxLen }: { content: string, minLe
   }
   return keys;
 }
+
+export const isString = data => typeof data === 'string';

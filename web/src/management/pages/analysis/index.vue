@@ -72,16 +72,20 @@ export default {
         return;
       }
       this.mainTableLoading = true;
-      const res = await getRecycleList({
-        page: this.currentPage,
-        surveyId: this.$route.params.id,
-        isShowSecret: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
-      });
+      try {
+        const res = await getRecycleList({
+          page: this.currentPage,
+          surveyId: this.$route.params.id,
+          isShowSecret: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
+        });
 
-      if (res.code === 200) {
-        const listHead = this.formatHead(res.data.listHead);
-        this.tableData = { ...res.data, listHead };
-        this.mainTableLoading = false;
+        if (res.code === 200) {
+          const listHead = this.formatHead(res.data.listHead);
+          this.tableData = { ...res.data, listHead };
+          this.mainTableLoading = false;
+        }
+      } catch (error) {
+        this.$message.error('查询回收数据失败，请重试');
       }
     },
     handleCurrentChange(current) {

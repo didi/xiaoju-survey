@@ -2,7 +2,6 @@ import axios from 'axios';
 import store from '@/management/store/index';
 import router from '@/management/router/index';
 import { get as _get } from 'lodash';
-import { Message } from 'element-ui';
 
 const instance = axios.create({
   baseURL: '/api',
@@ -25,7 +24,6 @@ instance.interceptors.response.use(
     }
   },
   (err) => {
-    Message.error(err || 'http请求出错');
     throw new Error(err);
   }
 );

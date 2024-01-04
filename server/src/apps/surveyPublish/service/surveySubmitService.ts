@@ -7,6 +7,7 @@ import * as CryptoJS from 'crypto-js';
 import * as aes from 'crypto-js/aes';
 import * as moment from 'moment';
 import { keyBy } from 'lodash';
+import { rpcInvote } from '../../../rpc';
 
 const config = getConfig();
 
@@ -98,26 +99,48 @@ class SurveySubmitService {
         throw new CommonError('超出提交总数限制');
       }
     }
-    // 投票信息保存
     const dataList = publishConf?.code?.dataConf?.dataList || [];
     const dataListMap = keyBy(dataList, 'field');
+
     const surveySubmitDataKeys = Object.keys(surveySubmitData.data);
+
+    const secretKeys = [];
+
     for (const field of surveySubmitDataKeys) {
       const configData = dataListMap[field];
+      const value = surveySubmitData.data[field];
+      const values = Array.isArray(value) ? value : [value];
+
       if (configData && /vote/.exec(configData.type)) {
+        // 投票信息保存
         const voteData = (await surveyKeyStoreService.get({ surveyPath: surveySubmitData.surveyPath, key: field, type: 'vote' })) || { total: 0 };
         voteData.total++;
-        const fields = Array.isArray(surveySubmitData.data[field]) ? surveySubmitData.data[field] : [surveySubmitData.data[field]];
-        for (const field of fields) {
-          if (!voteData[field]) {
-            voteData[field] = 1;
+        for (const val of values) {
+          if (!voteData[val]) {
+            voteData[val] = 1;
           } else {
-            voteData[field]++;
+            voteData[val]++;
           }
         }
         await surveyKeyStoreService.set({ surveyPath: surveySubmitData.surveyPath, key: field, data: voteData, type: 'vote' });
       }
+      // 检查敏感数据，对敏感数据进行加密存储
+      let isSecret = false;
+      for (const val of values) {
+        if (rpcInvote('security.isDataSensitive', val)) {
+          isSecret = true;
+          break;
+        }
+      }
+      if (isSecret) {
+        secretKeys.push(field);
+        surveySubmitData.data[field] = Array.isArray(value) ? value.map(item => rpcInvote('security.encryptData', item)) : rpcInvote('security.encryptData', value);
+      }
+      
     }
+
+    surveySubmitData.secretKeys = secretKeys;
+
     // 提交问卷
     const surveySubmitRes = await surveySubmit.insertOne({
       ...surveySubmitData,

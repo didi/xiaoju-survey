@@ -15,6 +15,7 @@ const undefinedToString = (data) => {
   }
   return res;
 };
+
 const getSignByData = (sourceData, ts) => {
   const data = undefinedToString(sourceData);
   const keysArr = Object.keys(data);

@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { QOP_MAP } from '@/management/utils/constant';
 import Tool from './tool';
 
 export default {
@@ -31,8 +32,11 @@ export default {
   methods: {
     onCall(val) {
       switch (val.key) {
-        case 'edit':
-          this.$emit('on-modify', this.data);
+        case QOP_MAP.EDIT:
+          this.$emit('on-modify', this.data, QOP_MAP.EDIT);
+          return;
+        case QOP_MAP.COPY:
+          this.$emit('on-modify', this.data, QOP_MAP.COPY);
           return;
         case 'analysis':
           this.$router.push({

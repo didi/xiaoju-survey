@@ -39,10 +39,18 @@ export default class SurveyManage {
   async create({ req }) {
     const params = getValidateValue(Joi.object({
       remark: Joi.string().required(),
-      questionType: Joi.string().allow(null),
       title: Joi.string().required(),
-      createMethod: Joi.string().allow(null),
-      createFrom: Joi.string().allow(null),
+      questionType: Joi.string().when('createMethod', {
+        is: 'copy',
+        then: Joi.allow(null),
+        otherwise: Joi.required(),
+      }),
+      createMethod: Joi.string().allow(null).default('basic'),
+      createFrom: Joi.string().when('createMethod', {
+        is: 'copy',
+        then: Joi.required(),
+        otherwise: Joi.allow(null),
+      }),
     }).validate(req.body, { allowUnknown: true }));
     params.userData = await userService.checkLogin({ req });
     const addRes = await surveyService.create(params);

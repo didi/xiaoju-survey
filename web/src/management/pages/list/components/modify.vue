@@ -25,7 +25,7 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" class="save-btn" @click="onSave"
-        >保存</el-button
+        >{{ type === 'edit' ? '保存' : '确定' }}</el-button
       >
     </div>
   </el-dialog>
@@ -33,12 +33,14 @@
 
 <script>
 import { CODE_MAP } from '@/management/api/base';
-import { updateSurvey } from '@/management/api/survey';
+import { updateSurvey, copySurvey } from '@/management/api/survey';
 import { pick as _pick } from 'lodash';
+import { QOP_MAP } from '@/management/utils/constant'
 
 export default {
   name: 'modifyDialog',
   props: {
+    type: String,
     questionInfo: Object,
     width: String,
     visible: Boolean,
@@ -70,19 +72,54 @@ export default {
       this.$emit('on-close-codify');
     },
     async onSave() {
-      const res = await updateSurvey({
-        surveyId: this.questionInfo._id,
-        ...this.current,
-      });
-
-      if (res.code === CODE_MAP.SUCCESS) {
-        this.$message.success('修改成功');
+      if(this.type === QOP_MAP.COPY) {
+        await this.handleCopy()
       } else {
-        this.$message.error(res.errmsg);
+        await this.handleUpdate()
       }
+      
 
       this.$emit('on-close-codify', 'update');
     },
+    async handleUpdate() {
+      try {
+        const res = await updateSurvey({
+          surveyId: this.questionInfo._id,
+          ...this.current,
+        });
+
+        if (res.code === CODE_MAP.SUCCESS) {
+          this.$message.success('修改成功');
+        } else {
+          this.$message.error(res.errmsg);
+        }
+      } catch (err) {
+        this.$message.error(err);
+      }
+    },
+    async handleCopy() {
+      try {
+        const res = await copySurvey({
+          createFrom: this.questionInfo._id,
+          createMethod: QOP_MAP.COPY,
+          ...this.current,
+        });
+
+        if (res.code === CODE_MAP.SUCCESS) {
+          const { data } = res
+          this.$router.push({
+            name: 'QuestionEditIndex',
+            params: {
+              id: data.id,
+            },
+          });
+        } else {
+          this.$message.error(res.errmsg);
+        }
+      } catch(err) {
+        this.$message.error(err);
+      }
+    }
   },
 };
 </script>

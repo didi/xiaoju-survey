@@ -40,7 +40,7 @@
             :data="scope.row"
             type="list"
             :tools="getToolConfig(scope.row)"
-            :tool-width="65"
+            :tool-width="50"
             @on-delete="onDelete"
             @on-modify="onModify"
           />
@@ -63,6 +63,7 @@
     </div>
 
     <modify-dialog
+      :type="modifyType"
       :visible="showModify"
       :question-info="questionInfo"
       @on-close-codify="onCloseModify"
@@ -92,6 +93,7 @@ export default {
   data() {
     return {
       fields: ['type', 'title', 'remark', 'creator', 'state', 'updateDate', 'createDate'],
+      modifyType: 'edit',
       showModify: false,
       loading: false,
       theadDict: thead,
@@ -168,6 +170,11 @@ export default {
           label: '删除',
           icon: 'icon-shanchu',
         },
+        {
+          key: 'copy',
+          label: '复制',
+          icon: 'icon-shanchu',
+        }
       ];
       return funcList;
     },
@@ -192,8 +199,9 @@ export default {
       this.currentPage = current;
       this.init();
     },
-    onModify(data) {
+    onModify(data, type = 'edit') {
       this.showModify = true;
+      this.modifyType = type
       this.questionInfo = data;
     },
     onCloseModify(type) {

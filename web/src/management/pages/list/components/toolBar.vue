@@ -34,6 +34,9 @@ export default {
         case 'edit':
           this.$emit('on-modify', this.data);
           return;
+        case 'copy':
+          this.$emit('on-modify', this.data, 'copy');
+          return;
         case 'analysis':
           this.$router.push({
             name: 'analysisPage',

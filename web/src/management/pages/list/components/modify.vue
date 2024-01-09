@@ -106,7 +106,13 @@ export default {
         });
 
         if (res.code === CODE_MAP.SUCCESS) {
-          this.$message.success('修改成功');
+          const { data } = res
+          this.$router.push({
+            name: 'QuestionEditIndex',
+            params: {
+              id: data.id,
+            },
+          });
         } else {
           this.$message.error(res.errmsg);
         }

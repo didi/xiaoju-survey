@@ -49,3 +49,7 @@ export const deleteSurvey = (surveyId) => {
 export const updateSurvey = (data) => {
   return axios.post('/surveyManage/update', data);
 };
+
+export const copySurvey = (data) => {
+  return axios.post('/surveyManage/create', data);
+};

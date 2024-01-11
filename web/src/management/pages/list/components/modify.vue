@@ -25,7 +25,7 @@
 
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" class="save-btn" @click="onSave"
-        >{{ type === 'edit' ? '保存' : '确定' }}</el-button
+        >{{ type === QOP_MAP.EDIT ? '保存' : '确定' }}</el-button
       >
     </div>
   </el-dialog>

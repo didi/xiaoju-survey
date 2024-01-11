@@ -35,7 +35,7 @@
 import { CODE_MAP } from '@/management/api/base';
 import { updateSurvey, copySurvey } from '@/management/api/survey';
 import { pick as _pick } from 'lodash';
-import { type } from '../config';
+import { QOP_MAP } from '@/management/utils/constant'
 
 export default {
   name: 'modifyDialog',
@@ -72,7 +72,7 @@ export default {
       this.$emit('on-close-codify');
     },
     async onSave() {
-      if(this.type == 'copy') {
+      if(this.type === QOP_MAP.COPY) {
         await this.handleCopy()
       } else {
         await this.handleUpdate()
@@ -101,7 +101,7 @@ export default {
       try {
         const res = await copySurvey({
           createFrom: this.questionInfo._id,
-          createMethod: 'copy',
+          createMethod: QOP_MAP.COPY,
           ...this.current,
         });
 

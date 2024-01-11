@@ -257,7 +257,7 @@ class SurveyService {
 
     const listBody = surveySubmitDataList.map(submitedData => {
       const data = submitedData.data;
-      const secretKeys = submitedData.secretKeys;
+      const secretKeys = submitedData.secretKeys || [];
       const dataKeys = Object.keys(data);
 
       for (const itemKey of dataKeys) {

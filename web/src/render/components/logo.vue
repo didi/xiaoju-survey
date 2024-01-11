@@ -31,7 +31,7 @@ export default {
 }
 
 .logo-wrapper {
-  max-width: 300px;
+  width: 100%;
   text-align: center;
   font-size: 0;
   padding: 0.1rem 0 0.5rem;

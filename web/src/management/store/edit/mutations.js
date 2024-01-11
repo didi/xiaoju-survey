@@ -1,4 +1,5 @@
 import { set as _set, merge as _merge } from 'lodash';
+import defaultSurveyConfig from '@/management/config/defaultSurveyConfig';
 
 export default {
   setCurrentEditOne(state, data) {
@@ -14,27 +15,27 @@ export default {
     state.schema.metaData = metaData;
     state.schema.bannerConf = _merge(
       {},
-      state.schema.bannerConf,
+      defaultSurveyConfig.bannerConf,
       codeData.bannerConf
     );
     state.schema.bottomConf = _merge(
       {},
-      state.schema.bottomConf,
+      defaultSurveyConfig.bottomConf,
       codeData.bottomConf
     );
     state.schema.skinConf = _merge(
       {},
-      state.schema.skinConf,
+      defaultSurveyConfig.skinConf,
       codeData.skinConf
     );
     state.schema.baseConf = _merge(
       {},
-      state.schema.baseConf,
+      defaultSurveyConfig.baseConf,
       codeData.baseConf
     );
     state.schema.submitConf = _merge(
       {},
-      state.schema.submitConf,
+      defaultSurveyConfig.submitConf,
       codeData.submitConf
     );
     state.schema.questionDataList = codeData.questionDataList || [];

@@ -47,6 +47,7 @@ export default {
   },
   data() {
     return {
+      QOP_MAP,
       loadingInstance: null,
       rules: {
         title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],

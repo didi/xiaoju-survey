@@ -85,7 +85,7 @@ import State from './state';
 import ToolBar from './toolBar';
 import { fieldConfig, thead, noListDataConfig } from '../config';
 import { CODE_MAP } from '@/management/api/base';
-
+import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
 
 export default {
@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       fields: ['type', 'title', 'remark', 'creator', 'state', 'updateDate', 'createDate'],
-      modifyType: 'edit',
+      modifyType: QOP_MAP.EDIT,
       showModify: false,
       loading: false,
       theadDict: thead,
@@ -154,7 +154,7 @@ export default {
     getToolConfig() {
       const funcList = [
         {
-          key: 'edit',
+          key: QOP_MAP.EDIT,
           label: '修改',
         },
         {
@@ -171,7 +171,7 @@ export default {
           icon: 'icon-shanchu',
         },
         {
-          key: 'copy',
+          key: QOP_MAP.COPY,
           label: '复制',
           icon: 'icon-shanchu',
         }
@@ -199,7 +199,7 @@ export default {
       this.currentPage = current;
       this.init();
     },
-    onModify(data, type = 'edit') {
+    onModify(data, type = QOP_MAP.EDIT) {
       this.showModify = true;
       this.modifyType = type
       this.questionInfo = data;

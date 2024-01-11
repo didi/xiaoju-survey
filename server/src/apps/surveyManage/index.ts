@@ -2,7 +2,7 @@ import { SurveyApp, SurveyServer } from '../../decorator';
 import { surveyService } from './service/surveyService';
 import { userService } from './service/userService';
 import { surveyHistoryService } from './service/surveyHistoryService';
-import { HISTORY_TYPE } from '../../types/index';
+import { CommonError, HISTORY_TYPE } from '../../types/index';
 import { getValidateValue } from './utils/index';
 import * as Joi from 'joi';
 
@@ -96,11 +96,19 @@ export default class SurveyManage {
     const condition = getValidateValue(Joi.object({
       curPage: Joi.number().default(1),
       pageSize: Joi.number().default(10),
+      filter: Joi.string().allow(null),
+      order: Joi.string().allow(null),
     }).validate(req.query, { allowUnknown: true }));
+    const { filter, order } = this.getFilterAndOrder({
+      order: condition.order,
+      filter: condition.filter,
+    });
     const userData = await userService.checkLogin({ req });
     const listRes = await surveyService.list({
       pageNum: condition.curPage,
       pageSize: condition.pageSize,
+      filter,
+      order,
       userData
     });
     return {
@@ -108,6 +116,57 @@ export default class SurveyManage {
       data: listRes,
     };
   }
+
+  private getFilterAndOrder({ order, filter }) {
+    const listFilter = [],
+      listOrder = [];
+    const allowFilterField = ['title', 'surveyType', 'curStatus.status'];
+    const allowOrderField = ['createDate', 'updateDate'];
+    if (filter) {
+      try {
+        const filterList = JSON.parse(filter).filter((filterItem) =>
+          allowFilterField.includes(filterItem.field),
+        );
+        listFilter.push(...filterList);
+      } catch (error) {
+        throw new CommonError('filter格式不对');
+      }
+    }
+    if (order) {
+      try {
+        const orderList = JSON.parse(order).filter((orderItem) =>
+          allowOrderField.includes(orderItem.field),
+        );
+        listOrder.push(...orderList);
+      } catch (error) {
+        throw new CommonError('sort格式不对');
+      }
+    }
+    return {
+      order: listOrder.reduce((pre, cur) => {
+        pre[cur.field] = cur.value;
+        return pre;
+      }, {}),
+      filter: listFilter.reduce((pre, cur) => {
+        switch (cur.type) {
+        case 'ne':
+          pre[cur.field] = {
+            $ne: cur.value,
+          };
+          break;
+        case 'regex':
+          pre[cur.field] = {
+            $regex: cur.value,
+          };
+          break;
+        default:
+          pre[cur.field] = cur.value;
+        }
+        return pre;
+      }, {}),
+    };
+  }
+
   @SurveyServer({ type: 'http', method: 'post', routerName: '/saveConf' })
   async saveConf({ req }) {
     const surveyData = getValidateValue(Joi.object({

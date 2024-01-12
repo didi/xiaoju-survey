@@ -2,9 +2,15 @@ import { SurveyApp, SurveyServer } from '../../decorator';
 import { surveyService } from './service/surveyService';
 import { userService } from './service/userService';
 import { surveyHistoryService } from './service/surveyHistoryService';
-import { CommonError, HISTORY_TYPE } from '../../types/index';
+import { HISTORY_TYPE } from '../../types/index';
 import { getValidateValue } from './utils/index';
 import * as Joi from 'joi';
+
+type FilterItem = {
+  field: string;
+  type?: string;
+  value: string & Array<FilterItem>;
+}
 
 @SurveyApp('/api/surveyManage')
 export default class SurveyManage {
@@ -99,10 +105,21 @@ export default class SurveyManage {
       filter: Joi.string().allow(null),
       order: Joi.string().allow(null),
     }).validate(req.query, { allowUnknown: true }));
-    const { filter, order } = this.getFilterAndOrder({
-      order: condition.order,
-      filter: condition.filter,
-    });
+    let filter = {}, order = {};
+    if (condition.filter) {
+      try {
+        filter = this.getFilter(JSON.parse(condition.filter));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (condition.order) {
+      try {
+        order = this.getOrder(JSON.parse(condition.order));
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const userData = await userService.checkLogin({ req });
     const listRes = await surveyService.list({
       pageNum: condition.curPage,
@@ -117,54 +134,57 @@ export default class SurveyManage {
     };
   }
 
-  private getFilterAndOrder({ order, filter }) {
-    const listFilter = [],
-      listOrder = [];
-    const allowFilterField = ['title', 'surveyType', 'curStatus.status'];
-    const allowOrderField = ['createDate', 'updateDate'];
-    if (filter) {
-      try {
-        const filterList = JSON.parse(filter).filter((filterItem) =>
-          allowFilterField.includes(filterItem.field),
-        );
-        listFilter.push(...filterList);
-      } catch (error) {
-        throw new CommonError('filter格式不对');
-      }
-    }
-    if (order) {
-      try {
-        const orderList = JSON.parse(order).filter((orderItem) =>
-          allowOrderField.includes(orderItem.field),
-        );
-        listOrder.push(...orderList);
-      } catch (error) {
-        throw new CommonError('sort格式不对');
-      }
-    }
-    return {
-      order: listOrder.reduce((pre, cur) => {
-        pre[cur.field] = cur.value;
-        return pre;
-      }, {}),
-      filter: listFilter.reduce((pre, cur) => {
-        switch (cur.type) {
-        case 'ne':
-          pre[cur.field] = {
-            $ne: cur.value,
+  private getFilter(filterList: Array<FilterItem>) {
+    const allowFilterField = ['title', 'remark', 'surveyType', 'curStatus.status', '$or'];
+    return filterList.filter(item => allowFilterField.includes(item.field)).map(item => {
+      if (item.field === '$or') {
+        if (Array.isArray(item.value)) {
+          return {
+            field: '$or',
+            type: item.type,
+            value: item.value.map($orItem => this.getFilter([$orItem]))
           };
-          break;
-        case 'regex':
-          pre[cur.field] = {
-            $regex: cur.value,
+        } else {
+          return {
+            field: '$or',
+            type: item.type,
+            value: this.getFilter(JSON.parse(item.value))
           };
-          break;
-        default:
-          pre[cur.field] = cur.value;
         }
-        return pre;
-      }, {}),
-    };
+      } else {
+        return item;
+      }
+    }).reduce((pre, cur) => {
+      switch (cur.type) {
+      case 'ne':
+        pre[cur.field] = {
+          $ne: cur.value,
+        };
+        break;
+      case 'regex':
+        pre[cur.field] = {
+          $regex: cur.value,
+        };
+        break;
+      default:
+        pre[cur.field] = cur.value;
+        break;
+      }
+      return pre;
+    }, {});
+  }
+
+  private getOrder(order) {
+    
+    const allowOrderField = ['createDate', 'updateDate'];
+
+    const orderList = JSON.parse(order).filter((orderItem) =>
+      allowOrderField.includes(orderItem.field),
+    );
+    return orderList.reduce((pre, cur) => {
+      pre[cur.field] = cur.value;
+      return pre;
+    }, {});
   }
 
   @SurveyServer({ type: 'http', method: 'post', routerName: '/saveConf' })

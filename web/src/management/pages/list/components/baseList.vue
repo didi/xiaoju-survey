@@ -238,7 +238,8 @@ export default {
       });
     },
     onSearchText(e) { 
-     this.init()
+      this.searchVal = e
+      this.init()
     }
   },
   components: {
@@ -255,7 +256,7 @@ export default {
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tableview-root {
   .search{
-    padding: 20px 0;
+    padding-bottom: 20px;
   }
   .list-table {
     min-height: 620px;

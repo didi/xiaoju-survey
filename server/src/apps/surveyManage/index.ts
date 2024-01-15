@@ -7,8 +7,13 @@ import { getValidateValue } from './utils/index';
 import * as Joi from 'joi';
 
 type FilterItem = {
+  comparator?: string;
+  condition: Array<FilterCondition>;
+}
+
+type FilterCondition = {
   field: string;
-  type?: string;
+  comparator?: string;
   value: string & Array<FilterItem>;
 }
 
@@ -135,43 +140,39 @@ export default class SurveyManage {
   }
 
   private getFilter(filterList: Array<FilterItem>) {
-    const allowFilterField = ['title', 'remark', 'surveyType', 'curStatus.status', '$or'];
-    return filterList.filter(item => allowFilterField.includes(item.field)).map(item => {
-      if (item.field === '$or') {
-        if (Array.isArray(item.value)) {
-          return {
-            field: '$or',
-            type: item.type,
-            value: item.value.map($orItem => this.getFilter([$orItem]))
+    const allowFilterField = ['title', 'remark', 'surveyType', 'curStatus.status'];
+    return filterList.reduce((preItem, curItem) => {
+      const condition = curItem.condition.filter(item => allowFilterField.includes(item.field)).reduce((pre, cur) => {
+        switch(cur.comparator) {
+        case '$ne':
+          pre[cur.field] = {
+            $ne: cur.value,
           };
-        } else {
-          return {
-            field: '$or',
-            type: item.type,
-            value: this.getFilter(JSON.parse(item.value))
+          break;
+        case '$regex':
+          pre[cur.field] = {
+            $regex: cur.value,
           };
+          break;
+        default:
+          pre[cur.field] = cur.value;
+          break;
         }
-      } else {
-        return item;
-      }
-    }).reduce((pre, cur) => {
-      switch (cur.type) {
-      case 'ne':
-        pre[cur.field] = {
-          $ne: cur.value,
-        };
-        break;
-      case 'regex':
-        pre[cur.field] = {
-          $regex: cur.value,
-        };
+        return pre;
+      }, {});
+      switch(curItem.comparator) {
+      case '$or':
+        if (!Array.isArray(preItem.$or)) {
+          preItem.$or = [];
+        }
+        preItem.$or.push(condition);
         break;
       default:
-        pre[cur.field] = cur.value;
+        Object.assign(preItem, condition);
         break;
       }
-      return pre;
-    }, {});
+      return preItem;
+    }, { } as { $or?: Array<Record<string, string>>; } & Record<string, string>);
   }
 
   private getOrder(order) {

@@ -78,6 +78,48 @@ class SurveyService {
     };
   }
 
+  async create(surveyMetaInfo: { remark: string, questionType: QUESTION_TYPE, title: string, userData: UserType, createMethod: string; createFrom: string; }) {
+    const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
+    const now = Date.now();
+    const surveyPath = await this.getNewSurveyPath();
+
+    let originSurvey;
+    if (surveyMetaInfo.createMethod === 'copy') {
+      originSurvey = await this.get({ surveyId: surveyMetaInfo.createFrom, userData: surveyMetaInfo.userData });
+      surveyMetaInfo.questionType = originSurvey.surveyMetaRes.questionType;
+    }
+
+    const surveyMetaRes = await surveyMeta.insertOne({
+      surveyPath,
+      remark: surveyMetaInfo.remark,
+      questionType: surveyMetaInfo.questionType,
+      createMethod: surveyMetaInfo.createMethod || 'basic',
+      createFrom: surveyMetaInfo.createFrom || '',
+      title: surveyMetaInfo.title,
+      creator: surveyMetaInfo.userData.username,
+      owner: surveyMetaInfo.userData.username,
+      curStatus: getStatusObject({ status: SURVEY_STATUS.new }),
+      createDate: now,
+      updateDate: now,
+    });
+    const pageId = surveyMetaRes.insertedId.toString();
+    const surveyConf = await mongo.getCollection({ collectionName: 'surveyConf' });
+    const code = originSurvey ? originSurvey.surveyConfRes.code : await this.getCodeData({
+      questionType: surveyMetaInfo.questionType,
+    });
+    const surveyConfRes = await surveyConf.insertOne({
+      pageId,
+      pageType: surveyMetaInfo.questionType,
+      curStatus: getStatusObject({ status: SURVEY_STATUS.new }),
+      code,
+    });
+    return {
+      pageId,
+      surveyMetaRes,
+      surveyConfRes
+    };
+  }
+
   async update(surveyParams: { surveyId: string, remark: string, title: string, userData: UserType }) {
     const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
     const _id = mongo.getObjectIdByStr(surveyParams.surveyId);
@@ -199,7 +241,7 @@ class SurveyService {
 
     const listBody = surveySubmitDataList.map(submitedData => {
       const data = submitedData.data;
-      const secretKeys = submitedData.secretKeys;
+      const secretKeys = submitedData.secretKeys || [];
       const dataKeys = Object.keys(data);
 
       for (const itemKey of dataKeys) {

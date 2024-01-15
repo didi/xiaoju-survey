@@ -35,6 +35,33 @@ export default class SurveyManage {
     };
   }
 
+  @SurveyServer({ type: 'http', method: 'post', routerName: '/create' })
+  async create({ req }) {
+    const params = getValidateValue(Joi.object({
+      remark: Joi.string().required(),
+      title: Joi.string().required(),
+      questionType: Joi.string().when('createMethod', {
+        is: 'copy',
+        then: Joi.allow(null),
+        otherwise: Joi.required(),
+      }),
+      createMethod: Joi.string().allow(null).default('basic'),
+      createFrom: Joi.string().when('createMethod', {
+        is: 'copy',
+        then: Joi.required(),
+        otherwise: Joi.allow(null),
+      }),
+    }).validate(req.body, { allowUnknown: true }));
+    params.userData = await userService.checkLogin({ req });
+    const addRes = await surveyService.create(params);
+    return {
+      code: 200,
+      data: {
+        id: addRes.pageId,
+      },
+    };
+  }
+
   @SurveyServer({ type: 'http', method: 'post', routerName: '/update' })
   async update({ req }) {
     const surveyParams = getValidateValue(Joi.object({

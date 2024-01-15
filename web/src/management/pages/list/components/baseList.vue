@@ -1,7 +1,9 @@
 <template>
   <div class="tableview-root">
-    <div class="search">
-      <text-search :value="searchVal" @search="onSearchText" />
+    <div class="filter-wrap">
+      <div class="search">
+        <text-search :value="searchVal" @search="onSearchText" />
+      </div>
     </div>
     <el-table
       v-if="total"
@@ -255,9 +257,14 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tableview-root {
-  .search{
-    padding-bottom: 20px;
+  .filter-wrap{
+    display: flex;
+    justify-content: right;
+    .search{
+      padding-bottom: 20px;
+    }
   }
+  
   .list-table {
     min-height: 620px;
     padding: 10px 20px;

@@ -2,7 +2,10 @@
   <div class="tableview-root">
     <div class="filter-wrap">
       <div class="search">
-        <text-search :value="searchVal" @search="onSearchText" />
+        <text-search 
+          placeholder="请输入问卷标题"
+          :value="searchVal" 
+          @search="onSearchText" />
       </div>
     </div>
     <el-table

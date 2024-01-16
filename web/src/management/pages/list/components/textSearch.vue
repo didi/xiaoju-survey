@@ -5,7 +5,7 @@
           v-model="curValue"
           @keyup.enter="onSearch"
           autocomplete="off"
-          placeholder=""
+          :placeholder="placeholder"
           type="text"
           rows="1"
           class="el-input__inner"
@@ -18,6 +18,7 @@ export default {
 name: 'TextSearch',
 props: {
   value: String,
+  placeholder: String
 },
 data() {
   return {

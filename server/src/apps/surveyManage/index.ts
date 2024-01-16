@@ -6,6 +6,17 @@ import { HISTORY_TYPE } from '../../types/index';
 import { getValidateValue } from './utils/index';
 import * as Joi from 'joi';
 
+type FilterItem = {
+  comparator?: string;
+  condition: Array<FilterCondition>;
+}
+
+type FilterCondition = {
+  field: string;
+  comparator?: string;
+  value: string & Array<FilterItem>;
+}
+
 @SurveyApp('/api/surveyManage')
 export default class SurveyManage {
 
@@ -96,11 +107,30 @@ export default class SurveyManage {
     const condition = getValidateValue(Joi.object({
       curPage: Joi.number().default(1),
       pageSize: Joi.number().default(10),
+      filter: Joi.string().allow(null),
+      order: Joi.string().allow(null),
     }).validate(req.query, { allowUnknown: true }));
+    let filter = {}, order = {};
+    if (condition.filter) {
+      try {
+        filter = this.getFilter(JSON.parse(condition.filter));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (condition.order) {
+      try {
+        order = this.getOrder(JSON.parse(condition.order));
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const userData = await userService.checkLogin({ req });
     const listRes = await surveyService.list({
       pageNum: condition.curPage,
       pageSize: condition.pageSize,
+      filter,
+      order,
       userData
     });
     return {
@@ -108,6 +138,56 @@ export default class SurveyManage {
       data: listRes,
     };
   }
+
+  private getFilter(filterList: Array<FilterItem>) {
+    const allowFilterField = ['title', 'remark', 'surveyType', 'curStatus.status'];
+    return filterList.reduce((preItem, curItem) => {
+      const condition = curItem.condition.filter(item => allowFilterField.includes(item.field)).reduce((pre, cur) => {
+        switch(cur.comparator) {
+        case '$ne':
+          pre[cur.field] = {
+            $ne: cur.value,
+          };
+          break;
+        case '$regex':
+          pre[cur.field] = {
+            $regex: cur.value,
+          };
+          break;
+        default:
+          pre[cur.field] = cur.value;
+          break;
+        }
+        return pre;
+      }, {});
+      switch(curItem.comparator) {
+      case '$or':
+        if (!Array.isArray(preItem.$or)) {
+          preItem.$or = [];
+        }
+        preItem.$or.push(condition);
+        break;
+      default:
+        Object.assign(preItem, condition);
+        break;
+      }
+      return preItem;
+    }, { } as { $or?: Array<Record<string, string>>; } & Record<string, string>);
+  }
+
+  private getOrder(order) {
+    
+    const allowOrderField = ['createDate', 'updateDate'];
+
+    const orderList = JSON.parse(order).filter((orderItem) =>
+      allowOrderField.includes(orderItem.field),
+    );
+    return orderList.reduce((pre, cur) => {
+      pre[cur.field] = cur.value;
+      return pre;
+    }, {});
+  }
+
   @SurveyServer({ type: 'http', method: 'post', routerName: '/saveConf' })
   async saveConf({ req }) {
     const surveyData = getValidateValue(Joi.object({

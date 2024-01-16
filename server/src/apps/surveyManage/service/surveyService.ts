@@ -6,6 +6,7 @@ import * as path from 'path';
 import { keyBy, merge, cloneDeep } from 'lodash';
 import * as moment from 'moment';
 import { DataItem } from '../../../types/survey';
+import { Sort } from 'mongodb';
 
 class SurveyService {
   async checkSecurity({ content, dictType }: { content: string, dictType: DICT_TYPE }) {
@@ -168,17 +169,32 @@ class SurveyService {
     };
   }
 
-  async list(condition: { pageNum: number, pageSize: number, userData: UserType }) {
+  async list(condition: { pageNum: number, pageSize: number, userData: UserType, filter: object, order: object }) {
     const surveyMeta = await mongo.getCollection({ collectionName: 'surveyMeta' });
-    const cond = {
-      owner: condition.userData.username
-    };
-    const data = await surveyMeta.find(cond)
-      .sort({ createDate: -1 })
+
+    const query = Object.assign(
+      {},
+      {
+        owner: condition.userData.username,
+        'curStatus.status': {
+          $ne: 'removed',
+        },
+      },
+      condition.filter,
+    );
+    const order = Object.assign(
+      {},
+      {
+        createDate: -1,
+      },
+      condition.order,
+    ) as Sort;
+    const data = await surveyMeta.find(query)
+      .sort(order)
       .limit(condition.pageSize)
       .skip((condition.pageNum - 1) * condition.pageSize)
       .toArray();
-    const count = await surveyMeta.countDocuments(cond);
+    const count = await surveyMeta.countDocuments(query);
     return { data: mongo.convertId2StringByList(data), count };
   }
 

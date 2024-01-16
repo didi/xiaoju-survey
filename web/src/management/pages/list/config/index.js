@@ -59,6 +59,12 @@ export const noListDataConfig = {
   img: '/imgs/icons/list-empty.png',
 };
 
+export const noSearchDataConfig = {
+  title: '没有满足该查询条件的问卷哦',
+  desc: '可以更换条件查询试试',
+  img: '/imgs/icons/list-empty.png',
+};
+
 export const statusMaps = {
   new: '未发布',
   editing: '修改中',

@@ -79,6 +79,7 @@ export default {
   }
 
   .list-content {
+    height: calc(100% - 56px);
     padding: 20px;
 
     .top {

@@ -1,5 +1,13 @@
 <template>
   <div class="tableview-root">
+    <div class="filter-wrap">
+      <div class="search">
+        <text-search 
+          placeholder="请输入问卷标题"
+          :value="searchVal" 
+          @search="onSearchText" />
+      </div>
+    </div>
     <el-table
       v-if="total"
       ref="multipleListTable"
@@ -59,7 +67,7 @@
     </div>
 
     <div v-else>
-      <empty :data="noListDataConfig" />
+      <empty :data="!searchVal? noListDataConfig : noSearchDataConfig" />
     </div>
 
     <modify-dialog
@@ -83,7 +91,8 @@ import ModifyDialog from './modify';
 import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
-import { fieldConfig, thead, noListDataConfig } from '../config';
+import TextSearch from './textSearch'
+import { fieldConfig, thead, noListDataConfig, noSearchDataConfig } from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -98,10 +107,12 @@ export default {
       loading: false,
       theadDict: thead,
       noListDataConfig,
+      noSearchDataConfig,
       questionInfo: {},
       total: 0,
       data: [],
       currentPage: 1,
+      searchVal: ''
     };
   },
   computed: {
@@ -111,6 +122,18 @@ export default {
       });
       return fieldInfo;
     },
+    filter() {
+      return [
+        {
+          comparator:"",
+          condition:[{
+            "field":"title",
+            "value":this.searchVal,
+            "comparator":"$regex"
+          }]
+        }
+      ]
+    }
   },
   created() {
     this.init();
@@ -119,7 +142,8 @@ export default {
     async init() {
       this.loading = true;
       try {
-        const res = await getSurveyList(this.currentPage);
+        const filter = JSON.stringify(this.filter)
+        const res = await getSurveyList(this.currentPage, filter);
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
           this.total = res.data.count;
@@ -219,12 +243,18 @@ export default {
         },
       });
     },
+    onSearchText(e) { 
+      this.searchVal = e
+      this.currentPage = 1
+      this.init()
+    }
   },
   components: {
     empty,
     ModifyDialog,
     Tag,
     ToolBar,
+    TextSearch,
     State,
   },
 };
@@ -232,6 +262,14 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tableview-root {
+  .filter-wrap{
+    display: flex;
+    justify-content: right;
+    .search{
+      padding-bottom: 20px;
+    }
+  }
+  
   .list-table {
     min-height: 620px;
     padding: 10px 20px;

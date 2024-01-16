@@ -242,6 +242,7 @@ export default {
     },
     onSearchText(e) { 
       this.searchVal = e
+      this.currentPage = 1
       this.init()
     }
   },

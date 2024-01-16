@@ -5,6 +5,7 @@ import { surveyHistoryService } from './service/surveyHistoryService';
 import { HISTORY_TYPE } from '../../types/index';
 import { getValidateValue } from './utils/index';
 import * as Joi from 'joi';
+import { CommonError } from '../../types/index';
 
 type FilterItem = {
   comparator?: string;
@@ -115,14 +116,14 @@ export default class SurveyManage {
       try {
         filter = this.getFilter(JSON.parse(condition.filter));
       } catch (error) {
-        console.log(error);
+        throw new CommonError('filter参数格式不正确');
       }
     }
     if (condition.order) {
       try {
         order = this.getOrder(JSON.parse(condition.order));
       } catch (error) {
-        console.log(error);
+        throw new CommonError('order参数格式不正确');
       }
     }
     const userData = await userService.checkLogin({ req });

@@ -64,7 +64,7 @@
     </div>
 
     <div v-else>
-      <empty :data="noListDataConfig" />
+      <empty :data="!searchVal? noListDataConfig : noSearchDataConfig" />
     </div>
 
     <modify-dialog
@@ -89,7 +89,7 @@ import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
 import TextSearch from './textSearch'
-import { fieldConfig, thead, noListDataConfig } from '../config';
+import { fieldConfig, thead, noListDataConfig, noSearchDataConfig } from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -104,6 +104,7 @@ export default {
       loading: false,
       theadDict: thead,
       noListDataConfig,
+      noSearchDataConfig,
       questionInfo: {},
       total: 0,
       data: [],

@@ -1,14 +1,8 @@
-const config = {
-  mongo: {
-    url: process.env.xiaojuSurveyMongoUrl || 'mongodb://localhost:27017',
-    dbName: 'xiaojuSurvey',
-  },
-  jwt: {
-    secret: process.env.xiaojuSurveyJwtSecret || 'xiaojuSurveyJwtSecret',
-    expiresIn: process.env.xiaojuSurveyJwtExpiresIn || '8h',
-  }
-};
+import { mongo, jwt } from '../../../config';
 
 export function getConfig() {
-  return config;
+  return {
+    mongo,
+    jwt,
+  };
 }

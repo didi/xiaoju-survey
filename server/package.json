@@ -33,7 +33,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.3.1",
     "glob": "^10.3.10",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",

@@ -141,7 +141,7 @@ export default class SurveyManage {
   }
 
   private getFilter(filterList: Array<FilterItem>) {
-    const allowFilterField = ['title', 'remark', 'surveyType', 'curStatus.status'];
+    const allowFilterField = ['title', 'remark', 'questionType', 'curStatus.status'];
     return filterList.reduce((preItem, curItem) => {
       const condition = curItem.condition.filter(item => allowFilterField.includes(item.field)).reduce((pre, cur) => {
         switch(cur.comparator) {

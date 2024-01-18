@@ -19,7 +19,6 @@
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
     "@types/koa-static": "^4.0.4",
-    "@types/node": "^20.10.8",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "cross-env": "^7.0.3",
@@ -33,7 +32,6 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.3.1",
     "glob": "^10.3.10",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",

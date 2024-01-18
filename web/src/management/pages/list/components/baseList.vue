@@ -1,11 +1,20 @@
 <template>
   <div class="tableview-root">
     <div class="filter-wrap">
+      <div class="select">
+        <text-select
+           v-for="item in Object.keys(selectOptionsDict)"
+           :effect-fun="onSelectChange"
+           :effect-key="item"
+           :options="selectOptionsDict[item]"
+        />
+      </div>
       <div class="search">
         <text-search 
           placeholder="请输入问卷标题"
           :value="searchVal" 
-          @search="onSearchText" />
+          @search="onSearchText" 
+        />
       </div>
     </div>
     <el-table
@@ -92,7 +101,8 @@ import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
 import TextSearch from './textSearch'
-import { fieldConfig, thead, noListDataConfig, noSearchDataConfig } from '../config';
+import TextSelect from './textSelect'
+import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict } from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -112,7 +122,12 @@ export default {
       total: 0,
       data: [],
       currentPage: 1,
-      searchVal: ''
+      searchVal: '',
+      selectOptionsDict,
+      selectValueMap: {
+        questionType: '',
+        'curStatus.status': ''
+      }
     };
   },
   computed: {
@@ -126,11 +141,31 @@ export default {
       return [
         {
           comparator:"",
-          condition:[{
-            "field":"title",
-            "value":this.searchVal,
-            "comparator":"$regex"
-          }]
+          condition:[
+              {
+              field: "title",
+              value: this.searchVal,
+              comparator: "$regex"
+            }
+          ]
+        },
+        { 
+        comparator: "",
+          condition: [
+            {
+              field: "curStatus.status",
+              value: this.selectValueMap["curStatus.status"]
+            }
+          ]
+        }, 
+        { 
+        comparator: "",
+          condition: [
+            {
+              field: "questionType",
+              value: this.selectValueMap.questionType
+            }
+          ]
         }
       ]
     }
@@ -142,7 +177,9 @@ export default {
     async init() {
       this.loading = true;
       try {
-        const filter = JSON.stringify(this.filter)
+        const filter = JSON.stringify(this.filter.filter(item => {
+          return item.condition[0].field === 'title' || item.condition[0].value
+        }))
         const res = await getSurveyList(this.currentPage, filter);
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
@@ -247,6 +284,11 @@ export default {
       this.searchVal = e
       this.currentPage = 1
       this.init()
+    },
+    onSelectChange(selectValue, selectKey){
+      this.selectValueMap[selectKey] = selectValue
+      this.currentPage = 1
+      this.init()
     }
   },
   components: {
@@ -255,6 +297,7 @@ export default {
     Tag,
     ToolBar,
     TextSearch,
+    TextSelect,
     State,
   },
 };
@@ -264,8 +307,12 @@ export default {
 .tableview-root {
   .filter-wrap{
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
+    .select{
+      display: flex;
+    }
     .search{
+      display: flex;
       padding-bottom: 20px;
     }
   }
@@ -302,4 +349,10 @@ export default {
     }
   }
 }
+.el-select-dropdown__wrap{
+        background: #eee;
+      }
+   .el-select-dropdown__item.hover{
+        background: #fff;
+      }
 </style>

@@ -89,10 +89,10 @@ export const questionTypeSelect = {
     //   value: 'exam',
     //   label: '在线考试'
     // }, 
-    {
-      value: 'nps',
-      label: 'NPS评分'
-    }, 
+    // {
+    //   value: 'nps',
+    //   label: 'NPS评分'
+    // }, 
     {
       value: 'vote',
       label: '投票评选'

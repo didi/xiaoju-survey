@@ -72,3 +72,66 @@ export const statusMaps = {
   removed: '',
   pausing: '',
 };
+
+// 问卷类型
+export const questionTypeSelect = {
+  label: '问卷类型',
+  value: [
+    {
+      value: '',
+      label: '全部类型'
+    }, 
+    {
+      value: 'normal',
+      label: '基础调查'
+    }, 
+    // {
+    //   value: 'exam',
+    //   label: '在线考试'
+    // }, 
+    // {
+    //   value: 'nps',
+    //   label: 'NPS评分'
+    // }, 
+    {
+      value: 'vote',
+      label: '投票评选'
+    },
+    {
+      value: 'register',
+      label: '在线报名'
+    },
+  ],
+  default: ''
+}
+
+// 问卷状态
+export const curStatusSelect = {
+  label: '问卷状态',
+  value: [
+    {
+      value: '',
+      label: '全部状态'
+    },
+    {
+      value: 'new',
+      label: '未发布'
+    }, 
+    {
+      value: 'published',
+      label: '已发布'
+    }, 
+    {
+      value: 'editing',
+      label: '修改中'
+    }
+  ],
+  default: ''
+}
+
+export const selectOptionsDict = Object.freeze({
+  questionType: questionTypeSelect,
+  'curStatus.status': curStatusSelect
+})
+
+

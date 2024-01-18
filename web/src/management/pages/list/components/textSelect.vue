@@ -42,11 +42,18 @@
 
 <style lang="scss" scoped>
     .el-select{
-      width: 120px;
+      width: 105px;
+      line-height: 35px;
       margin-right: 20px;
       ::v-deep .el-input__inner{
-        border: none;
-      }
+          border: none;
+          height: 35px;
+        //   line-height: 35px;
+        }
+        ::v-deep .el-icon-arrow-up:before{
+            position: relative;
+            top: -2px;
+        }
    
     }
 </style>

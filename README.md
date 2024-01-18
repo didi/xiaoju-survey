@@ -186,3 +186,7 @@ npm run serve
 
 # Feature
 [官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
+
+# CHANGELOG
+[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
+

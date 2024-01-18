@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import * as os from 'os';
 import * as Koa from 'koa';
 import * as KoaBodyparser from 'koa-bodyparser';

@@ -1,20 +1,20 @@
 import * as Router from 'koa-router';
 import { Context } from 'koa';
 import { RouterOptions, surveyAppKey, surveyServerKey } from './decorator';
-import { glob } from 'glob';
-import * as path from 'path';
+import Security from './apps/security';
+import SurveyManage from './apps/surveyManage';
+import SurveyPublish from './apps/surveyPublish';
+import UI from './apps/ui';
+import User from './apps/user';
 import appRegistry from './registry';
 
 
 export async function initRouter(app) {
   const rootRouter = new Router();
-  const jsEntries = await glob(path.join(__dirname, './apps/*/index.js'));
-  const tsEntries = await glob(path.join(__dirname, './apps/*/index.ts'));
-  const entries = Array.isArray(jsEntries) && jsEntries.length > 0 ? jsEntries : tsEntries;
+  const apps = [Security, SurveyManage, SurveyPublish, UI, User];
 
-  for (const entry of entries) {
-    const module = await import(entry);
-    const instance = new module.default();
+  for (const subApp of apps) {
+    const instance = new subApp();
 
     const moduleRouter = new Router();
 
@@ -29,7 +29,7 @@ export async function initRouter(app) {
         });
       }
     }
-    rootRouter.use(module.default[surveyAppKey], moduleRouter.routes());
+    rootRouter.use(subApp[surveyAppKey], moduleRouter.routes());
 
     appRegistry.registerApp(instance.constructor.name.toLowerCase(), instance);
 

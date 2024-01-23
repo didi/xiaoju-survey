@@ -44,11 +44,10 @@ export default{
     },
     methods: {
         onClick(){
-            if(this.iconIndex > this.iconsLength){
-                this.iconIndex = 0
-                return
-            }
             this.iconIndex++
+            if(this.iconIndex >= this.iconsLength){
+                this.iconIndex = 0
+            }
         }
     },
 }

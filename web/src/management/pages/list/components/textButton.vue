@@ -2,7 +2,6 @@
     <div class="text-button-root" @click="onClick">
         <el-button 
             v-bind="{...$attrs}"
-            :icon="currentIconItem.name" 
         >
             <slot>{{ option.label }}</slot>
         </el-button>
@@ -29,18 +28,16 @@ export default{
         }
     },
     computed: {
+        toggleOptionIcons(){
+            return this.option.icons.slice(1)
+        },
         iconsLength(){
-            return this.option.icons.length
+            return this.toggleOptionIcons.length
         },
         currentIconItem(){
             let finalIconIndex = this.iconIndex % this.iconsLength
-            return this.option.icons[finalIconIndex]
+            return this.toggleOptionIcons[finalIconIndex]
         }
-    },
-    watch: {
-        iconIndex(){
-            typeof this.effectFun === 'function' && this.effectFun(this.currentIconItem.effectValue, this.effectKey)
-        }  
     },
     methods: {
         onClick(){
@@ -48,12 +45,17 @@ export default{
             if(this.iconIndex >= this.iconsLength){
                 this.iconIndex = 0
             }
+            typeof this.effectFun === 'function' && this.effectFun(this.currentIconItem.effectValue, this.effectKey)
         }
     },
+    created(){
+        this.iconIndex = this.toggleOptionIcons.findIndex(iconItem => iconItem.isDefaultValue)
+    }
 }
 </script>
 <style lang="scss" scoped>
     .el-button{
         margin-right: 20px;
+        font-size: 14px;
     }
 </style>

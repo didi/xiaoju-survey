@@ -17,6 +17,7 @@
           :effect-fun="onButtonChange"
           :effect-key="item"
           :option="buttonOptionsDict[item]"
+          :icon="buttonOptionsDict[item].icons.find(iconItem => iconItem.effectValue === buttonValueMap[item]).name"
           size="mini"
           type="text"
         ></text-button>
@@ -140,7 +141,10 @@ export default {
         'curStatus.status': ''
       },
       buttonOptionsDict,
-      buttonValueMap: {}
+      buttonValueMap: {
+        updateDate: -1,
+        createDate: ''
+      }
     };
   },
   computed: {
@@ -183,7 +187,9 @@ export default {
       ]
     },
     order(){
-      const formatOrder = Object.entries(this.buttonValueMap).reduce((prev, item) => {
+      const formatOrder = Object.entries(this.buttonValueMap)
+      .filter(([, effectValue]) => effectValue)
+      .reduce((prev, item) => {
           const [effectKey, effectValue] = item
           prev.push({field: effectKey, value: effectValue})
           return prev
@@ -313,8 +319,11 @@ export default {
       this.init()
     },
     onButtonChange(effectValue, effectKey){
-      this.buttonValueMap = {}
-      this.$set(this.buttonValueMap, effectKey, effectValue)
+      this.buttonValueMap = {
+        updateDate: '',
+        createDate: ''
+      }
+      this.buttonValueMap[effectKey] = effectValue
       this.init()
     }
   },

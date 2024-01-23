@@ -140,7 +140,7 @@ export const buttonOptionsDict = Object.freeze({
     icons: [
       {
         name: 'el-icon-sort',
-        effectValue: -1
+        effectValue: ''
       },
       {
         name: 'el-icon-sort-up',
@@ -148,7 +148,8 @@ export const buttonOptionsDict = Object.freeze({
       },
       {
         name: 'el-icon-sort-down',
-        effectValue: -1
+        effectValue: -1,
+        isDefaultValue: true
       },
     ]
   },
@@ -157,7 +158,8 @@ export const buttonOptionsDict = Object.freeze({
     icons: [
       {
         name: 'el-icon-sort',
-        effectValue: -1
+        effectValue: '',
+        isDefaultValue: true
       },
       {
         name: 'el-icon-sort-up',

@@ -114,14 +114,14 @@ export default class SurveyManage {
     let filter = {}, order = {};
     if (condition.filter) {
       try {
-        filter = this.getFilter(JSON.parse(condition.filter));
+        filter = this.getFilter(JSON.parse(decodeURIComponent(condition.filter)));
       } catch (error) {
         throw new CommonError('filter参数格式不正确');
       }
     }
     if (condition.order) {
       try {
-        order = this.getOrder(JSON.parse(condition.order));
+        order = this.getOrder(JSON.parse(decodeURIComponent(condition.order)));
       } catch (error) {
         throw new CommonError('order参数格式不正确');
       }
@@ -180,11 +180,11 @@ export default class SurveyManage {
     
     const allowOrderField = ['createDate', 'updateDate'];
 
-    const orderList = JSON.parse(order).filter((orderItem) =>
+    const orderList = order.filter((orderItem) =>
       allowOrderField.includes(orderItem.field),
     );
     return orderList.reduce((pre, cur) => {
-      pre[cur.field] = cur.value;
+      pre[cur.field] = cur.value === 1 ? 1 : -1;
       return pre;
     }, {});
   }

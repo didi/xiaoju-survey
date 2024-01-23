@@ -1,13 +1,12 @@
-const config = {
-  mongo: {
-    url: process.env.xiaojuSurveyMongoUrl || 'mongodb://localhost:27017',
-    dbName: 'xiaojuSurvey'
-  },
-  aesEncrypt: {
-    key: process.env.xiaojuSurveyDataAesEncryptSecretKey || 'dataAesEncryptSecretKey'
-  }
+import { mongo } from '../../../config';
+
+const aesEncrypt = {
+  key: process.env.XIAOJU_SURVEY_ENCRYPT_SECRET_KEY || 'dataAesEncryptSecretKey',
 };
 
 export function getConfig() {
-  return config;
+  return {
+    mongo,
+    aesEncrypt,
+  };
 }

@@ -1,10 +1,7 @@
-const config = {
-  mongo: {
-    url: process.env.xiaojuSurveyMongoUrl || 'mongodb://localhost:27017',
-    dbName: 'xiaojuSurvey',
-  }
-};
+import { mongo  } from '../../../config';
 
 export function getConfig() {
-  return config;
+  return {
+    mongo,
+  };
 }

@@ -1,7 +1,9 @@
 <template>
     <div class="text-button-root" @click="onClick">
-        <el-button type="text" :icon="currentOption.icon" size="mini">
-            <slot>{{ currentOption.label }}</slot>
+        <el-button 
+            v-bind="{...$attrs}"
+        >
+            <slot>{{ option.label }}</slot>
         </el-button>
     </div>
 </template>
@@ -10,13 +12,12 @@ export default{
     name: 'TextButton',
     data(){
         return {
-            optionIndex: 0,
-            optionValue: ''
+            iconIndex: 0
         }
     },
     props: {
-        options: {
-            type: Array,
+        option: {
+            type: Object,
             required: true
         },
         effectFun: {
@@ -27,31 +28,35 @@ export default{
         }
     },
     computed: {
-        optionsLength(){
-            return this.options.length
+        toggleOptionIcons(){
+            return this.option.icons.slice(1)
         },
-        currentOption(){
-            return this.options[this.optionIndex % this.optionsLength]
+        iconsLength(){
+            return this.toggleOptionIcons.length
+        },
+        currentIconItem(){
+            let finalIconIndex = this.iconIndex % this.iconsLength
+            return this.toggleOptionIcons[finalIconIndex]
         }
-    },
-    watch: {
-      currentOption(newOption){
-        typeof this.effectFun === 'function' && this.effectFun(newOption, this.effectKey)
-      }  
     },
     methods: {
         onClick(){
-            if(this.optionIndex > this.optionsLength){
-                this.optionIndex = 0
-                return
+            this.iconIndex++
+            if(this.iconIndex >= this.iconsLength){
+                this.iconIndex = 0
             }
-            this.optionIndex++
+            typeof this.effectFun === 'function' && this.effectFun(this.currentIconItem.effectValue, this.effectKey)
         }
     },
+    created(){
+        this.iconIndex = this.toggleOptionIcons.findIndex(iconItem => iconItem.isDefaultValue)
+    }
 }
 </script>
 <style lang="scss" scoped>
     .el-button{
         margin-right: 20px;
+        font-size: 14px;
+        color: #4a4c5b;
     }
 </style>

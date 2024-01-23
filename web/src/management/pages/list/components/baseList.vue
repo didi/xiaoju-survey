@@ -201,17 +201,6 @@ export default {
         },
       ];
     },
-    order() {
-      const formatOrder = Object.entries(this.buttonValueMap).reduce(
-        (prev, item) => {
-          const [effectKey, effectValue] = item;
-          prev.push({ field: effectKey, value: effectValue });
-          return prev;
-        },
-        []
-      );
-      return encodeURIComponent(JSON.stringify(formatOrder));
-    },
     order(){
       const formatOrder = Object.entries(this.buttonValueMap)
       .filter(([, effectValue]) => effectValue)
@@ -346,11 +335,6 @@ export default {
     onSelectChange(selectValue, selectKey) {
       this.selectValueMap[selectKey] = selectValue;
       this.currentPage = 1;
-      this.init();
-    },
-    onButtonChange(effectValue, effectKey) {
-      this.buttonValueMap = {};
-      this.$set(this.buttonValueMap, effectKey, effectValue);
       this.init();
     },
     onButtonChange(effectValue, effectKey){

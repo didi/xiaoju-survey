@@ -1,7 +1,9 @@
 <template>
   <span :class="['list-tag-root', 'list-tag-' + type]">
     <div class="tag-bg"></div>
-    <span>{{ questionType[value.questionType] }}</span>
+    <span>{{
+      questionType[value.questionType] || questionType[value.surveyType]
+    }}</span>
   </span>
 </template>
 <script>

@@ -3,11 +3,11 @@
     <div class="filter-wrap">
       <div class="select">
         <text-select
-           v-for="item in Object.keys(selectOptionsDict)"
-           :key="item"
-           :effect-fun="onSelectChange"
-           :effect-key="item"
-           :options="selectOptionsDict[item]"
+          v-for="item in Object.keys(selectOptionsDict)"
+          :key="item"
+          :effect-fun="onSelectChange"
+          :effect-key="item"
+          :options="selectOptionsDict[item]"
         />
       </div>
       <div class="search">
@@ -20,10 +20,10 @@
           size="mini"
           type="text"
         ></text-button>
-        <text-search 
+        <text-search
           placeholder="请输入问卷标题"
-          :value="searchVal" 
-          @search="onSearchText" 
+          :value="searchVal"
+          @search="onSearchText"
         />
       </div>
     </div>
@@ -86,7 +86,7 @@
     </div>
 
     <div v-else>
-      <empty :data="!searchVal? noListDataConfig : noSearchDataConfig" />
+      <empty :data="!searchVal ? noListDataConfig : noSearchDataConfig" />
     </div>
 
     <modify-dialog
@@ -102,7 +102,7 @@
 import { get, map } from 'lodash';
 import moment from 'moment';
 // 引入中文
-import 'moment/locale/zh-cn'
+import 'moment/locale/zh-cn';
 // 设置中文
 moment.locale('zh-cn');
 import empty from '@/management/components/empty';
@@ -110,10 +110,17 @@ import ModifyDialog from './modify';
 import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
-import TextSearch from './textSearch'
-import TextSelect from './textSelect'
-import TextButton from './textButton'
-import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict, buttonOptionsDict } from '../config';
+import TextSearch from './textSearch';
+import TextSelect from './textSelect';
+import TextButton from './textButton';
+import {
+  fieldConfig,
+  thead,
+  noListDataConfig,
+  noSearchDataConfig,
+  selectOptionsDict,
+  buttonOptionsDict,
+} from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -122,7 +129,15 @@ export default {
   name: 'BaseList',
   data() {
     return {
-      fields: ['type', 'title', 'remark', 'creator', 'state', 'updateDate', 'createDate'],
+      fields: [
+        'type',
+        'title',
+        'remark',
+        'creator',
+        'state',
+        'updateDate',
+        'createDate',
+      ],
       modifyType: QOP_MAP.EDIT,
       showModify: false,
       loading: false,
@@ -137,10 +152,10 @@ export default {
       selectOptionsDict,
       selectValueMap: {
         questionType: '',
-        'curStatus.status': ''
+        'curStatus.status': '',
       },
       buttonOptionsDict,
-      buttonValueMap: {}
+      buttonValueMap: {},
     };
   },
   computed: {
@@ -153,43 +168,46 @@ export default {
     filter() {
       return [
         {
-          comparator:"",
-          condition:[
-              {
-              field: "title",
+          comparator: '',
+          condition: [
+            {
+              field: 'title',
               value: this.searchVal,
-              comparator: "$regex"
-            }
-          ]
+              comparator: '$regex',
+            },
+          ],
         },
-        { 
-        comparator: "",
+        {
+          comparator: '',
           condition: [
             {
-              field: "curStatus.status",
-              value: this.selectValueMap["curStatus.status"]
-            }
-          ]
-        }, 
-        { 
-        comparator: "",
+              field: 'curStatus.status',
+              value: this.selectValueMap['curStatus.status'],
+            },
+          ],
+        },
+        {
+          comparator: '',
           condition: [
             {
-              field: "questionType",
-              value: this.selectValueMap.questionType
-            }
-          ]
-        }
-      ]
+              field: 'questionType',
+              value: this.selectValueMap.questionType,
+            },
+          ],
+        },
+      ];
     },
-    order(){
-      const formatOrder = Object.entries(this.buttonValueMap).reduce((prev, item) => {
-          const [effectKey, effectValue] = item
-          prev.push({field: effectKey, value: effectValue})
-          return prev
-        }, [])
-      return encodeURIComponent(JSON.stringify(formatOrder))
-    }
+    order() {
+      const formatOrder = Object.entries(this.buttonValueMap).reduce(
+        (prev, item) => {
+          const [effectKey, effectValue] = item;
+          prev.push({ field: effectKey, value: effectValue });
+          return prev;
+        },
+        []
+      );
+      return encodeURIComponent(JSON.stringify(formatOrder));
+    },
   },
   created() {
     this.init();
@@ -198,10 +216,14 @@ export default {
     async init() {
       this.loading = true;
       try {
-        const filter = JSON.stringify(this.filter.filter(item => {
-          return item.condition[0].field === 'title' || item.condition[0].value
-        }))
-        
+        const filter = JSON.stringify(
+          this.filter.filter((item) => {
+            return (
+              item.condition[0].field === 'title' || item.condition[0].value
+            );
+          })
+        );
+
         const res = await getSurveyList(this.currentPage, filter, this.order);
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
@@ -232,7 +254,7 @@ export default {
       return data;
     },
     getStatus(data) {
-      return get(data, 'curStatus.id', 'new');
+      return get(data, 'curStatus.status', 'new');
     },
     getToolConfig() {
       const funcList = [
@@ -257,7 +279,7 @@ export default {
           key: QOP_MAP.COPY,
           label: '复制',
           icon: 'icon-shanchu',
-        }
+        },
       ];
       return funcList;
     },
@@ -284,7 +306,7 @@ export default {
     },
     onModify(data, type = QOP_MAP.EDIT) {
       this.showModify = true;
-      this.modifyType = type
+      this.modifyType = type;
       this.questionInfo = data;
     },
     onCloseModify(type) {
@@ -302,21 +324,21 @@ export default {
         },
       });
     },
-    onSearchText(e) { 
-      this.searchVal = e
-      this.currentPage = 1
-      this.init()
+    onSearchText(e) {
+      this.searchVal = e;
+      this.currentPage = 1;
+      this.init();
     },
-    onSelectChange(selectValue, selectKey){
-      this.selectValueMap[selectKey] = selectValue
-      this.currentPage = 1
-      this.init()
+    onSelectChange(selectValue, selectKey) {
+      this.selectValueMap[selectKey] = selectValue;
+      this.currentPage = 1;
+      this.init();
     },
-    onButtonChange(effectValue, effectKey){
-      this.buttonValueMap = {}
-      this.$set(this.buttonValueMap, effectKey, effectValue)
-      this.init()
-    }
+    onButtonChange(effectValue, effectKey) {
+      this.buttonValueMap = {};
+      this.$set(this.buttonValueMap, effectKey, effectValue);
+      this.init();
+    },
   },
   components: {
     empty,
@@ -333,18 +355,18 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tableview-root {
-  .filter-wrap{
+  .filter-wrap {
     display: flex;
     justify-content: space-between;
-    .select{
+    .select {
       display: flex;
     }
-    .search{
+    .search {
       display: flex;
       padding-bottom: 20px;
     }
   }
-  
+
   .list-table {
     min-height: 620px;
     padding: 10px 20px;
@@ -377,10 +399,10 @@ export default {
     }
   }
 }
-.el-select-dropdown__wrap{
-        background: #eee;
-      }
-   .el-select-dropdown__item.hover{
-        background: #fff;
-      }
+.el-select-dropdown__wrap {
+  background: #eee;
+}
+.el-select-dropdown__item.hover {
+  background: #fff;
+}
 </style>

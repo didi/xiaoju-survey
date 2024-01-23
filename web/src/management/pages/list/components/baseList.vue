@@ -142,7 +142,7 @@ export default {
       },
       buttonOptionsDict,
       buttonValueMap: {
-        updateDate: '',
+        'curStatus.date': '',
         createDate: -1
       }
     };
@@ -194,7 +194,7 @@ export default {
           prev.push({field: effectKey, value: effectValue})
           return prev
         }, [])
-      return encodeURIComponent(JSON.stringify(formatOrder))
+      return JSON.stringify(formatOrder)
     }
   },
   created() {
@@ -320,7 +320,7 @@ export default {
     },
     onButtonChange(effectValue, effectKey){
       this.buttonValueMap = {
-        updateDate: '',
+        'curStatus.date': '',
         createDate: ''
       }
       this.buttonValueMap[effectKey] = effectValue

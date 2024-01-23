@@ -178,10 +178,10 @@ export default class SurveyManage {
 
   private getOrder(order) {
     
-    const allowOrderField = ['createDate', 'updateDate'];
+    const allowOrderFields = ['createDate', 'updateDate', 'curStatus.date'];
 
     const orderList = order.filter((orderItem) =>
-      allowOrderField.includes(orderItem.field),
+      allowOrderFields.includes(orderItem.field),
     );
     return orderList.reduce((pre, cur) => {
       pre[cur.field] = cur.value === 1 ? 1 : -1;

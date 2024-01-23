@@ -57,5 +57,6 @@ export default{
     .el-button{
         margin-right: 20px;
         font-size: 14px;
+        color: #4a4c5b;
     }
 </style>

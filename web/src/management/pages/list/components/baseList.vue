@@ -140,10 +140,7 @@ export default {
         'curStatus.status': ''
       },
       buttonOptionsDict,
-      buttonValueMap: {
-        createDate: -1,
-        updateDate: -1
-      }
+      buttonValueMap: {}
     };
   },
   computed: {
@@ -316,6 +313,7 @@ export default {
       this.init()
     },
     onButtonChange(effectValue, effectKey){
+      this.buttonValueMap = {}
       this.$set(this.buttonValueMap, effectKey, effectValue)
       this.init()
     }

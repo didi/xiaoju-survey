@@ -136,25 +136,7 @@ export const selectOptionsDict = Object.freeze({
 
 export const buttonOptionsDict = Object.freeze({
   updateDate: {
-    label: '修改时间',
-    icons: [
-      {
-        name: 'el-icon-sort',
-        effectValue: ''
-      },
-      {
-        name: 'el-icon-sort-up',
-        effectValue: 1
-      },
-      {
-        name: 'el-icon-sort-down',
-        effectValue: -1,
-        isDefaultValue: true
-      },
-    ]
-  },
-  createDate: {
-    label: '创建时间',
+    label: '更新时间',
     icons: [
       {
         name: 'el-icon-sort',
@@ -167,7 +149,26 @@ export const buttonOptionsDict = Object.freeze({
       },
       {
         name: 'el-icon-sort-down',
-        effectValue: -1
+        effectValue: -1,
+      },
+    ]
+  },
+  createDate: {
+    label: '创建时间',
+    icons: [
+      {
+        name: 'el-icon-sort',
+        effectValue: '',
+       
+      },
+      {
+        name: 'el-icon-sort-up',
+        effectValue: 1
+      },
+      {
+        name: 'el-icon-sort-down',
+        effectValue: -1,
+        isDefaultValue: true
       },
     ]
   }

@@ -142,8 +142,8 @@ export default {
       },
       buttonOptionsDict,
       buttonValueMap: {
-        updateDate: -1,
-        createDate: ''
+        updateDate: '',
+        createDate: -1
       }
     };
   },

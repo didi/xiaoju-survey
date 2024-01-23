@@ -1,7 +1,10 @@
 <template>
     <div class="text-button-root" @click="onClick">
-        <el-button type="text" :icon="currentOption.icon" size="mini">
-            <slot>{{ currentOption.label }}</slot>
+        <el-button 
+            v-bind="{...$attrs}"
+            :icon="currentIconItem.name" 
+        >
+            <slot>{{ option.label }}</slot>
         </el-button>
     </div>
 </template>
@@ -10,13 +13,12 @@ export default{
     name: 'TextButton',
     data(){
         return {
-            optionIndex: 0,
-            optionValue: ''
+            iconIndex: 0
         }
     },
     props: {
-        options: {
-            type: Array,
+        option: {
+            type: Object,
             required: true
         },
         effectFun: {
@@ -27,25 +29,26 @@ export default{
         }
     },
     computed: {
-        optionsLength(){
-            return this.options.length
+        iconsLength(){
+            return this.option.icons.length
         },
-        currentOption(){
-            return this.options[this.optionIndex % this.optionsLength]
+        currentIconItem(){
+            let finalIconIndex = this.iconIndex % this.iconsLength
+            return this.option.icons[finalIconIndex]
         }
     },
     watch: {
-      currentOption(newOption){
-        typeof this.effectFun === 'function' && this.effectFun(newOption, this.effectKey)
-      }  
+        iconIndex(){
+            typeof this.effectFun === 'function' && this.effectFun(this.currentIconItem.effectValue, this.effectKey)
+        }  
     },
     methods: {
         onClick(){
-            if(this.optionIndex > this.optionsLength){
-                this.optionIndex = 0
+            if(this.iconIndex > this.iconsLength){
+                this.iconIndex = 0
                 return
             }
-            this.optionIndex++
+            this.iconIndex++
         }
     },
 }

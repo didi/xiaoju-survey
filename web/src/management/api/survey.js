@@ -1,11 +1,12 @@
 import axios from './base';
 
-export const getSurveyList = (curPage, filter) => {
+export const getSurveyList = (curPage, filter, order) => {
   return axios.get('/surveyManage/list', {
     params: {
       pageSize: 10,
       curPage,
       filter,
+      order
     },
   });
 };

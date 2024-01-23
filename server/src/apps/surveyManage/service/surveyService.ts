@@ -182,13 +182,9 @@ class SurveyService {
       },
       condition.filter,
     );
-    const order = Object.assign(
-      {},
-      {
-        createDate: -1,
-      },
-      condition.order,
-    ) as Sort;
+    const order = condition.order && Object.keys(condition.order).length > 0 ? condition.order as Sort : {
+      createDate: -1,
+    } as Sort;
     const data = await surveyMeta.find(query)
       .sort(order)
       .limit(condition.pageSize)

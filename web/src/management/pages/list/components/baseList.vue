@@ -4,12 +4,22 @@
       <div class="select">
         <text-select
            v-for="item in Object.keys(selectOptionsDict)"
+           :key="item"
            :effect-fun="onSelectChange"
            :effect-key="item"
            :options="selectOptionsDict[item]"
         />
       </div>
       <div class="search">
+        <text-button
+          v-for="item in Object.keys(buttonOptionsDict)"
+          :key="item"
+          :effect-fun="onButtonChange"
+          :effect-key="item"
+          :option="buttonOptionsDict[item]"
+          size="mini"
+          type="text"
+        ></text-button>
         <text-search 
           placeholder="请输入问卷标题"
           :value="searchVal" 
@@ -102,7 +112,8 @@ import State from './state';
 import ToolBar from './toolBar';
 import TextSearch from './textSearch'
 import TextSelect from './textSelect'
-import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict } from '../config';
+import TextButton from './textButton'
+import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict, buttonOptionsDict } from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -127,6 +138,11 @@ export default {
       selectValueMap: {
         questionType: '',
         'curStatus.status': ''
+      },
+      buttonOptionsDict,
+      buttonValueMap: {
+        createDate: -1,
+        updateDate: -1
       }
     };
   },
@@ -168,6 +184,14 @@ export default {
           ]
         }
       ]
+    },
+    order(){
+      const formatOrder = Object.entries(this.buttonValueMap).reduce((prev, item) => {
+          const [effectKey, effectValue] = item
+          prev.push({field: effectKey, value: effectValue})
+          return prev
+        }, [])
+      return encodeURIComponent(JSON.stringify(formatOrder))
     }
   },
   created() {
@@ -180,7 +204,8 @@ export default {
         const filter = JSON.stringify(this.filter.filter(item => {
           return item.condition[0].field === 'title' || item.condition[0].value
         }))
-        const res = await getSurveyList(this.currentPage, filter);
+        
+        const res = await getSurveyList(this.currentPage, filter, this.order);
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
           this.total = res.data.count;
@@ -289,6 +314,10 @@ export default {
       this.selectValueMap[selectKey] = selectValue
       this.currentPage = 1
       this.init()
+    },
+    onButtonChange(effectValue, effectKey){
+      this.$set(this.buttonValueMap, effectKey, effectValue)
+      this.init()
     }
   },
   components: {
@@ -298,6 +327,7 @@ export default {
     ToolBar,
     TextSearch,
     TextSelect,
+    TextButton,
     State,
   },
 };

@@ -135,7 +135,7 @@ export const selectOptionsDict = Object.freeze({
 })
 
 export const buttonOptionsDict = Object.freeze({
-  updateDate: {
+  'curStatus.date': {
     label: '更新时间',
     icons: [
       {

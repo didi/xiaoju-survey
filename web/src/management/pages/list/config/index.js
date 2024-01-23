@@ -134,4 +134,44 @@ export const selectOptionsDict = Object.freeze({
   'curStatus.status': curStatusSelect
 })
 
+export const buttonOptionsDict = Object.freeze({
+  'curStatus.date': {
+    label: '更新时间',
+    icons: [
+      {
+        name: 'el-icon-sort',
+        effectValue: '',
+        isDefaultValue: true
+      },
+      {
+        name: 'el-icon-sort-up',
+        effectValue: 1
+      },
+      {
+        name: 'el-icon-sort-down',
+        effectValue: -1,
+      },
+    ]
+  },
+  createDate: {
+    label: '创建时间',
+    icons: [
+      {
+        name: 'el-icon-sort',
+        effectValue: '',
+       
+      },
+      {
+        name: 'el-icon-sort-up',
+        effectValue: 1
+      },
+      {
+        name: 'el-icon-sort-down',
+        effectValue: -1,
+        isDefaultValue: true
+      },
+    ]
+  }
+})
+
 

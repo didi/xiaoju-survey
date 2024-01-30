@@ -8,6 +8,6 @@ export class SurveyResponseUIController {
 
   @Get('/render/:surveyPath')
   render(@Param('surveyPath') surveyPath: string, @Res() res: Response) {
-    res.sendFile(join(__dirname, 'src/../', 'public', 'render.html'));
+    res.sendFile(join(process.cwd(), 'public', 'render.html'));
   }
 }

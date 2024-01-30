@@ -34,9 +34,9 @@
           </div>
         </template>
         <template slot-scope="scope">
-          <span 
-            slot="reference" 
-            class="table-row-cell" 
+          <span
+            slot="reference"
+            class="table-row-cell"
             v-popover="scope.$index + scope.column.property"
           >
             {{ cleanRichText(scope.row[scope.column.property]) || '未知' }}

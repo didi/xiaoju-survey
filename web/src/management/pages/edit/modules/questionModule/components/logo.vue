@@ -3,7 +3,7 @@
     <div class="question-logo" @click="onSelect">
       <img
         v-if="logoImg !== ''"
-        :style="{ width: bottomConf.logoImageWidth  }"
+        :style="{ width: bottomConf.logoImageWidth }"
         class="bottom-logo"
         :src="logoImg"
       />
@@ -38,7 +38,7 @@ export default {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-.container{
+.container {
   display: flex;
   justify-content: center;
 }

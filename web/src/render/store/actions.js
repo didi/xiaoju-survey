@@ -88,31 +88,39 @@ export default {
     const questionData = state.questionData;
     const surveyPath = state.surveyPath;
 
-    const voteKeyList = [];
+    const fieldList = [];
 
     for (const field in questionData) {
       const { type } = questionData[field];
       if (/vote/.test(type)) {
-        voteKeyList.push(field);
+        fieldList.push(field);
       }
     }
 
-    if (voteKeyList.length <= 0) {
+    if (fieldList.length <= 0) {
       return;
     }
-    const voteRes = await queryVote({
-      surveyPath,
-      voteKeyList: voteKeyList.join(','),
-    });
+    try {
+      const voteRes = await queryVote({
+        surveyPath,
+        fieldList: fieldList.join(','),
+      });
 
-    if (voteRes.code === 200) {
-      commit('setVoteMap', voteRes.data);
+      if (voteRes.code === 200) {
+        commit('setVoteMap', voteRes.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
   async getEncryptInfo({ commit }) {
-    const res = await getEncryptInfo();
-    if (res.code === CODE_MAP.SUCCESS) {
-      commit('setEncryptInfo', res.data);
+    try {
+      const res = await getEncryptInfo();
+      if (res.code === CODE_MAP.SUCCESS) {
+        commit('setEncryptInfo', res.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 };

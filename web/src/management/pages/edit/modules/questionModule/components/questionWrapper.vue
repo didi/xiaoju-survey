@@ -93,11 +93,15 @@ export default defineComponent({
     };
     const onDelete = async () => {
       try {
-        await proxy.$confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        });
+        await proxy.$confirm(
+          '本次操作会影响数据统计查看，是否确认删除？',
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        );
         const index = props.qIndex;
         // this.changeQuestionSeq({ type: 'move', index, range: 1 })
         emit('changeSeq', { type: 'delete', index });

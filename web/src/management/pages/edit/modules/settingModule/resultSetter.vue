@@ -3,7 +3,12 @@
     <div class="setter-title">
       {{ currentEditText }}
     </div>
-    <el-form class="question-config-form" size="small" label-position="top" @submit.native.prevent>
+    <el-form
+      class="question-config-form"
+      size="small"
+      label-position="top"
+      @submit.native.prevent
+    >
       <template v-for="(item, index) in formFieldData">
         <FormItem
           :key="index"

@@ -1,18 +1,18 @@
 import axios from './base';
 
-export const getSurveyList = (curPage, filter, order) => {
-  return axios.get('/surveyManage/list', {
+export const getSurveyList = ({ curPage, filter, order }) => {
+  return axios.get('/survey/getList', {
     params: {
       pageSize: 10,
       curPage,
       filter,
-      order
+      order,
     },
   });
 };
 
 export const getSurveyById = (id) => {
-  return axios.get('/surveyManage/get', {
+  return axios.get('/survey/getSurvey', {
     params: {
       surveyId: id,
     },
@@ -20,21 +20,21 @@ export const getSurveyById = (id) => {
 };
 
 export const saveSurvey = ({ surveyId, configData }) => {
-  return axios.post('/surveyManage/saveConf', { surveyId, configData });
+  return axios.post('/survey/updateConf', { surveyId, configData });
 };
 
 export const publishSurvey = ({ surveyId }) => {
-  return axios.post('/surveyManage/publish', {
+  return axios.post('/survey/publishSurvey', {
     surveyId,
   });
 };
 
 export const createSurvey = (data) => {
-  return axios.post('/surveyManage/add', data);
+  return axios.post('/survey/createSurvey', data);
 };
 
 export const getSurveyHistory = ({ surveyId, historyType }) => {
-  return axios.get('/surveyManage/getHistoryList', {
+  return axios.get('/surveyHisotry/getList', {
     params: {
       surveyId,
       historyType,
@@ -43,15 +43,11 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
 };
 
 export const deleteSurvey = (surveyId) => {
-  return axios.post('/surveyManage/delete', {
+  return axios.post('/survey/deleteSurvey', {
     surveyId,
   });
 };
 
 export const updateSurvey = (data) => {
-  return axios.post('/surveyManage/update', data);
-};
-
-export const copySurvey = (data) => {
-  return axios.post('/surveyManage/create', data);
+  return axios.post('/survey/updateMeta', data);
 };

@@ -1,11 +1,13 @@
 <template>
   <span :class="['list-tag-root', 'list-tag-' + type]">
     <div class="tag-bg"></div>
-    <span>{{ questionType[value.questionType] }}</span>
+    <span>{{
+      surveyType[value.surveyType] || surveyType[value.questionType]
+    }}</span>
   </span>
 </template>
 <script>
-import { type as questionType } from '../config';
+import { type as surveyType } from '../config';
 export default {
   name: 'Tag',
   props: {
@@ -14,7 +16,7 @@ export default {
   },
   data() {
     return {
-      questionType,
+      surveyType,
     };
   },
 };

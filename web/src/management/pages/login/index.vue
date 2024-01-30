@@ -63,7 +63,7 @@
   </div>
 </template>
 <script>
-import { login, register } from '@/management/api/user';
+import { login, register } from '@/management/api/auth';
 import { refreshCaptcha } from '@/management/api/captcha';
 import { CODE_MAP } from '@/management/api/base';
 export default {
@@ -154,11 +154,17 @@ export default {
       });
     },
     async refreshCaptcha() {
-      const res = await refreshCaptcha({ captchaId: this.formData.captchaId });
-      if (res.code === 200) {
-        const { id, img } = res.data;
-        this.formData.captchaId = id;
-        this.captchaImgData = img;
+      try {
+        const res = await refreshCaptcha({
+          captchaId: this.formData.captchaId,
+        });
+        if (res.code === 200) {
+          const { id, img } = res.data;
+          this.formData.captchaId = id;
+          this.captchaImgData = img;
+        }
+      } catch (error) {
+        this.$message.error('获取验证码失败');
       }
     },
   },

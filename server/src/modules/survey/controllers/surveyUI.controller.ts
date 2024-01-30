@@ -8,11 +8,11 @@ export class SurveyUIController {
 
   @Get('/')
   home(@Res() res: Response) {
-    res.sendFile(join(__dirname, 'src/../', 'public', 'management.html'));
+    res.sendFile(join(process.cwd(), 'public', 'management.html'));
   }
 
   @Get('/management/:surveyId')
   management(@Param('surveyId') surveyId: string, @Res() res: Response) {
-    res.sendFile(join(__dirname, 'src/../', 'public', 'management.html'));
+    res.sendFile(join(process.cwd(), 'public', 'management.html'));
   }
 }

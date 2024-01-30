@@ -24,18 +24,18 @@
     </el-form>
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" class="save-btn" @click="onSave"
-        >{{ type === QOP_MAP.EDIT ? '保存' : '确定' }}</el-button
-      >
+      <el-button type="primary" class="save-btn" @click="onSave">{{
+        type === QOP_MAP.EDIT ? '保存' : '确定'
+      }}</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { CODE_MAP } from '@/management/api/base';
-import { updateSurvey, copySurvey } from '@/management/api/survey';
+import { updateSurvey, createSurvey } from '@/management/api/survey';
 import { pick as _pick } from 'lodash';
-import { QOP_MAP } from '@/management/utils/constant'
+import { QOP_MAP } from '@/management/utils/constant';
 
 export default {
   name: 'modifyDialog',
@@ -73,12 +73,11 @@ export default {
       this.$emit('on-close-codify');
     },
     async onSave() {
-      if(this.type === QOP_MAP.COPY) {
-        await this.handleCopy()
+      if (this.type === QOP_MAP.COPY) {
+        await this.handleCopy();
       } else {
-        await this.handleUpdate()
+        await this.handleUpdate();
       }
-      
 
       this.$emit('on-close-codify', 'update');
     },
@@ -100,14 +99,14 @@ export default {
     },
     async handleCopy() {
       try {
-        const res = await copySurvey({
+        const res = await createSurvey({
           createFrom: this.questionInfo._id,
           createMethod: QOP_MAP.COPY,
           ...this.current,
         });
 
         if (res.code === CODE_MAP.SUCCESS) {
-          const { data } = res
+          const { data } = res;
           this.$router.push({
             name: 'QuestionEditIndex',
             params: {
@@ -117,10 +116,10 @@ export default {
         } else {
           this.$message.error(res.errmsg);
         }
-      } catch(err) {
+      } catch (err) {
         this.$message.error(err);
       }
-    }
+    },
   },
 };
 </script>

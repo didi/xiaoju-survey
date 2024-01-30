@@ -1,14 +1,19 @@
-import CryptoJS from 'crypto-js';
+import * as forge from 'node-forge';
 
-function base64({ data }) {
-  return btoa(encodeURIComponent(data));
-}
-
-function aes({ data, code }) {
-  return CryptoJS.AES.encrypt(encodeURIComponent(data), code).toString();
+function rsa({ data, secretKey }) {
+  const publicKeyObject = forge.pki.publicKeyFromPem(secretKey);
+  const dataArr = [];
+  const originData = encodeURIComponent(data);
+  const step = 200;
+  for (let i = 0; i < originData.length; i += step) {
+    const encryptData = forge.util.encode64(
+      publicKeyObject.encrypt(originData.slice(i, i + step), 'RSA-OAEP')
+    );
+    dataArr.push(encryptData);
+  }
+  return dataArr;
 }
 
 export default {
-  base64,
-  aes,
+  rsa,
 };

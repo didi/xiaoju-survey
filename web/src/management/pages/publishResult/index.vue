@@ -65,7 +65,7 @@ export default {
       metaData: (state) => _get(state, 'edit.schema.metaData'),
     }),
     curStatus() {
-      return _get(this.metaData, 'curStatus.id', 'new');
+      return _get(this.metaData, 'curStatus.status', 'new');
     },
     mainChannel() {
       if (!this.metaData) {

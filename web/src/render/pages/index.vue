@@ -82,14 +82,19 @@ export default {
         difTime: Date.now() - this.$store.state.enterTime,
         clientTime: Date.now(),
       };
-      result.encryptType = this.encryptInfo?.encryptType || 'base64';
-      result.data = encrypt[result.encryptType]({
-        data: result.data,
-        code: this.encryptInfo?.data?.code,
-      });
-      if (this.encryptInfo?.data?.sessionId) {
-        result.sessionId = this.encryptInfo.data.sessionId;
+      if (this.encryptInfo?.encryptType) {
+        result.encryptType = this.encryptInfo?.encryptType;
+        result.data = encrypt[result.encryptType]({
+          data: result.data,
+          secretKey: this.encryptInfo?.data?.secretKey,
+        });
+        if (this.encryptInfo?.data?.sessionId) {
+          result.sessionId = this.encryptInfo.data.sessionId;
+        }
+      } else {
+        result.data = JSON.stringify(result.data);
       }
+
       return result;
     },
     async submitForm() {

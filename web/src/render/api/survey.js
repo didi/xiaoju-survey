@@ -1,7 +1,7 @@
 import axios from './base';
 
 export const getPublishedSurveyInfo = ({ surveyPath }) => {
-  return axios.get('/surveyPublish/getSurveyPublish', {
+  return axios.get('/responseSchema/getSchema', {
     params: {
       surveyPath,
     },
@@ -9,18 +9,18 @@ export const getPublishedSurveyInfo = ({ surveyPath }) => {
 };
 
 export const submitForm = (data) => {
-  return axios.post('/surveyPublish/submit', data);
+  return axios.post('/surveyResponse/createResponse', data);
 };
 
-export const queryVote = ({ surveyPath, voteKeyList }) => {
-  return axios.get('/surveyPublish/queryVote', {
+export const queryVote = ({ surveyPath, fieldList }) => {
+  return axios.get('/counter/queryOptionCountInfo', {
     params: {
       surveyPath,
-      voteKeyList,
+      fieldList,
     },
   });
 };
 
 export const getEncryptInfo = () => {
-  return axios.get('/surveyPublish/getEncryptInfo');
+  return axios.get('/clientEncrypt/getEncryptInfo');
 };

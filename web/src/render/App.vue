@@ -28,9 +28,8 @@ export default {
     return {};
   },
   computed: {},
-  created() {
+  async created() {
     this.init();
-    this.$store.dispatch('getEncryptInfo');
   },
   beforeCreate() {},
   methods: {
@@ -62,11 +61,15 @@ export default {
             };
             this.$store.commit('setSurveyPath', surveyPath);
             this.$store.dispatch('init', questionData);
+            this.$store.dispatch('getEncryptInfo');
           } else {
             throw new Error(res.errmsg);
           }
         } catch (error) {
           console.log(error);
+          this.$dialog.alert({
+            title: error.message || '获取问卷失败',
+          });
         }
       }
     },

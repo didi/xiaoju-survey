@@ -25,12 +25,12 @@ export default {
         {
           type: EDIT_STATUS_MAP.SUCCESS,
           title: '提交成功',
-          previewImg: '/imgs/icons/success.png',
+          previewImg: '/imgs/icons/success.webp',
         },
         {
           type: EDIT_STATUS_MAP.OVERTIME,
           title: '问卷过期',
-          previewImg: '/imgs/icons/overtime.png',
+          previewImg: '/imgs/icons/overtime.webp',
         },
       ],
     };

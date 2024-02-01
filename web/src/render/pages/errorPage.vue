@@ -10,7 +10,7 @@ export default {
   data() {
     return {
       imageMap: {
-        overTime: '/imgs/icons/overtime.png',
+        overTime: '/imgs/icons/overtime.webp',
       },
     };
   },

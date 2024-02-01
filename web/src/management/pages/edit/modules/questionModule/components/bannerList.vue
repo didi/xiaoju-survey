@@ -15,6 +15,7 @@
           <img
             class="banner-img"
             :src="banner.src"
+            loading="lazy"
             @click="changeBanner(banner.src)"
           />
         </div>

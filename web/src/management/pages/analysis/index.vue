@@ -54,7 +54,7 @@ export default {
       noDataConfig: {
         title: '暂无数据',
         desc: '您的问卷当前还没有数据，快去回收问卷吧！',
-        img: '/imgs/icons/analysis-empty.png',
+        img: '/imgs/icons/analysis-empty.webp',
       },
       currentPage: 1,
       isShowOriginData: false,

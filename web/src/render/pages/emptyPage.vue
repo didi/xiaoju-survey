@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <img src="/imgs/nodata.png" alt="" class="ui-404" />
+    <img src="/imgs/nodata.webp" alt="" class="ui-404" />
     <div class="ui-title">
       <div class="ui-maintitle">问卷找不到啦~</div>
     </div>

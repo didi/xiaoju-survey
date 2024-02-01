@@ -1,7 +1,7 @@
 <template>
   <div class="result-page">
     <div class="result-content">
-      <img src="/imgs/icons/success.png" />
+      <img src="/imgs/icons/success.webp" />
       <div class="msg" v-safe-html="successMsg"></div>
     </div>
   </div>

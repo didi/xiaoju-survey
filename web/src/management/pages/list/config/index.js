@@ -50,13 +50,13 @@ export const fieldConfig = {
 export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',
-  img: '/imgs/icons/list-empty.png',
+  img: '/imgs/icons/list-empty.webp',
 };
 
 export const noSearchDataConfig = {
   title: '没有满足该查询条件的问卷哦',
   desc: '可以更换条件查询试试',
-  img: '/imgs/icons/list-empty.png',
+  img: '/imgs/icons/list-empty.webp',
 };
 
 export const statusMaps = {

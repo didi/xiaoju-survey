@@ -2,12 +2,12 @@
   <div
     class="login-page"
     :style="{
-      background: `url('/imgs/create/background.jpg') no-repeat bottom right`,
+      background: `url('/imgs/create/background.webp') no-repeat bottom right`,
       'background-size': 'cover',
     }"
   >
     <div class="login-top">
-      <img src="/imgs/Logo.jpg" alt="logo" />
+      <img src="/imgs/Logo.webp" alt="logo" />
       <span>您好，请登录</span>
     </div>
     <div class="login-box">

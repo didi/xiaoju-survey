@@ -41,9 +41,9 @@ export default {
       noDataConfig: {
         title: '问卷未发布',
         desc: '点击发布后，问卷就可以对外投放了哦！',
-        img: '/imgs/icons/unpublished.png',
+        img: '/imgs/icons/unpublished.webp',
       },
-      phoneBg: '/imgs/phone-bg.png',
+      phoneBg: '/imgs/phone-bg.webp',
     };
   },
   async created() {

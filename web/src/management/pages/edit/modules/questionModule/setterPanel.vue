@@ -1,7 +1,7 @@
 <template>
   <div class="setter-wrapper">
     <div class="no-select-question" v-if="currentEditOne === null">
-      <img src="/imgs/icons/unselected.png" />
+      <img src="/imgs/icons/unselected.webp" />
       <h4 class="tipFont">选中题型可以编辑</h4>
       <span class="tip">来！试试看～</span>
     </div>

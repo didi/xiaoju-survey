@@ -19,7 +19,7 @@ export default {
   name: 'NavHeader',
   data() {
     return {
-      img: '/imgs/s-logo.jpg',
+      img: '/imgs/s-logo.webp',
     };
   },
   methods: {

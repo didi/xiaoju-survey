@@ -15,6 +15,7 @@
           <img
             class="banner-img"
             :src="banner.src"
+            loading="lazy"
             @click="changeBanner(banner.src)"
           />
         </div>
@@ -51,6 +52,7 @@ export default {
     position: relative;
     margin-bottom: 10px;
     width: 100%;
+    min-height: 111px;
     cursor: pointer;
     transition: all 0.2s;
     &:hover {

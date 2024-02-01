@@ -3,11 +3,11 @@
     <div class="filter-wrap">
       <div class="select">
         <text-select
-          v-for="item in Object.keys(selectOptionsDict)"
-          :key="item"
-          :effect-fun="onSelectChange"
-          :effect-key="item"
-          :options="selectOptionsDict[item]"
+           v-for="item in Object.keys(selectOptionsDict)"
+           :key="item"
+           :effect-fun="onSelectChange"
+           :effect-key="item"
+           :options="selectOptionsDict[item]"
         />
       </div>
       <div class="search">
@@ -111,17 +111,10 @@ import ModifyDialog from './modify';
 import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
-import TextSearch from './textSearch';
-import TextSelect from './textSelect';
-import TextButton from './textButton';
-import {
-  fieldConfig,
-  thead,
-  noListDataConfig,
-  noSearchDataConfig,
-  selectOptionsDict,
-  buttonOptionsDict,
-} from '../config';
+import TextSearch from './textSearch'
+import TextSelect from './textSelect'
+import TextButton from './textButton'
+import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict, buttonOptionsDict } from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -153,7 +146,7 @@ export default {
       selectOptionsDict,
       selectValueMap: {
         questionType: '',
-        'curStatus.status': '',
+        'curStatus.status': ''
       },
       buttonOptionsDict,
       buttonValueMap: {
@@ -194,12 +187,12 @@ export default {
           comparator: '',
           condition: [
             {
-              field: 'questionType',
-              value: this.selectValueMap.questionType,
-            },
-          ],
-        },
-      ];
+              field: "questionType",
+              value: this.selectValueMap.questionType
+            }
+          ]
+        }
+      ]
     },
     order(){
       const formatOrder = Object.entries(this.buttonValueMap)
@@ -219,14 +212,10 @@ export default {
     async init() {
       this.loading = true;
       try {
-        const filter = JSON.stringify(
-          this.filter.filter((item) => {
-            return (
-              item.condition[0].field === 'title' || item.condition[0].value
-            );
-          })
-        );
-
+        const filter = JSON.stringify(this.filter.filter(item => {
+          return item.condition[0].field === 'title' || item.condition[0].value
+        }))
+        
         const res = await getSurveyList(this.currentPage, filter, this.order);
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
@@ -336,6 +325,14 @@ export default {
       this.selectValueMap[selectKey] = selectValue;
       this.currentPage = 1;
       this.init();
+    },
+    onButtonChange(effectValue, effectKey){
+      this.buttonValueMap = {
+        'curStatus.date': '',
+        createDate: ''
+      }
+      this.buttonValueMap[effectKey] = effectValue
+      this.init()
     },
     onButtonChange(effectValue, effectKey){
       this.buttonValueMap = {

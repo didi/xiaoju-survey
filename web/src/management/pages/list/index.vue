@@ -1,10 +1,10 @@
 <template>
   <div class="question-list-root">
     <div class="login-status">
-      <img class="logo-img" src="/imgs/Logo.jpg" alt="logo" />
+      <img class="logo-img" src="/imgs/Logo.webp" alt="logo" />
       <div class="login-info">
         您好，{{ userInfo?.username }}
-        <img class="login-info-img" src="/imgs/avatar.png" />
+        <img class="login-info-img" src="/imgs/avatar.webp" />
         <span class="logout" @click="handleLogout">退出</span>
       </div>
     </div>

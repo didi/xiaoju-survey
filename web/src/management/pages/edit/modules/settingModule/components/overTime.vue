@@ -1,6 +1,6 @@
 <template>
   <div class="over-time">
-    <img class="over-img" src="/imgs/icons/overtime.png" />
+    <img class="over-img" src="/imgs/icons/overtime.webp" />
     <p class="title-msg" v-safe-html="resultText"></p>
   </div>
 </template>

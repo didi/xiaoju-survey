@@ -2,7 +2,7 @@
   <div class="suc-page">
     <div class="suc-content">
       <div class="title-box">
-        <img src="/imgs/icons/success.png" class="success-img" />
+        <img src="/imgs/icons/success.webp" class="success-img" />
         <div class="title-msg" v-safe-html="successText"></div>
       </div>
       <div class="bottom-btn"></div>

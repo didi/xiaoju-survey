@@ -1,6 +1,6 @@
 <template>
   <div class="navbar-main-logo" @click="toHomePage">
-    <img src="/imgs/s-logo.jpg" />
+    <img src="/imgs/s-logo.webp" />
   </div>
 </template>
 <script>

@@ -11,7 +11,7 @@ RUN npm config set registry https://registry.npmjs.org/
 
 # 安装项目依赖
 RUN cd /xiaoju-survey/web && npm install && npm run build
-
+# 用了后端服务代理启动，建议使用nginx启动
 RUN cd /xiaoju-survey && cp -af ./web/dist/* ./server/public/
 
 RUN cd /xiaoju-survey/server && npm install && npm run build

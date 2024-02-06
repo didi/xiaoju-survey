@@ -2,8 +2,8 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 
-import { ResponseSecurityPlugin } from './plugins/responseSecurityPlugin';
-import { SurveyUtilPlugin } from './plugins/surveyUtilPlugin';
+import { ResponseSecurityPlugin } from './securityPlugin/responseSecurityPlugin';
+import { SurveyUtilPlugin } from './securityPlugin/surveyUtilPlugin';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -29,9 +29,9 @@ import { ClientEncrypt } from './models/clientEncrypt.entity';
 import { Word } from './models/word.entity';
 
 import { LoggerProvider } from './logger/logger.provider';
-import { PluginManagerProvider } from './plugins/pluginManager.provider';
+import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
-import { XiaojuSurveyPluginManager } from './plugins/pluginManager';
+import { XiaojuSurveyPluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
 
 @Module({

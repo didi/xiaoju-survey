@@ -178,7 +178,7 @@ export default {
       for (const i in addOne) {
         if (i === 'others') {
           addOne[i] = others;
-          if(others) addOne.othersKey = `${field}_${addOne.hash}`;
+          if (others) addOne.othersKey = `${field}_${addOne.hash}`;
         } else if (i === 'mustOthers') {
           addOne[i] = false;
         } else if (i === 'text') {

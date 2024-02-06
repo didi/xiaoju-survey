@@ -1,11 +1,21 @@
 <template>
   <div class="content">
     <template v-for="btnItem in btnList">
-      <router-link class="navbar-btn" :key="btnItem.key" :to="{ name: btnItem.router }" tag="div" replace>
+      <router-link
+        class="navbar-btn"
+        :key="btnItem.key"
+        :to="{ name: btnItem.router }"
+        tag="div"
+        replace
+      >
         <i class="iconfont" :class="[btnItem.icon]"></i>
         <span>{{ btnItem.text }}</span>
       </router-link>
-      <i v-if="btnItem.next" :key="btnItem.key + '-next'" class="iconfont icon-jiantou next"></i>
+      <i
+        v-if="btnItem.next"
+        :key="btnItem.key + '-next'"
+        class="iconfont icon-jiantou next"
+      ></i>
     </template>
   </div>
 </template>

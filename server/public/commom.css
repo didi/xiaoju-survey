@@ -1,4 +1,4 @@
-#main{
+#main {
     width: 100wh;
     height: 100vh;
     display: flex;
@@ -6,7 +6,8 @@
     justify-content: center;
     align-items: center;
 }
-.title{
+
+.title {
     font-size: 20px;
     color: #4A4C5B;
 }

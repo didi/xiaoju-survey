@@ -13,7 +13,7 @@ import { ResponseSchemaService } from '../../surveyResponse/services/responseSch
 
 import * as Joi from 'joi';
 import { Authtication } from 'src/guards/authtication';
-import { XiaojuSurveyPluginManager } from 'src/plugins/pluginManager';
+import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 
 @Controller('/api/survey/dataStatistic')
 export class DataStatisticController {

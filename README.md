@@ -23,7 +23,7 @@
 
 <br />
 
-&ensp;&ensp;**XiaoJuSurvey**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
+&ensp;&ensp;**XIAOJUSURVEY**是一套轻量、安全的**问卷系统**，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
 
 &ensp;&ensp;系统已沉淀40+种题型，累积精选模板100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
 
@@ -34,15 +34,25 @@
 
 - 多样化题型：单行输入框、多行输入框、单项选择、多项选择、判断题、评分、投票
 
-  _(更多题型将陆续开放，也欢迎您参与共建提交自定义题型)_
+  _(更多题型将陆续开放。快速[自定义题型](https://xiaojusurvey.didi.cn/docs/document/%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C/%E9%A2%98%E5%9E%8B%E6%89%A9%E5%B1%95))_
 
 - 用户管理：登录、注册、权限管理
 
 - 数据安全：传输加密、脱敏等
 
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/nJ5fyGhocH1698903177499.png"  width="900" />
+> 查阅[官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
+
+<img src="https://github.com/didi/xiaoju-survey/assets/16012672/dd427471-368d-49d9-bc44-13c34d84e3be"  width="700" />
 
 _**(个人和企业用户均可快速构建特定领域的调研类解决方案。)**_
+
+# 技术
+Web端：Vue2（Vue3版本24年上半年推出）+ ElementUI
+
+Server端：Nestjs + MongoDB
+
+架构：[架构解读](https://xiaojusurvey.didi.cn/docs/document/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/%E6%9E%B6%E6%9E%84)
+
 
 # 项目优势
 **一、具备全面的综合性和专业性**
@@ -91,7 +101,7 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
 # 快速启动
 
-Node版本>=14.21.0，
+Node版本 >= 16.x，
 [查看环境准备指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
 
 复制工程
@@ -102,7 +112,7 @@ git clone git@github.com:didi/xiaoju-survey.git
 ## 服务端启动
 
 ### 方案一、快速启动，无需安装数据库
-_便于快速预览工程，对于正式项目需要使用方案二。_
+> _便于快速预览工程，对于正式项目需要使用方案二。_
 
 #### 1、安装依赖
 ```shell
@@ -115,33 +125,17 @@ npm install
 npm run local
 ```
 
-:cyclone:NOTE：
-
-服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
+> 服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
+> 
 > 1、数据保存在内存中，重启服务会更新数据。<br />2、启动内存服务器新实例时，如果找不到MongoDB二进制文件会自动下载，因此首次可能需要一些时间。
 
-### 方案二、(推荐)
+### 方案二、(生产推荐)
 
 #### 1、启动数据库
 
-项目使用MongoDB：
+> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
 
-> 没有安装可以查看 [MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
-
-```
-mongod --dbpath ~/data/db --logpath ~/data/log/mongodb/mongo.log --fork
-```
-验证启动
-```
-ps aux | grep -v grep | grep mongod
-```
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/q2kOGoR8MV1700072541114.jpg"  width="800" />
-
-> 工程默认的mongo链接如下，需要修改可查看[配置修改指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E9%85%8D%E7%BD%AE)：
-
-```
-mongodb://localhost:27017
-```
+启动和配置数据库，查看[MongoDB启动](http://localhost:5000/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E4%BA%94%E5%90%AF%E5%8A%A8)
 
 #### 2、安装依赖
 ```shell
@@ -174,7 +168,6 @@ npm run serve
 创建并发布问卷。
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
-
 
 
 # 交流群

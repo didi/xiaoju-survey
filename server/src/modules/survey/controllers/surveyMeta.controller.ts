@@ -129,7 +129,7 @@ export class SurveyMetaController {
     const allowFilterField = [
       'title',
       'remark',
-      'questionType',
+      'surveyType',
       'curStatus.status',
     ];
     return filterList.reduce(

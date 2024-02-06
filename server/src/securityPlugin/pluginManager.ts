@@ -17,11 +17,9 @@ export class XiaojuSurveyPluginManager {
   async triggerHook(hookName: AllowHooks, data?: any) {
     for (const plugin of this.plugins) {
       if (plugin[hookName]) {
-        await plugin[hookName](data);
-        break;
+        return await plugin[hookName](data);
       }
     }
-    return data;
   }
 }
 

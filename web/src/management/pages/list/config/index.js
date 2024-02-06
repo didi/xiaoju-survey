@@ -68,7 +68,7 @@ export const statusMaps = {
 };
 
 // 问卷类型
-export const questionTypeSelect = {
+export const surveyTypeSelect = {
   label: '问卷类型',
   value: [
     {
@@ -124,7 +124,7 @@ export const curStatusSelect = {
 };
 
 export const selectOptionsDict = Object.freeze({
-  questionType: questionTypeSelect,
+  surveyType: surveyTypeSelect,
   'curStatus.status': curStatusSelect,
 });
 

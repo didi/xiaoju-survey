@@ -61,7 +61,7 @@ describe('SurveyController', () => {
   });
 
   describe('createSurvey', () => {
-    it('should create a survey and return the survey ID', async () => {
+    it('should create a survey and return the survey id', async () => {
       const surveyInfo = {
         surveyType: 'normal',
         remark: '问卷调研',

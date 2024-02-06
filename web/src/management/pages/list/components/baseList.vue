@@ -154,7 +154,7 @@ export default {
       searchVal: '',
       selectOptionsDict,
       selectValueMap: {
-        questionType: '',
+        surveyType: '',
         'curStatus.status': '',
       },
       buttonOptionsDict,
@@ -204,8 +204,8 @@ export default {
           comparator: '',
           condition: [
             {
-              field: 'questionType',
-              value: this.selectValueMap.questionType,
+              field: 'surveyType',
+              value: this.selectValueMap.surveyType,
             },
           ],
         },
@@ -231,12 +231,9 @@ export default {
       try {
         const filter = JSON.stringify(
           this.filter.filter((item) => {
-            return (
-              item.condition[0].field === 'title' || item.condition[0].value
-            );
+            return item.condition[0].value;
           })
         );
-
         const res = await getSurveyList({
           curPage: this.currentPage,
           filter,

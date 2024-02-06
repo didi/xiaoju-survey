@@ -26,7 +26,7 @@
 import { getSurveyHistory } from '@/management/api/survey';
 import moment from 'moment';
 // 引入中文
-import 'moment/locale/zh-cn'
+import 'moment/locale/zh-cn';
 // 设置中文
 moment.locale('zh-cn');
 

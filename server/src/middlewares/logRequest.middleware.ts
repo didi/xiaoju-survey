@@ -12,7 +12,7 @@ export class LogRequestMiddleware implements NestMiddleware {
     const { method, originalUrl, ip } = req;
     const userAgent = req.get('user-agent') || '';
     const startTime = Date.now();
-    const traceId = genTraceId();
+    const traceId = genTraceId({ ip });
     this.logger.setTraceId(traceId);
     const query = JSON.stringify(req.query);
     const body = JSON.stringify(req.body);

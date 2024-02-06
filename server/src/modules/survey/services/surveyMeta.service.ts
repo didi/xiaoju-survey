@@ -8,7 +8,7 @@ import { NoSurveyPermissionException } from 'src/exceptions/noSurveyPermissionEx
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { XiaojuSurveyPluginManager } from 'src/plugins/pluginManager';
+import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 
 @Injectable()
 export class SurveyMetaService {

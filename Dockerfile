@@ -1,16 +1,5 @@
 # 镜像集成
-FROM ubuntu:latest
-
-# 安装依赖
-RUN apt-get -y update
-RUN apt-get -y install wget gcc
-
-# 安装node环境
-ENV NODE_VERSION v18.17.1
-RUN mkdir -p /node/$NODE_VERSION
-RUN wget https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.gz
-RUN tar xzf node-$NODE_VERSION-linux-x64.tar.gz -C /node/
-ENV PATH  /node/node-$NODE_VERSION-linux-x64/bin:$PATH
+FROM node:16
 
 # 设置工作区间
 WORKDIR /xiaoju-survey

@@ -23,7 +23,7 @@ import { SurveyHistoryService } from './services/surveyHistory.service';
 import { SurveyMetaService } from './services/surveyMeta.service';
 import { ContentSecurityService } from './services/contentSecurity.service';
 
-import { PluginManagerProvider } from 'src/plugins/pluginManager.provider';
+import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 
 @Module({
   imports: [

@@ -16,7 +16,7 @@ export class Authtication implements CanActivate {
     const token = request.headers.authorization?.split(' ')[1];
 
     if (!token) {
-      throw new AuthtificationException('未登录');
+      throw new AuthtificationException('请登录');
     }
 
     let decoded;

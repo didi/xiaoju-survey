@@ -8,30 +8,12 @@ import {
 } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { RECORD_STATUS } from '../enums';
-import pluginManager from '../plugins/pluginManager';
+import pluginManager from '../securityPlugin/pluginManager';
 
 @Entity({ name: 'surveySubmit' })
 export class SurveyResponse {
   @ObjectIdColumn()
   _id: ObjectId;
-
-  @Column()
-  curStatus: {
-    status: RECORD_STATUS;
-    date: number;
-  };
-
-  @Column()
-  statusList: Array<{
-    status: RECORD_STATUS;
-    date: number;
-  }>;
-
-  @Column()
-  createDate: number;
-
-  @Column()
-  updateDate: number;
 
   @Column()
   pageId: string;
@@ -53,6 +35,24 @@ export class SurveyResponse {
 
   @Column('jsonb')
   optionTextAndId: Record<string, any>;
+
+  @Column()
+  curStatus: {
+    status: RECORD_STATUS;
+    date: number;
+  };
+
+  @Column()
+  statusList: Array<{
+    status: RECORD_STATUS;
+    date: number;
+  }>;
+
+  @Column()
+  createDate: number;
+
+  @Column()
+  updateDate: number;
 
   @BeforeInsert()
   initDefaultInfo() {

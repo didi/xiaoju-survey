@@ -1,6 +1,5 @@
-version: '3.6'
+version: "3.6"
 services:
-
   mongo:
     image: mongo:4
     container_name: xiaoju-survey-mongo
@@ -22,9 +21,7 @@ services:
     ports:
       - "8080:3000" # API端口
     environment:
-      XIAOJU_SURVEY_MONGO_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@xiaoju-survey-mongo:27017  # docker-compose 会根据容器名称自动处理
-      XIAOJU_SURVEY_JWT_SECRET: surveyEngineJwtSecret
-      XIAOJU_SURVEY_JWT_EXPIRES_IN: 8h
+      XIAOJU_SURVEY_MONGO_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@xiaoju-survey-mongo:27017 # docker-compose 会根据容器名称自动处理
     links:
       - mongo:mongo
     depends_on:
@@ -37,5 +34,5 @@ volumes:
 
 networks:
   xiaoju-survey:
-    name:  xiaoju-survey
+    name: xiaoju-survey
     driver: bridge

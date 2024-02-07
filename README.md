@@ -51,7 +51,7 @@ Web端：Vue2（Vue3版本24年上半年推出）+ ElementUI
 
 Server端：Nestjs + MongoDB
 
-架构：[架构解读](https://xiaojusurvey.didi.cn/docs/document/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/%E6%9E%B6%E6%9E%84)
+架构：[架构解读](https://xiaojusurvey.didi.cn/docs/document/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88)
 
 
 # 项目优势
@@ -133,9 +133,9 @@ npm run local
 
 #### 1、启动数据库
 
-> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
+> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#mongodb)
 
-启动和配置数据库，查看[MongoDB启动](http://localhost:5000/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E4%BA%94%E5%90%AF%E5%8A%A8)
+启动和配置数据库，查看[MongoDB启动](https://xiaojusurvey.didi.cn/docs/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E4%BA%94%E5%90%AF%E5%8A%A8)
 
 #### 2、安装依赖
 ```shell

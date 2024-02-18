@@ -6,7 +6,6 @@ import draggable from 'vuedraggable';
 import { filterQuestionPreviewData } from '@/management/utils/index';
 
 export default defineComponent({
-  name: '',
   components: { draggable },
   props: {
     currentEditOne: {

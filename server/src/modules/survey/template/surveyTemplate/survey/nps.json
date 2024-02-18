@@ -1,0 +1,134 @@
+{
+  "submitConf": {
+    "submitTitle": "提交",
+    "confirmAgain": {
+      "is_again": true,
+      "again_text": "确认要提交吗？"
+    },
+    "msgContent": {
+      "msg_200": "提交成功",
+      "msg_9001": "您来晚了，感谢支持问卷~",
+      "msg_9002": "请勿多次提交！",
+      "msg_9003": "您来晚了，已经满额！",
+      "msg_9004": "提交失败！"
+    }
+  },
+  "skinConf": {
+    "skinColor": "#4a4c5b",
+    "inputBgColor": "#ffffff"
+  },
+  "bannerConf": {
+    "titleConfig": {
+      "mainTitle": "<h3 style=\"text-align: center\">满意度调研</h3> <p>&nbsp;</p> <p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与</span></p>",
+      "subTitle": ""
+    },
+    "bannerConfig": {
+      "bgImage": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp",
+      "videoLink": "",
+      "postImg": ""
+    }
+  },
+  "baseConf": {
+    "showVoteProcess": "allow",
+    "begTime": "2018-05-22 17:17:48",
+    "endTime": "2028-05-22 17:17:48",
+    "tLimit": "0",
+    "language": "chinese"
+  },
+  "dataConf": {
+    "dataList": [
+      {
+        "field": "data8",
+        "showIndex": true,
+        "showType": true,
+        "showSpliter": true,
+        "placeholderDesc": "",
+        "placeholder": "",
+        "isRequired": true,
+        "randomSort": false,
+        "innerRandom": false,
+        "hideSubTitleIndex": false,
+        "checked": false,
+        "minNum": "",
+        "maxNum": "",
+        "relyType": "and",
+        "extraOptions": [],
+        "importKey": "single",
+        "importData": "",
+        "npsMin": 0,
+        "addressType": 3,
+        "isAuto": false,
+        "urlKey": "",
+        "hasRely": true,
+        "relyList": [],
+        "jumpTo": "",
+        "optionOrigin": "",
+        "answerTip": "",
+        "type": "text",
+        "valid": "",
+        "title": "标题1",
+        "answer": "",
+        "textRange": {
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          },
+          "max": {
+            "placeholder": "500",
+            "value": 500
+          }
+        }
+      },
+      {
+        "field": "data4",
+        "showIndex": true,
+        "showType": true,
+        "showSpliter": true,
+        "placeholderDesc": "",
+        "placeholder": "",
+        "isRequired": true,
+        "randomSort": false,
+        "innerRandom": false,
+        "hideSubTitleIndex": false,
+        "checked": false,
+        "minNum": "",
+        "maxNum": "",
+        "relyType": "and",
+        "extraOptions": [],
+        "importKey": "single",
+        "importData": "",
+        "cOption": "",
+        "cOptions": [],
+        "npsMin": 0,
+        "star": 5,
+        "addressType": 3,
+        "isAuto": false,
+        "urlKey": "",
+        "defaultProps": {
+          "children": "children",
+          "label": "name",
+          "id": "id"
+        },
+        "hasRely": true,
+        "relyList": [],
+        "jumpTo": "",
+        "optionOrigin": "",
+        "answerTip": "",
+        "type": "radio-star",
+        "title": "标题2",
+        "answer": "",
+        "options": [],
+        "textRange": {
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          },
+          "max": {
+            "placeholder": "500",
+            "value": 500
+          }
+        }
+      }
+    ]
+  }
+}

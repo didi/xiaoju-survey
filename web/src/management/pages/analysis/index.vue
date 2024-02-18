@@ -76,7 +76,7 @@ export default {
         const res = await getRecycleList({
           page: this.currentPage,
           surveyId: this.$route.params.id,
-          isShowSecret: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
+          isDesensitive: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
         });
 
         if (res.code === 200) {

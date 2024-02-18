@@ -5,49 +5,43 @@ export const type = {
   register: '在线报名',
 };
 
-export const thead = {
-  type: '类型',
-  title: '标题',
-  remark: '备注',
-  state: '状态',
-  owner: '所有者',
-  creator: '创建人',
-  tags: '标签',
-  updateDate: '更新时间',
-  createDate: '创建时间',
-  collectCount: '回收数',
-};
-
 export const fieldConfig = {
   type: {
+    title: '类型',
     key: 'type',
     width: 150,
     comp: 'tag',
   },
   title: {
+    title: '标题',
     key: 'title',
     width: 240,
     tip: true,
   },
   remark: {
+    title: '备注',
     key: 'remark',
     width: 200,
     tip: true,
   },
   state: {
+    title: '状态',
     key: 'state',
     width: 140,
     comp: 'state',
   },
-  creator: {
-    key: 'creator',
+  owner: {
+    title: '所有者',
+    key: 'owner',
     width: 140,
   },
   updateDate: {
-    key: 'updateDate',
+    title: '更新时间',
+    key: 'curStatus.date',
     minWidth: 200,
   },
   createDate: {
+    title: '创建时间',
     key: 'createDate',
     minWidth: 200,
   },
@@ -74,36 +68,36 @@ export const statusMaps = {
 };
 
 // 问卷类型
-export const questionTypeSelect = {
+export const surveyTypeSelect = {
   label: '问卷类型',
   value: [
     {
       value: '',
-      label: '全部类型'
-    }, 
+      label: '全部类型',
+    },
     {
       value: 'normal',
-      label: '基础调查'
-    }, 
+      label: '基础调查',
+    },
     // {
     //   value: 'exam',
     //   label: '在线考试'
-    // }, 
+    // },
     // {
     //   value: 'nps',
     //   label: 'NPS评分'
-    // }, 
+    // },
     {
       value: 'vote',
-      label: '投票评选'
+      label: '投票评选',
     },
     {
       value: 'register',
-      label: '在线报名'
+      label: '在线报名',
     },
   ],
-  default: ''
-}
+  default: '',
+};
 
 // 问卷状态
 export const curStatusSelect = {
@@ -111,28 +105,28 @@ export const curStatusSelect = {
   value: [
     {
       value: '',
-      label: '全部状态'
+      label: '全部状态',
     },
     {
       value: 'new',
-      label: '未发布'
-    }, 
+      label: '未发布',
+    },
     {
       value: 'published',
-      label: '已发布'
-    }, 
+      label: '已发布',
+    },
     {
       value: 'editing',
-      label: '修改中'
-    }
+      label: '修改中',
+    },
   ],
-  default: ''
-}
+  default: '',
+};
 
 export const selectOptionsDict = Object.freeze({
-  questionType: questionTypeSelect,
-  'curStatus.status': curStatusSelect
-})
+  surveyType: surveyTypeSelect,
+  'curStatus.status': curStatusSelect,
+});
 
 export const buttonOptionsDict = Object.freeze({
   'curStatus.date': {
@@ -141,17 +135,17 @@ export const buttonOptionsDict = Object.freeze({
       {
         name: 'el-icon-sort',
         effectValue: '',
-        isDefaultValue: true
+        isDefaultValue: true,
       },
       {
         name: 'el-icon-sort-up',
-        effectValue: 1
+        effectValue: 1,
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
       },
-    ]
+    ],
   },
   createDate: {
     label: '创建时间',
@@ -159,19 +153,16 @@ export const buttonOptionsDict = Object.freeze({
       {
         name: 'el-icon-sort',
         effectValue: '',
-       
       },
       {
         name: 'el-icon-sort-up',
-        effectValue: 1
+        effectValue: 1,
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
-        isDefaultValue: true
+        isDefaultValue: true,
       },
-    ]
-  }
-})
-
-
+    ],
+  },
+});

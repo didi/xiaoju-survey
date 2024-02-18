@@ -1,52 +1,90 @@
 {
-  "name": "survey-template",
-  "version": "1.0.0",
-  "description": "survey server template",
-  "main": "index.js",
+  "name": "server",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
   "scripts": {
-    "copy": "mkdir -p ./build/ && cp -rf ./src/* ./build/",
-    "build": "tsc",
-    "start:stable": "SERVER_ENV=stable node ./build/index.js",
-    "start:preonline": "SERVER_ENV=preonline node ./build/index.js",
-    "start:online": "SERVER_ENV=online node ./build/index.js",
-    "start": "npm run start:online",
-    "local": "npx ts-node scripts/run-local.ts",
-    "dev": "npx ts-node-dev ./src/index.ts"
-  },
-  "devDependencies": {
-    "@types/crypto-js": "^4.2.1",
-    "@types/koa": "^2.13.8",
-    "@types/koa-bodyparser": "^4.3.10",
-    "@types/koa-router": "^7.4.4",
-    "@types/koa-static": "^4.0.4",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.56.0",
-    "mongodb-memory-server": "^9.0.1",
-    "nodemon": "^2.0.20",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.8.4"
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "local": "ts-node ./scripts/run-local.ts",
+    "start": "nest start",
+    "dev": "npm run start:dev",
+    "start:dev": "cross-env NODE_ENV=development nest start --watch",
+    "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
+    "start:prod": "NODE_ENV=production node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.1.1",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/serve-static": "^4.0.0",
+    "@nestjs/typeorm": "^10.0.1",
     "cheerio": "^1.0.0-rc.12",
     "crypto-js": "^4.2.0",
-    "glob": "^10.3.10",
-    "joi": "^17.9.2",
-    "jsonwebtoken": "^9.0.1",
-    "koa": "^2.14.2",
-    "koa-bodyparser": "^4.4.1",
-    "koa-pino-logger": "^4.0.0",
-    "koa-router": "^12.0.0",
-    "koa-static": "^4.0.3",
+    "dotenv": "^16.3.2",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
-    "mongodb": "^5.7.0",
-    "svg-captcha": "^1.4.0"
+    "log4js": "^6.9.1",
+    "moment": "^2.30.1",
+    "mongodb": "^5.9.2",
+    "nanoid": "^3.3.7",
+    "node-forge": "^1.3.1",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.1",
+    "svg-captcha": "^1.4.0",
+    "typeorm": "^0.3.19"
   },
-  "engines": {
-    "node": ">=14.21.0",
-    "npm": ">=6.14.17"
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@types/node-forge": "^1.3.11",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "mongodb-memory-server": "^9.1.4",
+    "prettier": "^3.0.0",
+    "source-map-support": "^0.5.21",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/$1"
+    }
   }
 }

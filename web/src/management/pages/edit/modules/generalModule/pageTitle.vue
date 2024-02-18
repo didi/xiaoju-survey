@@ -14,4 +14,11 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 400px;
+  white-space: nowrap;
+}
+</style>

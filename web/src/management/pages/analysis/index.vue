@@ -166,7 +166,7 @@ export default {
   box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
-  ::v-deep .el-pagination {
+  :deep(.el-pagination) {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;

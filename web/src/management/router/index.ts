@@ -1,7 +1,9 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory} from 'vue-router';
+import type { Router } from 'vue-router';
 
-Vue.use(VueRouter);
+type IRouter = Router & {
+  app?: any
+}
 
 const routes = [
   {
@@ -103,19 +105,20 @@ const routes = [
   },
 ];
 
-const router = new VueRouter({
-  mode: 'history',
-  base: '/management',
+console.log()
+const router: IRouter = createRouter({
+  history: createWebHistory('pages/management'),
   routes,
 });
 
 router.beforeEach((to, from, next) => {
-  const store = router.app.$options.store;
+  //TODO: 改造
+  const store = router.app?.$options.store;
   if (!store?.state?.user?.initialized) {
-    store.dispatch('user/init');
+    store?.dispatch('user/init');
   }
   if (to.meta.title) {
-    document.title = to.meta.title;
+    document.title = to.meta.title as string;
   }
   if (to.meta.needLogin) {
     if (store?.state?.user?.hasLogined) {

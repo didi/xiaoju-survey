@@ -61,16 +61,16 @@ export default {
     }
   }
 
-  ::v-deep .el-collapse-item__header {
+  :deep(.el-collapse-item__header) {
     font-size: 16px;
     color: $font-color-title;
     border-bottom: none;
   }
 
-  ::v-deep .el-collapse-item__arrow.is-active {
+  :deep(.el-collapse-item__arrow.is-active) {
     right: 0;
   }
-  ::v-deep .el-collapse-item__arrow {
+  :deep(.el-collapse-item__arrow) {
     right: 0;
   }
 }

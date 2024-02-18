@@ -383,12 +383,12 @@ export default {
   }
   .list-pagination {
     margin-top: 20px;
-    ::v-deep .el-pagination {
+    :deep(.el-pagination) {
       display: flex;
       justify-content: flex-end;
     }
   }
-  ::v-deep .el-table__header {
+  :deep(.el-table__header) {
     .tableview-header .el-table__cell {
       .cell {
         height: 24px;
@@ -397,7 +397,7 @@ export default {
       }
     }
   }
-  ::v-deep .tableview-row {
+  :deep(.tableview-row) {
     .tableview-cell {
       padding: 5px 0;
       &.link {

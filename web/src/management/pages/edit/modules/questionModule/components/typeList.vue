@@ -98,7 +98,7 @@ export default {
 .question-type-wrapper {
   padding: 0 20px;
   border: none;
-  ::v-deep .el-collapse-item__header {
+  :deep(.el-collapse-item__header) {
     font-size: 16px;
     font-weight: bold;
     color: #4a4c5b;

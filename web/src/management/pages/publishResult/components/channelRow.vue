@@ -134,7 +134,7 @@ export default {
         background: $background-color-gray;
       }
 
-      ::v-deep .font23 {
+      :deep(.font23) {
         font-size: 23px;
       }
     }

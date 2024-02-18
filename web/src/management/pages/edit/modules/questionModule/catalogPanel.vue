@@ -34,10 +34,10 @@ export default {
   box-shadow: none;
   border: none;
   overflow-y: auto;
-  ::v-deep .el-tabs__nav {
+  :deep(.el-tabs__nav) {
     width: 100%;
   }
-  ::v-deep .el-tabs__item {
+  :deep(.el-tabs__item) {
     width: 50%;
     text-align: center;
   }

@@ -54,7 +54,7 @@ export default {
   margin-bottom: 0.4rem;
   font-size: 0.36rem;
   color: #666;
-  ::v-deep * {
+  :deep(*) {
     font-size: 0.36rem;
   }
 }

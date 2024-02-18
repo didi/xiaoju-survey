@@ -20,9 +20,12 @@
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vuedraggable": "^2.24.3",
+    "vuex": "^4.1.0",
     "xss": "^1.0.14"
   },
   "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.11.19",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/eslint-config-prettier": "^8.0.0",

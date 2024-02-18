@@ -142,7 +142,7 @@ export default {
     border: unset;
     color: white;
 
-    ::v-deep span {
+    :deep(span) {
       font-size: 14px;
     }
   }

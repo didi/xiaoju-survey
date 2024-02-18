@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue';
 import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx';
 import questionWrapper from './questionWrapper.vue';

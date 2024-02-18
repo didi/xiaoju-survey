@@ -337,7 +337,7 @@ export default {
           border-radius: 2px;
           .el-input {
             width: 150px;
-            ::v-deep .el-input__inner {
+            :deep(.el-input__inner) {
               border: none;
             }
           }

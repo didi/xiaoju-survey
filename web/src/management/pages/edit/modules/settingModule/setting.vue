@@ -191,7 +191,7 @@ export default {
           padding-top: 15px;
           padding-right: 1rem;
 
-          ::v-deep .star-form.star-form_horizon .star-form-label {
+          :deep(.star-form.star-form_horizon .star-form-label) {
             display: inline-block;
             width: 3.4rem;
             text-align: left;

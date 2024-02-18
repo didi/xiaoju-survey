@@ -19,7 +19,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        management: resolve(__dirname, 'public/management.html'),
+        management: resolve(__dirname, 'pages/management.html'),
+        render: resolve(__dirname, 'pages/render.html'),
       },
     },
   }

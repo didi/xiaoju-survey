@@ -68,7 +68,7 @@ export default {
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .range-wrapper {
-  ::v-deep .el-form-item {
+  :deep(.el-form-item) {
     .el-form-item__content .el-input-number {
       width: 40%;
     }

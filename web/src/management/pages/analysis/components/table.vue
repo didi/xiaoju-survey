@@ -84,7 +84,7 @@ export default {
     box-sizing: border-box;
     text-align: center;
   }
-  ::v-deep .el-table__header {
+  :deep(.el-table__header) {
     width: 100%;
     .thead-cell .el-table__cell {
       .cell {

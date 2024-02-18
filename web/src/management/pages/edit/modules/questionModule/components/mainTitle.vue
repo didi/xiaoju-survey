@@ -57,7 +57,7 @@ export default {
     background-color: #f6f7f9;
     box-shadow: 0 0 5px #dedede;
 
-    ::v-deep .w-e-text-container {
+    :deep(.w-e-text-container) {
       background-color: #f6f7f9;
     }
   }

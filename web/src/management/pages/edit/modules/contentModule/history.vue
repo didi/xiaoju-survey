@@ -91,7 +91,7 @@ export default {
 @import url('@/management/styles/edit-btn.scss');
 .custom-tab {
   width: 300px;
-  ::v-deep .el-tabs__nav {
+  :deep(.el-tabs__nav) {
     width: 100%;
 
     .el-tabs__item {

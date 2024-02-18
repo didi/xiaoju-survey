@@ -236,7 +236,7 @@ export default {
     .captcha-img {
       height: 40px;
       cursor: pointer;
-      ::v-deep > svg {
+      :deep(> svg) {
         max-height: 40px;
       }
     }

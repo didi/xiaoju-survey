@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import OptionConfig from '@/materials/questions/components/AdvancedConfig/OptionConfig.vue';
 import RateConfig from '../AdvancedConfig/RateConfig.vue';
 import { defineComponent, ref, inject } from 'vue';

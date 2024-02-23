@@ -8,8 +8,8 @@
   </div>
 </template>
 <script>
-import typeList from './components/typeList';
-import createForm from './components/createForm';
+import typeList from './components/typeList.vue';
+import createForm from './components/createForm.vue';
 
 export default {
   name: 'createPage',

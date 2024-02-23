@@ -110,14 +110,14 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 // 设置中文
 moment.locale('zh-cn');
-import empty from '@/management/components/empty';
-import ModifyDialog from './modify';
-import Tag from './tag';
-import State from './state';
-import ToolBar from './toolBar';
-import TextSearch from './textSearch';
-import TextSelect from './textSelect';
-import TextButton from './textButton';
+import empty from '@/management/components/empty.vue';
+import ModifyDialog from './modify.vue';
+import Tag from './tag.vue';
+import State from './state.vue';
+import ToolBar from './toolBar.vue';
+import TextSearch from './textSearch.vue';
+import TextSelect from './textSelect.vue';
+import TextButton from './textButton.vue';
 import {
   fieldConfig,
   noListDataConfig,

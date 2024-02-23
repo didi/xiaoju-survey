@@ -16,7 +16,7 @@
 
 <script>
 import { QOP_MAP } from '@/management/utils/constant';
-import Tool from './tool';
+import Tool from './tool.vue';
 
 export default {
   name: 'ToolBar',

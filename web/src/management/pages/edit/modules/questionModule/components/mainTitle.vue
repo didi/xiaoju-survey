@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import richEditor from '@/common/Editor/RichEditor';
+import richEditor from '@/common/Editor/RichEditor.vue';
 
 export default {
   name: 'mainTitlePreview',

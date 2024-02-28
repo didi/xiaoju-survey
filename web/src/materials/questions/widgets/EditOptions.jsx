@@ -14,7 +14,7 @@ export default defineComponent({
   provide() {
     return {
       currentEditKey: store.getters['edit/currentEditKey'],
-      moduleConfig: this.moduleConfig,
+      moduleConfig: computed(()=>this.moduleConfig),
     };
   },
   props: {
@@ -35,9 +35,6 @@ export default defineComponent({
     });
     const getOptions = computed(() => {
       return props.moduleConfig.options;
-    });
-    const getModuleConfig = computed(() => {
-      return props.moduleConfig;
     });
     const { addOption, addOtherOption } = UseOptionBase(getOptions);
     const handleAddOption = (
@@ -115,7 +112,6 @@ export default defineComponent({
       currentEditOne,
       currentEditKey,
       getOptions,
-      getModuleConfig,
       isShowOptionConfig,
       hasAdvancedConfig,
       hasAdvancedRateConfig,
@@ -145,7 +141,6 @@ export default defineComponent({
           <OptionEditBar
             ref="optionEditBar"
             option-list={this.getOptions}
-            module-config={this.getModuleConfig}
             showOthers={this.showOthers}
             hasAdvancedConfig={this.hasAdvancedConfig}
             hasAdvancedRateConfig={this.hasAdvancedRateConfig}

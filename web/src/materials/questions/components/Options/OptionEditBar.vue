@@ -16,10 +16,6 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    moduleConfig: {
-      type: Object,
-      default: () => ({}),
-    },
     hasAdvancedConfig: {
       type: Boolean,
       default: true,
@@ -30,8 +26,8 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const moduleConfig = inject('moduleConfig');
     const optionConfigVisible = ref(false);
-
     const addOther = () => {
       emit('addOther');
     };
@@ -55,6 +51,7 @@ export default defineComponent({
       openRateConfig,
       handleOptionChange,
       handleChange,
+      moduleConfig,
       rateConfigVisible,
     };
   },

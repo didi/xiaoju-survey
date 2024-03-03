@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+    <progressBar/>
     <Header></Header>
     <mainRenderer ref="main"></mainRenderer>
     <submit
@@ -11,6 +12,7 @@
 </template>
 
 <script>
+import progressBar from '../components/progressBar.vue';
 import Header from '../components/header.vue';
 import submit from '../components/submit.vue';
 import mainRenderer from '../components/mainRenderer';
@@ -33,6 +35,7 @@ export default {
     Header,
     submit,
     mainRenderer,
+    progressBar
   },
   computed: {
     formModel() {

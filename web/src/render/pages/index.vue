@@ -1,5 +1,6 @@
 <template>
   <div class="index">
+    <progressBar/>
     <Header></Header>
     <mainRenderer ref="main"></mainRenderer>
     <submit
@@ -14,6 +15,7 @@
 import Header from '../components/header.vue';
 import submit from '../components/submit.vue';
 import mainRenderer from '../components/mainRenderer';
+import mainRenderer from '../components/progressBar.vue';
 import { submitForm } from '@/render/api/survey';
 import encrypt from '../utils/encrypt';
 
@@ -33,6 +35,7 @@ export default {
     Header,
     submit,
     mainRenderer,
+    progressBar
   },
   computed: {
     formModel() {

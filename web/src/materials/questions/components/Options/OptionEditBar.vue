@@ -28,7 +28,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const moduleConfig = inject('moduleConfig');
     const optionConfigVisible = ref(false);
-    
+
     const addOther = () => {
       emit('addOther');
     };

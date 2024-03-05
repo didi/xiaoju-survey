@@ -2,25 +2,23 @@
   <div class="progress-outer">
     <div class="progress-position">
       <div class="progress-inner-wrapper-mobile">
-      <div
-      class="progress-inner-mobile"
-      :style="{
-        transition: 'all 0.5s',
-        width: precent || 0,
-      }"
-    ></div>
-
+        <div
+          class="progress-inner-mobile"
+          :style="{
+            transition: 'all 0.5s',
+            width: precent || 0,
+          }"
+        ></div>
       </div>
       <div class="progress-inner-wrapper-pc">
         <div class="progress-inner-bar">
-
           <div
-          class="progress-inner-pc"
-          :style="{
-            transition: 'all 0.5s',
-            height: precent || 0,
-          }"
-        ></div>
+            class="progress-inner-pc"
+            :style="{
+              transition: 'all 0.5s',
+              height: precent || 0,
+            }"
+          ></div>
         </div>
         <div class="percent-pc">{{ precent || '0%' }}</div>
       </div>
@@ -28,66 +26,63 @@
   </div>
 </template>
 <script setup>
-import {useProgressBar} from '../hook/useProgress'
+import { useProgressBar } from '../hook/useProgress';
 
-const {precent} = useProgressBar();
-
-
+const { precent } = useProgressBar();
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .progress-outer {
   z-index: 10000;
   position: relative;
   overflow: hidden;
-  .progress-inner-wrapper-pc{
+  .progress-inner-wrapper-pc {
     display: none;
   }
 }
-@media (min-width:930px) {
-  .progress-position{
+@media (min-width: 930px) {
+  .progress-position {
     position: absolute;
     right: -24px;
     top: 160px;
   }
-  .progress-inner-wrapper-pc{
-      position: fixed;
-      display: flex !important;
-      flex-direction: column;
-      align-items: center;
-      background: #FFFFFF;
-      border-radius: 2px;
-      width: 56px;
-      height: 240px;
-    .progress-inner-bar{
+  .progress-inner-wrapper-pc {
+    position: fixed;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 2px;
+    width: 56px;
+    height: 240px;
+    .progress-inner-bar {
       height: 190px;
       width: 8px;
-      background: #F2F4F7;
+      background: #f2f4f7;
       border-radius: 4px;
       margin-top: 12px;
     }
-    .percent-pc{
+    .percent-pc {
       font-size: 12px;
-      color: #6E707C;
+      color: #6e707c;
       margin-top: 8px;
     }
-    .progress-inner-pc{
+    .progress-inner-pc {
       border-radius: 2px;
       background-color: $primary-color;
     }
   }
-
 }
-@media (max-width: 930px) { 
-  .progress-outer{
-    .progress-inner-wrapper-mobile{
+@media (max-width: 930px) {
+  .progress-outer {
+    .progress-inner-wrapper-mobile {
       position: fixed;
       width: 750px;
       height: 2px;
       top: 0;
       background-color: #f5f5f5;
-      display:block
+      display: block;
     }
-    .progress-inner-mobile{
+    .progress-inner-mobile {
       display: block;
       z-index: 10000;
       position: absolute;

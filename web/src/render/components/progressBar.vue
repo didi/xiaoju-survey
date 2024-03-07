@@ -76,7 +76,8 @@ const { precent } = useProgressBar();
   .progress-outer {
     .progress-inner-wrapper-mobile {
       position: fixed;
-      width: 750px;
+      width: 100%;
+      max-width: 750px;
       height: 2px;
       top: 0;
       background-color: #f5f5f5;

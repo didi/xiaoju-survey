@@ -144,7 +144,6 @@ export class SurveyResponseController {
         return pre;
       }, {});
 
-    const secretKeys = [];
     // 对用户提交的数据进行遍历处理
     for (const field in decryptedData) {
       const value = decryptedData[field];
@@ -180,7 +179,6 @@ export class SurveyResponseController {
       data: decryptedData,
       clientTime,
       difTime,
-      secretKeys,
       surveyId: responseSchema.pageId,
       optionTextAndId,
     });

@@ -7,53 +7,13 @@ import moment from 'moment';
 import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
-
+import { getListHeadByDataList } from '../utils';
 @Injectable()
 export class DataStatisticService {
   constructor(
     @InjectRepository(SurveyResponse)
     private readonly surveyResponseRepository: MongoRepository<SurveyResponse>,
   ) {}
-
-  private getListHeadByDataList(dataList) {
-    const listHead = dataList.map((question) => {
-      let othersCode;
-      if (question.type === 'radio-star') {
-        const rangeConfigKeys = Object.keys(question.rangeConfig);
-        if (rangeConfigKeys.length > 0) {
-          othersCode = [
-            { code: `${question.field}_custom`, option: '填写理由' },
-          ];
-        }
-      } else {
-        othersCode = (question.options || [])
-          .filter((optionItem) => optionItem.othersKey)
-          .map((optionItem) => {
-            return {
-              code: optionItem.othersKey,
-              option: optionItem.text,
-            };
-          });
-      }
-      return {
-        field: question.field,
-        title: question.title,
-        type: question.type,
-        othersCode,
-      };
-    });
-    listHead.push({
-      field: 'difTime',
-      title: '答题耗时（秒）',
-      type: 'text',
-    });
-    listHead.push({
-      field: 'createDate',
-      title: '提交时间',
-      type: 'text',
-    });
-    return listHead;
-  }
 
   async getDataTable({
     surveyId,
@@ -67,7 +27,7 @@ export class DataStatisticService {
     responseSchema: ResponseSchema;
   }) {
     const dataList = responseSchema?.code?.dataConf?.dataList || [];
-    const listHead = this.getListHeadByDataList(dataList);
+    const listHead = getListHeadByDataList(dataList);
     const dataListMap = keyBy(dataList, 'field');
     const where = {
       pageId: surveyId,

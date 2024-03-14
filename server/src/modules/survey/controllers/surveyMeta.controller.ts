@@ -15,21 +15,7 @@ import * as Joi from 'joi';
 import { Authtication } from 'src/guards/authtication';
 import moment from 'moment';
 
-type FilterItem = {
-  comparator?: string;
-  condition: Array<FilterCondition>;
-};
-
-type FilterCondition = {
-  field: string;
-  comparator?: string;
-  value: string & Array<FilterItem>;
-};
-
-type OrderItem = {
-  field: string;
-  value: number;
-};
+import { getFilter, getOrder } from 'src/utils/surveyUtil';
 
 @Controller('/api/survey')
 export class SurveyMetaController {
@@ -83,7 +69,7 @@ export class SurveyMetaController {
       order = {};
     if (validationResult.filter) {
       try {
-        filter = this.getFilter(
+        filter = getFilter(
           JSON.parse(decodeURIComponent(validationResult.filter)),
         );
       } catch (error) {
@@ -92,7 +78,7 @@ export class SurveyMetaController {
     }
     if (validationResult.order) {
       try {
-        order = order = this.getOrder(
+        order = order = getOrder(
           JSON.parse(decodeURIComponent(validationResult.order)),
         );
       } catch (error) {
@@ -123,63 +109,5 @@ export class SurveyMetaController {
         }),
       },
     };
-  }
-
-  private getFilter(filterList: Array<FilterItem>) {
-    const allowFilterField = [
-      'title',
-      'remark',
-      'surveyType',
-      'curStatus.status',
-    ];
-    return filterList.reduce(
-      (preItem, curItem) => {
-        const condition = curItem.condition
-          .filter((item) => allowFilterField.includes(item.field))
-          .reduce((pre, cur) => {
-            switch (cur.comparator) {
-              case '$ne':
-                pre[cur.field] = {
-                  $ne: cur.value,
-                };
-                break;
-              case '$regex':
-                pre[cur.field] = {
-                  $regex: cur.value,
-                };
-                break;
-              default:
-                pre[cur.field] = cur.value;
-                break;
-            }
-            return pre;
-          }, {});
-        switch (curItem.comparator) {
-          case '$or':
-            if (!Array.isArray(preItem.$or)) {
-              preItem.$or = [];
-            }
-            preItem.$or.push(condition);
-            break;
-          default:
-            Object.assign(preItem, condition);
-            break;
-        }
-        return preItem;
-      },
-      {} as { $or?: Array<Record<string, string>> } & Record<string, string>,
-    );
-  }
-
-  private getOrder(order: Array<OrderItem>) {
-    const allowOrderFields = ['createDate', 'updateDate', 'curStatus.date'];
-
-    const orderList = order.filter((orderItem) =>
-      allowOrderFields.includes(orderItem.field),
-    );
-    return orderList.reduce((pre, cur) => {
-      pre[cur.field] = cur.value === 1 ? 1 : -1;
-      return pre;
-    }, {});
   }
 }

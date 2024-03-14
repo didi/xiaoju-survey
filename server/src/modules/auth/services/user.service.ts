@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { User } from 'src/models/user.entity';
-import { createHash } from 'crypto';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { hash256 } from 'src/utils/hash256';
 
 @Injectable()
 export class UserService {
@@ -12,10 +12,6 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: MongoRepository<User>,
   ) {}
-
-  private hash256(text) {
-    return createHash('sha256').update(text).digest('hex');
-  }
 
   async createUser(userInfo: {
     username: string;
@@ -31,7 +27,7 @@ export class UserService {
 
     const newUser = this.userRepository.create({
       username: userInfo.username,
-      password: this.hash256(userInfo.password),
+      password: hash256(userInfo.password),
     });
 
     return this.userRepository.save(newUser);
@@ -44,7 +40,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         username: userInfo.username,
-        password: this.hash256(userInfo.password), // Please handle password hashing here
+        password: hash256(userInfo.password), // Please handle password hashing here
       },
     });
 

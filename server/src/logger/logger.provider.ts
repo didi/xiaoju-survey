@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
 
-import logger, { Logger } from './index';
+import { Logger } from './index';
 
 export const LoggerProvider: Provider = {
   provide: Logger,
-  useValue: logger,
+  useClass: Logger,
 };

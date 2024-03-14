@@ -46,7 +46,7 @@ import { Logger } from './logger';
         const authSource =
           (await configService.get<string>(
             'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',
-          )) || '';
+          )) || 'admin';
         const database = await configService.get<string>(
           'XIAOJU_SURVEY_MONGO_DB_NAME',
         );
@@ -94,7 +94,6 @@ export class AppModule {
   constructor(
     private readonly configService: ConfigService,
     private readonly pluginManager: XiaojuSurveyPluginManager,
-    private readonly logger: Logger,
   ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LogRequestMiddleware).forRoutes('*');
@@ -108,7 +107,7 @@ export class AppModule {
       ),
       new SurveyUtilPlugin(),
     );
-    this.logger.init({
+    Logger.init({
       filename: this.configService.get<string>('XIAOJU_SURVEY_LOGGER_FILENAME'),
     });
   }

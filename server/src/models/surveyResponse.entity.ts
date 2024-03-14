@@ -1,20 +1,9 @@
-import {
-  Entity,
-  Column,
-  ObjectIdColumn,
-  BeforeInsert,
-  BeforeUpdate,
-  AfterLoad,
-} from 'typeorm';
-import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from '../enums';
+import { Entity, Column, BeforeInsert, AfterLoad } from 'typeorm';
 import pluginManager from '../securityPlugin/pluginManager';
+import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'surveySubmit' })
-export class SurveyResponse {
-  @ObjectIdColumn()
-  _id: ObjectId;
-
+export class SurveyResponse extends BaseEntity {
   @Column()
   pageId: string;
 
@@ -36,44 +25,13 @@ export class SurveyResponse {
   @Column('jsonb')
   optionTextAndId: Record<string, any>;
 
-  @Column()
-  curStatus: {
-    status: RECORD_STATUS;
-    date: number;
-  };
-
-  @Column()
-  statusList: Array<{
-    status: RECORD_STATUS;
-    date: number;
-  }>;
-
-  @Column()
-  createDate: number;
-
-  @Column()
-  updateDate: number;
-
   @BeforeInsert()
-  initDefaultInfo() {
-    const now = Date.now();
-    if (!this.curStatus) {
-      const curStatus = { status: RECORD_STATUS.NEW, date: now };
-      this.curStatus = curStatus;
-      this.statusList = [curStatus];
-    }
-    this.createDate = now;
-    this.updateDate = now;
-    pluginManager.triggerHook('beforeResponseDataCreate', this);
-  }
-
-  @BeforeUpdate()
-  onUpdate() {
-    this.updateDate = Date.now();
+  async onDataInsert() {
+    return await pluginManager.triggerHook('beforeResponseDataCreate', this);
   }
 
   @AfterLoad()
-  onDataLoaded() {
-    pluginManager.triggerHook('afterResponseDataReaded', this);
+  async onDataLoaded() {
+    return await pluginManager.triggerHook('afterResponseDataReaded', this);
   }
 }

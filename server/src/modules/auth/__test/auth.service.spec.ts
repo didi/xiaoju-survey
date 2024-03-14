@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 import { sign } from 'jsonwebtoken';
 
 jest.mock('jsonwebtoken');

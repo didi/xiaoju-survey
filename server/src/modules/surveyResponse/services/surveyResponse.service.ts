@@ -11,7 +11,6 @@ export class SurveyResponseService {
 
   async createSurveyResponse({
     data,
-    secretKeys,
     clientTime,
     difTime,
     surveyId,
@@ -21,7 +20,7 @@ export class SurveyResponseService {
     const newSubmitData = this.surveyResponseRepository.create({
       surveyPath,
       data,
-      secretKeys,
+      secretKeys: [],
       clientTime,
       difTime,
       pageId: surveyId,

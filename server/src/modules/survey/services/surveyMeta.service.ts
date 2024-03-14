@@ -18,8 +18,8 @@ export class SurveyMetaService {
     private readonly pluginManager: XiaojuSurveyPluginManager,
   ) {}
 
-  private async getNewSurveyPath(): Promise<string> {
-    let surveyPath = this.pluginManager.triggerHook('genSurveyPath');
+  async getNewSurveyPath(): Promise<string> {
+    let surveyPath = await this.pluginManager.triggerHook('genSurveyPath');
     while (true) {
       const count = await this.surveyRepository.count({
         where: {
@@ -29,7 +29,7 @@ export class SurveyMetaService {
       if (count === 0) {
         break;
       }
-      surveyPath = this.pluginManager.triggerHook('genSurveyPath');
+      surveyPath = await this.pluginManager.triggerHook('genSurveyPath');
     }
     return surveyPath;
   }

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CaptchaService } from './captcha.service';
+import { CaptchaService } from '../services/captcha.service';
 import { MongoRepository } from 'typeorm';
 import { Captcha } from 'src/models/captcha.entity';
 import { ObjectId } from 'mongodb';

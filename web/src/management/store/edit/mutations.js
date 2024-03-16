@@ -1,4 +1,4 @@
-import { set as _set, merge as _merge } from 'lodash';
+import { set as _set, merge as _merge } from 'lodash-es';
 
 export default {
   setCurrentEditOne(state, data) {

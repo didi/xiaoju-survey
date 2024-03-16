@@ -1,5 +1,5 @@
 import { defaultQuestionConfig } from '../config/questionConfig';
-import { cloneDeep as _cloneDeep, map as _map } from 'lodash';
+import { cloneDeep as _cloneDeep, map as _map } from 'lodash-es';
 
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000);

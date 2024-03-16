@@ -45,7 +45,7 @@ import mainTitle from './components/mainTitle.vue';
 import submit from './components/submit.vue';
 import logo from './components/logo.vue';
 import { mapState, mapGetters } from 'vuex';
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 
 export default {
   name: 'mainOperation',

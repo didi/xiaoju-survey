@@ -48,7 +48,7 @@ import {
   cloneDeep as _cloneDeep,
   isArray as _isArray,
   get as _get,
-} from 'lodash';
+} from 'lodash-es';
 
 export default {
   name: 'QuestionConfig',

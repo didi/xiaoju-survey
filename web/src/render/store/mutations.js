@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { forEach, set } from 'lodash';
+import { forEach, set } from 'lodash-es';
 export default {
   // 将数据设置到state上
   assignState(state, data) {

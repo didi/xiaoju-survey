@@ -2,7 +2,7 @@
  * 处理单题的配置
  */
 
-import { get as _get, map as _map } from 'lodash';
+import { get as _get, map as _map } from 'lodash-es';
 
 // 处理选择题的options
 function handleOptions(item) {

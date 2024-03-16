@@ -1,4 +1,4 @@
-import { cloneDeep as _cloneDeep } from 'lodash';
+import { cloneDeep as _cloneDeep } from 'lodash-es';
 export default class ComponentLoader {
   constructor(options = {}) {
     const { componentList, lifeCycle } = options;

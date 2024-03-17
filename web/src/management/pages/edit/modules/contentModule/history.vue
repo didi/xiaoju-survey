@@ -31,7 +31,7 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 import { mapState } from 'vuex';
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 
 const getItemData = (item) => ({
   operator: item?.operator?.username || '未知用户',

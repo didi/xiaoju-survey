@@ -1,7 +1,7 @@
 import confirm from '../../components/confirm.vue';
 import alert from '../../components/alert.vue';
 
-import { isFunction as _isFunction } from 'lodash';
+import { isFunction as _isFunction } from 'lodash-es';
 
 export default {
   install(Vue) {

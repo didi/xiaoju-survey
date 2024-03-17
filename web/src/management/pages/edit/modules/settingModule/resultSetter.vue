@@ -33,7 +33,7 @@ import FormItem from '@/materials/setters/widgets/FormItem.vue';
 import setterLoader from '@/materials/setters/setterLoader';
 import statusConfig from './config/statusConfig';
 import { mapState } from 'vuex';
-import { get as _get, pick as _pick } from 'lodash';
+import { get as _get, pick as _pick } from 'lodash-es';
 
 const textMap = {
   Success: '提交成功页面配置',

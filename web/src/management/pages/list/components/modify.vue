@@ -34,7 +34,7 @@
 <script>
 import { CODE_MAP } from '@/management/api/base';
 import { updateSurvey, createSurvey } from '@/management/api/survey';
-import { pick as _pick } from 'lodash';
+import { pick as _pick } from 'lodash-es';
 import { QOP_MAP } from '@/management/utils/constant';
 
 export default {

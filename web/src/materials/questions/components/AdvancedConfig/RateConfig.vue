@@ -2,7 +2,7 @@
   <el-dialog
     title="评分高级设置"
     custom-class="option-config-wrapper"
-    :visible="innerVisible"
+    :visible.sync="innerVisible"
     :append-to-body="true"
     :width="dialogWidth"
   >
@@ -48,7 +48,7 @@
   </el-dialog>
 </template>
 <script>
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 import { mapGetters } from 'vuex';
 export default {
   props: {

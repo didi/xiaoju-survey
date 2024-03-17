@@ -12,7 +12,7 @@
 import { mapState } from 'vuex';
 import { publishSurvey, saveSurvey } from '@/management/api/survey';
 import buildData from './buildData';
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 export default {
   name: 'publish',
   data() {

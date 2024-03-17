@@ -1,5 +1,5 @@
 import { getNewField } from '@/management/utils';
-import { cloneDeep as _cloneDeep, get as _get } from 'lodash';
+import { cloneDeep as _cloneDeep, get as _get } from 'lodash-es';
 import { getSurveyById } from '@/management/api/survey';
 
 export default {

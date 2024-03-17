@@ -43,7 +43,7 @@
 <script>
 import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
-import { cloneDeep as _cloneDeep } from 'lodash';
+import { cloneDeep as _cloneDeep } from 'lodash-es';
 import EditorV2 from '@/common/Editor/EditorV2';
 
 export default {

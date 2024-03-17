@@ -1,7 +1,7 @@
 import baseInput from '../BaseInput';
 import { defineComponent, ref } from 'vue';
 import '../../common/css/input.scss';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import myMeta from './meta';
 export const meta = myMeta;
 /**

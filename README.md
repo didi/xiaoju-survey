@@ -169,17 +169,26 @@ npm run serve
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
 
+<br /><br />
 
-# 交流群
-## 微信
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="300" />
+## 微信交流群
 
-## QQ
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="230" />
 
-# Feature
+## Star
+如果该项目对你有帮助，star一下 ❤️❤️❤️
+
+[![Star History Chart](https://api.star-history.com/svg?repos=didi/xiaoju-survey&type=Date)](https://star-history.com/#didi/xiaoju-survey&Date)
+
+## 记录
+[谁在使用](https://github.com/didi/xiaoju-survey/issues/64)
+
+## 贡献
+[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)
+
+## Feature
 [官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
 
-# CHANGELOG
+## CHANGELOG
 [MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 

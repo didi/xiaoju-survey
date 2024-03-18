@@ -2,7 +2,7 @@
 name: Bug report
 about: 反馈遇到的问题 / 发现的Bug
 title: ''
-labels: ''
+labels: 'Bug'
 assignees: ''
 
 ---

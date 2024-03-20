@@ -133,9 +133,11 @@ npm run local
 
 #### 1、启动数据库
 
-> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
+> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E5%AE%89%E8%A3%85)
 
-启动和配置数据库，查看[MongoDB启动](http://localhost:5000/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E4%BA%94%E5%90%AF%E5%8A%A8)
+- 配置数据库，查看[MongoDB配置](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93)
+ 
+- 启动本地数据库，查看[MongoDB启动](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E4%BA%94%E5%90%AF%E5%8A%A8)
 
 #### 2、安装依赖
 ```shell

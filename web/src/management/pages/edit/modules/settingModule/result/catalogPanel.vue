@@ -1,21 +1,24 @@
 <template>
-  <div class="status-list-wrapper">
-    <div
-      v-for="(status, index) in statusList"
-      :key="index"
-      class="status-item"
-      @click="filterDisabledStatus({ type: status.type })"
-    >
-      <span>{{ status.title }}</span>
-      <div class="preview-item">
-        <img :src="status.previewImg" :alt="status.title" />
+  <div class="tab-box">
+    <div class="title">结果页状态选择</div>
+    <div class="status-list-wrapper">
+      <div
+        v-for="(status, index) in statusList"
+        :key="index"
+        class="status-item"
+        @click="filterDisabledStatus({ type: status.type })"
+      >
+        <span>{{ status.title }}</span>
+        <div class="preview-item">
+          <img :src="status.previewImg" :alt="status.title" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapMutations } from 'vuex';
-import { EDIT_STATUS_MAP } from './enum';
+import { EDIT_STATUS_MAP } from '../enum';
 
 export default {
   name: 'resultConfigList',
@@ -47,13 +50,27 @@ export default {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-.status-list-wrapper {
+.tab-box {
   width: 300px;
   height: 100%;
+  box-shadow: none;
+  border: none;
+  overflow-y: auto;
+  background-color: #fff;
+  .title {
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: $primary-color;
+    padding-left: 20px;
+    // background: #f9fafc;
+    border-bottom: 1px solid #edeffc;
+  }
+}
+.status-list-wrapper {
   padding: 19px 18px 100px 19px;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #fff;
 
   label.title {
     font-size: 16px;

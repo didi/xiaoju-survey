@@ -1,19 +1,21 @@
 <template>
   <div class="result-config-preview">
-    <div class="status-preview">
-      <component
-        :is="currentEditStatus"
-        :key="currentEditStatus"
-        :module-config="moduleConfig"
-      />
-    </div>
+    <div class="result-page-wrap">
+      <div class="result-page">
+        <component
+          :is="currentEditStatus"
+          :key="currentEditStatus"
+          :module-config="moduleConfig"
+        />
+      </div>
+    </div>  
   </div>
 </template>
 <script>
 import { mapState } from 'vuex';
-import success from './components/success';
-import overTime from './components/overTime';
-import { EDIT_STATUS_MAP } from './enum';
+import success from '../components/success';
+import overTime from '../components/overTime';
+import { EDIT_STATUS_MAP } from '../enum';
 import { get as _get } from 'lodash-es';
 
 export default {
@@ -51,13 +53,20 @@ export default {
   background-color: #f6f7f9;
 }
 
-.status-preview {
+.result-page-wrap {
   width: 90%;
-  margin-top: 38px;
+  margin-top: 50px;
   min-height: 812px;
   max-height: 812px;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #fff;
+  background-color: var(--primary-background-color);
+  padding: 0 0.3rem;
+  .result-page{
+    background: rgba(255, 255, 255, var(--opacity)); 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 </style>

@@ -1,13 +1,7 @@
 <template>
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
-    <!-- <div class="toolbar"></div> -->
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
-        <banner
-          :bannerConf="bannerConf"
-          :is-selected="currentEditOne === 'banner'"
-          @select="onSelectEditOne('banner')"
-        />
         <mainTitle
           :bannerConf="bannerConf"
           :is-selected="currentEditOne === 'mainTitle'"
@@ -28,29 +22,22 @@
           :is-selected="currentEditOne === 'submit'"
           @select="onSelectEditOne('submit')"
         />
-        <logo
-          :bottom-conf="bottomConf"
-          :is-selected="currentEditOne === 'logo'"
-          @select="onSelectEditOne('logo')"
-        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import materialGroup from './components/materialGroup.vue';
-import banner from './components/banner.vue';
-import mainTitle from './components/mainTitle.vue';
-import submit from './components/submit.vue';
-import logo from './components/logo.vue';
+import materialGroup from '@/management/pages/edit/components/materialGroup.vue';
+import mainTitle from '@/management/pages/edit/components/mainTitle.vue';
+import submit from '@/management/pages/edit/components/submit.vue';
+import logo from '@/management/pages/edit/components/logo.vue';
 import { mapState, mapGetters } from 'vuex';
 import { get as _get } from 'lodash-es';
 
 export default {
   name: 'mainOperation',
   components: {
-    banner,
     mainTitle,
     submit,
     logo,
@@ -81,6 +68,23 @@ export default {
     },
   },
   watch: {
+    skinConf: {
+      handler (skinConf)  {
+        const { themeConf, backgroundConf, contentConf} = skinConf
+        const root = document.documentElement;
+        if(themeConf?.color) {
+          root.style.setProperty('--primary-color', themeConf?.color); // 设置主题颜色
+        }
+        if(backgroundConf?.color) {
+          root.style.setProperty('--primary-background-color', backgroundConf?.color); // 设置背景颜色
+        }
+        if(contentConf?.opacity) {
+          root.style.setProperty('--opacity', contentConf?.opacity/100); // 设置全局透明度
+        }
+      },
+      immediate: true, // 立即触发回调函数
+      deep: true
+    },
     autoScrollData(newVal) {
       const { currentEditOne } = newVal;
       if (typeof currentEditOne === 'number') {
@@ -188,7 +192,7 @@ export default {
 }
 
 .operation-wrapper {
-  margin-top: 38px;
+  margin-top: 50px;
   margin-bottom: 45px;
   // min-height: 812px;
   overflow-x: hidden;

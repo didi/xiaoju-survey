@@ -66,4 +66,7 @@ export default {
     commit('changeSchema', { key, value });
     commit('updateSchemaUpdateTime', Date.now());
   },
+  changeThemePreset({ commit }, presets) {
+    commit('changeThemePreset', presets)
+  },
 };

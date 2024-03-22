@@ -32,7 +32,7 @@
         <div class="iconfont icon-kaishi play-icon" @click="play()"></div>
       </div>
     </div>
-    <div
+    <!-- <div
       class="titlePanel"
       v-if="bannerConf.titleConfig && bannerConf.titleConfig.mainTitle"
     >
@@ -41,7 +41,7 @@
         v-if="bannerConf.titleConfig.mainTitle"
         v-safe-html="bannerConf.titleConfig.mainTitle"
       ></div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -53,7 +53,7 @@ export default {
   computed: {
     bannerConf() {
       return _get(this.$store, 'state.bannerConf', {});
-    },
+    }
   },
   methods: {
     onBannerClick() {
@@ -90,6 +90,7 @@ export default {
   }
 
   .banner {
+    display: flex;
     .banner-img {
       width: 100%;
 
@@ -130,42 +131,6 @@ export default {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     z-index: 101;
-  }
-}
-</style>
-
-<style lang="scss">
-@import '@/render/styles/variable.scss';
-
-.mainTitle {
-  font-size: 0.28rem;
-  line-height: 0.4rem;
-  color: $title-color;
-
-  ol {
-    list-style: decimal;
-  }
-
-  ul {
-    list-style: disc;
-  }
-
-  img {
-    width: 100%;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p {
-    line-height: 0.6rem;
-    color: $title-color-deep;
-    margin-bottom: 0.35rem;
-  }
-  p {
-    margin-bottom: 0;
   }
 }
 </style>

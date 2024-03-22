@@ -118,7 +118,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 
 .option-edit-bar-wrap {
   margin-top: 20px;

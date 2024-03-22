@@ -31,13 +31,13 @@
 <script>
 import FormItem from '@/materials/setters/widgets/FormItem.vue';
 import setterLoader from '@/materials/setters/setterLoader';
-import statusConfig from './config/statusConfig';
+import statusConfig from '../config/statusConfig';
 import { mapState } from 'vuex';
 import { get as _get, pick as _pick } from 'lodash-es';
 
 const textMap = {
   Success: '提交成功页面配置',
-  OvertTme: '问卷过期页面配置',
+  OverTime: '问卷过期页面配置',
 };
 
 export default {
@@ -150,7 +150,7 @@ export default {
   font-size: 14px;
   color: $primary-color;
   padding-left: 20px;
-  background: #f9fafc;
+  // background: #f9fafc;
   border-bottom: 1px solid #edeffc;
 }
 

@@ -6,7 +6,6 @@
   >
     <el-button
       class="submit-btn"
-      :style="{ 'background-color': skinConf.skinColor }"
       type="primary"
       >{{ submitConf.submitTitle }}</el-button
     >
@@ -41,8 +40,9 @@ export default {
   .submit-btn {
     color: white;
     border: none;
-    width: 250px;
+    width: 100%;
     height: 44px;
+    background-color: var(--primary-color);
   }
 }
 </style>

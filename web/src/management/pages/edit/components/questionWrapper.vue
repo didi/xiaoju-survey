@@ -193,9 +193,9 @@ export default defineComponent({
   &.spliter {
     border-bottom: 0.12rem solid $spliter-color;
   }
-  // &:last-child{
-  //   border: none;
-  // }
+  &:last-child{
+    border: none;
+  }
   .editor {
     display: flex;
     font-size: 0.32rem;

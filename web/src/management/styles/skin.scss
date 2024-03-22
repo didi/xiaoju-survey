@@ -1,0 +1,12 @@
+// 定义颜色变量
+$primary-color: #ffa600;
+$primary-background-color: #fff;
+$opacity: 1;
+
+// 使用CSS自定义属性
+:root {
+  --primary-color: #{$primary-color};
+  --primary-background-color: #{$primary-background-color};
+  --opacity: #{$opacity};
+}
+

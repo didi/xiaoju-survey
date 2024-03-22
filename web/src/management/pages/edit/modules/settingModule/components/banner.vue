@@ -11,7 +11,7 @@
       <div class="video">
         <video
           class="custom-video"
-          :poster="bannerConf.bannerConfig.postImg"
+          :poster="bannerConf.bannerConfigpostImg"
           preload="auto"
           controls
           :src="bannerConf.bannerConfig.videoLink"
@@ -31,6 +31,7 @@ export default {
   props: {
     bannerConf: {
       type: Object,
+      default: () => {}
     },
     isSelected: {
       type: Boolean,
@@ -59,6 +60,7 @@ export default {
 
   .banner {
     width: 100%;
+    display: flex;
 
     img {
       width: 100%;

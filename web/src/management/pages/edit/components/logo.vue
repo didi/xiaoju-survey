@@ -3,7 +3,7 @@
     <div class="question-logo" @click="onSelect">
       <img
         v-if="logoImg !== ''"
-        :style="{ width: bottomConf.logoImageWidth }"
+        :style="{ width: logoConf.logoImageWidth }"
         class="bottom-logo"
         :src="logoImg"
       />
@@ -18,7 +18,10 @@
 export default {
   name: 'LogoPreview',
   props: {
-    bottomConf: Object,
+    logoConf: {
+      type: Object,
+      default: () => {}
+    },
     isSelected: Boolean,
   },
   data() {
@@ -31,7 +34,7 @@ export default {
   },
   computed: {
     logoImg() {
-      const { logoImage } = this.bottomConf;
+      const { logoImage = {} } = this.logoConf;
       return logoImage;
     },
   },

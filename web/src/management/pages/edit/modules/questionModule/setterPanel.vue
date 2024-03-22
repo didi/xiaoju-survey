@@ -13,14 +13,12 @@
         :module-config="moduleConfig"
         @form-change="onFormChange"
       />
-      <bannerList v-if="currentEditOne === 'banner'" @change="onClickSkin" />
     </template>
   </div>
 </template>
 
 <script>
-import bannerList from './components/bannerList.vue';
-import setterField from './components/setterField.vue';
+import setterField from '@/management/pages/edit/components/setterField.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -42,16 +40,9 @@ export default {
     }),
   },
   components: {
-    bannerList,
     setterField,
   },
   methods: {
-    onClickSkin(src) {
-      this.onFormChange({
-        key: 'bannerConfig.bgImage',
-        value: src,
-      });
-    },
     onFormChange(data) {
       const { key, value } = data;
       const resultKey = `${this.currentEditKey}.${key}`;
@@ -75,7 +66,6 @@ export default {
   font-size: 14px;
   color: $primary-color;
   padding-left: 20px;
-  background: #f9fafc;
   border-bottom: 1px solid #edeffc;
 }
 
@@ -98,6 +88,6 @@ export default {
 }
 
 .question-config-form {
-  padding: 30px 20px 50px 20px;
+  padding: 30px 20px 50px 20px!important;
 }
 </style>

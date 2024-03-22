@@ -142,7 +142,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" rel="stylesheet/scss">
 .row {
   display: flex;
   height: 60px;

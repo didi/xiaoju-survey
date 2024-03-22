@@ -1,0 +1,144 @@
+<template>
+  <div class="nps-wrapper-main">
+    <div class="nps-row-msg">
+      <div class="nps-msg">{{ minNpsMsg }}</div>
+      <div class="nps-msg">{{ maxNpsMsg }}</div>
+    </div>
+    <BaseRate
+      :name="props.field"
+      :min="props.npsMin"
+      :max="props.npsMax"
+      :readonly="props.readonly"
+      :value="indexValue"
+      iconClass="number"
+      @change="confirmNps"
+    />
+    <QuestionWithRule
+      v-if="isShowInput"
+      :showTitle="false"
+      :moduleConfig="moduleConfig"
+      @change="onMoreDataChange"
+    ></QuestionWithRule>
+  </div>
+</template>
+<script setup>
+import { defineProps, defineEmits, computed } from 'vue';
+import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
+import BaseRate from '../BaseRate';
+const props = defineProps({
+  field: {
+    type: [String, Number],
+    default: '',
+  },
+  value: {
+    type: [String, Number],
+    default: '',
+  },
+  npsMin: {
+    type: Number,
+    default: 1,
+  },
+  npsMax: {
+    type: Number,
+    default: 10,
+  },
+  minNpsMsg: {
+    type: String,
+    default: '',
+  },
+  maxNpsMsg: {
+    type: String,
+    default: '',
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
+  rangeConfig: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
+});
+const emit = defineEmits(['change']);
+
+const rating = computed({
+  get() {
+    return props.value;
+  },
+  set(val) {
+    const key = props.field;
+    emit('change', {
+      key,
+      value: val,
+    });
+  },
+});
+
+const confirmNps = (num) => {
+  if (props.readonly) return;
+  rating.value = num + '';
+};
+
+const minNpsMsg = computed(() => {
+  return props.minNpsMsg || '极不满意';
+});
+
+const maxNpsMsg = computed(() => {
+  return props.maxNpsMsg || '十分满意';
+});
+
+const indexValue = computed(() => {
+  return props.value !== '' ? props.value : -1;
+});
+const currentRangeConfig = computed(() => {
+  return props.rangeConfig[rating.value];
+});
+const isShowInput = computed(() => {
+  return currentRangeConfig.value?.isShowInput;
+});
+const moduleConfig = computed(() => {
+  return {
+    type: 'selectMoreModule',
+    field: `${props.field}_${rating.value}`,
+    placeholder: props.rangeConfig[rating.value]?.text,
+    value: props.rangeConfig[rating.value]?.othersValue || '',
+  };
+});
+
+const onMoreDataChange = (data) => {
+  const { key, value } = data;
+  emit('change', {
+    key,
+    value,
+  });
+};
+</script>
+<style lang="scss" rel="stylesheet/scss">
+.nps-wrapper-main {
+  .nps-row-msg {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    .nps-msg {
+      font-size: 0.22rem;
+      color: #92949d;
+    }
+  }
+}
+.nps-select-config {
+  width: 312px;
+}
+.nps-rate-config {
+  .row {
+    height: 47px;
+  }
+  .text {
+    input {
+      height: 32px;
+    }
+  }
+}
+</style>

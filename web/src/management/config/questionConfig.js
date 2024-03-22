@@ -29,6 +29,10 @@ export const defaultQuestionConfig = {
   starStyle: 'star',
   starMin: 1,
   starMax: 5,
+  npsMin: 0,
+  npsMax: 10,
+  minNpsMsg: '极不满意',
+  maxNpsMsg: '十分满意',
   // 分值对应的开关和输入框配置，因为不是固定从0开始，用对象比较合适
   rangeConfig: {},
   // 选项

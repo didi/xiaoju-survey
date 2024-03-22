@@ -9,6 +9,7 @@
     @change="changeData"
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
+    :class="formConfig.contentClass"
   >
     <el-option
       v-for="item in options"
@@ -31,6 +32,10 @@ export default {
   },
   props: {
     formConfig: {
+      type: Object,
+      required: true,
+    },
+    moduleConfig: {
       type: Object,
       required: true,
     },
@@ -57,8 +62,14 @@ export default {
   },
   methods: {
     changeData(value) {
-      const key = this.formConfig.key;
-
+      const { key, valueSetter } = this.formConfig;
+      if (valueSetter && typeof valueSetter == 'function') {
+        let status = valueSetter(value, this.moduleConfig);
+        if (status) {
+          this.validValue = '';
+          return;
+        }
+      }
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
         value,

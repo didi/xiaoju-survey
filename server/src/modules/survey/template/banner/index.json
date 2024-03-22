@@ -1,12 +1,64 @@
 {
 	"temp": {
 		"key": "default",
-		"name": "默认分类",
+		"name": "全部",
 		"list": [{
 			"src": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp",
 			"title": "1"
 		}]
-},
+	},
+	"scenery": {
+		"key": "scenery",
+		"name": "风景",
+		"list": [{
+			"src": "/imgs/skin/SyiLRcukyE1558430525760.webp",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/sqYig4AcWr1558430525663.webp",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/ElNeqJT2I21558430526165.webp",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/CxQkSU6AY21558430526163.webp",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/VTUwbp6vY61558430527320.webp",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/SHs0K703Yn1558430527218.webp",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/oVTedX9V4s1558430527671.webp",
+			"title": "7"
+		}]
+	},
+	"business": {
+		"key": "business",
+		"name": "商务",
+		"list": [{
+			"src": "/imgs/skin/3ABKqvDaVn1558514860472.webp",
+			"title": "1"
+		}, {
+			"src": "/imgs/skin/OewuaQmWoq1558514860285.webp",
+			"title": "2"
+		}, {
+			"src": "/imgs/skin/HuVqqtbFjs1558514860570.webp",
+			"title": "3"
+		}, {
+			"src": "/imgs/skin/icSlqsr0uZ1558514860875.webp",
+			"title": "4"
+		}, {
+			"src": "/imgs/skin/Qu9rg33wmq1558514861015.webp",
+			"title": "5"
+		}, {
+			"src": "/imgs/skin/145gBCRtNP1558514861211.webp",
+			"title": "6"
+		}, {
+			"src": "/imgs/skin/ykWLFV0QWj1558514861444.webp",
+			"title": "7"
+		}]
+	},
 	"activity": {
 		"key": "activity",
 		"name": "节日",
@@ -38,32 +90,6 @@
 			"title": "6"
 		}, {
 			"src": "/imgs/skin/FRIzPC6ZtN1558430221344.webp",
-			"title": "7"
-		}]
-	},
-	"scenery": {
-		"key": "scenery",
-		"name": "风景",
-		"list": [{
-			"src": "/imgs/skin/SyiLRcukyE1558430525760.webp",
-			"title": "1"
-		}, {
-			"src": "/imgs/skin/sqYig4AcWr1558430525663.webp",
-			"title": "2"
-		}, {
-			"src": "/imgs/skin/ElNeqJT2I21558430526165.webp",
-			"title": "3"
-		}, {
-			"src": "/imgs/skin/CxQkSU6AY21558430526163.webp",
-			"title": "4"
-		}, {
-			"src": "/imgs/skin/VTUwbp6vY61558430527320.webp",
-			"title": "5"
-		}, {
-			"src": "/imgs/skin/SHs0K703Yn1558430527218.webp",
-			"title": "6"
-		}, {
-			"src": "/imgs/skin/oVTedX9V4s1558430527671.webp",
 			"title": "7"
 		}]
 	},
@@ -119,32 +145,7 @@
 			"title": "7"
 		}]
 	},
-	"business": {
-		"key": "business",
-		"name": "商务",
-		"list": [{
-			"src": "/imgs/skin/3ABKqvDaVn1558514860472.webp",
-			"title": "1"
-		}, {
-			"src": "/imgs/skin/OewuaQmWoq1558514860285.webp",
-			"title": "2"
-		}, {
-			"src": "/imgs/skin/HuVqqtbFjs1558514860570.webp",
-			"title": "3"
-		}, {
-			"src": "/imgs/skin/icSlqsr0uZ1558514860875.webp",
-			"title": "4"
-		}, {
-			"src": "/imgs/skin/Qu9rg33wmq1558514861015.webp",
-			"title": "5"
-		}, {
-			"src": "/imgs/skin/145gBCRtNP1558514861211.webp",
-			"title": "6"
-		}, {
-			"src": "/imgs/skin/ykWLFV0QWj1558514861444.webp",
-			"title": "7"
-		}]
-	},
+	
 	"campus": {
 		"key": "campus",
 		"name": "校园",

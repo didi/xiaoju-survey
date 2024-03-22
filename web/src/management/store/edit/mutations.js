@@ -1,4 +1,4 @@
-import { set as _set, merge as _merge } from 'lodash-es';
+import { get as _get, set as _set, merge as _merge } from 'lodash-es';
 
 export default {
   setCurrentEditOne(state, data) {
@@ -86,4 +86,9 @@ export default {
   changeSchema(state, { key, value }) {
     _set(state.schema, key, value);
   },
+  changeThemePreset(state, presets) {
+    Object.keys(presets).forEach(key => {
+      _set(state.schema, key, presets[key]);
+    })
+  }
 };

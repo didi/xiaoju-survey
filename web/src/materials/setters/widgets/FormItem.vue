@@ -1,7 +1,7 @@
 <template>
   <el-form-item
     :class="{
-      horizion: formConfig.direction === 'horizon',
+      horizon: formConfig.direction === 'horizon',
       space_between: formConfig.direction === 'space_between',
     }"
   >
@@ -45,5 +45,16 @@ export default {
 .horizon {
   display: flex;
   flex-direction: row;
+}
+.space_between{
+  display: flex;
+  justify-content: space-between;
+  
+  ::v-deep> label{
+    flex: 1;
+  }
+  ::v-deep> div{
+    flex: 1;
+  }
 }
 </style>

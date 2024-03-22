@@ -252,7 +252,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 .ceilingPopper {
   max-width: 1000px !important ;
 }

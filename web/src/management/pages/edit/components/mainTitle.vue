@@ -1,6 +1,6 @@
 <template>
   <div class="title-wrapper" @click="handleClick()">
-    <div class="main-title" :class="{ active: isSelected }">
+    <div class="main-title" :class="{ active: isSelected }" >
       <richEditor
         :value="bannerConf?.titleConfig?.mainTitle"
         @input="onTitleInput"
@@ -17,6 +17,10 @@ export default {
     return {};
   },
   props: {
+    preview: {
+      type: Boolean,
+      default: false,
+    },
     bannerConf: {
       type: Object,
     },
@@ -27,7 +31,11 @@ export default {
   computed: {},
   methods: {
     handleClick() {
-      this.$emit('select');
+      if(this.preview) {
+        return false
+      } else {
+        this.$emit('select');
+      }
     },
     onTitleInput(val) {
       if (!this.isSelected) {

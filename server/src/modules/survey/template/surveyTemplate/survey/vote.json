@@ -143,9 +143,5 @@
     "endTime": "2028-05-25 10:22:23",
     "tLimit": "0",
     "language": "chinese"
-  },
-  "skinConf": {
-    "skinColor": "#4a4c5b",
-    "inputBgColor": "#ffffff"
   }
 }

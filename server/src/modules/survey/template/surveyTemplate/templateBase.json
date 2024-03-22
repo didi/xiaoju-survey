@@ -37,6 +37,15 @@
     },
     "skinConf": {
       "skinColor": "#4a4c5b",
-      "inputBgColor": "#ffffff"
+      "inputBgColor": "#ffffff",
+      "backgroundConf": {
+        "color": "#fff"
+      },
+      "themeConf": {
+        "color": "#ffa600"
+      },
+      "contentConf": {
+        "opacity": 100
+      }
     }
   }

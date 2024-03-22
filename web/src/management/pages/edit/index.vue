@@ -23,7 +23,6 @@ export default {
   },
   async created() {
     this.$store.commit('edit/setSurveyId', this.$route.params.id);
-    this.$store.dispatch('getBannerData');
     try {
       await this.$store.dispatch('edit/init');
     } catch (error) {

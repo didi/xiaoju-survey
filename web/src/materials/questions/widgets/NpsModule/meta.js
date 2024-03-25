@@ -60,6 +60,7 @@ const meta = {
       labelStyle: {
         'font-weight': 'bold',
       },
+      contentClass: 'nps-customed-config',
       type: 'Customed',
       content: [
         {

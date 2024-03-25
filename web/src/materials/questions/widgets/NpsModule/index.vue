@@ -1,8 +1,8 @@
 <template>
   <div class="nps-wrapper-main">
     <div class="nps-row-msg">
-      <div class="nps-msg">{{ minNpsMsg }}</div>
-      <div class="nps-msg">{{ maxNpsMsg }}</div>
+      <div class="nps-msg left">{{ minNpsMsg }}</div>
+      <div class="nps-msg right">{{ maxNpsMsg }}</div>
     </div>
     <BaseRate
       :name="props.field"
@@ -123,8 +123,25 @@ const onMoreDataChange = (data) => {
     align-items: center;
     margin-bottom: 0.2rem;
     .nps-msg {
+      flex:1;
       font-size: 0.22rem;
       color: #92949d;
+      &.left{
+        text-align: left;
+      }
+      &.right{
+        text-align: right;
+      }
+    }
+  }
+  .star-wrapper-main{
+    .star-item {
+      &:hover{
+        background-color: $primary-color;
+      }
+    }
+    &:has(.star-item:hover) .star-item:not(:hover,:hover ~ *){
+      background-color: $primary-color;
     }
   }
 }
@@ -139,6 +156,18 @@ const onMoreDataChange = (data) => {
     input {
       height: 32px;
     }
+  }
+}
+.nps-customed-config{
+  .el-form-item__label{
+    width: 70px !important;
+    margin-right: 8px;
+  }
+  .el-input__inner{
+    width: 234px;
+  }
+  .el-form-item{
+    margin-right: 0;
   }
 }
 </style>

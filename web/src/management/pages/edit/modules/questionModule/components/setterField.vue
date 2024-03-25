@@ -17,6 +17,7 @@
             @form-change="onFormChange($event, item)"
             :inline="true"
             labelPosition="left"
+            :class="item.contentClass"
           ></SettersField>
         </template>
         <Component

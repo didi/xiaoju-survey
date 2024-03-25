@@ -44,6 +44,9 @@ export class SurveyHistoryService {
         type: historyType,
       },
       take: 100,
+      order: {
+        createDate: -1,
+      },
     });
   }
 }

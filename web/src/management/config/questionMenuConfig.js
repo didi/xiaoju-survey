@@ -45,7 +45,7 @@ const menuItems = {
     type: 'radio-nps',
     path: 'NpsModule',
     snapshot: '/imgs/question-type-snapshot/radio-nps.webp',
-    icon: 'tixing-toupiao',
+    icon: 'NPSpingfen',
     title: 'nps评分',
   },
   vote: {

@@ -123,24 +123,24 @@ const onMoreDataChange = (data) => {
     align-items: center;
     margin-bottom: 0.2rem;
     .nps-msg {
-      flex:1;
+      flex: 1;
       font-size: 0.22rem;
       color: #92949d;
-      &.left{
+      &.left {
         text-align: left;
       }
-      &.right{
+      &.right {
         text-align: right;
       }
     }
   }
-  .star-wrapper-main{
+  .star-wrapper-main {
     .star-item {
-      &:hover{
+      &:hover {
         background-color: $primary-color;
       }
     }
-    &:has(.star-item:hover) .star-item:not(:hover,:hover ~ *){
+    &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
       background-color: $primary-color;
     }
   }
@@ -158,15 +158,15 @@ const onMoreDataChange = (data) => {
     }
   }
 }
-.nps-customed-config{
-  .el-form-item__label{
+.nps-customed-config {
+  .el-form-item__label {
     width: 70px !important;
     margin-right: 8px;
   }
-  .el-input__inner{
+  .el-input__inner {
     width: 234px;
   }
-  .el-form-item{
+  .el-form-item {
     margin-right: 0;
   }
 }

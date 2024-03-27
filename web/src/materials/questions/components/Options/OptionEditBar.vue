@@ -51,13 +51,13 @@ export default defineComponent({
     });
 
     const min = computed(() => {
-      const { npsMin, starMin } = moduleConfig.value;
-      return isNps.value ? npsMin : starMin;
+      const { min, starMin } = moduleConfig.value;
+      return isNps.value ? min : starMin;
     });
 
     const max = computed(() => {
-      const { npsMax, starMax } = moduleConfig.value;
-      return isNps.value ? npsMax : starMax;
+      const { max, starMax } = moduleConfig.value;
+      return isNps.value ? max : starMax;
     });
 
     const explain = computed(() => {

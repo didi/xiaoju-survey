@@ -1,13 +1,13 @@
 <template>
   <div class="nps-wrapper-main">
     <div class="nps-row-msg">
-      <div class="nps-msg left">{{ minNpsMsg }}</div>
-      <div class="nps-msg right">{{ maxNpsMsg }}</div>
+      <div class="nps-msg left">{{ minMsg }}</div>
+      <div class="nps-msg right">{{ maxMsg }}</div>
     </div>
     <BaseRate
       :name="props.field"
-      :min="props.npsMin"
-      :max="props.npsMax"
+      :min="props.min"
+      :max="props.max"
       :readonly="props.readonly"
       :value="indexValue"
       iconClass="number"
@@ -34,19 +34,19 @@ const props = defineProps({
     type: [String, Number],
     default: '',
   },
-  npsMin: {
+  min: {
     type: Number,
     default: 1,
   },
-  npsMax: {
+  max: {
     type: Number,
     default: 10,
   },
-  minNpsMsg: {
+  minMsg: {
     type: String,
     default: '',
   },
-  maxNpsMsg: {
+  maxMsg: {
     type: String,
     default: '',
   },
@@ -81,12 +81,12 @@ const confirmNps = (num) => {
   rating.value = num + '';
 };
 
-const minNpsMsg = computed(() => {
-  return props.minNpsMsg || '极不满意';
+const minMsg = computed(() => {
+  return props.minMsg || '极不满意';
 });
 
-const maxNpsMsg = computed(() => {
-  return props.maxNpsMsg || '十分满意';
+const maxMsg = computed(() => {
+  return props.maxMsg || '十分满意';
 });
 
 const indexValue = computed(() => {
@@ -115,7 +115,7 @@ const onMoreDataChange = (data) => {
   });
 };
 </script>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
 .nps-wrapper-main {
   .nps-row-msg {
     display: flex;

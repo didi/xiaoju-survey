@@ -9,20 +9,20 @@ const meta = {
   formConfig: [
     basicConfig,
     {
-      name: 'npsMin',
+      name: 'min',
       label: 'NPS量表最小值',
       labelStyle: {
         'font-weight': 'bold',
       },
       contentClass: 'nps-select-config',
-      key: 'npsMin',
+      key: 'min',
       type: 'Select',
       options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => ({
         value: v,
         label: v,
       })),
       valueSetter: (val, moduleConfig) => {
-        if (moduleConfig['npsMax'] && val >= moduleConfig['npsMax']) {
+        if (moduleConfig['max'] && val >= moduleConfig['max']) {
           Message({
             type: 'info',
             message: '最小值不可大于最大值',
@@ -32,12 +32,12 @@ const meta = {
       },
     },
     {
-      name: 'npsMax',
+      name: 'max',
       label: 'NPS量表最大值',
       labelStyle: {
         'font-weight': 'bold',
       },
-      key: 'npsMax',
+      key: 'max',
       type: 'Select',
       contentClass: 'nps-select-config',
       options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => ({
@@ -45,7 +45,7 @@ const meta = {
         label: v,
       })),
       valueSetter: (val, moduleConfig) => {
-        if (moduleConfig['npsMin'] && val <= moduleConfig['npsMin']) {
+        if (moduleConfig['min'] && val <= moduleConfig['min']) {
           Message({
             type: 'info',
             message: '最大值不可小于最小值',
@@ -66,13 +66,13 @@ const meta = {
         {
           label: '最小值文案',
           type: 'Input',
-          key: 'minNpsMsg',
+          key: 'minMsg',
           direction: 'horizon',
         },
         {
           label: '最大值文案',
           type: 'Input',
-          key: 'maxNpsMsg',
+          key: 'maxMsg',
           direction: 'horizon',
         },
       ],

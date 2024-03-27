@@ -51,8 +51,8 @@ export class SurveyController {
     req,
   ) {
     const validationResult = await Joi.object({
-      remark: Joi.string().required(),
       title: Joi.string().required(),
+      remark: Joi.string().allow(null).default(''),
       surveyType: Joi.string().when('createMethod', {
         is: 'copy',
         then: Joi.allow(null),

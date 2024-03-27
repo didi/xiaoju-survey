@@ -82,7 +82,9 @@ export default {
 .option-list-width {
   max-width: 400px;
 }
-
+.nps-select-config {
+  width: 312px;
+}
 .select-option-quote,
 .originType {
   font-family: PingFangSC-Regular;

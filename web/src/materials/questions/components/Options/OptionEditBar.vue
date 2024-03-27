@@ -182,6 +182,17 @@ export default defineComponent({
   }
 }
 
+.nps-rate-config {
+  ::v-deep .row {
+    height: 47px;
+  }
+  ::v-deep .text {
+    input {
+      height: 32px;
+    }
+  }
+}
+
 .pop-title {
   font-family: PingFangSC-Medium;
   font-size: 14px;

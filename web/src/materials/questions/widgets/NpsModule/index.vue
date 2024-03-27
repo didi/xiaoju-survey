@@ -115,7 +115,7 @@ const onMoreDataChange = (data) => {
   });
 };
 </script>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
 .nps-wrapper-main {
   .nps-row-msg {
     display: flex;
@@ -134,7 +134,7 @@ const onMoreDataChange = (data) => {
       }
     }
   }
-  .star-wrapper-main {
+  ::v-deep .star-wrapper-main {
     .star-item {
       &:hover {
         background-color: $primary-color;
@@ -143,31 +143,6 @@ const onMoreDataChange = (data) => {
     &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
       background-color: $primary-color;
     }
-  }
-}
-.nps-select-config {
-  width: 312px;
-}
-.nps-rate-config {
-  .row {
-    height: 47px;
-  }
-  .text {
-    input {
-      height: 32px;
-    }
-  }
-}
-.nps-customed-config {
-  .el-form-item__label {
-    width: 70px !important;
-    margin-right: 8px;
-  }
-  .el-input__inner {
-    width: 234px;
-  }
-  .el-form-item {
-    margin-right: 0;
   }
 }
 </style>

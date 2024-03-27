@@ -1,37 +1,10 @@
-import {
-  Entity,
-  Column,
-  ObjectIdColumn,
-  BeforeInsert,
-  BeforeUpdate,
-} from 'typeorm';
-import { ObjectId } from 'mongodb';
-import { HISTORY_TYPE, RECORD_STATUS } from '../enums';
+import { Entity, Column } from 'typeorm';
+import { HISTORY_TYPE } from '../enums';
 import { SurveySchemaInterface } from '../interfaces/survey';
+import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'surveyHistory' })
-export class SurveyHistory {
-  @ObjectIdColumn()
-  _id: ObjectId;
-
-  @Column()
-  curStatus: {
-    status: RECORD_STATUS;
-    date: number;
-  };
-
-  @Column()
-  statusList: Array<{
-    status: RECORD_STATUS;
-    date: number;
-  }>;
-
-  @Column()
-  createDate: number;
-
-  @Column()
-  updateDate: number;
-
+export class SurveyHistory extends BaseEntity {
   @Column()
   pageId: string;
 
@@ -46,21 +19,4 @@ export class SurveyHistory {
     username: string;
     _id: string;
   };
-
-  @BeforeInsert()
-  initDefaultInfo() {
-    const now = Date.now();
-    if (!this.curStatus) {
-      const curStatus = { status: RECORD_STATUS.NEW, date: now };
-      this.curStatus = curStatus;
-      this.statusList = [curStatus];
-    }
-    this.createDate = now;
-    this.updateDate = now;
-  }
-
-  @BeforeUpdate()
-  onUpdate() {
-    this.updateDate = Date.now();
-  }
 }

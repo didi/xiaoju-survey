@@ -8,28 +8,15 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-
-import { SurveyMetaService } from '../services/surveyMeta.service';
-
 import * as Joi from 'joi';
-import { Authtication } from 'src/guards/authtication';
 import moment from 'moment';
 
-type FilterItem = {
-  comparator?: string;
-  condition: Array<FilterCondition>;
-};
+import { getFilter, getOrder } from 'src/utils/surveyUtil';
+import { HttpException } from 'src/exceptions/httpException';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { Authtication } from 'src/guards/authtication';
 
-type FilterCondition = {
-  field: string;
-  comparator?: string;
-  value: string & Array<FilterItem>;
-};
-
-type OrderItem = {
-  field: string;
-  value: number;
-};
+import { SurveyMetaService } from '../services/surveyMeta.service';
 
 @Controller('/api/survey')
 export class SurveyMetaController {
@@ -39,11 +26,17 @@ export class SurveyMetaController {
   @Post('/updateMeta')
   @HttpCode(200)
   async updateMeta(@Body() reqBody, @Request() req) {
-    const validationResult = await Joi.object({
-      remark: Joi.string().allow(null).default(''),
-      title: Joi.string().required(),
-      surveyId: Joi.string().required(),
-    }).validateAsync(reqBody, { allowUnknown: true });
+    let validationResult;
+    try {
+      validationResult = await Joi.object({
+        title: Joi.string().required(),
+        remark: Joi.string().allow(null, '').default(''),
+        surveyId: Joi.string().required(),
+      }).validateAsync(reqBody, { allowUnknown: true });
+    } catch (error) {
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+
     const username = req.user.username;
     const surveyId = validationResult.surveyId;
     const survey = await this.surveyMetaService.checkSurveyAccess({
@@ -83,7 +76,7 @@ export class SurveyMetaController {
       order = {};
     if (validationResult.filter) {
       try {
-        filter = this.getFilter(
+        filter = getFilter(
           JSON.parse(decodeURIComponent(validationResult.filter)),
         );
       } catch (error) {
@@ -92,7 +85,7 @@ export class SurveyMetaController {
     }
     if (validationResult.order) {
       try {
-        order = order = this.getOrder(
+        order = order = getOrder(
           JSON.parse(decodeURIComponent(validationResult.order)),
         );
       } catch (error) {
@@ -123,63 +116,5 @@ export class SurveyMetaController {
         }),
       },
     };
-  }
-
-  private getFilter(filterList: Array<FilterItem>) {
-    const allowFilterField = [
-      'title',
-      'remark',
-      'surveyType',
-      'curStatus.status',
-    ];
-    return filterList.reduce(
-      (preItem, curItem) => {
-        const condition = curItem.condition
-          .filter((item) => allowFilterField.includes(item.field))
-          .reduce((pre, cur) => {
-            switch (cur.comparator) {
-              case '$ne':
-                pre[cur.field] = {
-                  $ne: cur.value,
-                };
-                break;
-              case '$regex':
-                pre[cur.field] = {
-                  $regex: cur.value,
-                };
-                break;
-              default:
-                pre[cur.field] = cur.value;
-                break;
-            }
-            return pre;
-          }, {});
-        switch (curItem.comparator) {
-          case '$or':
-            if (!Array.isArray(preItem.$or)) {
-              preItem.$or = [];
-            }
-            preItem.$or.push(condition);
-            break;
-          default:
-            Object.assign(preItem, condition);
-            break;
-        }
-        return preItem;
-      },
-      {} as { $or?: Array<Record<string, string>> } & Record<string, string>,
-    );
-  }
-
-  private getOrder(order: Array<OrderItem>) {
-    const allowOrderFields = ['createDate', 'updateDate', 'curStatus.date'];
-
-    const orderList = order.filter((orderItem) =>
-      allowOrderFields.includes(orderItem.field),
-    );
-    return orderList.reduce((pre, cur) => {
-      pre[cur.field] = cur.value === 1 ? 1 : -1;
-      return pre;
-    }, {});
   }
 }

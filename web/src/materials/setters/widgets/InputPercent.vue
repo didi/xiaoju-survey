@@ -1,5 +1,6 @@
 <template>
   <el-input
+    class="custom-input"
     :placeholder="formConfig.placeholder"
     v-model="value"
     @input="changeData"
@@ -67,4 +68,12 @@ export default {
   },
 };
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped></style>
+<style lang="scss" rel="stylesheet/scss" scoped>
+.custom-input{
+  ::v-deep .el-input__inner{
+    width: 100px;
+    padding-right: 0px;
+  }
+}
+
+</style>

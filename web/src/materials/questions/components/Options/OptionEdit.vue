@@ -43,7 +43,7 @@
 <script>
 import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
-import { cloneDeep as _cloneDeep } from 'lodash';
+import { cloneDeep as _cloneDeep } from 'lodash-es';
 import EditorV2 from '@/common/Editor/EditorV2';
 
 export default {
@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 .option-edit-wrap {
   .focus {
     margin-top: 31px;

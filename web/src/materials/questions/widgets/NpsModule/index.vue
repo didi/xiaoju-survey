@@ -115,7 +115,7 @@ const onMoreDataChange = (data) => {
   });
 };
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" rel="stylesheet/scss">
 .nps-wrapper-main {
   .nps-row-msg {
     display: flex;

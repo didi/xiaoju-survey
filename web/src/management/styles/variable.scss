@@ -1,7 +1,9 @@
+@import './skin.scss';
 $primary-color: #ffa600;
 $primary-color-hover: #fbb733;
 $primary-color-deep: #D48D00;
 $primary-color-light: #fffcf0;
+
 
 $normal-color: #4a4c5b;
 $normal-color-hover: #626369;
@@ -22,6 +24,7 @@ $background-color: #f6f7f9;
 $background-color-light: #ffffff;
 $background-color-gray: #F7F9Fb;
 $background-color-dark: #E7E9EB;
+$primary-bg-color: #fef6e6;
 
 $title-color-deep: #292a36;
 $title-color: #4a4c5b;
@@ -32,3 +35,35 @@ $light-focus-color: #666666;
 $spliter-color: #f7f7f7;
 
 $error-color: #ec4e29;
+
+$primary-color-light: hsl(48, 100%, 97%);
+
+
+
+
+$title-size: 0.32rem;
+$font-size: 0.28rem;
+$tip-size: 0.22rem;
+
+.el-radio__input.is-checked+.el-radio__label {
+  color: $font-color !important;
+}
+
+.el-switch.is-checked .el-switch__core {
+  border-color: $primary-color !important;
+  background-color: $primary-color !important;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.question-edit-wrapper .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: $primary-color !important;
+  border-color: $primary-color !important;
+}
+
+.el-checkbox__input.is-focus .el-checkbox__inner {
+  border-color: $primary-color !important;
+}
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
+  color: $font-color !important;
+}

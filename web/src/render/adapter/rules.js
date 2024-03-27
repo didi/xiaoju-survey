@@ -4,7 +4,7 @@ import {
   isArray as _isArray,
   keys as _keys,
   set as _set,
-} from 'lodash';
+} from 'lodash-es';
 
 const regexpMap = {
   nd: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,

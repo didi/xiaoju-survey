@@ -133,9 +133,11 @@ npm run local
 
 #### 1、启动数据库
 
-> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83)
+> 项目使用MongoDB：[MongoDB安装指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E5%AE%89%E8%A3%85)
 
-启动和配置数据库，查看[MongoDB启动](http://localhost:5000/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83#%E4%BA%94%E5%90%AF%E5%8A%A8)
+- 配置数据库，查看[MongoDB配置](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93)
+ 
+- 启动本地数据库，查看[MongoDB启动](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E4%BA%94%E5%90%AF%E5%8A%A8)
 
 #### 2、安装依赖
 ```shell
@@ -169,17 +171,26 @@ npm run serve
 
 [http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
 
+<br /><br />
 
-# 交流群
-## 微信
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="300" />
+## 微信交流群
 
-## QQ
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="230" />
 
-# Feature
+## Star
+如果该项目对你有帮助，star一下 ❤️❤️❤️
+
+[![Star History Chart](https://api.star-history.com/svg?repos=didi/xiaoju-survey&type=Date)](https://star-history.com/#didi/xiaoju-survey&Date)
+
+## 记录
+[谁在使用](https://github.com/didi/xiaoju-survey/issues/64)
+
+## 贡献
+[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)
+
+## Feature
 [官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
 
-# CHANGELOG
+## CHANGELOG
 [MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 

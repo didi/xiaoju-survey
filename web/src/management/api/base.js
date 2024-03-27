@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@/management/store/index';
 import router from '@/management/router/index';
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 
 const instance = axios.create({
   baseURL: '/api',

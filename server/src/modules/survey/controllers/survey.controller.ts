@@ -50,21 +50,26 @@ export class SurveyController {
     @Request()
     req,
   ) {
-    const validationResult = await Joi.object({
-      remark: Joi.string().required(),
-      title: Joi.string().required(),
-      surveyType: Joi.string().when('createMethod', {
-        is: 'copy',
-        then: Joi.allow(null),
-        otherwise: Joi.required(),
-      }),
-      createMethod: Joi.string().allow(null).default('basic'),
-      createFrom: Joi.string().when('createMethod', {
-        is: 'copy',
-        then: Joi.required(),
-        otherwise: Joi.allow(null),
-      }),
-    }).validateAsync(reqBody);
+    let validationResult;
+    try {
+      validationResult = await Joi.object({
+        title: Joi.string().required(),
+        remark: Joi.string().allow(null, '').default(''),
+        surveyType: Joi.string().when('createMethod', {
+          is: 'copy',
+          then: Joi.allow(null),
+          otherwise: Joi.required(),
+        }),
+        createMethod: Joi.string().allow(null).default('basic'),
+        createFrom: Joi.string().when('createMethod', {
+          is: 'copy',
+          then: Joi.required(),
+          otherwise: Joi.allow(null),
+        }),
+      }).validateAsync(reqBody);
+    } catch (error) {
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
 
     const { title, remark, createMethod, createFrom } = validationResult;
 

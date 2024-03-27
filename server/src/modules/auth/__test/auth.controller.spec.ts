@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
-import { AuthController } from './auth.controller';
+import { AuthController } from '../controllers/auth.controller';
 import { UserService } from '../services/user.service';
 import { CaptchaService } from '../services/captcha.service';
 import { AuthService } from '../services/auth.service';
@@ -10,6 +10,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { ObjectId } from 'mongodb';
 import { User } from 'src/models/user.entity';
+import { Captcha } from 'src/models/captcha.entity';
 
 jest.mock('../services/captcha.service');
 jest.mock('../services/auth.service');
@@ -23,7 +24,7 @@ describe('AuthController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot()],
+      // imports: [ConfigModule.forRoot()],
       controllers: [AuthController],
       providers: [UserService, CaptchaService, ConfigService, AuthService],
     }).compile();
@@ -147,6 +148,21 @@ describe('AuthController', () => {
       await expect(controller.login(mockUserInfo)).rejects.toThrow(
         new HttpException('用户名或密码错误', EXCEPTION_CODE.USER_NOT_EXISTS),
       );
+    });
+  });
+
+  describe('getCaptcha', () => {
+    it('should return captcha image and id', async () => {
+      const captcha = new Captcha();
+      const mockCaptchaId = new ObjectId();
+      captcha._id = mockCaptchaId;
+      jest.spyOn(captchaService, 'createCaptcha').mockResolvedValue(captcha);
+
+      const result = await controller.getCaptcha();
+
+      expect(result.code).toBe(200);
+      expect(result.data.id).toBe(mockCaptchaId.toString());
+      expect(typeof result.data.img).toBe('string');
     });
   });
 });

@@ -39,35 +39,34 @@ export interface DataItem {
   showType: boolean;
   showSpliter: boolean;
   type: string;
-  valid: string;
+  valid?: string;
   field: string;
   title: string;
   placeholder: string;
-  randomSort: boolean;
+  randomSort?: boolean;
   checked: boolean;
   minNum: string;
   maxNum: string;
   star: number;
-  nps: NPS;
+  nps?: NPS;
   placeholderDesc: string;
-  addressType: number;
-  isAuto: boolean;
-  urlKey: string;
-  textRange: TextRange;
+  textRange?: TextRange;
   options?: Option[];
   importKey?: string;
   importData?: string;
   cOption?: string;
   cOptions?: string[];
   exclude?: boolean;
+  rangeConfig?: any;
+  starStyle?: string;
+  innerType?: string;
 }
 
 export interface Option {
   text: string;
-  imageUrl: string;
   others: boolean;
-  mustOthers: boolean;
-  othersKey: string;
+  mustOthers?: boolean;
+  othersKey?: string;
   placeholderDesc: string;
   hash: string;
 }
@@ -109,10 +108,16 @@ export interface SkinConf {
   inputBgColor: string;
 }
 
+export interface BottomConf {
+  logoImage: string;
+  logoImageWidth: string;
+}
+
 export interface SurveySchemaInterface {
   bannerConf: BannerConf;
   dataConf: DataConf;
   submitConf: SubmitConf;
   baseConf: BaseConf;
   skinConf: SkinConf;
+  bottomConf: BottomConf;
 }

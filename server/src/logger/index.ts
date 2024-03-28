@@ -1,13 +1,12 @@
 import * as log4js from 'log4js';
 import moment from 'moment';
-import { REQUEST } from '@nestjs/core';
-import { Inject, Request } from '@nestjs/common';
+import { Request } from 'express';
 const log4jsLogger = log4js.getLogger();
 
 export class Logger {
   private static inited = false;
 
-  constructor(@Inject(REQUEST) private req: Request) {}
+  constructor() {}
 
   static init(config: { filename: string }) {
     if (this.inited) {
@@ -33,23 +32,23 @@ export class Logger {
     });
   }
 
-  _log(message, options: { dltag?: string; level: string }) {
+  _log(message, options: { dltag?: string; level: string; req?: Request }) {
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
     const level = options.level;
     const dltag = options.dltag ? `${options.dltag}||` : '';
-    const traceIdStr = this.req['traceId']
-      ? `traceid=${this.req['traceId']}||`
+    const traceIdStr = options?.req['traceId']
+      ? `traceid=${options?.req['traceId']}||`
       : '';
     return log4jsLogger[level](
       `[${datetime}][${level.toUpperCase()}]${dltag}${traceIdStr}${message}`,
     );
   }
 
-  info(message, options = { dltag: '' }) {
+  info(message, options?: { dltag?: string; req?: Request }) {
     return this._log(message, { ...options, level: 'info' });
   }
 
-  error(message, options = { dltag: '' }) {
+  error(message, options: { dltag?: string; req?: Request }) {
     return this._log(message, { ...options, level: 'error' });
   }
 }

@@ -11,8 +11,10 @@ import { SurveyHistoryService } from '../services/surveyHistory.service';
 import { SurveyMetaService } from '../services/surveyMeta.service';
 
 import * as Joi from 'joi';
+import { ApiTags } from '@nestjs/swagger';
 import { Authtication } from 'src/guards/authtication';
 
+@ApiTags('survey')
 @Controller('/api/surveyHisotry')
 export class SurveyHistoryController {
   constructor(

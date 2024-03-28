@@ -3,7 +3,9 @@ import { ResponseSchemaService } from '../services/responseScheme.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { RECORD_STATUS } from 'src/enums';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('surveyResponse')
 @Controller('/api/responseSchema')
 export class ResponseSchemaController {
   constructor(private readonly responseSchemaService: ResponseSchemaService) {}

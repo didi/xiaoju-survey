@@ -25,6 +25,6 @@ describe('BaseEntity', () => {
     const now = Date.now();
     baseEntity.onUpdate();
 
-    expect(baseEntity.updateDate).toBeCloseTo(now, -3); // Check if date is close to current time
+    expect(baseEntity.updateDate).toBeCloseTo(now, -3);
   });
 });

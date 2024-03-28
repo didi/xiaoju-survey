@@ -2,7 +2,9 @@ import { Controller, Get, HttpCode, Query } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { CounterService } from '../services/counter.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('surveyResponse')
 @Controller('/api/counter')
 export class CounterController {
   constructor(private readonly counterService: CounterService) {}

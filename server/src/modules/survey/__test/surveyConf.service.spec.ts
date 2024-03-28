@@ -87,7 +87,6 @@ describe('SurveyConfService', () => {
       code: schema,
     } as unknown as SurveyConf);
 
-    // 调用待测试的方法
     await service.saveSurveyConf({ surveyId, schema });
 
     // 验证save方法被调用了一次，并且传入了正确的参数
@@ -120,7 +119,6 @@ describe('SurveyConfService', () => {
     expect(surveyConfRepository.save).not.toHaveBeenCalled();
   });
 
-  // getSurveyContentByCode方法的单元测试
   it('should get survey content by code', async () => {
     // 准备参数和模拟数据
     const schema = {

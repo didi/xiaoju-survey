@@ -16,12 +16,16 @@ import { ContentSecurityService } from '../services/contentSecurity.service';
 import { SurveyHistoryService } from '../services/surveyHistory.service';
 
 import BannerData from '../template/banner/index.json';
+
 import * as Joi from 'joi';
+import { ApiTags } from '@nestjs/swagger';
 import { Authtication } from 'src/guards/authtication';
 import { HISTORY_TYPE } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { Logger } from 'src/logger';
 
+@ApiTags('survey')
 @Controller('/api/survey')
 export class SurveyController {
   constructor(
@@ -30,6 +34,7 @@ export class SurveyController {
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly contentSecurityService: ContentSecurityService,
     private readonly surveyHistoryService: SurveyHistoryService,
+    private readonly logger: Logger,
   ) {}
 
   @Get('/getBannerData')
@@ -68,6 +73,9 @@ export class SurveyController {
         }),
       }).validateAsync(reqBody);
     } catch (error) {
+      this.logger.error(`createSurvey_parameter error: ${error.message}`, {
+        req,
+      });
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 

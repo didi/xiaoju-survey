@@ -6,6 +6,7 @@ export default {
   checkbox: 'CheckboxModule',
   'binary-choice': 'BinaryChoiceModule',
   'radio-star': 'StarModule',
+  'radio-nps': 'NpsModule',
   city: 'CityModule',
   vote: 'VoteModule',
   'matrix-checkbox': 'GroupModule',

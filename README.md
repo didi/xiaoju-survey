@@ -177,6 +177,10 @@ npm run serve
 
 <img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="230" />
 
+## QQ交流群
+
+[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="300" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+
 ## Star
 如果该项目对你有帮助，star一下 ❤️❤️❤️
 
@@ -194,3 +198,5 @@ npm run serve
 ## CHANGELOG
 [MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 
+## 分享
+[文章](https://github.com/didi/xiaoju-survey/issues)

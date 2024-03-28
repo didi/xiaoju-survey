@@ -47,6 +47,7 @@ export class SurveyHistoryService {
       order: {
         createDate: -1,
       },
+      select: ['createDate', 'operator', 'type', '_id'],
     });
   }
 }

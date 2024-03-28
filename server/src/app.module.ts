@@ -27,6 +27,8 @@ import { Counter } from './models/counter.entity';
 import { SurveyResponse } from './models/surveyResponse.entity';
 import { ClientEncrypt } from './models/clientEncrypt.entity';
 import { Word } from './models/word.entity';
+import { MessagePushingTask } from './models/messagePushingTask.entity';
+import { MessagePushingLog } from './models/messagePushingLog.entity';
 
 import { LoggerProvider } from './logger/logger.provider';
 import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
@@ -69,6 +71,8 @@ import { Logger } from './logger';
             ResponseSchema,
             ClientEncrypt,
             Word,
+            MessagePushingTask,
+            MessagePushingLog,
           ],
         };
       },

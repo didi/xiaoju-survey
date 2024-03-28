@@ -21,10 +21,9 @@ describe('SurveyResponseUIController', () => {
   });
 
   it('should render the survey response with the correct path', () => {
-    const surveyPath = 'some-survey-path';
     const expectedFilePath = join(process.cwd(), 'public', 'render.html');
 
-    controller.render(surveyPath, res);
+    controller.render(res);
 
     expect(res.sendFile).toHaveBeenCalledWith(expectedFilePath);
   });

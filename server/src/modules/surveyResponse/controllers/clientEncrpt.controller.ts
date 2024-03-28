@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import * as forge from 'node-forge';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('surveyResponse')
 @Controller('/api/clientEncrypt')
 export class ClientEncryptController {
   constructor(

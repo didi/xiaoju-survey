@@ -27,24 +27,6 @@
         "checked": false,
         "minNum": "",
         "maxNum": "",
-        "options": [
-          {
-            "text": "选项1",
-            "imageUrl": "",
-            "others": false,
-            "mustOthers": false,
-            "othersKey": "",
-            "placeholderDesc": ""
-          },
-          {
-            "text": "选项2",
-            "imageUrl": "",
-            "others": false,
-            "mustOthers": false,
-            "othersKey": "",
-            "placeholderDesc": ""
-          }
-        ],
         "star": 5,
         "nps": {
           "leftText": "极不满意",

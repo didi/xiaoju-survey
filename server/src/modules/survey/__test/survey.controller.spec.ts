@@ -10,8 +10,8 @@ import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { LoggerProvider } from 'src/logger/logger.provider';
 
-// Mock the services
 jest.mock('../services/surveyMeta.service');
 jest.mock('../services/surveyConf.service');
 jest.mock('../../surveyResponse/services/responseScheme.service');
@@ -37,6 +37,7 @@ describe('SurveyController', () => {
         ResponseSchemaService,
         ContentSecurityService,
         SurveyHistoryService,
+        LoggerProvider,
       ],
     }).compile();
 

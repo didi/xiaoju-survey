@@ -82,8 +82,6 @@ describe('CaptchaService', () => {
 
       expect(captchaRepository.delete).toHaveBeenCalledWith(mockCaptchaId);
     });
-
-    // Add more test cases for different scenarios
   });
 
   describe('checkCaptchaIsCorrect', () => {

@@ -20,6 +20,7 @@ export class LogRequestMiddleware implements NestMiddleware {
       `method=${method}||uri=${originalUrl}||ip=${ip}||ua=${userAgent}||query=${query}||body=${body}`,
       {
         dltag: 'request_in',
+        req,
       },
     );
 
@@ -29,6 +30,7 @@ export class LogRequestMiddleware implements NestMiddleware {
         `status=${res.statusCode.toString()}||duration=${duration}ms`,
         {
           dltag: 'request_out',
+          req,
         },
       );
     });

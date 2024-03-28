@@ -2,8 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyMetaController } from '../controllers/surveyMeta.controller';
 import { SurveyMetaService } from '../services/surveyMeta.service';
 import { Authtication } from 'src/guards/authtication';
-import * as Joi from 'joi';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { LoggerProvider } from 'src/logger/logger.provider';
+import { HttpException } from 'src/exceptions/httpException';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
 describe('SurveyMetaController', () => {
   let controller: SurveyMetaController;
@@ -23,6 +25,7 @@ describe('SurveyMetaController', () => {
               .mockResolvedValue({ count: 0, data: [] }),
           },
         },
+        LoggerProvider,
       ],
     })
       .overrideGuard(Authtication)
@@ -74,9 +77,7 @@ describe('SurveyMetaController', () => {
   });
 
   it('should validate request body with Joi', async () => {
-    const reqBody = {
-      // Missing title and surveyId
-    };
+    const reqBody = {};
     const req = {
       user: {
         username: 'test-user',
@@ -86,8 +87,8 @@ describe('SurveyMetaController', () => {
     try {
       await controller.updateMeta(reqBody, req);
     } catch (error) {
-      expect(error).toBeInstanceOf(Joi.ValidationError);
-      expect(error.details[0].message).toMatch('"title" is required');
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.code).toBe(EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
     expect(surveyMetaService.checkSurveyAccess).not.toHaveBeenCalled();

@@ -2,16 +2,28 @@ import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
-import * as Joi from 'joi';
+import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import {
+  MESSAGE_PUSHING_HOOK,
+  MESSAGE_PUSHING_TYPE,
+} from 'src/enums/messagePushing';
+import { getPushingData } from 'src/utils/messagePushing';
+
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { CounterService } from '../services/counter.service';
-import moment from 'moment';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
-import { ENCRYPT_TYPE } from 'src/enums/encrypt';
-import * as forge from 'node-forge';
+import { MessagePushingTaskService } from '../../survey/services/messagePushingTask.service';
+import { MessagePushingLogService } from '../services/messagePushingLog.service';
 
+import moment from 'moment';
+import * as Joi from 'joi';
+import * as forge from 'node-forge';
+import { ApiTags } from '@nestjs/swagger';
+import fetch from 'node-fetch';
+
+@ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
 export class SurveyResponseController {
   constructor(
@@ -19,6 +31,8 @@ export class SurveyResponseController {
     private readonly counterService: CounterService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
+    private readonly messagePushingTaskService: MessagePushingTaskService,
+    private readonly messagePushingLogService: MessagePushingLogService,
   ) {}
 
   @Post('/createResponse')
@@ -174,13 +188,27 @@ export class SurveyResponseController {
     }
 
     // 入库
-    await this.surveyResponseService.createSurveyResponse({
-      surveyPath: validationResult.surveyPath,
-      data: decryptedData,
-      clientTime,
-      difTime,
+    const surveyResponse =
+      await this.surveyResponseService.createSurveyResponse({
+        surveyPath: validationResult.surveyPath,
+        data: decryptedData,
+        clientTime,
+        difTime,
+        surveyId: responseSchema.pageId,
+        optionTextAndId,
+      });
+
+    const sendData = getPushingData({
+      surveyResponse,
+      questionList: responseSchema?.code?.dataConf?.dataList || [],
       surveyId: responseSchema.pageId,
-      optionTextAndId,
+      surveyPath: responseSchema.surveyPath,
+    });
+
+    // 数据异步推送
+    this.sendSurveyResponseMessage({
+      sendData,
+      surveyId: responseSchema.pageId,
     });
 
     // 入库成功后，要把密钥删掉，防止被重复使用
@@ -190,5 +218,54 @@ export class SurveyResponseController {
       code: 200,
       msg: '提交成功',
     };
+  }
+
+  async sendSurveyResponseMessage({ sendData, surveyId }) {
+    try {
+      // 数据推送
+      const messagePushingTasks = await this.messagePushingTaskService.findAll({
+        surveyId,
+        hook: MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED,
+      });
+
+      if (
+        Array.isArray(messagePushingTasks) &&
+        messagePushingTasks.length > 0
+      ) {
+        for (const task of messagePushingTasks) {
+          switch (task.type) {
+            case MESSAGE_PUSHING_TYPE.HTTP: {
+              try {
+                const res = await fetch(task.pushAddress, {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json, */*',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(sendData),
+                });
+                const response = await res.json();
+                await this.messagePushingLogService.createPushingLog({
+                  taskId: task._id.toString(),
+                  request: sendData,
+                  response: response,
+                  status: res.status,
+                });
+              } catch (error) {
+                await this.messagePushingLogService.createPushingLog({
+                  taskId: task._id.toString(),
+                  request: sendData,
+                  response: error.data || error.message,
+                  status: error.status || 500,
+                });
+              }
+              break;
+            }
+            default:
+              break;
+          }
+        }
+      }
+    } catch (error) {}
   }
 }

@@ -34,6 +34,7 @@ const checkBoxTipSame = '请选择#min#项，少选择了#less#项';
 const textRangeMinTip = '至少输入#min#字';
 const numberRangeMinTip = '数字最小为#min#';
 const numberRangeMaxTip = '数字最大为#max#';
+const radioType = ['radio-star', 'radio-nps'];
 
 // 多选题的选项数目限制
 export function optionValidator(value, minNum, maxNum) {
@@ -198,7 +199,7 @@ const generateOthersKeyMap = (question) => {
   const { type, field, options, rangeConfig } = question;
   let othersKeyMap = undefined;
 
-  if (['radio-star'].includes(type)) {
+  if (radioType.includes(type)) {
     othersKeyMap = {};
     for (const key in rangeConfig) {
       if (rangeConfig[key].isShowInput) {
@@ -257,7 +258,7 @@ export default function (questionConfig) {
 
     // 对于选择题支持填写更多信息的，需要做是否必填的校验
     if (_keys(othersKeyMap).length) {
-      if (['radio-star'].includes(type)) {
+      if (radioType.includes(type)) {
         if (rangeConfig) {
           for (const key in rangeConfig) {
             if (rangeConfig[key].isShowInput && rangeConfig[key].required) {
@@ -275,7 +276,6 @@ export default function (questionConfig) {
         });
       }
     }
-
     return Object.assign(validMap, pre);
   }, {});
   return { rules };

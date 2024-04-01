@@ -10,6 +10,8 @@ import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { getListHeadByDataList } from '../utils';
 @Injectable()
 export class DataStatisticService {
+  private radioType = ['radio-star', 'radio-nps'];
+
   constructor(
     @InjectRepository(SurveyResponse)
     private readonly surveyResponseRepository: MongoRepository<SurveyResponse>,
@@ -66,7 +68,7 @@ export class DataStatisticService {
         }
         // 处理选项的更多输入框
         if (
-          itemConfig.type === 'radio-star' &&
+          this.radioType.includes(itemConfig.type) &&
           !data[`${itemConfigKey}_custom`]
         ) {
           data[`${itemConfigKey}_custom`] =

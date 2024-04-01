@@ -17,6 +17,7 @@
             @form-change="onFormChange($event, item)"
             :inline="true"
             labelPosition="left"
+            :class="item.contentClass"
           ></SettersField>
         </template>
         <Component
@@ -32,7 +33,11 @@
   </el-form>
 </template>
 <script>
-import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash-es';
+import {
+  get as _get,
+  pick as _pick,
+  isFunction as _isFunction,
+} from 'lodash-es';
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue';
 import setterLoader from '@/materials/setters/setterLoader';
@@ -169,5 +174,17 @@ export default {
 <style lang="scss" rel="stylesheet/scss" scoped>
 .config-form {
   padding: 15px 0;
+}
+.nps-customed-config {
+  .el-form-item {
+    margin-right: 0px;
+    ::v-deep .el-form-item__label {
+      width: 70px !important;
+      margin-right: 8px;
+    }
+    ::v-deep .el-input__inner {
+      width: 234px;
+    }
+  }
 }
 </style>

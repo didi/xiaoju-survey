@@ -31,7 +31,8 @@ export async function getSchemaBySurveyType(surveyType: string) {
 export function getListHeadByDataList(dataList) {
   const listHead = dataList.map((question) => {
     let othersCode;
-    if (question.type === 'radio-star') {
+    const radioType = ['radio-star', 'radio-nps'];
+    if (radioType.includes(question.type)) {
       const rangeConfigKeys = Object.keys(question.rangeConfig);
       if (rangeConfigKeys.length > 0) {
         othersCode = [{ code: `${question.field}_custom`, option: '填写理由' }];

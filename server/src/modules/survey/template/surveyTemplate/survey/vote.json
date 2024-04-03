@@ -28,10 +28,6 @@
         "minNum": "",
         "maxNum": "",
         "star": 5,
-        "nps": {
-          "leftText": "极不满意",
-          "rightText": "极满意"
-        },
         "exclude": false,
         "relTypes": {
           "textarea": "多行文本框",
@@ -87,10 +83,6 @@
             "hash": "115020"
           }
         ],
-        "nps": {
-          "leftText": "极不满意",
-          "rightText": "极满意"
-        },
         "star": 5,
         "addressType": 3,
         "textRange": {

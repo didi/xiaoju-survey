@@ -27,7 +27,10 @@ export default {
   name: 'Select',
   data() {
     return {
-      validValue: this.formConfig.value || '',
+      validValue:
+        !this.formConfig.value && this.formConfig.value != 0
+          ? ''
+          : this.formConfig.value,
     };
   },
   props: {

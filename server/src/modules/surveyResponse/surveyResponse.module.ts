@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 
+import { MessagePushingModule } from '../message/messagePushing.module';
+
 import { ResponseSchemaService } from './services/responseScheme.service';
 import { SurveyResponseService } from './services/surveyResponse.service';
 import { CounterService } from './services/counter.service';
 import { ClientEncryptService } from './services/clientEncrypt.service';
-import { MessagePushingTaskService } from '../survey/services/messagePushingTask.service';
-import { MessagePushingLogService } from './services/messagePushingLog.service';
+// import { MessagePushingTaskService } from '../messagePushing/services/messagePushingTask.service';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
-import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
-import { MessagePushingLog } from 'src/models/messagePushingLog.entity';
 
 import { ClientEncryptController } from './controllers/clientEncrpt.controller';
 import { CounterController } from './controllers/counter.controller';
@@ -30,10 +29,9 @@ import { ConfigModule } from '@nestjs/config';
       Counter,
       SurveyResponse,
       ClientEncrypt,
-      MessagePushingTask,
-      MessagePushingLog,
     ]),
     ConfigModule,
+    MessagePushingModule,
   ],
   controllers: [
     ClientEncryptController,
@@ -47,8 +45,6 @@ import { ConfigModule } from '@nestjs/config';
     SurveyResponseService,
     CounterService,
     ClientEncryptService,
-    MessagePushingTaskService,
-    MessagePushingLogService,
   ],
   exports: [
     ResponseSchemaService,

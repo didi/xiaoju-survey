@@ -78,7 +78,7 @@ const rating = computed({
 
 const confirmNps = (num) => {
   if (props.readonly) return;
-  rating.value = num + '';
+  rating.value = num;
 };
 
 const minMsg = computed(() => {

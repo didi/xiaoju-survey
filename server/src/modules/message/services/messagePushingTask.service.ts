@@ -7,12 +7,16 @@ import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 import { ObjectId } from 'mongodb';
 import { RECORD_STATUS } from 'src/enums';
+import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
+import { MessagePushingLogService } from './messagePushingLog.service';
+import fetch from 'node-fetch';
 
 @Injectable()
 export class MessagePushingTaskService {
   constructor(
     @InjectRepository(MessagePushingTask)
     private readonly messagePushingTaskRepository: MongoRepository<MessagePushingTask>,
+    private readonly messagePushingLogService: MessagePushingLogService,
   ) {}
 
   async create(
@@ -145,5 +149,54 @@ export class MessagePushingTaskService {
         },
       },
     );
+  }
+
+  async runResponseDataPush({ surveyId, sendData }) {
+    try {
+      // 数据推送
+      const messagePushingTasks = await this.findAll({
+        surveyId,
+        hook: MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED,
+      });
+
+      if (
+        Array.isArray(messagePushingTasks) &&
+        messagePushingTasks.length > 0
+      ) {
+        for (const task of messagePushingTasks) {
+          switch (task.type) {
+            case MESSAGE_PUSHING_TYPE.HTTP: {
+              try {
+                const res = await fetch(task.pushAddress, {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json, */*',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(sendData),
+                });
+                const response = await res.json();
+                await this.messagePushingLogService.createPushingLog({
+                  taskId: task._id.toString(),
+                  request: sendData,
+                  response: response,
+                  status: res.status,
+                });
+              } catch (error) {
+                await this.messagePushingLogService.createPushingLog({
+                  taskId: task._id.toString(),
+                  request: sendData,
+                  response: error.data || error.message,
+                  status: error.status || 500,
+                });
+              }
+              break;
+            }
+            default:
+              break;
+          }
+        }
+      }
+    } catch (error) {}
   }
 }

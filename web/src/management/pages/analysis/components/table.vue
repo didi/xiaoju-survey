@@ -39,14 +39,14 @@
             class="table-row-cell"
             v-popover="scope.$index + scope.column.property"
           >
-            {{ cleanRichText(scope.row[scope.column.property]) || '未知' }}
+            {{ getContent(scope.row[scope.column.property]) }}
           </span>
           <el-popover
             :ref="scope.$index + scope.column.property"
             placement="top-start"
             trigger="hover"
             width="300"
-            :content="cleanRichText(scope.row[scope.column.property]) || '未知'"
+            :content="getContent(scope.row[scope.column.property])"
           >
           </el-popover>
         </template>
@@ -69,6 +69,11 @@ export default {
 
   methods: {
     cleanRichText,
+    getContent(value) {
+      const content = cleanRichText(value)
+
+      return content === 0 ? 0 : (content || '未知')
+    }
   },
 };
 </script>

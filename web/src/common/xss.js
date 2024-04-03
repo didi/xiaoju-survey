@@ -29,7 +29,7 @@ const isVideo = (html) => {
 
 export const cleanRichText = (text) => {
   if (!text) {
-    return '';
+    return text === 0 ? 0 : '';
   }
   const html = transformHtmlTag(text);
   const content = html.replace(/<[^<>]+>/g, '').replace(/&nbsp;/g, '');

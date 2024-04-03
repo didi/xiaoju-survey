@@ -12,6 +12,7 @@
       :value="indexValue"
       iconClass="number"
       @change="confirmNps"
+      :class="npsClass"
     />
     <QuestionWithRule
       v-if="isShowInput"
@@ -62,6 +63,8 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['change']);
+
+const npsClass = !props.readonly ? 'radio-nps-hover' : '';
 
 const rating = computed({
   get() {
@@ -134,7 +137,12 @@ const onMoreDataChange = (data) => {
       }
     }
   }
-  ::v-deep .star-wrapper-main {
+  @media (max-width: 930px) {
+    ::v-deep .question-block {
+      padding: 0;
+    }
+  }
+  ::v-deep .radio-nps-hover {
     .star-item {
       &:hover {
         background-color: $primary-color;

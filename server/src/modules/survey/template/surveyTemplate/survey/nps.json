@@ -19,7 +19,8 @@
         "extraOptions": [],
         "importKey": "single",
         "importData": "",
-        "npsMin": 0,
+        "addressType": 3,
+        "isAuto": false,
         "urlKey": "",
         "hasRely": true,
         "relyList": [],
@@ -60,7 +61,6 @@
         "importData": "",
         "cOption": "",
         "cOptions": [],
-        "npsMin": 0,
         "star": 5,
         "urlKey": "",
         "defaultProps": {

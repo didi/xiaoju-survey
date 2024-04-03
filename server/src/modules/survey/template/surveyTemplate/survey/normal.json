@@ -16,10 +16,6 @@
         "minNum": "",
         "maxNum": "",
         "star": 5,
-        "nps": {
-          "leftText": "极不满意",
-          "rightText": "极满意"
-        },
         "placeholderDesc": "",
         "urlKey": "",
         "textRange": {
@@ -71,10 +67,6 @@
         "importData": "",
         "cOption": "",
         "cOptions": [],
-        "nps": {
-          "leftText": "极不满意",
-          "rightText": "极满意"
-        },
         "star": 5,
         "exclude": false,
         "textRange": {

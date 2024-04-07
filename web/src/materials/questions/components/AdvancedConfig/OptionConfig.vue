@@ -87,7 +87,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash';
+import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es';
 import ExtraIcon from '../ExtraIcon';
 import { cleanRichText } from '@/common/xss';
 
@@ -178,7 +178,7 @@ export default {
       for (const i in addOne) {
         if (i === 'others') {
           addOne[i] = others;
-          if(others) addOne.othersKey = `${field}_${addOne.hash}`;
+          if (others) addOne.othersKey = `${field}_${addOne.hash}`;
         } else if (i === 'mustOthers') {
           addOne[i] = false;
         } else if (i === 'text') {
@@ -252,7 +252,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 .ceilingPopper {
   max-width: 1000px !important ;
 }

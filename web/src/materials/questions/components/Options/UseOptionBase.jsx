@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 import GetHash from '../../common/utils/getOptionHash';
 
@@ -26,13 +26,13 @@ function useOptionBase(options) {
     if (typeof text !== 'string') {
       text = '选项';
     }
-    
+
     const getHash = new GetHash();
     addOne.hash = getHash.getHash();
     for (const i in addOne) {
       if (i === 'others') {
         addOne[i] = others;
-        if(others) addOne.othersKey = `${field}_${addOne.hash}`;
+        if (others) addOne.othersKey = `${field}_${addOne.hash}`;
       } else if (i === 'mustOthers') {
         addOne[i] = false;
       } else if (i === 'text') {

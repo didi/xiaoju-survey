@@ -1,3 +1,3 @@
 #! /bin/bash 
 cd /xiaoju-survey/server
-npm run start
+npm run start:prod

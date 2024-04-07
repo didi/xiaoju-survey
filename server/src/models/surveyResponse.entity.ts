@@ -1,0 +1,37 @@
+import { Entity, Column, BeforeInsert, AfterLoad } from 'typeorm';
+import pluginManager from '../securityPlugin/pluginManager';
+import { BaseEntity } from './base.entity';
+
+@Entity({ name: 'surveySubmit' })
+export class SurveyResponse extends BaseEntity {
+  @Column()
+  pageId: string;
+
+  @Column()
+  surveyPath: string;
+
+  @Column('jsonb')
+  data: Record<string, any>;
+
+  @Column()
+  difTime: number;
+
+  @Column()
+  clientTime: number;
+
+  @Column('jsonb')
+  secretKeys: Array<string>;
+
+  @Column('jsonb')
+  optionTextAndId: Record<string, any>;
+
+  @BeforeInsert()
+  async onDataInsert() {
+    return await pluginManager.triggerHook('beforeResponseDataCreate', this);
+  }
+
+  @AfterLoad()
+  async onDataLoaded() {
+    return await pluginManager.triggerHook('afterResponseDataReaded', this);
+  }
+}

@@ -23,7 +23,7 @@ import history from '../modules/contentModule/history.vue';
 import save from '../modules/contentModule/save.vue';
 import publish from '../modules/contentModule/publish.vue';
 import { mapState } from 'vuex';
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 
 export default {
   name: 'navbar',

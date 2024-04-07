@@ -1,6 +1,8 @@
 @import './default.scss';
+
 .input-wrapper {
     font-size: 0;
+
     .input-box {
         outline: none;
         font-size: 0.56rem;
@@ -13,7 +15,7 @@
         width: 200%;
         height: 1.61rem;
 
-        transform: scale(0.5,0.5);
+        transform: scale(0.5, 0.5);
         transform-origin: left top;
         box-sizing: border-box;
         margin-bottom: -.81rem;
@@ -21,41 +23,53 @@
         // overflow: hidden;
         color: $font-color;
         z-index: 10;
+
         &.is-focused:focus {
             border: 1px solid $primary-color;
             height: 3.5rem;
             margin-bottom: -1.75rem;
             overflow-y: scroll;
         }
-        &:not([readonly="readonly"]):hover{
+
+        &:not([readonly="readonly"]):hover {
             border: 1px solid $primary-color;
         }
+
         &.print {
             border: none;
             border-bottom: 1px solid $border-color;
             border-radius: 0;
         }
-        &::-webkit-input-placeholder { /* WebKit browsers */
+
+        &::-webkit-input-placeholder {
+            /* WebKit browsers */
             font-size: .56rem;
             font-weight: 300;
             color: $placeholder-color;
         }
-        &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+
+        &:-moz-placeholder {
+            /* Mozilla Firefox 4 to 18 */
             font-size: .56rem;
             font-weight: 300;
             color: $placeholder-color;
         }
-        &::-moz-placeholder { /* Mozilla Firefox 19+ */
+
+        &::-moz-placeholder {
+            /* Mozilla Firefox 19+ */
             font-size: .56rem;
             font-weight: 300;
             color: $placeholder-color;
         }
-        &:-ms-input-placeholder { /* Internet Explorer 10+ */
+
+        &:-ms-input-placeholder {
+            /* Internet Explorer 10+ */
             font-size: .56rem;
             font-weight: 300;
             color: $placeholder-color;
         }
     }
+
     .text-number-tip {
         font-size: .24rem;
         color: $font-color;
@@ -73,7 +87,8 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
-    textarea{
+
+    textarea {
         resize: none;
     }
 }

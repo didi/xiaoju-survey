@@ -41,6 +41,13 @@ const menuItems = {
     icon: 'tixing-pingfen',
     title: '评分',
   },
+  'radio-nps': {
+    type: 'radio-nps',
+    path: 'NpsModule',
+    snapshot: '/imgs/question-type-snapshot/radio-nps.webp',
+    icon: 'NPSpingfen',
+    title: 'nps评分',
+  },
   vote: {
     type: 'vote',
     path: 'VoteModule',
@@ -57,7 +64,14 @@ const menuGroup = [
   },
   {
     title: '选择类题型',
-    questionList: ['radio', 'checkbox', 'binary-choice', 'radio-star', 'vote'],
+    questionList: [
+      'radio',
+      'checkbox',
+      'binary-choice',
+      'radio-star',
+      'radio-nps',
+      'vote',
+    ],
   },
 ];
 

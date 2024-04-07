@@ -1,8 +1,7 @@
 <script>
 import OptionConfig from '@/materials/questions/components/AdvancedConfig/OptionConfig.vue';
 import RateConfig from '../AdvancedConfig/RateConfig.vue';
-import { defineComponent, ref, inject, computed } from 'vue';
-import store from '@/management/store';
+import { defineComponent, ref, computed, inject } from 'vue';
 import ExtraIcon from '@/materials/questions/components/ExtraIcon.vue';
 
 export default defineComponent({
@@ -11,7 +10,7 @@ export default defineComponent({
   props: {
     optionList: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     showOthers: {
       type: Boolean,
@@ -29,9 +28,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const moduleConfig = inject('moduleConfig');
     const optionConfigVisible = ref(false);
-    const currentEditKey = computed(() => {
-      return store.getters['edit/currentEditKey'];
-    });
 
     const addOther = () => {
       emit('addOther');
@@ -49,6 +45,28 @@ export default defineComponent({
     const openRateConfig = () => {
       rateConfigVisible.value = true;
     };
+
+    const isNps = computed(() => {
+      return moduleConfig.value.type === 'radio-nps';
+    });
+
+    const min = computed(() => {
+      const { min, starMin } = moduleConfig.value;
+      return isNps.value ? min : starMin;
+    });
+
+    const max = computed(() => {
+      const { max, starMax } = moduleConfig.value;
+      return isNps.value ? max : starMax;
+    });
+
+    const explain = computed(() => {
+      const { type } = moduleConfig.value;
+      if (type == 'radio-start') return true;
+      if (isNps.value) return false;
+      return true;
+    });
+
     return {
       addOther,
       optionConfigVisible,
@@ -58,10 +76,22 @@ export default defineComponent({
       handleChange,
       moduleConfig,
       rateConfigVisible,
+      min,
+      max,
+      isNps,
+      explain,
     };
   },
   render() {
-    const { showOthers, hasAdvancedConfig, hasAdvancedRateConfig } = this;
+    const {
+      showOthers,
+      hasAdvancedConfig,
+      hasAdvancedRateConfig,
+      min,
+      max,
+      explain,
+      isNps,
+    } = this;
     return (
       <div class="option-edit-bar-wrap">
         <div class="option-edit-bar">
@@ -104,16 +134,17 @@ export default defineComponent({
         )}
         {this.rateConfigVisible && (
           <RateConfig
-            min={this.moduleConfig.starMin}
-            max={this.moduleConfig.starMax}
+            min={min}
+            max={max}
             rangeConfig={this.moduleConfig.rangeConfig}
             visible={this.rateConfigVisible}
             onVisibleChange={(val) => {
               this.rateConfigVisible = val;
             }}
-            explain={true}
+            explain={explain}
             dialogWidth="800px"
             onConfirm={this.handleChange}
+            class={[isNps ? 'nps-rate-config' : '']}
           />
         )}
       </div>
@@ -122,7 +153,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 
 .option-edit-bar-wrap {
   margin-top: 20px;
@@ -131,20 +162,34 @@ export default defineComponent({
   line-height: 24px;
   font-size: 12px;
   color: $primary-color;
+
   .add-option {
     display: inline-block;
     margin-right: 10px;
     cursor: pointer;
     font-size: 12px;
   }
+
   .option-advanced-config {
     color: #0f8a82;
     float: right;
     cursor: pointer;
     font-size: 12px;
   }
+
   .primary-color {
     color: $primary-color;
+  }
+}
+
+.nps-rate-config {
+  ::v-deep .row {
+    height: 47px;
+  }
+  ::v-deep .text {
+    input {
+      height: 32px;
+    }
   }
 }
 
@@ -155,6 +200,7 @@ export default defineComponent({
   letter-spacing: 0;
   text-align: left;
 }
+
 .pop-tip {
   font-family: PingFangSC-Regular;
   font-size: 12px;
@@ -162,6 +208,7 @@ export default defineComponent({
   letter-spacing: 0.65px;
   text-align: left;
 }
+
 .pop-input {
   margin-top: 6px;
   margin-bottom: 16px;

@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 4263849 */
-  src: url('//at.alicdn.com/t/c/font_4263849_tcd4y5836dg.woff2?t=1695630919866') format('woff2'),
-       url('//at.alicdn.com/t/c/font_4263849_tcd4y5836dg.woff?t=1695630919866') format('woff'),
-       url('//at.alicdn.com/t/c/font_4263849_tcd4y5836dg.ttf?t=1695630919866') format('truetype');
+  font-family: 'iconfont';  /* Project id 4263849 */
+  src: url('//at.alicdn.com/t/c/font_4263849_xndlbqcha3l.woff2?t=1711101684869') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4263849_xndlbqcha3l.woff?t=1711101684869') format('woff'),
+       url('//at.alicdn.com/t/c/font_4263849_xndlbqcha3l.ttf?t=1711101684869') format('truetype');
 }
 
 .iconfont {
@@ -50,7 +50,7 @@
 }
 
 .icon-wenjuanshezhi:before {
-  content: "\e6cc";
+  content: "\eacc";
 }
 
 .icon-jiantou:before {
@@ -123,4 +123,10 @@
 
 .icon-erweima:before {
   content: "\e6c0";
+}
+.icon-yangshishezhi:before {
+  content: "\e6e6";
+}
+.icon-NPSpingfen::before {
+  content: "\e6e7";
 }

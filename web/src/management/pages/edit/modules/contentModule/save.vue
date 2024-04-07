@@ -8,7 +8,10 @@
           {{ saveText }}
         </span>
         <i class="icon el-icon-loading" v-if="autoSaveStatus === 'saving'"></i>
-        <i class="icon succeed el-icon-check" v-else-if="autoSaveStatus === 'succeed'"></i>
+        <i
+          class="icon succeed el-icon-check"
+          v-else-if="autoSaveStatus === 'succeed'"
+        ></i>
       </div>
     </transition>
   </div>
@@ -17,7 +20,7 @@
 import { saveSurvey } from '@/management/api/survey';
 import buildData from './buildData';
 import { mapState } from 'vuex';
-import { get as _get} from 'lodash';
+import { get as _get } from 'lodash-es';
 
 export default {
   name: 'save',

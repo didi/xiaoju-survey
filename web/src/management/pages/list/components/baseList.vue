@@ -3,11 +3,11 @@
     <div class="filter-wrap">
       <div class="select">
         <text-select
-           v-for="item in Object.keys(selectOptionsDict)"
-           :key="item"
-           :effect-fun="onSelectChange"
-           :effect-key="item"
-           :options="selectOptionsDict[item]"
+          v-for="item in Object.keys(selectOptionsDict)"
+          :key="item"
+          :effect-fun="onSelectChange"
+          :effect-key="item"
+          :options="selectOptionsDict[item]"
         />
       </div>
       <div class="search">
@@ -17,7 +17,11 @@
           :effect-fun="onButtonChange"
           :effect-key="item"
           :option="buttonOptionsDict[item]"
-          :icon="buttonOptionsDict[item].icons.find(iconItem => iconItem.effectValue === buttonValueMap[item]).name"
+          :icon="
+            buttonOptionsDict[item].icons.find(
+              (iconItem) => iconItem.effectValue === buttonValueMap[item]
+            ).name
+          "
           size="mini"
           type="text"
         ></text-button>
@@ -32,7 +36,7 @@
       v-if="total"
       ref="multipleListTable"
       class="list-table"
-      :data="data"
+      :data="dataList"
       empty-text="暂无数据"
       row-key="_id"
       header-row-class-name="tableview-header"
@@ -46,7 +50,7 @@
       <el-table-column
         v-for="field in fieldList"
         :key="field.key"
-        :label="theadDict[field.key]"
+        :label="field.title"
         :column-key="field.key"
         :width="field.width"
         :min-width="field.width || field.minWidth"
@@ -57,7 +61,7 @@
             <component :is="field.comp" type="table" :value="scope.row" />
           </template>
           <template v-else>
-            <span class="cell-span">{{ lget(scope.row, field) }}</span>
+            <span class="cell-span">{{ scope.row[field.key] }}</span>
           </template>
         </template>
       </el-table-column>
@@ -100,7 +104,7 @@
 </template>
 
 <script>
-import { get, map } from 'lodash';
+import { get, map } from 'lodash-es';
 import moment from 'moment';
 // 引入中文
 import 'moment/locale/zh-cn';
@@ -111,10 +115,16 @@ import ModifyDialog from './modify';
 import Tag from './tag';
 import State from './state';
 import ToolBar from './toolBar';
-import TextSearch from './textSearch'
-import TextSelect from './textSelect'
-import TextButton from './textButton'
-import { fieldConfig, thead, noListDataConfig, noSearchDataConfig, selectOptionsDict, buttonOptionsDict } from '../config';
+import TextSearch from './textSearch';
+import TextSelect from './textSelect';
+import TextButton from './textButton';
+import {
+  fieldConfig,
+  noListDataConfig,
+  noSearchDataConfig,
+  selectOptionsDict,
+  buttonOptionsDict,
+} from '../config';
 import { CODE_MAP } from '@/management/api/base';
 import { QOP_MAP } from '@/management/utils/constant';
 import { getSurveyList, deleteSurvey } from '@/management/api/survey';
@@ -127,15 +137,14 @@ export default {
         'type',
         'title',
         'remark',
-        'creator',
+        'owner',
         'state',
-        'updateDate',
         'createDate',
+        'updateDate',
       ],
-      modifyType: QOP_MAP.EDIT,
       showModify: false,
+      modifyType: '',
       loading: false,
-      theadDict: thead,
       noListDataConfig,
       noSearchDataConfig,
       questionInfo: {},
@@ -145,14 +154,14 @@ export default {
       searchVal: '',
       selectOptionsDict,
       selectValueMap: {
-        questionType: '',
-        'curStatus.status': ''
+        surveyType: '',
+        'curStatus.status': '',
       },
       buttonOptionsDict,
       buttonValueMap: {
         'curStatus.date': '',
-        createDate: -1
-      }
+        createDate: -1,
+      },
     };
   },
   computed: {
@@ -161,6 +170,14 @@ export default {
         return get(fieldConfig, f, null);
       });
       return fieldInfo;
+    },
+    dataList() {
+      return this.data.map((item) => {
+        return {
+          ...item,
+          'curStatus.date': item.curStatus.date,
+        };
+      });
     },
     filter() {
       return [
@@ -187,23 +204,23 @@ export default {
           comparator: '',
           condition: [
             {
-              field: "questionType",
-              value: this.selectValueMap.questionType
-            }
-          ]
-        }
-      ]
+              field: 'surveyType',
+              value: this.selectValueMap.surveyType,
+            },
+          ],
+        },
+      ];
     },
-    order(){
+    order() {
       const formatOrder = Object.entries(this.buttonValueMap)
-      .filter(([, effectValue]) => effectValue)
-      .reduce((prev, item) => {
-          const [effectKey, effectValue] = item
-          prev.push({field: effectKey, value: effectValue})
-          return prev
-        }, [])
-      return JSON.stringify(formatOrder)
-    }
+        .filter(([, effectValue]) => effectValue)
+        .reduce((prev, item) => {
+          const [effectKey, effectValue] = item;
+          prev.push({ field: effectKey, value: effectValue });
+          return prev;
+        }, []);
+      return JSON.stringify(formatOrder);
+    },
   },
   created() {
     this.init();
@@ -212,11 +229,16 @@ export default {
     async init() {
       this.loading = true;
       try {
-        const filter = JSON.stringify(this.filter.filter(item => {
-          return item.condition[0].field === 'title' || item.condition[0].value
-        }))
-        
-        const res = await getSurveyList(this.currentPage, filter, this.order);
+        const filter = JSON.stringify(
+          this.filter.filter((item) => {
+            return item.condition[0].value;
+          })
+        );
+        const res = await getSurveyList({
+          curPage: this.currentPage,
+          filter,
+          order: this.order,
+        });
         this.loading = false;
         if (res.code === CODE_MAP.SUCCESS) {
           this.total = res.data.count;
@@ -234,16 +256,6 @@ export default {
         });
         this.loading = false;
       }
-    },
-    lget(row, field) {
-      const data = get(row, field.key);
-      if (field.key === 'createDate') {
-        return moment(data).format('YYYY-MM-DD HH:mm:ss');
-      } else if (field.key === 'updateDate') {
-        const updateDate = get(row, 'curStatus.date');
-        return moment(updateDate).format('YYYY-MM-DD HH:mm:ss');
-      }
-      return data;
     },
     getStatus(data) {
       return get(data, 'curStatus.status', 'new');
@@ -275,22 +287,25 @@ export default {
       ];
       return funcList;
     },
-    onDelete(row) {
-      this.$confirm('是否确认删除？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(async () => {
-          const res = await deleteSurvey(row._id);
-          if (res.code === CODE_MAP.SUCCESS) {
-            this.$message.success('删除成功');
-            this.init();
-          }
-        })
-        .catch(() => {
-          console.log('取消删除');
+    async onDelete(row) {
+      try {
+        await this.$confirm('是否确认删除？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         });
+      } catch (error) {
+        console.log('取消删除');
+        return;
+      }
+
+      const res = await deleteSurvey(row._id);
+      if (res.code === CODE_MAP.SUCCESS) {
+        this.$message.success('删除成功');
+        this.init();
+      } else {
+        this.$message.error(res.errmsg || '删除失败');
+      }
     },
     handleCurrentChange(current) {
       this.currentPage = current;
@@ -326,22 +341,14 @@ export default {
       this.currentPage = 1;
       this.init();
     },
-    onButtonChange(effectValue, effectKey){
+    onButtonChange(effectValue, effectKey) {
       this.buttonValueMap = {
         'curStatus.date': '',
-        createDate: ''
-      }
-      this.buttonValueMap[effectKey] = effectValue
-      this.init()
+        createDate: '',
+      };
+      this.buttonValueMap[effectKey] = effectValue;
+      this.init();
     },
-    onButtonChange(effectValue, effectKey){
-      this.buttonValueMap = {
-        'curStatus.date': '',
-        createDate: ''
-      }
-      this.buttonValueMap[effectKey] = effectValue
-      this.init()
-    }
   },
   components: {
     empty,

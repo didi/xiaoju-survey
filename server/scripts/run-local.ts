@@ -9,10 +9,20 @@ async function startServerAndRunScript() {
   console.log('MongoDB Memory Server started:', mongoUri);
 
   // 通过 spawn 运行另一个脚本，并传递 MongoDB 连接 URL 作为环境变量
-  const tsnode = spawn('cross-env', [`XIAOJU_SURVEY_MONGO_URL="${mongoUri}"`, 'npx', 'ts-node-dev', './src/index.ts'], {
-    stdio: 'inherit',
-    shell: process.platform === 'win32'
-  });
+  const tsnode = spawn(
+    'cross-env',
+    [
+      `XIAOJU_SURVEY_MONGO_URL=${mongoUri}`,
+      'NODE_ENV=development',
+      'npm',
+      'run',
+      'start:dev',
+    ],
+    {
+      stdio: 'inherit',
+      shell: process.platform === 'win32',
+    },
+  );
   tsnode.stdout?.on('data', (data) => {
     console.log(data.toString());
   });

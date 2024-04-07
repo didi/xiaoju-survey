@@ -44,7 +44,11 @@ import baseConfig from './config/baseConfig';
 import baseFormConfig from './config/baseFormConfig';
 import FormItem from '@/materials/setters/widgets/FormItem.vue';
 import setterLoader from '@/materials/setters/setterLoader';
-import { cloneDeep as _cloneDeep, isArray as _isArray,  get as _get } from 'lodash';
+import {
+  cloneDeep as _cloneDeep,
+  isArray as _isArray,
+  get as _get,
+} from 'lodash-es';
 
 export default {
   name: 'QuestionConfig',

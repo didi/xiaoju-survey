@@ -92,7 +92,7 @@ export default {
         }
         this.canSubmit = false;
         const res = await createSurvey({
-          questionType: selectType,
+          surveyType: selectType,
           ...this.form,
         });
         if (res.code === 200 && res?.data?.id) {

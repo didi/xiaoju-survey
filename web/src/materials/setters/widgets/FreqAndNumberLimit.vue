@@ -24,7 +24,7 @@
   </el-form-item>
 </template>
 <script>
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
 export default {
   name: 'FreqAndNumberLimit',

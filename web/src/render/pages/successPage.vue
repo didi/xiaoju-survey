@@ -1,14 +1,19 @@
 <template>
-  <div class="result-page">
-    <div class="result-content">
-      <img src="/imgs/icons/success.webp" />
-      <div class="msg" v-safe-html="successMsg"></div>
+  <div class="result-page-wrap">
+    <div class="result-page">
+      <div class="result-content">
+        <img src="/imgs/icons/success.webp" />
+        <div class="msg" v-safe-html="successMsg"></div>
+      </div>
+      <logo></logo>
     </div>
   </div>
 </template>
 <script>
+import logo from '../components/logo.vue';
 export default {
   name: 'resultPage',
+  components: {logo},
   computed: {
     submitConf() {
       return this.$store?.state?.submitConf || {};
@@ -22,11 +27,20 @@ export default {
 <style lang="scss" rel="stylesheet/scss" scoped>
 @import '@/render/styles/variable.scss';
 
-.result-page {
+.result-page-wrap {
   width: 100%;
   flex: 1;
   text-align: center;
   overflow: hidden;
+  background: var(--primary-background-color);
+  
+  padding: 0 0.3rem;
+  .result-page{
+    background: rgba(255, 255, 255, var(--opacity)); 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 }
 
 .result-content {
@@ -37,7 +51,7 @@ export default {
   width: 100%;
   position: relative;
   padding-top: 2rem;
-  background: #fff;
+  flex: 1;
 
   img {
     width: 2rem;

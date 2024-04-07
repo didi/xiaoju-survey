@@ -9,6 +9,7 @@
     @change="changeData"
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
+    :class="formConfig.contentClass"
   >
     <el-option
       v-for="item in options"
@@ -26,11 +27,18 @@ export default {
   name: 'Select',
   data() {
     return {
-      validValue: this.formConfig.value || '',
+      validValue:
+        !this.formConfig.value && this.formConfig.value != 0
+          ? ''
+          : this.formConfig.value,
     };
   },
   props: {
     formConfig: {
+      type: Object,
+      required: true,
+    },
+    moduleConfig: {
       type: Object,
       required: true,
     },
@@ -57,8 +65,14 @@ export default {
   },
   methods: {
     changeData(value) {
-      const key = this.formConfig.key;
-
+      const { key, valueSetter } = this.formConfig;
+      if (valueSetter && typeof valueSetter == 'function') {
+        let status = valueSetter(value, this.moduleConfig);
+        if (status) {
+          this.validValue = '';
+          return;
+        }
+      }
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
         value,
@@ -71,7 +85,9 @@ export default {
 .option-list-width {
   max-width: 400px;
 }
-
+.nps-select-config {
+  width: 312px;
+}
 .select-option-quote,
 .originType {
   font-family: PingFangSC-Regular;

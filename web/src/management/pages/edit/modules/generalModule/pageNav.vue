@@ -1,17 +1,30 @@
 <template>
   <div class="content">
-    <template v-for="btnItem in btnList">
-      <router-link class="navbar-btn" :key="btnItem.key" :to="{ name: btnItem.router }" tag="div" replace>
+    <template v-for="btnItem in btnList" :key="btnItem.key">
+      <router-link
+        class="navbar-btn"
+        :to="{ name: btnItem.router }"
+        tag="div"
+        replace
+        v-slot="{ href, route, navigate, isActive, isExactActive }"
+        custom
+      >
+      <div
+        :class="[
+          (isActive && btnItem.key === 'skinsettings'  ) || isExactActive ? 'router-link-exact-active' : '']"
+      >
         <i class="iconfont" :class="[btnItem.icon]"></i>
-        <span>{{ btnItem.text }}</span>
+        <a :href="href" @click="navigate"><span>{{ btnItem.text }}</span></a>
+        <!-- <span>{{ btnItem.text }}</span> -->
+      </div>
+        
       </router-link>
-      <i v-if="btnItem.next" :key="btnItem.key + '-next'" class="iconfont icon-jiantou next"></i>
     </template>
   </div>
 </template>
 <script>
 export default {
-  name: 'pageTitle',
+  name: 'pageNav',
   props: {},
   data() {
     return {
@@ -31,10 +44,11 @@ export default {
           next: true,
         },
         {
-          icon: 'icon-jieguoyeshezhi',
-          text: '结果页设置',
-          router: 'QuestionEditResultConfig',
-          key: 'status',
+          icon: 'icon-yangshishezhi',
+          text: '皮肤设置',
+          router: 'QuestionSkinSetting',
+          key: 'skinsettings',
+          next: true,
         },
       ],
     };
@@ -52,7 +66,9 @@ export default {
     color: #92949d;
     padding: 0 20px;
     cursor: pointer;
-
+    a{
+      color: inherit;
+    }
     &.router-link-exact-active {
       color: $font-color-title;
 

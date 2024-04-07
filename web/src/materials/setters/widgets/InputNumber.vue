@@ -71,11 +71,14 @@ export default {
           return max(this.moduleConfig);
         }
         return Number(max);
-      } else if (min !== undefined && Array.isArray(this.moduleConfig?.options)) {
+      } else if (
+        min !== undefined &&
+        Array.isArray(this.moduleConfig?.options)
+      ) {
         // inputNumber 配置了最小值，没有配置最大值（checkbox, vote, matrix-checkbox, 最大选择数 ）
         return this.moduleConfig.options.length;
       } else {
-        return Infinity
+        return Infinity;
       }
     },
   },

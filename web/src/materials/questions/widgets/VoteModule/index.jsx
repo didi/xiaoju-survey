@@ -3,7 +3,7 @@ import baseChoice from '../BaseChoice';
 import Progress from '../../components/Progress.vue';
 import '../../common/css/vote.scss';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
-import { includes } from 'lodash';
+import { includes } from 'lodash-es';
 export default defineComponent({
   name: 'VoteModule',
   components: { baseChoice, Progress, QuestionWithRule },

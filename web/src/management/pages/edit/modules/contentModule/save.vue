@@ -22,7 +22,7 @@ import {
 import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 import { mapState } from 'vuex'
-import { get as _get } from 'lodash'
+import { get as _get } from 'lodash-es'
 
 export default {
   components: {

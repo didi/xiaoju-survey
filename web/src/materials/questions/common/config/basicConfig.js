@@ -1,4 +1,4 @@
-import { pick as _pick } from 'lodash';
+import { pick as _pick } from 'lodash-es';
 
 export default {
   name: 'basicConfig',

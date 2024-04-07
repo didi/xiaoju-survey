@@ -91,7 +91,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash';
+import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es';
 import ExtraIcon from '../ExtraIcon.vue';
 import { cleanRichText } from '@/common/xss';
 

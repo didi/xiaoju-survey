@@ -25,7 +25,7 @@ import questionMenuConfig, {
 } from '@/management/config/questionMenuConfig'
 import { getQuestionByType } from '@/management/utils/index'
 import { useStore } from 'vuex'
-import { get as _get } from 'lodash'
+import { get as _get } from 'lodash-es'
 import { computed, ref } from 'vue'
 
 const activeNames = ref([0, 1])

@@ -1,7 +1,7 @@
 import BaseChoice from '../BaseChoice';
 import { computed, defineComponent } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
-import { includes } from 'lodash';
+import { includes } from 'lodash-es';
 import metaConfig from './meta.js';
 export const meta = metaConfig;
 /**

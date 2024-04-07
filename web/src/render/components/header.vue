@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 import { formatLink } from '../utils/index.js';
 
 export default {

@@ -12,7 +12,7 @@ import {
 } from 'vue';
 import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
-import { assign } from 'lodash';
+import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
 export default defineComponent({
   name: 'QuestionRuleContainer',

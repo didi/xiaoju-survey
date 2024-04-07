@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { get, map } from 'lodash'
+import { get, map } from 'lodash-es'
 import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'

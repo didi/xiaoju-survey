@@ -50,7 +50,7 @@
   </el-dialog>
 </template>
 <script>
-import { get as _get } from 'lodash';
+import { get as _get } from 'lodash-es';
 import { mapGetters } from 'vuex';
 export default {
   props: {

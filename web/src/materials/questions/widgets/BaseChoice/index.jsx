@@ -1,5 +1,5 @@
 import { defineComponent, computed } from 'vue';
-import { findIndex, includes } from 'lodash';
+import { findIndex, includes } from 'lodash-es';
 import { filterXSS } from '@/common/xss';
 import '../../common/css/choice.scss';
 

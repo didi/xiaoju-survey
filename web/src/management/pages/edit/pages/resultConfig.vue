@@ -1,24 +1,30 @@
 <template>
   <commonTemplate>
-    <resultCatalog slot="left"></resultCatalog>
-    <resultPreview slot="center"></resultPreview>
-    <resultSetter slot="right"></resultSetter>
+    <template #left>
+      <ResultCatalog />
+    </template>
+    <template #center>
+      <ResultPreview />
+    </template>
+    <template #right>
+      <ResultSetter />
+    </template>
   </commonTemplate>
 </template>
 
 <script>
 import commonTemplate from '../components/commonTemplate.vue'
-import resultCatalog from '../modules/settingModule/resultCatalog.vue'
-import resultPreview from '../modules/settingModule/resultPreview.vue'
-import resultSetter from '../modules/settingModule/resultSetter.vue'
+import ResultCatalog from '../modules/settingModule/resultCatalog.vue'
+import ResultPreview from '../modules/settingModule/resultPreview.vue'
+import ResultSetter from '../modules/settingModule/resultSetter.vue'
 
 export default {
   name: 'editIndex',
   components: {
     commonTemplate,
-    resultCatalog,
-    resultPreview,
-    resultSetter,
+    ResultCatalog,
+    ResultPreview,
+    ResultSetter,
   },
 }
 </script>

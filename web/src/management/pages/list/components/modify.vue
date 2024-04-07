@@ -23,11 +23,13 @@
       </el-form-item>
     </el-form>
 
-    <div slot="footer" class="dialog-footer">
-      <el-button type="primary" class="save-btn" @click="onSave">{{
-        type === QOP_MAP.EDIT ? '保存' : '确定'
-      }}</el-button>
-    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" class="save-btn" @click="onSave">{{
+          type === QOP_MAP.EDIT ? '保存' : '确定'
+        }}</el-button>
+      </div>
+    </template>
   </el-dialog>
 </template>
 

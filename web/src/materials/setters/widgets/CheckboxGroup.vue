@@ -17,7 +17,9 @@
         effect="dark"
         placement="right"
       >
-        <div slot="content" v-plain-text="item.tip"></div>
+        <template #content>
+          <div v-plain-text="item.tip"></div>
+        </template>
         <i class="el-icon-question icon-tip"></i>
       </el-tooltip>
     </div>

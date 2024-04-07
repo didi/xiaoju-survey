@@ -29,7 +29,7 @@ export default defineComponent({
       default: '标题',
     },
     showType: {
-      type: Boolean | String,
+      type: [Boolean, String],
       default: false,
     },
     type: {

@@ -178,7 +178,7 @@ export default {
             &:after {
               position: absolute;
               left: 0;
-              top: 41px;
+              top: 42px;
               width: 100%;
               height: 3px;
               background-color: $primary-color;

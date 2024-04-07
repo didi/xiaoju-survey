@@ -1,8 +1,8 @@
 <template>
   <div class="range-wrapper">
-    <el-input-number :value="minValue" @change="changeDataMin" :min="0" />
+    <el-input-number :modelValue="minValue" @change="changeDataMin" :min="0" />
     <span class="split-text">至</span>
-    <el-input-number :value="maxValue" @change="changeDataMax" :min="0" />
+    <el-input-number :modelValue="maxValue" @change="changeDataMax" :min="0" />
   </div>
 </template>
 <script>

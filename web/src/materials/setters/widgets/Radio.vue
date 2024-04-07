@@ -13,7 +13,9 @@
         effect="dark"
         :placement="setTipPosition(item)"
       >
-        <div slot="content" v-html="item.tip"></div>
+        <template #content>
+          <div v-html="item.tip"></div>
+        </template>
         <span>{{ item.label }} <i class="el-icon-question"></i></span>
       </el-tooltip>
       <template v-else-if="item.labelType === 'array'">

@@ -25,30 +25,30 @@ const pages = createPages([
 const mpaPlugin = createMpaPlugin({
   pages,
   verbose: true,
-  rewrites: [
-    {
-      from: /^\/render\/.?/,
-      to: (ctx) => {
-        // console.log('ctx.parsedUrl.path', ctx.parsedUrl.path)
-        // if(/^\/render\/.?/.test(ctx.parsedUrl.path as string)) {
-          return normalizePath('/src/render/index.html')
-        // }
-        // return normalizePath('/src/management/index.html')
-      }
-    },
-    {
-      from: /\/management.?/,
-      to: (ctx) => normalizePath('/src/management/index.html')
-    },
-    // {
-    //   from: /^\/$/,
-    //   to: (ctx) => {
-    //     console.log(ctx)
-    //     return normalizePath('/src/management/index.html')
-    //   }
-    // },
+  // rewrites: [
+  //   {
+  //     from: /^\/render\/.?/,
+  //     to: (ctx) => {
+  //       // console.log('ctx.parsedUrl.path', ctx.parsedUrl.path)
+  //       // if(/^\/render\/.?/.test(ctx.parsedUrl.path as string)) {
+  //         return normalizePath('/src/render/index.html')
+  //       // }
+  //       // return normalizePath('/src/management/index.html')
+  //     }
+  //   },
+  //   {
+  //     from: /\/|\/management\/.?/,
+  //     to: (ctx) => normalizePath('/src/management/index.html')
+  //   },
+  //   // {
+  //   //   from: /^\/$/,
+  //   //   to: (ctx) => {
+  //   //     console.log(ctx)
+  //   //     return normalizePath('/src/management/index.html')
+  //   //   }
+  //   // },
 
-  ]
+  // ]
 })
 
 // https://vitejs.dev/config/

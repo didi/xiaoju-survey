@@ -22,8 +22,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () =>
-      import(/* webpackChunkName: "editPage" */ '../pages/edit/index.vue'),
+    component: () => import('../pages/edit/index.vue'),
     children: [
       {
         path: '',
@@ -31,10 +30,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "QuestionEditIndex" */ '../pages/edit/pages/edit.vue'
-          ),
+        component: () => import('../pages/edit/pages/edit.vue'),
       },
       {
         path: 'setting',
@@ -42,10 +38,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "QuestionEditSetting" */ '../pages/edit/pages/setting.vue'
-          ),
+        component: () => import('../pages/edit/pages/setting.vue'),
       },
       {
         path: 'resultConfig',
@@ -53,10 +46,10 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "QuestionEditResultConfig" */ '../pages/edit/pages/resultConfig.vue'
-          ),
+        beforeEnter(to){
+          console.log('result config to', to)
+        },
+        component: () => import( '../pages/edit/pages/resultConfig.vue' ),
       },
     ],
   },
@@ -66,10 +59,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "analysisPage" */ '../pages/analysis/index.vue'
-      ),
+    component: () => import( '../pages/analysis/index.vue'),
   },
   {
     path: '/survey/:id/publishResult',
@@ -107,7 +97,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('from', from)
   const store = useStore()
   if (!store.state.user?.initialized) {
     store?.dispatch('user/init')

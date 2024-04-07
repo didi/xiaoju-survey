@@ -58,7 +58,7 @@ export default {
   created() {
     this.alert = useCommandComponent(alert)
     this.confirm = useCommandComponent(confirm)
-    // window.confirm = this.confirm
+    window.confirm = this.confirm
   },
   methods: {
     validate(cbk) {
@@ -70,13 +70,13 @@ export default {
       if (is_again) {
         this.confirm({
           title: again_text,
-          onConfirm: async (closeDialogFn) => {
+          onConfirm: async () => {
             try {
               await this.submitForm();
             } catch (error) {
               console.error(error);
             } finally {
-              // closeDialogFn && closeDialogFn();
+              this.confirm.close();
             }
           },
         });

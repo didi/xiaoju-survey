@@ -35,8 +35,9 @@ export default {
       this.$emit('close');
     },
     onConfirm() {
-      this.$emit('close');
-      this.$emit('confirm');
+      this.$emit('confirm', () => {
+        this.$emit('close');
+      });
     },
   },
 };

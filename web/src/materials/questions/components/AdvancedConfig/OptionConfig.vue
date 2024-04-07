@@ -30,7 +30,7 @@
               </div>
               <div class="oitem moreInfo lh36" v-if="showOthers">
                 <el-switch
-                  :value="optionItem.others"
+                  :modelValue="optionItem.others"
                   @change="(val) => changeOptionOthers(val, optionItem)"
                 ></el-switch>
                 <div class="more-info-content" v-if="optionItem.others">

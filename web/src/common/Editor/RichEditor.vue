@@ -1,6 +1,6 @@
 <template>
   <div class="editor-wrapper border">
-    <Toolbar class="toolbar" ref="toolbar" v-show="showToolbar" :editor="editorRef" :defaultConfig="toolbarConfig"
+    <Toolbar :class="['toolbar',props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']" ref="toolbar" v-show="showToolbar" :editor="editorRef" :defaultConfig="toolbarConfig"
       :mode="mode" />
     <Editor class="editor" ref="editor" :modelValue="curValue" :defaultConfig="editorConfig" @onCreated="onCreated" @onChange="onChange"
       @onBlur="onBlur" @onFocus="onFocus" :mode="mode" />
@@ -15,10 +15,11 @@ import { ref, shallowRef, onBeforeMount, watch } from 'vue';
 
 const emit = defineEmits(['input', 'onFocus', 'change', 'blur'])
 const model = defineModel()
+const props = defineProps(['staticToolBar'])
 
 const curValue = ref('')
 const editorRef = shallowRef()
-const showToolbar = ref(false)
+const showToolbar = ref(props.staticToolBar || false)
 
 const mode = 'simple'
 
@@ -52,14 +53,20 @@ const onChange = (editor) => {
 }
 const onFocus = (editor) => {
   emit('onFocus', editor);
-  showToolbar.value = true;
+  setToolbarStatus(true);
 }
 const onBlur = (editor) => {
   const editorHtml = editor.getHtml();
   curValue.value = editorHtml; // 记录当前 html 内容
   emit('change', editorHtml);
   emit('blur', editor);
-  showToolbar.value = false;
+  setToolbarStatus(false);
+}
+
+const setToolbarStatus = (status) => {
+  if(props.staticToolBar) return
+  showToolbar.value = status
+
 }
 
 watch(
@@ -91,7 +98,10 @@ onBeforeMount(() => {
   // min-height: 45px;
 }
 
-.toolbar {
+.static-toolbar {
+  border-bottom: 1px solid #dedede;
+}
+.dynamic-toolbar {
   position: absolute;
   left: 0;
   top: -44px;

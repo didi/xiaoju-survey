@@ -1,5 +1,5 @@
 <template>
-  <el-switch :value="!!formConfig.value" @change="changeData" />
+  <el-switch :modelValue="!!formConfig.value" @change="changeData" />
 </template>
 <script>
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';

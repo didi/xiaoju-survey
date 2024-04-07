@@ -1,8 +1,9 @@
 <template>
-  <!-- <div id="app"> -->
+  <div>
     <Component v-if="$store.state.router" :is="$store.state.router"></Component>
+    <!-- <RouterView /> -->
     <logo></logo>
-  <!-- </div> -->
+  </div>
 </template>
 
 <script>

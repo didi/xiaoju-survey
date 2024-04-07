@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import { useStore } from 'vuex'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/survey',
@@ -85,14 +86,16 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    title: '登陆',
     component: () =>
       import(/* webpackChunkName: "login" */ '../pages/login/index.vue'),
+    meta: {
+    title: '登陆',
+    }
   },
 ]
 
 const router = createRouter({
-  history: createWebHistory('management'),
+  history: createWebHistory('/management'),
   routes,
 })
 

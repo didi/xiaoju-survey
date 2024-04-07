@@ -1,7 +1,6 @@
 <template>
   <el-form
     class="config-form"
-    size="small"
     :labelPosition="labelPosition"
     label-width="110px"
     :inline="inline"

@@ -10,7 +10,6 @@
           </div>
           <el-form
             class="question-config-form"
-            size="small"
             label-position="left"
             label-width="200px"
             @submit.native.prevent

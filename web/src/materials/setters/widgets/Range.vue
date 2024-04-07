@@ -68,10 +68,8 @@ export default {
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .range-wrapper {
-  :deep(.el-form-item) {
-    .el-form-item__content .el-input-number {
+  .el-input-number {
       width: 40%;
-    }
   }
 
   .split-text {

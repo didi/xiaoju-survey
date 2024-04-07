@@ -1,10 +1,9 @@
 <template>
   <div class="question-catalog-wrapper">
-    <draggable :list="renderData" :options="dragOptions" @end="onDragEnd">
+    <draggable :list="renderData" :options="dragOptions" @end="onDragEnd" itemKey="field">
       <template #item>
         <catalogItem
           v-for="(catalogItem, index) in renderData"
-          :key="catalogItem.field"
           :title="catalogItem.title"
           :indexNumber="catalogItem.indexNumber"
           :showIndex="catalogItem.showIndex"

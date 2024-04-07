@@ -22,8 +22,7 @@
               (iconItem) => iconItem.effectValue === buttonValueMap[item]
             ).name
           "
-          size="mini"
-          type="text"
+          link
         ></text-button>
         <text-search
           placeholder="请输入问卷标题"

@@ -5,7 +5,6 @@
     </div>
     <el-form
       class="question-config-form"
-      size="small"
       label-position="top"
       @submit.native.prevent
     >

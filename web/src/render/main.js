@@ -1,13 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue';
 import store from './store';
-import DialogPlugin from '@/render/plugins/dialog/index';
+import router from './router'
 import './styles/reset.scss';
-
-// Vue.config.productionTip = false;
-
-// Vue.use(DialogPlugin);
-
 
 import safeHtml from '../management/directive/safeHtml'
 
@@ -15,6 +10,7 @@ import safeHtml from '../management/directive/safeHtml'
 const app = createApp(App)
 
 app.use(store)
+// app.use(router)
 
 
 app.use(safeHtml)

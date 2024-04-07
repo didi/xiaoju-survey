@@ -6,7 +6,7 @@
       @keyup.enter="onSearch"
       autocomplete="off"
       :placeholder="placeholder"
-      type="text"
+      link
       rows="1"
       class="el-input__inner"
     />

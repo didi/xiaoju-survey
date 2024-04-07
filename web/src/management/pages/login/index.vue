@@ -52,7 +52,6 @@
           >
           <el-button
             :loading="registerPending"
-            size="small"
             class="button register-button"
             @click="submitForm('formData', 'register')"
             >注册</el-button

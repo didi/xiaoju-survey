@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import materialGroup from './components/materialGroup.vue';
-import banner from './components/banner.vue';
-import mainTitle from './components/mainTitle.vue';
-import submit from './components/submit.vue';
-import logo from './components/logo.vue';
-import { mapState, mapGetters } from 'vuex';
-import { get as _get } from 'lodash';
+import materialGroup from './components/materialGroup.vue'
+import banner from './components/banner.vue'
+import mainTitle from './components/mainTitle.vue'
+import submit from './components/submit.vue'
+import logo from './components/logo.vue'
+import { mapState, mapGetters } from 'vuex'
+import { get as _get } from 'lodash'
 
 export default {
   name: 'mainOperation',
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       isAnimating: false,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -77,73 +77,73 @@ export default {
       return {
         currentEditOne: this.currentEditOne,
         len: this.questionDataList.length,
-      };
+      }
     },
   },
   watch: {
     autoScrollData(newVal) {
-      const { currentEditOne } = newVal;
+      const { currentEditOne } = newVal
       if (typeof currentEditOne === 'number') {
         setTimeout(() => {
           // if (this.isAnimating) {
           //   return;
           // }
-          const field = this.questionDataList?.[currentEditOne]?.field;
+          const field = this.questionDataList?.[currentEditOne]?.field
           if (field) {
             const questionComp =
-              this.$refs.materialGroup.getQuestionRefByField(field);
+              this.$refs.materialGroup.getQuestionRefByField(field)
             if (questionComp && questionComp.$el) {
               questionComp.$el.scrollIntoView({
                 behavior: 'smooth',
-              });
+              })
               // this.isAnimating = true;
               // const maxScrollTop = this.$refs.box.clientHeight - this.$refs.operationWrapper.clientHeight
               // const targetVal = Math.min(questionComp.$el.offsetTop - this.$refs.operationWrapper.clientHeight / 2, maxScrollTop)
               // this.animate(this.$refs.operationWrapper, 'scrollTop', targetVal)
             }
           }
-        }, 0);
+        }, 0)
       }
     },
   },
   methods: {
     animate(dom, property, targetValue) {
-      const origin = dom[property];
-      const subVal = targetValue - origin;
+      const origin = dom[property]
+      const subVal = targetValue - origin
 
-      const flag = subVal < 0 ? -1 : 1;
+      const flag = subVal < 0 ? -1 : 1
 
-      const step = flag * 50;
+      const step = flag * 50
 
-      const totalCount = Math.floor(subVal / step) + 1;
+      const totalCount = Math.floor(subVal / step) + 1
 
-      let runCount = 0;
+      let runCount = 0
       const run = () => {
-        dom[property] += step;
-        runCount++;
+        dom[property] += step
+        runCount++
         if (runCount < totalCount) {
-          requestAnimationFrame(run);
+          requestAnimationFrame(run)
         } else {
-          this.isAnimating = false;
+          this.isAnimating = false
         }
-      };
+      }
 
-      requestAnimationFrame(run);
+      requestAnimationFrame(run)
     },
     async onSelectEditOne(currentEditOne) {
-      this.$store.commit('edit/setCurrentEditOne', currentEditOne);
+      this.$store.commit('edit/setCurrentEditOne', currentEditOne)
     },
     handleChange(data) {
       if (this.currentEditOne === null) {
-        return;
+        return
       }
-      const { key, value } = data;
-      const resultKey = `${this.currentEditKey}.${key}`;
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value });
+      const { key, value } = data
+      const resultKey = `${this.currentEditKey}.${key}`
+      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
     },
     onMainClick(e) {
       if (e.target === this.$refs.mainOperation) {
-        this.$store.commit('edit/setCurrentEditOne', null);
+        this.$store.commit('edit/setCurrentEditOne', null)
       }
     },
     onQuestionOperation(data) {
@@ -152,20 +152,20 @@ export default {
           this.$store.dispatch('edit/moveQuestion', {
             index: data.index,
             range: data.range,
-          });
-          break;
+          })
+          break
         case 'delete':
-          this.$store.dispatch('edit/deleteQuestion', { index: data.index });
-          break;
+          this.$store.dispatch('edit/deleteQuestion', { index: data.index })
+          break
         case 'copy':
-          this.$store.dispatch('edit/copyQuestion', { index: data.index });
-          break;
+          this.$store.dispatch('edit/copyQuestion', { index: data.index })
+          break
         default:
-          break;
+          break
       }
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

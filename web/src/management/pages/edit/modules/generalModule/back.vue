@@ -4,16 +4,18 @@
     <span>返回</span>
   </div>
 </template>
+
 <script>
 export default {
   name: 'back',
   methods: {
     onBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .back-btn {
   height: 100%;

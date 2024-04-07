@@ -1,10 +1,10 @@
 <template>
   <div class="editor-v2">
-    <RichEditor :value="realData" @input="handleChange" @blur="handleBlur" />
+    <RichEditor :modelValue="realData" @input="handleChange" @blur="handleBlur" />
   </div>
 </template>
 <script>
-import RichEditor from './RichEditor';
+import RichEditor from './RichEditor.vue';
 
 export default {
   components: {

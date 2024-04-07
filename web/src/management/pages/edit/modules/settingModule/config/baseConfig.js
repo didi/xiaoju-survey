@@ -9,4 +9,4 @@ export default [
     key: 'limitConfig',
     formList: ['limit_tLimit'],
   },
-];
+]

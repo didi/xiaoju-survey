@@ -1,10 +1,9 @@
-import Vue from 'vue';
 import { forEach, set } from 'lodash';
 export default {
   // 将数据设置到state上
   assignState(state, data) {
     forEach(data, (value, key) => {
-      Vue.set(state, key, value);
+      state[key] = value
     });
   },
   setQuestionData(state, data) {
@@ -35,7 +34,7 @@ export default {
     state.surveyPath = data;
   },
   setVoteMap(state, data) {
-    Vue.set(state, 'voteMap', data);
+    state.voteMap = data
   },
   setQuestionSeq(state, data) {
     state.questionSeq = data;

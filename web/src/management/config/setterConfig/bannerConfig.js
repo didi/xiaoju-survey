@@ -47,9 +47,9 @@ export default [
         direction: 'horizon',
         key: 'bannerConfig.bgImageJumpLink',
         relyFunc: (data) => {
-          return !!data?.bannerConfig?.bgImageAllowJump;
+          return !!data?.bannerConfig?.bgImageAllowJump
         },
       },
     ],
   },
-];
+]

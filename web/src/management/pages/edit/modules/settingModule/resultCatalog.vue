@@ -13,9 +13,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import { mapMutations } from 'vuex';
-import { EDIT_STATUS_MAP } from './enum';
+import { mapMutations } from 'vuex'
+import { EDIT_STATUS_MAP } from './enum'
 
 export default {
   name: 'resultConfigList',
@@ -33,7 +34,7 @@ export default {
           previewImg: '/imgs/icons/overtime.webp',
         },
       ],
-    };
+    }
   },
   computed: {},
   methods: {
@@ -41,11 +42,12 @@ export default {
       changeStatusPreview: 'edit/changeStatusPreview',
     }),
     filterDisabledStatus(data) {
-      this.changeStatusPreview(data);
+      this.changeStatusPreview(data)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .status-list-wrapper {
   width: 300px;

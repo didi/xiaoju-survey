@@ -7,8 +7,8 @@
     :inline="inline"
     @submit.native.prevent
   >
-    <template v-for="(item, index) in formFieldData">
-      <FormItem :key="item.key + index" class="form-item" :form-config="item">
+    <template v-for="(item, index) in formFieldData" :key="item.key + index">
+      <FormItem class="form-item" :form-config="item">
         <template v-if="item.type === 'Customed'">
           <SettersField
             :key="index"
@@ -31,31 +31,32 @@
     </template>
   </el-form>
 </template>
+
 <script>
-import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash';
+import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash'
 
-import FormItem from '@/materials/setters/widgets/FormItem.vue';
-import setterLoader from '@/materials/setters/setterLoader';
+import FormItem from '@/materials/setters/widgets/FormItem.vue'
+import setterLoader from '@/materials/setters/setterLoader'
 
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 const formatValue = ({ item, moduleConfig }) => {
   if (_isFunction(item.valueAdapter)) {
-    const value = item.valueAdapter({ moduleConfig });
-    return value;
+    const value = item.valueAdapter({ moduleConfig })
+    return value
   } else {
-    const { key, keys } = item;
+    const { key, keys } = item
 
-    let result = null;
+    let result = null
     if (key) {
-      result = _get(moduleConfig, key, item.value);
+      result = _get(moduleConfig, key, item.value)
     }
     if (keys) {
-      result = _pick(moduleConfig, keys);
+      result = _pick(moduleConfig, keys)
     }
-    return result;
+    return result
   }
-};
+}
 
 export default {
   name: 'SettersField',
@@ -74,7 +75,7 @@ export default {
   data() {
     return {
       registerd: {},
-    };
+    }
   },
   components: {
     FormItem,
@@ -84,25 +85,25 @@ export default {
       return this.formConfigList
         .filter((item) => {
           if (!item.type) {
-            return false;
+            return false
           }
           if (item.type !== 'Customed' && !this.registerd[item.type]) {
-            return false;
+            return false
           }
           if (item.hidden) {
-            return false;
+            return false
           }
           if (_isFunction(item.relyFunc)) {
-            return item.relyFunc(this.moduleConfig);
+            return item.relyFunc(this.moduleConfig)
           }
-          return true;
+          return true
         })
         .map((item) => {
           return {
             ...item,
             value: formatValue({ item, moduleConfig: this.moduleConfig }),
-          };
-        });
+          }
+        })
     },
   },
   watch: {
@@ -111,61 +112,62 @@ export default {
       immediate: true,
       handler(newVal) {
         if (!newVal || !newVal.length) {
-          return;
+          return
         }
-        this.handleComponentRegister(newVal);
+        this.handleComponentRegister(newVal)
       },
     },
   },
   methods: {
     async handleComponentRegister(formFieldData) {
-      const setters = formFieldData.map((item) => item.type);
-      const settersSet = new Set(setters);
-      const settersArr = Array.from(settersSet);
+      const setters = formFieldData.map((item) => item.type)
+      const settersSet = new Set(setters)
+      const settersArr = Array.from(settersSet)
       const allSetters = settersArr.map((item) => {
         return {
           type: item,
           path: item,
-        };
-      });
+        }
+      })
       try {
-        const comps = await setterLoader.loadComponents(allSetters);
+        const comps = await setterLoader.loadComponents(allSetters)
         for (const comp of comps) {
           if (!comp) {
-            continue;
+            continue
           }
-          const { type, component, err } = comp;
+          const { type, component, err } = comp
           if (!err) {
-            const componentName = component.name;
+            const componentName = component.name
             if (!this.$options.components) {
-              this.$options.components = {};
+              this.$options.components = {}
             }
-            this.$options.components[componentName] = component;
-            this.$set(this.registerd, type, componentName);
+            this.$options.components[componentName] = component
+            this.registerd[type] = componentName
           }
         }
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     },
 
     onFormChange(data, formConfig) {
       if (_isFunction(formConfig?.setterAdapter)) {
-        const resultData = formConfig.setterAdapter(data);
+        const resultData = formConfig.setterAdapter(data)
         if (Array.isArray(resultData)) {
           resultData.forEach((item) => {
-            this.$emit(FORM_CHANGE_EVENT_KEY, item);
-          });
+            this.$emit(FORM_CHANGE_EVENT_KEY, item)
+          })
         } else {
-          this.$emit(FORM_CHANGE_EVENT_KEY, resultData);
+          this.$emit(FORM_CHANGE_EVENT_KEY, resultData)
         }
       } else {
-        this.$emit(FORM_CHANGE_EVENT_KEY, data);
+        this.$emit(FORM_CHANGE_EVENT_KEY, data)
       }
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .config-form {
   padding: 15px 0;

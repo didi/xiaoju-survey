@@ -7,9 +7,10 @@
     <create-form :selectType="selectType" />
   </div>
 </template>
+
 <script>
-import typeList from './components/typeList.vue';
-import createForm from './components/createForm.vue';
+import typeList from './components/typeList.vue'
+import createForm from './components/createForm.vue'
 
 export default {
   name: 'createPage',
@@ -20,15 +21,16 @@ export default {
   data() {
     return {
       selectType: 'normal',
-    };
+    }
   },
   methods: {
     onSelectTypeChange(selectType) {
-      this.selectType = selectType;
+      this.selectType = selectType
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .new {
   position: relative;

@@ -10,11 +10,16 @@
       rows="1"
       class="el-input__inner"
     />
-    <i class="el-icon-search el-input__icon" @click="onSearch"></i>
+    <el-icon class="el-input__icon"><el-icon-search /></el-icon>
   </div>
 </template>
+
 <script>
+import { Search as ElIconSearch } from '@element-plus/icons-vue'
 export default {
+  components: {
+    ElIconSearch,
+  },
   name: 'TextSearch',
   props: {
     value: String,
@@ -23,20 +28,21 @@ export default {
   data() {
     return {
       curValue: this.value,
-    };
+    }
   },
   watch: {
     value(val) {
-      this.curValue = val;
+      this.curValue = val
     },
   },
   methods: {
     onSearch() {
-      this.$emit('search', this.curValue);
+      this.$emit('search', this.curValue)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss">
 // @import '@didi/question-common/assets/css/variable';
 .filter-input {

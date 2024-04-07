@@ -46,7 +46,7 @@ export default {
         const keys = Object.keys(newVal);
         for (const key of keys) {
           if (newVal[key] !== this.values[key]) {
-            this.$set(this.values, key, newVal[key]);
+            this.values[key] = newVal[key];
           }
         }
       },

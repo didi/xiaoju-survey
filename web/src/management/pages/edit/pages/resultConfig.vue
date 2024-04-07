@@ -5,11 +5,12 @@
     <resultSetter slot="right"></resultSetter>
   </commonTemplate>
 </template>
+
 <script>
-import commonTemplate from '../components/commonTemplate.vue';
-import resultCatalog from '../modules/settingModule/resultCatalog.vue';
-import resultPreview from '../modules/settingModule/resultPreview.vue';
-import resultSetter from '../modules/settingModule/resultSetter.vue';
+import commonTemplate from '../components/commonTemplate.vue'
+import resultCatalog from '../modules/settingModule/resultCatalog.vue'
+import resultPreview from '../modules/settingModule/resultPreview.vue'
+import resultSetter from '../modules/settingModule/resultSetter.vue'
 
 export default {
   name: 'editIndex',
@@ -19,6 +20,5 @@ export default {
     resultPreview,
     resultSetter,
   },
-};
+}
 </script>
-<style lang="scss" scoped></style>

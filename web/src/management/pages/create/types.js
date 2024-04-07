@@ -23,4 +23,4 @@ export const SURVEY_TYPE_LIST = [
     img: '/imgs/create/register-icon.webp',
     desc: '活动报名 / 会议报名',
   },
-];
+]

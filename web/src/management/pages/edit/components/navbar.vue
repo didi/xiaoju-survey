@@ -16,14 +16,14 @@
 </template>
 
 <script>
-import back from '../modules/generalModule/back.vue';
-import pageTitle from '../modules/generalModule/pageTitle.vue';
-import pageNav from '../modules/generalModule/pageNav.vue';
-import history from '../modules/contentModule/history.vue';
-import save from '../modules/contentModule/save.vue';
-import publish from '../modules/contentModule/publish.vue';
-import { mapState } from 'vuex';
-import { get as _get } from 'lodash';
+import back from '../modules/generalModule/back.vue'
+import pageTitle from '../modules/generalModule/pageTitle.vue'
+import pageNav from '../modules/generalModule/pageNav.vue'
+import history from '../modules/contentModule/history.vue'
+import save from '../modules/contentModule/save.vue'
+import publish from '../modules/contentModule/publish.vue'
+import { mapState } from 'vuex'
+import { get as _get } from 'lodash'
 
 export default {
   name: 'navbar',
@@ -36,14 +36,14 @@ export default {
     publish,
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
     ...mapState({
       title: (state) => _get(state, 'edit.schema.metaData.title'),
     }),
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -27,12 +27,13 @@
     </div>
   </div>
 </template>
+
 <script>
-import ChannelRow from './components/channelRow';
-import empty from '@/management/components/empty';
-import { get as _get } from 'lodash';
-import leftMenu from '@/management/components/leftMenu.vue';
-import { mapState } from 'vuex';
+import ChannelRow from './components/channelRow.vue'
+import empty from '@/management/components/empty.vue'
+import { get as _get } from 'lodash'
+import leftMenu from '@/management/components/leftMenu.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'publishResultPage',
@@ -44,20 +45,20 @@ export default {
         img: '/imgs/icons/unpublished.webp',
       },
       phoneBg: '/imgs/phone-bg.webp',
-    };
+    }
   },
   async created() {
-    this.$store.commit('edit/setSurveyId', this.$route.params.id);
+    this.$store.commit('edit/setSurveyId', this.$route.params.id)
     try {
-      await this.$store.dispatch('edit/init');
+      await this.$store.dispatch('edit/init')
     } catch (error) {
-      this.$message.error(error.message);
+      this.$message.error(error.message)
       // 自动跳转回列表页
       setTimeout(() => {
         this.$router.replace({
           name: 'survey',
-        });
-      }, 1000);
+        })
+      }, 1000)
     }
   },
   computed: {
@@ -65,17 +66,17 @@ export default {
       metaData: (state) => _get(state, 'edit.schema.metaData'),
     }),
     curStatus() {
-      return _get(this.metaData, 'curStatus.status', 'new');
+      return _get(this.metaData, 'curStatus.status', 'new')
     },
     mainChannel() {
       if (!this.metaData) {
         return {
           fullUrl: '',
-        };
+        }
       }
       return {
         fullUrl: `${location.origin}/render/${this.metaData.surveyPath}`,
-      };
+      }
     },
   },
   components: {
@@ -83,7 +84,7 @@ export default {
     empty,
     leftMenu,
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

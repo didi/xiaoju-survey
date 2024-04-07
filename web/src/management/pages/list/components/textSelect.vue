@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       selectValue: this.options.default,
-    };
+    }
   },
   props: {
     options: {
@@ -34,11 +34,11 @@ export default {
   },
   watch: {
     selectValue(newSelect) {
-      const { effectFun } = this;
-      typeof effectFun === 'function' && effectFun(newSelect, this.effectKey);
+      const { effectFun } = this
+      typeof effectFun === 'function' && effectFun(newSelect, this.effectKey)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

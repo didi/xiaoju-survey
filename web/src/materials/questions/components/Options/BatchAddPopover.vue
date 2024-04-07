@@ -3,7 +3,7 @@
     class="mypopover"
     placement="right"
     width="440"
-    v-model="visible"
+    v-model:visible="visible"
     trigger="click"
   >
     <div class="mypopover-body">

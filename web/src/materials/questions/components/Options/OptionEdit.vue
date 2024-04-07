@@ -3,39 +3,38 @@
     <draggable
       id="sortDraggable"
       :list="optionList"
-      :options="{ handle: '.drag-handle' }"
+      handle=".drag-handle"
       @update="optionSortChange"
+      itemKey="hash"
     >
-      <div
-        class="draggdiv dragg-handle"
-        v-for="(item, index) in optionList"
-        :key="index"
-      >
-        <span class="drag-handle qicon qicon-tuodong"></span>
-        <div class="input-box">
-          <EditorV2
-            :realData="item.text"
-            @change="(value) => handleChange(index, value)"
-            :is-show-operation="isShowOperation"
-          />
-        </div>
-
-        <i
-          v-if="isShowOperation"
-          class="icon el-icon-circle-plus-outline"
-          @click="onAddOption(index)"
-        ></i>
-        <el-tooltip
-          v-if="isShowOperation"
-          v-show="optionList.length > 1"
-          class="icon delete"
-          effect="dark"
-          content="删除"
-          placement="top"
+      <template #item="{element, index}">
+        <div
+          class="draggdiv dragg-handle"
         >
-          <i class="el-icon-remove-outline" @click="deleteOption(index)"></i>
-        </el-tooltip>
-      </div>
+          <span class="drag-handle qicon qicon-tuodong"></span>
+          <div class="input-box">
+            <RichEditor
+              :modelValue="element.text"
+              @change="(value) => handleChange(index, value)"
+            />
+          </div>
+
+          <i
+            v-if="isShowOperation"
+            class="icon el-icon-circle-plus-outline"
+            @click="onAddOption(index)"
+          ></i>
+          <el-tooltip
+            v-if="isShowOperation"
+            class="icon delete"
+            effect="dark"
+            content="删除"
+            placement="top"
+          >
+            <i class="el-icon-remove-outline" @click="deleteOption(index)"></i>
+          </el-tooltip>
+        </div>
+      </template>
     </draggable>
   </div>
 </template>
@@ -44,7 +43,7 @@
 import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
 import { cloneDeep as _cloneDeep } from 'lodash';
-import EditorV2 from '@/common/Editor/EditorV2';
+import RichEditor from '@/common/Editor/RichEditor.vue';
 
 export default {
   name: 'OptionEdit',
@@ -64,7 +63,7 @@ export default {
   },
   components: {
     draggable,
-    EditorV2,
+    RichEditor,
   },
   mounted() {
     // 选项hash兜底
@@ -93,6 +92,7 @@ export default {
       return random;
     },
     handleChange(index, value) {
+      console.log('handle change', index,value)
       // 更新单个选项文案
       const optionKey = `options[${index}].text`;
       const key = `${this.currentEditKey}.${optionKey}`;

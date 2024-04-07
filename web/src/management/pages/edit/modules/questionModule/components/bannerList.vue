@@ -23,26 +23,28 @@
     </el-collapse>
   </div>
 </template>
+
 <script>
 export default {
   name: 'bannerList',
   data() {
     return {
       curSkinGroupKey: ['temp'],
-    };
+    }
   },
   computed: {
     bannerList() {
-      return this.$store?.state?.bannerList || [];
+      return this.$store?.state?.bannerList || []
     },
   },
   methods: {
     changeBanner(imgSrc) {
-      this.$emit('change', imgSrc);
+      this.$emit('change', imgSrc)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .banner-list-wrapper {
   padding: 5px 18px 100px 19px;

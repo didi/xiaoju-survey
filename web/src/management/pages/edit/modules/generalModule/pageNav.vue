@@ -18,6 +18,7 @@
     </template>
   </div>
 </template>
+
 <script>
 export default {
   name: 'pageTitle',
@@ -46,10 +47,11 @@ export default {
           key: 'status',
         },
       ],
-    };
+    }
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .content {
   display: flex;

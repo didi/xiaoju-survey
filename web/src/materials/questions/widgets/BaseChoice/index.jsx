@@ -142,7 +142,7 @@ export default defineComponent({
                         >
                           {!hideText && (
                             <span
-                              domPropsInnerHTML={filterXSS(item.text)}
+                              v-html={filterXSS(item.text)}
                               class="item-title-text"
                               style="display: block; height: auto; padding: 9px 0"
                             ></span>
@@ -158,7 +158,7 @@ export default defineComponent({
                   {!this.readonly
                     ? item.others &&
                       isChecked(item) &&
-                      this.$scopedSlots.selectMore?.({
+                      slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
                           type: 'selectMoreModule',
@@ -170,7 +170,7 @@ export default defineComponent({
                         },
                       })
                     : item.others &&
-                      this.$scopedSlots.selectMore?.({
+                      this.slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
                           type: 'selectMoreModule',

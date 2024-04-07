@@ -1,5 +1,5 @@
 import '../common/css/formItem.scss';
-import Vue, {
+import {
   defineComponent,
   getCurrentInstance,
   ref,
@@ -8,6 +8,7 @@ import Vue, {
   inject,
   onMounted,
   onBeforeUnmount,
+  h,
 } from 'vue';
 import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
@@ -117,12 +118,14 @@ export default defineComponent({
       });
     };
     const onFieldBlur = () => {
-      if (!(form && form instanceof Vue)) return;
+      // TODO: 
+      // if (!(form && form instanceof Vue)) return;
       validate('blur');
     };
     // eslint-disable-next-line no-unused-vars
     const onFieldChange = () => {
-      if (!(form && form instanceof Vue)) return;
+      // TODO: 
+      // if (!(form && form instanceof Vue)) return;
       validate('change');
     };
     const getRules = () => {
@@ -160,7 +163,7 @@ export default defineComponent({
       handleChange,
     };
   },
-  render(h) {
+  render() {
     const { itemClass, validateMessage } = this;
     return (
       <div
@@ -181,7 +184,7 @@ export default defineComponent({
             readonly: this.readonly,
           },
           on: {
-            ...this.$listeners,
+            ...this.$attrs,
             blur: this.handleBlur,
             change: this.handleChange,
           },

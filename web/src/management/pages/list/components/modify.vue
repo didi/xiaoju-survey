@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     class="base-dialog-root"
-    :visible="visible"
+    :model-value="visible"
     width="40%"
     title="基础信息"
     @close="onClose"
@@ -32,10 +32,10 @@
 </template>
 
 <script>
-import { CODE_MAP } from '@/management/api/base';
-import { updateSurvey, createSurvey } from '@/management/api/survey';
-import { pick as _pick } from 'lodash';
-import { QOP_MAP } from '@/management/utils/constant';
+import { CODE_MAP } from '@/management/api/base'
+import { updateSurvey, createSurvey } from '@/management/api/survey'
+import { pick as _pick } from 'lodash'
+import { QOP_MAP } from '@/management/utils/constant'
 
 export default {
   name: 'modifyDialog',
@@ -53,12 +53,12 @@ export default {
         title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],
       },
       current: this.getCurrent(this.questionInfo),
-    };
+    }
   },
   watch: {
     questionInfo: {
       handler(val) {
-        this.current = this.getCurrent(val);
+        this.current = this.getCurrent(val)
       },
       deep: true,
     },
@@ -67,34 +67,34 @@ export default {
     getCurrent(val) {
       return {
         ..._pick(val, ['title', 'remark']),
-      };
+      }
     },
     onClose() {
-      this.$emit('on-close-codify');
+      this.$emit('on-close-codify')
     },
     async onSave() {
       if (this.type === QOP_MAP.COPY) {
-        await this.handleCopy();
+        await this.handleCopy()
       } else {
-        await this.handleUpdate();
+        await this.handleUpdate()
       }
 
-      this.$emit('on-close-codify', 'update');
+      this.$emit('on-close-codify', 'update')
     },
     async handleUpdate() {
       try {
         const res = await updateSurvey({
           surveyId: this.questionInfo._id,
           ...this.current,
-        });
+        })
 
         if (res.code === CODE_MAP.SUCCESS) {
-          this.$message.success('修改成功');
+          this.$message.success('修改成功')
         } else {
-          this.$message.error(res.errmsg);
+          this.$message.error(res.errmsg)
         }
       } catch (err) {
-        this.$message.error(err);
+        this.$message.error(err)
       }
     },
     async handleCopy() {
@@ -103,25 +103,23 @@ export default {
           createFrom: this.questionInfo._id,
           createMethod: QOP_MAP.COPY,
           ...this.current,
-        });
+        })
 
         if (res.code === CODE_MAP.SUCCESS) {
-          const { data } = res;
+          const { data } = res
           this.$router.push({
             name: 'QuestionEditIndex',
             params: {
               id: data.id,
             },
-          });
+          })
         } else {
-          this.$message.error(res.errmsg);
+          this.$message.error(res.errmsg)
         }
       } catch (err) {
-        this.$message.error(err);
+        this.$message.error(err)
       }
     },
   },
-};
+}
 </script>
-
-<style lang="scss" rel="lang/scss" scoped></style>

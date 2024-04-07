@@ -1,4 +1,4 @@
-import axios from './base';
+import axios from './base'
 
 export const getSurveyList = ({ curPage, filter, order }) => {
   return axios.get('/survey/getList', {
@@ -8,30 +8,30 @@ export const getSurveyList = ({ curPage, filter, order }) => {
       filter,
       order,
     },
-  });
-};
+  })
+}
 
 export const getSurveyById = (id) => {
   return axios.get('/survey/getSurvey', {
     params: {
       surveyId: id,
     },
-  });
-};
+  })
+}
 
 export const saveSurvey = ({ surveyId, configData }) => {
-  return axios.post('/survey/updateConf', { surveyId, configData });
-};
+  return axios.post('/survey/updateConf', { surveyId, configData })
+}
 
 export const publishSurvey = ({ surveyId }) => {
   return axios.post('/survey/publishSurvey', {
     surveyId,
-  });
-};
+  })
+}
 
 export const createSurvey = (data) => {
-  return axios.post('/survey/createSurvey', data);
-};
+  return axios.post('/survey/createSurvey', data)
+}
 
 export const getSurveyHistory = ({ surveyId, historyType }) => {
   return axios.get('/surveyHisotry/getList', {
@@ -39,15 +39,15 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
       surveyId,
       historyType,
     },
-  });
-};
+  })
+}
 
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
     surveyId,
-  });
-};
+  })
+}
 
 export const updateSurvey = (data) => {
-  return axios.post('/survey/updateMeta', data);
-};
+  return axios.post('/survey/updateMeta', data)
+}

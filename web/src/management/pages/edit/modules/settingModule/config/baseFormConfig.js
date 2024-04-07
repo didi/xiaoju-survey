@@ -79,4 +79,4 @@ export default {
   //   direction: 'horizon',
   //   maxlength: 6,
   // },
-};
+}

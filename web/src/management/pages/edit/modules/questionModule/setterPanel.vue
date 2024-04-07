@@ -19,20 +19,20 @@
 </template>
 
 <script>
-import bannerList from './components/bannerList.vue';
-import setterField from './components/setterField.vue';
-import { mapGetters } from 'vuex';
+import bannerList from './components/bannerList.vue'
+import setterField from './components/setterField.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'setterWrapper',
   data() {
     return {
       tabSelected: '0',
-    };
+    }
   },
   computed: {
     currentEditOne() {
-      return this.$store.state?.edit?.currentEditOne;
+      return this.$store.state?.edit?.currentEditOne
     },
     ...mapGetters({
       formConfigList: 'edit/formConfigList',
@@ -50,16 +50,17 @@ export default {
       this.onFormChange({
         key: 'bannerConfig.bgImage',
         value: src,
-      });
+      })
     },
     onFormChange(data) {
-      const { key, value } = data;
-      const resultKey = `${this.currentEditKey}.${key}`;
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value });
+      const { key, value } = data
+      const resultKey = `${this.currentEditKey}.${key}`
+      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .setter-wrapper {
   width: 360px;

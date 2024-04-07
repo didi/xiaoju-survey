@@ -23,10 +23,11 @@
     </div>
   </div>
 </template>
-<script>
-import NavHeader from './navHeader.vue';
 
-import { SURVEY_TYPE_LIST } from '../types';
+<script>
+import NavHeader from './navHeader.vue'
+
+import { SURVEY_TYPE_LIST } from '../types'
 
 export default {
   name: 'LeftSide',
@@ -41,17 +42,18 @@ export default {
   },
   computed: {
     renderData() {
-      return SURVEY_TYPE_LIST;
+      return SURVEY_TYPE_LIST
     },
   },
   methods: {
     handleSelectType(key, value) {
-      const { type } = value;
-      this.$emit('selectTypeChange', type);
+      const { type } = value
+      this.$emit('selectTypeChange', type)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .left-side {
   position: relative;

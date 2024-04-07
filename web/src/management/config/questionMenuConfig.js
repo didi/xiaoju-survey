@@ -48,7 +48,7 @@ const menuItems = {
     icon: 'tixing-toupiao',
     title: '投票',
   },
-};
+}
 
 const menuGroup = [
   {
@@ -59,15 +59,13 @@ const menuGroup = [
     title: '选择类题型',
     questionList: ['radio', 'checkbox', 'binary-choice', 'radio-star', 'vote'],
   },
-];
+]
 
 const menu = menuGroup.map((group) => {
-  group.questionList = group.questionList.map(
-    (question) => menuItems[question]
-  );
-  return group;
-});
+  group.questionList = group.questionList.map((question) => menuItems[question])
+  return group
+})
 
-export const questionTypeList = Object.values(menuItems);
+export const questionTypeList = Object.values(menuItems)
 
-export default menu;
+export default menu

@@ -2,7 +2,7 @@
   <div class="default-empty-root">
     <img class="img" :src="data.img" />
     <div class="title">{{ data.title }}</div>
-    <div class="desc" v-html="data.desc" ></div>
+    <div class="desc" v-html="data.desc"></div>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
       required: true,
     },
   },
-};
+}
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

@@ -9,9 +9,8 @@
       label-position="top"
       @submit.native.prevent
     >
-      <template v-for="(item, index) in formFieldData">
+      <template v-for="(item, index) in formFieldData" :key="index">
         <FormItem
-          :key="index"
           v-if="item.type && !item.hidden && Boolean(registerd[item.type])"
           :form-config="item"
           :style="item.style"
@@ -28,17 +27,18 @@
     </el-form>
   </div>
 </template>
+
 <script>
-import FormItem from '@/materials/setters/widgets/FormItem.vue';
-import setterLoader from '@/materials/setters/setterLoader';
-import statusConfig from './config/statusConfig';
-import { mapState } from 'vuex';
-import { get as _get, pick as _pick } from 'lodash';
+import FormItem from '@/materials/setters/widgets/FormItem.vue'
+import setterLoader from '@/materials/setters/setterLoader'
+import statusConfig from './config/statusConfig'
+import { mapState } from 'vuex'
+import { get as _get, pick as _pick } from 'lodash'
 
 const textMap = {
   Success: '提交成功页面配置',
   OvertTme: '问卷过期页面配置',
-};
+}
 
 export default {
   name: 'StatusEditForm',
@@ -48,28 +48,28 @@ export default {
   data() {
     return {
       registerd: {},
-    };
+    }
   },
   computed: {
     formFieldData() {
-      const formList = statusConfig[this.currentEditStatus] || [];
+      const formList = statusConfig[this.currentEditStatus] || []
       return formList.map((item) => {
-        const value = _get(this.moduleConfig, item.key, item.value);
+        const value = _get(this.moduleConfig, item.key, item.value)
         return {
           ...item,
           value,
-        };
-      });
+        }
+      })
     },
     currentEditText() {
-      return textMap[this.currentEditStatus] || '';
+      return textMap[this.currentEditStatus] || ''
     },
     ...mapState({
       currentEditStatus: (state) => state.edit.currentEditStatus,
       submitConf: (state) => _get(state, 'edit.schema.submitConf'),
     }),
     moduleConfig() {
-      return this.submitConf;
+      return this.submitConf
     },
   },
   watch: {
@@ -77,65 +77,66 @@ export default {
       immediate: true,
       handler(newVal) {
         if (Array.isArray(newVal)) {
-          this.handleComponentRegister(newVal);
+          this.handleComponentRegister(newVal)
         }
       },
     },
   },
   methods: {
     async handleComponentRegister(formFieldData) {
-      const setters = formFieldData.map((item) => item.type);
-      const settersSet = new Set(setters);
-      const settersArr = Array.from(settersSet);
+      const setters = formFieldData.map((item) => item.type)
+      const settersSet = new Set(setters)
+      const settersArr = Array.from(settersSet)
       const allSetters = settersArr.map((item) => {
         return {
           type: item,
           path: item,
-        };
-      });
+        }
+      })
       try {
-        const comps = await setterLoader.loadComponents(allSetters);
+        const comps = await setterLoader.loadComponents(allSetters)
         for (const comp of comps) {
           if (!comp) {
-            continue;
+            continue
           }
-          const { type, component, err } = comp;
+          const { type, component, err } = comp
           if (!err) {
-            const componentName = component.name;
-            this.$options.components[componentName] = component;
-            this.$set(this.registerd, type, componentName);
+            const componentName = component.name
+            this.$options.components[componentName] = component
+            this.registerd[type] = componentName
           }
         }
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     },
     getValueFromModuleConfig(item) {
-      const { key, keys } = item;
-      const moduleConfig = this.moduleConfig;
-      let result = item;
+      const { key, keys } = item
+      const moduleConfig = this.moduleConfig
+      let result = item
       if (key) {
         result = {
           ...item,
           value: _get(moduleConfig, key, item.value),
-        };
+        }
       }
       if (keys) {
         result = {
           ...item,
           value: _pick(moduleConfig, keys),
-        };
+        }
       }
-      return result;
+      return result
     },
     onFormChange(data) {
-      const { key, value } = data;
-      const resultKey = `submitConf.${key}`;
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value });
+      const { key, value } = data
+      const resultKey = `submitConf.${key}`
+      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-edit-form {
   width: 360px;

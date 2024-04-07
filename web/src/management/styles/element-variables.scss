@@ -1,10 +1,18 @@
-@import "./variable.scss";
-@import "./reset.scss";
+// @use "./variable.scss" as *;
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #ffa600,
+    ),
+  ),
+);
 
+
+
+@use "element-plus/theme-chalk/src/index.scss" as *;
+// @import "./reset.scss";
 /* 改变主题色变量 */
-$--color-primary: $primary-color;
+// $--color-primary: $primary-color;
 
 /* 改变 icon 字体路径变量，必需 */
-$--font-path: '~element-ui/lib/theme-chalk/fonts';
-
-@import "element-plus/dist/index.css";
+// $--font-path: '~element-ui/lib/theme-chalk/fonts';

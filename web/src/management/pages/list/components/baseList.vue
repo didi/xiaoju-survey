@@ -56,7 +56,7 @@
         :min-width="field.width || field.minWidth"
         class-name="link"
       >
-        <template slot-scope="scope">
+        <template #default="scope">
           <template v-if="field.comp">
             <component :is="field.comp" type="table" :value="scope.row" />
           </template>
@@ -67,7 +67,7 @@
       </el-table-column>
 
       <el-table-column label="操作" :width="300" class-name="table-options">
-        <template slot-scope="scope">
+        <template  #default="scope">
           <ToolBar
             :data="scope.row"
             type="list"
@@ -104,30 +104,30 @@
 </template>
 
 <script>
-import { get, map } from 'lodash';
-import moment from 'moment';
+import { get, map } from 'lodash'
+import moment from 'moment'
 // 引入中文
-import 'moment/locale/zh-cn';
+import 'moment/locale/zh-cn'
 // 设置中文
-moment.locale('zh-cn');
-import empty from '@/management/components/empty.vue';
-import ModifyDialog from './modify.vue';
-import Tag from './tag.vue';
-import State from './state.vue';
-import ToolBar from './toolBar.vue';
-import TextSearch from './textSearch.vue';
-import TextSelect from './textSelect.vue';
-import TextButton from './textButton.vue';
+moment.locale('zh-cn')
+import empty from '@/management/components/empty.vue'
+import ModifyDialog from './modify.vue'
+import Tag from './tag.vue'
+import State from './state.vue'
+import ToolBar from './toolBar.vue'
+import TextSearch from './textSearch.vue'
+import TextSelect from './textSelect.vue'
+import TextButton from './textButton.vue'
 import {
   fieldConfig,
   noListDataConfig,
   noSearchDataConfig,
   selectOptionsDict,
   buttonOptionsDict,
-} from '../config';
-import { CODE_MAP } from '@/management/api/base';
-import { QOP_MAP } from '@/management/utils/constant';
-import { getSurveyList, deleteSurvey } from '@/management/api/survey';
+} from '../config'
+import { CODE_MAP } from '@/management/api/base'
+import { QOP_MAP } from '@/management/utils/constant'
+import { getSurveyList, deleteSurvey } from '@/management/api/survey'
 
 export default {
   name: 'BaseList',
@@ -162,22 +162,22 @@ export default {
         'curStatus.date': '',
         createDate: -1,
       },
-    };
+    }
   },
   computed: {
     fieldList() {
       const fieldInfo = map(this.fields, (f) => {
-        return get(fieldConfig, f, null);
-      });
-      return fieldInfo;
+        return get(fieldConfig, f, null)
+      })
+      return fieldInfo
     },
     dataList() {
       return this.data.map((item) => {
         return {
           ...item,
           'curStatus.date': item.curStatus.date,
-        };
-      });
+        }
+      })
     },
     filter() {
       return [
@@ -209,56 +209,56 @@ export default {
             },
           ],
         },
-      ];
+      ]
     },
     order() {
       const formatOrder = Object.entries(this.buttonValueMap)
         .filter(([, effectValue]) => effectValue)
         .reduce((prev, item) => {
-          const [effectKey, effectValue] = item;
-          prev.push({ field: effectKey, value: effectValue });
-          return prev;
-        }, []);
-      return JSON.stringify(formatOrder);
+          const [effectKey, effectValue] = item
+          prev.push({ field: effectKey, value: effectValue })
+          return prev
+        }, [])
+      return JSON.stringify(formatOrder)
     },
   },
   created() {
-    this.init();
+    this.init()
   },
   methods: {
     async init() {
-      this.loading = true;
+      this.loading = true
       try {
         const filter = JSON.stringify(
           this.filter.filter((item) => {
-            return item.condition[0].value;
+            return item.condition[0].value
           })
-        );
+        )
         const res = await getSurveyList({
           curPage: this.currentPage,
           filter,
           order: this.order,
-        });
-        this.loading = false;
+        })
+        this.loading = false
         if (res.code === CODE_MAP.SUCCESS) {
-          this.total = res.data.count;
-          this.data = res.data.data;
+          this.total = res.data.count
+          this.data = res.data.data
         } else {
           this.$message({
             type: 'error',
             message: res.errmsg,
-          });
+          })
         }
       } catch (error) {
         this.$message({
           type: 'error',
           message: error,
-        });
-        this.loading = false;
+        })
+        this.loading = false
       }
     },
     getStatus(data) {
-      return get(data, 'curStatus.status', 'new');
+      return get(data, 'curStatus.status', 'new')
     },
     getToolConfig() {
       const funcList = [
@@ -284,8 +284,8 @@ export default {
           label: '复制',
           icon: 'icon-shanchu',
         },
-      ];
-      return funcList;
+      ]
+      return funcList
     },
     async onDelete(row) {
       try {
@@ -293,34 +293,34 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-        });
+        })
       } catch (error) {
-        console.log('取消删除');
-        return;
+        console.log('取消删除')
+        return
       }
 
-      const res = await deleteSurvey(row._id);
+      const res = await deleteSurvey(row._id)
       if (res.code === CODE_MAP.SUCCESS) {
-        this.$message.success('删除成功');
-        this.init();
+        this.$message.success('删除成功')
+        this.init()
       } else {
-        this.$message.error(res.errmsg || '删除失败');
+        this.$message.error(res.errmsg || '删除失败')
       }
     },
     handleCurrentChange(current) {
-      this.currentPage = current;
-      this.init();
+      this.currentPage = current
+      this.init()
     },
     onModify(data, type = QOP_MAP.EDIT) {
-      this.showModify = true;
-      this.modifyType = type;
-      this.questionInfo = data;
+      this.showModify = true
+      this.modifyType = type
+      this.questionInfo = data
     },
     onCloseModify(type) {
-      this.showModify = false;
-      this.questionInfo = {};
+      this.showModify = false
+      this.questionInfo = {}
       if (type === 'update') {
-        this.init();
+        this.init()
       }
     },
     onRowClick(row) {
@@ -329,25 +329,25 @@ export default {
         params: {
           id: row._id,
         },
-      });
+      })
     },
     onSearchText(e) {
-      this.searchVal = e;
-      this.currentPage = 1;
-      this.init();
+      this.searchVal = e
+      this.currentPage = 1
+      this.init()
     },
     onSelectChange(selectValue, selectKey) {
-      this.selectValueMap[selectKey] = selectValue;
-      this.currentPage = 1;
-      this.init();
+      this.selectValueMap[selectKey] = selectValue
+      this.currentPage = 1
+      this.init()
     },
     onButtonChange(effectValue, effectKey) {
       this.buttonValueMap = {
         'curStatus.date': '',
         createDate: '',
-      };
-      this.buttonValueMap[effectKey] = effectValue;
-      this.init();
+      }
+      this.buttonValueMap[effectKey] = effectValue
+      this.init()
     },
   },
   components: {
@@ -360,7 +360,7 @@ export default {
     TextButton,
     State,
   },
-};
+}
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

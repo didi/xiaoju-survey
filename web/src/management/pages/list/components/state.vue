@@ -4,8 +4,9 @@
     <span>{{ statusMaps[value.curStatus.status] }}</span>
   </div>
 </template>
+
 <script>
-import { statusMaps } from '../config';
+import { statusMaps } from '../config'
 export default {
   name: 'State',
   props: {
@@ -14,10 +15,11 @@ export default {
   data() {
     return {
       statusMaps,
-    };
+    }
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .list-state {
   display: flex;

@@ -1,9 +1,5 @@
-import { createRouter, createWebHistory} from 'vue-router';
-import type { Router } from 'vue-router';
-
-type IRouter = Router & {
-  app?: any
-}
+import { createRouter, createWebHistory } from 'vue-router'
+import { useStore } from 'vuex'
 
 const routes = [
   {
@@ -103,37 +99,36 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "login" */ '../pages/login/index.vue'),
   },
-];
+]
 
-console.log()
-const router: IRouter = createRouter({
-  history: createWebHistory('pages/management'),
+const router = createRouter({
+  history: createWebHistory('management'),
   routes,
-});
+})
 
 router.beforeEach((to, from, next) => {
-  //TODO: 改造
-  const store = router.app?.$options.store;
-  if (!store?.state?.user?.initialized) {
-    store?.dispatch('user/init');
+  console.log('from', from)
+  const store = useStore()
+  if (!store.state.user?.initialized) {
+    store?.dispatch('user/init')
   }
   if (to.meta.title) {
-    document.title = to.meta.title as string;
+    document.title = to.meta.title as string
   }
   if (to.meta.needLogin) {
     if (store?.state?.user?.hasLogined) {
-      next();
+      next()
     } else {
       next({
         name: 'login',
         query: {
           redirect: encodeURIComponent(to.path),
         },
-      });
+      })
     }
   } else {
-    next();
+    next()
   }
-});
+})
 
-export default router;
+export default router

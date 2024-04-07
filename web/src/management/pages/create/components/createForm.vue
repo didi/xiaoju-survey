@@ -42,9 +42,10 @@
     </el-form>
   </div>
 </template>
+
 <script>
-import { SURVEY_TYPE_LIST } from '../types';
-import { createSurvey } from '@/management/api/survey';
+import { SURVEY_TYPE_LIST } from '../types'
+import { createSurvey } from '@/management/api/survey'
 
 export default {
   name: 'CreateForm',
@@ -64,55 +65,56 @@ export default {
         title: '问卷调研',
         remark: '问卷调研',
       },
-    };
+    }
   },
   computed: {
     SURVEY_TYPE_LIST() {
-      return SURVEY_TYPE_LIST;
+      return SURVEY_TYPE_LIST
     },
     title() {
       return this.SURVEY_TYPE_LIST.find((item) => item.type === this.selectType)
-        ?.title;
+        ?.title
     },
   },
   methods: {
     checkForm(fn) {
       this.$refs.ruleForm.validate((valid) => {
-        valid && typeof fn === 'function' && fn();
-      });
+        valid && typeof fn === 'function' && fn()
+      })
     },
     submit() {
       if (!this.canSubmit) {
-        return;
+        return
       }
       this.checkForm(async () => {
-        const { selectType } = this;
+        const { selectType } = this
         if (!this.canSubmit) {
-          return;
+          return
         }
-        this.canSubmit = false;
+        this.canSubmit = false
         const res = await createSurvey({
           surveyType: selectType,
           ...this.form,
-        });
+        })
         if (res.code === 200 && res?.data?.id) {
-          const id = res.data.id;
+          const id = res.data.id
           this.$router.push({
             name: 'QuestionEditIndex',
             params: {
               id,
             },
-          });
+          })
         } else {
-          this.$message.error(res.errmsg || '创建失败');
+          this.$message.error(res.errmsg || '创建失败')
         }
 
-        this.canSubmit = true;
-      });
+        this.canSubmit = true
+      })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .right-side {
   width: 538px;

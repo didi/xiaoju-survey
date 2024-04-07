@@ -71,8 +71,11 @@ import { Logger } from './logger';
             ResponseSchema,
             ClientEncrypt,
             Word,
+<<<<<<< HEAD
             MessagePushingTask,
             MessagePushingLog,
+=======
+>>>>>>> main
           ],
         };
       },
@@ -98,6 +101,10 @@ export class AppModule {
   constructor(
     private readonly configService: ConfigService,
     private readonly pluginManager: XiaojuSurveyPluginManager,
+<<<<<<< HEAD
+=======
+    private readonly logger: Logger,
+>>>>>>> main
   ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LogRequestMiddleware).forRoutes('*');
@@ -111,7 +118,11 @@ export class AppModule {
       ),
       new SurveyUtilPlugin(),
     );
+<<<<<<< HEAD
     Logger.init({
+=======
+    this.logger.init({
+>>>>>>> main
       filename: this.configService.get<string>('XIAOJU_SURVEY_LOGGER_FILENAME'),
     });
   }

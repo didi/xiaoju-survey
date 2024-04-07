@@ -1,9 +1,8 @@
 <template>
   <div class="content">
-    <template v-for="btnItem in btnList">
+    <template v-for="btnItem in btnList" :key="btnItem.key">
       <router-link
         class="navbar-btn"
-        :key="btnItem.key"
         :to="{ name: btnItem.router }"
         tag="div"
         replace

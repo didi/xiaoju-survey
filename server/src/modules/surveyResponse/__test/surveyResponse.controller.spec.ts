@@ -5,21 +5,19 @@ import { cloneDeep } from 'lodash';
 import { mockResponseSchema } from './mockResponseSchema';
 
 import { SurveyResponseController } from '../controllers/surveyResponse.controller';
+
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { CounterService } from '../services/counter.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
-import { MessagePushingTaskService } from '../../survey/services/messagePushingTask.service';
-import { MessagePushingLogService } from '../services/messagePushingLog.service';
+import { MessagePushingTaskService } from 'src/modules/message/services/messagePushingTask.service';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
-import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
 
-import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { RECORD_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 
@@ -77,8 +75,6 @@ describe('SurveyResponseController', () => {
   let responseSchemaService: ResponseSchemaService;
   let surveyResponseService: SurveyResponseService;
   let clientEncryptService: ClientEncryptService;
-  let messagePushingTaskService: MessagePushingTaskService;
-  let messagePushingLogService: MessagePushingLogService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -113,19 +109,13 @@ describe('SurveyResponseController', () => {
               .mockResolvedValue(mockClientEncryptInfo),
           },
         },
+        PluginManagerProvider,
         {
           provide: MessagePushingTaskService,
           useValue: {
-            findAll: jest.fn(),
+            runResponseDataPush: jest.fn(),
           },
         },
-        {
-          provide: MessagePushingLogService,
-          useValue: {
-            createPushingLog: jest.fn(),
-          },
-        },
-        PluginManagerProvider,
       ],
     }).compile();
 
@@ -138,14 +128,6 @@ describe('SurveyResponseController', () => {
     );
     clientEncryptService =
       module.get<ClientEncryptService>(ClientEncryptService);
-
-    messagePushingTaskService = module.get<MessagePushingTaskService>(
-      MessagePushingTaskService,
-    );
-
-    messagePushingLogService = module.get<MessagePushingLogService>(
-      MessagePushingLogService,
-    );
 
     const pluginManager = module.get<XiaojuSurveyPluginManager>(
       XiaojuSurveyPluginManager,
@@ -214,9 +196,6 @@ describe('SurveyResponseController', () => {
       jest
         .spyOn(clientEncryptService, 'deleteEncryptInfo')
         .mockResolvedValueOnce(undefined);
-      jest
-        .spyOn(controller, 'sendSurveyResponseMessage')
-        .mockReturnValueOnce(undefined);
 
       const result = await controller.createResponse(reqBody);
 
@@ -318,103 +297,6 @@ describe('SurveyResponseController', () => {
       await expect(controller.createResponse(reqBody)).rejects.toThrow(
         HttpException,
       );
-    });
-  });
-
-  describe('sendSurveyResponseMessage', () => {
-    it('should send survey response message', async () => {
-      const sendData = {
-        surveyId: '65f29f3192862d6a9067ad1c',
-        surveyPath: 'EBzdmnSp',
-        surveyResponseId: '65fc2dd77f4520858046e129',
-        data: [
-          {
-            questionId: 'data458',
-            title: '<p>您的手机号</p>',
-            valueType: 'text',
-            alias: '',
-            value: ['15000000000'],
-          },
-          {
-            questionId: 'data515',
-            title: '<p>您的性别</p>',
-            valueType: 'option',
-            alias: '',
-            value: [
-              {
-                alias: '',
-                id: '115019',
-                text: '<p>男</p>',
-              },
-            ],
-          },
-          {
-            questionId: 'data450',
-            title: '<p>身份证</p>',
-            valueType: 'text',
-            alias: '',
-            value: ['450111000000000000'],
-          },
-          {
-            questionId: 'data405',
-            title: '<p>地址</p>',
-            valueType: 'text',
-            alias: '',
-            value: ['浙江省杭州市西湖区xxx'],
-          },
-          {
-            questionId: 'data770',
-            title: '<p>邮箱</p>',
-            valueType: 'text',
-            alias: '',
-            value: ['123456@qq.com'],
-          },
-        ],
-      };
-
-      const mockTasks = [
-        {
-          _id: new ObjectId('65fc31dbfd09a5d0619c3b74'),
-          name: 'Task 1',
-          type: MESSAGE_PUSHING_TYPE.HTTP,
-          pushAddress: 'success_url',
-        },
-        {
-          _id: new ObjectId('65fc31dbfd09a5d0619c3b75'),
-          name: 'Task 2',
-          type: MESSAGE_PUSHING_TYPE.HTTP,
-          pushAddress: 'fail_url',
-        },
-      ] as MessagePushingTask[];
-      jest
-        .spyOn(messagePushingTaskService, 'findAll')
-        .mockReturnValue(Promise.resolve(mockTasks));
-
-      const mockFetch = jest.fn().mockImplementation((url) => {
-        if (url === 'success_url') {
-          return {
-            json: () => {
-              return Promise.resolve({ code: 200, msg: '提交成功' });
-            },
-            status: 200,
-          };
-        } else {
-          return {
-            data: 'failed',
-            status: 501,
-          };
-        }
-      });
-      jest.mock('node-fetch', () => jest.fn().mockImplementation(mockFetch));
-
-      await controller.sendSurveyResponseMessage({
-        sendData,
-        surveyId: mockResponseSchema.pageId,
-      });
-
-      expect(messagePushingTaskService.findAll).toHaveBeenCalled();
-
-      expect(messagePushingLogService.createPushingLog).toHaveBeenCalled();
     });
   });
 });

@@ -1,4 +1,4 @@
-import axios from './base';
+import axios from './base'
 
 export const getRecycleList = (data) => {
   return axios.get('/survey/dataStatistic/dataTable', {
@@ -6,5 +6,5 @@ export const getRecycleList = (data) => {
       pageSize: 10,
       ...data,
     },
-  });
-};
+  })
+}

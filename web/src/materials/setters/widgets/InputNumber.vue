@@ -1,7 +1,7 @@
 <template>
   <el-input-number
     :placeholder="formConfig.placeholder"
-    :value="numberValue"
+    :modelValue="numberValue"
     @change="changeData"
     :min="min"
     :max="max"

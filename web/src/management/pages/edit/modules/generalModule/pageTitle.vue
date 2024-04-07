@@ -3,6 +3,7 @@
     {{ title }}
   </div>
 </template>
+
 <script>
 export default {
   name: 'pageTitle',
@@ -12,13 +13,15 @@ export default {
       default: '',
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .title {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 400px;
   white-space: nowrap;
+  color: $primary-color;
 }
 </style>

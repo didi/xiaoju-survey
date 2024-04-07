@@ -20,13 +20,14 @@
     </div>
   </div>
 </template>
+
 <script>
 import { get as _get } from 'lodash-es';
 
 export default {
   name: 'banner',
   data() {
-    return {};
+    return {}
   },
   props: {
     bannerConf: {
@@ -39,17 +40,18 @@ export default {
   },
   computed: {
     bgImage() {
-      return _get(this.bannerConf, 'bannerConfig.bgImage', '');
+      return _get(this.bannerConf, 'bannerConfig.bgImage', '')
     },
   },
   methods: {
     handleClick() {
-      this.$emit('select');
+      this.$emit('select')
     },
   },
   components: {},
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .banner-preview {
   width: 100%;
@@ -107,7 +109,7 @@ export default {
     background-color: #f6f7f9;
     box-shadow: 0 0 5px #dedede;
 
-    ::v-deep .w-e-text-container {
+    :deep(.w-e-text-container) {
       background-color: #f6f7f9;
     }
   }

@@ -29,17 +29,18 @@ export default {
     };
   },
   created() {
-    this.$on('form.addField', (field) => {
-      if (field) {
-        this.fields.push(field);
-      }
-    });
+    // TODO:vue3移除$on api，需要抽离数据到全局
+    // this.$on('form.addField', (field) => {
+    //   if (field) {
+    //     this.fields.push(field);
+    //   }
+    // });
 
-    this.$on('form.removeField', (field) => {
-      if (field) {
-        this.fields.splice(this.fields.indexOf(field), 1);
-      }
-    });
+    // this.$on('form.removeField', (field) => {
+    //   if (field) {
+    //     this.fields.splice(this.fields.indexOf(field), 1);
+    //   }
+    // });
   },
   methods: {
     submit(e) {

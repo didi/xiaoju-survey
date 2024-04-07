@@ -8,7 +8,7 @@
     :max="max"
     type="number"
   >
-    <template slot="append">%</template>
+    <template #append>%</template>
   </el-input>
 </template>
 <script>

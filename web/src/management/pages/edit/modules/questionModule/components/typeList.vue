@@ -1,104 +1,67 @@
 <template>
   <el-collapse class="question-type-wrapper" v-model="activeNames">
-    <el-collapse-item
-      v-for="(item, index) of questionMenuConfig"
-      :title="item.title"
-      :name="index"
-      :key="index"
-    >
-      <draggable
-        class="questiontype-list item-wrapper"
-        :options="{
-          element: 'li',
-          sort: false,
-          group: { name: 'previewList', pull: 'clone', put: false },
-        }"
-      >
-        <el-popover
-          v-for="(item, index) in item.questionList"
-          :key="item.type"
-          placement="right"
-          trigger="hover"
-          :popper-class="'qtype-popper-' + (index % 3)"
-        >
+    <el-collapse-item v-for="(item, index) of questionMenuConfig" :title="item.title" :name="index" :key="index">
+      <div class="questiontype-list">
+        <el-popover v-for="(item, index) in item.questionList" :key="item.type" placement="right" trigger="hover"
+          :popper-class="'qtype-popper-' + (index % 3)">
           <img :src="item.snapshot" width="345px" />
-          <div
-            slot="reference"
-            :key="item.type"
-            class="qtopic-item"
-            @click="onQuestionType({ type: item.type })"
-          >
-            <i class="iconfont" :class="['icon-' + item.icon]"></i>
-            <p class="text">{{ item.title }}</p>
-          </div>
+          <template #reference>
+            <div :key="item.type" class="qtopic-item" @click="onQuestionType({ type: item.type })">
+              <i class="iconfont" :class="['icon-' + item.icon]"></i>
+              <p class="text">{{ item.title }}</p>
+            </div>
+          </template>
         </el-popover>
-      </draggable>
+      </div>
     </el-collapse-item>
   </el-collapse>
 </template>
 
-<script>
-import questionLoader from '@/materials/questions/questionLoader';
-import draggable from 'vuedraggable';
+<script setup>
+import questionLoader from '@/materials/questions/questionLoader'
 
 import questionMenuConfig, {
   questionTypeList,
-} from '@/management/config/questionMenuConfig';
-import { getQuestionByType } from '@/management/utils/index';
-import { mapState, mapActions } from 'vuex';
-import { get as _get } from 'lodash-es';
+} from '@/management/config/questionMenuConfig'
+import { getQuestionByType } from '@/management/utils/index'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash'
+import { computed, ref } from 'vue'
 
-export default {
-  name: 'QuestionTypeList',
-  components: {
-    draggable,
-  },
-  data() {
-    return {
-      activeNames: [0, 1],
-      questionMenuConfig,
-    };
-  },
-  computed: {
-    ...mapState({
-      questionDataList: (state) => _get(state, 'edit.schema.questionDataList'),
-      currentEditOne: (state) => _get(state, 'edit.currentEditOne'),
-    }),
-  },
-  async created() {
-    await questionLoader.init({
-      typeList: questionTypeList.map((item) => item.type),
-    });
-  },
-  methods: {
-    ...mapActions({
-      addQuestion: 'edit/addQuestion',
-    }),
-    onQuestionType({ type }) {
-      const questionDataList = this.questionDataList || [];
-      const fields = questionDataList.map((item) => item.field);
-      const currentEditOne = this.currentEditOne;
-      const index =
-        typeof currentEditOne === 'number'
-          ? currentEditOne + 1
-          : questionDataList.length;
-      const newQuestion = getQuestionByType(type, fields);
-      newQuestion.title = newQuestion.title = `标题${index + 1}`;
-      if (type === 'vote') {
-        newQuestion.innerType = 'radio';
-      }
-      this.addQuestion({ question: newQuestion, index });
-      this.$store.commit('edit/setCurrentEditOne', index);
-    },
-  },
-};
+const activeNames = ref([0, 1])
+
+const store = useStore()
+const questionDataList = computed(() =>
+  _get(store, 'state.edit.schema.questionDataList')
+)
+
+questionLoader.init({
+  typeList: questionTypeList.map((item) => item.type),
+})
+
+const onQuestionType = ({ type }) => {
+  const fields = questionDataList.value.map((item) => item.field)
+  const currentEditOne = _get(store, 'state.edit.currentEditOne')
+  const index =
+    typeof currentEditOne === 'number'
+      ? currentEditOne + 1
+      : questionDataList.length
+  const newQuestion = getQuestionByType(type, fields)
+  newQuestion.title = newQuestion.title = `标题${index + 1}`
+  if (type === 'vote') {
+    newQuestion.innerType = 'radio'
+  }
+  store.dispatch('edit/addQuestion', { question: newQuestion, index })
+  store.commit('edit/setCurrentEditOne', index)
+}
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-type-wrapper {
   padding: 0 20px;
   border: none;
-  ::v-deep .el-collapse-item__header {
+
+  :deep(.el-collapse-item__header) {
     font-size: 16px;
     font-weight: bold;
     color: #4a4c5b;
@@ -145,9 +108,11 @@ export default {
     font-size: 21px;
     color: $font-color-title;
   }
+
 }
 </style>
-<style lang="scss" rel="stylesheet/scss">
+
+<!-- <style lang="scss" rel="stylesheet/scss">
 .qtype-popper-0 {
   transform: translateX(183px);
 }
@@ -159,4 +124,4 @@ export default {
 .qtype-popper-2 {
   transform: translateX(30px);
 }
-</style>
+</style> -->

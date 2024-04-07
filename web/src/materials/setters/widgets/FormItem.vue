@@ -6,23 +6,26 @@
     }"
   >
     <slot name="before"></slot>
-    <div
-      v-if="formConfig.label"
-      slot="label"
-      class="customed-label"
-      :style="formConfig.labelStyle"
-    >
-      <span class="label" v-plain-text="formConfig.label"></span>
-      <el-tooltip
-        v-if="formConfig.tip"
-        class="tooltip"
-        effect="dark"
-        :placement="formConfig.placement || 'right'"
+    <template #label v-if="formConfig.label">
+      <div
+        v-if="formConfig.label"
+        class="customed-label"
+        :style="formConfig.labelStyle"
       >
-        <div slot="content" v-plain-text="formConfig.tip"></div>
-        <i class="el-icon-question"></i>
-      </el-tooltip>
-    </div>
+        <span class="label" v-plain-text="formConfig.label"></span>
+        <el-tooltip
+          v-if="formConfig.tip"
+          class="tooltip"
+          effect="dark"
+          :placement="formConfig.placement || 'right'"
+        >
+          <template #content>
+              <div v-plain-text="formConfig.tip"></div>
+          </template>
+          <i class="el-icon-question"></i>
+        </el-tooltip>
+      </div>
+    </template>
     <slot></slot>
   </el-form-item>
 </template>

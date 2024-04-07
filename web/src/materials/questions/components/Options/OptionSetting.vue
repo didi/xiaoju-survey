@@ -194,7 +194,7 @@ const OptionSetting = defineComponent({
           {this.addBtnShow && (
             <el-form-item class="setting-btn">
               <el-button
-                type="text"
+              link
                 class="setting-btn-item"
                 onClick={() => {
                   this.addField(this.level);
@@ -209,7 +209,7 @@ const OptionSetting = defineComponent({
                 onConfirm={this.addBatchField}
               >
                 <el-button
-                  type="text"
+                  link
                   class="setting-btn-item"
                   slot="reference"
                 >

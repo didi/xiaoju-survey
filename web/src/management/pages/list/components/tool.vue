@@ -5,6 +5,7 @@
     }}</span>
   </div>
 </template>
+
 <script>
 export default {
   name: 'Tool',
@@ -19,11 +20,12 @@ export default {
       this.$emit('call', {
         key: this.value,
         name: this.label,
-      });
+      })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tool-root {
   display: inline-block;

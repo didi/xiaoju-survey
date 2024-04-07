@@ -8,6 +8,7 @@
     发布
   </el-button>
 </template>
+
 <script>
 import { mapState } from 'vuex';
 import { publishSurvey, saveSurvey } from '@/management/api/survey';
@@ -18,7 +19,7 @@ export default {
   data() {
     return {
       isPublishing: false,
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -27,40 +28,41 @@ export default {
   },
   methods: {
     async onPublish() {
-      const saveData = buildData(this.$store.state.edit.schema);
+      const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
-        this.$message.error('未获取到问卷id');
-        return;
+        this.$message.error('未获取到问卷id')
+        return
       }
       if (this.isPublishing) {
-        return;
+        return
       }
       try {
-        this.isPublishing = true;
-        const saveRes = await saveSurvey(saveData);
+        this.isPublishing = true
+        const saveRes = await saveSurvey(saveData)
         if (saveRes.code !== 200) {
-          this.$message.error(saveRes.errmsg || '问卷保存失败');
-          return;
+          this.$message.error(saveRes.errmsg || '问卷保存失败')
+          return
         }
-        const publishRes = await publishSurvey({ surveyId: this.surveyId });
+        const publishRes = await publishSurvey({ surveyId: this.surveyId })
         if (publishRes.code === 200) {
-          this.$message.success('发布成功');
-          this.$store.dispatch('edit/getSchemaFromRemote');
+          this.$message.success('发布成功')
+          this.$store.dispatch('edit/getSchemaFromRemote')
           this.$router.push({
             name: 'publishResultPage',
-          });
+          })
         } else {
-          this.$message.error(`发布失败 ${publishRes.errmsg}`);
+          this.$message.error(`发布失败 ${publishRes.errmsg}`)
         }
       } catch (error) {
-        this.$message.error(`发布失败`);
+        this.$message.error(`发布失败`)
       } finally {
-        this.isPublishing = false;
+        this.isPublishing = false
       }
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .publish-btn {
   width: 100px;

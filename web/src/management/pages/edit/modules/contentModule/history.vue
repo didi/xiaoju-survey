@@ -22,21 +22,22 @@
     </div>
   </el-popover>
 </template>
-<script>
-import { getSurveyHistory } from '@/management/api/survey';
-import moment from 'moment';
-// 引入中文
-import 'moment/locale/zh-cn';
-// 设置中文
-moment.locale('zh-cn');
 
-import { mapState } from 'vuex';
-import { get as _get } from 'lodash-es';
+<script>
+import { getSurveyHistory } from '@/management/api/survey'
+import moment from 'moment'
+// 引入中文
+import 'moment/locale/zh-cn'
+// 设置中文
+moment.locale('zh-cn')
+
+import { mapState } from 'vuex'
+import { get as _get } from 'lodash'
 
 const getItemData = (item) => ({
   operator: item?.operator?.username || '未知用户',
   time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'),
-});
+})
 
 export default {
   name: 'history',
@@ -45,10 +46,10 @@ export default {
       surveyId: (state) => _get(state, 'edit.surveyId'),
     }),
     dailyList() {
-      return this.dailyHis.map(getItemData);
+      return this.dailyHis.map(getItemData)
     },
     publishList() {
-      return this.publishHis.map(getItemData);
+      return this.publishHis.map(getItemData)
     },
   },
   data() {
@@ -57,7 +58,7 @@ export default {
       publishHis: [],
       currentTab: 'daily',
       visible: false,
-    };
+    }
   },
   watch: {
     surveyId: {
@@ -73,25 +74,26 @@ export default {
               surveyId: this.surveyId,
               historyType: 'publishHis',
             }),
-          ]);
-          this.dailyHis = dailyHis.data || [];
-          this.publishHis = publishHis.data || [];
+          ])
+          this.dailyHis = dailyHis.data || []
+          this.publishHis = publishHis.data || []
         }
       },
     },
   },
   methods: {
     onShow() {
-      this.visible = true;
+      this.visible = true
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
 .custom-tab {
   width: 300px;
-  ::v-deep .el-tabs__nav {
+  :deep(.el-tabs__nav) {
     width: 100%;
 
     .el-tabs__item {

@@ -1,9 +1,8 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
+import { useStore } from 'vuex'
 
-Vue.use(VueRouter);
-
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/survey',
@@ -24,9 +23,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    // redirect: '/question',
-    component: () =>
-      import(/* webpackChunkName: "editPage" */ '../pages/edit/index.vue'),
+    component: () => import('../pages/edit/index.vue'),
     children: [
       {
         path: '',
@@ -35,10 +32,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "QuestionEditIndex" */ '../pages/edit/pages/edit.vue'
-          ),
+        component: () => import('../pages/edit/pages/edit.vue'),
       },
       {
         path: 'setting',
@@ -46,10 +40,7 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () =>
-          import(
-            /* webpackChunkName: "QuestionEditSetting" */ '../pages/edit/pages/setting.vue'
-          ),
+        component: () => import('../pages/edit/pages/setting.vue'),
       },
       {
         path: 'skin',
@@ -57,27 +48,10 @@ const routes = [
         meta: {
           needLogin: true,
         },
-        component: () => import(/* webpackChunkName: "skin" */ '../pages/edit/pages/skin/index.vue'),
-        children: [
-          {
-            path: '',
-            name: 'QuestionSkinSetting',
-            meta: {
-              needLogin: true,
-            },
-            component: () =>
-              import('../pages/edit/pages/skin/content.vue'),
-          },
-          {
-            path: 'result',
-            name: 'QuestionEditResultConfig',
-            meta: {
-              needLogin: true,
-            },
-            component: () =>
-              import('../pages/edit/pages/skin/result.vue'),
-          }
-        ],
+        beforeEnter(to){
+          console.log('result config to', to)
+        },
+        component: () => import( '../pages/edit/pages/resultConfig.vue' ),
       },
     ],
   },
@@ -87,10 +61,7 @@ const routes = [
     meta: {
       needLogin: true,
     },
-    component: () =>
-      import(
-        /* webpackChunkName: "analysisPage" */ '../pages/analysis/index.vue'
-      ),
+    component: () => import( '../pages/analysis/index.vue'),
   },
   {
     path: '/survey/:id/publishResult',
@@ -116,40 +87,41 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    title: '登陆',
     component: () =>
       import(/* webpackChunkName: "login" */ '../pages/login/index.vue'),
+    meta: {
+    title: '登陆',
+    }
   },
-];
+]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: '/management',
+const router = createRouter({
+  history: createWebHistory('/management'),
   routes,
-});
+})
 
 router.beforeEach((to, from, next) => {
-  const store = router.app.$options.store;
-  if (!store?.state?.user?.initialized) {
-    store.dispatch('user/init');
+  const store = useStore()
+  if (!store.state.user?.initialized) {
+    store?.dispatch('user/init')
   }
   if (to.meta.title) {
-    document.title = to.meta.title;
+    document.title = to.meta.title as string
   }
   if (to.meta.needLogin) {
     if (store?.state?.user?.hasLogined) {
-      next();
+      next()
     } else {
       next({
         name: 'login',
         query: {
           redirect: encodeURIComponent(to.path),
         },
-      });
+      })
     }
   } else {
-    next();
+    next()
   }
-});
+})
 
-export default router;
+export default router

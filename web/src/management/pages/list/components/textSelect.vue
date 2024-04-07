@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       selectValue: this.options.default,
-    };
+    }
   },
   props: {
     options: {
@@ -34,11 +34,11 @@ export default {
   },
   watch: {
     selectValue(newSelect) {
-      const { effectFun } = this;
-      typeof effectFun === 'function' && effectFun(newSelect, this.effectKey);
+      const { effectFun } = this
+      typeof effectFun === 'function' && effectFun(newSelect, this.effectKey)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -46,12 +46,12 @@ export default {
   width: 105px;
   line-height: 35px;
   margin-right: 20px;
-  ::v-deep .el-input__inner {
+  :deep(.el-input__inner) {
     border: none;
     height: 35px;
     //   line-height: 35px;
   }
-  ::v-deep .el-icon-arrow-up:before {
+  :deep(.el-icon-arrow-up:before) {
     position: relative;
     top: -2px;
   }

@@ -3,6 +3,7 @@
     <img src="/imgs/s-logo.webp" />
   </div>
 </template>
+
 <script>
 export default {
   name: 'logoIcon',
@@ -10,11 +11,12 @@ export default {
     toHomePage() {
       this.$router.push({
         name: 'survey',
-      });
+      })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .navbar-main-logo {
   width: 80px;

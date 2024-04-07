@@ -1,5 +1,5 @@
 <template>
-  <div class="mask">
+  <div class="mask" v-show="visible">
     <div class="box">
       <div class="title">{{ title }}</div>
       <div class="btn-box">
@@ -12,6 +12,10 @@
 <script>
 export default {
   props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
     cancelBtnText: {
       type: String,
       default: '取消',
@@ -27,10 +31,13 @@ export default {
   },
   methods: {
     onCancel() {
-      this.$emit('cancel');
+      // this.$emit('cancel');
+      this.$emit('close');
     },
     onConfirm() {
-      this.$emit('confirm');
+      this.$emit('confirm', () => {
+        this.$emit('close');
+      });
     },
   },
 };

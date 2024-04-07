@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import { QOP_MAP } from '@/management/utils/constant';
-import Tool from './tool';
+import { QOP_MAP } from '@/management/utils/constant'
+import Tool from './tool.vue'
 
 export default {
   name: 'ToolBar',
@@ -27,45 +27,45 @@ export default {
     tools: Array,
   },
   data() {
-    return {};
+    return {}
   },
   methods: {
     onCall(val) {
       switch (val.key) {
         case QOP_MAP.EDIT:
-          this.$emit('on-modify', this.data, QOP_MAP.EDIT);
-          return;
+          this.$emit('on-modify', this.data, QOP_MAP.EDIT)
+          return
         case QOP_MAP.COPY:
-          this.$emit('on-modify', this.data, QOP_MAP.COPY);
-          return;
+          this.$emit('on-modify', this.data, QOP_MAP.COPY)
+          return
         case 'analysis':
           this.$router.push({
             name: 'analysisPage',
             params: {
               id: this.data._id,
             },
-          });
-          return;
+          })
+          return
         case 'release':
           this.$router.push({
             name: 'publishResultPage',
             params: {
               id: this.data._id,
             },
-          });
-          return;
+          })
+          return
         case 'delete':
-          this.$emit('on-delete', this.data);
-          return;
+          this.$emit('on-delete', this.data)
+          return
         default:
-          return;
+          return
       }
     },
   },
   components: {
     Tool,
   },
-};
+}
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

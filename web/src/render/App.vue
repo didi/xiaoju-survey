@@ -5,11 +5,13 @@
 
 <script>
 import { getPublishedSurveyInfo } from './api/survey';
+import useCommandComponent from './hooks/useCommandComponent'
 
 import emptyPage from './pages/emptyPage.vue';
 import indexPage from './pages/index.vue';
 import errorPage from './pages/errorPage.vue';
 import successPage from './pages/successPage.vue';
+import alert from './components/alert.vue'
 
 import logo from './components/logo.vue';
 import { get as _get, value } from 'lodash-es'
@@ -38,6 +40,7 @@ export default {
   },
   async created() {
     this.init();
+    this.alert = useCommandComponent(alert)
   },
   beforeCreate() {},
   methods: {
@@ -76,7 +79,7 @@ export default {
           }
         } catch (error) {
           console.log(error);
-          this.$dialog.alert({
+          this.alert({
             title: error.message || '获取问卷失败',
           });
         }

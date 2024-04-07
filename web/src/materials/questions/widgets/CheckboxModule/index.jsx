@@ -1,4 +1,4 @@
-import baseChoice from '../BaseChoice';
+import BaseChoice from '../BaseChoice';
 import { computed, defineComponent } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import { includes } from 'lodash-es';
@@ -10,7 +10,7 @@ export const meta = metaConfig;
  */
 export default defineComponent({
   name: 'CheckBoxModule',
-  components: { baseChoice, QuestionWithRule },
+  components: { BaseChoice, QuestionWithRule },
   props: {
     type: {
       type: String,
@@ -84,7 +84,7 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, field, myOptions } = this;
+    const { readonly, field, myOptions, onChange } = this;
 
     const props = {
       ...this.$props,
@@ -93,15 +93,12 @@ export default defineComponent({
       options: myOptions,
     };
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget="checkbox"
         {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
-        scopedSlots={{
+        onChange={onChange}
+      >
+        {{
           selectMore: (scoped) => {
             return (
               <QuestionWithRule
@@ -113,7 +110,7 @@ export default defineComponent({
             );
           },
         }}
-      ></baseChoice>
+      </BaseChoice>
     );
   },
 });

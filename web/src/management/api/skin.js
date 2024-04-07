@@ -1,5 +1,5 @@
-import axios from './base';
+import axios from './base'
 
 export const getBannerData = () => {
-  return axios.get('/survey/getBannerData');
-};
+  return axios.get('/survey/getBannerData')
+}

@@ -16,6 +16,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { mapMutations } from 'vuex';
 import { EDIT_STATUS_MAP } from '../enum';
@@ -36,7 +37,7 @@ export default {
           previewImg: '/imgs/icons/overtime.webp',
         },
       ],
-    };
+    }
   },
   computed: {},
   methods: {
@@ -44,11 +45,12 @@ export default {
       changeStatusPreview: 'edit/changeStatusPreview',
     }),
     filterDisabledStatus(data) {
-      this.changeStatusPreview(data);
+      this.changeStatusPreview(data)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .tab-box {
   width: 300px;

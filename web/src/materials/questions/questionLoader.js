@@ -1,5 +1,7 @@
+import { defineAsyncComponent } from 'vue'
 import ComponentLoader from '../utils/componentLoader';
 import moduleList from './common/config/moduleList';
+
 export class MaterialLoader extends ComponentLoader {
   metaCache = {};
   inited = false;
@@ -7,6 +9,7 @@ export class MaterialLoader extends ComponentLoader {
     if (this.inited) {
       return;
     }
+
     this.inited = true;
     this.componentInfoList = typeList.map((type) => ({
       type,
@@ -17,7 +20,8 @@ export class MaterialLoader extends ComponentLoader {
   }
 
   dynamicImport(path) {
-    return import(`@/materials/questions/widgets/${path}`);
+    // see https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
+    return import(`./widgets/${path}`);
   }
 
   setMeta(type, config) {

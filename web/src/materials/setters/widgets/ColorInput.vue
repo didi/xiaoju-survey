@@ -6,7 +6,7 @@
       :maxLength="formConfig.maxlength"
       @change="changeData"
     >
-      <template slot="prepend">#</template>
+    <template #prepend>#</template>
     </el-input>
   </el-form-item>
 </template>

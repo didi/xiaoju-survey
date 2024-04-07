@@ -3,11 +3,13 @@
     <router-view></router-view>
   </div>
 </template>
+
 <script>
 export default {
   name: 'App',
-};
+}
 </script>
+
 <style lang="scss">
 @import url('./styles/icon.scss');
 @import url('../materials/questions/common/css/icon.scss');

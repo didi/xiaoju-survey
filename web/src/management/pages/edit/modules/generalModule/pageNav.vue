@@ -22,6 +22,7 @@
     </template>
   </div>
 </template>
+
 <script>
 export default {
   name: 'pageNav',
@@ -51,10 +52,11 @@ export default {
           next: true,
         },
       ],
-    };
+    }
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .content {
   display: flex;

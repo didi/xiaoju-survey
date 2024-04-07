@@ -41,10 +41,12 @@
         </div>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="innerVisible = false">取消</el-button>
-      <el-button type="primary" @click="onConfirm">确认</el-button>
-    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="innerVisible = false">取消</el-button>
+        <el-button type="primary" @click="onConfirm">确认</el-button>
+      </span>
+    </template>
   </el-dialog>
 </template>
 <script>

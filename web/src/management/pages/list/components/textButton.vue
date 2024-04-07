@@ -5,13 +5,14 @@
     </el-button>
   </div>
 </template>
+
 <script>
 export default {
   name: 'TextButton',
   data() {
     return {
       iconIndex: 0,
-    };
+    }
   },
   props: {
     option: {
@@ -27,33 +28,34 @@ export default {
   },
   computed: {
     toggleOptionIcons() {
-      return this.option.icons.slice(1);
+      return this.option.icons.slice(1)
     },
     iconsLength() {
-      return this.toggleOptionIcons.length;
+      return this.toggleOptionIcons.length
     },
     currentIconItem() {
-      let finalIconIndex = this.iconIndex % this.iconsLength;
-      return this.toggleOptionIcons[finalIconIndex];
+      let finalIconIndex = this.iconIndex % this.iconsLength
+      return this.toggleOptionIcons[finalIconIndex]
     },
   },
   methods: {
     onClick() {
-      this.iconIndex++;
+      this.iconIndex++
       if (this.iconIndex >= this.iconsLength) {
-        this.iconIndex = 0;
+        this.iconIndex = 0
       }
       typeof this.effectFun === 'function' &&
-        this.effectFun(this.currentIconItem.effectValue, this.effectKey);
+        this.effectFun(this.currentIconItem.effectValue, this.effectKey)
     },
   },
   created() {
     this.iconIndex = this.toggleOptionIcons.findIndex(
       (iconItem) => iconItem.isDefaultValue
-    );
+    )
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .el-button {
   margin-right: 20px;

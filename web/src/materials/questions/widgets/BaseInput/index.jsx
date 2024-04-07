@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue';
+import { defineComponent, h } from 'vue';
 import '../../common/css/choice.scss';
 import '../../common/css/input.scss';
 
@@ -63,7 +63,7 @@ export default defineComponent({
       onChange,
     };
   },
-  render(h) {
+  render() {
     const { uiTarget, customClass } = this;
     return (
       <div class="input-wrapper">

@@ -29,7 +29,6 @@ const mpaPlugin = createMpaPlugin({
     {
       from: /^\/render\/.?/,
       to: (ctx) => {
-        // console.log('ctx.parsedUrl.path', ctx.parsedUrl.path)
         if(/^\/render\/.?/.test(ctx.parsedUrl.path as string)) {
           return normalizePath('/src/render/index.html')
         }
@@ -53,7 +52,6 @@ const mpaPlugin = createMpaPlugin({
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  appType: 'mpa',
   plugins: [
     vue(),
     vueJsx(),
@@ -85,10 +83,10 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      input: {
-        management: resolve(__dirname, 'src/management/index.html'),
-        render: resolve(__dirname, 'src/render/index.html')
-      }
+      // input: {
+      //   management: resolve(__dirname, 'src/management/index.html'),
+      //   render: resolve(__dirname, 'src/render/index.html')
+      // }
     }
   }
 })

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { MessagePushingModule } from '../message/messagePushing.module';
+
 import { ResponseSchemaService } from './services/responseScheme.service';
 import { SurveyResponseService } from './services/surveyResponse.service';
 import { CounterService } from './services/counter.service';
@@ -28,6 +30,7 @@ import { ConfigModule } from '@nestjs/config';
       ClientEncrypt,
     ]),
     ConfigModule,
+    MessagePushingModule,
   ],
   controllers: [
     ClientEncryptController,

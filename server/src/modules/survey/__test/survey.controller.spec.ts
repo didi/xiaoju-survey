@@ -8,8 +8,10 @@ import { SurveyHistoryService } from '../services/surveyHistory.service';
 import { ObjectId } from 'mongodb';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyConf } from 'src/models/surveyConf.entity';
+import { HttpException } from 'src/exceptions/httpException';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { LoggerProvider } from 'src/logger/logger.provider';
 
-// Mock the services
 jest.mock('../services/surveyMeta.service');
 jest.mock('../services/surveyConf.service');
 jest.mock('../../surveyResponse/services/responseScheme.service');
@@ -35,6 +37,7 @@ describe('SurveyController', () => {
         ResponseSchemaService,
         ContentSecurityService,
         SurveyHistoryService,
+        LoggerProvider,
       ],
     }).compile();
 
@@ -186,8 +189,6 @@ describe('SurveyController', () => {
         code: 200,
       });
     });
-
-    // Add more test cases for different scenarios
   });
 
   describe('deleteSurvey', () => {
@@ -218,8 +219,6 @@ describe('SurveyController', () => {
         code: 200,
       });
     });
-
-    // Add more test cases for different scenarios
   });
 
   describe('getSurvey', () => {
@@ -255,7 +254,7 @@ describe('SurveyController', () => {
   });
 
   describe('publishSurvey', () => {
-    it('should publish a survey and its response schema', async () => {
+    it('should publish a survey success', async () => {
       const surveyId = new ObjectId();
       const surveyMeta = {
         _id: surveyId,
@@ -303,6 +302,50 @@ describe('SurveyController', () => {
       expect(result).toEqual({
         code: 200,
       });
+    });
+
+    it('should not publish a survey with forbidden content', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'normal',
+        owner: 'testUser',
+      } as SurveyMeta;
+
+      jest
+        .spyOn(surveyMetaService, 'checkSurveyAccess')
+        .mockResolvedValue(Promise.resolve(surveyMeta));
+
+      jest
+        .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
+        .mockResolvedValue(
+          Promise.resolve({
+            _id: new ObjectId(),
+            pageId: surveyId.toString(),
+          } as SurveyConf),
+        );
+
+      jest
+        .spyOn(surveyConfService, 'getSurveyContentByCode')
+        .mockResolvedValue({
+          text: '违禁词',
+        });
+
+      jest
+        .spyOn(contentSecurityService, 'isForbiddenContent')
+        .mockResolvedValue(true);
+
+      await expect(
+        controller.publishSurvey(
+          { surveyId: surveyId.toString() },
+          { user: { username: 'testUser', _id: 'testUserId' } },
+        ),
+      ).rejects.toThrow(
+        new HttpException(
+          '问卷存在非法关键字，不允许发布',
+          EXCEPTION_CODE.SURVEY_CONTENT_NOT_ALLOW,
+        ),
+      );
     });
   });
 });

@@ -11,7 +11,6 @@ export class SurveyResponseService {
 
   async createSurveyResponse({
     data,
-    secretKeys,
     clientTime,
     difTime,
     surveyId,
@@ -21,7 +20,7 @@ export class SurveyResponseService {
     const newSubmitData = this.surveyResponseRepository.create({
       surveyPath,
       data,
-      secretKeys,
+      secretKeys: [],
       clientTime,
       difTime,
       pageId: surveyId,
@@ -29,7 +28,10 @@ export class SurveyResponseService {
     });
 
     // 提交问卷
-    return await this.surveyResponseRepository.save(newSubmitData);
+    const res = await this.surveyResponseRepository.save(newSubmitData);
+    // res是加密后的数据，需要手动调用loaded才会触发解密
+    res.onDataLoaded();
+    return res;
   }
 
   async getSurveyResponseTotalByPath(surveyPath: string) {

@@ -34,7 +34,7 @@ export default {
   text-align: center;
   width: 100%;
   display: inline-block;
-
+  height: 100%;
   .success-img {
     margin-top: -0.2rem;
     width: 100px;
@@ -48,7 +48,6 @@ export default {
   width: 100%;
   position: relative;
   padding-top: 1.8rem;
-  background: #fff;
 }
 
 .title-msg {

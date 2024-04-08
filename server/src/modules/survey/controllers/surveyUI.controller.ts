@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { join } from 'path';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('ui')
 @Controller()
 export class SurveyUIController {
   constructor() {}
@@ -11,8 +12,8 @@ export class SurveyUIController {
     res.sendFile(join(process.cwd(), 'public', 'management.html'));
   }
 
-  @Get('/management/:surveyId')
-  management(@Param('surveyId') surveyId: string, @Res() res: Response) {
+  @Get('/management/:path*')
+  management(@Res() res: Response) {
     res.sendFile(join(process.cwd(), 'public', 'management.html'));
   }
 }

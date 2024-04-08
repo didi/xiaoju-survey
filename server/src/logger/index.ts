@@ -1,13 +1,14 @@
 import * as log4js from 'log4js';
 import moment from 'moment';
-
+import { Request } from 'express';
 const log4jsLogger = log4js.getLogger();
 
 export class Logger {
-  private traceId: string = '';
-  private inited = false;
+  private static inited = false;
 
-  init(config: { filename: string }) {
+  constructor() {}
+
+  static init(config: { filename: string }) {
     if (this.inited) {
       return;
     }
@@ -31,27 +32,23 @@ export class Logger {
     });
   }
 
-  setTraceId(traceId: string) {
-    this.traceId = traceId;
-  }
-
-  _log(message, options: { dltag?: string; level: string }) {
+  _log(message, options: { dltag?: string; level: string; req?: Request }) {
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
     const level = options.level;
     const dltag = options.dltag ? `${options.dltag}||` : '';
-    const traceId = this.traceId ? `traceid=${this.traceId}||` : '';
+    const traceIdStr = options?.req['traceId']
+      ? `traceid=${options?.req['traceId']}||`
+      : '';
     return log4jsLogger[level](
-      `[${datetime}][${level.toUpperCase()}]${dltag}${traceId}${message}`,
+      `[${datetime}][${level.toUpperCase()}]${dltag}${traceIdStr}${message}`,
     );
   }
 
-  info(message, options = { dltag: '' }) {
+  info(message, options?: { dltag?: string; req?: Request }) {
     return this._log(message, { ...options, level: 'info' });
   }
 
-  error(message, options = { dltag: '' }) {
+  error(message, options: { dltag?: string; req?: Request }) {
     return this._log(message, { ...options, level: 'error' });
   }
 }
-
-export default new Logger();

@@ -1,7 +1,7 @@
 <script lang="jsx">
 import OptionConfig from '@/materials/questions/components/AdvancedConfig/OptionConfig.vue';
 import RateConfig from '../AdvancedConfig/RateConfig.vue';
-import { defineComponent, ref, inject } from 'vue';
+import { defineComponent, ref, computed, inject } from 'vue';
 import ExtraIcon from '@/materials/questions/components/ExtraIcon.vue';
 
 export default defineComponent({
@@ -45,6 +45,28 @@ export default defineComponent({
     const openRateConfig = () => {
       rateConfigVisible.value = true;
     };
+
+    const isNps = computed(() => {
+      return moduleConfig.value.type === 'radio-nps';
+    });
+
+    const min = computed(() => {
+      const { min, starMin } = moduleConfig.value;
+      return isNps.value ? min : starMin;
+    });
+
+    const max = computed(() => {
+      const { max, starMax } = moduleConfig.value;
+      return isNps.value ? max : starMax;
+    });
+
+    const explain = computed(() => {
+      const { type } = moduleConfig.value;
+      if (type == 'radio-start') return true;
+      if (isNps.value) return false;
+      return true;
+    });
+
     return {
       addOther,
       optionConfigVisible,
@@ -54,10 +76,22 @@ export default defineComponent({
       handleChange,
       moduleConfig,
       rateConfigVisible,
+      min,
+      max,
+      isNps,
+      explain,
     };
   },
   render() {
-    const { showOthers, hasAdvancedConfig, hasAdvancedRateConfig } = this;
+    const {
+      showOthers,
+      hasAdvancedConfig,
+      hasAdvancedRateConfig,
+      min,
+      max,
+      explain,
+      isNps,
+    } = this;
     return (
       <div class="option-edit-bar-wrap">
         <div class="option-edit-bar">
@@ -100,16 +134,17 @@ export default defineComponent({
         )}
         {this.rateConfigVisible && (
           <RateConfig
-            min={this.moduleConfig.starMin}
-            max={this.moduleConfig.starMax}
+            min={min}
+            max={max}
             rangeConfig={this.moduleConfig.rangeConfig}
             visible={this.rateConfigVisible}
             onVisibleChange={(val) => {
               this.rateConfigVisible = val;
             }}
-            explain={true}
+            explain={explain}
             dialogWidth="800px"
             onConfirm={this.handleChange}
+            class={[isNps ? 'nps-rate-config' : '']}
           />
         )}
       </div>
@@ -118,7 +153,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 
 .option-edit-bar-wrap {
   margin-top: 20px;
@@ -144,6 +179,17 @@ export default defineComponent({
 
   .primary-color {
     color: $primary-color;
+  }
+}
+
+.nps-rate-config {
+  ::v-deep .row {
+    height: 47px;
+  }
+  ::v-deep .text {
+    input {
+      height: 32px;
+    }
   }
 }
 

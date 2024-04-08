@@ -1,13 +1,14 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { join } from 'path';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('ui')
 @Controller()
 export class SurveyResponseUIController {
   constructor() {}
 
-  @Get('/render/:surveyPath')
-  render(@Param('surveyPath') surveyPath: string, @Res() res: Response) {
+  @Get('/render/:path*')
+  render(@Res() res: Response) {
     res.sendFile(join(process.cwd(), 'public', 'render.html'));
   }
 }

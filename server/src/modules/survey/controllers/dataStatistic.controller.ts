@@ -12,9 +12,11 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
 import * as Joi from 'joi';
+import { ApiTags } from '@nestjs/swagger';
 import { Authtication } from 'src/guards/authtication';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 
+@ApiTags('survey')
 @Controller('/api/survey/dataStatistic')
 export class DataStatisticController {
   constructor(

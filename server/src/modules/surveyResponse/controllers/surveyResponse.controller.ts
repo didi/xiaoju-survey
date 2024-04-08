@@ -2,16 +2,22 @@ import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
-import * as Joi from 'joi';
+import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { getPushingData } from 'src/utils/messagePushing';
+
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { CounterService } from '../services/counter.service';
-import moment from 'moment';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
-import { ENCRYPT_TYPE } from 'src/enums/encrypt';
-import * as forge from 'node-forge';
+import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
 
+import moment from 'moment';
+import * as Joi from 'joi';
+import * as forge from 'node-forge';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
 export class SurveyResponseController {
   constructor(
@@ -19,6 +25,7 @@ export class SurveyResponseController {
     private readonly counterService: CounterService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
+    private readonly messagePushingTaskService: MessagePushingTaskService,
   ) {}
 
   @Post('/createResponse')
@@ -144,7 +151,6 @@ export class SurveyResponseController {
         return pre;
       }, {});
 
-    const secretKeys = [];
     // 对用户提交的数据进行遍历处理
     for (const field in decryptedData) {
       const value = decryptedData[field];
@@ -175,14 +181,28 @@ export class SurveyResponseController {
     }
 
     // 入库
-    await this.surveyResponseService.createSurveyResponse({
-      surveyPath: validationResult.surveyPath,
-      data: decryptedData,
-      clientTime,
-      difTime,
-      secretKeys,
-      surveyId: responseSchema.pageId,
-      optionTextAndId,
+    const surveyResponse =
+      await this.surveyResponseService.createSurveyResponse({
+        surveyPath: validationResult.surveyPath,
+        data: decryptedData,
+        clientTime,
+        difTime,
+        surveyId: responseSchema.pageId,
+        optionTextAndId,
+      });
+
+    const surveyId = responseSchema.pageId;
+    const sendData = getPushingData({
+      surveyResponse,
+      questionList: responseSchema?.code?.dataConf?.dataList || [],
+      surveyId,
+      surveyPath: responseSchema.surveyPath,
+    });
+
+    // 异步执行推送任务
+    this.messagePushingTaskService.runResponseDataPush({
+      surveyId,
+      sendData,
     });
 
     // 入库成功后，要把密钥删掉，防止被重复使用

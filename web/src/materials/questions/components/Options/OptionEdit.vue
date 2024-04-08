@@ -115,7 +115,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import '../../common/css/default.scss';
+// @import '../../common/css/default.scss';
 .option-edit-wrap {
   .focus {
     margin-top: 31px;

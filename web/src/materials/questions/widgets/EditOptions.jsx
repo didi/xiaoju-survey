@@ -14,7 +14,7 @@ export default defineComponent({
   provide() {
     return {
       currentEditKey: store.getters['edit/currentEditKey'],
-      moduleConfig: this.moduleConfig,
+      moduleConfig: computed(() => this.moduleConfig),
     };
   },
   props: {

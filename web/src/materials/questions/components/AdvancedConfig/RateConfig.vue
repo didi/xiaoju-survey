@@ -2,7 +2,7 @@
   <el-dialog
     title="评分高级设置"
     custom-class="option-config-wrapper"
-    :visible="innerVisible"
+    :visible.sync="innerVisible"
     :append-to-body="true"
     :width="dialogWidth"
   >

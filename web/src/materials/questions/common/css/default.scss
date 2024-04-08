@@ -1,4 +1,4 @@
-$primary-color: #FAA600;
+$primary-color: var(--primary-color);
 $primary-color-light: hsl(48, 100%, 97%);
 
 $title-color-deep: #292a36;
@@ -19,26 +19,3 @@ $error-color: #ec4e29;
 $title-size: 0.32rem;
 $font-size: 0.28rem;
 $tip-size: 0.22rem;
-
-.el-radio__input.is-checked+.el-radio__label {
-  color: $font-color !important;
-}
-
-.el-switch.is-checked .el-switch__core {
-  border-color: $primary-color !important;
-  background-color: $primary-color !important;
-}
-
-.el-checkbox__input.is-checked .el-checkbox__inner,
-.question-edit-wrapper .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-  background-color: $primary-color !important;
-  border-color: $primary-color !important;
-}
-
-.el-checkbox__input.is-focus .el-checkbox__inner {
-  border-color: $primary-color !important;
-}
-
-.el-checkbox__input.is-checked+.el-checkbox__label {
-  color: $font-color !important;
-}

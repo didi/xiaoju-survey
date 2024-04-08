@@ -24,8 +24,15 @@ export default {
       logoImageWidth: '28%',
     },
     skinConf: {
-      skinColor: '#4a4c5b',
-      inputBgColor: '#ffffff',
+      backgroundConf: {
+        color: "#fff"
+      },
+      themeConf: {
+        color: "#ffa600"
+      },
+      contentConf: {
+        opacity: 100
+      }
     },
     baseConf: {
       begTime: '',

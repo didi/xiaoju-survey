@@ -28,6 +28,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'QuestionEditIndex',
+        
         meta: {
           needLogin: true,
         },
@@ -42,8 +43,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../pages/edit/pages/setting.vue'),
       },
       {
-        path: 'resultConfig',
-        name: 'QuestionEditResultConfig',
+        path: 'skin',
+        name: 'SkinSetting',
         meta: {
           needLogin: true,
         },

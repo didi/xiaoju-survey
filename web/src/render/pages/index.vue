@@ -1,17 +1,25 @@
 <template>
   <div class="index">
-    <Header></Header>
-    <mainRenderer ref="main"></mainRenderer>
-    <submit
-      :validate="validate"
-      :renderData="renderData"
-      @submit="onSubmit"
-    ></submit>
+    <progressBar />
+    <div class="wrapper" ref="box">
+      <Header></Header>
+      <div class="content">
+        <mainTitle></mainTitle>
+        <mainRenderer ref="main"></mainRenderer>
+        <submit
+          :validate="validate"
+          :renderData="renderData"
+          @submit="onSubmit"
+        ></submit>
+        <logo></logo>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Header from '../components/header.vue';
+import mainTitle from '../components/mainTitle.vue'
 import submit from '../components/submit.vue';
 import mainRenderer from '../components/mainRenderer.vue';
 import alert from '../components/alert.vue';
@@ -20,6 +28,7 @@ import useCommandComponent from '../hooks/useCommandComponent';
 
 import { submitForm } from '@/render/api/survey';
 import encrypt from '../utils/encrypt';
+import logo from '../components/logo.vue';
 
 export default {
   name: 'indexPage',
@@ -35,8 +44,11 @@ export default {
   },
   components: {
     Header,
+    mainTitle,
     submit,
     mainRenderer,
+    progressBar,
+    logo,
   },
   computed: {
     formModel() {
@@ -127,6 +139,20 @@ export default {
 
 <style scoped lang="scss">
 .index {
-  padding-bottom: 0.8rem;
+  // padding-bottom: 0.8rem;
+  min-height: 100%;
+  .wrapper{
+    min-height: 100%;
+    background-color: var(--primary-background-color);
+    display: flex;
+    flex-direction: column;
+    .content{
+      flex: 1;
+      margin: 0 0.3rem;
+      background: rgba(255, 255, 255, var(--opacity)); 
+      border-radius: 8px 8px 0 0;
+      height: 100%;
+    }
+  }
 }
 </style>

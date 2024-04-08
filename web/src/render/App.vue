@@ -1,9 +1,6 @@
 <template>
-  <div>
     <Component v-if="$store.state.router" :is="$store.state.router"></Component>
-    <!-- <RouterView /> -->
-    <logo></logo>
-  </div>
+    <logo v-if="!['successPage', 'indexPage'].includes($store.state.router)"></logo>
 </template>
 
 <script>
@@ -17,6 +14,7 @@ import successPage from './pages/successPage.vue';
 import alert from './components/alert.vue'
 
 import logo from './components/logo.vue';
+import { get as _get, value } from 'lodash-es'
 
 export default {
   name: 'App',
@@ -30,7 +28,16 @@ export default {
   data() {
     return {};
   },
-  computed: {},
+  computed: {
+    skinConf () {
+      return _get(this.$store, 'state.skinConf', {});
+    },
+  },
+  watch: {
+    skinConf(value) {
+      this.setSkin(value)
+    }
+  },
   async created() {
     this.init();
     this.alert = useCommandComponent(alert)
@@ -63,6 +70,7 @@ export default {
               skinConf,
               submitConf,
             };
+            this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath);
             this.$store.dispatch('init', questionData);
             this.$store.dispatch('getEncryptInfo');
@@ -77,6 +85,20 @@ export default {
         }
       }
     },
+    setSkin(skinConf) {
+      const { themeConf, backgroundConf, contentConf} = skinConf
+      const root = document.documentElement;
+      if(themeConf?.color) {
+        root.style.setProperty('--primary-color', themeConf?.color); // 设置主题颜色
+      }
+      if(backgroundConf?.color) {
+        root.style.setProperty('--primary-background-color', backgroundConf?.color); // 设置背景颜色
+      }
+      if(contentConf?.opacity.toString()) {
+        console.log({opacity: (contentConf?.opacity)/100})
+        root.style.setProperty('--opacity', (contentConf?.opacity)/100); // 设置全局透明度
+      }
+    }
   },
 };
 </script>
@@ -90,10 +112,7 @@ html {
   background: rgb(238, 238, 238);
 }
 
-body,
-.container {
-  height: 100%;
-}
+
 
 #app {
   position: relative;
@@ -101,7 +120,7 @@ body,
   width: 100%;
   max-width: 750px;
   margin: auto;
-  min-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex: 1;

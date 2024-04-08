@@ -14,19 +14,19 @@ export default {
     state.schema.metaData = metaData
     state.schema.bannerConf = _merge(
       {},
-      state.schema.bannerConf,
+      defaultSurveyConfig.bannerConf,
       codeData.bannerConf
     )
     state.schema.bottomConf = _merge(
       {},
-      state.schema.bottomConf,
+      defaultSurveyConfig.bottomConf,
       codeData.bottomConf
     )
     state.schema.skinConf = _merge({}, state.schema.skinConf, codeData.skinConf)
     state.schema.baseConf = _merge({}, state.schema.baseConf, codeData.baseConf)
     state.schema.submitConf = _merge(
       {},
-      state.schema.submitConf,
+      defaultSurveyConfig.submitConf,
       codeData.submitConf
     )
     state.schema.questionDataList = codeData.questionDataList || []

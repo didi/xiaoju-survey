@@ -5,7 +5,7 @@ import {
   toRefs,
   computed,
   getCurrentInstance,
-} from 'vue'
+} from 'vue';
 
 export default defineComponent({
   name: 'QuestionWrapper',
@@ -29,56 +29,56 @@ export default defineComponent({
     moduleConfig: {
       type: Object,
       default: () => {
-        return {}
+        return {};
       },
     },
   },
   setup(props, { emit }) {
     const state = reactive({
       isHover: false,
-    })
-    const { proxy } = getCurrentInstance()
+    });
+    const { proxy } = getCurrentInstance();
     const itemClass = computed(() => {
       return {
         'question-wrapper': true,
         'mouse-hover': state.isHover,
         isSelected: props.isSelected,
         spliter: props.moduleConfig.showSpliter,
-      }
-    })
+      };
+    });
     const showHover = computed(() => {
-      return state.isHover
-    })
+      return state.isHover;
+    });
     const showUp = computed(() => {
-      return props.qIndex !== 0
-    })
+      return props.qIndex !== 0;
+    });
     const showDown = computed(() => {
-      return !props.isLast
-    })
+      return !props.isLast;
+    });
     const showCopy = computed(() => {
-      const field = props.moduleConfig.field
-      const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement']
-      return hiddenCopFields.indexOf(field) <= -1
-    })
+      const field = props.moduleConfig.field;
+      const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement'];
+      return hiddenCopFields.indexOf(field) <= -1;
+    });
     const toggleHoverClass = (status) => {
-      state.isHover = status
-    }
+      state.isHover = status;
+    };
     const clickFormItem = () => {
-      const index = props.qIndex
-      emit('select', index)
-    }
+      const index = props.qIndex;
+      emit('select', index);
+    };
     const onCopy = () => {
-      const index = props.qIndex
+      const index = props.qIndex;
       // this.changeQuestionSeq({ type: 'copy', index })
-      emit('changeSeq', { type: 'copy', index })
-      state.isHover = false
-    }
+      emit('changeSeq', { type: 'copy', index });
+      state.isHover = false;
+    };
     const onMoveUp = () => {
-      const index = props.qIndex
+      const index = props.qIndex;
       // this.changeQuestionSeq({ type: 'move', index, range: -1 })
-      emit('changeSeq', { type: 'move', index, range: -1 })
-      state.isHover = false
-    }
+      emit('changeSeq', { type: 'move', index, range: -1 });
+      state.isHover = false;
+    };
     // const onMoveTop = () => {
     //   const index = props.qIndex
     //   // this.changeQuestionSeq({ type: 'move', index, range: -index })
@@ -86,11 +86,11 @@ export default defineComponent({
     //   state.isHover = false
     // }
     const onMoveDown = () => {
-      const index = props.qIndex
+      const index = props.qIndex;
       // this.changeQuestionSeq({ type: 'move', index, range: 1 })
-      emit('changeSeq', { type: 'move', index, range: 1 })
-      state.isHover = false
-    }
+      emit('changeSeq', { type: 'move', index, range: 1 });
+      state.isHover = false;
+    };
     const onDelete = async () => {
       try {
         await proxy.$confirm(
@@ -101,15 +101,15 @@ export default defineComponent({
             cancelButtonText: '取消',
             type: 'warning',
           }
-        )
-        const index = props.qIndex
+        );
+        const index = props.qIndex;
         // this.changeQuestionSeq({ type: 'move', index, range: 1 })
-        emit('changeSeq', { type: 'delete', index })
-        state.isHover = false
+        emit('changeSeq', { type: 'delete', index });
+        state.isHover = false;
       } catch (error) {
-        console.log('取消删除')
+        console.log('取消删除');
       }
-    }
+    };
     // const onMoveBottom = () => {
     //   const index = props.qIndex
     //   this.changeQuestionSeq({
@@ -119,7 +119,6 @@ export default defineComponent({
     //   })
     //   state.isHover = false
     // }
-    const onMove = () => {}
     return {
       ...toRefs(state),
       itemClass,
@@ -128,66 +127,64 @@ export default defineComponent({
       showDown,
       showCopy,
       onCopy,
-      onMove,
       onMoveUp,
       onMoveDown,
       onDelete,
       toggleHoverClass,
       clickFormItem,
-    }
+    };
   },
   render() {
-    const { showHover, itemClass, showUp, showDown, showCopy } = this
+    const { showHover, itemClass, showUp, showDown, showCopy } = this;
     return (
       <div
         class={itemClass}
         onMouseenter={() => {
-          this.isHover = true
+          this.isHover = true;
         }}
         onMouseleave={() => {
-          this.isHover = false
+          this.isHover = false;
         }}
         onClick={this.clickFormItem}
       >
         {this.moduleConfig.type !== 'section' && (
-          <div>{this.$slots.default()}</div>
+          <div>{this.$slots.default}</div>
         )}
         {
           <div class={[showHover ? 'visibily' : 'hidden', 'hoverItem']}>
             <div
               class="item move el-icon-rank"
-              onClick_stop_prevent={this.onMove}
+              vOn:click_stop_prevent={this.onMove}
             ></div>
             {showUp && (
               <div
                 class="item iconfont icon-shangyi"
-                onClick_stop_prevent={this.onMoveUp}
+                vOn:click_stop_prevent={this.onMoveUp}
               ></div>
             )}
             {showDown && (
               <div
                 class="item iconfont icon-xiayi"
-                onClick_stop_prevent={this.onMoveDown}
+                vOn:click_stop_prevent={this.onMoveDown}
               ></div>
             )}
             {showCopy && (
               <div
                 class="item copy iconfont icon-fuzhi"
-                onClick_stop_prevent_stop_prevent={this.onCopy}
+                vOn:click_stop_prevent={this.onCopy}
               ></div>
             )}
             <div
               class="item iconfont icon-shanchu"
-              onClick_stop_prevent={this.onDelete}
+              vOn:click_stop_prevent={this.onDelete}
             ></div>
           </div>
         }
       </div>
-    )
+    );
   },
-})
+});
 </script>
-
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-wrapper {
   position: relative;
@@ -196,9 +193,9 @@ export default defineComponent({
   &.spliter {
     border-bottom: 0.12rem solid $spliter-color;
   }
-  &:last-child{
-    border: none;
-  }
+  // &:last-child{
+  //   border: none;
+  // }
   .editor {
     display: flex;
     font-size: 0.32rem;

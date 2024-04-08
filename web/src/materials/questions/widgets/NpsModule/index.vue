@@ -24,7 +24,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, computed,ref } from 'vue';
+import { defineProps, defineEmits, computed,ref,nextTick } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import BaseRate from '../BaseRate';
 const props = defineProps({
@@ -88,11 +88,12 @@ const confirmNps = (num) => {
 };
 
 const resetOthersError = (num) => {
-  const {required,othersKey } = props.rangeConfig[num];
-  if (!required && othersKey && withRuleRef.value) {
-    withRuleRef.value.validateMessage = '';
-    withRuleRef.value.validateState = '';
-  }
+  nextTick(() => {
+    const { required, othersKey } = props.rangeConfig[num];
+    if (!required && othersKey && withRuleRef.value && withRuleRef.value.validateMessage) {
+      withRuleRef.value.validateMessage = '';
+    }
+ })
 }
 
 const minMsg = computed(() => {

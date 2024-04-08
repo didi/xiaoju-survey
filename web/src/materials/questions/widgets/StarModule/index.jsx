@@ -1,4 +1,4 @@
-import { defineComponent, computed,ref} from 'vue';
+import { defineComponent, computed,ref,nextTick} from 'vue';
 import '../../common/css/radioStar.scss';
 import BaseRate from '../BaseRate';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
@@ -81,11 +81,12 @@ export default defineComponent({
     };
 
     const resetOthersError = (num) => {
-      const {required,othersKey } = props.rangeConfig[num];
-      if (!required && othersKey && withRuleRef.value) {
-        withRuleRef.value.validateMessage = '';
-        withRuleRef.value.validateState = '';
-      }
+      nextTick(() => {
+        const { required, othersKey } = props.rangeConfig[num];
+        if (!required && othersKey && withRuleRef.value && withRuleRef.value.validateMessage) {
+          withRuleRef.value.validateMessage = '';
+        }
+     })
     }
 
     const onMoreDataChange = (data) => {

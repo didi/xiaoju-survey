@@ -17,14 +17,14 @@
     <QuestionWithRule
       v-if="isShowInput"
       :showTitle="false"
-      ref="withRuleRef"
+      :key="`${props.field}_${rating}`"
       :moduleConfig="moduleConfig"
       @change="onMoreDataChange"
     ></QuestionWithRule>
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, computed, ref, nextTick } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import BaseRate from '../BaseRate';
 const props = defineProps({
@@ -66,7 +66,6 @@ const props = defineProps({
 const emit = defineEmits(['change']);
 
 const npsClass = !props.readonly ? 'radio-nps-hover' : '';
-const withRuleRef = ref(null);
 
 const rating = computed({
   get() {
@@ -84,21 +83,6 @@ const rating = computed({
 const confirmNps = (num) => {
   if (props.readonly) return;
   rating.value = num;
-  resetOthersError(num);
-};
-
-const resetOthersError = (num) => {
-  nextTick(() => {
-    const { required, othersKey } = props.rangeConfig[num];
-    if (
-      !required &&
-      othersKey &&
-      withRuleRef.value &&
-      withRuleRef.value.validateMessage
-    ) {
-      withRuleRef.value.validateMessage = '';
-    }
-  });
 };
 
 const minMsg = computed(() => {

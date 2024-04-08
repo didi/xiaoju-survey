@@ -1,14 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MessagePushingTaskService } from '../services/messagePushingTask.service';
+
 import { MongoRepository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
+import { ObjectId } from 'mongodb';
+
+import { MessagePushingTaskService } from '../services/messagePushingTask.service';
+import { MessagePushingLogService } from '../services/messagePushingLog.service';
+
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
-import { ObjectId } from 'mongodb';
+
 import { RECORD_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
+import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
 
 describe('MessagePushingTaskService', () => {
   let service: MessagePushingTaskService;
@@ -21,6 +26,12 @@ describe('MessagePushingTaskService', () => {
         {
           provide: getRepositoryToken(MessagePushingTask),
           useClass: MongoRepository,
+        },
+        {
+          provide: MessagePushingLogService,
+          useValue: {
+            createPushingLog: jest.fn(),
+          },
         },
       ],
     }).compile();

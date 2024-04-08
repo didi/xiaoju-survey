@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { RECORD_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MessagePushingLogService } from './messagePushingLog.service';
-import fetch from 'node-fetch';
+import { httpPost } from 'src/utils/request';
 
 @Injectable()
 export class MessagePushingTaskService {
@@ -167,19 +167,14 @@ export class MessagePushingTaskService {
           switch (task.type) {
             case MESSAGE_PUSHING_TYPE.HTTP: {
               try {
-                const res = await fetch(task.pushAddress, {
-                  method: 'POST',
-                  headers: {
-                    Accept: 'application/json, */*',
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(sendData),
+                const res = await httpPost({
+                  url: task.pushAddress,
+                  body: sendData,
                 });
-                const response = await res.json();
                 await this.messagePushingLogService.createPushingLog({
                   taskId: task._id.toString(),
                   request: sendData,
-                  response: response,
+                  response: res,
                   status: res.status,
                 });
               } catch (error) {

@@ -24,7 +24,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, computed,ref,nextTick } from 'vue';
+import { defineProps, defineEmits, computed, ref, nextTick } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import BaseRate from '../BaseRate';
 const props = defineProps({
@@ -90,11 +90,16 @@ const confirmNps = (num) => {
 const resetOthersError = (num) => {
   nextTick(() => {
     const { required, othersKey } = props.rangeConfig[num];
-    if (!required && othersKey && withRuleRef.value && withRuleRef.value.validateMessage) {
+    if (
+      !required &&
+      othersKey &&
+      withRuleRef.value &&
+      withRuleRef.value.validateMessage
+    ) {
       withRuleRef.value.validateMessage = '';
     }
- })
-}
+  });
+};
 
 const minMsg = computed(() => {
   return props.minMsg || '极不满意';

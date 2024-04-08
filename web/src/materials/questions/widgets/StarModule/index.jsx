@@ -1,4 +1,4 @@
-import { defineComponent, computed,ref,nextTick} from 'vue';
+import { defineComponent, computed, ref, nextTick } from 'vue';
 import '../../common/css/radioStar.scss';
 import BaseRate from '../BaseRate';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
@@ -77,17 +77,22 @@ export default defineComponent({
     const confirmStar = (num) => {
       if (props.readonly) return;
       rating.value = num;
-      resetOthersError(num)
+      resetOthersError(num);
     };
 
     const resetOthersError = (num) => {
       nextTick(() => {
         const { required, othersKey } = props.rangeConfig[num];
-        if (!required && othersKey && withRuleRef.value && withRuleRef.value.validateMessage) {
+        if (
+          !required &&
+          othersKey &&
+          withRuleRef.value &&
+          withRuleRef.value.validateMessage
+        ) {
           withRuleRef.value.validateMessage = '';
         }
-     })
-    }
+      });
+    };
 
     const onMoreDataChange = (data) => {
       const { key, value } = data;
@@ -134,7 +139,7 @@ export default defineComponent({
         {isShowInput && (
           <QuestionWithRule
             showTitle={false}
-            ref={el => this.withRuleRef = el}
+            ref={(el) => (this.withRuleRef = el)}
             moduleConfig={{
               type: 'selectMoreModule',
               field: `${this.field}_${this.rating}`,

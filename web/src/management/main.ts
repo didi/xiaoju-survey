@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import store from './store'
 import './styles/element-variables.scss'
 import ElementPlus from 'element-plus'
-// import 'element-plus/dist/index.css'
 import plainText from './directive/plainText'
 import safeHtml from './directive/safeHtml'
 

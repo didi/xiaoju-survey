@@ -48,10 +48,27 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true,
         },
-        beforeEnter(to){
-          console.log('result config to', to)
-        },
-        component: () => import( '../pages/edit/pages/resultConfig.vue' ),
+        component: () => import(/* webpackChunkName: "skin" */ '../pages/edit/pages/skin/index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'QuestionSkinSetting',
+            meta: {
+              needLogin: true,
+            },
+            component: () =>
+              import('../pages/edit/pages/skin/content.vue'),
+          },
+          {
+            path: 'result',
+            name: 'QuestionEditResultConfig',
+            meta: {
+              needLogin: true,
+            },
+            component: () =>
+              import('../pages/edit/pages/skin/result.vue'),
+          }
+        ],
       },
     ],
   },

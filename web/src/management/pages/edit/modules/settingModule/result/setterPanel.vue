@@ -30,7 +30,7 @@
 <script>
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
-import statusConfig from './config/statusConfig'
+import statusConfig from '../config/statusConfig'
 import { mapState } from 'vuex'
 import { get as _get, pick as _pick } from 'lodash-es'
 

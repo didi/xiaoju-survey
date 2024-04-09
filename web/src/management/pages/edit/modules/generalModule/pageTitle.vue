@@ -22,6 +22,5 @@ export default {
   text-overflow: ellipsis;
   width: 400px;
   white-space: nowrap;
-  color: $primary-color;
 }
 </style>

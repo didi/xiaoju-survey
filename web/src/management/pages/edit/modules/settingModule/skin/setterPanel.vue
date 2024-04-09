@@ -77,13 +77,13 @@ export default {
   padding: 10px 20px;
   .el-collapse {
     border: none;
-    ::v-deep .el-collapse-item__header{
+    :deep(.el-collapse-item__header){
       font-size: 14px;
       color: #606266;
       font-weight: bold;
       border: none;
     }
-    ::v-deep .el-collapse-item__wrap{
+    :deep(.el-collapse-item__wrap){
       border: none;
       .el-collapse-item__content{
         padding-bottom: 0px!important;

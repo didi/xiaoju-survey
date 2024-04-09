@@ -1,9 +1,24 @@
 <template>
   <div class="editor-wrapper border">
-    <Toolbar :class="['toolbar',props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']" ref="toolbar" v-show="showToolbar" :editor="editorRef" :defaultConfig="toolbarConfig"
-      :mode="mode" />
-    <Editor class="editor" ref="editor" :modelValue="curValue" :defaultConfig="editorConfig" @onCreated="onCreated" @onChange="onChange"
-      @onBlur="onBlur" @onFocus="onFocus" :mode="mode" />
+    <Toolbar
+      :class="['toolbar',props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']"
+      ref="toolbar"
+      v-show="showToolbar"
+      :editor="editorRef"
+      :defaultConfig="toolbarConfig"
+      :mode="mode"
+    />
+    <Editor
+      class="editor"
+      ref="editor"
+      :modelValue="curValue"
+      :defaultConfig="editorConfig"
+      @onCreated="onCreated"
+      @onChange="onChange"
+      @onBlur="onBlur"
+      @onFocus="onFocus"
+      :mode="mode"
+    />
   </div>
 </template>
 

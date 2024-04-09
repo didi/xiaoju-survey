@@ -1,5 +1,5 @@
 import basicConfig from '../../common/config/basicConfig';
-import { Message } from 'element-ui';
+import { ElMessage } from 'element-plus';
 
 const meta = {
   title: '评分',
@@ -23,7 +23,7 @@ const meta = {
       })),
       valueSetter: (val, moduleConfig) => {
         if (moduleConfig['max'] && val >= moduleConfig['max']) {
-          Message({
+          ElMessage({
             type: 'info',
             message: '最小值不可大于最大值',
           });

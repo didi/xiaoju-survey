@@ -1,7 +1,7 @@
 <template>
   <div class="skin-content">
     <div class="navbar-tab"> 
-      <el-radio-group size="mini" style="margin-bottom: 30px;" v-model="activeRouter">
+      <el-radio-group style="margin-bottom: 30px;" v-model="activeRouter">
         <el-radio-button :label="btnItem.router" :key="btnItem.router" v-for="btnItem in btnList" >
           <span>{{ btnItem.text }}</span>
         </el-radio-button>
@@ -55,7 +55,7 @@ export default {
     top: 10px;
     cursor: pointer;
     z-index: 9999;
-    ::v-deep .el-radio-button__orig-radio:checked + .el-radio-button__inner{
+    :deep(.el-radio-button__orig-radio:checked + .el-radio-button__inner){
         color:  $primary-color;
         background-color: #fff!important;
         // &:active{

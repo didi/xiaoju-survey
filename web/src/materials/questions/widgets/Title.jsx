@@ -111,7 +111,7 @@ export default defineComponent({
                 <RichEditor
                   modelValue={filterXSS(this.title)}
                   onChange={this.handleChange}
-                ></RichEditor>
+                 />
               </div>
             ) : (
               <div

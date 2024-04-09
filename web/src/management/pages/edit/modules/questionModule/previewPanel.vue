@@ -28,11 +28,10 @@
 </template>
 
 <script>
-import materialGroup from './components/materialGroup.vue'
-import banner from './components/banner.vue'
-import mainTitle from './components/mainTitle.vue'
-import submit from './components/submit.vue'
-import logo from './components/logo.vue'
+import materialGroup from '@/management/pages/edit/components/materialGroup.vue';
+import mainTitle from '@/management/pages/edit/components/mainTitle.vue';
+import submit from '@/management/pages/edit/components/submit.vue';
+import logo from '@/management/pages/edit/components/logo.vue';
 import { mapState, mapGetters } from 'vuex'
 import { get as _get } from 'lodash-es'
 

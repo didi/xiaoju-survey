@@ -13,11 +13,9 @@
       </div>
       <div>
         <draggable :list="curOptions" :options="{ handle: '.drag-handle' }">
-          <template #item>
+          <template #item="{optionItem, index}">
             <div
               class="option-item"
-              v-for="(optionItem, index) in curOptions"
-              :key="optionItem.hash"
             >
               <span class="drag-handle qicon qicon-tuodong"></span>
               <div class="flex-1 oitem" v-if="showText">

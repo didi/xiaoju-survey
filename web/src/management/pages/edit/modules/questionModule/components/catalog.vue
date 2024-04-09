@@ -1,12 +1,17 @@
 <template>
   <div class="question-catalog-wrapper">
-    <draggable :list="renderData" :options="dragOptions" @end="onDragEnd" itemKey="field">
-      <template #item>
+    <draggable
+      :list="renderData"
+      @end="onDragEnd"
+      itemKey="field"
+      handle=".draggHandle"
+      host-class="catalog-item-ghost"
+    >
+      <template #item="{ element, index }">
         <catalogItem
-          v-for="(catalogItem, index) in renderData"
-          :title="catalogItem.title"
-          :indexNumber="catalogItem.indexNumber"
-          :showIndex="catalogItem.showIndex"
+          :title="element.title"
+          :indexNumber="element.indexNumber"
+          :showIndex="element.showIndex"
           @select="onSelect(index)"
         />
       </template>
@@ -23,11 +28,6 @@ export default {
   name: 'QuestionCatalog',
   data() {
     return {
-      dragOptions: {
-        handle: '.draggHandle',
-        ghostClass: 'catalog-item-ghost',
-        dragClass: 'catalog-item-dragging',
-      },
     }
   },
   computed: {

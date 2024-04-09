@@ -21,6 +21,9 @@ export class MaterialLoader extends ComponentLoader {
 
   dynamicImport(path) {
     // see https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
+    if(path === 'NpsModule') {
+      path = 'NpsModule/index.vue'
+    }
     return import(`./widgets/${path}`);
   }
 
@@ -36,7 +39,7 @@ export class MaterialLoader extends ComponentLoader {
         console.error('The component has not been loaded yet');
       }
       path = path || this.components[type]?.path || type;
-      const res = await import(`@/materials/questions/widgets/${path}/meta.js`);
+      const res = await import(`./widgets/${path}/meta.js`);
       this.metaCache[type] = res.default || res.meta || null;
       return this.metaCache[type];
     }

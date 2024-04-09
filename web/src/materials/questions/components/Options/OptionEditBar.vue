@@ -183,10 +183,10 @@ export default defineComponent({
 }
 
 .nps-rate-config {
-  ::v-deep .row {
+  :deep(.row) {
     height: 47px;
   }
-  ::v-deep .text {
+  :deep(.text) {
     input {
       height: 32px;
     }

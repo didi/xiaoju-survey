@@ -1,28 +1,5 @@
-<template>
-  <div class="nps-wrapper-main">
-    <div class="nps-row-msg">
-      <div class="nps-msg left">{{ minMsg }}</div>
-      <div class="nps-msg right">{{ maxMsg }}</div>
-    </div>
-    <BaseRate
-      :name="props.field"
-      :min="props.min"
-      :max="props.max"
-      :readonly="props.readonly"
-      :value="indexValue"
-      iconClass="number"
-      @change="confirmNps"
-      :class="npsClass"
-    />
-    <QuestionWithRule
-      v-if="isShowInput"
-      :showTitle="false"
-      :moduleConfig="moduleConfig"
-      @change="onMoreDataChange"
-    ></QuestionWithRule>
-  </div>
-</template>
-<script setup>
+
+<script lang="jsx">
 import { defineProps, defineEmits, computed } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import BaseRate from '../BaseRate';
@@ -119,38 +96,5 @@ const onMoreDataChange = (data) => {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-.nps-wrapper-main {
-  .nps-row-msg {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.2rem;
-    .nps-msg {
-      flex: 1;
-      font-size: 0.22rem;
-      color: #92949d;
-      &.left {
-        text-align: left;
-      }
-      &.right {
-        text-align: right;
-      }
-    }
-  }
-  @media (max-width: 930px) {
-    :deep(.question-block) {
-      padding: 0;
-    }
-  }
-  :deep(.radio-nps-hover) {
-    .star-item {
-      &:hover {
-        background-color: $primary-color;
-      }
-    }
-    &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
-      background-color: $primary-color;
-    }
-  }
-}
+
 </style>

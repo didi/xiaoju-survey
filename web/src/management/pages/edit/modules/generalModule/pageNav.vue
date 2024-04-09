@@ -2,7 +2,6 @@
   <div class="content">
     <template v-for="btnItem in btnList" :key="btnItem.key">
       <router-link
-        class="navbar-btn"
         :to="{ name: btnItem.router }"
         tag="div"
         replace
@@ -11,6 +10,7 @@
       >
       <div
         :class="[
+          'navbar-btn',
           (isActive && btnItem.key === 'skinsettings'  ) || isExactActive ? 'router-link-exact-active' : '']"
       >
         <i class="iconfont" :class="[btnItem.icon]"></i>

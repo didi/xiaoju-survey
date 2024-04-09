@@ -175,11 +175,11 @@ export default {
 .nps-customed-config {
   .el-form-item {
     margin-right: 0px;
-    ::v-deep .el-form-item__label {
+    :deep(.el-form-item__label) {
       width: 70px !important;
       margin-right: 8px;
     }
-    ::v-deep .el-input__inner {
+    :deep(.el-input__inner) {
       width: 234px;
     }
   }

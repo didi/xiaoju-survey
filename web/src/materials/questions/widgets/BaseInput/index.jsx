@@ -91,7 +91,7 @@ export default defineComponent({
           },
           [this.value]
         )}
-        {this.$slots.default}
+        {this.$slots.default()}
         {/* {this.$scopedSlots.default} */}
         {/* {renderSlot(this.$slots, 'default')}   */}
       </div>

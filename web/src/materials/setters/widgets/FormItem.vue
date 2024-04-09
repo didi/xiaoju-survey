@@ -53,10 +53,10 @@ export default {
   display: flex;
   justify-content: space-between;
   
-  ::v-deep> label{
+  :deep(> label) {
     flex: 1;
   }
-  ::v-deep> div{
+  :deep(> div){
     flex: 1;
   }
 }

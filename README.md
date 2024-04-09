@@ -182,21 +182,21 @@ npm run serve
 [<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
 
 ## Star
-如果该项目对你有帮助，star一下 ❤️❤️❤️
+开源不易，如果该项目对你有帮助，请star一下 ❤️❤️❤️，你的支持是我们最大的动力。
 
 [![Star History Chart](https://api.star-history.com/svg?repos=didi/xiaoju-survey&type=Date)](https://star-history.com/#didi/xiaoju-survey&Date)
 
 ## 记录
-[谁在使用](https://github.com/didi/xiaoju-survey/issues/64)
+如果你使用了该项目，请记录反馈：[我在使用](https://github.com/didi/xiaoju-survey/issues/64)，你的支持是我们最大的动力。
 
 ## 贡献
-[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)
+如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)，你的加入使我们最大的荣幸。
 
 ## Feature
-[官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
+关注每周推出的建设：[官方Feature](https://github.com/didi/xiaoju-survey/issues/45)
 
 ## CHANGELOG
-[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
+关注重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 
 ## 分享
-[文章](https://github.com/didi/xiaoju-survey/issues)
+跟大家晒一晒你的分享：[文章](https://github.com/didi/xiaoju-survey/issues)

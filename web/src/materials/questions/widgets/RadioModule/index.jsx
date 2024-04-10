@@ -72,23 +72,18 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, field } = this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-    };
+    const { readonly, field, options } = this;
+    
     return (
       <div>
         <baseChoice
           uiTarget="radio"
-          {...{ props: props }}
-          {...{
-            on: {
-              change: this.onChange,
-            },
-          }}
-          scopedSlots={{
+          readonly={readonly}
+          name={field}
+          options={options}
+          onChange={(e) => this.onChange(e)}
+        >
+          {{
             selectMore: (scoped) => {
               return (
                 <QuestionWithRule
@@ -100,7 +95,7 @@ export default defineComponent({
               );
             },
           }}
-        ></baseChoice>
+        </baseChoice>
       </div>
     );
   },

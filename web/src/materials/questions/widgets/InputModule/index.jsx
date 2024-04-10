@@ -102,7 +102,7 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange } =
+    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange, placeholder } =
       this;
     const props = {
       ...this.$props,
@@ -115,15 +115,16 @@ export default defineComponent({
     return (
       <baseInput
         uiTarget="input"
-        {...{ props: props }}
-        {...{
-          on: {
-            blur: this.onBlur,
-            focus: this.onFocus,
-            input: this.onInput,
-            change: this.onChange,
-          },
-        }}
+        readonly={readonly}
+        name={field}
+        placeholder={placeholder}
+        type={valid === 'n' ? 'number' : 'text'}
+        maxlength={textRange.max.value}
+        minlength={textRange.min.value}
+        onBlur={this.onBlur}
+        onFocus={this.onFocus}
+        onInput={this.onInput}
+        onChange={this.onChange}
       >
         {focusFlag && (
           <div class="text-number-tip">

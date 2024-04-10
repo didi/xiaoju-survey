@@ -107,12 +107,13 @@ export default defineComponent({
           <div class="module-title-title">
             {this.showIndex && <span class="index"> {indexNumber}.</span>}
             {this.status === 'edit' ? (
-              <div class="richeditor">
+              // <div class="richeditor">
                 <RichEditor
+                  class="richeditor"
                   modelValue={filterXSS(this.title)}
                   onChange={this.handleChange}
                  />
-              </div>
+              // </div>
             ) : (
               <div
                 v-html={filterXSS(tagTitle)}

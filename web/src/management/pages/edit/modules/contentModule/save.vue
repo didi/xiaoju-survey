@@ -7,8 +7,8 @@
         <span class="sv-text">
           {{ saveText }}
         </span>
-        <el-icon class="icon"><el-icon-loading /></el-icon>
-        <el-icon class="icon succeed"><el-icon-check /></el-icon>
+        <el-icon class="icon" v-if="autoSaveStatus === 'saving'"><el-icon-loading /></el-icon>
+        <el-icon class="icon succeed"  v-else-if="autoSaveStatus === 'succeed'"><el-icon-check /></el-icon>
       </div>
     </transition>
   </div>

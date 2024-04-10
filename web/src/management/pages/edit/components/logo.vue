@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     logoImg() {
-      const { logoImage } = this.bottomConf
+      const { logoImage } = this.logoConf
       return logoImage
     },
   },

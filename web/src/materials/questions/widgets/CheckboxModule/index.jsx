@@ -95,7 +95,9 @@ export default defineComponent({
     return (
       <BaseChoice
         uiTarget="checkbox"
-        {...{ props: props }}
+        readonly={readonly}
+        name={field}
+        options={myOptions}
         onChange={onChange}
       >
         {{

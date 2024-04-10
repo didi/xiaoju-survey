@@ -3,7 +3,8 @@
     <el-collapse-item v-for="(item, index) of questionMenuConfig" :title="item.title" :name="index" :key="index">
       <div class="questiontype-list">
         <el-popover v-for="(item, index) in item.questionList" :key="item.type" placement="right" trigger="hover"
-          :popper-class="'qtype-popper-' + (index % 3)">
+          :popper-class="'qtype-popper-' + (index % 3)"
+          :popper-style="{width: '369px'}">
           <img :src="item.snapshot" width="345px" />
           <template #reference>
             <div :key="item.type" class="qtopic-item" @click="onQuestionType({ type: item.type })">
@@ -45,7 +46,7 @@ const onQuestionType = ({ type }) => {
   const index =
     typeof currentEditOne === 'number'
       ? currentEditOne + 1
-      : questionDataList.length
+      : questionDataList.value.length
   const newQuestion = getQuestionByType(type, fields)
   newQuestion.title = newQuestion.title = `标题${index + 1}`
   if (type === 'vote') {

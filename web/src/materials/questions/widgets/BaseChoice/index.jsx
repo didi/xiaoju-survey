@@ -1,4 +1,4 @@
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, useSlots } from 'vue';
 import { findIndex, includes } from 'lodash-es';
 import { filterXSS } from '@/common/xss';
 import '../../common/css/choice.scss';
@@ -49,7 +49,7 @@ export default defineComponent({
       default: 10,
     },
   },
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const getOptions = computed(() => {
       return props.options;
     });
@@ -82,6 +82,7 @@ export default defineComponent({
       // return values
     };
     return {
+      slots,
       getOptions,
       isChecked,
       onRadioClick,
@@ -89,7 +90,7 @@ export default defineComponent({
     };
   },
   render() {
-    const { uiTarget, isMatrix, hideText, getOptions, isChecked } = this;
+    const { uiTarget, isMatrix, hideText, getOptions, isChecked, slots } = this;
     return (
       <div class="choice-wrapper">
         <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>
@@ -147,7 +148,7 @@ export default defineComponent({
                               style="display: block; height: auto; padding: 9px 0"
                             ></span>
                           )}
-                          {this.$scopedSlots.vote?.({
+                          {slots.vote?.({
                             option: item,
                             voteTotal: this.voteTotal,
                           })}
@@ -170,7 +171,7 @@ export default defineComponent({
                         },
                       })
                     : item.others &&
-                      this.slots.selectMore?.({
+                      slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
                           type: 'selectMoreModule',

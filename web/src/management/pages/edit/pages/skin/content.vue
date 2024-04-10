@@ -1,8 +1,14 @@
 <template>
     <commonTemplate>
-      <catalogPanel slot="left"></catalogPanel>
-      <previewPanel slot="center"></previewPanel>
-      <setterPanel slot="right"></setterPanel>
+      <template #left>
+        <catalogPanel  />
+      </template>
+      <template #center>
+        <previewPanel />
+      </template>
+      <template #right>
+        <setterPanel />
+      </template>
     </commonTemplate>
   </template>
   <script>

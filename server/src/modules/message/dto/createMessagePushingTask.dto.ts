@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import Joi from 'joi';
 import {
   MESSAGE_PUSHING_TYPE,
   MESSAGE_PUSHING_HOOK,
@@ -27,4 +28,19 @@ export class CreateMessagePushingTaskDto {
     default: [],
   })
   surveys?: string[];
+
+  static async validate(data) {
+    return await Joi.object({
+      name: Joi.string().required(),
+      type: Joi.string().allow(null).default(MESSAGE_PUSHING_TYPE.HTTP),
+      pushAddress: Joi.string().required(),
+      triggerHook: Joi.string()
+        .allow(null)
+        .default(MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED),
+      surveys: Joi.array()
+        .items(Joi.string().required())
+        .allow(null)
+        .default([]),
+    }).validateAsync(data);
+  }
 }

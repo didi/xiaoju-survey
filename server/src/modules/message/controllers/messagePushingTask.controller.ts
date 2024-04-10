@@ -47,10 +47,21 @@ export class MessagePushingTaskController {
     req,
     @Body() createMessagePushingTaskDto: CreateMessagePushingTaskDto,
   ) {
+    let data;
+    try {
+      data = await CreateMessagePushingTaskDto.validate(
+        createMessagePushingTaskDto,
+      );
+    } catch (error) {
+      throw new HttpException(
+        `参数错误: ${error.message}`,
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
+    }
     const userId = req.user._id;
 
     const messagePushingTask = await this.messagePushingTaskService.create({
-      ...createMessagePushingTaskDto,
+      ...data,
       ownerId: userId,
     });
     return {
@@ -72,13 +83,19 @@ export class MessagePushingTaskController {
     req,
     @Query() query: QueryMessagePushingTaskListDto,
   ) {
-    const userId = req.user._id;
-    if (!query?.surveyId && !query?.triggerHook && !userId) {
-      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    let data;
+    try {
+      data = await QueryMessagePushingTaskListDto.validate(query);
+    } catch (error) {
+      throw new HttpException(
+        `参数错误: ${error.message}`,
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
     }
+    const userId = req.user._id;
     const list = await this.messagePushingTaskService.findAll({
-      surveyId: query.surveyId,
-      hook: query.triggerHook,
+      surveyId: data.surveyId,
+      hook: data.triggerHook,
       ownerId: userId,
     });
     return {

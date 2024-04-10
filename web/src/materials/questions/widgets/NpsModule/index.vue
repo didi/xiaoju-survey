@@ -17,6 +17,7 @@
     <QuestionWithRule
       v-if="isShowInput"
       :showTitle="false"
+      :key="`${props.field}_${rating}`"
       :moduleConfig="moduleConfig"
       @change="onMoreDataChange"
     ></QuestionWithRule>

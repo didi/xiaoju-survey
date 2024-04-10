@@ -77,7 +77,6 @@ export default defineComponent({
       if (props.readonly) return;
       rating.value = num;
     };
-
     const onMoreDataChange = (data) => {
       const { key, value } = data;
       emit('change', {
@@ -122,6 +121,7 @@ export default defineComponent({
         {isShowInput && (
           <QuestionWithRule
             showTitle={false}
+            key={ `${this.field}_${this.rating}`}
             moduleConfig={{
               type: 'selectMoreModule',
               field: `${this.field}_${this.rating}`,

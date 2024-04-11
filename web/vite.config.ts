@@ -8,16 +8,17 @@ import { createMpaPlugin, createPages } from 'vite-plugin-virtual-mpa'
 
 import ElementPlus from 'unplugin-element-plus/vite'
 
+const isProd = process.env.NODE_ENV === 'production'
 const pages = createPages([
   {
     name: 'management',
-    filename: 'src/management/index.html',
+    filename: isProd ? 'management.html' : 'src/management/index.html', // fix: filename影响dev template
     template: 'src/management/index.html',
     entry: '/src/management/main.ts'
   },
   {
     name: 'render',
-    filename: 'src/render/index.html',
+    filename: isProd ? 'render.html' : 'src/render/index.html',
     template: 'src/render/index.html',
     entry: '/src/render/main.js'
   }

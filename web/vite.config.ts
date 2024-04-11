@@ -28,26 +28,13 @@ const mpaPlugin = createMpaPlugin({
   verbose: true,
   rewrites: [
     {
-      from: /^\/render\/.?/,
-      to: (ctx) => {
-        if(/^\/render\/.?/.test(ctx.parsedUrl.path as string)) {
-          return normalizePath('/src/render/index.html')
-        }
-        return normalizePath('/src/management/index.html')
-      }
+      from: /render/,
+      to: (ctx) =>  normalizePath('/src/render/index.html')
     },
     {
       from: /\/|\/management\/.?/,
       to: (ctx) => normalizePath('/src/management/index.html')
     },
-    {
-      from: /^\/$/,
-      to: (ctx) => {
-        console.log(ctx)
-        return normalizePath('/src/management/index.html')
-      }
-    },
-
   ]
 })
 
@@ -83,11 +70,6 @@ export default defineConfig({
     }
   },
   build: {
-    rollupOptions: {
-      // input: {
-      //   management: resolve(__dirname, 'src/management/index.html'),
-      //   render: resolve(__dirname, 'src/render/index.html')
-      // }
-    }
+    rollupOptions: {}
   }
 })

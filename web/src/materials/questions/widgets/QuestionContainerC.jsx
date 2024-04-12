@@ -1,5 +1,5 @@
 import { computed, defineComponent, onMounted, shallowRef } from 'vue'
-import moduleTitle from './Title.jsx'
+import moduleTitle from './TitleModule/index.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
 
@@ -31,26 +31,7 @@ export default defineComponent({
     moduleConfig: {
       type: Object,
       default: () => {
-        return {
-          // field: 'quiestion01',
-          // type: 'text',
-          // component: 'InputModule',
-          // title: '标题1单行输入框',
-          // value: '123444',
-          // showType: 'text',
-          // placeholder: '请填写',
-          // textRange: {
-          //   max: {
-          //     placeholder: '500',
-          //     value: 500
-          //   },
-          //   min: {
-          //     placeholder: '0',
-          //     value: 0
-          //   }
-          // },
-          // valid: 'n'
-        }
+        return {}
       }
     },
     readonly: {
@@ -94,17 +75,14 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly, isSelected } = this
-
     const props = {
-      isSelected,
       ...this.moduleConfig,
       ...this.$props
     }
-    const { blockComponent } = this
+    const blockComponent = this.blockComponent
     return (
-      <div class={['question', props.isSelected ? 'isSelected' : '']}>
-        {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}
+      <div class={['question']}>
+        {this.showTitle && <moduleTitle { ...props }  />}
         <div class="question-block">
           {
             this.blockComponent ? <blockComponent

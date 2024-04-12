@@ -79,7 +79,7 @@ export default defineComponent({
           <div class="module-title-title">
             {this.showIndex && <span class="index"> {indexNumber}.</span>}
             <div
-              domPropsInnerHTML={filterXSS(tagTitle)}
+              v-html={filterXSS(tagTitle)}
               class="flex module-title-title-text"
             ></div>
           </div>

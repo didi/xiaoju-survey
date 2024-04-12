@@ -6,8 +6,6 @@ import {
   nextTick,
   computed,
   inject,
-  onMounted,
-  onBeforeUnmount,
   h,
   unref,
 } from 'vue';
@@ -68,12 +66,6 @@ export default defineComponent({
       const { type } = props.moduleConfig;
       return !/hidden|mobileHidden/.test(type);
     });
-    onMounted(() => {
-      // form.$bus.emit && form.$bus.emit('form.addField', instance);
-    });
-    onBeforeUnmount(() => {
-      // form.$bus.emit && form.$bus.emit('form.removeField', instance);
-    });
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger);
       if (!rules || rules.length === 0) {
@@ -105,7 +97,6 @@ export default defineComponent({
       nextTick(() => {
         // 对填空题单独设置其value
         let value = unref(form.model)[field];
-        debugger
         validator.validate(
           { [field]: value },
           { firstFields: true },
@@ -118,18 +109,13 @@ export default defineComponent({
       });
     };
     const onFieldBlur = () => {
-      // TODO: 
-      // if (!(form && form instanceof Vue)) return;
       validate('blur');
     };
-    // eslint-disable-next-line no-unused-vars
     const onFieldChange = () => {
-      // TODO: 
-      // if (!(form && form instanceof Vue)) return;
       validate('change');
     };
     const getRules = () => {
-      const { rules } = form;
+      const rules = unref(form.rules);
       const { field } = props.moduleConfig;
       return rules[field];
     };

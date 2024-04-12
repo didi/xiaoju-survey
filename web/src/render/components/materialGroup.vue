@@ -13,11 +13,9 @@
   </form>
 </template>
 <script setup>
-
 import { defineProps, defineEmits, ref, onMounted, provide, computed } from 'vue';
-// import Form from './form.vue';
 import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
-// import store from '../../store'
+
 const props = defineProps({
   rules: {
     type: Object,
@@ -38,9 +36,6 @@ const props = defineProps({
     },
   },
 })
-// const formModel = computed(() => {
-//       return store.getters.formModel;
-//     })
 const emit = defineEmits(['formChange', 'blur']);
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
@@ -54,7 +49,7 @@ provide(
   'Form',
   {
     model: computed(() => { return props.formModel }),
-    rules: props.rules
+    rules: computed(() => { return props.rules })
   }
 )
 // 题目组件ref
@@ -99,10 +94,7 @@ const validate = (callback) => {
 }
 
 defineExpose({
-  validate,
-  fields,
-  ruleForm,
-  questionWrappers,
+  validate
 })
 </script>
   

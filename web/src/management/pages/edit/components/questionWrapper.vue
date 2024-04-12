@@ -6,6 +6,7 @@ import {
   computed,
   getCurrentInstance,
 } from 'vue';
+import { Rank, Top, Bottom, CopyDocument, Delete } from '@element-plus/icons-vue'
 
 export default defineComponent({
   name: 'QuestionWrapper',
@@ -155,31 +156,41 @@ export default defineComponent({
         {
           <div class={[showHover ? 'visibily' : 'hidden', 'hoverItem']}>
             <div
-              class="item move el-icon-rank"
-              onClick_stop_prevent={this.onMove}
-            ></div>
+              class="item"
+              onClickPrevent={this.onMove}
+            >
+              <el-icon><Rank /></el-icon>
+            </div>
             {showUp && (
               <div
-                class="item iconfont icon-shangyi"
-                onClick_stop_prevent={this.onMoveUp}
-              ></div>
+                class="item"
+                onClickPrevent={this.onMoveUp}
+              >
+                <el-icon><Top /></el-icon>
+              </div>
             )}
             {showDown && (
               <div
-                class="item iconfont icon-xiayi"
-                onClick_stop_prevent={this.onMoveDown}
-              ></div>
+                class="item"
+                onClickPrevent={this.onMoveDown}
+              >
+                <el-icon><Bottom /></el-icon>
+              </div>
             )}
             {showCopy && (
               <div
-                class="item copy iconfont icon-fuzhi"
-                onClick_stop_prevent={this.onCopy}
-              ></div>
+                class="item"
+                onClickPrevent={this.onCopy}
+              >
+                <el-icon><CopyDocument /></el-icon>
+              </div>
             )}
             <div
-              class="item iconfont icon-shanchu"
-              onClick_stop_prevent={this.onDelete}
-            ></div>
+              class="item"
+              onClickPrevent={this.onDelete}
+            >
+              <el-icon><Delete /></el-icon>
+            </div>
           </div>
         }
       </div>
@@ -278,8 +289,10 @@ export default defineComponent({
       display: none;
     }
     .item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-top: 5px;
-      display: inline-block;
       width: 28px;
       height: 28px;
       border-radius: 50%;

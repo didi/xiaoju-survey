@@ -10,7 +10,7 @@ import {
   onBeforeUnmount,
   h,
 } from 'vue';
-import QuestionContainer from '@/materials/questions/widgets/QuestionContainerC.jsx';
+import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
 import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
@@ -172,7 +172,7 @@ export default defineComponent({
           itemClass,
         ]}
       >
-        {h(QuestionContainer, {
+        {h(QuestionContainerC, {
             type: this.moduleConfig.type,
             moduleConfig: this.moduleConfig,
             value: this.moduleConfig.value,
@@ -180,7 +180,7 @@ export default defineComponent({
             showTitle: this.showTitle,
             readonly: this.readonly,
             onBlur: this.handleBlur,
-            onChange: this.handleChange
+            onChange: this.handleChange,
         })}
         <ErrorTip msg={validateMessage} />
       </div>

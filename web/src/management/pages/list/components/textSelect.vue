@@ -46,8 +46,8 @@ export default {
   width: 105px;
   line-height: 35px;
   margin-right: 20px;
-  :deep(.el-input__inner) {
-    border: none;
+  :deep(.el-select__wrapper) {
+    box-shadow: none;
     height: 35px;
     //   line-height: 35px;
   }

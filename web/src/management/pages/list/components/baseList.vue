@@ -20,7 +20,7 @@
           :icon="
             buttonOptionsDict[item].icons.find(
               (iconItem) => iconItem.effectValue === buttonValueMap[item]
-            ).name
+            ).icon
           "
           link
         ></text-button>
@@ -368,12 +368,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
     .select {
       display: flex;
     }
     .search {
       display: flex;
-      padding-bottom: 20px;
     }
   }
 

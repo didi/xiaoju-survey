@@ -1,4 +1,5 @@
 import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
+import EditOptions from './EditOptions.jsx';
 import moduleTitle from './Title.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
@@ -96,6 +97,7 @@ export default defineComponent({
     }
     return {
       // isSelected,
+      props,
       blockComponent,
       onClick,
       onBlur,
@@ -114,17 +116,30 @@ export default defineComponent({
       ...this.$props
     }
     const { blockComponent } = this
+    console.log('block ', blockComponent)
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}
         <div class="question-block">
-            <blockComponent
-              readonly
-              {...props}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-              change={this.onChange}
-            ></blockComponent>
+          {
+            this.showEditCom ? (
+              <EditOptions moduleConfig={props.moduleConfig} >
+                <blockComponent
+                  {...props}
+                  onBlur={this.onBlur}
+                  onFocus={this.onFocus}
+                  onChange={this.onChange}
+                />
+              </EditOptions>
+              ) : <blockComponent
+                    readonly
+                    {...props}
+                    onBlur={this.onBlur}
+                    onFocus={this.onFocus}
+                    change={this.onChange}
+                />
+          }
+            
         </div>
       </div>
     )

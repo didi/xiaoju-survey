@@ -57,6 +57,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text-button-root {
+  display: flex;
+  align-items: center;
+}
 .el-button {
   margin-right: 20px;
   font-size: 14px;

@@ -92,6 +92,7 @@ const onFocus = () => {
   emit('focus')
 }
 const onChange = (data) => {
+  console.log('question container change', data)
   emit('change', data)
 }
 const onClick = () => {

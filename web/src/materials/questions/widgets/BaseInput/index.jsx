@@ -83,8 +83,8 @@ export default defineComponent({
           minlength={props.minlength}
           autocomplete={'off'}
           onBlur={this.onBlur}
-          onInput={this.onInput}
-          onFocus={this.onFocus}
+          // onInput={this.onInput}
+          // onFocus={this.onFocus}
           onChange={this.onChange}
         >
           {this.value}

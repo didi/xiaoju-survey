@@ -1,5 +1,4 @@
 import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
-import EditOptions from './EditOptions.jsx';
 import moduleTitle from './Title.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
@@ -110,10 +109,12 @@ export default defineComponent({
           {
             this.blockComponent ? <blockComponent
               readonly
-              {...props}
+              options={props.moduleConfig.options}
+              field={props.moduleConfig.field}
+              value={props.moduleConfig.value}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
-              change={this.onChange}
+              onChange={this.onChange}
             /> : <span>题型控件加载中</span>
           }
             

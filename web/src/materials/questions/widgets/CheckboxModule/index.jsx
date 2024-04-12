@@ -43,6 +43,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {
@@ -65,6 +66,7 @@ export default defineComponent({
     });
     const onChange = (value) => {
       const key = props.field;
+      console.log(' checkbox module', value)
       emit('change', {
         key,
         value,
@@ -85,7 +87,7 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, field, myOptions, onChange, props } = this;
+    const { readonly, field, myOptions, onChange, maxNum, value } = this;
 
     // const props = {
     //   ...this.$props,
@@ -98,9 +100,10 @@ export default defineComponent({
         uiTarget="checkbox"
         readonly={readonly}
         name={field}
+        maxNum={maxNum}
         options={myOptions}
         onChange={onChange}
-        value={props.value}
+        value={value}
       >
         {{
           selectMore: (scoped) => {

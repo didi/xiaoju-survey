@@ -15,7 +15,7 @@
 <script>
 import { defineComponent, h } from 'vue';
 import Form from './form.vue';
-import questionWrapper from './QuestionRuleContainer.jsx';
+import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
 
 export default defineComponent({
   name: 'MaterialGroup',

@@ -51,6 +51,7 @@ export default defineComponent({
     //   }
     // }
   },
+  emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const onChange = (value) => {
       const key = props.field;

@@ -10,7 +10,7 @@ import {
   onBeforeUnmount,
   h,
 } from 'vue';
-import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx';
+import QuestionContainer from '@/materials/questions/widgets/QuestionContainerC.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
 import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
@@ -35,6 +35,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const validateMessage = ref('');
     const validateState = ref('');
@@ -48,9 +49,6 @@ export default defineComponent({
         if (type === 'section') {
           classList.push('question-type-section');
         }
-        // if (includes(['radio', 'checkbox', 'vote', 'radio-star', 'binary-choice'], type)) {
-        //   classList.push('special')
-        // }
 
         if (type === 'scroll') {
           classList.push('no-padding');

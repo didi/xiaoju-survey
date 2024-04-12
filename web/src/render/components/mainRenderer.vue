@@ -7,7 +7,7 @@
           :render-data="item"
           :rules="rules"
           :formModel="formModel"
-          @change="changeData"
+          @formChange="changeData"
         />
       </div>
     </template>

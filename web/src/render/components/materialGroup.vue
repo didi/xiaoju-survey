@@ -42,7 +42,9 @@ export default defineComponent({
   },
   methods: {
     handleChange(data) {
-      this.$emit('change', data);
+      // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
+      // 导致接受到的data是个Event
+      this.$emit('formChange', data);
     },
     handleBlur() {
       this.$emit('blur');

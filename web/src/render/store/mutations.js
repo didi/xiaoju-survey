@@ -20,9 +20,6 @@ export default {
   },
   changeFormData(state, data) {
     let { key, value } = data;
-    // FIXME:输入框会触发两次onChange，且参数为event，导致key是undefined
-    // 这里先做下拦截
-    if(key == null) return
     set(state, `formValues.${key}`, value);
     // set(state, `questionData.${key}.value`, value)
   },

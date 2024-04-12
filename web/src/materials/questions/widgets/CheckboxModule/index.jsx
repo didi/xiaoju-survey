@@ -43,6 +43,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {

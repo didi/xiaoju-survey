@@ -1,5 +1,4 @@
-import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
-import EditOptions from './EditOptions.jsx';
+import { defineComponent, onMounted, shallowRef } from 'vue'
 import moduleTitle from './Title.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
@@ -15,7 +14,7 @@ export const getBlockComponent = async (type) => {
 }
 
 export default defineComponent({
-  name: 'QuestionContainer',
+  name: 'QuestionContainerC',
   props: {
     type: {
       type: String,
@@ -66,6 +65,7 @@ export default defineComponent({
   components: {
     moduleTitle
   },
+  emits: ['change', 'focus', 'blur'],
   setup(props, { emit }) {
     const blockComponent = shallowRef(null)
     onMounted(async () => {
@@ -113,10 +113,9 @@ export default defineComponent({
               {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
-              change={this.onChange}
+              onChange={this.onChange}
             /> : <span>题型控件加载中</span>
           }
-            
         </div>
       </div>
     )

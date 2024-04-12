@@ -113,7 +113,7 @@ const onQuestionType = ({ type }) => {
 }
 </style>
 
-<!-- <style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss">
 .qtype-popper-0 {
   transform: translateX(183px);
 }
@@ -125,4 +125,4 @@ const onQuestionType = ({ type }) => {
 .qtype-popper-2 {
   transform: translateX(30px);
 }
-</style> -->
+</style>

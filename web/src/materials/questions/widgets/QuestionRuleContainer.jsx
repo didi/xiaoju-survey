@@ -175,19 +175,14 @@ export default defineComponent({
         ]}
       >
         {h(QuestionContainer, {
-          props: {
             type: this.moduleConfig.type,
             moduleConfig: this.moduleConfig,
             value: this.moduleConfig.value,
             indexNumber: this.indexNumber,
             showTitle: this.showTitle,
             readonly: this.readonly,
-          },
-          on: {
-            ...this.$attrs,
-            blur: this.handleBlur,
-            change: this.handleChange,
-          },
+            onBlur: this.handleBlur,
+            onChange: this.handleChange
         })}
         <ErrorTip msg={validateMessage} />
       </div>

@@ -42,6 +42,7 @@ export default defineComponent({
       default: '',
     },
   },
+  emits: ['input','change'],
   setup(props, { emit, slots }) {
     const onBlur = () => {
       emit('blur');
@@ -50,6 +51,7 @@ export default defineComponent({
       emit('input', e);
     };
     const onChange = (e) => {
+      console.log('e',e)
       emit('change', e);
     };
     const onFocus = () => {
@@ -68,12 +70,30 @@ export default defineComponent({
     const { uiTarget, customClass, slots } = this;
     return (
       <div class="input-wrapper">
-        {h(
+        <uiTarget
+          class={['input-box item-border', customClass]}
+          type={this.type}
+          readonly={this.readonly}
+          placeholder={this.placeholder}
+          name={this.name}
+          value={this.value}
+          maxlength={this.maxlength}
+          minlength={this.minlength}
+          autocomplete={'off'}
+          onBlur={this.onBlur}
+          onInput={this.onInput}
+          onFocus={this.onFocus}
+          onChange={this.onChange}
+        >
+          {this.value}
+         </uiTarget>
+
+        {/* {h(
           uiTarget,
           {
             // class: ['input-box','item-border', ],
             class: ['input-box item-border', customClass],
-            placeholder: this.placeholder,
+            readonly: this.readonly,
             type: this.type,
             readonly: this.readonly,
             placeholder: this.placeholder,
@@ -88,10 +108,9 @@ export default defineComponent({
             onChange: this.onChange,
           },
           [this.value]
-        )}
-        {slots.default()}
-        {/* {this.$scopedSlots.default} */}
-        {/* {renderSlot(this.$slots, 'default')}   */}
+        )} */}
+        
+        {/* {slots.default()} */}
       </div>
     );
   },

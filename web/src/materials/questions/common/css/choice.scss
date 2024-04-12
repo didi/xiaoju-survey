@@ -209,7 +209,7 @@
     // &:focus, &.is-focused {
     //     border: 1px solid $primary-color;
     // }
-    &:not([readonly="readonly"]):hover {
+    &:not([readonly]):hover {
       border: 1px solid $primary-color;
     }
 

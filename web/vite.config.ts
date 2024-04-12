@@ -1,18 +1,16 @@
 import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'node:path'
-
 import { defineConfig, normalizePath } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createMpaPlugin, createPages } from 'vite-plugin-virtual-mpa'
-
 import ElementPlus from 'unplugin-element-plus/vite'
 
 const isProd = process.env.NODE_ENV === 'production'
+
 const pages = createPages([
   {
     name: 'management',
-    filename: isProd ? 'management.html' : 'src/management/index.html', // fix: filename影响dev template
+    filename: isProd ? 'management.html' : 'src/management/index.html',
     template: 'src/management/index.html',
     entry: '/src/management/main.ts'
   },

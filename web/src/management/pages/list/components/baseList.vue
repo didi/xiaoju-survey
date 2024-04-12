@@ -367,6 +367,7 @@ export default {
   .filter-wrap {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     .select {
       display: flex;
     }

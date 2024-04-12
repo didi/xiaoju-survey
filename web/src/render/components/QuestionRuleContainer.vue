@@ -1,3 +1,20 @@
+<template>
+  <div :class="[ 'question-wrapper', moduleConfig.showSpliter ? 'spliter' : '', validateMessage ? 'hasError' : '', itemClass ]">
+    <QuestionContainer
+      :type="moduleConfig.type"
+      :moduleConfig="moduleConfig"
+      :value="moduleConfig.value"
+      :indexNumber="indexNumber"
+      :showTitle="showTitle"
+      :readonly="readonly"
+      v-bind="$attrs"
+      @blur="handleBlur"
+      @change="handleChange"
+    />
+    <ErrorTip :msg="validateMessage" />
+  </div>
+</template>
+<script>
 import '@/materials/questions/common/css/formItem.scss';
 import {
   defineComponent,
@@ -10,13 +27,13 @@ import {
   onBeforeUnmount,
   h,
 } from 'vue';
-import QuestionContainer from './QuestionContainer.jsx';
+import QuestionContainer from './QuestionContainer.vue';
 import ErrorTip from '@/materials/questions/components/ErrorTip.vue';
 import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
 export default defineComponent({
   name: 'QuestionRuleContainer',
-  components: { ErrorTip },
+  components: { ErrorTip, QuestionContainer },
   props: {
     readonly: Boolean,
     showTitle: Boolean,
@@ -75,7 +92,7 @@ export default defineComponent({
     onBeforeUnmount(() => {
       form.$emit && form.$emit('form.removeField', instance);
     });
-    const validate = (trigger, callback = () => {}) => {
+    const validate = (trigger, callback = () => { }) => {
       const rules = getFilteredRule(trigger);
       if (!rules || rules.length === 0) {
         callback && callback();
@@ -151,7 +168,6 @@ export default defineComponent({
       onFieldChange();
     };
     return {
-      props,
       validateMessage,
       validate,
       itemClass,
@@ -164,49 +180,11 @@ export default defineComponent({
       handleChange,
     };
   },
-  render() {
-    const { itemClass, validateMessage, props } = this;
-    console.log('props', props)
-    return (
-      <div
-        class={[
-          'question-wrapper',
-          this.moduleConfig.showSpliter ? 'spliter' : '',
-          validateMessage ? 'hasError' : '',
-          itemClass,
-        ]}
-      >
+  // render() {
+  //   const { itemClass, validateMessage } = this;
+  //   return (
 
-        <QuestionContainer
-          type={this.moduleConfig.type}
-          moduleConfig={this.moduleConfig}
-          value={this.moduleConfig.value}
-          indexNumber={this.moduleConfig.indexNumber}
-          showTitle={this.showTitle}
-          readonly={this.readonly}
-          {...props}
-          onBlur={this.handleBlur}
-          blur={this.handleBlur}
-          onChange={this.handleChange}
-          onClick={this.onClick}
-        />
-        {/* {h(QuestionContainer, {
-          props: {
-            type: this.moduleConfig.type,
-            moduleConfig: this.moduleConfig,
-            value: this.moduleConfig.value,
-            indexNumber: this.indexNumber,
-            showTitle: this.showTitle,
-            readonly: this.readonly,
-          },
-          on: {
-            ...this.$attrs,
-            blur: this.handleBlur,
-            change: this.handleChange,
-          },
-        })} */}
-        <ErrorTip msg={validateMessage} />
-      </div>
-    );
-  },
+  //   );
+  // },
 });
+</script>

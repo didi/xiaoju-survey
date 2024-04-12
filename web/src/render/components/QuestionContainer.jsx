@@ -6,7 +6,7 @@ import '@/materials/questions/common/css/question.scss'
 import questionLoader from '@/materials/questions/questionLoader.js'
 import '@/materials/questions/common/css/title.scss'
 
-export const getBlockComponent = async (type) => {
+const getBlockComponent = async (type) => {
   const path = moduleList[type]
   const component = await questionLoader.loadComponent(type, path)
 
@@ -76,12 +76,10 @@ export default defineComponent({
       }
       return result
     })
-
-    // const isSelected = ref(false)
-    onMounted(async () => {
-      const { component } = await getBlockComponent(props.type)
+    getBlockComponent(props.type).then(({component}) => {
       blockComponent.value = component
     })
+
     const onBlur = () => {
       emit('blur')
     }
@@ -123,7 +121,8 @@ export default defineComponent({
               {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
-              change={this.onChange}
+              onChange={this.onChange}
+              onSelect={this.onSelect}
             ></blockComponent>
         </div>
       </div>

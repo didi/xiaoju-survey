@@ -87,6 +87,8 @@ export default defineComponent({
       if (['m', 'idcard', 'e', 'licensePlate'].includes(props.valid)) {
         e.target.value = e.target.value.replace(/\s+/g, '');
       }
+      console.log('input module change',e)
+
       emit('change', {
         key,
         value: e.target.value,

@@ -1,5 +1,5 @@
 import { defineComponent, computed, useSlots } from 'vue';
-import { findIndex, includes } from 'lodash-es';
+import { findIndex, includes, cloneDeep } from 'lodash-es';
 import { filterXSS } from '@/common/xss';
 import '../../common/css/choice.scss';
 
@@ -69,7 +69,7 @@ export default defineComponent({
       $event && $event.stopPropagation();
       $event && $event.preventDefault();
       const targetValue = item.hash;
-      let values = props.value;
+      const values = cloneDeep(props.value);
       if (!includes(values, targetValue)) {
         values.push(targetValue);
       } else {

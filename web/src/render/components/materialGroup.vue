@@ -42,6 +42,7 @@ export default defineComponent({
   },
   methods: {
     handleChange(data) {
+      console.log('handleChange', data)
       this.$emit('change', data);
     },
     handleBlur() {

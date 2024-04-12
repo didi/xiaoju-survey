@@ -12,7 +12,7 @@
               size="small"
               class="cru-content"
               :model-value="getFullUrl(data)"
-              readonly="readonly"
+              :readonly="true"
             />
           </div>
         </div>

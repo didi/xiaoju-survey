@@ -102,7 +102,6 @@ export default defineComponent({
       ...this.$props
     }
     const { blockComponent } = this
-    console.log('block ', blockComponent, props)
     return (
       <div class={['question', props.isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}

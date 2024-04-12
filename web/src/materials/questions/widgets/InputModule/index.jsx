@@ -54,6 +54,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['blur', 'focus', 'input', 'change'],
   setup(props, { emit }) {
     const focusFlag = ref(false);
     const initial = props.textRange.max.value - props.value.length;

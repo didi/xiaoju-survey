@@ -1,5 +1,5 @@
 <template>
-  <Form ref="ruleForm"  :model="formModel" :rules="rules">
+  <Form ref="ruleForm" :model="formModel" :rules="rules">
     <questionWrapper v-for="item in renderData"
       :key="item.field"
       class="gap"

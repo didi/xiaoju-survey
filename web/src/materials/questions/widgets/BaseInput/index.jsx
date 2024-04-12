@@ -51,7 +51,6 @@ export default defineComponent({
       emit('input', e);
     };
     const onChange = (e) => {
-      console.log('input change', e)
       emit('change', e);
     };
     const onFocus = () => {
@@ -83,12 +82,8 @@ export default defineComponent({
           minlength={props.minlength}
           autocomplete={'off'}
           onBlur={this.onBlur}
-          // onInput={this.onInput}
-          // onFocus={this.onFocus}
           onChange={this.onChange}
-        >
-          {this.value}
-         </uiTarget>
+        />
 
         {/* {h(
           uiTarget,

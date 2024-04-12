@@ -102,17 +102,15 @@ export default defineComponent({
       ...this.$props
     }
     const { blockComponent } = this
-    console.log('block ', blockComponent)
+    console.log('block ', blockComponent, props)
     return (
-      <div class={['question', isSelected ? 'isSelected' : '']}>
+      <div class={['question', props.isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}
         <div class="question-block">
           {
             this.blockComponent ? <blockComponent
               readonly
-              options={props.moduleConfig.options}
-              field={props.moduleConfig.field}
-              value={props.moduleConfig.value}
+              {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
               onChange={this.onChange}

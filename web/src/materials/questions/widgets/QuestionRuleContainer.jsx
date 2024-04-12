@@ -9,6 +9,7 @@ import {
   onMounted,
   onBeforeUnmount,
   h,
+  unref,
 } from 'vue';
 import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
@@ -68,10 +69,10 @@ export default defineComponent({
       return !/hidden|mobileHidden/.test(type);
     });
     onMounted(() => {
-      form.$emit && form.$emit('form.addField', instance);
+      // form.$bus.emit && form.$bus.emit('form.addField', instance);
     });
     onBeforeUnmount(() => {
-      form.$emit && form.$emit('form.removeField', instance);
+      // form.$bus.emit && form.$bus.emit('form.removeField', instance);
     });
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger);
@@ -103,7 +104,8 @@ export default defineComponent({
       //  因为有些input的value是bind上去的，所以应该在下一帧再去校验，否则会出现第一次blur没反应
       nextTick(() => {
         // 对填空题单独设置其value
-        let value = form.model[field];
+        let value = unref(form.model)[field];
+        debugger
         validator.validate(
           { [field]: value },
           { firstFields: true },

@@ -76,7 +76,9 @@ export default {
   methods: {
     validate(cbk) {
       const index = 0;
-      this.$refs.main.$refs.formGroup[index].$refs.ruleForm.validate(cbk);
+      this.$refs.main.$refs.formGroup[index].validate(cbk);
+      // console.log(this.$refs.main.$refs.formGroup[index].ruleForm.validate(cbk))
+      // .$refs.;
     },
     onSubmit() {
       const { again_text, is_again } = this.confirmAgain;

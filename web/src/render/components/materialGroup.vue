@@ -1,6 +1,6 @@
 <template>
-  <Form ref="ruleForm" :model="formModel" :rules="rules">
-    <questionWrapper v-for="item in renderData"
+  <form ref="ruleForm" :model="formModel" :rules="rules">
+    <questionWrapper ref="questionWrappers" v-for="(item, index) in renderData"
       :key="item.field"
       class="gap"
       v-bind="$attrs"
@@ -10,45 +10,99 @@
       :showTitle="true"
       @change="handleChange"
     ></questionWrapper>
-  </Form>
+  </form>
 </template>
-<script>
-import { defineComponent, h } from 'vue';
-import Form from './form.vue';
-import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
+<script setup>
 
-export default defineComponent({
-  name: 'MaterialGroup',
-  components: { Form, questionWrapper },
-  props: {
-    rules: {
-      type: Object,
-      default: () => {
-        return {};
-      },
-    },
-    formModel: {
-      type: Object,
-      default: () => {
-        return {};
-      },
-    },
-    renderData: {
-      type: Array,
-      default: () => {
-        return [];
-      },
+import { defineProps, defineEmits, ref, onMounted, provide, computed } from 'vue';
+// import Form from './form.vue';
+import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
+// import store from '../../store'
+const props = defineProps({
+  rules: {
+    type: Object,
+    default: () => {
+      return {};
     },
   },
-  methods: {
-    handleChange(data) {
-      // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
-      // 导致接受到的data是个Event
-      this.$emit('formChange', data);
+  formModel: {
+    type: Object,
+    default: () => {
+      return {};
     },
-    handleBlur() {
-      this.$emit('blur');
+  },
+  renderData: {
+    type: Array,
+    default: () => {
+      return [];
     },
+  },
+})
+// const formModel = computed(() => {
+//       return store.getters.formModel;
+//     })
+const emit = defineEmits(['formChange', 'blur']);
+// 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
+// 导致接受到的data是个Event
+const handleChange = (data) => {
+  emit('formChange', data);
+};
+// 动态 field 管理
+const fields = ref([])
+const ruleForm = ref(null)
+provide(
+  'Form',
+  {
+    model: computed(() => { return props.formModel }),
+    rules: props.rules
   }
-});
+)
+// 题目组件ref
+const questionWrappers = ref([]);
+onMounted(() => {
+  const childInstances = questionWrappers.value;
+  childInstances.forEach((field) => {
+    fields.value.push(field);
+  })
+})
+
+const validate = (callback) => {
+  const length = fields.value.length;
+  if (length === 0) {
+    callback(true);
+  }
+
+  let valid = true;
+  let count = 0;
+  let flag = false; // 滚动到第一个未验证成功的元素
+
+  fields.value.forEach((field) => {
+    field.validate('', (errors) => {
+      count++;
+      if (errors) {
+        if (!flag) {
+          flag = true;
+          try {
+            const el = field.$el;
+            el.scrollIntoViewIfNeeded();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        valid = false;
+      }
+      if (typeof callback === 'function' && count === length) {
+        callback(valid);
+      }
+    });
+  });
+}
+
+defineExpose({
+  validate,
+  fields,
+  ruleForm,
+  questionWrappers,
+})
 </script>
+  

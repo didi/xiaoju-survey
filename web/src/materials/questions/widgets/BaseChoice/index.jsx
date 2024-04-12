@@ -49,6 +49,7 @@ export default defineComponent({
       default: 10,
     },
   },
+  emits: ['change'],
   setup(props, { emit, slots }) {
     const getOptions = computed(() => {
       return props.options;

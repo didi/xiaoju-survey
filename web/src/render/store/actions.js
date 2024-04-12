@@ -88,7 +88,6 @@ export default {
   },
   // 用户输入或者选择后，更新表单数据
   changeData({ commit }, data) {
-    console.log('changeData', data)
     commit('changeFormData', data);
   },
   // 初始化投票题的数据

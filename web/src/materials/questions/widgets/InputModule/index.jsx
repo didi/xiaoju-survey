@@ -95,6 +95,7 @@ export default defineComponent({
       });
     };
     return {
+      props,
       focusFlag,
       getLeftTextNumber,
       onBlur,
@@ -104,28 +105,32 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange, placeholder } =
+    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange, placeholder, props } =
       this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-      type: valid === 'n' ? 'number' : 'text',
-      maxlength: textRange.max.value,
-      minlength: textRange.min.value,
-    };
+    // const props = {
+    //   ...this.$props,
+    //   readonly,
+    //   name: field,
+    //   type: valid === 'n' ? 'number' : 'text',
+    //   maxlength: textRange.max.value,
+    //   minlength: textRange.min.value,
+    // };
     return (
       <baseInput
         uiTarget="input"
-        readonly={readonly}
-        name={field}
-        placeholder={placeholder}
         type={valid === 'n' ? 'number' : 'text'}
+        field={props.field}
+        name={props.field}
+        value={props.value}
+        placeholder={props.placeholder}
+        textRange={props.textRange}
         maxlength={textRange.max.value}
         minlength={textRange.min.value}
+        valid={props.valid}
+        readonly={props.readonly}
         onBlur={this.onBlur}
-        onFocus={this.onFocus}
-        onInput={this.onInput}
+        // onFocus={this.onFocus}
+        // onInput={this.onInput}
         onChange={this.onChange}
       >
         {focusFlag && (

@@ -78,20 +78,21 @@ export default defineComponent({
       });
     };
     return {
+      props,
       onChange,
       handleSelectMoreChange,
       myOptions,
     };
   },
   render() {
-    const { readonly, field, myOptions, onChange } = this;
+    const { readonly, field, myOptions, onChange, props } = this;
 
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-      options: myOptions,
-    };
+    // const props = {
+    //   ...this.$props,
+    //   readonly,
+    //   name: field,
+    //   options: myOptions,
+    // };
     return (
       <BaseChoice
         uiTarget="checkbox"
@@ -99,6 +100,7 @@ export default defineComponent({
         name={field}
         options={myOptions}
         onChange={onChange}
+        value={props.value}
       >
         {{
           selectMore: (scoped) => {

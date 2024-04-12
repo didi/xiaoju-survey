@@ -1,8 +1,14 @@
 <template>
-  <div :class="['question', isSelected ? 'isSelected' : '']">
-    <moduleTitle v-bind="props" v-if="showTitle" />
+  <div :class="['question', props.isSelected ? 'isSelected' : '']">
+    <moduleTitle :indexNumber="props.indexNumber" :title="props.moduleConfig.title"
+      :showType="true" :type="props.type" v-if="showTitle" />
     <div class="question-block">
-      <blockComponent readonly v-bind="props" @blur="onBlur" @focus="onFocus" @change="onChange"></blockComponent>
+      <blockComponent readonly v-bind="props" 
+        :options="props.moduleConfig.options"
+        :field="props.moduleConfig.field"
+        :value="props.moduleConfig.value"
+        @blur="onBlur" @focus="onFocus" @change="onChange">
+      </blockComponent>
     </div>
   </div>
 </template>
@@ -22,11 +28,57 @@ const getBlockComponent = async (type) => {
   return component
 }
 
-const props = defineProps(['type', 'moduleConfig', 'value'])
+const props = defineProps({
+  type: {
+    type: String,
+    default: 'text'
+  },
+  showTitle: {
+    type: Boolean,
+    default: true
+  },
+  indexNumber: {
+    type: [Number, String],
+    default: 1
+  },
+  moduleConfig: {
+    type: Object,
+    default: () => {
+      return {
+        field: 'quiestion01',
+        type: 'text',
+        component: 'InputModule',
+        title: '标题1单行输入框',
+        value: '123444',
+        showType: 'text',
+        placeholder: '请填写',
+        textRange: {
+          max: {
+            placeholder: '500',
+            value: 500
+          },
+          min: {
+            placeholder: '0',
+            value: 0
+          }
+        },
+        valid: 'n'
+      }
+    }
+  },
+  readonly: {
+    type: Boolean,
+    default: false
+  },
+  isSelected: {
+    type: Boolean,
+    default: false
+  }
+})
+const emit = defineEmits(['blur', 'focus', 'change', 'select'])
 
 const blockComponent = shallowRef(null)
 
-console.log('props.type', props.type)
 getBlockComponent(props.type).then(({ component }) => {
   blockComponent.value = component
 })

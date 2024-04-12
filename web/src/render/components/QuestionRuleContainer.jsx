@@ -10,7 +10,7 @@ import {
   onBeforeUnmount,
   h,
 } from 'vue';
-import QuestionContainer from './QuestionContainer.jsx';
+import QuestionContainer from './QuestionContainer.vue';
 import ErrorTip from '@/materials/questions/components/ErrorTip.vue';
 import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
@@ -166,7 +166,6 @@ export default defineComponent({
   },
   render() {
     const { itemClass, validateMessage, props } = this;
-    console.log('props', props)
     return (
       <div
         class={[
@@ -184,11 +183,9 @@ export default defineComponent({
           indexNumber={this.moduleConfig.indexNumber}
           showTitle={this.showTitle}
           readonly={this.readonly}
-          {...props}
           onBlur={this.handleBlur}
-          blur={this.handleBlur}
           onChange={this.handleChange}
-          onClick={this.onClick}
+          // onClick={this.onClick}
         />
         {/* {h(QuestionContainer, {
           props: {

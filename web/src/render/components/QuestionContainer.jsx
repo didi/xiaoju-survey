@@ -65,6 +65,7 @@ export default defineComponent({
   components: {
     moduleTitle
   },
+  emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const blockComponent = shallowRef(null)
     const showEditCom = computed(() => {
@@ -104,26 +105,34 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly, isSelected } = this
+    const { blockComponent } = this
 
     const props = {
-      isSelected,
+      isSelected: this.isSelected,
       ...this.moduleConfig,
       ...this.$props
     }
-    const { blockComponent } = this
     return (
-      <div class={['question', isSelected ? 'isSelected' : '']}>
+      <div class={['question', this.isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}
         <div class="question-block">
-            <blockComponent
-              readonly
-              {...props}
+          {/* 下述写法导致props异常，去掉判断直接写blockComponent会有运行时warning */}
+        { blockComponent 
+          ? <blockComponent
+              readonly={this.readonly}
+              type={this.type}
+              showTitle={this.showTitle}
+              indexNumber={this.indexNumber}
+              moduleConfig={this.moduleConfig}
+              isSelected={this.isSelected}
+              // {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
               onChange={this.onChange}
-              onSelect={this.onSelect}
+              onClick={this.onClick}
             ></blockComponent>
+            : null
+        }
         </div>
       </div>
     )

@@ -67,21 +67,27 @@ export default defineComponent({
       });
     };
     return {
+      props,
       onChange,
       handleSelectMoreChange,
     };
   },
   render() {
-    const { readonly, field, options } = this;
+    const { props } = this;
     
     return (
       <div>
         <baseChoice
           uiTarget="radio"
-          readonly={readonly}
-          name={field}
-          options={options}
-          onChange={(e) => this.onChange(e)}
+          readonly={props.readonly}
+          name={props.field}
+          options={props.options}
+          value={props.value}
+          type={props.type}
+          field={props.field}
+          layout={props.layout}
+
+          onChange={this.onChange}
         >
           {{
             selectMore: (scoped) => {

@@ -42,7 +42,7 @@ export default defineComponent({
       default: '',
     },
   },
-  emits: ['input','change'],
+  emits: ['input','change', 'blur', 'focus'],
   setup(props, { emit, slots }) {
     const onBlur = () => {
       emit('blur');
@@ -51,7 +51,7 @@ export default defineComponent({
       emit('input', e);
     };
     const onChange = (e) => {
-      console.log('e',e)
+      console.log('input change', e)
       emit('change', e);
     };
     const onFocus = () => {
@@ -59,6 +59,7 @@ export default defineComponent({
       emit('focus');
     };
     return {
+      props,
       slots,
       onBlur,
       onInput,
@@ -67,18 +68,19 @@ export default defineComponent({
     };
   },
   render() {
-    const { uiTarget, customClass, slots } = this;
+    const { uiTarget, customClass, slots, props } = this;
     return (
       <div class="input-wrapper">
         <uiTarget
           class={['input-box item-border', customClass]}
-          type={this.type}
-          readonly={this.readonly}
-          placeholder={this.placeholder}
-          name={this.name}
-          value={this.value}
-          maxlength={this.maxlength}
-          minlength={this.minlength}
+          type={props.type}
+          name={props.name}
+          field={props.field}
+          readonly={props.readonly}
+          placeholder={props.placeholder}
+          value={props.value}
+          maxlength={props.maxlength}
+          minlength={props.minlength}
           autocomplete={'off'}
           onBlur={this.onBlur}
           onInput={this.onInput}

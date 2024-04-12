@@ -44,25 +44,23 @@ export default defineComponent({
       });
     };
     return {
+      props,
       onChange,
     };
   },
   render() {
-    const { readonly, field } = this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-    };
+    const { props } = this;
     return (
       <baseChoice
         uiTarget="radio"
-        {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
+        type={props.type}
+        readonly={props.readonly}
+        name={props.field}
+        field={props.field}
+        value={props.value}
+        layout={props.layout}
+        options={props.options}
+        onChange={this.onChange}
       ></baseChoice>
     );
   },

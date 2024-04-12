@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue';
+import { defineComponent, h } from 'vue';
 import '../../common/css/choice.scss';
 import '../../common/css/input.scss';
 
@@ -42,7 +42,7 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
     const onBlur = () => {
       emit('blur');
     };
@@ -57,14 +57,15 @@ export default defineComponent({
       emit('focus');
     };
     return {
+      slots,
       onBlur,
       onInput,
       onFocus,
       onChange,
     };
   },
-  render(h) {
-    const { uiTarget, customClass } = this;
+  render() {
+    const { uiTarget, customClass, slots } = this;
     return (
       <div class="input-wrapper">
         {h(
@@ -72,26 +73,23 @@ export default defineComponent({
           {
             // class: ['input-box','item-border', ],
             class: ['input-box item-border', customClass],
-            attrs: {
-              type: this.type,
-              readonly: this.readonly,
-              placeholder: this.placeholder,
-              name: this.name,
-              value: this.value,
-              maxlength: this.maxlength,
-              minlength: this.minlength,
-              autocomplete: 'off',
-            },
-            on: {
-              blur: this.onBlur,
-              input: this.onInput,
-              focus: this.onFocus,
-              change: this.onChange,
-            },
+            placeholder: this.placeholder,
+            type: this.type,
+            readonly: this.readonly,
+            placeholder: this.placeholder,
+            name: this.name,
+            value: this.value,
+            maxlength: this.maxlength,
+            minlength: this.minlength,
+            autocomplete: 'off',
+            onBlur: this.onBlur,
+            onInput: this.onInput,
+            onFocus: this.onFocus,
+            onChange: this.onChange,
           },
           [this.value]
         )}
-        {this.$slots.default}
+        {slots.default()}
         {/* {this.$scopedSlots.default} */}
         {/* {renderSlot(this.$slots, 'default')}   */}
       </div>

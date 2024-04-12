@@ -13,45 +13,45 @@
       </div>
       <div>
         <draggable :list="curOptions" :options="{ handle: '.drag-handle' }">
-          <div
-            class="option-item"
-            v-for="(optionItem, index) in curOptions"
-            :key="optionItem.hash"
-          >
-            <span class="drag-handle qicon qicon-tuodong"></span>
-            <div class="flex-1 oitem" v-if="showText">
-              <div
-                contenteditable="true"
-                class="render-html"
-                v-safe-html="textOptions[index]"
-                @blur="onBlur($event, index)"
-              ></div>
-            </div>
-            <div class="oitem moreInfo lh36" v-if="showOthers">
-              <el-switch
-                :value="optionItem.others"
-                @change="(val) => changeOptionOthers(val, optionItem)"
-              ></el-switch>
-              <div class="more-info-content" v-if="optionItem.others">
-                <el-input
-                  v-model="optionItem.placeholderDesc"
-                  placeholder="提示文案"
-                ></el-input>
-                <el-checkbox v-model="optionItem.mustOthers">必填</el-checkbox>
+          <template #item="{optionItem, index}">
+            <div
+              class="option-item"
+            >
+              <span class="drag-handle qicon qicon-tuodong"></span>
+              <div class="flex-1 oitem" v-if="showText">
+                <div
+                  contenteditable="true"
+                  class="render-html"
+                  v-safe-html="textOptions[index]"
+                  @blur="onBlur($event, index)"
+                ></div>
+              </div>
+              <div class="oitem moreInfo lh36" v-if="showOthers">
+                <el-switch
+                  :modelValue="optionItem.others"
+                  @change="(val) => changeOptionOthers(val, optionItem)"
+                ></el-switch>
+                <div class="more-info-content" v-if="optionItem.others">
+                  <el-input
+                    v-model="optionItem.placeholderDesc"
+                    placeholder="提示文案"
+                  ></el-input>
+                  <el-checkbox v-model="optionItem.mustOthers">必填</el-checkbox>
+                </div>
+              </div>
+              <div class="operate-area" v-if="showOperateOption">
+                <i
+                  class="add el-icon-circle-plus-outline"
+                  @click="addOption('选项', false, index)"
+                ></i>
+                <i
+                  class="el-icon-remove-outline"
+                  v-show="curOptions.length > 1"
+                  @click="deleteOption(index)"
+                ></i>
               </div>
             </div>
-            <div class="operate-area" v-if="showOperateOption">
-              <i
-                class="add el-icon-circle-plus-outline"
-                @click="addOption('选项', false, index)"
-              ></i>
-              <i
-                class="el-icon-remove-outline"
-                v-show="curOptions.length > 1"
-                @click="deleteOption(index)"
-              ></i>
-            </div>
-          </div>
+          </template>
         </draggable>
       </div>
       <div class="add-btn-row">
@@ -78,17 +78,19 @@
         </div>
       </div>
     </div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="configVisible = false">取消</el-button>
-      <el-button type="primary" @click="optionConfigChange">确认</el-button>
-    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="configVisible = false">取消</el-button>
+        <el-button type="primary" @click="optionConfigChange">确认</el-button>
+      </span>
+  </template>
   </el-dialog>
 </template>
 
 <script>
 import draggable from 'vuedraggable';
 import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es';
-import ExtraIcon from '../ExtraIcon';
+import ExtraIcon from '../ExtraIcon.vue';
 import { cleanRichText } from '@/common/xss';
 
 export default {
@@ -337,7 +339,7 @@ export default {
           border-radius: 2px;
           .el-input {
             width: 150px;
-            ::v-deep .el-input__inner {
+            :deep(.el-input__inner) {
               border: none;
             }
           }

@@ -9,6 +9,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: 'Success',
@@ -20,11 +21,12 @@ export default {
   },
   computed: {
     successText() {
-      return this.moduleConfig?.submitConf?.msgContent?.msg_200 || '';
+      return this.moduleConfig?.submitConf?.msgContent?.msg_200 || ''
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 /*成功页面跳转全屏展示浮层*/
 .suc-page {
@@ -53,7 +55,7 @@ export default {
   margin-bottom: 0.4rem;
   font-size: 0.36rem;
   color: #666;
-  ::v-deep * {
+  :deep(*) {
     font-size: 0.36rem;
   }
 }

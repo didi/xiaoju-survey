@@ -11,7 +11,7 @@
             <el-input
               size="small"
               class="cru-content"
-              :value="getFullUrl(data)"
+              :model-value="getFullUrl(data)"
               readonly="readonly"
             />
           </div>
@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import QRCode from './QRCode';
-import Clipboard from 'clipboard';
+import QRCode from './QRCode.vue'
+import Clipboard from 'clipboard'
 
 export default {
   name: 'ChannelRow',
@@ -60,24 +60,24 @@ export default {
   props: ['data', 'styleWrap'],
   methods: {
     handleCopy() {
-      const clipboard = new Clipboard('.j-copy');
+      const clipboard = new Clipboard('.j-copy')
       clipboard.on('success', (e) => {
         this.$message({
           type: 'success',
           message: `已复制渠道链接：${e.text}`,
-        });
-      });
+        })
+      })
     },
     openPage(url) {
-      window.open(url);
+      window.open(url)
     },
     getFullUrl(v) {
-      const url = v.fullUrl;
-      const protocol = window.location.protocol;
-      return `${protocol}//${url.split('//')[1]}`;
+      const url = v.fullUrl
+      const protocol = window.location.protocol
+      return `${protocol}//${url.split('//')[1]}`
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -134,7 +134,7 @@ export default {
         background: $background-color-gray;
       }
 
-      ::v-deep .font23 {
+      :deep(.font23) {
         font-size: 23px;
       }
     }

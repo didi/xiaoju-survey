@@ -139,11 +139,11 @@ const onMoreDataChange = (data) => {
     }
   }
   @media (max-width: 930px) {
-    ::v-deep .question-block {
+    :deep(.question-block) {
       padding: 0;
     }
   }
-  ::v-deep .radio-nps-hover {
+  :deep(.radio-nps-hover) {
     .star-item {
       &:hover {
         background-color: $primary-color;

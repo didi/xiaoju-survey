@@ -135,7 +135,7 @@ export default defineComponent({
             onChange={this.handleChange}
           />
         ) : (
-          this.$slots.default
+          this.$slots.default()
         )}
         {this.showOptionEditBar && (
           <OptionEditBar

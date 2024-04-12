@@ -1,8 +1,8 @@
 <template>
   <div class="range-wrapper">
-    <el-input-number :value="minValue" @change="changeDataMin" :min="0" />
+    <el-input-number :modelValue="minValue" @change="changeDataMin" :min="0" />
     <span class="split-text">至</span>
-    <el-input-number :value="maxValue" @change="changeDataMax" :min="0" />
+    <el-input-number :modelValue="maxValue" @change="changeDataMax" :min="0" />
   </div>
 </template>
 <script>
@@ -68,10 +68,8 @@ export default {
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .range-wrapper {
-  ::v-deep .el-form-item {
-    .el-form-item__content .el-input-number {
+  .el-input-number {
       width: 40%;
-    }
   }
 
   .split-text {

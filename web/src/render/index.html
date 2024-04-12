@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="/imgs/favicon.ico">
+  <title></title>
+  <script>
+    (function () {
+      function resetRemUnit() {
+        var PC_W = 750;
+        var docEl = window.document.documentElement;
+        var width = docEl.getBoundingClientRect().width || 375;
+
+        if (!(/Android|webOS|iPhone|iPad|iPod|BlackBerry/i).test(navigator.userAgent)) {
+          width = width < PC_W ? width : PC_W;
+          docEl.className += ' ispc-html';
+        }
+
+        var f = Math.min(width / 7.5, 50);
+        docEl.style.fontSize = f + 'px';
+
+        var d = window.document.createElement('div');
+        d.style.width = '1rem';
+        d.style.display = "none";
+        var head = window.document.getElementsByTagName('head')[0];
+        head.appendChild(d);
+        var realf = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'));
+
+        if (f !== realf) {
+          docEl.style.fontSize = f * (f / realf) + 'px';
+        }
+      }
+      resetRemUnit();
+      window.addEventListener('resize', resetRemUnit);
+    })();
+  </script>
+  <style></style>
+</head>
+
+<body>
+  <div id="app"></div>
+</body>
+
+</html>

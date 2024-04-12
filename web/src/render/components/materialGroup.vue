@@ -1,11 +1,25 @@
+<template>
+  <Form ref="ruleForm" :props="{ model: formModel }" :rules="rules">
+    <questionWrapper v-for="item in renderData"
+      :key="item.field"
+      class="gap"
+      v-bind="$attrs"
+      :moduleConfig="item"
+      :qIndex="item.qIndex"
+      :indexNumber="item.indexNumber"
+      :showTitle="true"
+      @change="handleChange"
+    ></questionWrapper>
+  </Form>
+</template>
 <script>
-import { defineComponent } from 'vue';
-import Form from './form';
+import { defineComponent, h } from 'vue';
+import Form from './form.vue';
 import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
 
 export default defineComponent({
   name: 'MaterialGroup',
-  components: { Form },
+  components: { Form, questionWrapper },
   props: {
     rules: {
       type: Object,
@@ -26,40 +40,13 @@ export default defineComponent({
       },
     },
   },
-  setup(props, { emit }) {
-    const handleChange = (data) => {
-      emit('change', data);
-    };
-    const handleBlur = () => {
-      emit('blur');
-    };
-    return {
-      handleChange,
-      handleBlur,
-    };
-  },
-  render(h) {
-    const { formModel } = this;
-    return (
-      <Form ref="ruleForm" props={{ model: formModel }} rules={this.rules}>
-        {this.renderData.map((item) => {
-          return h(questionWrapper, {
-            key: item.field,
-            class: 'gap',
-            props: {
-              moduleConfig: item,
-              qIndex: item.qIndex,
-              indexNumber: item.indexNumber,
-              showTitle: true,
-            },
-            on: {
-              ...this.$listeners,
-              change: this.handleChange,
-            },
-          });
-        })}
-      </Form>
-    );
-  },
+  methods: {
+    handleChange(data) {
+      this.$emit('change', data);
+    },
+    handleBlur() {
+      this.$emit('blur');
+    },
+  }
 });
 </script>

@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import OptionConfig from '@/materials/questions/components/AdvancedConfig/OptionConfig.vue';
 import RateConfig from '../AdvancedConfig/RateConfig.vue';
 import { defineComponent, ref, computed, inject } from 'vue';
@@ -183,10 +183,10 @@ export default defineComponent({
 }
 
 .nps-rate-config {
-  ::v-deep .row {
+  :deep(.row) {
     height: 47px;
   }
-  ::v-deep .text {
+  :deep(.text) {
     input {
       height: 32px;
     }

@@ -7,29 +7,35 @@
         <span class="sv-text">
           {{ saveText }}
         </span>
-        <i class="icon el-icon-loading" v-if="autoSaveStatus === 'saving'"></i>
-        <i
-          class="icon succeed el-icon-check"
-          v-else-if="autoSaveStatus === 'succeed'"
-        ></i>
+        <el-icon class="icon" v-if="autoSaveStatus === 'saving'"><el-icon-loading /></el-icon>
+        <el-icon class="icon succeed"  v-else-if="autoSaveStatus === 'succeed'"><el-icon-check /></el-icon>
       </div>
     </transition>
   </div>
 </template>
+
 <script>
-import { saveSurvey } from '@/management/api/survey';
-import buildData from './buildData';
-import { mapState } from 'vuex';
-import { get as _get } from 'lodash-es';
+import {
+  Loading as ElIconLoading,
+  Check as ElIconCheck,
+} from '@element-plus/icons-vue'
+import { saveSurvey } from '@/management/api/survey'
+import buildData from './buildData'
+import { mapState } from 'vuex'
+import { get as _get } from 'lodash-es'
 
 export default {
+  components: {
+    ElIconLoading,
+    ElIconCheck,
+  },
   name: 'save',
   data() {
     return {
       isSaving: false,
       isShowAutoSave: false,
       autoSaveStatus: 'succeed',
-    };
+    }
   },
   computed: {
     ...mapState({
@@ -40,13 +46,13 @@ export default {
         saving: '保存中',
         succeed: '保存成功',
         failed: '保存失败',
-      };
-      return statusMap[this.autoSaveStatus];
+      }
+      return statusMap[this.autoSaveStatus]
     },
   },
   watch: {
     schemaUpdateTime() {
-      this.triggerAutoSave();
+      this.triggerAutoSave()
     },
   },
   methods: {
@@ -54,68 +60,69 @@ export default {
       if (this.autoSaveStatus === 'saving') {
         // 正在调用接口
         setTimeout(() => {
-          this.triggerAutoSave();
-        }, 1000);
+          this.triggerAutoSave()
+        }, 1000)
       } else {
         if (this.timer) {
-          clearTimeout(this.timer);
+          clearTimeout(this.timer)
         }
         this.timer = setTimeout(() => {
-          this.autoSaveStatus = 'saving';
-          this.isShowAutoSave = true;
+          this.autoSaveStatus = 'saving'
+          this.isShowAutoSave = true
           this.$nextTick(() => {
             this.saveData()
               .then((res) => {
                 if (res.code === 200) {
-                  this.autoSaveStatus = 'succeed';
+                  this.autoSaveStatus = 'succeed'
                 } else {
-                  this.autoSaveStatus = 'failed';
+                  this.autoSaveStatus = 'failed'
                 }
                 setTimeout(() => {
-                  this.isShowAutoSave = false;
-                  this.timer = null;
-                }, 300);
+                  this.isShowAutoSave = false
+                  this.timer = null
+                }, 300)
               })
               .catch(() => {
-                this.timer = null;
-                this.autoSaveStatus = 'failed';
-                this.isShowAutoSave = true;
-              });
-          });
-        }, 2000);
+                this.timer = null
+                this.autoSaveStatus = 'failed'
+                this.isShowAutoSave = true
+              })
+          })
+        }, 2000)
       }
     },
     async saveData() {
-      const saveData = buildData(this.$store.state.edit.schema);
+      const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
-        this.$message.error('未获取到问卷id');
-        return null;
+        this.$message.error('未获取到问卷id')
+        return null
       }
-      const res = await saveSurvey(saveData);
-      return res;
+      const res = await saveSurvey(saveData)
+      return res
     },
     async onSave() {
       if (this.isSaving) {
-        return;
+        return
       }
-      this.isShowAutoSave = false;
+      this.isShowAutoSave = false
       try {
-        this.isSaving = true;
-        const res = await this.saveData();
+        this.isSaving = true
+        const res = await this.saveData()
         if (res.code === 200) {
-          this.$message.success('保存成功');
+          this.$message.success('保存成功')
         } else {
-          this.$message.error(res.errmsg);
+          this.$message.error(res.errmsg)
         }
       } catch (error) {
-        this.$message.error('保存问卷失败');
+        this.$message.error('保存问卷失败')
       } finally {
-        this.isSaving = false;
+        this.isSaving = false
       }
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
 

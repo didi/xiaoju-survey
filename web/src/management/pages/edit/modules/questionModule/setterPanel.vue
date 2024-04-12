@@ -26,11 +26,11 @@ export default {
   data() {
     return {
       tabSelected: '0',
-    };
+    }
   },
   computed: {
     currentEditOne() {
-      return this.$store.state?.edit?.currentEditOne;
+      return this.$store.state?.edit?.currentEditOne
     },
     ...mapGetters({
       formConfigList: 'edit/formConfigList',
@@ -44,13 +44,14 @@ export default {
   },
   methods: {
     onFormChange(data) {
-      const { key, value } = data;
-      const resultKey = `${this.currentEditKey}.${key}`;
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value });
+      const { key, value } = data
+      const resultKey = `${this.currentEditKey}.${key}`
+      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .setter-wrapper {
   width: 360px;

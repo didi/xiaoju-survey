@@ -1,118 +1,111 @@
 <template>
   <div class="editor-wrapper border">
-    <div class="toolbar" ref="toolbar" v-show="showToolbar"></div>
-    <div class="editor" ref="editor"></div>
+    <Toolbar
+      :class="['toolbar',props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']"
+      ref="toolbar"
+      v-show="showToolbar"
+      :editor="editorRef"
+      :defaultConfig="toolbarConfig"
+      :mode="mode"
+    />
+    <Editor
+      class="editor"
+      ref="editor"
+      :modelValue="curValue"
+      :defaultConfig="editorConfig"
+      @onCreated="onCreated"
+      @onChange="onChange"
+      @onBlur="onBlur"
+      @onFocus="onFocus"
+      :mode="mode"
+    />
   </div>
 </template>
 
-<script>
-import { createEditor, createToolbar } from '@wangeditor/editor';
+<script setup>
+import '@wangeditor/editor/dist/css/style.css'
+import '@/management/styles/reset-wangeditor.scss'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { ref, shallowRef, onBeforeMount, watch } from 'vue';
 
-export default {
-  name: 'richEditor',
-  data() {
-    return {
-      curValue: '',
-      editor: null,
-      showToolbar: false,
-    };
-  },
-  props: ['value'], // value 用于自定义 v-model
-  mounted() {
-    this.create();
-  },
-  watch: {
-    value: {
-      immediate: true,
-      handler(newVal) {
-        const isEqual = newVal === this.curValue;
-        if (isEqual) return; // 和当前内容一样，则忽略
+const emit = defineEmits(['input', 'onFocus', 'change', 'blur'])
+const model = defineModel()
+const props = defineProps(['staticToolBar'])
 
-        // 重置 HTML
-        this.setHtml(newVal);
-      },
-    },
-  },
-  methods: {
+const curValue = ref('')
+const editorRef = shallowRef()
+const showToolbar = ref(props.staticToolBar || false)
+
+const mode = 'simple'
+
+const toolbarConfig = {
+  toolbarKeys: [
+    'color', // 字体色
+    'bgColor', // 背景色
+    'bold',
+    'insertLink', // 链接
+  ],
+}
+
+const editorConfig = {}
+
+const setHtml = (newHtml) => {
+  const editor = editorRef.value;
+  if (editor == null) return;
+  editor.setHtml(newHtml);
+}
+
+const onCreated = (editor) => {
+  editorRef.value = editor
+  if (model.value) {
+    setHtml(model.value);
+  }
+}
+const onChange = (editor) => {
+  const editorHtml = editor.getHtml();
+  curValue.value = editorHtml; // 记录当前 html 内容
+  emit('input', editorHtml); // 用于自定义 v-model
+}
+const onFocus = (editor) => {
+  emit('onFocus', editor);
+  setToolbarStatus(true);
+}
+const onBlur = (editor) => {
+  const editorHtml = editor.getHtml();
+  curValue.value = editorHtml; // 记录当前 html 内容
+  emit('change', editorHtml);
+  emit('blur', editor);
+  setToolbarStatus(false);
+}
+
+const setToolbarStatus = (status) => {
+  if(props.staticToolBar) return
+  showToolbar.value = status
+
+}
+
+watch(
+  () => model.value,
+  (newVal) => {
+    const isEqual = newVal === curValue.value;
+    if (isEqual) return; // 和当前内容一样，则忽略
+
     // 重置 HTML
-    setHtml(newHtml) {
-      const editor = this.editor;
-      if (editor === null) return;
-      editor.setHtml(newHtml);
-    },
-    // 创建 editor
-    create() {
-      if (this.$refs.editor === null) return;
-
-      createEditor({
-        selector: this.$refs.editor,
-        html: this.defaultHtml || this.value || '',
-        config: {
-          onCreated: (editor) => {
-            this.editor = Object.seal(editor);
-
-            if (this.value) {
-              this.setHtml(this.value);
-            }
-
-            this.$refs.toolbar &&
-              createToolbar({
-                editor,
-                selector: this.$refs.toolbar,
-                config: {
-                  toolbarKeys: [
-                    'color', // 字体色
-                    'bgColor', // 背景色
-                    'bold',
-                    // 'insertImage', // 插入图片
-                    // 'video',
-                    // 'fontSize', // 字号
-                    // 'justify', // 对齐方式
-                    'insertLink', // 链接
-                    // 'clean',
-                  ],
-                },
-                mode: 'simple',
-              });
-          },
-          onChange: (editor) => {
-            const editorHtml = editor.getHtml();
-            this.curValue = editorHtml; // 记录当前 html 内容
-            this.$emit('input', editorHtml); // 用于自定义 v-model
-          },
-          onDestroyed: (editor) => {
-            this.$emit('onDestroyed', editor);
-            editor.destroy();
-          },
-          onFocus: (editor) => {
-            this.$emit('onFocus', editor);
-            this.showToolbar = true;
-          },
-          onBlur: (editor) => {
-            const editorHtml = editor.getHtml();
-            this.curValue = editorHtml; // 记录当前 html 内容
-            this.$emit('change', editorHtml);
-            this.$emit('blur', editor);
-            this.showToolbar = false;
-          },
-          // customPaste: (editor, event) => {
-          //   let res;
-          //   this.$emit('customPaste', editor, event, (val) => {
-          //     res = val;
-          //   });
-          //   return res;
-          // },
-        },
-        content: [],
-        mode: 'simple',
-      });
-    },
+    setHtml(newVal);
   },
-};
+  {
+    // immediate: true
+  }
+)
+
+onBeforeMount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
 </script>
 <style lang="scss" scoped>
-@import url('@wangeditor/editor/dist/css/style.css');
-@import url('@/management/styles/reset-wangeditor.scss');
 
 .editor-wrapper {
   position: relative;
@@ -120,7 +113,10 @@ export default {
   // min-height: 45px;
 }
 
-.toolbar {
+.static-toolbar {
+  border-bottom: 1px solid #dedede;
+}
+.dynamic-toolbar {
   position: absolute;
   left: 0;
   top: -44px;

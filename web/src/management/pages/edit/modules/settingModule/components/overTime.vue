@@ -4,6 +4,7 @@
     <p class="title-msg" v-safe-html="resultText"></p>
   </div>
 </template>
+
 <script>
 export default {
   name: 'OverTime',
@@ -15,13 +16,12 @@ export default {
   },
   computed: {
     resultText() {
-      return (
-        this.moduleConfig?.submitConf?.msgContent?.msg_9001 || '问卷已过期'
-      );
+      return this.moduleConfig?.submitConf?.msgContent?.msg_9001 || '问卷已过期'
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .over-time {
   text-align: center;

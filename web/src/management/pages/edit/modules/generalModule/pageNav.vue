@@ -1,9 +1,7 @@
 <template>
   <div class="content">
-    <template v-for="btnItem in btnList">
+    <template v-for="btnItem in btnList" :key="btnItem.key">
       <router-link
-        class="navbar-btn"
-        :key="btnItem.key"
         :to="{ name: btnItem.router }"
         tag="div"
         replace
@@ -12,6 +10,7 @@
       >
       <div
         :class="[
+          'navbar-btn',
           (isActive && btnItem.key === 'skinsettings'  ) || isExactActive ? 'router-link-exact-active' : '']"
       >
         <i class="iconfont" :class="[btnItem.icon]"></i>
@@ -23,6 +22,7 @@
     </template>
   </div>
 </template>
+
 <script>
 export default {
   name: 'pageNav',
@@ -52,10 +52,11 @@ export default {
           next: true,
         },
       ],
-    };
+    }
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .content {
   display: flex;

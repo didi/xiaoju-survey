@@ -52,7 +52,6 @@
           >
           <el-button
             :loading="registerPending"
-            size="small"
             class="button register-button"
             @click="submitForm('formData', 'register')"
             >注册</el-button
@@ -62,10 +61,11 @@
     </div>
   </div>
 </template>
+
 <script>
-import { login, register } from '@/management/api/auth';
-import { refreshCaptcha } from '@/management/api/captcha';
-import { CODE_MAP } from '@/management/api/base';
+import { login, register } from '@/management/api/auth'
+import { refreshCaptcha } from '@/management/api/captcha'
+import { CODE_MAP } from '@/management/api/base'
 export default {
   name: 'loginPage',
   data() {
@@ -106,10 +106,10 @@ export default {
       loginPending: false,
       registerPending: false,
       captchaImgData: '',
-    };
+    }
   },
   created() {
-    this.refreshCaptcha();
+    this.refreshCaptcha()
   },
   methods: {
     submitForm(formName, type) {
@@ -119,57 +119,58 @@ export default {
             const submitTypes = {
               login,
               register,
-            };
-            this[`${type}Pending`] = true;
+            }
+            this[`${type}Pending`] = true
             const res = await submitTypes[type]({
               username: this.formData.name,
               password: this.formData.password,
               captcha: this.formData.captcha,
               captchaId: this.formData.captchaId,
-            });
-            this[`${type}Pending`] = false;
+            })
+            this[`${type}Pending`] = false
             if (res.code !== CODE_MAP.SUCCESS) {
-              this.$message.error(res.errmsg);
-              throw new Error('登录/注册失败' + res.errmsg);
+              this.$message.error(res.errmsg)
+              throw new Error('登录/注册失败' + res.errmsg)
             }
             this.$store.dispatch('user/login', {
               username: res.data.username,
               token: res.data.token,
-            });
+            })
             let redirect = {
               name: 'survey',
-            };
-            if (this.$route.query.redirect) {
-              redirect = decodeURIComponent(this.$route.query.redirect);
             }
-            this.$router.replace(redirect);
+            if (this.$route.query.redirect) {
+              redirect = decodeURIComponent(this.$route.query.redirect)
+            }
+            this.$router.replace(redirect)
           } catch (error) {
-            this[`${type}Pending`] = false;
-            console.log(error);
+            this[`${type}Pending`] = false
+            console.log(error)
           }
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async refreshCaptcha() {
       try {
         const res = await refreshCaptcha({
           captchaId: this.formData.captchaId,
-        });
+        })
         if (res.code === 200) {
-          const { id, img } = res.data;
-          this.formData.captchaId = id;
-          this.captchaImgData = img;
+          const { id, img } = res.data
+          this.formData.captchaId = id
+          this.captchaImgData = img
         }
       } catch (error) {
-        this.$message.error('获取验证码失败');
+        this.$message.error('获取验证码失败')
       }
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .login-page {
   overflow: hidden;
@@ -236,7 +237,7 @@ export default {
     .captcha-img {
       height: 40px;
       cursor: pointer;
-      ::v-deep > svg {
+      :deep(> svg) {
         max-height: 40px;
       }
     }

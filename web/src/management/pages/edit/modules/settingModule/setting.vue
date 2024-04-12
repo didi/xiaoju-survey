@@ -10,14 +10,12 @@
           </div>
           <el-form
             class="question-config-form"
-            size="small"
             label-position="left"
             label-width="200px"
             @submit.native.prevent
           >
-            <template v-for="(item, index) in form.formList">
+            <template v-for="(item, index) in form.formList" :key="index">
               <FormItem
-                :key="index"
                 v-if="
                   item.type && !item.hidden && Boolean(registerd[item.type])
                 "
@@ -39,16 +37,17 @@
     </div>
   </div>
 </template>
+
 <script>
-import baseConfig from './config/baseConfig';
-import baseFormConfig from './config/baseFormConfig';
-import FormItem from '@/materials/setters/widgets/FormItem.vue';
-import setterLoader from '@/materials/setters/setterLoader';
+import baseConfig from './config/baseConfig'
+import baseFormConfig from './config/baseFormConfig'
+import FormItem from '@/materials/setters/widgets/FormItem.vue'
+import setterLoader from '@/materials/setters/setterLoader'
 import {
   cloneDeep as _cloneDeep,
   isArray as _isArray,
   get as _get,
-} from 'lodash-es';
+} from 'lodash-es'
 
 export default {
   name: 'QuestionConfig',
@@ -59,58 +58,58 @@ export default {
     return {
       formConfigList: [],
       registerd: {},
-    };
+    }
   },
   methods: {
     onFormChange(data) {
       this.$store.dispatch('edit/changeSchema', {
         key: data.key,
         value: data.value,
-      });
+      })
     },
   },
   computed: {
     allSetters() {
-      const formList = this.formConfigList.map((item) => item.formList).flat();
+      const formList = this.formConfigList.map((item) => item.formList).flat()
       const typeList = formList.map((item) => ({
         type: item.type,
         path: item.path || item.type,
-      }));
-      return typeList;
+      }))
+      return typeList
     },
     renderData() {
       // todo: 1、给formConfig组装value；2、新增dataConfig字段
-      const formConfigList = _cloneDeep(this.formConfigList);
+      const formConfigList = _cloneDeep(this.formConfigList)
 
       return formConfigList.map((form) => {
-        const dataConfig = {};
+        const dataConfig = {}
         for (const formItem of form.formList) {
-          const formKey = formItem.key ? formItem.key : formItem.keys;
-          let formValue;
+          const formKey = formItem.key ? formItem.key : formItem.keys
+          let formValue
           if (_isArray(formKey)) {
-            formValue = [];
+            formValue = []
             for (const key of formKey) {
               const val = _get(
                 this.$store.state.edit.schema,
                 key,
                 formItem.value
-              );
-              formValue.push(val);
-              dataConfig[key] = val;
+              )
+              formValue.push(val)
+              dataConfig[key] = val
             }
           } else {
             formValue = _get(
               this.$store.state.edit.schema,
               formKey,
               formItem.value
-            );
-            dataConfig[formKey] = formValue;
+            )
+            dataConfig[formKey] = formValue
           }
-          formItem.value = formValue;
+          formItem.value = formValue
         }
-        form.dataConfig = dataConfig;
-        return form;
-      });
+        form.dataConfig = dataConfig
+        return form
+      })
     },
   },
   async created() {
@@ -120,24 +119,25 @@ export default {
         formList: item.formList
           .map((key) => baseFormConfig[key])
           .filter((config) => !!config),
-      };
-    });
+      }
+    })
 
-    const comps = await setterLoader.loadComponents(this.allSetters);
+    const comps = await setterLoader.loadComponents(this.allSetters)
     for (const comp of comps) {
       if (!comp) {
-        continue;
+        continue
       }
-      const { type, component, err } = comp;
+      const { type, component, err } = comp
       if (!err) {
-        const componentName = component.name;
-        this.$options.components[componentName] = component;
-        this.$set(this.registerd, type, componentName);
+        const componentName = component.name
+        this.$options.components[componentName] = component
+        this.registerd[type] = componentName
       }
     }
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-config {
   width: 100%;
@@ -177,7 +177,7 @@ export default {
             &:after {
               position: absolute;
               left: 0;
-              top: 41px;
+              top: 42px;
               width: 100%;
               height: 3px;
               background-color: $primary-color;
@@ -191,7 +191,7 @@ export default {
           padding-top: 15px;
           padding-right: 1rem;
 
-          ::v-deep .star-form.star-form_horizon .star-form-label {
+          :deep(.star-form.star-form_horizon .star-form-label) {
             display: inline-block;
             width: 3.4rem;
             text-align: left;

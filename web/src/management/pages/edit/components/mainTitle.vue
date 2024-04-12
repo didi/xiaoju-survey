@@ -2,19 +2,20 @@
   <div class="title-wrapper" @click="handleClick()">
     <div class="main-title" :class="{ active: isSelected }" >
       <richEditor
-        :value="bannerConf?.titleConfig?.mainTitle"
+        :modelValue="bannerConf?.titleConfig?.mainTitle"
         @input="onTitleInput"
       ></richEditor>
     </div>
   </div>
 </template>
+
 <script>
-import richEditor from '@/common/Editor/RichEditor';
+import richEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
   name: 'mainTitlePreview',
   data() {
-    return {};
+    return {}
   },
   props: {
     preview: {
@@ -31,27 +32,24 @@ export default {
   computed: {},
   methods: {
     handleClick() {
-      if(this.preview) {
-        return false
-      } else {
-        this.$emit('select');
-      }
+      this.$emit('select')
     },
     onTitleInput(val) {
       if (!this.isSelected) {
-        return;
+        return
       }
       this.$emit('change', {
         key: 'titleConfig.mainTitle',
         value: val,
-      });
+      })
     },
   },
   components: {
     richEditor,
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .title-wrapper {
   padding: 15px;
@@ -65,7 +63,7 @@ export default {
     background-color: #f6f7f9;
     box-shadow: 0 0 5px #dedede;
 
-    ::v-deep .w-e-text-container {
+    :deep(.w-e-text-container) {
       background-color: #f6f7f9;
     }
   }

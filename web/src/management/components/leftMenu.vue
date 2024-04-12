@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import logo from './logo.vue';
+import logo from './logo.vue'
 
 export default {
   name: 'leftMenu',
@@ -49,9 +49,9 @@ export default {
           },
         },
       ],
-    };
+    }
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

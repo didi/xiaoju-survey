@@ -1,3 +1,4 @@
+
 export default [
   {
     label: '顶部图片地址',
@@ -37,5 +38,22 @@ export default [
     relyFunc: (data) => {
       return !!data?.bgImageAllowJump;
     },
+    content: [
+      {
+        label: '图片支持点击',
+        type: 'CustomedSwitch',
+        direction: 'space_between',
+        key: 'bannerConfig.bgImageAllowJump',
+      },
+      {
+        label: '跳转链接',
+        type: 'Input',
+        direction: 'horizon',
+        key: 'bannerConfig.bgImageJumpLink',
+        relyFunc: (data) => {
+          return !!data?.bannerConfig?.bgImageAllowJump
+        },
+      },
+    ],
   },
-];
+]

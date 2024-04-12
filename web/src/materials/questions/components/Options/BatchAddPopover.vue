@@ -3,7 +3,7 @@
     class="mypopover"
     placement="right"
     width="440"
-    v-model="visible"
+    v-model:visible="visible"
     trigger="click"
   >
     <div class="mypopover-body">
@@ -17,8 +17,8 @@
       </div>
       <el-input type="textarea" rows="7" v-model="myValue"></el-input>
       <div class="mypopover-body-footer">
-        <el-button size="mini" type="text" @click="handleClose">取消</el-button>
-        <el-button type="primary" size="mini" @click="handleConfirm"
+        <el-button size="small" link @click="handleClose">取消</el-button>
+        <el-button type="primary" @click="handleConfirm"
           >确定</el-button
         >
       </div>

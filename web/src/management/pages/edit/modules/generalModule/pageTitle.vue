@@ -3,6 +3,7 @@
     {{ title }}
   </div>
 </template>
+
 <script>
 export default {
   name: 'pageTitle',
@@ -12,8 +13,9 @@ export default {
       default: '',
     },
   },
-};
+}
 </script>
+
 <style lang="scss" scoped>
 .title {
   overflow: hidden;

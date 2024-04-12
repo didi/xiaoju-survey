@@ -6,8 +6,9 @@
     }}</span>
   </span>
 </template>
+
 <script>
-import { type as surveyType } from '../config';
+import { type as surveyType } from '../config'
 export default {
   name: 'Tag',
   props: {
@@ -17,10 +18,11 @@ export default {
   data() {
     return {
       surveyType,
-    };
+    }
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .list-tag-root {
   display: inline-block;

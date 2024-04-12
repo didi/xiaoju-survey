@@ -8,6 +8,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   props: {
@@ -20,20 +21,21 @@ export default {
   data() {
     return {
       img: '/imgs/s-logo.webp',
-    };
+    }
   },
   methods: {
     toHomePage() {
       this.$router.replace({
         name: 'survey',
-      });
+      })
     },
     onBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .nav-header {
   z-index: 99;

@@ -15,4 +15,4 @@ export default [
     direction: 'horizon',
     labelStyle: { width: '120px' }
   },
-];
+]

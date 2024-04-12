@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import {
   defineComponent,
   reactive,
@@ -119,6 +119,7 @@ export default defineComponent({
     //   })
     //   state.isHover = false
     // }
+    const onMove = () => {}
     return {
       ...toRefs(state),
       itemClass,
@@ -127,6 +128,7 @@ export default defineComponent({
       showDown,
       showCopy,
       onCopy,
+      onMove,
       onMoveUp,
       onMoveDown,
       onDelete,
@@ -148,35 +150,35 @@ export default defineComponent({
         onClick={this.clickFormItem}
       >
         {this.moduleConfig.type !== 'section' && (
-          <div>{this.$slots.default}</div>
+          <div>{this.$slots.default()}</div>
         )}
         {
           <div class={[showHover ? 'visibily' : 'hidden', 'hoverItem']}>
             <div
               class="item move el-icon-rank"
-              vOn:click_stop_prevent={this.onMove}
+              onClick_stop_prevent={this.onMove}
             ></div>
             {showUp && (
               <div
                 class="item iconfont icon-shangyi"
-                vOn:click_stop_prevent={this.onMoveUp}
+                onClick_stop_prevent={this.onMoveUp}
               ></div>
             )}
             {showDown && (
               <div
                 class="item iconfont icon-xiayi"
-                vOn:click_stop_prevent={this.onMoveDown}
+                onClick_stop_prevent={this.onMoveDown}
               ></div>
             )}
             {showCopy && (
               <div
                 class="item copy iconfont icon-fuzhi"
-                vOn:click_stop_prevent={this.onCopy}
+                onClick_stop_prevent={this.onCopy}
               ></div>
             )}
             <div
               class="item iconfont icon-shanchu"
-              vOn:click_stop_prevent={this.onDelete}
+              onClick_stop_prevent={this.onDelete}
             ></div>
           </div>
         }
@@ -193,9 +195,9 @@ export default defineComponent({
   &.spliter {
     border-bottom: 0.12rem solid $spliter-color;
   }
-  &:last-child{
-    border: none;
-  }
+  // &:last-child{
+  //   border: none;
+  // }
   .editor {
     display: flex;
     font-size: 0.32rem;

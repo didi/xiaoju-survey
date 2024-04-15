@@ -2,11 +2,11 @@ import { defineComponent, ref, computed, watch } from 'vue';
 import { filterXSS } from '@/common/xss';
 import '../common/css/title.scss';
 import tagList from '../common/config/tagList';
-import richEditor from '@/common/Editor/RichEditor';
+import RichEditor from '@/common/Editor/RichEditor.vue';
 
 export default defineComponent({
   name: 'ModuleTitle',
-  components: { richEditor },
+  components: { RichEditor },
   props: {
     isSelected: {
       type: Boolean,
@@ -29,7 +29,7 @@ export default defineComponent({
       default: '标题',
     },
     showType: {
-      type: Boolean,
+      type: [Boolean, String],
       default: false,
     },
     type: {
@@ -107,15 +107,16 @@ export default defineComponent({
           <div class="module-title-title">
             {this.showIndex && <span class="index"> {indexNumber}.</span>}
             {this.status === 'edit' ? (
-              <div class="richeditor">
-                <richEditor
-                  value={filterXSS(this.title)}
+              // <div class="richeditor">
+                <RichEditor
+                  class="richeditor"
+                  modelValue={filterXSS(this.title)}
                   onChange={this.handleChange}
-                ></richEditor>
-              </div>
+                 />
+              // </div>
             ) : (
               <div
-                domPropsInnerHTML={filterXSS(tagTitle)}
+                v-html={filterXSS(tagTitle)}
                 class="flex module-title-title-text"
               ></div>
             )}

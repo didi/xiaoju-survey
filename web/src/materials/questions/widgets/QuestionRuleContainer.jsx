@@ -1,15 +1,15 @@
 import '../common/css/formItem.scss';
-import Vue, {
+import {
   defineComponent,
   getCurrentInstance,
   ref,
   nextTick,
   computed,
   inject,
-  onMounted,
-  onBeforeUnmount,
+  h,
+  unref,
 } from 'vue';
-import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx';
+import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx';
 import ErrorTip from '../components/ErrorTip.vue';
 import { assign } from 'lodash-es';
 import AsyncValidator from 'async-validator';
@@ -34,6 +34,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const validateMessage = ref('');
     const validateState = ref('');
@@ -47,9 +48,6 @@ export default defineComponent({
         if (type === 'section') {
           classList.push('question-type-section');
         }
-        // if (includes(['radio', 'checkbox', 'vote', 'radio-star', 'binary-choice'], type)) {
-        //   classList.push('special')
-        // }
 
         if (type === 'scroll') {
           classList.push('no-padding');
@@ -67,12 +65,6 @@ export default defineComponent({
     const show = computed(() => {
       const { type } = props.moduleConfig;
       return !/hidden|mobileHidden/.test(type);
-    });
-    onMounted(() => {
-      form.$emit && form.$emit('form.addField', instance);
-    });
-    onBeforeUnmount(() => {
-      form.$emit && form.$emit('form.removeField', instance);
     });
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger);
@@ -104,7 +96,7 @@ export default defineComponent({
       //  因为有些input的value是bind上去的，所以应该在下一帧再去校验，否则会出现第一次blur没反应
       nextTick(() => {
         // 对填空题单独设置其value
-        let value = form.model[field];
+        let value = unref(form.model)[field];
         validator.validate(
           { [field]: value },
           { firstFields: true },
@@ -117,16 +109,13 @@ export default defineComponent({
       });
     };
     const onFieldBlur = () => {
-      if (!(form && form instanceof Vue)) return;
       validate('blur');
     };
-    // eslint-disable-next-line no-unused-vars
     const onFieldChange = () => {
-      if (!(form && form instanceof Vue)) return;
       validate('change');
     };
     const getRules = () => {
-      const { rules } = form;
+      const rules = unref(form.rules);
       const { field } = props.moduleConfig;
       return rules[field];
     };
@@ -160,7 +149,7 @@ export default defineComponent({
       handleChange,
     };
   },
-  render(h) {
+  render() {
     const { itemClass, validateMessage } = this;
     return (
       <div
@@ -171,20 +160,15 @@ export default defineComponent({
           itemClass,
         ]}
       >
-        {h(QuestionContainer, {
-          props: {
+        {h(QuestionContainerC, {
             type: this.moduleConfig.type,
             moduleConfig: this.moduleConfig,
             value: this.moduleConfig.value,
             indexNumber: this.indexNumber,
             showTitle: this.showTitle,
             readonly: this.readonly,
-          },
-          on: {
-            ...this.$listeners,
-            blur: this.handleBlur,
-            change: this.handleChange,
-          },
+            onBlur: this.handleBlur,
+            onChange: this.handleChange,
         })}
         <ErrorTip msg={validateMessage} />
       </div>

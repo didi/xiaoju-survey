@@ -54,6 +54,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ['blur', 'focus', 'input', 'change'],
   setup(props, { emit }) {
     const focusFlag = ref(false);
     const initial = props.textRange.max.value - props.value.length;
@@ -87,12 +88,15 @@ export default defineComponent({
       if (['m', 'idcard', 'e', 'licensePlate'].includes(props.valid)) {
         e.target.value = e.target.value.replace(/\s+/g, '');
       }
+      console.log('input module change',e)
+
       emit('change', {
         key,
         value: e.target.value,
       });
     };
     return {
+      props,
       focusFlag,
       getLeftTextNumber,
       onBlur,
@@ -102,28 +106,33 @@ export default defineComponent({
     };
   },
   render() {
-    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange } =
+    const { readonly, focusFlag, getLeftTextNumber, field, valid, textRange, placeholder, props } =
       this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-      type: valid === 'n' ? 'number' : 'text',
-      maxlength: textRange.max.value,
-      minlength: textRange.min.value,
-    };
+    // const props = {
+    //   ...this.$props,
+    //   readonly,
+    //   name: field,
+    //   type: valid === 'n' ? 'number' : 'text',
+    //   maxlength: textRange.max.value,
+    //   minlength: textRange.min.value,
+    // };
     return (
       <baseInput
         uiTarget="input"
-        {...{ props: props }}
-        {...{
-          on: {
-            blur: this.onBlur,
-            focus: this.onFocus,
-            input: this.onInput,
-            change: this.onChange,
-          },
-        }}
+        type={valid === 'n' ? 'number' : 'text'}
+        field={props.field}
+        name={props.field}
+        value={props.value}
+        placeholder={props.placeholder}
+        textRange={props.textRange}
+        maxlength={textRange.max.value}
+        minlength={textRange.min.value}
+        valid={props.valid}
+        readonly={props.readonly}
+        onBlur={this.onBlur}
+        // onFocus={this.onFocus}
+        // onInput={this.onInput}
+        onChange={this.onChange}
       >
         {focusFlag && (
           <div class="text-number-tip">

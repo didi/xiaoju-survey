@@ -5,7 +5,14 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import adapter from '../adapter';
 import { queryVote, getEncryptInfo } from '@/render/api/survey';
-import { CODE_MAP } from '@/management/api/base';
+/**
+ * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
+ */ 
+const CODE_MAP = {
+  SUCCESS: 200,
+  ERROR: 500,
+  NOTAUTH: 403,
+}
 
 export default {
   // 初始化

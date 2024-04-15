@@ -51,6 +51,7 @@ export default defineComponent({
     //   }
     // }
   },
+  emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const onChange = (value) => {
       const key = props.field;
@@ -67,28 +68,29 @@ export default defineComponent({
       });
     };
     return {
+      props,
       onChange,
       handleSelectMoreChange,
     };
   },
   render() {
-    const { readonly, field } = this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-    };
+    const { props } = this;
+    
     return (
       <div>
         <baseChoice
           uiTarget="radio"
-          {...{ props: props }}
-          {...{
-            on: {
-              change: this.onChange,
-            },
-          }}
-          scopedSlots={{
+          readonly={props.readonly}
+          name={props.field}
+          options={props.options}
+          value={props.value}
+          type={props.type}
+          field={props.field}
+          layout={props.layout}
+
+          onChange={this.onChange}
+        >
+          {{
             selectMore: (scoped) => {
               return (
                 <QuestionWithRule
@@ -100,7 +102,7 @@ export default defineComponent({
               );
             },
           }}
-        ></baseChoice>
+        </baseChoice>
       </div>
     );
   },

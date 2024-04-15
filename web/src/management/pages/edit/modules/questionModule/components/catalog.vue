@@ -1,12 +1,17 @@
 <template>
   <div class="question-catalog-wrapper">
-    <draggable :list="renderData" :options="dragOptions" @end="onDragEnd">
-      <template v-for="(catalogItem, index) in renderData">
+    <draggable
+      :list="renderData"
+      @end="onDragEnd"
+      itemKey="field"
+      handle=".draggHandle"
+      host-class="catalog-item-ghost"
+    >
+      <template #item="{ element, index }">
         <catalogItem
-          :key="catalogItem.field"
-          :title="catalogItem.title"
-          :indexNumber="catalogItem.indexNumber"
-          :showIndex="catalogItem.showIndex"
+          :title="element.title"
+          :indexNumber="element.indexNumber"
+          :showIndex="element.showIndex"
           @select="onSelect(index)"
         />
       </template>
@@ -15,27 +20,22 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import catalogItem from './catalogItem';
-import { filterQuestionPreviewData } from '@/management/utils/index';
+import draggable from 'vuedraggable'
+import catalogItem from './catalogItem.vue'
+import { filterQuestionPreviewData } from '@/management/utils/index'
 
 export default {
   name: 'QuestionCatalog',
   data() {
     return {
-      dragOptions: {
-        handle: '.draggHandle',
-        ghostClass: 'catalog-item-ghost',
-        dragClass: 'catalog-item-dragging',
-      },
-    };
+    }
   },
   computed: {
     questionDataList() {
-      return this.$store.state.edit.schema.questionDataList;
+      return this.$store.state.edit.schema.questionDataList
     },
     renderData() {
-      return filterQuestionPreviewData(this.questionDataList) || [];
+      return filterQuestionPreviewData(this.questionDataList) || []
     },
   },
   components: {
@@ -44,18 +44,19 @@ export default {
   },
   methods: {
     onDragEnd(data) {
-      const { newIndex, oldIndex } = data;
+      const { newIndex, oldIndex } = data
       this.$store.dispatch('edit/moveQuestion', {
         index: oldIndex,
         range: newIndex - oldIndex,
-      });
+      })
     },
     onSelect(index) {
-      this.$store.commit('edit/setCurrentEditOne', index);
+      this.$store.commit('edit/setCurrentEditOne', index)
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-catalog-wrapper {
   padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的

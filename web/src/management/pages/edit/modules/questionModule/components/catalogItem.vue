@@ -12,7 +12,7 @@
 export default {
   name: 'QuestionCatalogItem',
   data() {
-    return {};
+    return {}
   },
   computed: {},
   props: {
@@ -32,11 +32,12 @@ export default {
   components: {},
   methods: {
     onSelect() {
-      this.$emit('select');
+      this.$emit('select')
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .question-catalog-item {
   position: relative;

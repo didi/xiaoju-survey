@@ -1,5 +1,5 @@
-import { defineComponent, computed } from 'vue';
-import { findIndex, includes } from 'lodash-es';
+import { defineComponent, computed, useSlots } from 'vue';
+import { findIndex, includes, cloneDeep } from 'lodash-es';
 import { filterXSS } from '@/common/xss';
 import '../../common/css/choice.scss';
 
@@ -49,7 +49,8 @@ export default defineComponent({
       default: 10,
     },
   },
-  setup(props, { emit }) {
+  emits: ['change'],
+  setup(props, { emit, slots }) {
     const getOptions = computed(() => {
       return props.options;
     });
@@ -69,7 +70,7 @@ export default defineComponent({
       $event && $event.stopPropagation();
       $event && $event.preventDefault();
       const targetValue = item.hash;
-      let values = props.value;
+      const values = cloneDeep(props.value);
       if (!includes(values, targetValue)) {
         values.push(targetValue);
       } else {
@@ -82,6 +83,7 @@ export default defineComponent({
       // return values
     };
     return {
+      slots,
       getOptions,
       isChecked,
       onRadioClick,
@@ -89,7 +91,7 @@ export default defineComponent({
     };
   },
   render() {
-    const { uiTarget, isMatrix, hideText, getOptions, isChecked } = this;
+    const { uiTarget, isMatrix, hideText, getOptions, isChecked, slots } = this;
     return (
       <div class="choice-wrapper">
         <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>
@@ -142,12 +144,12 @@ export default defineComponent({
                         >
                           {!hideText && (
                             <span
-                              domPropsInnerHTML={filterXSS(item.text)}
+                              v-html={filterXSS(item.text)}
                               class="item-title-text"
                               style="display: block; height: auto; padding: 9px 0"
                             ></span>
                           )}
-                          {this.$scopedSlots.vote?.({
+                          {slots.vote?.({
                             option: item,
                             voteTotal: this.voteTotal,
                           })}
@@ -158,7 +160,7 @@ export default defineComponent({
                   {!this.readonly
                     ? item.others &&
                       isChecked(item) &&
-                      this.$scopedSlots.selectMore?.({
+                      slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
                           type: 'selectMoreModule',
@@ -170,7 +172,7 @@ export default defineComponent({
                         },
                       })
                     : item.others &&
-                      this.$scopedSlots.selectMore?.({
+                      slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
                           type: 'selectMoreModule',

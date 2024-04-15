@@ -18,7 +18,7 @@
         :label="cleanRichText(item.title)"
         minWidth="200"
       >
-        <template slot="header" slot-scope="scope">
+        <template #header="scope">
           <div class="table-row-cell">
             <span slot="reference" v-popover="scope.column.id">
               {{ scope.column.label.replace(/&nbsp;/g, '') }}
@@ -33,7 +33,7 @@
             </el-popover>
           </div>
         </template>
-        <template slot-scope="scope">
+        <template  #default="scope">
           <span
             slot="reference"
             class="table-row-cell"
@@ -54,13 +54,14 @@
     </el-table>
   </div>
 </template>
+
 <script>
-import { cleanRichText } from '@/common/xss';
+import { cleanRichText } from '@/common/xss'
 
 export default {
   name: 'DataTable',
   data() {
-    return {};
+    return {}
   },
   props: {
     mainTableLoading: Boolean,
@@ -75,8 +76,9 @@ export default {
       return content === 0 ? 0 : (content || '未知')
     }
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .data-table-wrapper {
   position: relative;
@@ -89,7 +91,7 @@ export default {
     box-sizing: border-box;
     text-align: center;
   }
-  ::v-deep .el-table__header {
+  :deep(.el-table__header) {
     width: 100%;
     .thead-cell .el-table__cell {
       .cell {

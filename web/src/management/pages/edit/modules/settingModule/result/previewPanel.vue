@@ -11,18 +11,19 @@
     </div>  
   </div>
 </template>
+
 <script>
-import { mapState } from 'vuex';
-import success from '../components/success';
-import overTime from '../components/overTime';
+import { mapState } from 'vuex'
+import success from '../components/success.vue';
+import overTime from '../components/overTime.vue';
 import { EDIT_STATUS_MAP } from '../enum';
-import { get as _get } from 'lodash-es';
+import { get as _get } from 'lodash-es'
 
 export default {
   name: 'ResultConfigPreivew',
   props: {},
   data() {
-    return {};
+    return {}
   },
   computed: {
     ...mapState({
@@ -32,15 +33,16 @@ export default {
     moduleConfig() {
       return {
         submitConf: this.submitConf,
-      };
+      }
     },
   },
   components: {
     [EDIT_STATUS_MAP.SUCCESS]: success,
     [EDIT_STATUS_MAP.OVERTIME]: overTime,
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .result-config-preview {
   width: 100%;

@@ -31,10 +31,10 @@ export const useProgressBar = () => {
     return data;
   });
 
-  const precent = computed(() => {
+  const percent = computed(() => {
     const { fillCount, topicCount } = surveySchedule.value;
     return Math.floor((100 / topicCount) * fillCount) + '%';
   });
 
-  return { surveySchedule, precent };
+  return { surveySchedule, percent };
 };

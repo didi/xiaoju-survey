@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import QRCode from 'qrcode';
+import QRCode from 'qrcode'
 
 export default {
   name: 'QRCode',
@@ -26,17 +26,17 @@ export default {
     return {
       inQcode: false,
       qRCodeImg: '',
-    };
+    }
   },
   methods: {
     initQRCodeImg() {
       QRCode.toDataURL(this.url)
         .then((url) => {
-          this.qRCodeImg = url;
+          this.qRCodeImg = url
         })
         .catch((err) => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
   },
   watch: {
@@ -45,13 +45,13 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.$nextTick(() => {
-            this.initQRCodeImg();
-          });
+            this.initQRCodeImg()
+          })
         }
       },
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

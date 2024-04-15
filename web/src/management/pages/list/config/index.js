@@ -1,9 +1,11 @@
+import { Sort, SortDown, SortUp } from "@element-plus/icons-vue"
+
 export const type = {
   normal: '调查问卷',
   vote: '投票评选',
   nps: 'NPS评分',
   register: '在线报名',
-};
+}
 
 export const fieldConfig = {
   type: {
@@ -45,19 +47,19 @@ export const fieldConfig = {
     key: 'createDate',
     minWidth: 200,
   },
-};
+}
 
 export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',
   img: '/imgs/icons/list-empty.webp',
-};
+}
 
 export const noSearchDataConfig = {
   title: '没有满足该查询条件的问卷哦',
   desc: '可以更换条件查询试试',
   img: '/imgs/icons/list-empty.webp',
-};
+}
 
 export const statusMaps = {
   new: '未发布',
@@ -65,7 +67,7 @@ export const statusMaps = {
   published: '已发布',
   removed: '',
   pausing: '',
-};
+}
 
 // 问卷类型
 export const surveyTypeSelect = {
@@ -97,7 +99,7 @@ export const surveyTypeSelect = {
     },
   ],
   default: '',
-};
+}
 
 // 问卷状态
 export const curStatusSelect = {
@@ -121,12 +123,12 @@ export const curStatusSelect = {
     },
   ],
   default: '',
-};
+}
 
 export const selectOptionsDict = Object.freeze({
   surveyType: surveyTypeSelect,
   'curStatus.status': curStatusSelect,
-});
+})
 
 export const buttonOptionsDict = Object.freeze({
   'curStatus.date': {
@@ -136,14 +138,17 @@ export const buttonOptionsDict = Object.freeze({
         name: 'el-icon-sort',
         effectValue: '',
         isDefaultValue: true,
+        icon: Sort
       },
       {
         name: 'el-icon-sort-up',
         effectValue: 1,
+        icon: SortUp
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
+        icon: SortDown
       },
     ],
   },
@@ -153,16 +158,19 @@ export const buttonOptionsDict = Object.freeze({
       {
         name: 'el-icon-sort',
         effectValue: '',
+        icon: Sort
       },
       {
         name: 'el-icon-sort-up',
         effectValue: 1,
+        icon: SortUp
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
         isDefaultValue: true,
+        icon: SortDown
       },
     ],
   },
-});
+})

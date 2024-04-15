@@ -89,6 +89,7 @@ export default defineComponent({
       });
     };
     return {
+      props,
       myOptions,
       calcVotePercent,
       onChange,
@@ -96,24 +97,28 @@ export default defineComponent({
     };
   },
   render() {
-    const { calcVotePercent, innerType, field, myOptions } = this;
-    const props = {
-      ...this.$props,
-      options: myOptions,
-      layout: 'vertical',
-      readonly: this.readonly,
-      name: field,
-    };
+    const { calcVotePercent, innerType, field, myOptions, props } = this;
+    // const props = {
+    //   ...this.$props,
+    //   options: myOptions,
+    //   layout: 'vertical',
+    //   readonly: this.readonly,
+    //   name: field,
+    // };
     return (
       <baseChoice
         uiTarget={innerType}
-        {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
-        scopedSlots={{
+        layout={'vertical'}
+        name={props.field}
+        innerType={props.innerType}
+        value={props.value}
+        options={props.options}
+        readonly={props.readonly}
+        voteTotal={props.voteTotal}
+        maxNum={props.maxNum}
+        onChange={this.onChange}
+      >
+        {{
           vote: (scoped) => {
             return (
               <div class="vote-detail">
@@ -145,7 +150,7 @@ export default defineComponent({
             );
           },
         }}
-      ></baseChoice>
+      </baseChoice>
     );
   },
 });

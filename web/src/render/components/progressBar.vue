@@ -6,7 +6,7 @@
           class="progress-inner-mobile"
           :style="{
             transition: 'all 0.5s',
-            width: precent || 0,
+            width: percent || 0,
           }"
         ></div>
       </div>
@@ -16,11 +16,11 @@
             class="progress-inner-pc"
             :style="{
               transition: 'all 0.5s',
-              height: precent || 0,
+              height: percent || 0,
             }"
           ></div>
         </div>
-        <div class="percent-pc">{{ precent || '0%' }}</div>
+        <div class="percent-pc">{{ percent || '0%' }}</div>
       </div>
     </div>
   </div>
@@ -28,7 +28,7 @@
 <script setup>
 import { useProgressBar } from '../hook/useProgress';
 
-const { precent } = useProgressBar();
+const { percent } = useProgressBar();
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .progress-outer {

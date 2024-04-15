@@ -8,7 +8,7 @@
     :max="max"
     type="number"
   >
-    <template slot="append">%</template>
+    <template #append>%</template>
   </el-input>
 </template>
 <script>
@@ -70,7 +70,7 @@ export default {
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
 .custom-input{
-  ::v-deep .el-input__inner{
+  :deep(.el-input__inner){
     width: 100px;
     padding-right: 0px;
   }

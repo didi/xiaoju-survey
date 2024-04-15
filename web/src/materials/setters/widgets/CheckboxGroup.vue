@@ -17,7 +17,9 @@
         effect="dark"
         placement="right"
       >
-        <div slot="content" v-plain-text="item.tip"></div>
+        <template #content>
+          <div v-plain-text="item.tip"></div>
+        </template>
         <i class="el-icon-question icon-tip"></i>
       </el-tooltip>
     </div>
@@ -46,7 +48,7 @@ export default {
         const keys = Object.keys(newVal);
         for (const key of keys) {
           if (newVal[key] !== this.values[key]) {
-            this.$set(this.values, key, newVal[key]);
+            this.values[key] = newVal[key];
           }
         }
       },

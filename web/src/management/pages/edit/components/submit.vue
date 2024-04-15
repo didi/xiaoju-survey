@@ -11,11 +11,12 @@
     >
   </div>
 </template>
+
 <script>
 export default {
   name: 'Submit',
   data() {
-    return {};
+    return {}
   },
   props: {
     submitConf: Object,
@@ -27,11 +28,12 @@ export default {
   },
   methods: {
     onClick() {
-      this.$emit('select');
+      this.$emit('select')
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .submit-wrapper {
   padding: 25px;

@@ -6,7 +6,7 @@
         <h2 class="data-list">数据列表</h2>
         <div class="menus">
           <el-switch
-            :value="isShowOriginData"
+            :model-value="isShowOriginData"
             active-text="是否展示原数据"
             @input="onIsShowOriginChange"
           >
@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import DataTable from './components/table.vue';
-import empty from '@/management/components/empty';
-import leftMenu from '@/management/components/leftMenu.vue';
-import { getRecycleList } from '@/management/api/analysis';
+import DataTable from './components/table.vue'
+import empty from '@/management/components/empty.vue'
+import leftMenu from '@/management/components/leftMenu.vue'
+import { getRecycleList } from '@/management/api/analysis'
 
 export default {
   name: 'analysisPage',
@@ -59,71 +59,71 @@ export default {
       currentPage: 1,
       isShowOriginData: false,
       tmpIsShowOriginData: false,
-    };
+    }
   },
   computed: {},
   created() {
-    this.init();
+    this.init()
   },
   methods: {
     async init() {
       if (!this.$route.params.id) {
-        this.$message.error('没有传入问卷参数~');
-        return;
+        this.$message.error('没有传入问卷参数~')
+        return
       }
-      this.mainTableLoading = true;
+      this.mainTableLoading = true
       try {
         const res = await getRecycleList({
           page: this.currentPage,
           surveyId: this.$route.params.id,
           isDesensitive: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
-        });
+        })
 
         if (res.code === 200) {
-          const listHead = this.formatHead(res.data.listHead);
-          this.tableData = { ...res.data, listHead };
-          this.mainTableLoading = false;
+          const listHead = this.formatHead(res.data.listHead)
+          this.tableData = { ...res.data, listHead }
+          this.mainTableLoading = false
         }
       } catch (error) {
-        this.$message.error('查询回收数据失败，请重试');
+        this.$message.error('查询回收数据失败，请重试')
       }
     },
     handleCurrentChange(current) {
       if (this.mainTableLoading) {
-        return;
+        return
       }
-      this.currentPage = current;
-      this.init();
+      this.currentPage = current
+      this.init()
     },
     formatHead(listHead = []) {
-      const head = [];
+      const head = []
 
       listHead.forEach((headItem) => {
         head.push({
           field: headItem.field,
           title: headItem.title,
-        });
+        })
 
         if (headItem.othersCode?.length) {
           headItem.othersCode.forEach((item) => {
             head.push({
               field: item.code,
               title: `${headItem.title}-${item.option}`,
-            });
-          });
+            })
+          })
         }
-      });
+      })
 
-      return head;
+      return head
     },
     async onIsShowOriginChange(data) {
       if (this.mainTableLoading) {
-        return;
+        return
       }
       // console.log(data)
-      this.tmpIsShowOriginData = data;
-      await this.init();
-      this.isShowOriginData = data;
+      this.tmpIsShowOriginData = data
+      await this.init()
+      this.isShowOriginData = data
     },
   },
 
@@ -132,7 +132,7 @@ export default {
     empty,
     leftMenu,
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -166,7 +166,7 @@ export default {
   box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
-  ::v-deep .el-pagination {
+  :deep(.el-pagination) {
     margin-top: 20px;
     display: flex;
     justify-content: flex-end;

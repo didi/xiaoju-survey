@@ -14,6 +14,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: 'LogoPreview',
@@ -25,21 +26,22 @@ export default {
     isSelected: Boolean,
   },
   data() {
-    return {};
+    return {}
   },
   methods: {
     onSelect() {
-      this.$emit('select');
+      this.$emit('select')
     },
   },
   computed: {
     logoImg() {
-      const { logoImage = {} } = this.logoConf;
-      return logoImage;
+      const { logoImage } = this.logoConf
+      return logoImage
     },
   },
-};
+}
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
 .container {
   display: flex;

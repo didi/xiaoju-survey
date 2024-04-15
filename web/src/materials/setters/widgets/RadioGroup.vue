@@ -11,7 +11,9 @@
       class="customed-radio"
     >
       <el-tooltip v-if="item.tip" class="item right" effect="dark">
-        <div slot="content" v-html="item.tip"></div>
+        <template #content>
+          <div v-html="item.tip"></div>
+        </template>
         <span>{{ item.label }} <i class="el-icon-question"></i></span>
       </el-tooltip>
       <div v-else v-safe-html="item.label"></div>

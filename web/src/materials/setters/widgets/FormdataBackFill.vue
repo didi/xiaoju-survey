@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="row">
-      <el-select :value="backfillSelect" @change="onSelectChange">
+      <el-select :modelValue="backfillSelect" @change="onSelectChange">
         <el-option
           v-for="item in options"
           :label="`${item.label}`"

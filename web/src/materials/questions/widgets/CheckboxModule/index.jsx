@@ -1,4 +1,4 @@
-import baseChoice from '../BaseChoice';
+import BaseChoice from '../BaseChoice';
 import { computed, defineComponent } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import { includes } from 'lodash-es';
@@ -10,7 +10,7 @@ export const meta = metaConfig;
  */
 export default defineComponent({
   name: 'CheckBoxModule',
-  components: { baseChoice, QuestionWithRule },
+  components: { BaseChoice, QuestionWithRule },
   props: {
     type: {
       type: String,
@@ -43,6 +43,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {
@@ -65,6 +66,7 @@ export default defineComponent({
     });
     const onChange = (value) => {
       const key = props.field;
+      console.log(' checkbox module', value)
       emit('change', {
         key,
         value,
@@ -78,30 +80,32 @@ export default defineComponent({
       });
     };
     return {
+      props,
       onChange,
       handleSelectMoreChange,
       myOptions,
     };
   },
   render() {
-    const { readonly, field, myOptions } = this;
+    const { readonly, field, myOptions, onChange, maxNum, value } = this;
 
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-      options: myOptions,
-    };
+    // const props = {
+    //   ...this.$props,
+    //   readonly,
+    //   name: field,
+    //   options: myOptions,
+    // };
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget="checkbox"
-        {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
-        scopedSlots={{
+        readonly={readonly}
+        name={field}
+        maxNum={maxNum}
+        options={myOptions}
+        onChange={onChange}
+        value={value}
+      >
+        {{
           selectMore: (scoped) => {
             return (
               <QuestionWithRule
@@ -113,7 +117,7 @@ export default defineComponent({
             );
           },
         }}
-      ></baseChoice>
+      </BaseChoice>
     );
   },
 });

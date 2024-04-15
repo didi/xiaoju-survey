@@ -20,9 +20,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import baseList from './components/baseList.vue';
-import { mapState, mapActions } from 'vuex';
+import baseList from './components/baseList.vue'
+import { mapState, mapActions } from 'vuex'
 export default {
   components: { baseList },
   name: 'listPage',
@@ -32,14 +33,14 @@ export default {
   methods: {
     ...mapActions('user', ['logout']),
     onCreate() {
-      this.$router.push('/create');
+      this.$router.push('/create')
     },
     handleLogout() {
-      this.logout();
-      this.$router.replace({ name: 'login' });
+      this.logout()
+      this.$router.replace({ name: 'login' })
     },
   },
-};
+}
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>

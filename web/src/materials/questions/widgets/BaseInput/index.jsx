@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue';
+import { defineComponent, h } from 'vue';
 import '../../common/css/choice.scss';
 import '../../common/css/input.scss';
 
@@ -42,7 +42,8 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props, { emit }) {
+  emits: ['input','change', 'blur', 'focus'],
+  setup(props, { emit, slots }) {
     const onBlur = () => {
       emit('blur');
     };
@@ -57,43 +58,56 @@ export default defineComponent({
       emit('focus');
     };
     return {
+      props,
+      slots,
       onBlur,
       onInput,
       onFocus,
       onChange,
     };
   },
-  render(h) {
-    const { uiTarget, customClass } = this;
+  render() {
+    const { uiTarget, customClass, slots, props } = this;
     return (
       <div class="input-wrapper">
-        {h(
+        <uiTarget
+          class={['input-box item-border', customClass]}
+          type={props.type}
+          name={props.name}
+          field={props.field}
+          readonly={props.readonly}
+          placeholder={props.placeholder}
+          value={props.value}
+          maxlength={props.maxlength}
+          minlength={props.minlength}
+          autocomplete={'off'}
+          onBlur={this.onBlur}
+          onChange={this.onChange}
+        />
+
+        {/* {h(
           uiTarget,
           {
             // class: ['input-box','item-border', ],
             class: ['input-box item-border', customClass],
-            attrs: {
-              type: this.type,
-              readonly: this.readonly,
-              placeholder: this.placeholder,
-              name: this.name,
-              value: this.value,
-              maxlength: this.maxlength,
-              minlength: this.minlength,
-              autocomplete: 'off',
-            },
-            on: {
-              blur: this.onBlur,
-              input: this.onInput,
-              focus: this.onFocus,
-              change: this.onChange,
-            },
+            readonly: this.readonly,
+            type: this.type,
+            readonly: this.readonly,
+            placeholder: this.placeholder,
+            name: this.name,
+            value: this.value,
+            maxlength: this.maxlength,
+            minlength: this.minlength,
+            autocomplete: 'off',
+            onBlur: this.onBlur,
+            onInput: this.onInput,
+            onFocus: this.onFocus,
+            onChange: this.onChange,
           },
           [this.value]
-        )}
-        {this.$slots.default}
-        {/* {this.$scopedSlots.default} */}
-        {/* {renderSlot(this.$slots, 'default')}   */}
+        )} */}
+        
+        {/* {slots.default()} */}
       </div>
     );
   },

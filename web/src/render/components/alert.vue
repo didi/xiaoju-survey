@@ -1,5 +1,5 @@
 <template>
-  <div class="mask">
+  <div class="mask" v-if="visible">
     <div class="box">
       <div class="title">{{ title }}</div>
       <div class="btn" @click="onConfirm">{{ btnText }}</div>
@@ -9,6 +9,10 @@
 <script>
 export default {
   props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
     btnText: {
       type: String,
       default: '我知道了',
@@ -21,6 +25,7 @@ export default {
   methods: {
     onConfirm() {
       this.$emit('confirm');
+      this.$emit('close');
     },
   },
 };

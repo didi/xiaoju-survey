@@ -21,8 +21,12 @@
 import Header from '../components/header.vue';
 import mainTitle from '../components/mainTitle.vue'
 import submit from '../components/submit.vue';
-import mainRenderer from '../components/mainRenderer';
-import progressBar from '../components/progressBar';
+import mainRenderer from '../components/mainRenderer.vue';
+import alert from '../components/alert.vue';
+import confirm from '../components/confirm.vue';
+import useCommandComponent from '../hooks/useCommandComponent';
+import progressBar from '../components/progressBar.vue';
+
 import { submitForm } from '@/render/api/survey';
 import encrypt from '../utils/encrypt';
 import logo from '../components/logo.vue';
@@ -64,23 +68,28 @@ export default {
       return this.$store.state.encryptInfo;
     },
   },
+  created() {
+    this.alert = useCommandComponent(alert)
+    this.confirm = useCommandComponent(confirm)
+    window.confirm = this.confirm
+  },
   methods: {
     validate(cbk) {
       const index = 0;
-      this.$refs.main.$refs.formGroup[index].$refs.ruleForm.validate(cbk);
+      this.$refs.main.$refs.formGroup[index].validate(cbk);
     },
     onSubmit() {
       const { again_text, is_again } = this.confirmAgain;
       if (is_again) {
-        this.$dialog.confirm({
+        this.confirm({
           title: again_text,
-          onConfirm: async (closeDialogFn) => {
+          onConfirm: async () => {
             try {
               await this.submitForm();
             } catch (error) {
               console.error(error);
             } finally {
-              closeDialogFn();
+              this.confirm.close();
             }
           },
         });
@@ -117,7 +126,7 @@ export default {
         if (res.code === 200) {
           this.$store.commit('setRouter', 'successPage');
         } else {
-          this.$dialog.alert({
+          this.alert({
             title: res.errmsg || '提交失败',
           });
         }

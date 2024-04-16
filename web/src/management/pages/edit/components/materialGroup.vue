@@ -16,7 +16,6 @@
         :isSelected="currentEditOne === index"
         :isLast="index + 1 === questionDataList.length"
         @select="handleSelect"
-        @changeSeq="handleChangeSeq"
       >
         <QuestionContainer
           v-bind="$attrs"

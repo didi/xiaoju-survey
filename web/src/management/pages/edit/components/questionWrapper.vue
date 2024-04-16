@@ -5,6 +5,7 @@ import {
   toRefs,
   computed,
   getCurrentInstance,
+  withModifiers,
 } from 'vue';
 import { Rank, Top, Bottom, CopyDocument, Delete } from '@element-plus/icons-vue'
 
@@ -164,7 +165,7 @@ export default defineComponent({
             {showUp && (
               <div
                 class="item"
-                onClickPrevent={this.onMoveUp}
+                onClick={this.onMoveUp}
               >
                 <el-icon><Top /></el-icon>
               </div>
@@ -172,7 +173,7 @@ export default defineComponent({
             {showDown && (
               <div
                 class="item"
-                onClickPrevent={this.onMoveDown}
+                onClick={this.onMoveDown}
               >
                 <el-icon><Bottom /></el-icon>
               </div>
@@ -180,14 +181,14 @@ export default defineComponent({
             {showCopy && (
               <div
                 class="item"
-                onClickPrevent={this.onCopy}
+                onClick={this.onCopy}
               >
                 <el-icon><CopyDocument /></el-icon>
               </div>
             )}
             <div
               class="item"
-              onClickPrevent={this.onDelete}
+              onClick={this.onDelete}
             >
               <el-icon><Delete /></el-icon>
             </div>

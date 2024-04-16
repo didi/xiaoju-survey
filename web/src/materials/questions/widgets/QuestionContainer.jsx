@@ -118,7 +118,7 @@ export default defineComponent({
     const { blockComponent } = this
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
-        {this.showTitle && <moduleTitle {...{ ...props, props: props }}  />}
+        {this.showTitle && <moduleTitle { ...props } onChange={this.onChange}  />}
         <div class="question-block">
           {
             this.showEditCom ? (

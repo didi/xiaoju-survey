@@ -13,7 +13,7 @@
   </form>
 </template>
 <script setup>
-import { defineProps, defineEmits, ref, onMounted, provide, computed } from 'vue';
+import { ref, onMounted, provide, computed } from 'vue';
 import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
 
 const props = defineProps({

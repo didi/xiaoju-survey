@@ -24,7 +24,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { computed } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import BaseRate from '../BaseRate';
 const props = defineProps({

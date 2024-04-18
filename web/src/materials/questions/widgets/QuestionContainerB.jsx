@@ -32,26 +32,7 @@ export default defineComponent({
     moduleConfig: {
       type: Object,
       default: () => {
-        return {
-          field: 'quiestion01',
-          type: 'text',
-          component: 'InputModule',
-          title: '标题1单行输入框',
-          value: '123444',
-          showType: 'text',
-          placeholder: '请填写',
-          textRange: {
-            max: {
-              placeholder: '500',
-              value: 500
-            },
-            min: {
-              placeholder: '0',
-              value: 0
-            }
-          },
-          valid: 'n'
-        }
+        return {}
       }
     },
     readonly: {

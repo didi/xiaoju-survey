@@ -109,14 +109,12 @@ export default defineComponent({
       <BaseInput
         uiTarget="textarea"
         customClass={focusFlag ? 'is-focused' : ''}
-        {...{ props: props }}
+        { ...props }
         {...{
-          on: {
-            blur: this.onBlur,
-            focus: this.onFocus,
-            input: this.onInput,
-            change: this.onChange,
-          },
+          onBlur: this.onBlur,
+          onFocus: this.onFocus,
+          onInput: this.onInput,
+          onChange: this.onChange,
         }}
       >
         {focusFlag && (

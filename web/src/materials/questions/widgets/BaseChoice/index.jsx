@@ -157,9 +157,9 @@ export default defineComponent({
                       </div>
                     )}
                   </div>
-                  {!this.readonly
-                    ? item.others &&
-                      isChecked(item) &&
+                  {item.others &&
+                    // 如果开启了其他，在运行态需要选中后显示输入框，而预览态直接显示输入框
+                    (this.readonly || (!this.readonly && isChecked(item))) && 
                       slots.selectMore?.({
                         showTitle: false,
                         selectMoreConfig: {
@@ -171,18 +171,7 @@ export default defineComponent({
                           value: item.othersValue,
                         },
                       })
-                    : item.others &&
-                      slots.selectMore?.({
-                        showTitle: false,
-                        selectMoreConfig: {
-                          type: 'selectMoreModule',
-                          index: index,
-                          field: item.othersKey,
-                          placeholder: item.placeholderDesc,
-                          require: item.mustOthers,
-                          value: item.othersValue,
-                        },
-                      })}
+                    }
                 </div>
               )
             );

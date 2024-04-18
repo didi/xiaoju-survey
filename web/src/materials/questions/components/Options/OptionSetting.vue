@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
 import { defineComponent, reactive, toRefs, watch } from 'vue';
 import ElPopconfirm from './ElPopconfirm.vue';
 import BatchAddPopover from './BatchAddPopover.vue';
@@ -107,11 +107,7 @@ const OptionSetting = defineComponent({
       <div class="setting">
         <el-form
           ref={`FormLevel${this.level}`}
-          {...{
-            props: {
-              model: this.formValue, // vue jsx element 表单校验的model不可以直接写 以这种方式解决
-            },
-          }}
+          model={this.formValue}
         >
           {this.formValue.options.map((item, index) => {
             return (

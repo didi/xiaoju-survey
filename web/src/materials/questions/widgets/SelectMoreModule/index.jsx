@@ -11,9 +11,6 @@ export default defineComponent({
     value: String,
   },
   setup(props, { emit }) {
-    // const moduleConfig = ref({
-    //   type: 'text'
-    // })
     const onBlur = () => {
       emit('blur');
     };
@@ -32,19 +29,16 @@ export default defineComponent({
     };
   },
   render() {
+    const props = this.$props 
     return (
       <BaseInput
         readonly={this.readonly}
         uiTarget="input"
-        {...{ props: this.$props }}
-        {...{
-          on: {
-            blur: this.onBlur,
-            // 'focus': this.onFocus,
-            // 'input': this.onInput,
-            change: this.onChange,
-          },
-        }}
+        { ...props }
+        { ...{
+          onBlur: this.onBlur,
+          onChange: this.onChange,
+        } }
       ></BaseInput>
     );
   },

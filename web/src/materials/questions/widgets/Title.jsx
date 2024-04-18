@@ -82,7 +82,6 @@ export default defineComponent({
       }
     };
     const handleChange = (val) => {
-      console.log('val change', val)
       emit('change', {
         key: 'title',
         value: val,

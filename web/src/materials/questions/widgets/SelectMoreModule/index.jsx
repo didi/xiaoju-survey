@@ -1,9 +1,9 @@
 import { defineComponent } from 'vue';
-import baseInput from '../BaseInput';
+import BaseInput from '../BaseInput';
 
 export default defineComponent({
   name: 'SelectMoreData',
-  components: { baseInput },
+  components: { BaseInput },
   props: {
     readonly: Boolean,
     field: String,
@@ -33,7 +33,7 @@ export default defineComponent({
   },
   render() {
     return (
-      <baseInput
+      <BaseInput
         readonly={this.readonly}
         uiTarget="input"
         {...{ props: this.$props }}
@@ -45,7 +45,7 @@ export default defineComponent({
             change: this.onChange,
           },
         }}
-      ></baseInput>
+      ></BaseInput>
     );
   },
 });

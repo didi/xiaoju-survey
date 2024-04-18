@@ -92,7 +92,6 @@ export default {
       return random;
     },
     handleChange(index, value) {
-      console.log('handle change', index,value)
       // 更新单个选项文案
       const optionKey = `options[${index}].text`;
       const key = `${this.currentEditKey}.${optionKey}`;

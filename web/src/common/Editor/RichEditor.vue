@@ -24,7 +24,7 @@
 
 <script setup>
 import '@wangeditor/editor/dist/css/style.css'
-import '@/management/styles/reset-wangeditor.scss'
+import './styles/reset-wangeditor.scss'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { ref, shallowRef, onBeforeMount, watch } from 'vue';
 

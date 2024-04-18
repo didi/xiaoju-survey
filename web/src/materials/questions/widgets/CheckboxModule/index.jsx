@@ -66,7 +66,6 @@ export default defineComponent({
     });
     const onChange = (value) => {
       const key = props.field;
-      console.log(' checkbox module', value)
       emit('change', {
         key,
         value,

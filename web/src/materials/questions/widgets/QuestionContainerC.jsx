@@ -48,10 +48,10 @@ export default defineComponent({
   },
   emits: ['change', 'focus', 'blur'],
   setup(props, { emit }) {
-    const blockComponent = shallowRef(null)
+    const BlockComponent = shallowRef(null)
     onMounted(async () => {
       const { component } = await getBlockComponent(props.type)
-      blockComponent.value = component
+      BlockComponent.value = component
     })
     const onBlur = () => {
       emit('blur')
@@ -67,7 +67,7 @@ export default defineComponent({
     }
     return {
       props,
-      blockComponent,
+      BlockComponent,
       onClick,
       onBlur,
       onFocus,
@@ -79,13 +79,13 @@ export default defineComponent({
       ...this.moduleConfig,
       ...this.$props
     }
-    const blockComponent = this.blockComponent
+    const BlockComponent = this.BlockComponent
     return (
       <div class={['question']}>
         {this.showTitle && <moduleTitle { ...props }  />}
         <div class="question-block">
           {
-            this.blockComponent ? <blockComponent
+            this.BlockComponent ? <BlockComponent
               readonly
               {...props}
               onBlur={this.onBlur}

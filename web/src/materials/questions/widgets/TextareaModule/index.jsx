@@ -1,4 +1,4 @@
-import baseInput from '../BaseInput';
+import BaseInput from '../BaseInput';
 import { defineComponent, ref } from 'vue';
 import '../../common/css/input.scss';
 import { get } from 'lodash-es';
@@ -12,7 +12,7 @@ export const meta = myMeta;
  */
 export default defineComponent({
   name: 'TextareaModule',
-  components: { baseInput },
+  components: { BaseInput },
   props: {
     type: {},
     field: {},
@@ -106,7 +106,7 @@ export default defineComponent({
       minlength: textRange.min.value,
     };
     return (
-      <baseInput
+      <BaseInput
         uiTarget="textarea"
         customClass={focusFlag ? 'is-focused' : ''}
         {...{ props: props }}
@@ -124,7 +124,7 @@ export default defineComponent({
             <p>{getLeftTextNumber}</p>
           </div>
         )}
-      </baseInput>
+      </BaseInput>
     );
   },
 });

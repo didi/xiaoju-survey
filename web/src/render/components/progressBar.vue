@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup>
-import { useProgressBar } from '../hook/useProgress';
+import { useProgressBar } from '../hooks/useProgress';
 
 const { percent } = useProgressBar();
 </script>

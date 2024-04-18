@@ -3,7 +3,7 @@
     <div class="result-page">
       <div class="result-content">
         <img src="/imgs/icons/success.webp" />
-        <div class="msg" v-safe-html="successMsg"></div>
+        <div class="msg" v-html="successMsg"></div>
       </div>
       <logo></logo>
     </div>

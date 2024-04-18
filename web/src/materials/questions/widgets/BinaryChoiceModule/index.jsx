@@ -1,4 +1,4 @@
-import baseChoice from '../BaseChoice';
+import BaseChoice from '../BaseChoice';
 import { defineComponent } from 'vue';
 import metaConfig from './meta.js';
 export const meta = metaConfig;
@@ -8,7 +8,7 @@ export const meta = metaConfig;
  */
 export default defineComponent({
   name: 'BinaryChoiceModule',
-  components: { baseChoice },
+  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -51,7 +51,7 @@ export default defineComponent({
   render() {
     const { props } = this;
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget="radio"
         type={props.type}
         readonly={props.readonly}
@@ -61,7 +61,7 @@ export default defineComponent({
         layout={props.layout}
         options={props.options}
         onChange={this.onChange}
-      ></baseChoice>
+      ></BaseChoice>
     );
   },
 });

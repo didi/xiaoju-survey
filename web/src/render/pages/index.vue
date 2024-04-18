@@ -71,7 +71,6 @@ export default {
   created() {
     this.alert = useCommandComponent(alert)
     this.confirm = useCommandComponent(confirm)
-    window.confirm = this.confirm
   },
   methods: {
     validate(cbk) {

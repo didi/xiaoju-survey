@@ -86,4 +86,9 @@ export default {
   changeSchema(state, { key, value }) {
     _set(state.schema, key, value);
   },
+  changeThemePreset(state, presets) {
+    Object.keys(presets).forEach(key => {
+      _set(state.schema, key, presets[key]);
+    })
+  }
 };

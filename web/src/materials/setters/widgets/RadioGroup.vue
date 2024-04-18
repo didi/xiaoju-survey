@@ -16,7 +16,7 @@
         </template>
         <span>{{ item.label }} <i class="el-icon-question"></i></span>
       </el-tooltip>
-      <div v-else v-safe-html="item.label"></div>
+      <div v-else v-html="item.label"></div>
     </el-radio>
   </el-radio-group>
 </template>

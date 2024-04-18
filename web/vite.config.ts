@@ -12,7 +12,7 @@ const pages = createPages([
     name: 'management',
     filename: isProd ? 'management.html' : 'src/management/index.html',
     template: 'src/management/index.html',
-    entry: '/src/management/main.ts'
+    entry: '/src/management/main.js'
   },
   {
     name: 'render',

@@ -145,7 +145,6 @@ export default {
             this.$router.replace(redirect)
           } catch (error) {
             this[`${type}Pending`] = false
-            console.log(error)
           }
           return true
         } else {

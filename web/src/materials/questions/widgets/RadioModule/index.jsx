@@ -1,4 +1,4 @@
-import baseChoice from '../BaseChoice';
+import BaseChoice from '../BaseChoice';
 import { defineComponent } from 'vue';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 
@@ -8,7 +8,7 @@ import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContaine
  */
 export default defineComponent({
   name: 'RadioModule',
-  components: { baseChoice, QuestionWithRule },
+  components: { BaseChoice, QuestionWithRule },
   props: {
     type: {
       type: String,
@@ -78,7 +78,7 @@ export default defineComponent({
     
     return (
       <div>
-        <baseChoice
+        <BaseChoice
           uiTarget="radio"
           readonly={props.readonly}
           name={props.field}
@@ -102,7 +102,7 @@ export default defineComponent({
               );
             },
           }}
-        </baseChoice>
+        </BaseChoice>
       </div>
     );
   },

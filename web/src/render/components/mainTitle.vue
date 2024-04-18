@@ -7,7 +7,7 @@
       <div
         class="mainTitle"
         v-if="bannerConf.titleConfig.mainTitle"
-        v-safe-html="bannerConf.titleConfig.mainTitle"
+        v-html="bannerConf.titleConfig.mainTitle"
       ></div>
     </div>
   </div>

@@ -1,12 +1,12 @@
 import { computed, defineComponent } from 'vue';
-import baseChoice from '../BaseChoice';
+import BaseChoice from '../BaseChoice';
 import Progress from '../../components/Progress.vue';
 import '../../common/css/vote.scss';
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
 import { includes } from 'lodash-es';
 export default defineComponent({
   name: 'VoteModule',
-  components: { baseChoice, Progress, QuestionWithRule },
+  components: { BaseChoice, Progress, QuestionWithRule },
   props: {
     innerType: {
       type: String,
@@ -106,7 +106,7 @@ export default defineComponent({
     //   name: field,
     // };
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget={innerType}
         layout={'vertical'}
         name={props.field}
@@ -150,7 +150,7 @@ export default defineComponent({
             );
           },
         }}
-      </baseChoice>
+      </BaseChoice>
     );
   },
 });

@@ -21,13 +21,9 @@
 </template>
 
 <script setup>
-import { useSlots, useAttrs, getCurrentInstance } from 'vue'
+import { useSlots } from 'vue'
 
 const slots = useSlots()
-const attrs = useAttrs()
-const current = getCurrentInstance()
-window.vm = current
-console.log('current',current)
 </script>
 
 <style lang="scss" scoped>

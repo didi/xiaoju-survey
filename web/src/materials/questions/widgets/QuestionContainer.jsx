@@ -67,7 +67,7 @@ export default defineComponent({
     moduleTitle
   },
   setup(props, { emit }) {
-    const blockComponent = shallowRef(null)
+    const BlockComponent = shallowRef(null)
     const showEditCom = computed(() => {
       let result = false
       if (props.isSelected) {
@@ -81,7 +81,7 @@ export default defineComponent({
     // const isSelected = ref(false)
     onMounted(async () => {
       const { component } = await getBlockComponent(props.type)
-      blockComponent.value = component
+      BlockComponent.value = component
     })
     const onBlur = () => {
       emit('blur')
@@ -98,7 +98,7 @@ export default defineComponent({
     return {
       // isSelected,
       props,
-      blockComponent,
+      BlockComponent,
       onClick,
       onBlur,
       onFocus,
@@ -115,7 +115,7 @@ export default defineComponent({
       ...this.moduleConfig,
       ...this.$props
     }
-    const { blockComponent } = this
+    const { BlockComponent } = this
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle { ...props } onChange={this.onChange}  />}
@@ -123,14 +123,14 @@ export default defineComponent({
           {
             this.showEditCom ? (
               <EditOptions moduleConfig={props.moduleConfig} >
-                <blockComponent
+                <BlockComponent
                   {...props}
                   onBlur={this.onBlur}
                   onFocus={this.onFocus}
                   onChange={this.onChange}
                 />
               </EditOptions>
-              ) : <blockComponent
+              ) : <BlockComponent
                     readonly
                     {...props}
                     onBlur={this.onBlur}

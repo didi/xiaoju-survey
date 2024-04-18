@@ -22,7 +22,7 @@
                 <div
                   contenteditable="true"
                   class="render-html"
-                  v-safe-html="textOptions[index]"
+                  v-html="textOptions[index]"
                   @blur="onBlur($event, index)"
                 ></div>
               </div>

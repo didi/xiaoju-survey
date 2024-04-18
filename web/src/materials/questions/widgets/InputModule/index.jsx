@@ -1,4 +1,4 @@
-import baseInput from '../BaseInput';
+import BaseInput from '../BaseInput';
 import { defineComponent, ref } from 'vue';
 import '../../common/css/input.scss';
 import { get } from 'lodash-es';
@@ -12,7 +12,7 @@ export const meta = myMeta;
  */
 export default defineComponent({
   name: 'InputModule',
-  components: { baseInput },
+  components: { BaseInput },
   props: {
     type: {
       type: String,
@@ -88,7 +88,6 @@ export default defineComponent({
       if (['m', 'idcard', 'e', 'licensePlate'].includes(props.valid)) {
         e.target.value = e.target.value.replace(/\s+/g, '');
       }
-      console.log('input module change',e)
 
       emit('change', {
         key,
@@ -117,7 +116,7 @@ export default defineComponent({
     //   minlength: textRange.min.value,
     // };
     return (
-      <baseInput
+      <BaseInput
         uiTarget="input"
         type={valid === 'n' ? 'number' : 'text'}
         field={props.field}
@@ -139,7 +138,7 @@ export default defineComponent({
             <p>{getLeftTextNumber}</p>
           </div>
         )}
-      </baseInput>
+      </BaseInput>
     );
   },
 });

@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import url('@wangeditor/editor/dist/css/style.css');
-@import url('@/common/styles/reset-wangeditor.scss');
+@import url('@/common/Editor/styles/reset-wangeditor.scss');
 
 .editor-wrapper {
   position: relative;

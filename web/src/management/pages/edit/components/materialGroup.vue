@@ -17,7 +17,7 @@
         :isLast="index + 1 === questionDataList.length"
         @select="handleSelect"
       >
-        <QuestionContainer
+        <QuestionContainerB
           v-bind="$attrs"
           :type="element.type"
           :moduleConfig="element"
@@ -25,7 +25,7 @@
           :isSelected="currentEditOne === index"
           :readonly="true"
           @select="handleSelect"
-        ></QuestionContainer>
+        ></QuestionContainerB>
       </questionWrapper>
     </template>
   </draggable>
@@ -33,7 +33,7 @@
 
 <script>
 import { computed, defineComponent, ref, getCurrentInstance, h } from 'vue'
-import QuestionContainer from '@/materials/questions/widgets/QuestionContainer.jsx'
+import QuestionContainerB from '@/materials/questions/widgets/QuestionContainerB.jsx'
 import questionWrapper from './questionWrapper.vue'
 import draggable from 'vuedraggable'
 import { filterQuestionPreviewData } from '@/management/utils/index'
@@ -42,7 +42,7 @@ export default defineComponent({
   components: {
     draggable,
     questionWrapper,
-    QuestionContainer,
+    QuestionContainerB,
   },
   props: {
     currentEditOne: {

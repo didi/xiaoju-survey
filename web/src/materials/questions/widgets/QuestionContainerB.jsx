@@ -15,7 +15,7 @@ export const getBlockComponent = async (type) => {
 }
 
 export default defineComponent({
-  name: 'QuestionContainer',
+  name: 'QuestionContainerB',
   props: {
     type: {
       type: String,
@@ -96,7 +96,12 @@ export default defineComponent({
       ...this.moduleConfig,
       ...this.$props
     }
+    
     const { BlockComponent } = this
+    let dynamicComponent = <span> 题型组件加载中</span>
+    if (BlockComponent){
+      dynamicComponent = BlockComponent
+    }
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle { ...props } onChange={this.onChange}  />}
@@ -104,14 +109,14 @@ export default defineComponent({
           {
             this.showEditCom ? (
               <EditOptions moduleConfig={props.moduleConfig} >
-                <BlockComponent
+                <dynamicComponent
                   {...props}
                   onBlur={this.onBlur}
                   onFocus={this.onFocus}
                   onChange={this.onChange}
                 />
               </EditOptions>
-              ) : <BlockComponent
+              ) : <dynamicComponent
                     readonly
                     {...props}
                     onBlur={this.onBlur}

@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
     path: '/survey',
     name: 'survey',
     component: () =>
-      import(/* webpackChunkName: "survey" */ '../pages/list/index.vue'),
+      import('../pages/list/index.vue'),
     meta: {
       needLogin: true,
       title: '问卷列表',
@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true,
         },
-        component: () => import(/* webpackChunkName: "skin" */ '../pages/edit/pages/skin/index.vue'),
+        component: () => import('../pages/edit/pages/skin/index.vue'),
         children: [
           {
             path: '',
@@ -85,9 +85,7 @@ const routes: RouteRecordRaw[] = [
       needLogin: true,
     },
     component: () =>
-      import(
-        /* webpackChunkName: "publishResultPage" */ '../pages/publishResult/index.vue'
-      ),
+      import('../pages/publishResult/index.vue'),
   },
   {
     path: '/create',
@@ -97,13 +95,13 @@ const routes: RouteRecordRaw[] = [
       title: '创建问卷',
     },
     component: () =>
-      import(/* webpackChunkName: "create" */ '../pages/create/index.vue'),
+      import('../pages/create/index.vue'),
   },
   {
     path: '/login',
     name: 'login',
     component: () =>
-      import(/* webpackChunkName: "login" */ '../pages/login/index.vue'),
+      import('../pages/login/index.vue'),
     meta: {
     title: '登陆',
     }

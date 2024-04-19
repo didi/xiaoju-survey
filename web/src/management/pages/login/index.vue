@@ -20,11 +20,11 @@
         @submit.native.prevent
       >
         <el-form-item label="账号" prop="name">
-          <el-input v-model="formData.name"></el-input>
+          <el-input v-model="formData.name" size="large"></el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="formData.password"></el-input>
+          <el-input type="password" v-model="formData.password" size="large"></el-input>
         </el-form-item>
 
         <el-form-item label="验证码" prop="captcha">
@@ -32,6 +32,7 @@
             <el-input
               style="width: 150px"
               v-model="formData.captcha"
+              size="large"
             ></el-input>
             <div
               class="captcha-img"

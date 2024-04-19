@@ -7,7 +7,7 @@
       :placeholder="placeholder"
     >
       <template #suffix>
-        <el-icon class="el-input__icon"><ElIconSearch /></el-icon>
+        <el-icon @click="onSearch"><ElIconSearch /></el-icon>
       </template>
     </el-input>
   </div>
@@ -43,32 +43,19 @@ export default {
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" rel="stylesheet/scss" scoped>
 // @import '@didi/question-common/assets/css/variable';
 .filter-input {
   position: relative;
   width: 200px;
-  // .el-input__inner {
-  //   height: 32px;
-  //   line-height: 32px;
-  //   padding: 0 25px;
-  //   font-size: 12px;
-  //   background: #ffffff;
-  //   border: 1px solid $border-color;
-  //   border-radius: 18px;
-  //   &:focus {
-  //     border-color: $primary-color;
-  //   }
-  // }
-  // .el-icon-search {
-  //   position: absolute;
-  //   line-height: 32px;
-  //   right: 10px;
-  //   color: #7e7f8a;
-  //   cursor: pointer;
-  //   &:hover {
-  //     color: $primary-color;
-  //   }
-  // }
+  :deep(.el-input__wrapper) {
+    border-radius: 18px;
+  }
+  :deep(.el-icon) {
+    cursor: pointer;
+    &:hover{
+      color: var(--el-color-primary);
+    }
+  }
 }
 </style>

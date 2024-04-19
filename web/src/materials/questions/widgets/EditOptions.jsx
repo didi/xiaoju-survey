@@ -24,9 +24,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const questionDataList = computed(() => {
-      return store.state.schema.questionDataList;
-    });
     const currentEditOne = computed(() => {
       return store.state?.edit?.currentEditOne;
     });
@@ -108,7 +105,6 @@ export default defineComponent({
       }
     });
     return {
-      questionDataList,
       currentEditOne,
       currentEditKey,
       getOptions,

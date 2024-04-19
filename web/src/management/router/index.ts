@@ -19,7 +19,6 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/survey/:id/edit',
-    name: 'editPage',
     meta: {
       needLogin: true,
     },
@@ -28,7 +27,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'QuestionEditIndex',
-        
         meta: {
           needLogin: true,
         },
@@ -44,7 +42,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'skin',
-        name: 'SkinSetting',
+        // name: 'SkinSetting',
         meta: {
           needLogin: true,
         },

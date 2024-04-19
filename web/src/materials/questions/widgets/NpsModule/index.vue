@@ -120,6 +120,7 @@ const onMoreDataChange = (data) => {
 };
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
+@import '../../common/css/default.scss';
 .nps-wrapper-main {
   .nps-row-msg {
     display: flex;

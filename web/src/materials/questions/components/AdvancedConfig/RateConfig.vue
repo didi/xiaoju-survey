@@ -2,7 +2,7 @@
   <el-dialog
     title="评分高级设置"
     custom-class="option-config-wrapper"
-    :visible.sync="innerVisible"
+    v-model="innerVisible"
     :append-to-body="true"
     :width="dialogWidth"
   >
@@ -79,14 +79,8 @@ export default {
       default: false,
     },
   },
-  watch: {
-    // innerVisible(newVal) {
-    // this.$emit('update:visible', newVal)
-    // },
-  },
   data() {
     return {
-      // innerVisible: this.visible,
       range: [],
     };
   },
@@ -102,7 +96,7 @@ export default {
         return this.visible;
       },
       set(newVal) {
-        this.$emit('visibleChange', newVal);
+        this.$emit('update:modelValue', newVal);
       },
     },
   },

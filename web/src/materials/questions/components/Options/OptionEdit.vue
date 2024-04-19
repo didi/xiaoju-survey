@@ -19,11 +19,7 @@
             />
           </div>
 
-          <i
-            v-if="isShowOperation"
-            class="icon el-icon-circle-plus-outline"
-            @click="onAddOption(index)"
-          ></i>
+          <el-icon v-if="isShowOperation" @click="onAddOption(index)"><CirclePlus /></el-icon>
           <el-tooltip
             v-if="isShowOperation"
             class="icon delete"
@@ -31,7 +27,7 @@
             content="删除"
             placement="top"
           >
-            <i class="el-icon-remove-outline" @click="deleteOption(index)"></i>
+            <el-icon @click="deleteOption(index)" class="delete"><Remove /></el-icon>
           </el-tooltip>
         </div>
       </template>
@@ -43,6 +39,7 @@
 import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
 import { cloneDeep as _cloneDeep } from 'lodash-es';
+import { CirclePlus, Remove } from '@element-plus/icons-vue';
 import RichEditor from '@/common/Editor/RichEditor.vue';
 
 export default {
@@ -64,6 +61,8 @@ export default {
   components: {
     draggable,
     RichEditor,
+    CirclePlus,
+    Remove,
   },
   mounted() {
     // 选项hash兜底
@@ -186,15 +185,16 @@ export default {
     .el-icon-error {
       visibility: hidden;
     }
-    .icon {
+    .el-icon {
       margin-left: 4px;
       font-size: 17px;
       color: #888;
       cursor: pointer;
+      &.delete:hover {
+        color: red;
+      }
     }
-    .icon.delete:hover {
-      color: red;
-    }
+    
     &.dragg-handle {
       border: 1px solid transparent;
       // border-left: 3px solid $placeholder-color;

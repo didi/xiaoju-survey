@@ -33,6 +33,7 @@ export default defineComponent({
       emit('addOther');
     };
     const openOptionConfig = () => {
+      console.log('open')
       optionConfigVisible.value = true;
     };
     const handleOptionChange = (value) => {
@@ -118,35 +119,29 @@ export default defineComponent({
             </span>
           )}
         </div>
-        {this.optionConfigVisible && (
-          <OptionConfig
+        <OptionConfig
             options={this.optionList}
             show-option-dialog={this.optionConfigVisible}
             show-others={this.showOthers}
             show-limit={false}
-            onVisibleChange={(val) => {
-              this.optionConfigVisible = val;
-            }}
+            v-model={this.optionConfigVisible}
             onAddOther={this.addOther}
             onOptionChange={this.handleOptionChange}
             onChange={this.handleChange}
-          />
-        )}
-        {this.rateConfigVisible && (
-          <RateConfig
-            min={min}
-            max={max}
-            rangeConfig={this.moduleConfig.rangeConfig}
-            visible={this.rateConfigVisible}
-            onVisibleChange={(val) => {
-              this.rateConfigVisible = val;
-            }}
-            explain={explain}
-            dialogWidth="800px"
-            onConfirm={this.handleChange}
-            class={[isNps ? 'nps-rate-config' : '']}
-          />
-        )}
+        />
+        <RateConfig
+          min={min}
+          max={max}
+          rangeConfig={this.moduleConfig.rangeConfig}
+          v-model={this.rateConfigVisible}
+          onVisibleChange={(val) => {
+            this.rateConfigVisible = val;
+          }}
+          explain={explain}
+          dialogWidth="800px"
+          onConfirm={this.handleChange}
+          class={[isNps ? 'nps-rate-config' : '']}
+        />
       </div>
     );
   },

@@ -1,6 +1,6 @@
 <template>
   <el-form-item class="slider-wrap">
-    <el-slider :value="formConfig.value" @input="changeData" :format-tooltip="formatTooltip"></el-slider>
+    <el-slider :modelValue="formConfig.value" @input="changeData" :format-tooltip="formatTooltip"></el-slider>
     <!-- <span>{{ formConfig.value + '%'  }}</span> -->
   </el-form-item>
 </template>

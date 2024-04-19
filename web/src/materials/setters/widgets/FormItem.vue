@@ -60,4 +60,9 @@ export default {
     flex: 1;
   }
 }
+:deep(.customed-label) {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
 </style>

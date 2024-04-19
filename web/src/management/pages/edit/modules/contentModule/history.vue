@@ -16,10 +16,12 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <div class="btn" slot="reference">
-      <i class="iconfont icon-lishi"></i>
+    <template #reference>
+      <div class="btn">
+        <i class="iconfont icon-lishi"></i>
       <span class="btn-txt">历史</span>
     </div>
+    </template>
   </el-popover>
 </template>
 

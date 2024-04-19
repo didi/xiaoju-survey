@@ -1,22 +1,24 @@
 <template>
   <div class="custom-time-range">
-    <el-date-picker
-      v-model="begTime"
-      type="datetime"
-      placeholder="开始日期"
-      format="yyyy-MM-dd HH:mm:ss"
-      @change="changeData(formConfig.keys[0], $event)"
-    >
-    </el-date-picker>
-    <span class="seporator">至</span>
-    <el-date-picker
-      v-model="endTime"
-      type="datetime"
-      placeholder="结束日期"
-      format="yyyy-MM-dd HH:mm:ss"
-      @change="changeData(formConfig.keys[1], $event)"
-    >
-    </el-date-picker>
+    <el-config-provider :locale="zhCn">
+      <el-date-picker
+        v-model="begTime"
+        type="datetime"
+        placeholder="开始日期"
+        format="YYYY-MM-DD HH:mm:ss"
+        @change="changeData(formConfig.keys[0], $event)"
+      >
+      </el-date-picker>
+      <span class="seporator">至</span>
+      <el-date-picker
+        v-model="endTime"
+        type="datetime"
+        placeholder="结束日期"
+        format="YYYY-MM-DD HH:mm:ss"
+        @change="changeData(formConfig.keys[1], $event)"
+      >
+      </el-date-picker>
+    </el-config-provider>
   </div>
 </template>
 <script>
@@ -24,6 +26,7 @@
 import moment from 'moment';
 // 引入中文
 import 'moment/locale/zh-cn';
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 // 设置中文
 moment.locale('zh-cn');
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
@@ -35,8 +38,9 @@ export default {
     const format = 'yyyy-MM-DD HH:mm:ss';
     return {
       begTime: defaultBeginTime,
-      endTime: defaultEndTime,
+      endTime: new Date(defaultEndTime),
       format,
+      zhCn,
       begTimeStr: moment(defaultBeginTime).format(format),
       endTimeStr: moment(defaultEndTime).format(format),
     };

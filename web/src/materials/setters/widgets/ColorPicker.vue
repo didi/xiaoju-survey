@@ -1,6 +1,6 @@
 <template>
   <el-form-item class="pick-wrap">
-    <el-color-picker :value="formConfig.value" @change="changeData"></el-color-picker>
+    <el-color-picker :modelValue="formConfig.value" @change="changeData"></el-color-picker>
   </el-form-item>
 </template>
 <script>
@@ -25,7 +25,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.pick-wrap{
-  text-align: end;
+.pick-wrap {
+  width: 100%;
+
+  :deep(.el-form-item__content) {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+  }
 }
 </style>

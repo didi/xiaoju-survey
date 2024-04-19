@@ -83,31 +83,8 @@ export default defineComponent({
           autocomplete={'off'}
           onBlur={this.onBlur}
           onChange={this.onChange}
+          onFocus={this.onFocus}
         />
-
-        {/* {h(
-          uiTarget,
-          {
-            // class: ['input-box','item-border', ],
-            class: ['input-box item-border', customClass],
-            readonly: this.readonly,
-            type: this.type,
-            readonly: this.readonly,
-            placeholder: this.placeholder,
-            name: this.name,
-            value: this.value,
-            maxlength: this.maxlength,
-            minlength: this.minlength,
-            autocomplete: 'off',
-            onBlur: this.onBlur,
-            onInput: this.onInput,
-            onFocus: this.onFocus,
-            onChange: this.onChange,
-          },
-          [this.value]
-        )} */}
-        
-        {/* {slots.default()} */}
       </div>
     );
   },

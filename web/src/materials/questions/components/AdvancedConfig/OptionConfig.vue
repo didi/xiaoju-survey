@@ -1,10 +1,11 @@
 <template>
   <el-dialog
     title="选项高级设置"
-    custom-class="option-config-wrapper"
-    :visible.sync="configVisible"
+    class="option-config-wrapper"
+    v-model="configVisible"
     :append-to-body="true"
     :width="dialogWidth"
+    size="large"
   >
     <div class="J-option-handwrite">
       <div class="option-header">
@@ -12,8 +13,8 @@
         <div class="ohItem w285" v-if="showOthers">选项后增添输入框</div>
       </div>
       <div>
-        <draggable :list="curOptions" :options="{ handle: '.drag-handle' }">
-          <template #item="{optionItem, index}">
+        <draggable :list="curOptions" handle='.drag-handle'>
+          <template #item="{element, index}">
             <div
               class="option-item"
             >
@@ -28,27 +29,21 @@
               </div>
               <div class="oitem moreInfo lh36" v-if="showOthers">
                 <el-switch
-                  :modelValue="optionItem.others"
-                  @change="(val) => changeOptionOthers(val, optionItem)"
+                  :modelValue="element.others"
+                  @change="(val) => changeOptionOthers(val, element)"
                 ></el-switch>
-                <div class="more-info-content" v-if="optionItem.others">
+                <div class="more-info-content" v-if="element.others">
                   <el-input
-                    v-model="optionItem.placeholderDesc"
+                    v-model="element.placeholderDesc"
                     placeholder="提示文案"
                   ></el-input>
-                  <el-checkbox v-model="optionItem.mustOthers">必填</el-checkbox>
+                  <el-checkbox v-model="element.mustOthers">必填</el-checkbox>
                 </div>
               </div>
+              
               <div class="operate-area" v-if="showOperateOption">
-                <i
-                  class="add el-icon-circle-plus-outline"
-                  @click="addOption('选项', false, index)"
-                ></i>
-                <i
-                  class="el-icon-remove-outline"
-                  v-show="curOptions.length > 1"
-                  @click="deleteOption(index)"
-                ></i>
+                <el-icon v-if="showOperateOption"  @click="addOption('选项', false, index)"><CirclePlus /></el-icon>
+                <el-icon v-show="curOptions.length" @click="deleteOption(index)"><Remove /></el-icon>
               </div>
             </div>
           </template>
@@ -90,6 +85,7 @@
 <script>
 import draggable from 'vuedraggable';
 import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es';
+import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import ExtraIcon from '../ExtraIcon.vue';
 import { cleanRichText } from '@/common/xss';
 
@@ -136,7 +132,7 @@ export default {
         return this.showOptionDialog;
       },
       set(newVal) {
-        this.$emit('visibleChange', newVal);
+        this.$emit('update:modelValue', newVal);
       },
     },
     hashMap() {
@@ -155,6 +151,8 @@ export default {
   components: {
     draggable,
     ExtraIcon,
+    CirclePlus,
+    Remove
   },
   methods: {
     addOtherOption() {
@@ -339,8 +337,8 @@ export default {
           border-radius: 2px;
           .el-input {
             width: 150px;
-            :deep(.el-input__inner) {
-              border: none;
+            :deep(.el-input__wrapper) {
+              box-shadow: none;
             }
           }
           .el-checkbox {
@@ -379,10 +377,10 @@ export default {
       border-color: #fff;
       font-size: 18px;
       text-align: right;
-      i {
+      .el-icon {
         cursor: pointer;
         font-size: inherit;
-        &.add {
+        &:first-child {
           margin-right: 8px;
         }
       }

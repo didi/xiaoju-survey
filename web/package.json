@@ -30,7 +30,8 @@
     "vue-router": "^4.2.5",
     "vuedraggable": "^4.1.0",
     "vuex": "^4.0.2",
-    "xss": "^1.0.14"
+    "xss": "^1.0.14",
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@iconify-json/ep": "^1.1.15",

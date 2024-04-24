@@ -1,7 +1,7 @@
 import { HttpException } from './httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-export class AuthtificationException extends HttpException {
+export class AuthenticationException extends HttpException {
   constructor(public readonly message: string) {
-    super(message, EXCEPTION_CODE.AUTHTIFICATION_FAILED);
+    super(message, EXCEPTION_CODE.AUTHENTICATION_FAILED);
   }
 }

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Authtication } from './authtication';
 import { UserService } from '../modules/auth/services/user.service';
 import { ConfigService } from '@nestjs/config';
-import { AuthtificationException } from '../exceptions/authException';
+import { AuthenticationException } from '../exceptions/authException';
 import { User } from 'src/models/user.entity';
 import * as jwt from 'jsonwebtoken';
 
@@ -47,7 +47,7 @@ describe('Authtication', () => {
     };
 
     await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
+      AuthenticationException,
     );
   });
 
@@ -69,7 +69,7 @@ describe('Authtication', () => {
       .mockReturnValue('XIAOJU_SURVEY_JWT_SECRET');
 
     await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
+      AuthenticationException,
     );
   });
 
@@ -94,7 +94,7 @@ describe('Authtication', () => {
     jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(null);
 
     await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
+      AuthenticationException,
     );
   });
 

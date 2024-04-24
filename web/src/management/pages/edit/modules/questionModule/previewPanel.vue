@@ -28,10 +28,9 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/materialGroup.vue';
-import mainTitle from '@/management/pages/edit/components/mainTitle.vue';
-import submit from '@/management/pages/edit/components/submit.vue';
-import logo from '@/management/pages/edit/components/logo.vue';
+import materialGroup from '@/management/pages/edit/components/materialGroup.vue'
+import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
+import submit from '@/management/pages/edit/components/submit.vue'
 import { mapState, mapGetters } from 'vuex'
 import { get as _get } from 'lodash-es'
 
@@ -40,12 +39,11 @@ export default {
   components: {
     mainTitle,
     submit,
-    logo,
-    materialGroup,
+    materialGroup
   },
   data() {
     return {
-      isAnimating: false,
+      isAnimating: false
     }
   },
   computed: {
@@ -55,31 +53,31 @@ export default {
       skinConf: (state) => _get(state, 'edit.schema.skinConf'),
       bottomConf: (state) => _get(state, 'edit.schema.bottomConf'),
       questionDataList: (state) => _get(state, 'edit.schema.questionDataList'),
-      currentEditOne: (state) => _get(state, 'edit.currentEditOne'),
+      currentEditOne: (state) => _get(state, 'edit.currentEditOne')
     }),
     ...mapGetters({
-      currentEditKey: 'edit/currentEditKey',
+      currentEditKey: 'edit/currentEditKey'
     }),
     autoScrollData() {
       return {
         currentEditOne: this.currentEditOne,
-        len: this.questionDataList.length,
+        len: this.questionDataList.length
       }
-    },
+    }
   },
   watch: {
     skinConf: {
-      handler (skinConf)  {
-        const { themeConf, backgroundConf, contentConf} = skinConf
-        const root = document.documentElement;
-        if(themeConf?.color) {
-          root.style.setProperty('--primary-color', themeConf?.color); // 设置主题颜色
+      handler(skinConf) {
+        const { themeConf, backgroundConf, contentConf } = skinConf
+        const root = document.documentElement
+        if (themeConf?.color) {
+          root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
         }
-        if(backgroundConf?.color) {
-          root.style.setProperty('--primary-background-color', backgroundConf?.color); // 设置背景颜色
+        if (backgroundConf?.color) {
+          root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
         }
-        if(contentConf?.opacity) {
-          root.style.setProperty('--opacity', contentConf?.opacity/100); // 设置全局透明度
+        if (contentConf?.opacity) {
+          root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
         }
       },
       immediate: true, // 立即触发回调函数
@@ -94,21 +92,20 @@ export default {
           // }
           const field = this.questionDataList?.[currentEditOne]?.field
           if (field) {
-            const questionComp =
-              this.$refs.materialGroup.getQuestionRefByField(field)
-            if (questionComp && questionComp.$el) {
-              questionComp.$el.scrollIntoView({
-                behavior: 'smooth',
+            const questionModule = this.$refs.materialGroup.getQuestionRefByField(field)
+            if (questionModule && questionModule.$el) {
+              questionModule.$el.scrollIntoView({
+                behavior: 'smooth'
               })
               // this.isAnimating = true;
               // const maxScrollTop = this.$refs.box.clientHeight - this.$refs.operationWrapper.clientHeight
-              // const targetVal = Math.min(questionComp.$el.offsetTop - this.$refs.operationWrapper.clientHeight / 2, maxScrollTop)
+              // const targetVal = Math.min(questionModule.$el.offsetTop - this.$refs.operationWrapper.clientHeight / 2, maxScrollTop)
               // this.animate(this.$refs.operationWrapper, 'scrollTop', targetVal)
             }
           }
         }, 0)
       }
-    },
+    }
   },
   methods: {
     animate(dom, property, targetValue) {
@@ -155,7 +152,7 @@ export default {
         case 'move':
           this.$store.dispatch('edit/moveQuestion', {
             index: data.index,
-            range: data.range,
+            range: data.range
           })
           break
         case 'delete':
@@ -167,8 +164,8 @@ export default {
         default:
           break
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -1,10 +1,20 @@
 <template>
   <el-collapse class="question-type-wrapper" v-model="activeNames">
-    <el-collapse-item v-for="(item, index) of questionMenuConfig" :title="item.title" :name="index" :key="index">
+    <el-collapse-item
+      v-for="(item, index) of questionMenuConfig"
+      :title="item.title"
+      :name="index"
+      :key="index"
+    >
       <div class="questiontype-list">
-        <el-popover v-for="(item, index) in item.questionList" :key="item.type" placement="right" trigger="hover"
+        <el-popover
+          v-for="(item, index) in item.questionList"
+          :key="item.type"
+          placement="right"
+          trigger="hover"
           :popper-class="'qtype-popper-' + (index % 3)"
-          :popper-style="{width: '369px'}">
+          :popper-style="{ width: '369px' }"
+        >
           <img :src="item.snapshot" width="345px" />
           <template #reference>
             <div :key="item.type" class="qtopic-item" @click="onQuestionType({ type: item.type })">
@@ -21,9 +31,7 @@
 <script setup>
 import questionLoader from '@/materials/questions/questionLoader'
 
-import questionMenuConfig, {
-  questionTypeList,
-} from '@/management/config/questionMenuConfig'
+import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { getQuestionByType } from '@/management/utils/index'
 import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
@@ -32,21 +40,17 @@ import { computed, ref } from 'vue'
 const activeNames = ref([0, 1])
 
 const store = useStore()
-const questionDataList = computed(() =>
-  _get(store, 'state.edit.schema.questionDataList')
-)
+const questionDataList = computed(() => _get(store, 'state.edit.schema.questionDataList'))
 
 questionLoader.init({
-  typeList: questionTypeList.map((item) => item.type),
+  typeList: questionTypeList.map((item) => item.type)
 })
 
 const onQuestionType = ({ type }) => {
   const fields = questionDataList.value.map((item) => item.field)
   const currentEditOne = _get(store, 'state.edit.currentEditOne')
   const index =
-    typeof currentEditOne === 'number'
-      ? currentEditOne + 1
-      : questionDataList.value.length
+    typeof currentEditOne === 'number' ? currentEditOne + 1 : questionDataList.value.length
   const newQuestion = getQuestionByType(type, fields)
   newQuestion.title = newQuestion.title = `标题${index + 1}`
   if (type === 'vote') {
@@ -57,7 +61,7 @@ const onQuestionType = ({ type }) => {
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-type-wrapper {
   padding: 0 20px;
   border: none;
@@ -109,11 +113,10 @@ const onQuestionType = ({ type }) => {
     font-size: 21px;
     color: $font-color-title;
   }
-
 }
 </style>
 
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss">
 .qtype-popper-0 {
   transform: translateX(183px);
 }

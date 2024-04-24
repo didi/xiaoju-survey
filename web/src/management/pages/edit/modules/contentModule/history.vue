@@ -19,8 +19,8 @@
     <template #reference>
       <div class="btn">
         <i class="iconfont icon-lishi"></i>
-      <span class="btn-txt">历史</span>
-    </div>
+        <span class="btn-txt">历史</span>
+      </div>
     </template>
   </el-popover>
 </template>
@@ -38,28 +38,28 @@ import { get as _get } from 'lodash-es'
 
 const getItemData = (item) => ({
   operator: item?.operator?.username || '未知用户',
-  time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'),
+  time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
 })
 
 export default {
-  name: 'history',
+  name: 'HistoryModule',
   computed: {
     ...mapState({
-      surveyId: (state) => _get(state, 'edit.surveyId'),
+      surveyId: (state) => _get(state, 'edit.surveyId')
     }),
     dailyList() {
       return this.dailyHis.map(getItemData)
     },
     publishList() {
       return this.publishHis.map(getItemData)
-    },
+    }
   },
   data() {
     return {
       dailyHis: [],
       publishHis: [],
       currentTab: 'daily',
-      visible: false,
+      visible: false
     }
   },
   watch: {
@@ -70,24 +70,24 @@ export default {
           const [dailyHis, publishHis] = await Promise.all([
             getSurveyHistory({
               surveyId: this.surveyId,
-              historyType: 'dailyHis',
+              historyType: 'dailyHis'
             }),
             getSurveyHistory({
               surveyId: this.surveyId,
-              historyType: 'publishHis',
-            }),
+              historyType: 'publishHis'
+            })
           ])
           this.dailyHis = dailyHis.data || []
           this.publishHis = publishHis.data || []
         }
-      },
-    },
+      }
+    }
   },
   methods: {
     onShow() {
       this.visible = true
-    },
-  },
+    }
+  }
 }
 </script>
 

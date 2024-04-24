@@ -1,73 +1,73 @@
-import { defineComponent, h } from 'vue';
-import '../../common/css/choice.scss';
-import '../../common/css/input.scss';
+import { defineComponent, } from 'vue'
+import '../../common/css/choice.scss'
+import '../../common/css/input.scss'
 
 export default defineComponent({
   name: 'baseInput',
   props: {
     uiTarget: {
       type: String,
-      default: 'radio',
+      default: 'radio'
     },
     customClass: {
       type: String,
-      default: '',
+      default: ''
     },
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     readonly: {
       type: Boolean,
-      default: false,
+      default: false
     },
     placeholder: {
       type: String,
-      default: '请填写',
+      default: '请填写'
     },
     maxlength: {
       type: Number,
-      default: 500,
+      default: 500
     },
     minlength: {
       type: Number,
-      default: 0,
+      default: 0
     },
     value: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
-  emits: ['input','change', 'blur', 'focus'],
+  emits: ['input', 'change', 'blur', 'focus'],
   setup(props, { emit, slots }) {
     const onBlur = () => {
-      emit('blur');
-    };
+      emit('blur')
+    }
     const onInput = (e) => {
-      emit('input', e);
-    };
+      emit('input', e)
+    }
     const onChange = (e) => {
-      emit('change', e);
-    };
+      emit('change', e)
+    }
     const onFocus = () => {
-      if (props.readonly) return false;
-      emit('focus');
-    };
+      if (props.readonly) return false
+      emit('focus')
+    }
     return {
       props,
       slots,
       onBlur,
       onInput,
       onFocus,
-      onChange,
-    };
+      onChange
+    }
   },
   render() {
-    const { uiTarget, customClass, slots, props } = this;
+    const { uiTarget, customClass, props } = this
     return (
       <div class="input-wrapper">
         <uiTarget
@@ -86,6 +86,6 @@ export default defineComponent({
           onFocus={this.onFocus}
         />
       </div>
-    );
-  },
-});
+    )
+  }
+})

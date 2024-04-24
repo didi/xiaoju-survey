@@ -5,7 +5,7 @@ import { get as _get } from 'lodash-es'
 
 const instance = axios.create({
   baseURL: '/api',
-  timeout: 10000,
+  timeout: 10000
 })
 
 instance.interceptors.response.use(
@@ -16,7 +16,7 @@ instance.interceptors.response.use(
     const res = response.data
     if (res.code === 403) {
       router.replace({
-        name: 'login',
+        name: 'login'
       })
       return res
     } else {
@@ -45,5 +45,5 @@ export default instance
 export const CODE_MAP = {
   SUCCESS: 200,
   ERROR: 500,
-  NOTAUTH: 403,
+  NOTAUTH: 403
 }

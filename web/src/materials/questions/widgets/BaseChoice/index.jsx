@@ -1,97 +1,97 @@
-import { defineComponent, computed, useSlots } from 'vue';
-import { findIndex, includes, cloneDeep } from 'lodash-es';
-import { filterXSS } from '@/common/xss';
-import '../../common/css/choice.scss';
+import { defineComponent, computed } from 'vue'
+import { findIndex, includes, cloneDeep } from 'lodash-es'
+import { filterXSS } from '@/common/xss'
+import '../../common/css/choice.scss'
 
 export default defineComponent({
   name: 'BaseChoice',
   props: {
     uiTarget: {
       type: String,
-      default: 'radio',
+      default: 'radio'
     },
     hideText: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isMatrix: {
       type: Boolean,
-      default: false,
+      default: false
     },
     choiceStyle: {
       type: String,
-      default: '',
+      default: ''
     },
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     readonly: {
       type: Boolean,
-      default: false,
+      default: false
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     value: {
       type: [Array, String],
       default: () => {
-        return '';
-      },
+        return ''
+      }
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     voteTotal: {
       type: Number,
-      default: 10,
-    },
+      default: 10
+    }
   },
   emits: ['change'],
   setup(props, { emit, slots }) {
     const getOptions = computed(() => {
-      return props.options;
-    });
+      return props.options
+    })
     const isChecked = (item) => {
       if (props.uiTarget === 'radio') {
-        return props.value === item.hash;
+        return props.value === item.hash
       } else {
-        return props.value.includes(item.hash);
+        return props.value.includes(item.hash)
       }
-    };
+    }
     const onRadioClick = (item, $event) => {
-      $event && $event.stopPropagation();
-      $event && $event.preventDefault();
-      emit('change', item.hash);
-    };
+      $event && $event.stopPropagation()
+      $event && $event.preventDefault()
+      emit('change', item.hash)
+    }
     const onCheckboxClick = (item, $event) => {
-      $event && $event.stopPropagation();
-      $event && $event.preventDefault();
-      const targetValue = item.hash;
-      const values = cloneDeep(props.value);
+      $event && $event.stopPropagation()
+      $event && $event.preventDefault()
+      const targetValue = item.hash
+      const values = cloneDeep(props.value)
       if (!includes(values, targetValue)) {
-        values.push(targetValue);
+        values.push(targetValue)
       } else {
-        const index = findIndex(values, (val) => val === targetValue);
+        const index = findIndex(values, (val) => val === targetValue)
         if (index !== -1) {
-          values.splice(index, 1);
+          values.splice(index, 1)
         }
       }
-      emit('change', values);
+      emit('change', values)
       // return values
-    };
+    }
     return {
       slots,
       getOptions,
       isChecked,
       onRadioClick,
-      onCheckboxClick,
-    };
+      onCheckboxClick
+    }
   },
   render() {
-    const { uiTarget, isMatrix, hideText, getOptions, isChecked, slots } = this;
+    const { uiTarget, isMatrix, hideText, getOptions, isChecked, slots } = this
     return (
       <div class="choice-wrapper">
         <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>
@@ -112,15 +112,13 @@ export default defineComponent({
                           index === getOptions.length - 1 ? 'lastchild' : '',
                           index === getOptions.length - 2 ? 'last2child' : '',
                           item.disabled ? 'disabled' : '',
-                          'choice-item',
+                          'choice-item'
                         ]}
                         onClick={($event) => {
-                          if (this.readonly) return;
-                          if (item.disabled) return;
-                          if (uiTarget === 'radio')
-                            this.onRadioClick(item, $event);
-                          if (uiTarget === 'checkbox')
-                            this.onCheckboxClick(item, $event);
+                          if (this.readonly) return
+                          if (item.disabled) return
+                          if (uiTarget === 'radio') this.onRadioClick(item, $event)
+                          if (uiTarget === 'checkbox') this.onCheckboxClick(item, $event)
                         }}
                       >
                         <input
@@ -133,15 +131,10 @@ export default defineComponent({
                           disabled={item.disabled}
                           class={[
                             'item-input',
-                            isChecked(item)
-                              ? 'qicon qicon-gouxuan ql-checked-input'
-                              : '',
+                            isChecked(item) ? 'qicon qicon-gouxuan ql-checked-input' : ''
                           ]}
                         />
-                        <label
-                          class={'item-title'}
-                          for={`${uiTarget}${this.name}${index}`}
-                        >
+                        <label class={'item-title'} for={`${uiTarget}${this.name}${index}`}>
                           {!hideText && (
                             <span
                               v-html={filterXSS(item.text)}
@@ -151,7 +144,7 @@ export default defineComponent({
                           )}
                           {slots.vote?.({
                             option: item,
-                            voteTotal: this.voteTotal,
+                            voteTotal: this.voteTotal
                           })}
                         </label>
                       </div>
@@ -159,25 +152,24 @@ export default defineComponent({
                   </div>
                   {item.others &&
                     // 如果开启了其他，在运行态需要选中后显示输入框，而预览态直接显示输入框
-                    (this.readonly || (!this.readonly && isChecked(item))) && 
-                      slots.selectMore?.({
-                        showTitle: false,
-                        selectMoreConfig: {
-                          type: 'selectMoreModule',
-                          index: index,
-                          field: item.othersKey,
-                          placeholder: item.placeholderDesc,
-                          require: item.mustOthers,
-                          value: item.othersValue,
-                        },
-                      })
-                    }
+                    (this.readonly || (!this.readonly && isChecked(item))) &&
+                    slots.selectMore?.({
+                      showTitle: false,
+                      selectMoreConfig: {
+                        type: 'selectMoreModule',
+                        index: index,
+                        field: item.othersKey,
+                        placeholder: item.placeholderDesc,
+                        require: item.mustOthers,
+                        value: item.othersValue
+                      }
+                    })}
                 </div>
               )
-            );
+            )
           })}
         </div>
       </div>
-    );
-  },
-});
+    )
+  }
+})

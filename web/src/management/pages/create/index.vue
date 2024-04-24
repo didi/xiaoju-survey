@@ -1,9 +1,6 @@
 <template>
   <div class="new">
-    <type-list
-      :selectType="selectType"
-      @selectTypeChange="onSelectTypeChange"
-    />
+    <type-list :selectType="selectType" @selectTypeChange="onSelectTypeChange" />
     <create-form :selectType="selectType" />
   </div>
 </template>
@@ -16,22 +13,22 @@ export default {
   name: 'createPage',
   components: {
     typeList,
-    createForm,
+    createForm
   },
   data() {
     return {
-      selectType: 'normal',
+      selectType: 'normal'
     }
   },
   methods: {
     onSelectTypeChange(selectType) {
       this.selectType = selectType
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .new {
   position: relative;
   min-height: 750px;

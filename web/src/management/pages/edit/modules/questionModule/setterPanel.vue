@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import setterField from '@/management/pages/edit/components/setterField.vue';
-import { mapGetters } from 'vuex';
+import setterField from '@/management/pages/edit/components/setterField.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'setterWrapper',
   data() {
     return {
-      tabSelected: '0',
+      tabSelected: '0'
     }
   },
   computed: {
@@ -36,23 +36,23 @@ export default {
       formConfigList: 'edit/formConfigList',
       moduleConfig: 'edit/moduleConfig',
       currentEditKey: 'edit/currentEditKey',
-      currentEditMeta: 'edit/currentEditMeta',
-    }),
+      currentEditMeta: 'edit/currentEditMeta'
+    })
   },
   components: {
-    setterField,
+    setterField
   },
   methods: {
     onFormChange(data) {
       const { key, value } = data
       const resultKey = `${this.currentEditKey}.${key}`
       this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .setter-wrapper {
   width: 360px;
   height: 100%;
@@ -89,6 +89,6 @@ export default {
 }
 
 .question-config-form {
-  padding: 30px 20px 50px 20px!important;
+  padding: 30px 20px 50px 20px;
 }
 </style>

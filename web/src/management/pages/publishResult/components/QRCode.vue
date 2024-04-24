@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       inQcode: false,
-      qRCodeImg: '',
+      qRCodeImg: ''
     }
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
         .catch((err) => {
           console.error(err)
         })
-    },
+    }
   },
   watch: {
     url: {
@@ -48,9 +48,9 @@ export default {
             this.initQRCodeImg()
           })
         }
-      },
-    },
-  },
+      }
+    }
+  }
 }
 </script>
 

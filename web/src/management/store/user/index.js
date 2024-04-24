@@ -5,11 +5,11 @@ export default {
   state: {
     userInfo: {
       token: '',
-      username: '',
+      username: ''
     },
     hasLogined: false,
     loginTime: null,
-    initialized: false,
+    initialized: false
   },
   mutations: {
     setUserInfo(state, data) {
@@ -23,7 +23,7 @@ export default {
     },
     setInitialized(state, data) {
       state.initialized = data
-    },
+    }
   },
   actions: {
     init({ dispatch, commit }) {
@@ -51,7 +51,7 @@ export default {
         USER_INFO_KEY,
         JSON.stringify({
           userInfo: data,
-          loginTime: loginTime,
+          loginTime: loginTime
         })
       )
     },
@@ -59,6 +59,6 @@ export default {
       commit('setUserInfo', null)
       commit('setHsLogined', false)
       localStorage.removeItem(USER_INFO_KEY)
-    },
-  },
+    }
+  }
 }

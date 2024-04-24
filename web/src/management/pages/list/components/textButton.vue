@@ -11,20 +11,20 @@ export default {
   name: 'TextButton',
   data() {
     return {
-      iconIndex: 0,
+      iconIndex: 0
     }
   },
   props: {
     option: {
       type: Object,
-      required: true,
+      required: true
     },
     effectFun: {
-      type: Function,
+      type: Function
     },
     effectKey: {
-      type: String,
-    },
+      type: String
+    }
   },
   computed: {
     toggleOptionIcons() {
@@ -36,7 +36,7 @@ export default {
     currentIconItem() {
       let finalIconIndex = this.iconIndex % this.iconsLength
       return this.toggleOptionIcons[finalIconIndex]
-    },
+    }
   },
   methods: {
     onClick() {
@@ -46,13 +46,11 @@ export default {
       }
       typeof this.effectFun === 'function' &&
         this.effectFun(this.currentIconItem.effectValue, this.effectKey)
-    },
+    }
   },
   created() {
-    this.iconIndex = this.toggleOptionIcons.findIndex(
-      (iconItem) => iconItem.isDefaultValue
-    )
-  },
+    this.iconIndex = this.toggleOptionIcons.findIndex((iconItem) => iconItem.isDefaultValue)
+  }
 }
 </script>
 

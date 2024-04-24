@@ -1,9 +1,9 @@
-import BaseInput from '../BaseInput';
-import { defineComponent, ref } from 'vue';
-import '../../common/css/input.scss';
-import { get } from 'lodash-es';
-import myMeta from './meta';
-export const meta = myMeta;
+import BaseInput from '../BaseInput'
+import { defineComponent, ref } from 'vue'
+import '../../common/css/input.scss'
+import { get } from 'lodash-es'
+import myMeta from './meta'
+export const meta = myMeta
 /**
  * 支持配置：
  * 内容限制格式，valid
@@ -18,11 +18,11 @@ export default defineComponent({
     field: {},
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     placeholder: {
       type: String,
-      default: '请填写',
+      default: '请填写'
     },
     textRange: {
       type: Object,
@@ -30,91 +30,90 @@ export default defineComponent({
         return {
           max: {
             placeholder: '500',
-            value: 500,
+            value: 500
           },
           min: {
             placeholder: '0',
-            value: 0,
-          },
-        };
-      },
+            value: 0
+          }
+        }
+      }
     },
     valid: {
       type: String,
-      default: '',
+      default: ''
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   setup(props, { emit }) {
-    const focusFlag = ref(false);
-    const initial = props.textRange.max.value - props.value.length;
-    const getLeftTextNumber = ref(initial);
+    const focusFlag = ref(false)
+    const initial = props.textRange.max.value - props.value.length
+    const getLeftTextNumber = ref(initial)
     const onFocus = () => {
-      if (props.readonly) return;
+      if (props.readonly) return
       if (props.type !== 'mob' && (props.valid === '' || props.valid === 'n')) {
-        focusFlag.value = true;
+        focusFlag.value = true
       }
-      emit('focus');
-    };
+      emit('focus')
+    }
     const onBlur = () => {
-      emit('blur');
-    };
+      emit('blur')
+    }
     const onInput = (e) => {
       if (props.type !== 'mob' && (props.valid === '' || props.valid === 'n')) {
-        getLeftTextNumber.value =
-          props.textRange.max.value - e.target.value.length;
+        getLeftTextNumber.value = props.textRange.max.value - e.target.value.length
       }
-      emit('input');
-    };
+      emit('input')
+    }
     const onChange = (e) => {
-      const key = props.field;
-      const maxLength = get(props, 'textRange.max.value');
+      const key = props.field
+      const maxLength = get(props, 'textRange.max.value')
       if (
         get(props, 'valid') === 'n' &&
         maxLength &&
         e.target.value.toString().length > maxLength
       ) {
-        e.target.value = e.target.value.slice(0, props.textRange.max.value);
+        e.target.value = e.target.value.slice(0, props.textRange.max.value)
       }
       if (['m', 'idcard', 'e', 'licensePlate'].includes(props.valid)) {
-        e.target.value = e.target.value.replace(/\s+/g, '');
+        e.target.value = e.target.value.replace(/\s+/g, '')
       }
       emit('change', {
         key,
-        value: e.target.value,
-      });
-    };
+        value: e.target.value
+      })
+    }
     return {
       focusFlag,
       getLeftTextNumber,
       onBlur,
       onFocus,
       onInput,
-      onChange,
-    };
+      onChange
+    }
   },
   render() {
-    const { focusFlag, getLeftTextNumber, field, textRange } = this;
+    const { focusFlag, getLeftTextNumber, field, textRange } = this
     const props = {
       ...this.$props,
       value: this.value,
       name: field,
       maxlength: textRange.max.value,
-      minlength: textRange.min.value,
-    };
+      minlength: textRange.min.value
+    }
     return (
       <BaseInput
         uiTarget="textarea"
         customClass={focusFlag ? 'is-focused' : ''}
-        { ...props }
+        {...props}
         {...{
           onBlur: this.onBlur,
           onFocus: this.onFocus,
           onInput: this.onInput,
-          onChange: this.onChange,
+          onChange: this.onChange
         }}
       >
         {focusFlag && (
@@ -123,6 +122,6 @@ export default defineComponent({
           </div>
         )}
       </BaseInput>
-    );
-  },
-});
+    )
+  }
+})

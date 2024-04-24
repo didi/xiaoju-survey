@@ -1,20 +1,20 @@
 <template>
-    <Component v-if="$store.state.router" :is="$store.state.router"></Component>
-    <logo v-if="!['successPage', 'indexPage'].includes($store.state.router)"></logo>
+  <Component v-if="$store.state.router" :is="$store.state.router"></Component>
+  <logo v-if="!['successPage', 'indexPage'].includes($store.state.router)"></logo>
 </template>
 
 <script>
-import { getPublishedSurveyInfo } from './api/survey';
+import { getPublishedSurveyInfo } from './api/survey'
 import useCommandComponent from './hooks/useCommandComponent'
 
-import emptyPage from './pages/emptyPage.vue';
-import indexPage from './pages/index.vue';
-import errorPage from './pages/errorPage.vue';
-import successPage from './pages/successPage.vue';
+import emptyPage from './pages/emptyPage.vue'
+import indexPage from './pages/index.vue'
+import errorPage from './pages/errorPage.vue'
+import successPage from './pages/successPage.vue'
 import alert from './components/alert.vue'
 
-import logo from './components/logo.vue';
-import { get as _get, value } from 'lodash-es'
+import logo from './components/logo.vue'
+import { get as _get } from 'lodash-es'
 
 export default {
   name: 'App',
@@ -23,15 +23,15 @@ export default {
     indexPage,
     errorPage,
     successPage,
-    logo,
+    logo
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
-    skinConf () {
-      return _get(this.$store, 'state.skinConf', {});
-    },
+    skinConf() {
+      return _get(this.$store, 'state.skinConf', {})
+    }
   },
   watch: {
     skinConf(value) {
@@ -39,68 +39,61 @@ export default {
     }
   },
   async created() {
-    this.init();
+    this.init()
     this.alert = useCommandComponent(alert)
   },
   beforeCreate() {},
   methods: {
     async init() {
-      const surveyPath = location.pathname.split('/').pop();
+      const surveyPath = location.pathname.split('/').pop()
       if (!surveyPath) {
-        this.$store.commit('setRouter', 'emptyPage');
+        this.$store.commit('setRouter', 'emptyPage')
       } else {
         try {
-          const res = await getPublishedSurveyInfo({ surveyPath });
+          const res = await getPublishedSurveyInfo({ surveyPath })
           if (res.code === 200) {
-            const data = res.data;
-            const {
-              bannerConf,
-              baseConf,
-              bottomConf,
-              dataConf,
-              skinConf,
-              submitConf,
-            } = data.code;
-            document.title = data.title;
+            const data = res.data
+            const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf } = data.code
+            document.title = data.title
             const questionData = {
               bannerConf,
               baseConf,
               bottomConf,
               dataConf,
               skinConf,
-              submitConf,
-            };
+              submitConf
+            }
             this.setSkin(skinConf)
-            this.$store.commit('setSurveyPath', surveyPath);
-            this.$store.dispatch('init', questionData);
-            this.$store.dispatch('getEncryptInfo');
+            this.$store.commit('setSurveyPath', surveyPath)
+            this.$store.dispatch('init', questionData)
+            this.$store.dispatch('getEncryptInfo')
           } else {
-            throw new Error(res.errmsg);
+            throw new Error(res.errmsg)
           }
         } catch (error) {
-          console.log(error);
+          console.log(error)
           this.alert({
-            title: error.message || '获取问卷失败',
-          });
+            title: error.message || '获取问卷失败'
+          })
         }
       }
     },
     setSkin(skinConf) {
-      const { themeConf, backgroundConf, contentConf} = skinConf
-      const root = document.documentElement;
-      if(themeConf?.color) {
-        root.style.setProperty('--primary-color', themeConf?.color); // 设置主题颜色
+      const { themeConf, backgroundConf, contentConf } = skinConf
+      const root = document.documentElement
+      if (themeConf?.color) {
+        root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
       }
-      if(backgroundConf?.color) {
-        root.style.setProperty('--primary-background-color', backgroundConf?.color); // 设置背景颜色
+      if (backgroundConf?.color) {
+        root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
       }
-      if(contentConf?.opacity.toString()) {
-        console.log({opacity: (contentConf?.opacity)/100})
-        root.style.setProperty('--opacity', (contentConf?.opacity)/100); // 设置全局透明度
+      if (contentConf?.opacity.toString()) {
+        console.log({ opacity: contentConf?.opacity / 100 })
+        root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
       }
     }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss">
@@ -111,8 +104,6 @@ export default {
 html {
   background: rgb(238, 238, 238);
 }
-
-
 
 #app {
   position: relative;

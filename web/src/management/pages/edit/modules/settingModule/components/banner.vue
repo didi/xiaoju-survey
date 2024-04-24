@@ -25,7 +25,7 @@
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'banner',
+  name: 'BannerModule',
   data() {
     return {}
   },
@@ -35,24 +35,24 @@ export default {
       default: () => {}
     },
     isSelected: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   computed: {
     bgImage() {
       return _get(this.bannerConf, 'bannerConfig.bgImage', '')
-    },
+    }
   },
   methods: {
     handleClick() {
       this.$emit('select')
-    },
+    }
   },
-  components: {},
+  components: {}
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .banner-preview {
   width: 100%;
 }

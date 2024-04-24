@@ -6,7 +6,7 @@
         <div class="bottom-word" v-html="errorMsg"></div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 <script>
 export default {
@@ -14,36 +14,35 @@ export default {
   data() {
     return {
       imageMap: {
-        overTime: '/imgs/icons/overtime.webp',
-      },
-    };
+        overTime: '/imgs/icons/overtime.webp'
+      }
+    }
   },
   computed: {
     errorImageUrl() {
-      return this.imageMap[this.errorType] || this.imageMap.default;
+      return this.imageMap[this.errorType] || this.imageMap.default
     },
     errorType() {
-      return this.$store.state?.errorInfo?.errorType;
+      return this.$store.state?.errorInfo?.errorType
     },
     errorMsg() {
-      return this.$store.state?.errorInfo?.errorMsg;
-    },
+      return this.$store.state?.errorInfo?.errorMsg
+    }
   },
-  mounted() {},
-};
+  mounted() {}
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
-
+<style lang="scss" scoped>
 .result-page-wrap {
   width: 100%;
   flex: 1;
   text-align: center;
   overflow: hidden;
   background: var(--primary-background-color);
-  
+
   padding: 0 0.3rem;
-  .result-page{
-    background: rgba(255, 255, 255, var(--opacity)); 
+  .result-page {
+    background: rgba(255, 255, 255, var(--opacity));
     display: flex;
     flex-direction: column;
     height: 100%;

@@ -1,9 +1,6 @@
 <template>
   <div class="question-header">
-    <div
-      class="banner"
-      v-if="bannerConf.bannerConfig && bannerConf.bannerConfig.bgImage"
-    >
+    <div class="banner" v-if="bannerConf.bannerConfig && bannerConf.bannerConfig.bgImage">
       <img
         class="banner-img"
         :src="bannerConf.bannerConfig.bgImage"
@@ -11,10 +8,7 @@
         @click="onBannerClick"
       />
     </div>
-    <div
-      class="banner"
-      v-if="bannerConf.bannerConfig && bannerConf.bannerConfig.videoLink"
-    >
+    <div class="banner" v-if="bannerConf.bannerConfig && bannerConf.bannerConfig.videoLink">
       <div class="video">
         <video
           id="video"
@@ -45,43 +39,35 @@
   </div>
 </template>
 <script>
-import { get as _get } from 'lodash-es';
-import { formatLink } from '../utils/index.js';
+import { get as _get } from 'lodash-es'
+import { formatLink } from '../utils/index.js'
 
 export default {
   name: 'TheHeader',
   computed: {
     bannerConf() {
-      return _get(this.$store, 'state.bannerConf', {});
+      return _get(this.$store, 'state.bannerConf', {})
     }
   },
   methods: {
     onBannerClick() {
-      const allow = _get(
-        this.bannerConf,
-        'bannerConfig.bgImageAllowJump',
-        false
-      );
-      const jumpLink = _get(
-        this.bannerConf,
-        'bannerConfig.bgImageJumpLink',
-        ''
-      );
+      const allow = _get(this.bannerConf, 'bannerConfig.bgImageAllowJump', false)
+      const jumpLink = _get(this.bannerConf, 'bannerConfig.bgImageJumpLink', '')
       if (!allow || !jumpLink) {
-        return;
+        return
       }
-      window.open(formatLink(jumpLink));
+      window.open(formatLink(jumpLink))
     },
     play() {
-      const video = document.getElementById('video');
-      document.querySelector('.play-icon').style.display = 'none';
-      document.querySelector('.video-modal').style.display = 'none';
-      video.play();
-    },
-  },
-};
+      const video = document.getElementById('video')
+      document.querySelector('.play-icon').style.display = 'none'
+      document.querySelector('.video-modal').style.display = 'none'
+      video.play()
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-header {
   .banner,
   .titlePanel {

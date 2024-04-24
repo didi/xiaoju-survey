@@ -1,32 +1,30 @@
 <template>
   <div class="tool-root" @click.stop="onClick">
-    <span class="tool-root-btn-text" :style="{ width: width + 'px' }">{{
-      label
-    }}</span>
+    <span class="tool-root-btn-text" :style="{ width: width + 'px' }">{{ label }}</span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Tool',
+  name: 'ToolModule',
   props: {
     value: String,
     label: String,
     type: String,
-    width: Number,
+    width: Number
   },
   methods: {
     onClick() {
       this.$emit('call', {
         key: this.value,
-        name: this.label,
+        name: this.label
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tool-root {
   display: inline-block;
   font-size: 0;

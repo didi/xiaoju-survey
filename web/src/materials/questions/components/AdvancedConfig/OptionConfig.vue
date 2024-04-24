@@ -13,11 +13,9 @@
         <div class="ohItem w285" v-if="showOthers">选项后增添输入框</div>
       </div>
       <div>
-        <draggable :list="curOptions" handle='.drag-handle'>
-          <template #item="{element, index}">
-            <div
-              class="option-item"
-            >
+        <draggable :list="curOptions" handle=".drag-handle">
+          <template #item="{ element, index }">
+            <div class="option-item">
               <span class="drag-handle qicon qicon-tuodong"></span>
               <div class="flex-1 oitem" v-if="showText">
                 <div
@@ -33,28 +31,25 @@
                   @change="(val) => changeOptionOthers(val, element)"
                 ></el-switch>
                 <div class="more-info-content" v-if="element.others">
-                  <el-input
-                    v-model="element.placeholderDesc"
-                    placeholder="提示文案"
-                  ></el-input>
+                  <el-input v-model="element.placeholderDesc" placeholder="提示文案"></el-input>
                   <el-checkbox v-model="element.mustOthers">必填</el-checkbox>
                 </div>
               </div>
-              
+
               <div class="operate-area" v-if="showOperateOption">
-                <el-icon v-if="showOperateOption"  @click="addOption('选项', false, index)"><CirclePlus /></el-icon>
-                <el-icon v-show="curOptions.length" @click="deleteOption(index)"><Remove /></el-icon>
+                <el-icon v-if="showOperateOption" @click="addOption('选项', false, index)"
+                  ><CirclePlus
+                /></el-icon>
+                <el-icon v-show="curOptions.length" @click="deleteOption(index)"
+                  ><Remove
+                /></el-icon>
               </div>
             </div>
           </template>
         </draggable>
       </div>
       <div class="add-btn-row">
-        <div
-          class="add-option primary-color"
-          v-if="showOperateOption"
-          @click="addOption()"
-        >
+        <div class="add-option primary-color" v-if="showOperateOption" @click="addOption()">
           <span>
             <i class="el-icon-circle-plus-outline primary-color"></i>
             添加新选项
@@ -78,16 +73,16 @@
         <el-button @click="configVisible = false">取消</el-button>
         <el-button type="primary" @click="optionConfigChange">确认</el-button>
       </span>
-  </template>
+    </template>
   </el-dialog>
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es';
+import draggable from 'vuedraggable'
+import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es'
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
-import ExtraIcon from '../ExtraIcon.vue';
-import { cleanRichText } from '@/common/xss';
+import ExtraIcon from '../ExtraIcon.vue'
+import { cleanRichText } from '@/common/xss'
 
 export default {
   name: 'OptionConfig',
@@ -95,58 +90,58 @@ export default {
   data() {
     return {
       curOptions: _cloneDeep(this.options),
-      popoverVisible: false,
-    };
+      popoverVisible: false
+    }
   },
   props: {
     options: {
       type: Array,
       default() {
-        return [];
-      },
+        return []
+      }
     },
     showOptionDialog: {
       type: Boolean,
-      default: false,
+      default: false
     },
     dialogWidth: {
       type: String,
-      default: '60%',
+      default: '60%'
     },
     showOperateOption: {
       type: Boolean,
-      default: true,
+      default: true
     },
     showText: {
       type: Boolean,
-      default: true,
+      default: true
     },
     showOthers: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   computed: {
     configVisible: {
       get() {
-        return this.showOptionDialog;
+        return this.showOptionDialog
       },
       set(newVal) {
-        this.$emit('update:modelValue', newVal);
-      },
+        this.$emit('update:modelValue', newVal)
+      }
     },
     hashMap() {
-      const mapData = {};
+      const mapData = {}
       _forEach(this.curOptions, (item) => {
         if (item.hash) {
-          mapData[item.hash] = true;
+          mapData[item.hash] = true
         }
-      });
-      return mapData;
+      })
+      return mapData
     },
     textOptions() {
-      return this.curOptions.map((item) => item.text);
-    },
+      return this.curOptions.map((item) => item.text)
+    }
   },
   components: {
     draggable,
@@ -156,13 +151,13 @@ export default {
   },
   methods: {
     addOtherOption() {
-      const { field } = this.moduleConfig;
-      this.addOption('其他', true, -1, field);
+      const { field } = this.moduleConfig
+      this.addOption('其他', true, -1, field)
     },
     addOption(text = '选项', others = false, index = -1, field) {
-      let addOne;
+      let addOne
       if (this.curOptions[0]) {
-        addOne = _cloneDeep(this.curOptions[0]);
+        addOne = _cloneDeep(this.curOptions[0])
       } else {
         addOne = {
           text: '',
@@ -172,86 +167,86 @@ export default {
           othersKey: '',
           placeholderDesc: '',
           score: 0,
-          limit: '',
-        };
+          limit: ''
+        }
       }
       for (const i in addOne) {
         if (i === 'others') {
-          addOne[i] = others;
-          if (others) addOne.othersKey = `${field}_${addOne.hash}`;
+          addOne[i] = others
+          if (others) addOne.othersKey = `${field}_${addOne.hash}`
         } else if (i === 'mustOthers') {
-          addOne[i] = false;
+          addOne[i] = false
         } else if (i === 'text') {
-          addOne[i] = text;
+          addOne[i] = text
         } else if (i === 'score') {
-          addOne[i] = 0;
+          addOne[i] = 0
         }
       }
-      addOne.hash = this.getNewHash();
+      addOne.hash = this.getNewHash()
       if (index < 0 || typeof index !== 'number') {
-        this.curOptions.push(addOne);
+        this.curOptions.push(addOne)
       } else {
-        this.curOptions.splice(index + 1, 0, addOne);
+        this.curOptions.splice(index + 1, 0, addOne)
       }
 
-      return addOne;
+      return addOne
     },
     async deleteOption(index) {
-      this.curOptions.splice(index, 1);
+      this.curOptions.splice(index, 1)
     },
     parseImport(newOptions) {
       if (typeof newOptions !== 'undefined' && newOptions.length > 0) {
-        this.curOptions = newOptions;
-        this.importKey = 'single';
-        this.popoverVisible = false;
+        this.curOptions = newOptions
+        this.importKey = 'single'
+        this.popoverVisible = false
       } else {
-        this.$message.warning('最少保留一项');
+        this.$message.warning('最少保留一项')
       }
     },
     getNewHash() {
-      let random = this.getRandom();
+      let random = this.getRandom()
       while (random in this.hashMap) {
-        random = this.getRandom();
+        random = this.getRandom()
       }
-      return random;
+      return random
     },
     getRandom() {
-      return Math.random().toString().slice(-6);
+      return Math.random().toString().slice(-6)
     },
     changeOptionOthers(val, option) {
-      const { field } = this.moduleConfig;
-      option.others = val;
+      const { field } = this.moduleConfig
+      option.others = val
       if (val) {
-        option.othersKey = `${field}_${option.hash}`;
+        option.othersKey = `${field}_${option.hash}`
       } else {
-        option.othersKey = '';
+        option.othersKey = ''
       }
     },
     optionConfigChange() {
-      const arr = [];
+      const arr = []
       this.curOptions.forEach((item) => {
-        item.label !== undefined && item.label !== '' && arr.push(item.label);
-      });
-      const set = [...new Set(arr)];
+        item.label !== undefined && item.label !== '' && arr.push(item.label)
+      })
+      const set = [...new Set(arr)]
       if (set.length < arr.length) {
         this.curOptions.forEach((item, index) => {
-          item.label = this.options[index].label || '';
-        });
-        this.$message.warning('已存在相同的标签内容，请重新输入');
-        return;
+          item.label = this.options[index].label || ''
+        })
+        this.$message.warning('已存在相同的标签内容，请重新输入')
+        return
       }
-      this.$emit('optionChange', this.curOptions);
-      this.configVisible = false;
+      this.$emit('optionChange', this.curOptions)
+      this.configVisible = false
     },
     onBlur(e, index) {
-      if (cleanRichText(e.target.innerHTML) === '') return;
-      this.curOptions[index].text = e.target.innerHTML;
-    },
-  },
-};
+      if (cleanRichText(e.target.innerHTML) === '') return
+      this.curOptions[index].text = e.target.innerHTML
+    }
+  }
+}
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 // @import '../../common/css/default.scss';
 .ceilingPopper {
   max-width: 1000px !important ;

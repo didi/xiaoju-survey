@@ -22,7 +22,7 @@
   font-size: 0;
 
   .choice-box {
-    padding: 0 .2rem !important;
+    padding: 0 0.2rem !important;
     box-sizing: border-box;
 
     // margin-bottom: -0.22rem;
@@ -73,11 +73,10 @@
             background: #eee;
           }
 
-          &+label {
+          & + label {
             color: #ccc !important;
           }
         }
-
       }
 
       .item-title {
@@ -122,7 +121,7 @@
           border-color: $primary-color;
           background-color: $primary-color;
           color: #fff;
-          border: none
+          border: none;
         }
 
         transition: all 0.3s ease-in-out;
@@ -181,7 +180,6 @@
   color: #aaa;
 }
 
-
 .input-wrapper {
   font-size: 0;
 
@@ -189,7 +187,7 @@
     outline: none;
     font-size: 0.56rem;
     padding: 0.4rem;
-    border-radius: .08rem;
+    border-radius: 0.08rem;
     background-color: #fff;
     vertical-align: top;
 
@@ -200,7 +198,7 @@
     transform: scale(0.5, 0.5);
     transform-origin: left top;
     box-sizing: border-box;
-    margin-bottom: -.81rem;
+    margin-bottom: -0.81rem;
     overflow: hidden;
     // overflow: hidden;
     color: $font-color;
@@ -221,39 +219,39 @@
 
     &::-webkit-input-placeholder {
       /* WebKit browsers */
-      font-size: .56rem;
+      font-size: 0.56rem;
       font-weight: 300;
       color: $placeholder-color;
     }
 
     &:-moz-placeholder {
       /* Mozilla Firefox 4 to 18 */
-      font-size: .56rem;
+      font-size: 0.56rem;
       font-weight: 300;
       color: $placeholder-color;
     }
 
     &::-moz-placeholder {
       /* Mozilla Firefox 19+ */
-      font-size: .56rem;
+      font-size: 0.56rem;
       font-weight: 300;
       color: $placeholder-color;
     }
 
     &:-ms-input-placeholder {
       /* Internet Explorer 10+ */
-      font-size: .56rem;
+      font-size: 0.56rem;
       font-weight: 300;
       color: $placeholder-color;
     }
   }
 
   .text-number-tip {
-    font-size: .24rem;
+    font-size: 0.24rem;
     color: $font-color;
     float: right;
-    margin-right: .1rem;
-    margin-top: .1rem;
+    margin-right: 0.1rem;
+    margin-top: 0.1rem;
   }
 
   input::-webkit-outer-spin-button,
@@ -262,7 +260,7 @@
     margin: 0;
   }
 
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
   }
 }
@@ -285,7 +283,7 @@
         margin-right: 0;
         border-radius: 2px;
 
-        &.ql-checked-input+.item-title {
+        &.ql-checked-input + .item-title {
           visibility: visible;
           height: auto;
           opacity: 1;

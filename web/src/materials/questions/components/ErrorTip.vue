@@ -10,16 +10,16 @@
 export default {
   name: 'ModuleErrTip',
   data() {
-    return {};
+    return {}
   },
   props: {
-    msg: String,
+    msg: String
   },
-  methods: {},
-};
+  methods: {}
+}
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import '@/render/styles/default.scss';
 
 .module-err-tip {

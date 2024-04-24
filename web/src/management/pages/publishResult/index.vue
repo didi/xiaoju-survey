@@ -3,10 +3,7 @@
     <leftMenu class="left"></leftMenu>
     <div class="right">
       <template v-if="curStatus !== 'new'">
-        <div
-          class="preview-container"
-          :style="{ backgroundImage: `url('${this.phoneBg}')` }"
-        >
+        <div class="preview-container" :style="{ backgroundImage: `url('${this.phoneBg}')` }">
           <iframe :src="mainChannel.fullUrl"></iframe>
         </div>
         <div class="container-content">
@@ -42,9 +39,9 @@ export default {
       noDataConfig: {
         title: '问卷未发布',
         desc: '点击发布后，问卷就可以对外投放了哦！',
-        img: '/imgs/icons/unpublished.webp',
+        img: '/imgs/icons/unpublished.webp'
       },
-      phoneBg: '/imgs/phone-bg.webp',
+      phoneBg: '/imgs/phone-bg.webp'
     }
   },
   async created() {
@@ -56,14 +53,14 @@ export default {
       // 自动跳转回列表页
       setTimeout(() => {
         this.$router.replace({
-          name: 'survey',
+          name: 'survey'
         })
       }, 1000)
     }
   },
   computed: {
     ...mapState({
-      metaData: (state) => _get(state, 'edit.schema.metaData'),
+      metaData: (state) => _get(state, 'edit.schema.metaData')
     }),
     curStatus() {
       return _get(this.metaData, 'curStatus.status', 'new')
@@ -71,19 +68,19 @@ export default {
     mainChannel() {
       if (!this.metaData) {
         return {
-          fullUrl: '',
+          fullUrl: ''
         }
       }
       return {
-        fullUrl: `${location.origin}/render/${this.metaData.surveyPath}`,
+        fullUrl: `${location.origin}/render/${this.metaData.surveyPath}`
       }
-    },
+    }
   },
   components: {
     ChannelRow,
     empty,
-    leftMenu,
-  },
+    leftMenu
+  }
 }
 </script>
 

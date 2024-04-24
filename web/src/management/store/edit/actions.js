@@ -15,14 +15,8 @@ export default {
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
       document.title = metaData.title
-      const {
-        bannerConf,
-        bottomConf,
-        skinConf,
-        baseConf,
-        submitConf,
-        dataConf,
-      } = res.data.surveyConfRes.code
+      const { bannerConf, bottomConf, skinConf, baseConf, submitConf, dataConf } =
+        res.data.surveyConfRes.code
       commit('initSchema', {
         metaData,
         codeData: {
@@ -31,8 +25,8 @@ export default {
           skinConf,
           baseConf,
           submitConf,
-          questionDataList: dataConf.dataList,
-        },
+          questionDataList: dataConf.dataList
+        }
       })
     } else {
       throw new Error(res.errmsg || '问卷不存在')
@@ -45,9 +39,7 @@ export default {
   // 复制题目到当前题目后
   copyQuestion({ commit, state }, { index }) {
     const newQuestion = _cloneDeep(state.schema.questionDataList[index])
-    newQuestion.field = getNewField(
-      state.schema.questionDataList.map((item) => item.field)
-    )
+    newQuestion.field = getNewField(state.schema.questionDataList.map((item) => item.field))
     commit('addQuestion', { question: newQuestion, index })
   },
   addQuestion({ commit }, { question, index }) {
@@ -68,5 +60,5 @@ export default {
   },
   changeThemePreset({ commit }, presets) {
     commit('changeThemePreset', presets)
-  },
+  }
 }

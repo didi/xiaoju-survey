@@ -1,21 +1,11 @@
-import bannerFormConfig from '@/management/config/setterConfig/bannerConfig'
-import logoFormConfig from '@/management/config/setterConfig/logoConfig'
 import submitFormConfig from '@/management/config/setterConfig/submitConfig'
 import questionLoader from '@/materials/questions/questionLoader'
 
 const innerMetaConfig = {
-  banner: {
-    title: '规则说明配置',
-    formConfig: bannerFormConfig,
-  },
-  logo: {
-    title: 'Logo 配置',
-    formConfig: logoFormConfig,
-  },
   submit: {
     title: '提交配置',
-    formConfig: submitFormConfig,
-  },
+    formConfig: submitFormConfig
+  }
 }
 
 export default {
@@ -52,8 +42,7 @@ export default {
     } else if (innerMetaConfig[currentEditOne]) {
       return innerMetaConfig[currentEditOne]
     } else {
-      const questionType =
-        state.schema?.questionDataList?.[currentEditOne]?.type
+      const questionType = state.schema?.questionDataList?.[currentEditOne]?.type
       return questionLoader.getMeta(questionType)
     }
   },
@@ -78,5 +67,5 @@ export default {
         key = `questionDataList.${currentEditOne}`
     }
     return key
-  },
+  }
 }

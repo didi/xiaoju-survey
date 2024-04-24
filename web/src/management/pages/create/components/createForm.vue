@@ -8,7 +8,7 @@
       :model="form"
       label-width="100px"
       :rules="rules"
-      @submit.native.prevent
+      @submit.prevent
     >
       <el-form-item prop="title" label="问卷名称">
         <el-input
@@ -27,12 +27,7 @@
         <p class="form-item-tip">备注仅自己可见</p>
       </el-form-item>
       <el-form-item>
-        <el-button
-          class="create-btn"
-          type="primary"
-          @click="submit"
-          :loading="!canSubmit"
-        >
+        <el-button class="create-btn" type="primary" @click="submit" :loading="!canSubmit">
           开始创建
         </el-button>
       </el-form-item>
@@ -49,19 +44,19 @@ export default {
   props: {
     selectType: {
       type: String,
-      default: 'normal',
-    },
+      default: 'normal'
+    }
   },
   data() {
     return {
       rules: {
-        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
       },
       canSubmit: true,
       form: {
         title: '问卷调研',
-        remark: '问卷调研',
-      },
+        remark: '问卷调研'
+      }
     }
   },
   computed: {
@@ -69,9 +64,8 @@ export default {
       return SURVEY_TYPE_LIST
     },
     title() {
-      return this.SURVEY_TYPE_LIST.find((item) => item.type === this.selectType)
-        ?.title
-    },
+      return this.SURVEY_TYPE_LIST.find((item) => item.type === this.selectType)?.title
+    }
   },
   methods: {
     checkForm(fn) {
@@ -91,15 +85,15 @@ export default {
         this.canSubmit = false
         const res = await createSurvey({
           surveyType: selectType,
-          ...this.form,
+          ...this.form
         })
         if (res.code === 200 && res?.data?.id) {
           const id = res.data.id
           this.$router.push({
             name: 'QuestionEditIndex',
             params: {
-              id,
-            },
+              id
+            }
           })
         } else {
           this.$message.error(res.errmsg || '创建失败')
@@ -107,12 +101,12 @@ export default {
 
         this.canSubmit = true
       })
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .right-side {
   width: 538px;
   margin: auto;

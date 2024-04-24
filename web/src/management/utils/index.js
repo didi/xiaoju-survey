@@ -67,7 +67,7 @@ export function filterQuestionPreviewData(data, currentEditOne = '') {
       ...item,
       isSelected: index === currentEditOne,
       indexNumber: 0,
-      qIndex: index,
+      qIndex: index
     }
     // 根据是否展示序号，处理 indexNumber
     if (newData.showIndex) {

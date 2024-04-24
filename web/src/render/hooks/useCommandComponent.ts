@@ -1,33 +1,33 @@
-import {  createVNode, getCurrentInstance, render  } from 'vue';
-import type {AppContext,  Component, ComponentPublicInstance, VNode} from 'vue'
+import { createVNode, getCurrentInstance, render } from 'vue'
+import type { AppContext, Component, ComponentPublicInstance, VNode } from 'vue'
 
 export interface Options {
-  visible?: boolean;
-  onClose?: () => void;
-  appendTo?: HTMLElement | string;
-  [key: string]: unknown;
+  visible?: boolean
+  onClose?: () => void
+  appendTo?: HTMLElement | string
+  [key: string]: unknown
 }
 
 export interface CommandComponent {
-  (options: Options): VNode;
-  close: () => void;
+  (options: Options): VNode
+  close: () => void
 }
 
 const getAppendToElement = (props: Options): HTMLElement => {
-  let appendTo: HTMLElement | null = document.body;
+  let appendTo: HTMLElement | null = document.body
   if (props.appendTo) {
     if (typeof props.appendTo === 'string') {
-      appendTo = document.querySelector<HTMLElement>(props.appendTo);
+      appendTo = document.querySelector<HTMLElement>(props.appendTo)
     }
     if (props.appendTo instanceof HTMLElement) {
-      appendTo = props.appendTo;
+      appendTo = props.appendTo
     }
     if (!(appendTo instanceof HTMLElement)) {
-      appendTo = document.body;
+      appendTo = document.body
     }
   }
-  return appendTo;
-};
+  return appendTo
+}
 
 const initInstance = <T extends Component>(
   Component: T,
@@ -35,54 +35,54 @@ const initInstance = <T extends Component>(
   container: HTMLElement,
   appContext: AppContext | null = null
 ) => {
-  const vNode = createVNode(Component, props);
-  vNode.appContext = appContext;
-  render(vNode, container);
+  const vNode = createVNode(Component, props)
+  vNode.appContext = appContext
+  render(vNode, container)
 
-  getAppendToElement(props).appendChild(container);
-  return vNode;
-};
+  getAppendToElement(props).appendChild(container)
+  return vNode
+}
 
 export const useCommandComponent = <T extends Component>(Component: T): CommandComponent => {
-  const appContext = getCurrentInstance()?.appContext;
+  const appContext = getCurrentInstance()?.appContext
   if (appContext) {
-    const currentProvides = (getCurrentInstance() as any)?.provides;
-    Reflect.set(appContext, 'provides', {...appContext.provides, ...currentProvides});
+    const currentProvides = (getCurrentInstance() as any)?.provides
+    Reflect.set(appContext, 'provides', { ...appContext.provides, ...currentProvides })
   }
 
-  const container = document.createElement('div');
+  const container = document.createElement('div')
 
   const close = () => {
-    render(null, container);
-    container.parentNode?.removeChild(container);
-  };
+    render(null, container)
+    container.parentNode?.removeChild(container)
+  }
 
   const CommandComponent = (options: Options): VNode => {
     if (!Reflect.has(options, 'visible')) {
-      options.visible = true;
+      options.visible = true
     }
     if (typeof options.onClose !== 'function') {
-      options.onClose = close;
+      options.onClose = close
     } else {
-      const originOnClose = options.onClose;
+      const originOnClose = options.onClose
       options.onClose = () => {
-        originOnClose();
-        close();
-      };
-    }
-    const vNode = initInstance<T>(Component, options, container, appContext);
-    const vm = vNode.component?.proxy as ComponentPublicInstance<Options>;
-    for (const prop in options) {
-      if (Reflect.has(options, prop) && !Reflect.has(vm.$props, prop)) {
-        vm[prop as keyof ComponentPublicInstance] = options[prop];
+        originOnClose()
+        close()
       }
     }
-    return vNode;
-  };
+    const vNode = initInstance<T>(Component, options, container, appContext)
+    const vm = vNode.component?.proxy as ComponentPublicInstance<Options>
+    for (const prop in options) {
+      if (Reflect.has(options, prop) && !Reflect.has(vm.$props, prop)) {
+        vm[prop as keyof ComponentPublicInstance] = options[prop]
+      }
+    }
+    return vNode
+  }
 
-  CommandComponent.close = close;
+  CommandComponent.close = close
 
-  return CommandComponent;
-};
+  return CommandComponent
+}
 
-export default useCommandComponent;
+export default useCommandComponent

@@ -10,10 +10,10 @@ export default {
   methods: {
     toHomePage() {
       this.$router.push({
-        name: 'survey',
+        name: 'survey'
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

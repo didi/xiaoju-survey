@@ -15,10 +15,7 @@
       </template>
 
       <template v-if="tableData.total">
-        <DataTable
-          :main-table-loading="mainTableLoading"
-          :table-data="tableData"
-        />
+        <DataTable :main-table-loading="mainTableLoading" :table-data="tableData" />
         <el-pagination
           background
           layout="prev, pager, next"
@@ -49,16 +46,16 @@ export default {
       tableData: {
         total: 0,
         listHead: [],
-        listBody: [],
+        listBody: []
       },
       noDataConfig: {
         title: '暂无数据',
         desc: '您的问卷当前还没有数据，快去回收问卷吧！',
-        img: '/imgs/icons/analysis-empty.webp',
+        img: '/imgs/icons/analysis-empty.webp'
       },
       currentPage: 1,
       isShowOriginData: false,
-      tmpIsShowOriginData: false,
+      tmpIsShowOriginData: false
     }
   },
   computed: {},
@@ -76,7 +73,7 @@ export default {
         const res = await getRecycleList({
           page: this.currentPage,
           surveyId: this.$route.params.id,
-          isDesensitive: !this.tmpIsShowOriginData, // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
+          isDesensitive: !this.tmpIsShowOriginData // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
         })
 
         if (res.code === 200) {
@@ -101,14 +98,14 @@ export default {
       listHead.forEach((headItem) => {
         head.push({
           field: headItem.field,
-          title: headItem.title,
+          title: headItem.title
         })
 
         if (headItem.othersCode?.length) {
           headItem.othersCode.forEach((item) => {
             head.push({
               field: item.code,
-              title: `${headItem.title}-${item.option}`,
+              title: `${headItem.title}-${item.option}`
             })
           })
         }
@@ -124,14 +121,14 @@ export default {
       this.tmpIsShowOriginData = data
       await this.init()
       this.isShowOriginData = data
-    },
+    }
   },
 
   components: {
     DataTable,
     empty,
-    leftMenu,
-  },
+    leftMenu
+  }
 }
 </script>
 

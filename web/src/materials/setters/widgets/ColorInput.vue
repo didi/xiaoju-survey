@@ -6,28 +6,28 @@
       :maxLength="formConfig.maxlength"
       @change="changeData"
     >
-    <template #prepend>#</template>
+      <template #prepend>#</template>
     </el-input>
   </el-form-item>
 </template>
 <script>
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 export default {
   name: 'ColorInput',
   props: {
     formConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
     changeData(value) {
-      const key = this.formConfig.key;
+      const key = this.formConfig.key
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
-        value,
-      });
-    },
-  },
-};
+        value
+      })
+    }
+  }
+}
 </script>

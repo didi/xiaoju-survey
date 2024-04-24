@@ -26,23 +26,23 @@ import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'navbar',
+  name: 'NavbarModule',
   components: {
     back,
     pageTitle,
     pageNav,
     history,
     save,
-    publish,
+    publish
   },
   data() {
     return {}
   },
   computed: {
     ...mapState({
-      title: (state) => _get(state, 'edit.schema.metaData.title'),
-    }),
-  },
+      title: (state) => _get(state, 'edit.schema.metaData.title')
+    })
+  }
 }
 </script>
 

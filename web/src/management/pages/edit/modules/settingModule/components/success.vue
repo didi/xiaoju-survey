@@ -12,22 +12,22 @@
 
 <script>
 export default {
-  name: 'Success',
+  name: 'SuccessModule',
   props: {
     moduleConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     successText() {
       return this.moduleConfig?.submitConf?.msgContent?.msg_200 || ''
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 /*成功页面跳转全屏展示浮层*/
 .suc-page {
   padding: 0;

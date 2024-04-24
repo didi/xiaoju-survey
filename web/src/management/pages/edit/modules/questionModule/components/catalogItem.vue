@@ -18,27 +18,27 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: ''
     },
     indexNumber: {
       type: [String, Number],
-      default: '',
+      default: ''
     },
     showIndex: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   components: {},
   methods: {
     onSelect() {
       this.$emit('select')
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-catalog-item {
   position: relative;
   border-top: 1px solid #ebebeb;

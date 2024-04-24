@@ -17,18 +17,18 @@ export default {
   name: 'EditLeftTabPanel',
   data() {
     return {
-      tabSelected: '0',
+      tabSelected: '0'
     }
   },
   components: {
     TypeList,
-    Catalog,
+    Catalog
   },
-  methods: {},
+  methods: {}
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tab-box {
   width: 300px;
   height: 100%;

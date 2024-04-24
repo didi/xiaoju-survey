@@ -1,13 +1,7 @@
 <template>
   <div class="nav">
     <logo></logo>
-    <router-link
-      v-for="(tab, index) in tabList"
-      :key="index"
-      class="tab-btn"
-      :to="tab.to"
-      replace
-    >
+    <router-link v-for="(tab, index) in tabList" :key="index" class="tab-btn" :to="tab.to" replace>
       <div class="icon">
         <i class="iconfont" :class="tab.icon"></i>
       </div>
@@ -22,7 +16,7 @@ import logo from './logo.vue'
 export default {
   name: 'leftMenu',
   components: {
-    logo,
+    logo
   },
   data() {
     return {
@@ -31,26 +25,26 @@ export default {
           text: '编辑问卷',
           icon: 'icon-bianji',
           to: {
-            name: 'QuestionEditIndex',
-          },
+            name: 'QuestionEditIndex'
+          }
         },
         {
           text: '投放问卷',
           icon: 'icon-toufang',
           to: {
-            name: 'publishResultPage',
-          },
+            name: 'publishResultPage'
+          }
         },
         {
           text: '数据统计',
           icon: 'icon-shujutongji',
           to: {
-            name: 'analysisPage',
-          },
-        },
-      ],
+            name: 'analysisPage'
+          }
+        }
+      ]
     }
-  },
+  }
 }
 </script>
 

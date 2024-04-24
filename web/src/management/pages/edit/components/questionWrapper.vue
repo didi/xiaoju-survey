@@ -1,86 +1,78 @@
 <script lang="jsx">
-import {
-  defineComponent,
-  reactive,
-  toRefs,
-  computed,
-  getCurrentInstance,
-  withModifiers,
-} from 'vue';
-import { Rank, Top, Bottom, CopyDocument, Delete } from '@element-plus/icons-vue'
+import { defineComponent, reactive, toRefs, computed, getCurrentInstance } from 'vue'
 
 export default defineComponent({
   name: 'QuestionWrapper',
   props: {
     qIndex: {
       type: Number,
-      default: 0,
+      default: 0
     },
     indexNumber: {
       type: Number,
-      default: 1,
+      default: 1
     },
     isSelected: {
       type: Boolean,
-      default: false,
+      default: false
     },
     isLast: {
       type: Boolean,
-      default: false,
+      default: false
     },
     moduleConfig: {
       type: Object,
       default: () => {
-        return {};
-      },
-    },
+        return {}
+      }
+    }
   },
   setup(props, { emit }) {
     const state = reactive({
-      isHover: false,
-    });
-    const { proxy } = getCurrentInstance();
+      isHover: false
+    })
+    const { proxy } = getCurrentInstance()
     const itemClass = computed(() => {
       return {
         'question-wrapper': true,
         'mouse-hover': state.isHover,
         isSelected: props.isSelected,
-        spliter: props.moduleConfig.showSpliter,
-      };
-    });
+        spliter: props.moduleConfig.showSpliter
+      }
+    })
     const showHover = computed(() => {
-      return state.isHover;
-    });
+      return state.isHover
+    })
     const showUp = computed(() => {
-      return props.qIndex !== 0;
-    });
+      return props.qIndex !== 0
+    })
     const showDown = computed(() => {
-      return !props.isLast;
-    });
+      return !props.isLast
+    })
     const showCopy = computed(() => {
-      const field = props.moduleConfig.field;
-      const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement'];
-      return hiddenCopFields.indexOf(field) <= -1;
-    });
+      const field = props.moduleConfig.field
+      const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement']
+      return hiddenCopFields.indexOf(field) <= -1
+    })
     const toggleHoverClass = (status) => {
-      state.isHover = status;
-    };
+      state.isHover = status
+    }
     const clickFormItem = () => {
-      const index = props.qIndex;
-      emit('select', index);
-    };
+      const index = props.qIndex
+      emit('select', index)
+    }
     const onCopy = () => {
-      const index = props.qIndex;
+      const index = props.qIndex
       // this.changeQuestionSeq({ type: 'copy', index })
-      emit('changeSeq', { type: 'copy', index });
-      state.isHover = false;
-    };
+      emit('changeSeq', { type: 'copy', index })
+      state.isHover = false
+    }
     const onMoveUp = () => {
-      const index = props.qIndex;
+      const index = props.qIndex
       // this.changeQuestionSeq({ type: 'move', index, range: -1 })
-      emit('changeSeq', { type: 'move', index, range: -1 });
-      state.isHover = false;
-    };
+      emit('changeSeq', { type: 'move', index, range: -1 })
+      state.isHover = false
+    }
     // const onMoveTop = () => {
     //   const index = props.qIndex
     //   // this.changeQuestionSeq({ type: 'move', index, range: -index })
@@ -88,30 +80,26 @@ export default defineComponent({
     //   state.isHover = false
     // }
     const onMoveDown = () => {
-      const index = props.qIndex;
+      const index = props.qIndex
       // this.changeQuestionSeq({ type: 'move', index, range: 1 })
-      emit('changeSeq', { type: 'move', index, range: 1 });
-      state.isHover = false;
-    };
+      emit('changeSeq', { type: 'move', index, range: 1 })
+      state.isHover = false
+    }
     const onDelete = async () => {
       try {
-        await proxy.$confirm(
-          '本次操作会影响数据统计查看，是否确认删除？',
-          '提示',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }
-        );
-        const index = props.qIndex;
+        await proxy.$confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        const index = props.qIndex
         // this.changeQuestionSeq({ type: 'move', index, range: 1 })
-        emit('changeSeq', { type: 'delete', index });
-        state.isHover = false;
+        emit('changeSeq', { type: 'delete', index })
+        state.isHover = false
       } catch (error) {
-        console.log('取消删除');
+        console.log('取消删除')
       }
-    };
+    }
     // const onMoveBottom = () => {
     //   const index = props.qIndex
     //   this.changeQuestionSeq({
@@ -135,71 +123,54 @@ export default defineComponent({
       onMoveDown,
       onDelete,
       toggleHoverClass,
-      clickFormItem,
-    };
+      clickFormItem
+    }
   },
   render() {
-    const { showHover, itemClass, showUp, showDown, showCopy } = this;
+    const { showHover, itemClass, showUp, showDown, showCopy } = this
     return (
       <div
         class={itemClass}
         onMouseenter={() => {
-          this.isHover = true;
+          this.isHover = true
         }}
         onMouseleave={() => {
-          this.isHover = false;
+          this.isHover = false
         }}
         onClick={this.clickFormItem}
       >
-        {this.moduleConfig.type !== 'section' && (
-          <div>{this.$slots.default()}</div>
-        )}
+        {this.moduleConfig.type !== 'section' && <div>{this.$slots.default()}</div>}
         {
           <div class={[showHover ? 'visibily' : 'hidden', 'hoverItem']}>
-            <div
-              class="item"
-              onClickPrevent={this.onMove}
-            >
-              <el-icon><Rank /></el-icon>
+            <div class="item" onClickPrevent={this.onMove}>
+              <i-ep-rank />
             </div>
             {showUp && (
-              <div
-                class="item"
-                onClick={this.onMoveUp}
-              >
-                <el-icon><Top /></el-icon>
+              <div class="item" onClick={this.onMoveUp}>
+                <i-ep-top />
               </div>
             )}
             {showDown && (
-              <div
-                class="item"
-                onClick={this.onMoveDown}
-              >
-                <el-icon><Bottom /></el-icon>
+              <div class="item" onClick={this.onMoveDown}>
+                <i-ep-bottom />
               </div>
             )}
             {showCopy && (
-              <div
-                class="item"
-                onClick={this.onCopy}
-              >
-                <el-icon><CopyDocument /></el-icon>
+              <div class="item" onClick={this.onCopy}>
+                <i-ep-copyDocument />
               </div>
             )}
-            <div
-              class="item"
-              onClick={this.onDelete}
-            >
-              <el-icon><Delete /></el-icon>
+            <div class="item" onClick={this.onDelete}>
+              <i-ep-delete />
             </div>
           </div>
         }
       </div>
-    );
-  },
-});
+    )
+  }
+})
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-wrapper {
   position: relative;
   padding: 0.36rem 0 0.36rem;

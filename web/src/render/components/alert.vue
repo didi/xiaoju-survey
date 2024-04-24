@@ -8,6 +8,7 @@
 </template>
 <script>
 export default {
+  name: 'AlertSetter',
   props: {
     visible: {
       type: Boolean,
@@ -15,22 +16,22 @@ export default {
     },
     btnText: {
       type: String,
-      default: '我知道了',
+      default: '我知道了'
     },
     title: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   methods: {
     onConfirm() {
-      this.$emit('confirm');
-      this.$emit('close');
-    },
-  },
-};
+      this.$emit('confirm')
+      this.$emit('close')
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import url('../styles/dialog.scss');
 
 .btn {

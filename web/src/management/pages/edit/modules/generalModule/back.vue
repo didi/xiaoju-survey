@@ -7,12 +7,12 @@
 
 <script>
 export default {
-  name: 'back',
+  name: 'BackModule',
   methods: {
     onBack() {
       this.$router.go(-1)
-    },
-  },
+    }
+  }
 }
 </script>
 

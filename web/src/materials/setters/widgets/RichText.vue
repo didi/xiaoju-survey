@@ -1,11 +1,15 @@
 <template>
-  <RichEditor :modelValue="formConfig.value" @change="onChange" :staticToolBar="true" @input="onInput"/>
+  <RichEditor
+    :modelValue="formConfig.value"
+    @change="onChange"
+    :staticToolBar="true"
+    @input="onInput"
+  />
 </template>
 
 <script>
-import { createEditor, createToolbar } from '@wangeditor/editor';
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
-import RichEditor from '../../../common/Editor/RichEditor.vue';
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+import RichEditor from '../../../common/Editor/RichEditor.vue'
 
 export default {
   name: 'RichText',
@@ -15,27 +19,27 @@ export default {
   props: {
     formConfig: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   }, // value 用于自定义 v-model
-  
+
   methods: {
     onChange(newHtml) {
       this.$emit(FORM_CHANGE_EVENT_KEY, {
-              key: this.formConfig.key,
-              value: newHtml,
-      });
+        key: this.formConfig.key,
+        value: newHtml
+      })
       this.$emit('change', newHtml)
     },
     onInput(newHtml) {
       this.$emit(FORM_CHANGE_EVENT_KEY, {
-              key: this.formConfig.key,
-              value: newHtml,
-      });
-      this.$emit('input', newHtml);
-    },
-  },
-};
+        key: this.formConfig.key,
+        value: newHtml
+      })
+      this.$emit('input', newHtml)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import url('@wangeditor/editor/dist/css/style.css');

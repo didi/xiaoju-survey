@@ -24,8 +24,8 @@ export default {
     commonTemplate,
     catalogPanel,
     previewPanel,
-    setterPanel,
-  },
+    setterPanel
+  }
 }
 </script>
 

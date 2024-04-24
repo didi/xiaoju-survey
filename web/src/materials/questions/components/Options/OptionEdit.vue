@@ -7,10 +7,8 @@
       @update="optionSortChange"
       itemKey="hash"
     >
-      <template #item="{element, index}">
-        <div
-          class="draggdiv dragg-handle"
-        >
+      <template #item="{ element, index }">
+        <div class="draggdiv dragg-handle">
           <span class="drag-handle qicon qicon-tuodong"></span>
           <div class="input-box">
             <RichEditor
@@ -36,83 +34,83 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import { mapGetters } from 'vuex';
-import { cloneDeep as _cloneDeep } from 'lodash-es';
-import { CirclePlus, Remove } from '@element-plus/icons-vue';
-import RichEditor from '@/common/Editor/RichEditor.vue';
+import draggable from 'vuedraggable'
+import { mapGetters } from 'vuex'
+import { cloneDeep as _cloneDeep } from 'lodash-es'
+import { CirclePlus, Remove } from '@element-plus/icons-vue'
+import RichEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
   name: 'OptionEdit',
   computed: {
     ...mapGetters({
-      currentEditKey: 'edit/currentEditKey',
-    }),
+      currentEditKey: 'edit/currentEditKey'
+    })
   },
   props: {
     optionList: {
-      type: Array,
+      type: Array
     },
     isShowOperation: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   components: {
     draggable,
     RichEditor,
     CirclePlus,
-    Remove,
+    Remove
   },
   mounted() {
     // 选项hash兜底
-    const hashMap = {};
-    let hashHasChanged = false;
+    const hashMap = {}
+    let hashHasChanged = false
     for (const item of this.optionList) {
       if (!item.hash) {
-        item.hash = this.getNewHash(hashMap);
-        hashHasChanged = true;
+        item.hash = this.getNewHash(hashMap)
+        hashHasChanged = true
       }
     }
-    const originOptionList = _cloneDeep(this.optionList);
+    const originOptionList = _cloneDeep(this.optionList)
     if (hashHasChanged) {
-      this.$emit('optionChange', originOptionList);
+      this.$emit('optionChange', originOptionList)
     }
   },
   methods: {
     getRandom() {
-      return Math.random().toString().slice(-6);
+      return Math.random().toString().slice(-6)
     },
     getNewHash(hashMap) {
-      let random = this.getRandom();
+      let random = this.getRandom()
       while (random in hashMap) {
-        random = this.getRandom();
+        random = this.getRandom()
       }
-      return random;
+      return random
     },
     handleChange(index, value) {
       // 更新单个选项文案
-      const optionKey = `options[${index}].text`;
-      const key = `${this.currentEditKey}.${optionKey}`;
-      this.$emit('change', { key, value });
+      const optionKey = `options[${index}].text`
+      const key = `${this.currentEditKey}.${optionKey}`
+      this.$emit('change', { key, value })
     },
     onAddOption(index) {
-      this.$emit('addOption', '选项', false, index);
+      this.$emit('addOption', '选项', false, index)
     },
     async deleteOption(index) {
-      const optionList = _cloneDeep(this.optionList);
-      optionList.splice(index, 1);
-      this.$emit('optionChange', optionList);
+      const optionList = _cloneDeep(this.optionList)
+      optionList.splice(index, 1)
+      this.$emit('optionChange', optionList)
     },
     optionSortChange() {
-      const optionList = _cloneDeep(this.optionList);
-      this.$emit('optionChange', optionList);
-    },
-  },
-};
+      const optionList = _cloneDeep(this.optionList)
+      this.$emit('optionChange', optionList)
+    }
+  }
+}
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 // @import '../../common/css/default.scss';
 .option-edit-wrap {
   .focus {
@@ -194,7 +192,7 @@ export default {
         color: red;
       }
     }
-    
+
     &.dragg-handle {
       border: 1px solid transparent;
       // border-left: 3px solid $placeholder-color;

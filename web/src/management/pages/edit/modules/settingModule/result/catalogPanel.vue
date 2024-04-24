@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { EDIT_STATUS_MAP } from '../enum';
+import { mapMutations } from 'vuex'
+import { EDIT_STATUS_MAP } from '../enum'
 
 export default {
   name: 'resultConfigList',
@@ -29,29 +29,29 @@ export default {
         {
           type: EDIT_STATUS_MAP.SUCCESS,
           title: '提交成功',
-          previewImg: '/imgs/icons/success.webp',
+          previewImg: '/imgs/icons/success.webp'
         },
         {
           type: EDIT_STATUS_MAP.OVERTIME,
           title: '问卷过期',
-          previewImg: '/imgs/icons/overtime.webp',
-        },
-      ],
+          previewImg: '/imgs/icons/overtime.webp'
+        }
+      ]
     }
   },
   computed: {},
   methods: {
     ...mapMutations({
-      changeStatusPreview: 'edit/changeStatusPreview',
+      changeStatusPreview: 'edit/changeStatusPreview'
     }),
     filterDisabledStatus(data) {
       this.changeStatusPreview(data)
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tab-box {
   width: 300px;
   height: 100%;

@@ -27,8 +27,7 @@ import { filterQuestionPreviewData } from '@/management/utils/index'
 export default {
   name: 'QuestionCatalog',
   data() {
-    return {
-    }
+    return {}
   },
   computed: {
     questionDataList() {
@@ -36,28 +35,28 @@ export default {
     },
     renderData() {
       return filterQuestionPreviewData(this.questionDataList) || []
-    },
+    }
   },
   components: {
     draggable,
-    catalogItem,
+    catalogItem
   },
   methods: {
     onDragEnd(data) {
       const { newIndex, oldIndex } = data
       this.$store.dispatch('edit/moveQuestion', {
         index: oldIndex,
-        range: newIndex - oldIndex,
+        range: newIndex - oldIndex
       })
     },
     onSelect(index) {
       this.$store.commit('edit/setCurrentEditOne', index)
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-catalog-wrapper {
   padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的
   .catelog-first-page {

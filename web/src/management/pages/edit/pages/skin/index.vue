@@ -1,8 +1,8 @@
 <template>
   <div class="skin-content">
-    <div class="navbar-tab"> 
-      <el-radio-group style="margin-bottom: 30px;" v-model="activeRouter">
-        <el-radio-button :label="btnItem.router" :key="btnItem.router" v-for="btnItem in btnList" >
+    <div class="navbar-tab">
+      <el-radio-group style="margin-bottom: 30px" v-model="activeRouter">
+        <el-radio-button :label="btnItem.router" :key="btnItem.router" v-for="btnItem in btnList">
           <span>{{ btnItem.text }}</span>
         </el-radio-button>
       </el-radio-group>
@@ -22,24 +22,24 @@ export default {
           text: '内容页',
           router: 'QuestionSkinSetting',
           key: 'skinsettings',
-          next: true,
+          next: true
         },
         {
           text: '结果页',
           router: 'QuestionEditResultConfig',
-          key: 'status',
-        },
-      ],
-    };
+          key: 'status'
+        }
+      ]
+    }
   },
   watch: {
     activeRouter: {
-      handler (val)  {
-        this.$router.push({ name: val})
+      handler(val) {
+        this.$router.push({ name: val })
       }
     }
-  },
-};
+  }
+}
 </script>
 <style lang="scss" scoped>
 .skin-content {
@@ -55,14 +55,13 @@ export default {
     top: 10px;
     cursor: pointer;
     z-index: 9999;
-    :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner){
-        color:  $primary-color;
-        background-color: #fff!important;
-        // &:active{
-        //   color: $primary-color;
-        // }
+    :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+      color: $primary-color;
+      background-color: #fff !important;
+      // &:active{
+      //   color: $primary-color;
+      // }
     }
-    
   }
 }
 </style>

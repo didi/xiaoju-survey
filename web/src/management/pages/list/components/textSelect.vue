@@ -1,6 +1,6 @@
 <template>
   <div class="text-select-root">
-    <el-select v-model="selectValue" :placeholder="options.label">
+    <el-select v-model="selectValue" :empty-values="[null, undefined]" :placeholder="options.label">
       <el-option
         v-for="item in options.value"
         :key="item.value"
@@ -17,27 +17,27 @@ export default {
   name: 'TextSelect',
   data() {
     return {
-      selectValue: this.options.default,
+      selectValue: this.options.default
     }
   },
   props: {
     options: {
       type: Object,
-      required: true,
+      required: true
     },
     effectFun: {
-      type: Function,
+      type: Function
     },
     effectKey: {
-      type: String,
-    },
+      type: String
+    }
   },
   watch: {
     selectValue(newSelect) {
       const { effectFun } = this
       typeof effectFun === 'function' && effectFun(newSelect, this.effectKey)
-    },
-  },
+    }
+  }
 }
 </script>
 

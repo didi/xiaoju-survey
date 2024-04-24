@@ -11,6 +11,7 @@
 </template>
 <script>
 export default {
+  name: 'ConfirmSetter',
   props: {
     visible: {
       type: Boolean,
@@ -18,31 +19,31 @@ export default {
     },
     cancelBtnText: {
       type: String,
-      default: '取消',
+      default: '取消'
     },
     confirmBtnText: {
       type: String,
-      default: '确定',
+      default: '确定'
     },
     title: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   methods: {
     onCancel() {
       // this.$emit('cancel');
-      this.$emit('close');
+      this.$emit('close')
     },
     onConfirm() {
       this.$emit('confirm', () => {
-        this.$emit('close');
-      });
-    },
-  },
-};
+        this.$emit('close')
+      })
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import url('../styles/dialog.scss');
 
 .btn-box {

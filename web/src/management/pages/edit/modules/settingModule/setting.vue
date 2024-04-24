@@ -12,18 +12,16 @@
             class="question-config-form"
             label-position="left"
             label-width="200px"
-            @submit.native.prevent
+            @submit.prevent
           >
             <template v-for="(item, index) in form.formList" :key="index">
               <FormItem
-                v-if="
-                  item.type && !item.hidden && Boolean(registerd[item.type])
-                "
+                v-if="item.type && !item.hidden && Boolean(register[item.type])"
                 :form-config="item"
                 :style="item.style"
               >
                 <Component
-                  v-if="Boolean(registerd[item.type])"
+                  v-if="Boolean(register[item.type])"
                   :is="item.type"
                   :module-config="form.dataConfig"
                   :form-config="item"
@@ -43,38 +41,35 @@ import baseConfig from './config/baseConfig'
 import baseFormConfig from './config/baseFormConfig'
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
-import {
-  cloneDeep as _cloneDeep,
-  isArray as _isArray,
-  get as _get,
-} from 'lodash-es'
+import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get } from 'lodash-es'
 
 export default {
   name: 'QuestionConfig',
   components: {
-    FormItem,
+    FormItem
   },
   data() {
     return {
       formConfigList: [],
-      registerd: {},
+      register: {}
     }
   },
   methods: {
     onFormChange(data) {
       this.$store.dispatch('edit/changeSchema', {
         key: data.key,
-        value: data.value,
+        value: data.value
       })
-    },
+    }
   },
   computed: {
     allSetters() {
       const formList = this.formConfigList.map((item) => item.formList).flat()
       const typeList = formList.map((item) => ({
         type: item.type,
-        path: item.path || item.type,
+        path: item.path || item.type
       }))
+
       return typeList
     },
     renderData() {
@@ -89,20 +84,12 @@ export default {
           if (_isArray(formKey)) {
             formValue = []
             for (const key of formKey) {
-              const val = _get(
-                this.$store.state.edit.schema,
-                key,
-                formItem.value
-              )
+              const val = _get(this.$store.state.edit.schema, key, formItem.value)
               formValue.push(val)
               dataConfig[key] = val
             }
           } else {
-            formValue = _get(
-              this.$store.state.edit.schema,
-              formKey,
-              formItem.value
-            )
+            formValue = _get(this.$store.state.edit.schema, formKey, formItem.value)
             dataConfig[formKey] = formValue
           }
           formItem.value = formValue
@@ -110,15 +97,13 @@ export default {
         form.dataConfig = dataConfig
         return form
       })
-    },
+    }
   },
   async created() {
     this.formConfigList = baseConfig.map((item) => {
       return {
         ...item,
-        formList: item.formList
-          .map((key) => baseFormConfig[key])
-          .filter((config) => !!config),
+        formList: item.formList.map((key) => baseFormConfig[key]).filter((config) => !!config)
       }
     })
 
@@ -131,14 +116,14 @@ export default {
       if (!err) {
         const componentName = component.name
         this.$options.components[componentName] = component
-        this.registerd[type] = componentName
+        this.register[type] = componentName
       }
     }
-  },
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-config {
   width: 100%;
   min-width: 1080px;

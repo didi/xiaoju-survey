@@ -20,7 +20,7 @@
       >
         <template #header="scope">
           <div class="table-row-cell">
-            <span slot="reference" v-popover="scope.column.id">
+            <span v-popover="scope.column.id">
               {{ scope.column.label.replace(/&nbsp;/g, '') }}
             </span>
             <el-popover
@@ -35,7 +35,6 @@
         </template>
         <template  #default="scope">
           <span
-            slot="reference"
             class="table-row-cell"
             v-popover="scope.$index + scope.column.property"
           >
@@ -79,7 +78,7 @@ export default {
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .data-table-wrapper {
   position: relative;
   width: 100%;

@@ -6,16 +6,16 @@ export const getSurveyList = ({ curPage, filter, order }) => {
       pageSize: 10,
       curPage,
       filter,
-      order,
-    },
+      order
+    }
   })
 }
 
 export const getSurveyById = (id) => {
   return axios.get('/survey/getSurvey', {
     params: {
-      surveyId: id,
-    },
+      surveyId: id
+    }
   })
 }
 
@@ -25,7 +25,7 @@ export const saveSurvey = ({ surveyId, configData }) => {
 
 export const publishSurvey = ({ surveyId }) => {
   return axios.post('/survey/publishSurvey', {
-    surveyId,
+    surveyId
   })
 }
 
@@ -37,14 +37,14 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
   return axios.get('/surveyHisotry/getList', {
     params: {
       surveyId,
-      historyType,
-    },
+      historyType
+    }
   })
 }
 
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
-    surveyId,
+    surveyId
   })
 }
 

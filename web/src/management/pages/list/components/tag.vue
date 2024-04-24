@@ -1,29 +1,27 @@
 <template>
   <span :class="['list-tag-root', 'list-tag-' + type]">
     <div class="tag-bg"></div>
-    <span>{{
-      surveyType[value.surveyType] || surveyType[value.questionType]
-    }}</span>
+    <span>{{ surveyType[value.surveyType] || surveyType[value.questionType] }}</span>
   </span>
 </template>
 
 <script>
 import { type as surveyType } from '../config'
 export default {
-  name: 'Tag',
+  name: 'TagModule',
   props: {
     value: Object,
-    type: String,
+    type: String
   },
   data() {
     return {
-      surveyType,
+      surveyType
     }
-  },
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .list-tag-root {
   display: inline-block;
   position: relative;

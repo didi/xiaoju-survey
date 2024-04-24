@@ -1,34 +1,43 @@
 <template>
-  <el-form
-    class="config-form"
-    :labelPosition="labelPosition"
-    label-width="110px"
-    :inline="inline"
-    @submit.native.prevent
-  >
-    <template v-for="(item, index) in formFieldData" :key="item.key + index">
-      <FormItem class="form-item" :form-config="item">
-        <template v-if="item.type === 'Customed'">
-          <SettersField
-            :key="index"
-            :form-config-list="item.content"
+  <el-form class="config-form" :inline="inline" @submit.prevent>
+    <div v-for="(item, index) in formFieldData" :key="`${item.key}${index}`" class="group-wrap">
+      <div v-if="item.title" class="group-title">
+        {{ item.title }}
+        
+        <el-tooltip
+          v-if="item.tip"
+          :content="item.tip"
+          placement="right"
+        >
+          <i-ep-questionFilled class="icon-tip" />
+        </el-tooltip>
+      </div>
+
+      <template v-if="item.type === 'Customed'">
+        <FormItem
+          v-for="(content, contentIndex) in item.content"
+          :key="`${item.key}${contentIndex}`"
+          :form-config="content"
+        >
+          <Component
+            :is="content.type"
+            :form-config="content"
             :module-config="moduleConfig"
-            @form-change="onFormChange($event, item)"
-            :inline="true"
-            labelPosition="left"
-            :class="item.contentClass"
-          ></SettersField>
-        </template>
+            @form-change="onFormChange($event, content)"
+            :class="content.contentClass"
+          />
+        </FormItem>
+      </template>
+      <FormItem v-else :form-config="item">
         <Component
-          v-else
           :is="item.type"
-          :module-config="moduleConfig"
           :form-config="item"
+          :module-config="moduleConfig"
           @form-change="onFormChange($event, item)"
-          :slot="item.contentPosition || null"
+          :class="item.contentClass"
         />
       </FormItem>
-    </template>
+    </div>
   </el-form>
 </template>
 
@@ -65,46 +74,52 @@ export default {
     moduleConfig: Object,
     inline: {
       type: Boolean,
-      default: false,
+      default: false
     },
     labelPosition: {
-      type: String,
-      default: 'top',
-    },
+      type: String, // top | left
+      default: 'top'
+    }
   },
   data() {
     return {
-      registerd: {},
+      register: {}
     }
   },
   components: {
-    FormItem,
+    FormItem
   },
   computed: {
     formFieldData() {
-      return this.formConfigList
+      const data = this.formConfigList
         .filter((item) => {
           if (!item.type) {
             return false
           }
-          if (item.type !== 'Customed' && !this.registerd[item.type]) {
+          // Customed：组件组
+          console.log(423534546)
+          if (item.type !== 'Customed' && !this.register[item.type]) {
             return false
           }
           if (item.hidden) {
             return false
           }
+          // 动态显隐设置器
           if (_isFunction(item.relyFunc)) {
             return item.relyFunc(this.moduleConfig)
           }
+
           return true
         })
         .map((item) => {
           return {
             ...item,
-            value: formatValue({ item, moduleConfig: this.moduleConfig }),
+            value: formatValue({ item, moduleConfig: this.moduleConfig })
           }
         })
-    },
+
+      return data
+    }
   },
   watch: {
     formConfigList: {
@@ -114,19 +129,28 @@ export default {
         if (!newVal || !newVal.length) {
           return
         }
+
         this.handleComponentRegister(newVal)
-      },
-    },
+      }
+    }
   },
   methods: {
     async handleComponentRegister(formFieldData) {
-      const setters = formFieldData.map((item) => item.type)
-      const settersSet = new Set(setters)
+      let innerSetters = []
+      const setters = formFieldData.map((item) => {
+        if (item.type === 'Customed') {
+          innerSetters.push(...(item.content || []).map(content => content.type))
+        }
+
+        return item.type
+      })
+
+      const settersSet = new Set([...setters, ...innerSetters])
       const settersArr = Array.from(settersSet)
       const allSetters = settersArr.map((item) => {
         return {
           type: item,
-          path: item,
+          path: item
         }
       })
       try {
@@ -142,7 +166,7 @@ export default {
               this.$options.components = {}
             }
             this.$options.components[componentName] = component
-            this.registerd[type] = componentName
+            this.register[type] = componentName
           }
         }
       } catch (err) {
@@ -163,24 +187,30 @@ export default {
       } else {
         this.$emit(FORM_CHANGE_EVENT_KEY, data)
       }
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .config-form {
   padding: 15px 0;
-}
-.nps-customed-config {
-  .el-form-item {
-    margin-right: 0px;
-    :deep(.el-form-item__label) {
-      width: 70px !important;
-      margin-right: 8px;
-    }
-    :deep(.el-input__inner) {
-      width: 234px;
+
+  .group-wrap {
+    margin-bottom: 20px;
+  }
+
+  .group-title {
+    font-size: 14px;
+    color: #606266;
+    margin-bottom: 20px;
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+
+    .icon-tip {
+      font-size: 13px;
+      color: #606266;
     }
   }
 }

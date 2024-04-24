@@ -7,53 +7,46 @@
         <span class="sv-text">
           {{ saveText }}
         </span>
-        <el-icon class="icon" v-if="autoSaveStatus === 'saving'"><el-icon-loading /></el-icon>
-        <el-icon class="icon succeed"  v-else-if="autoSaveStatus === 'succeed'"><el-icon-check /></el-icon>
+        <i-ep-loading class="icon" v-if="autoSaveStatus === 'saving'" />
+        <i-ep-check class="icon succeed" v-else-if="autoSaveStatus === 'succeed'" />
       </div>
     </transition>
   </div>
 </template>
 
 <script>
-import {
-  Loading as ElIconLoading,
-  Check as ElIconCheck,
-} from '@element-plus/icons-vue'
 import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 export default {
-  components: {
-    ElIconLoading,
-    ElIconCheck,
-  },
-  name: 'save',
+  components: {},
+  name: 'SaveModule',
   data() {
     return {
       isSaving: false,
       isShowAutoSave: false,
-      autoSaveStatus: 'succeed',
+      autoSaveStatus: 'succeed'
     }
   },
   computed: {
     ...mapState({
-      schemaUpdateTime: (state) => _get(state, 'edit.schemaUpdateTime'),
+      schemaUpdateTime: (state) => _get(state, 'edit.schemaUpdateTime')
     }),
     saveText() {
       const statusMap = {
         saving: '保存中',
         succeed: '保存成功',
-        failed: '保存失败',
+        failed: '保存失败'
       }
       return statusMap[this.autoSaveStatus]
-    },
+    }
   },
   watch: {
     schemaUpdateTime() {
       this.triggerAutoSave()
-    },
+    }
   },
   methods: {
     triggerAutoSave() {
@@ -118,8 +111,8 @@ export default {
       } finally {
         this.isSaving = false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

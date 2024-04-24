@@ -14,29 +14,29 @@ export default {
   props: {
     boxShadow: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   name: 'NavHeader',
   data() {
     return {
-      img: '/imgs/s-logo.webp',
+      img: '/imgs/s-logo.webp'
     }
   },
   methods: {
     toHomePage() {
       this.$router.replace({
-        name: 'survey',
+        name: 'survey'
       })
     },
     onBack() {
       this.$router.go(-1)
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .nav-header {
   z-index: 99;
   position: relative;

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref, getCurrentInstance, h } from 'vue'
+import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
 import QuestionContainerB from '@/materials/questions/widgets/QuestionContainerB.jsx'
 import questionWrapper from './questionWrapper.vue'
 import draggable from 'vuedraggable'
@@ -42,19 +42,19 @@ export default defineComponent({
   components: {
     draggable,
     questionWrapper,
-    QuestionContainerB,
+    QuestionContainerB
   },
   props: {
     currentEditOne: {
       type: [Number, String],
-      default: null,
+      default: null
     },
     questionDataList: {
       type: Array,
       default: () => {
         return []
-      },
-    },
+      }
+    }
   },
   setup(props, { emit }) {
     const renderData = computed(() => {
@@ -77,7 +77,7 @@ export default defineComponent({
       emit('changeSeq', {
         type: 'move',
         index: oldIndex,
-        range: newIndex - oldIndex,
+        range: newIndex - oldIndex
       })
     }
 
@@ -100,10 +100,10 @@ export default defineComponent({
         scroll: true,
         scrollSpeed: 2500,
         scrollSensitivity: 150,
-        forceFallback: true,
+        forceFallback: true
       },
-      getQuestionRefByField,
+      getQuestionRefByField
     }
-  },
+  }
 })
 </script>

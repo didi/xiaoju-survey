@@ -28,7 +28,7 @@ export default {
   components: { baseList },
   name: 'listPage',
   computed: {
-    ...mapState('user', ['userInfo']),
+    ...mapState('user', ['userInfo'])
   },
   methods: {
     ...mapActions('user', ['logout']),
@@ -38,12 +38,12 @@ export default {
     handleLogout() {
       this.logout()
       this.$router.replace({ name: 'login' })
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-list-root {
   height: 100%;
   background-color: #f6f7f9;

@@ -1,10 +1,10 @@
-import ComponentLoader from '@/materials/utils/componentLoader';
+import ComponentLoader from '@/materials/utils/componentLoader'
 export class SetterLoader extends ComponentLoader {
   dynamicImport(path) {
-    return import(`@/materials/setters/widgets/${path}.vue`);
+    return import(`@/materials/setters/widgets/${path}.vue`)
   }
 }
 
-const setterLoader = new SetterLoader();
+const setterLoader = new SetterLoader()
 
-export default setterLoader;
+export default setterLoader

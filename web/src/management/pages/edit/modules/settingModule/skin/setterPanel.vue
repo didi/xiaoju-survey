@@ -1,8 +1,6 @@
 <template>
   <div class="setter-wrapper">
-    <div class="setter-title">
-      样式设置
-    </div>
+    <div class="setter-title">样式设置</div>
     <div class="setter-content">
       <el-collapse v-model="collapse">
         <el-collapse-item
@@ -14,48 +12,52 @@
           <setterField
             :form-config-list="collapse.formConfigList"
             :module-config="_get(schema, collapse.key, {})"
-            @form-change="(key) => { onFormChange(key, collapse.key) }"
-          /> 
+            @form-change="
+              (key) => {
+                onFormChange(key, collapse.key)
+              }
+            "
+          />
         </el-collapse-item>
       </el-collapse>
     </div>
-     <!-- -->
+    <!-- -->
   </div>
 </template>
 <script>
-import skinConfig from '@/management/config/setterConfig/skinConfig';
-import setterField from '@/management/pages/edit/components/setterField.vue';
-import { mapState, mapGetters } from 'vuex';
+import skinConfig from '@/management/config/setterConfig/skinConfig'
+import setterField from '@/management/pages/edit/components/setterField.vue'
+import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 export default {
   name: 'setterPanel',
   components: {
-    setterField,
+    setterField
   },
   data() {
     return {
       collapse: '',
-      skinConfig,
-    };
+      skinConfig
+    }
   },
   computed: {
     ...mapState({
       skinConf: (state) => _get(state, 'edit.schema.skinConf'),
-      schema: (state) => _get(state, 'edit.schema'),
-    }),
+      schema: (state) => _get(state, 'edit.schema')
+    })
   },
   methods: {
     _get,
-    onFormChange(data,collapse) {
-      const { key, value } = data;
+    onFormChange(data, collapse) {
+      const { key, value } = data
       const currentEditKey = `${collapse}`
-      const resultKey = `${currentEditKey}.${key}`;
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value });
-    },
-  },
-};
+      const resultKey = `${currentEditKey}.${key}`
+      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .setter-wrapper {
   width: 360px;
   height: 100%;
@@ -73,26 +75,25 @@ export default {
   // background: #f9fafc;
   border-bottom: 1px solid #edeffc;
 }
-.setter-content{
+.setter-content {
   padding: 10px 20px;
   .el-collapse {
     border: none;
-    :deep(.el-collapse-item__header){
+    :deep(.el-collapse-item__header) {
       font-size: 14px;
       color: #606266;
       font-weight: bold;
       border: none;
     }
-    :deep(.el-collapse-item__wrap){
+    :deep(.el-collapse-item__wrap) {
       border: none;
-      .el-collapse-item__content{
-        padding-bottom: 0px!important;
+      .el-collapse-item__content {
+        padding-bottom: 0px !important;
       }
-
     }
   }
-  .config-form{
-    padding: 0!important;
+  .config-form {
+    padding: 0 !important;
   }
 }
 .no-select-question {

@@ -3,14 +3,8 @@
     <el-form-item v-for="item in formConfig.content" :key="item.key">
       <label class="multiline-label">
         {{ item.label }}
-        <el-tooltip
-          v-if="item.tip"
-          class="item"
-          effect="dark"
-          :content="item.tip"
-          placement="top"
-        >
-          <i class="el-icon-question"></i>
+        <el-tooltip v-if="item.tip" class="item" effect="dark" :content="item.tip" placement="top">
+          <i-ep-questionFilled  />
         </el-tooltip>
       </label>
       <el-input
@@ -23,39 +17,39 @@
   </div>
 </template>
 <script>
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 export default {
   name: 'MultiInput',
   props: {
     formConfig: {
       type: Object,
-      required: true,
+      required: true
     },
     moduleConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   methods: {
     changeData(key, value) {
       if (this.formConfig.key) {
         this.$emit(FORM_CHANGE_EVENT_KEY, {
           key: this.formConfig.key + '.' + key,
-          value,
-        });
+          value
+        })
       } else if (this.formConfig.keys) {
         this.$emit(FORM_CHANGE_EVENT_KEY, {
           key,
-          value,
-        });
+          value
+        })
       } else {
         // todo
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .star-question-multiline {
   .el-form-item__content {
     display: flex;

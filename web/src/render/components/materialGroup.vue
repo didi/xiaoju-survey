@@ -1,6 +1,8 @@
 <template>
   <form ref="ruleForm" :model="formModel" :rules="rules">
-    <questionWrapper ref="questionWrappers" v-for="(item, index) in renderData"
+    <questionWrapper
+      ref="questionWrappers"
+      v-for="(item) in renderData"
       :key="item.field"
       class="gap"
       v-bind="$attrs"
@@ -13,88 +15,88 @@
   </form>
 </template>
 <script setup>
-import { ref, onMounted, provide, computed } from 'vue';
-import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer';
+import { ref, onMounted, provide, computed } from 'vue'
+import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer'
 
 const props = defineProps({
   rules: {
     type: Object,
     default: () => {
-      return {};
-    },
+      return {}
+    }
   },
   formModel: {
     type: Object,
     default: () => {
-      return {};
-    },
+      return {}
+    }
   },
   renderData: {
     type: Array,
     default: () => {
-      return [];
-    },
-  },
+      return []
+    }
+  }
 })
-const emit = defineEmits(['formChange', 'blur']);
+const emit = defineEmits(['formChange', 'blur'])
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
-  emit('formChange', data);
-};
+  emit('formChange', data)
+}
 // 动态 field 管理
 const fields = ref([])
 const ruleForm = ref(null)
-provide(
-  'Form',
-  {
-    model: computed(() => { return props.formModel }),
-    rules: computed(() => { return props.rules })
-  }
-)
+provide('Form', {
+  model: computed(() => {
+    return props.formModel
+  }),
+  rules: computed(() => {
+    return props.rules
+  })
+})
 // 题目组件ref
-const questionWrappers = ref([]);
+const questionWrappers = ref([])
 onMounted(() => {
-  const childInstances = questionWrappers.value;
+  const childInstances = questionWrappers.value
   childInstances.forEach((field) => {
-    fields.value.push(field);
+    fields.value.push(field)
   })
 })
 
 const validate = (callback) => {
-  const length = fields.value.length;
+  const length = fields.value.length
   if (length === 0) {
-    callback(true);
+    callback(true)
   }
 
-  let valid = true;
-  let count = 0;
-  let flag = false; // 滚动到第一个未验证成功的元素
+  let valid = true
+  let count = 0
+  let flag = false // 滚动到第一个未验证成功的元素
 
   fields.value.forEach((field) => {
     field.validate('', (errors) => {
-      count++;
+      count++
       if (errors) {
         if (!flag) {
-          flag = true;
+          flag = true
           try {
-            const el = field.$el;
-            el.scrollIntoViewIfNeeded();
+            const el = field.$el
+            el.scrollIntoViewIfNeeded()
           } catch (e) {
-            console.error(e);
+            console.error(e)
           }
         }
-        valid = false;
+        valid = false
       }
       if (typeof callback === 'function' && count === length) {
-        callback(valid);
+        callback(valid)
       }
-    });
-  });
+    })
+  })
 }
 
 defineExpose({
   validate
 })
 </script>
-  

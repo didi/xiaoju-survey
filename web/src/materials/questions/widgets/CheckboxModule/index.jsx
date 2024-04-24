@@ -1,9 +1,9 @@
-import BaseChoice from '../BaseChoice';
-import { computed, defineComponent } from 'vue';
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
-import { includes } from 'lodash-es';
-import metaConfig from './meta.js';
-export const meta = metaConfig;
+import BaseChoice from '../BaseChoice'
+import { computed, defineComponent } from 'vue'
+import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
+import { includes } from 'lodash-es'
+import metaConfig from './meta.js'
+export const meta = metaConfig
 /**
  * 支持配置：
  * 排列方式, layout
@@ -14,86 +14,80 @@ export default defineComponent({
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: Array,
       default: () => {
-        return [];
-      },
+        return []
+      }
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
+      default: false
     },
     maxNum: {
       type: [Number, String],
-      default: 1,
-    },
+      default: 1
+    }
   },
   emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {
-        return false;
+        return false
       }
-      return props.value.length >= +props.maxNum;
-    });
+      return props.value.length >= +props.maxNum
+    })
     const isDisabled = (item) => {
-      const { value } = props;
-      return disableState.value && !includes(value, item.value);
-    };
+      const { value } = props
+      return disableState.value && !includes(value, item.value)
+    }
     const myOptions = computed(() => {
-      const { options } = props;
+      const { options } = props
       return options.map((item) => {
         return {
           ...item,
-          disabled: isDisabled(item),
-        };
-      });
-    });
+          disabled: isDisabled(item)
+        }
+      })
+    })
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     const handleSelectMoreChange = (data) => {
-      const { key, value } = data;
+      const { key, value } = data
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
       props,
       onChange,
       handleSelectMoreChange,
-      myOptions,
-    };
+      myOptions
+    }
   },
   render() {
-    const { readonly, field, myOptions, onChange, maxNum, value } = this;
+    const { readonly, field, myOptions, onChange, maxNum, value } = this
 
-    // const props = {
-    //   ...this.$props,
-    //   readonly,
-    //   name: field,
-    //   options: myOptions,
-    // };
     return (
       <BaseChoice
         uiTarget="checkbox"
@@ -113,10 +107,10 @@ export default defineComponent({
                 moduleConfig={scoped.selectMoreConfig}
                 onChange={(e) => this.handleSelectMoreChange(e)}
               ></QuestionWithRule>
-            );
-          },
+            )
+          }
         }}
       </BaseChoice>
-    );
-  },
-});
+    )
+  }
+})

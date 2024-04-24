@@ -1,5 +1,5 @@
-import { computed, defineComponent, onMounted, ref, shallowRef } from 'vue'
-import EditOptions from './EditOptions.jsx';
+import { computed, defineComponent, onMounted, shallowRef } from 'vue'
+import EditOptions from './EditOptions.jsx'
 import moduleTitle from './Title.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
@@ -89,42 +89,41 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly, isSelected } = this
+    const { isSelected } = this
 
     const props = {
       isSelected,
       ...this.moduleConfig,
       ...this.$props
     }
-    
+
     const { BlockComponent } = this
     let dynamicComponent = <span> 题型组件加载中</span>
-    if (BlockComponent){
+    if (BlockComponent) {
       dynamicComponent = BlockComponent
     }
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
-        {this.showTitle && <moduleTitle { ...props } onChange={this.onChange}  />}
+        {this.showTitle && <moduleTitle {...props} onChange={this.onChange} />}
         <div class="question-block">
-          {
-            this.showEditCom ? (
-              <EditOptions moduleConfig={props.moduleConfig} >
-                <dynamicComponent
-                  {...props}
-                  onBlur={this.onBlur}
-                  onFocus={this.onFocus}
-                  onChange={this.onChange}
-                />
-              </EditOptions>
-              ) : <dynamicComponent
-                    readonly
-                    {...props}
-                    onBlur={this.onBlur}
-                    onFocus={this.onFocus}
-                    change={this.onChange}
-                />
-          }
-            
+          {this.showEditCom ? (
+            <EditOptions moduleConfig={props.moduleConfig}>
+              <dynamicComponent
+                {...props}
+                onBlur={this.onBlur}
+                onFocus={this.onFocus}
+                onChange={this.onChange}
+              />
+            </EditOptions>
+          ) : (
+            <dynamicComponent
+              readonly
+              {...props}
+              onBlur={this.onBlur}
+              onFocus={this.onFocus}
+              change={this.onChange}
+            />
+          )}
         </div>
       </div>
     )

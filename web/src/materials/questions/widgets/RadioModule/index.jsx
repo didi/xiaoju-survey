@@ -1,6 +1,6 @@
-import BaseChoice from '../BaseChoice';
-import { defineComponent } from 'vue';
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
+import BaseChoice from '../BaseChoice'
+import { defineComponent } from 'vue'
+import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 
 /**
  * 支持配置：
@@ -12,28 +12,28 @@ export default defineComponent({
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
     // moduleConfig: {
     //   type: Object,
     //   default: () => {
@@ -54,28 +54,28 @@ export default defineComponent({
   emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     const handleSelectMoreChange = (data) => {
-      const { key, value } = data;
+      const { key, value } = data
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
       props,
       onChange,
-      handleSelectMoreChange,
-    };
+      handleSelectMoreChange
+    }
   },
   render() {
-    const { props } = this;
-    
+    const { props } = this
+
     return (
       <div>
         <BaseChoice
@@ -87,7 +87,6 @@ export default defineComponent({
           type={props.type}
           field={props.field}
           layout={props.layout}
-
           onChange={this.onChange}
         >
           {{
@@ -99,11 +98,11 @@ export default defineComponent({
                   moduleConfig={scoped.selectMoreConfig}
                   onChange={(e) => this.handleSelectMoreChange(e)}
                 ></QuestionWithRule>
-              );
-            },
+              )
+            }
           }}
         </BaseChoice>
       </div>
-    );
-  },
-});
+    )
+  }
+})

@@ -11,18 +11,18 @@ export default {
   props: {
     moduleConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     resultText() {
       return this.moduleConfig?.submitConf?.msgContent?.msg_9001 || '问卷已过期'
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .over-time {
   text-align: center;
   margin-bottom: 5.5rem;

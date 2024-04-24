@@ -3,21 +3,24 @@
     <template v-for="btnItem in btnList" :key="btnItem.key">
       <router-link
         :to="{ name: btnItem.router }"
-        tag="div"
         replace
-        v-slot="{ href, route, navigate, isActive, isExactActive }"
+        v-slot="{ href, navigate, isActive, isExactActive }"
         custom
       >
-      <div
-        :class="[
-          'navbar-btn',
-          (isActive && btnItem.key === 'skinsettings'  ) || isExactActive ? 'router-link-exact-active' : '']"
-      >
-        <i class="iconfont" :class="[btnItem.icon]"></i>
-        <a :href="href" @click="navigate"><span>{{ btnItem.text }}</span></a>
-        <!-- <span>{{ btnItem.text }}</span> -->
-      </div>
-        
+        <div
+          :class="[
+            'navbar-btn',
+            (isActive && btnItem.key === 'skinsettings') || isExactActive
+              ? 'router-link-exact-active'
+              : ''
+          ]"
+        >
+          <i class="iconfont" :class="[btnItem.icon]"></i>
+          <a :href="href" @click="navigate"
+            ><span>{{ btnItem.text }}</span></a
+          >
+          <!-- <span>{{ btnItem.text }}</span> -->
+        </div>
       </router-link>
     </template>
   </div>
@@ -35,25 +38,25 @@ export default {
           text: '问卷编辑',
           router: 'QuestionEditIndex',
           key: 'edit',
-          next: true,
+          next: true
         },
         {
           icon: 'icon-wenjuanshezhi',
           text: '问卷设置',
           router: 'QuestionEditSetting',
           key: 'settings',
-          next: true,
+          next: true
         },
         {
           icon: 'icon-yangshishezhi',
           text: '皮肤设置',
           router: 'QuestionSkinSetting',
           key: 'skinsettings',
-          next: true,
-        },
-      ],
+          next: true
+        }
+      ]
     }
-  },
+  }
 }
 </script>
 
@@ -68,7 +71,7 @@ export default {
     color: #92949d;
     padding: 0 20px;
     cursor: pointer;
-    a{
+    a {
       color: inherit;
     }
     &.router-link-exact-active {

@@ -23,7 +23,7 @@ export default {
       type: Object,
       default: () => {}
     },
-    isSelected: Boolean,
+    isSelected: Boolean
   },
   data() {
     return {}
@@ -31,18 +31,18 @@ export default {
   methods: {
     onSelect() {
       this.$emit('select')
-    },
+    }
   },
   computed: {
     logoImg() {
       const { logoImage } = this.logoConf
       return logoImage
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .container {
   display: flex;
   justify-content: center;

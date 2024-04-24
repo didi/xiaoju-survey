@@ -8,19 +8,19 @@
 <script>
 import { statusMaps } from '../config'
 export default {
-  name: 'State',
+  name: 'StateModule',
   props: {
-    value: Object,
+    value: Object
   },
   data() {
     return {
-      statusMaps,
+      statusMaps
     }
-  },
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .list-state {
   display: flex;
   align-items: center;

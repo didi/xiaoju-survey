@@ -25,31 +25,31 @@
   &::-webkit-scrollbar {
     display: block;
     height: 10px;
-    background-color: #F2F4F7;
+    background-color: #f2f4f7;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    background: #E3E4E8;
+    background: #e3e4e8;
   }
 
   &::-webkit-scrollbar-track {
     height: 16px;
-    background: #F2F4F7;
+    background: #f2f4f7;
   }
 
   .form-item-wrapper {
-    padding: 0 0 .2rem 0;
+    padding: 0 0 0.2rem 0;
     box-sizing: border-box;
   }
 
   .question-form-item {
-    padding: .16rem 0 .4rem;
+    padding: 0.16rem 0 0.4rem;
     border-bottom: none;
 
     .module-title {
-      padding: 0 0 .24rem 0.2rem;
-      font-size: .28rem;
+      padding: 0 0 0.24rem 0.2rem;
+      font-size: 0.28rem;
       font-weight: 400;
     }
 
@@ -57,7 +57,7 @@
       padding: 0;
 
       .star-wrapper {
-        padding: 0 .35rem;
+        padding: 0 0.35rem;
       }
 
       .nps-wrapper {
@@ -79,10 +79,10 @@
   }
 
   .group-title.main {
-    background: #F2F4F7;
+    background: #f2f4f7;
     padding: 0;
-    min-height: .4rem;
-    line-height: .4rem;
+    min-height: 0.4rem;
+    line-height: 0.4rem;
     box-sizing: border-box;
     display: flex;
 
@@ -90,7 +90,7 @@
       display: inline-block;
       box-sizing: border-box;
       vertical-align: top;
-      font-size: .28rem;
+      font-size: 0.28rem;
       color: $title-color;
       text-align: center;
       line-height: 0.4rem;
@@ -101,7 +101,7 @@
       height: auto;
     }
 
-    &>span:first-child {
+    & > span:first-child {
       border: none;
     }
 
@@ -109,30 +109,30 @@
       border: none;
     }
 
-    &>span {
-      padding: .2rem .1rem;
+    & > span {
+      padding: 0.2rem 0.1rem;
     }
   }
 
   &.group-radio {
     .module-title {
       // color: $font-color;
-      line-height: .36rem;
+      line-height: 0.36rem;
     }
 
     .question-form-item {
-      padding: .4rem 0 .4rem 0;
+      padding: 0.4rem 0 0.4rem 0;
     }
 
     .checkbox-wrapper,
     .radio-wrapper {
       .radio-box.nest-box .radio-outer .radio-item {
-        padding: .22rem 0;
+        padding: 0.22rem 0;
       }
     }
 
     .module-err-tip {
-      margin-top: .25rem;
+      margin-top: 0.25rem;
     }
   }
 }
@@ -147,14 +147,14 @@
     font-size: 0;
     overflow: hidden;
     border-bottom: 1px solid #eee;
-    margin-bottom: .2rem;
-    padding-top: .2rem;
+    margin-bottom: 0.2rem;
+    padding-top: 0.2rem;
 
     .module-title {
       float: left;
       width: 27%;
       vertical-align: top;
-      font-size: .26rem !important;
+      font-size: 0.26rem !important;
     }
 
     .checkbox-wrapper,
@@ -169,13 +169,13 @@
 
 .select-more-label {
   display: block;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   // margin-bottom: -.2rem;
-  height: .3rem;
-  line-height: .3rem;
+  height: 0.3rem;
+  line-height: 0.3rem;
   width: 100%;
   color: #666;
-  font-size: .26rem;
+  font-size: 0.26rem;
 }
 
 .matrix-select-more {
@@ -185,8 +185,8 @@
     padding-top: 0px;
 
     .m-select-more {
-      margin-top: .3rem;
-      margin-bottom: .5rem;
+      margin-top: 0.3rem;
+      margin-bottom: 0.5rem;
       width: 100% !important;
     }
   }

@@ -9,14 +9,14 @@ export default function (schema) {
     'bottomConf',
     'skinConf',
     'submitConf',
-    'questionDataList',
+    'questionDataList'
   ])
   configData.dataConf = {
-    dataList: configData.questionDataList,
+    dataList: configData.questionDataList
   }
   delete configData.questionDataList
   return {
     surveyId,
-    configData,
+    configData
   }
 }

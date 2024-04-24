@@ -8,17 +8,17 @@
 
 <script>
 export default {
-  name: 'Empty',
+  name: 'EmptyModule',
   props: {
     data: {
       type: Object,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .default-empty-root {
   width: 350px;
   margin: 200px auto;

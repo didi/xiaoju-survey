@@ -1,7 +1,7 @@
-import BaseChoice from '../BaseChoice';
-import { defineComponent } from 'vue';
-import metaConfig from './meta.js';
-export const meta = metaConfig;
+import BaseChoice from '../BaseChoice'
+import { defineComponent } from 'vue'
+import metaConfig from './meta.js'
+export const meta = metaConfig
 /**
  * 支持配置：
  * 排列方式, layout
@@ -12,44 +12,44 @@ export default defineComponent({
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   setup(props, { emit }) {
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
       props,
-      onChange,
-    };
+      onChange
+    }
   },
   render() {
-    const { props } = this;
+    const { props } = this
     return (
       <BaseChoice
         uiTarget="radio"
@@ -62,6 +62,6 @@ export default defineComponent({
         options={props.options}
         onChange={this.onChange}
       ></BaseChoice>
-    );
-  },
-});
+    )
+  }
+})

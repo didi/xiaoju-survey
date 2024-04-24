@@ -24,11 +24,7 @@
           "
           link
         ></text-button>
-        <text-search
-          placeholder="请输入问卷标题"
-          :value="searchVal"
-          @search="onSearchText"
-        />
+        <text-search placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
       </div>
     </div>
     <el-table
@@ -66,7 +62,7 @@
       </el-table-column>
 
       <el-table-column label="操作" :width="300" class-name="table-options">
-        <template  #default="scope">
+        <template #default="scope">
           <ToolBar
             :data="scope.row"
             type="list"
@@ -122,7 +118,7 @@ import {
   noListDataConfig,
   noSearchDataConfig,
   selectOptionsDict,
-  buttonOptionsDict,
+  buttonOptionsDict
 } from '../config'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant'
@@ -132,15 +128,7 @@ export default {
   name: 'BaseList',
   data() {
     return {
-      fields: [
-        'type',
-        'title',
-        'remark',
-        'owner',
-        'state',
-        'createDate',
-        'updateDate',
-      ],
+      fields: ['type', 'title', 'remark', 'owner', 'state', 'createDate', 'updateDate'],
       showModify: false,
       modifyType: '',
       loading: false,
@@ -154,13 +142,13 @@ export default {
       selectOptionsDict,
       selectValueMap: {
         surveyType: '',
-        'curStatus.status': '',
+        'curStatus.status': ''
       },
       buttonOptionsDict,
       buttonValueMap: {
         'curStatus.date': '',
-        createDate: -1,
-      },
+        createDate: -1
+      }
     }
   },
   computed: {
@@ -174,7 +162,7 @@ export default {
       return this.data.map((item) => {
         return {
           ...item,
-          'curStatus.date': item.curStatus.date,
+          'curStatus.date': item.curStatus.date
         }
       })
     },
@@ -186,28 +174,28 @@ export default {
             {
               field: 'title',
               value: this.searchVal,
-              comparator: '$regex',
-            },
-          ],
+              comparator: '$regex'
+            }
+          ]
         },
         {
           comparator: '',
           condition: [
             {
               field: 'curStatus.status',
-              value: this.selectValueMap['curStatus.status'],
-            },
-          ],
+              value: this.selectValueMap['curStatus.status']
+            }
+          ]
         },
         {
           comparator: '',
           condition: [
             {
               field: 'surveyType',
-              value: this.selectValueMap.surveyType,
-            },
-          ],
-        },
+              value: this.selectValueMap.surveyType
+            }
+          ]
+        }
       ]
     },
     order() {
@@ -219,7 +207,7 @@ export default {
           return prev
         }, [])
       return JSON.stringify(formatOrder)
-    },
+    }
   },
   created() {
     this.init()
@@ -236,7 +224,7 @@ export default {
         const res = await getSurveyList({
           curPage: this.currentPage,
           filter,
-          order: this.order,
+          order: this.order
         })
         this.loading = false
         if (res.code === CODE_MAP.SUCCESS) {
@@ -245,13 +233,13 @@ export default {
         } else {
           this.$message({
             type: 'error',
-            message: res.errmsg,
+            message: res.errmsg
           })
         }
       } catch (error) {
         this.$message({
           type: 'error',
-          message: error,
+          message: error
         })
         this.loading = false
       }
@@ -263,26 +251,26 @@ export default {
       const funcList = [
         {
           key: QOP_MAP.EDIT,
-          label: '修改',
+          label: '修改'
         },
         {
           key: 'analysis',
-          label: '数据',
+          label: '数据'
         },
         {
           key: 'release',
-          label: '投放',
+          label: '投放'
         },
         {
           key: 'delete',
           label: '删除',
-          icon: 'icon-shanchu',
+          icon: 'icon-shanchu'
         },
         {
           key: QOP_MAP.COPY,
           label: '复制',
-          icon: 'icon-shanchu',
-        },
+          icon: 'icon-shanchu'
+        }
       ]
       return funcList
     },
@@ -291,7 +279,7 @@ export default {
         await this.$confirm('是否确认删除？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         })
       } catch (error) {
         console.log('取消删除')
@@ -326,8 +314,8 @@ export default {
       this.$router.push({
         name: 'QuestionEditIndex',
         params: {
-          id: row._id,
-        },
+          id: row._id
+        }
       })
     },
     onSearchText(e) {
@@ -343,11 +331,11 @@ export default {
     onButtonChange(effectValue, effectKey) {
       this.buttonValueMap = {
         'curStatus.date': '',
-        createDate: '',
+        createDate: ''
       }
       this.buttonValueMap[effectKey] = effectValue
       this.init()
-    },
+    }
   },
   components: {
     empty,
@@ -357,12 +345,12 @@ export default {
     TextSearch,
     TextSelect,
     TextButton,
-    State,
-  },
+    State
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tableview-root {
   .filter-wrap {
     display: flex;

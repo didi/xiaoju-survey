@@ -24,39 +24,37 @@
   </el-form-item>
 </template>
 <script>
-import { get as _get } from 'lodash-es';
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { get as _get } from 'lodash-es'
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 export default {
   name: 'FreqAndNumberLimit',
   props: {
     formConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     isShowNumberFn() {
-      return !!this.formConfig.value[this.formConfig.selectKey];
-    },
+      return !!this.formConfig.value[this.formConfig.selectKey]
+    }
   },
   data() {
     return {
-      numberValue: Number(
-        _get(this.formConfig.value, this.formConfig.numberKey, 0)
-      ),
-    };
+      numberValue: Number(_get(this.formConfig.value, this.formConfig.numberKey, 0))
+    }
   },
   methods: {
     onChange(e, key) {
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
-        value: e,
-      });
-    },
-  },
-};
+        value: e
+      })
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss">
 .option-select {
   width: 130px !important;
 }

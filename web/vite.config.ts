@@ -3,7 +3,12 @@ import { defineConfig, normalizePath } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createMpaPlugin, createPages } from 'vite-plugin-virtual-mpa'
-import ElementPlus from 'unplugin-element-plus/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -27,12 +32,12 @@ const mpaPlugin = createMpaPlugin({
   rewrites: [
     {
       from: /render/,
-      to: (ctx) =>  normalizePath('/src/render/index.html')
+      to: () => normalizePath('/src/render/index.html')
     },
     {
       from: /\/|\/management\/.?/,
-      to: (ctx) => normalizePath('/src/management/index.html')
-    },
+      to: () => normalizePath('/src/management/index.html')
+    }
   ]
 })
 
@@ -41,8 +46,28 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    ElementPlus({
-      useSource: true
+    AutoImport({
+      resolvers: [
+        ElementPlusResolver(),
+        // Auto import icon components
+        IconsResolver({
+          prefix: 'Icon'
+        })
+      ]
+    }),
+    Components({
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        }),
+        // Auto register icon components
+        IconsResolver({
+          enabledCollections: ['ep']
+        })
+      ]
+    }),
+    Icons({
+      autoInstall: true
     }),
     mpaPlugin
   ],
@@ -54,7 +79,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@use "@/management/styles/variable.scss" as *;`
+        additionalData: `@use "@/management/styles/element-variables.scss" as *;`
       }
     }
   },

@@ -13,6 +13,6 @@ export default createStore({
   actions,
   modules: {
     edit,
-    user,
-  },
+    user
+  }
 })

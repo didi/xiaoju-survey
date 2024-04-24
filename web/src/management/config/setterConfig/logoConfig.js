@@ -14,5 +14,5 @@ export default [
     tip: '填写宽度百分比，例如30%',
     direction: 'horizon',
     labelStyle: { width: '120px' }
-  },
+  }
 ]

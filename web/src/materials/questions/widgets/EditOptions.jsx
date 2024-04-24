@@ -1,109 +1,98 @@
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import OptionEdit from '@/materials/questions/components/Options/OptionEdit.vue';
-import OptionEditBar from '@/materials/questions/components/Options/OptionEditBar.vue';
-import store from '@/management/store';
-import questionLoader from '@/materials/questions/questionLoader';
-import UseOptionBase from '@/materials/questions/components/Options/UseOptionBase';
+import { defineComponent, ref, computed, onMounted } from 'vue'
+import OptionEdit from '@/materials/questions/components/Options/OptionEdit.vue'
+import OptionEditBar from '@/materials/questions/components/Options/OptionEditBar.vue'
+import store from '@/management/store'
+import questionLoader from '@/materials/questions/questionLoader'
+import UseOptionBase from '@/materials/questions/components/Options/UseOptionBase'
 
 export default defineComponent({
   name: 'EditOptions',
   components: {
     OptionEdit,
-    OptionEditBar,
+    OptionEditBar
   },
   provide() {
     return {
       currentEditKey: store.getters['edit/currentEditKey'],
-      moduleConfig: computed(() => this.moduleConfig),
-    };
+      moduleConfig: computed(() => this.moduleConfig)
+    }
   },
   props: {
     moduleConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   setup(props) {
     const currentEditOne = computed(() => {
-      return store.state?.edit?.currentEditOne;
-    });
+      return store.state?.edit?.currentEditOne
+    })
     const currentEditKey = computed(() => {
-      return store.getters['edit/currentEditKey'];
-    });
+      return store.getters['edit/currentEditKey']
+    })
     const getOptions = computed(() => {
-      return props.moduleConfig.options;
-    });
-    const { addOption, addOtherOption } = UseOptionBase(getOptions);
-    const handleAddOption = (
-      text = '选项',
-      others = false,
-      index = -1,
-      field
-    ) => {
-      const value = addOption(text, others, index, field);
-      handleOptionChange(value);
-    };
+      return props.moduleConfig.options
+    })
+    const { addOption, addOtherOption } = UseOptionBase(getOptions)
+    const handleAddOption = (text = '选项', others = false, index = -1, field) => {
+      const value = addOption(text, others, index, field)
+      handleOptionChange(value)
+    }
     const handleAddOtherOption = () => {
-      const { field } = props.moduleConfig;
-      const value = addOtherOption(field);
-      handleOptionChange(value);
-    };
+      const { field } = props.moduleConfig
+      const value = addOtherOption(field)
+      handleOptionChange(value)
+    }
 
     const handleOptionChange = (value) => {
-      const optionKey = `options`;
-      const key = `${currentEditKey.value}.${optionKey}`;
-      handleChange({ key, value });
-    };
+      const optionKey = `options`
+      const key = `${currentEditKey.value}.${optionKey}`
+      handleChange({ key, value })
+    }
 
     const handleChange = ({ key, value }) => {
-      store.dispatch('edit/changeSchema', { key, value });
-    };
+      store.dispatch('edit/changeSchema', { key, value })
+    }
     // const questionMeta = ref({})
-    const isShowOptionConfig = ref(false);
-    const hasAdvancedConfig = ref(false);
-    const hasAdvancedRateConfig = ref(false);
-    const showOthers = ref(false);
-    const showOptionEdit = ref(false);
-    const showOptionEditBar = ref(true);
+    const isShowOptionConfig = ref(false)
+    const hasAdvancedConfig = ref(false)
+    const hasAdvancedRateConfig = ref(false)
+    const showOthers = ref(false)
+    const showOptionEdit = ref(false)
+    const showOptionEditBar = ref(true)
     onMounted(() => {
-      const questionMeta = questionLoader.getMeta(props.moduleConfig.type);
-      const { editConfigure } = questionMeta;
+      const questionMeta = questionLoader.getMeta(props.moduleConfig.type)
+      const { editConfigure } = questionMeta
 
       if (editConfigure) {
-        showOptionEdit.value = editConfigure.optionEdit.show;
-        const { optionEditBar } = editConfigure;
-        showOptionEditBar.value = optionEditBar.show;
-        showOthers.value = optionEditBar.configure.showOthers;
-        hasAdvancedConfig.value = Boolean(
-          optionEditBar.configure.showAdvancedConfig
-        );
-        hasAdvancedRateConfig.value = Boolean(
-          optionEditBar.configure.showAdvancedRateConfig
-        );
+        showOptionEdit.value = editConfigure.optionEdit.show
+        const { optionEditBar } = editConfigure
+        showOptionEditBar.value = optionEditBar.show
+        showOthers.value = optionEditBar.configure.showOthers
+        hasAdvancedConfig.value = Boolean(optionEditBar.configure.showAdvancedConfig)
+        hasAdvancedRateConfig.value = Boolean(optionEditBar.configure.showAdvancedRateConfig)
       } else {
         // meta不存在的兜底程序
-        if (
-          ['radio-star', 'text', 'textarea'].includes(props.moduleConfig.type)
-        ) {
-          showOptionEdit.value = false;
+        if (['radio-star', 'text', 'textarea'].includes(props.moduleConfig.type)) {
+          showOptionEdit.value = false
         } else {
-          showOptionEdit.value = true;
+          showOptionEdit.value = true
         }
         if (['radio-star'].includes(props.moduleConfig.type)) {
-          showOthers.value = false;
+          showOthers.value = false
         } else {
-          showOthers.value = true;
+          showOthers.value = true
         }
         if (['binary-choice'].includes(props.moduleConfig.type)) {
-          showOptionEditBar.value = false;
+          showOptionEditBar.value = false
         }
         if (!['radio-star'].includes(props.moduleConfig.type)) {
-          hasAdvancedConfig.value = true;
+          hasAdvancedConfig.value = true
         } else {
-          hasAdvancedRateConfig.value = true;
+          hasAdvancedRateConfig.value = true
         }
       }
-    });
+    })
     return {
       currentEditOne,
       currentEditKey,
@@ -117,8 +106,8 @@ export default defineComponent({
       handleAddOption,
       handleAddOtherOption,
       handleOptionChange,
-      handleChange,
-    };
+      handleChange
+    }
   },
   render() {
     return (
@@ -147,6 +136,6 @@ export default defineComponent({
           />
         )}
       </div>
-    );
-  },
-});
+    )
+  }
+})

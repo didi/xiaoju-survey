@@ -3,7 +3,7 @@
     class="login-page"
     :style="{
       background: `url('/imgs/create/background.webp') no-repeat bottom right`,
-      'background-size': 'cover',
+      'background-size': 'cover'
     }"
   >
     <div class="login-top">
@@ -17,7 +17,7 @@
         ref="formData"
         label-width="100px"
         class="login-form"
-        @submit.native.prevent
+        @submit.prevent
       >
         <el-form-item label="账号" prop="name">
           <el-input v-model="formData.name" size="large"></el-input>
@@ -29,16 +29,8 @@
 
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
-            <el-input
-              style="width: 150px"
-              v-model="formData.captcha"
-              size="large"
-            ></el-input>
-            <div
-              class="captcha-img"
-              @click="refreshCaptcha"
-              v-html="captchaImgData"
-            ></div>
+            <el-input style="width: 150px" v-model="formData.captcha" size="large"></el-input>
+            <div class="captcha-img" @click="refreshCaptcha" v-html="captchaImgData"></div>
           </div>
         </el-form-item>
 
@@ -75,7 +67,7 @@ export default {
         name: '',
         password: '',
         captcha: '',
-        captchaId: '',
+        captchaId: ''
       },
       rules: {
         name: [
@@ -84,8 +76,8 @@ export default {
             min: 3,
             max: 10,
             message: '长度在 3 到 10 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -93,20 +85,20 @@ export default {
             min: 8,
             max: 16,
             message: '长度在 8 到 16 个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         captcha: [
           {
             required: true,
             message: '请输入验证码',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
       loginPending: false,
       registerPending: false,
-      captchaImgData: '',
+      captchaImgData: ''
     }
   },
   created() {
@@ -119,14 +111,14 @@ export default {
           try {
             const submitTypes = {
               login,
-              register,
+              register
             }
             this[`${type}Pending`] = true
             const res = await submitTypes[type]({
               username: this.formData.name,
               password: this.formData.password,
               captcha: this.formData.captcha,
-              captchaId: this.formData.captchaId,
+              captchaId: this.formData.captchaId
             })
             this[`${type}Pending`] = false
             if (res.code !== CODE_MAP.SUCCESS) {
@@ -135,10 +127,10 @@ export default {
             }
             this.$store.dispatch('user/login', {
               username: res.data.username,
-              token: res.data.token,
+              token: res.data.token
             })
             let redirect = {
-              name: 'survey',
+              name: 'survey'
             }
             if (this.$route.query.redirect) {
               redirect = decodeURIComponent(this.$route.query.redirect)
@@ -156,7 +148,7 @@ export default {
     async refreshCaptcha() {
       try {
         const res = await refreshCaptcha({
-          captchaId: this.formData.captchaId,
+          captchaId: this.formData.captchaId
         })
         if (res.code === 200) {
           const { id, img } = res.data
@@ -166,8 +158,8 @@ export default {
       } catch (error) {
         this.$message.error('获取验证码失败')
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

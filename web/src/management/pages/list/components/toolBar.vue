@@ -24,7 +24,7 @@ export default {
     data: Object,
     type: String,
     toolWidth: Number,
-    tools: Array,
+    tools: Array
   },
   data() {
     return {}
@@ -42,16 +42,16 @@ export default {
           this.$router.push({
             name: 'analysisPage',
             params: {
-              id: this.data._id,
-            },
+              id: this.data._id
+            }
           })
           return
         case 'release':
           this.$router.push({
             name: 'publishResultPage',
             params: {
-              id: this.data._id,
-            },
+              id: this.data._id
+            }
           })
           return
         case 'delete':
@@ -60,15 +60,15 @@ export default {
         default:
           return
       }
-    },
+    }
   },
   components: {
-    Tool,
-  },
+    Tool
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tool-bar-root {
   margin-left: -16px;
   .tool-root:not(:last-child) {

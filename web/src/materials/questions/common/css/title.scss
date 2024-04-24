@@ -1,5 +1,5 @@
 @import './default.scss';
-.question-form-item.isSelected{ 
+.question-form-item.isSelected {
   background-color: #f2f4f7;
   -webkit-box-shadow: 0 0 5px #e3e4e8;
   box-shadow: 0 0 5px #e3e4e8;
@@ -38,9 +38,10 @@
       padding-right: 0.06rem;
       font-size: $title-size;
     }
-    &-text{
+    &-text {
       font-size: $title-size;
-      p, span{
+      p,
+      span {
         font-size: inherit;
       }
     }
@@ -56,7 +57,7 @@
       width: 100%;
       margin: -10px 0;
       flex: 1;
-      font-size: .32rem;
+      font-size: 0.32rem;
       background-color: #fff;
     }
   }

@@ -2,14 +2,15 @@
   <div class="tab-box">
     <div class="title">主题设置</div>
     <div class="content">
-      <div  class="tag-list">
-        <el-tag 
+      <div class="tag-list">
+        <el-tag
           v-for="item in groupList"
-          :class="[groupName === item.value ? 'current' : '', 'tag']"  
-          type = 'info' 
+          :class="[groupName === item.value ? 'current' : '', 'tag']"
+          type="info"
           :key="item.value"
-          @click="() => changeGroup(item.value)">
-          {{item.label}}
+          @click="() => changeGroup(item.value)"
+        >
+          {{ item.label }}
         </el-tag>
       </div>
       <div class="banner-list-wrapper">
@@ -18,17 +19,10 @@
           v-for="(banner, bannerIndex) in currentBannerList"
           :key="bannerIndex"
         >
-          <img
-            class="banner-img"
-            :src="banner.src"
-            loading="lazy"
-            @click="changePreset(banner)"
-          />
+          <img class="banner-img" :src="banner.src" loading="lazy" @click="changePreset(banner)" />
         </div>
       </div>
     </div>
-    
-   
   </div>
 </template>
 <script>
@@ -40,12 +34,12 @@ export default {
   data() {
     return {
       skinPresets: [],
-      groupName: 'temp',
-    };
+      groupName: 'temp'
+    }
   },
   computed: {
     bannerList() {
-      return this.$store?.state?.bannerList || [];
+      return this.$store?.state?.bannerList || []
     },
     groupList() {
       return Object.keys(this.bannerList).map((key) => {
@@ -55,20 +49,22 @@ export default {
         }
       })
     },
-    currentBannerList () {
-      const arr =  Object.keys(this.bannerList).map((key) => {
-        return  this.bannerList[key]
-      }).map(data => {
-        return data.list.map(item => {
-          item.group = data.key;
-          return item;
+    currentBannerList() {
+      const arr = Object.keys(this.bannerList)
+        .map((key) => {
+          return this.bannerList[key]
         })
-      })
-      const  allbanner =  arr.reduce((acc, curr) => {
-        return acc.concat(curr);
-      }, []);
-      return allbanner.filter(item => {
-        if(this.groupName === "temp") {
+        .map((data) => {
+          return data.list.map((item) => {
+            item.group = data.key
+            return item
+          })
+        })
+      const allbanner = arr.reduce((acc, curr) => {
+        return acc.concat(curr)
+      }, [])
+      return allbanner.filter((item) => {
+        if (this.groupName === 'temp') {
           return true
         } else {
           return item.group === this.groupName
@@ -76,34 +72,31 @@ export default {
       })
     }
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     ...mapActions({
-      changeThemePreset: 'edit/changeThemePreset',
+      changeThemePreset: 'edit/changeThemePreset'
     }),
     changeGroup(value) {
       this.groupName = value
     },
-  changePreset(banner) {
+    changePreset(banner) {
       const name = banner.group + '-' + banner.title
       let presets = {
         'bannerConf.bannerConfig.bgImage': banner.src,
         'skinConf.themeConf.color': '#FAA600',
-        'skinConf.backgroundConf.color': '#fff',
+        'skinConf.backgroundConf.color': '#fff'
       }
-      if(skinPresets[name]){
+      if (skinPresets[name]) {
         presets = Object.assign(presets, skinPresets[name])
       }
-       
-      
+
       this.changeThemePreset(presets)
     }
-  },
-};
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .tab-box {
   width: 300px;
   height: 100%;
@@ -120,16 +113,16 @@ export default {
     // background: #f9fafc;
     border-bottom: 1px solid #edeffc;
   }
-  .content{ 
+  .content {
     padding: 12px;
   }
-  .tag-list{
+  .tag-list {
     display: flex;
     flex-wrap: wrap;
-    .tag{
+    .tag {
       margin: 5px 8px;
       cursor: pointer;
-      &.current{
+      &.current {
         color: $primary-color;
         background-color: $primary-bg-color;
       }

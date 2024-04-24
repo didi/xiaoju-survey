@@ -10,21 +10,21 @@
   </div>
 </template>
 <script>
-import logo from '../components/logo.vue';
+import logo from '../components/logo.vue'
 export default {
   name: 'resultPage',
-  components: {logo},
+  components: { logo },
   computed: {
     submitConf() {
-      return this.$store?.state?.submitConf || {};
+      return this.$store?.state?.submitConf || {}
     },
     successMsg() {
-      return this.submitConf?.msgContent?.msg_200 || '提交成功';
-    },
-  },
-};
+      return this.submitConf?.msgContent?.msg_200 || '提交成功'
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import '@/render/styles/variable.scss';
 
 .result-page-wrap {
@@ -33,10 +33,10 @@ export default {
   text-align: center;
   overflow: hidden;
   background: var(--primary-background-color);
-  
+
   padding: 0 0.3rem;
-  .result-page{
-    background: rgba(255, 255, 255, var(--opacity)); 
+  .result-page {
+    background: rgba(255, 255, 255, var(--opacity));
     display: flex;
     flex-direction: column;
     height: 100%;

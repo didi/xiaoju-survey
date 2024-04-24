@@ -1,97 +1,97 @@
-import { defineComponent, computed } from 'vue';
-import '../../common/css/radioStar.scss';
-import BaseRate from '../BaseRate';
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
+import { defineComponent, computed } from 'vue'
+import '../../common/css/radioStar.scss'
+import BaseRate from '../BaseRate'
+import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 export default defineComponent({
   name: 'StarModule',
   components: { BaseRate, QuestionWithRule },
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: [String, Number],
-      default: 0,
+      default: 0
     },
     starMin: {
       type: Number,
-      default: 1,
+      default: 1
     },
     starMax: {
       type: Number,
-      default: 5,
+      default: 5
     },
     starStyle: {
       type: String,
-      default: 'star',
+      default: 'star'
     },
     readonly: {
       type: Boolean,
-      default: false,
+      default: false
     },
     rangeConfig: {
       type: Object,
       default: () => {
-        return {};
-      },
-    },
+        return {}
+      }
+    }
   },
   setup(props, { emit }) {
     const rating = computed({
       get() {
-        return props.value;
+        return props.value
       },
       set(val) {
-        const key = props.field;
+        const key = props.field
         emit('change', {
           key,
-          value: val,
-        });
-      },
-    });
+          value: val
+        })
+      }
+    })
     const currentRangeConfig = computed(() => {
-      return props.rangeConfig[rating.value];
-    });
+      return props.rangeConfig[rating.value]
+    })
     const isShowInput = computed(() => {
-      return currentRangeConfig.value?.isShowInput;
-    });
+      return currentRangeConfig.value?.isShowInput
+    })
     const starClass = computed(() => {
-      const { starStyle } = props;
+      const { starStyle } = props
       switch (starStyle) {
         case 'star':
-          return 'qicon qicon-xingxing';
+          return 'qicon qicon-xingxing'
         case 'love':
-          return 'qicon qicon-aixin';
+          return 'qicon qicon-aixin'
         case 'number':
-          return 'number';
+          return 'number'
         default:
-          return 'qicon qicon-xingxing';
+          return 'qicon qicon-xingxing'
       }
-    });
+    })
     const confirmStar = (num) => {
-      if (props.readonly) return;
-      rating.value = num;
-    };
+      if (props.readonly) return
+      rating.value = num
+    }
     const onMoreDataChange = (data) => {
-      const { key, value } = data;
+      const { key, value } = data
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
       rating,
       currentRangeConfig,
       starClass,
       isShowInput,
       confirmStar,
-      onMoreDataChange,
-    };
+      onMoreDataChange
+    }
   },
   render() {
     const {
@@ -103,8 +103,8 @@ export default defineComponent({
       currentRangeConfig,
       isShowInput,
       onMoreDataChange,
-      rangeConfig,
-    } = this;
+      rangeConfig
+    } = this
 
     return (
       <div class="star-wrapper-main">
@@ -115,23 +115,21 @@ export default defineComponent({
           iconClass={starClass}
           onChange={this.confirmStar}
         />
-        {currentRangeConfig && (
-          <p class="explain radio-star">{currentRangeConfig.explain}</p>
-        )}
+        {currentRangeConfig && <p class="explain radio-star">{currentRangeConfig.explain}</p>}
         {isShowInput && (
           <QuestionWithRule
             showTitle={false}
-            key={ `${this.field}_${this.rating}`}
+            key={`${this.field}_${this.rating}`}
             moduleConfig={{
               type: 'selectMoreModule',
               field: `${this.field}_${this.rating}`,
               placeholder: rangeConfig[rating]?.text,
-              value: rangeConfig[rating]?.othersValue || '',
+              value: rangeConfig[rating]?.othersValue || ''
             }}
             onChange={(e) => onMoreDataChange(e)}
           ></QuestionWithRule>
         )}
       </div>
-    );
-  },
-});
+    )
+  }
+})

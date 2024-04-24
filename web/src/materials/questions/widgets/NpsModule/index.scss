@@ -1,34 +1,34 @@
 .nps-wrapper-main {
-    .nps-row-msg {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.2rem;
-      .nps-msg {
-        flex: 1;
-        font-size: 0.22rem;
-        color: #92949d;
-        &.left {
-          text-align: left;
-        }
-        &.right {
-          text-align: right;
-        }
+  .nps-row-msg {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    .nps-msg {
+      flex: 1;
+      font-size: 0.22rem;
+      color: #92949d;
+      &.left {
+        text-align: left;
       }
-    }
-    @media (max-width: 930px) {
-      :deep(.question-block) {
-        padding: 0;
-      }
-    }
-    :deep(.radio-nps-hover) {
-      .star-item {
-        &:hover {
-          background-color: $primary-color;
-        }
-      }
-      &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
-        background-color: $primary-color;
+      &.right {
+        text-align: right;
       }
     }
   }
+  @media (max-width: 930px) {
+    :deep(.question-block) {
+      padding: 0;
+    }
+  }
+  :deep(.radio-nps-hover) {
+    .star-item {
+      &:hover {
+        background-color: $primary-color;
+      }
+    }
+    &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
+      background-color: $primary-color;
+    }
+  }
+}

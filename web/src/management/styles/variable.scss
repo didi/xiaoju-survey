@@ -1,29 +1,27 @@
 @import './skin.scss';
 $primary-color: #ffa600;
 $primary-color-hover: #fbb733;
-$primary-color-deep: #D48D00;
+$primary-color-deep: #d48d00;
 $primary-color-light: #fffcf0;
-
 
 $normal-color: #4a4c5b;
 $normal-color-hover: #626369;
 $normal-color-deep: #292a36;
 $normal-color-light: #92959c;
 
-
 $disable-color: #f2f4f7;
 $border-color: #e3e4e8;
 $sub-color: #0f8a82;
 
-$font-color: #6E707C;
+$font-color: #6e707c;
 $font-color-title: $normal-color;
-$font-color-stress: #2B3035;
-$font-color-invert: #FFFFFF;
+$font-color-stress: #2b3035;
+$font-color-invert: #ffffff;
 
 $background-color: #f6f7f9;
 $background-color-light: #ffffff;
-$background-color-gray: #F7F9Fb;
-$background-color-dark: #E7E9EB;
+$background-color-gray: #f7f9fb;
+$background-color-dark: #e7e9eb;
 $primary-bg-color: #fef6e6;
 
 $title-color-deep: #292a36;
@@ -38,14 +36,11 @@ $error-color: #ec4e29;
 
 $primary-color-light: hsl(48, 100%, 97%);
 
-
-
-
 $title-size: 0.32rem;
 $font-size: 0.28rem;
 $tip-size: 0.22rem;
 
-.el-radio__input.is-checked+.el-radio__label {
+.el-radio__input.is-checked + .el-radio__label {
   color: $font-color !important;
 }
 
@@ -64,6 +59,6 @@ $tip-size: 0.22rem;
   border-color: $primary-color !important;
 }
 
-.el-checkbox__input.is-checked+.el-checkbox__label {
+.el-checkbox__input.is-checked + .el-checkbox__label {
   color: $font-color !important;
 }

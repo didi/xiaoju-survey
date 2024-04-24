@@ -11,7 +11,7 @@ const safeHtml: Directive & Plugin = {
   updated: _safeHtml,
   install: function (app) {
     app.directive('safe-html', this)
-  },
+  }
 }
 
 export default safeHtml

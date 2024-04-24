@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="channel-row-container"
-    :style="styleWrap"
-    :class="data.vertical ? 'vertical' : ''"
-  >
+  <div class="channel-row-container" :style="styleWrap" :class="data.vertical ? 'vertical' : ''">
     <div class="normal-row-wrap">
       <div class="left">
         <div class="crc-url-wrap" :class="{ 'no-name': !data.name }">
@@ -18,27 +14,13 @@
         </div>
       </div>
       <div class="operate-btn-group">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="在新页面打开"
-          placement="top"
-        >
+        <el-tooltip class="item" effect="dark" content="在新页面打开" placement="top">
           <a class="cru-suffix j-open" @click="openPage(getFullUrl(data))">
             <i class="font23 iconfont icon-jinru"></i>
           </a>
         </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="复制链接"
-          placement="top"
-        >
-          <a
-            class="cru-suffix j-copy"
-            :data-clipboard-text="getFullUrl(data)"
-            @click="handleCopy"
-          >
+        <el-tooltip class="item" effect="dark" content="复制链接" placement="top">
+          <a class="cru-suffix j-copy" :data-clipboard-text="getFullUrl(data)" @click="handleCopy">
             <i class="font23 iconfont icon-fuzhi"></i>
           </a>
         </el-tooltip>
@@ -55,7 +37,7 @@ import Clipboard from 'clipboard'
 export default {
   name: 'ChannelRow',
   components: {
-    QRCode,
+    QRCode
   },
   props: ['data', 'styleWrap'],
   methods: {
@@ -64,7 +46,7 @@ export default {
       clipboard.on('success', (e) => {
         this.$message({
           type: 'success',
-          message: `已复制渠道链接：${e.text}`,
+          message: `已复制渠道链接：${e.text}`
         })
       })
     },
@@ -75,8 +57,8 @@ export default {
       const url = v.fullUrl
       const protocol = window.location.protocol
       return `${protocol}//${url.split('//')[1]}`
-    },
-  },
+    }
+  }
 }
 </script>
 

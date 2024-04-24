@@ -3,19 +3,15 @@
     <div class="setter-title">
       {{ currentEditText }}
     </div>
-    <el-form
-      class="question-config-form"
-      label-position="top"
-      @submit.native.prevent
-    >
+    <el-form class="question-config-form" label-position="top" @submit.prevent>
       <template v-for="(item, index) in formFieldData" :key="index">
         <FormItem
-          v-if="item.type && !item.hidden && Boolean(registerd[item.type])"
+          v-if="item.type && !item.hidden && Boolean(register[item.type])"
           :form-config="item"
           :style="item.style"
         >
           <Component
-            v-if="Boolean(registerd[item.type])"
+            v-if="Boolean(register[item.type])"
             :is="item.type"
             :module-config="moduleConfig"
             :form-config="item"
@@ -36,17 +32,17 @@ import { get as _get, pick as _pick } from 'lodash-es'
 
 const textMap = {
   Success: '提交成功页面配置',
-  OverTime: '问卷过期页面配置',
-};
+  OverTime: '问卷过期页面配置'
+}
 
 export default {
   name: 'StatusEditForm',
   components: {
-    FormItem,
+    FormItem
   },
   data() {
     return {
-      registerd: {},
+      register: {}
     }
   },
   computed: {
@@ -56,7 +52,7 @@ export default {
         const value = _get(this.moduleConfig, item.key, item.value)
         return {
           ...item,
-          value,
+          value
         }
       })
     },
@@ -65,11 +61,11 @@ export default {
     },
     ...mapState({
       currentEditStatus: (state) => state.edit.currentEditStatus,
-      submitConf: (state) => _get(state, 'edit.schema.submitConf'),
+      submitConf: (state) => _get(state, 'edit.schema.submitConf')
     }),
     moduleConfig() {
       return this.submitConf
-    },
+    }
   },
   watch: {
     formFieldData: {
@@ -78,8 +74,8 @@ export default {
         if (Array.isArray(newVal)) {
           this.handleComponentRegister(newVal)
         }
-      },
-    },
+      }
+    }
   },
   methods: {
     async handleComponentRegister(formFieldData) {
@@ -89,7 +85,7 @@ export default {
       const allSetters = settersArr.map((item) => {
         return {
           type: item,
-          path: item,
+          path: item
         }
       })
       try {
@@ -102,7 +98,7 @@ export default {
           if (!err) {
             const componentName = component.name
             this.$options.components[componentName] = component
-            this.registerd[type] = componentName
+            this.register[type] = componentName
           }
         }
       } catch (err) {
@@ -116,13 +112,13 @@ export default {
       if (key) {
         result = {
           ...item,
-          value: _get(moduleConfig, key, item.value),
+          value: _get(moduleConfig, key, item.value)
         }
       }
       if (keys) {
         result = {
           ...item,
-          value: _pick(moduleConfig, keys),
+          value: _pick(moduleConfig, keys)
         }
       }
       return result
@@ -131,12 +127,12 @@ export default {
       const { key, value } = data
       const resultKey = `submitConf.${key}`
       this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-edit-form {
   width: 360px;
   height: 100%;

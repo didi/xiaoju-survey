@@ -4,40 +4,40 @@
   </div>
 </template>
 <script>
-import RichEditor from './RichEditor.vue';
+import RichEditor from './RichEditor.vue'
 
 export default {
   components: {
-    RichEditor,
+    RichEditor
     // ReadOnly,
   },
   props: {
     realData: {
       type: String,
-      default: () => '',
+      default: () => ''
     },
     questionDataList: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   data() {
-    return {};
+    return {}
   },
   computed: {},
   watch: {},
-  destroyed() {
-    this.$emit('onDestroy');
+  unmounted() {
+    this.$emit('onDestroy')
   },
   methods: {
     handleChange(v) {
-      this.$emit('change', v);
+      this.$emit('change', v)
     },
     handleBlur(v) {
-      this.$emit('blur', v);
-    },
-  },
-};
+      this.$emit('blur', v)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .editor-v2 {

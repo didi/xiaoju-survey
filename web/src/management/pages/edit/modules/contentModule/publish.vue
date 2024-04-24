@@ -1,10 +1,5 @@
 <template>
-  <el-button
-    type="primary"
-    :loading="isPublishing"
-    class="publish-btn"
-    @click="onPublish"
-  >
+  <el-button type="primary" :loading="isPublishing" class="publish-btn" @click="onPublish">
     发布
   </el-button>
 </template>
@@ -15,16 +10,16 @@ import { publishSurvey, saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 import { get as _get } from 'lodash-es'
 export default {
-  name: 'publish',
+  name: 'PublishModule',
   data() {
     return {
-      isPublishing: false,
+      isPublishing: false
     }
   },
   computed: {
     ...mapState({
-      surveyId: (state) => _get(state, 'edit.surveyId'),
-    }),
+      surveyId: (state) => _get(state, 'edit.surveyId')
+    })
   },
   methods: {
     async onPublish() {
@@ -48,7 +43,7 @@ export default {
           this.$message.success('发布成功')
           this.$store.dispatch('edit/getSchemaFromRemote')
           this.$router.push({
-            name: 'publishResultPage',
+            name: 'publishResultPage'
           })
         } else {
           this.$message.error(`发布失败 ${publishRes.errmsg}`)
@@ -58,8 +53,8 @@ export default {
       } finally {
         this.isPublishing = false
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

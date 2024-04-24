@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <template v-for="(item, index) in renderData"  :key="index">
+    <template v-for="(item, index) in renderData" :key="index">
       <div>
         <materialGroup
           ref="formGroup"
@@ -15,30 +15,30 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import materialGroup from './materialGroup.vue';
+import { mapActions } from 'vuex'
+import materialGroup from './materialGroup.vue'
 export default {
   name: 'mainRenderer',
   computed: {
     questionData() {
-      return this.$store.state.questionData;
+      return this.$store.state.questionData
     },
     renderData() {
-      return this.$store.getters.renderData;
+      return this.$store.getters.renderData
     },
     rules() {
-      return this.$store.state.rules;
+      return this.$store.state.rules
     },
     formModel() {
-      return this.$store.getters.formModel;
-    },
+      return this.$store.getters.formModel
+    }
   },
   mounted() {},
   components: { materialGroup },
   methods: {
-    ...mapActions(['changeData']),
-  },
-};
+    ...mapActions(['changeData'])
+  }
+}
 </script>
 
 <style scoped lang="scss"></style>

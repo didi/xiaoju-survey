@@ -1,9 +1,6 @@
 <template>
   <div class="question-header">
-    <div
-      class="titlePanel"
-      v-if="bannerConf.titleConfig && bannerConf.titleConfig.mainTitle"
-    >
+    <div class="titlePanel" v-if="bannerConf.titleConfig && bannerConf.titleConfig.mainTitle">
       <div
         class="mainTitle"
         v-if="bannerConf.titleConfig.mainTitle"
@@ -13,14 +10,14 @@
   </div>
 </template>
 <script>
-import { get as _get } from 'lodash-es';
+import { get as _get } from 'lodash-es'
 export default {
   name: 'mainTitle',
   computed: {
     bannerConf() {
-      return _get(this.$store, 'state.bannerConf', {});
+      return _get(this.$store, 'state.bannerConf', {})
     }
-  },
+  }
 }
 </script>
 

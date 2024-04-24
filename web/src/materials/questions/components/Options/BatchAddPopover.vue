@@ -18,39 +18,39 @@
       <el-input type="textarea" rows="7" v-model="myValue"></el-input>
       <div class="mypopover-body-footer">
         <el-button size="small" link @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleConfirm"
-          >确定</el-button
-        >
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
       </div>
     </div>
-    <slot name="reference" slot="reference"></slot>
+    <template v-slot:reference>
+      <slot name="reference"></slot>
+    </template>
   </el-popover>
 </template>
 <script>
 export default {
   props: {
     title: String,
-    desc: String,
+    desc: String
   },
   data() {
     return {
       visible: false,
-      myValue: '',
-    };
+      myValue: ''
+    }
   },
   methods: {
     handleClose() {
-      this.visible = false;
-      this.$emit('cancel');
+      this.visible = false
+      this.$emit('cancel')
     },
     handleConfirm() {
-      this.visible = false;
-      this.$emit('confirm', this.myValue);
+      this.visible = false
+      this.$emit('confirm', this.myValue)
       // 清空值
-      this.myValue = '';
-    },
-  },
-};
+      this.myValue = ''
+    }
+  }
+}
 </script>
 <style lang="scss">
 .mypopover {

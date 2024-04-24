@@ -1,9 +1,6 @@
 <template>
   <div class="question-submit_wrapper">
-    <button
-      class="question-submit-btn"
-      @click="submit"
-    >
+    <button class="question-submit-btn" @click="submit">
       {{ submitConf.submitTitle }}
     </button>
   </div>
@@ -11,39 +8,39 @@
 
 <script>
 export default {
-  name: 'submit',
+  name: 'SubmitSetter',
   props: {
     validate: Function,
-    renderData: Array,
+    renderData: Array
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
     submitConf() {
-      return this.$store.state?.submitConf || {};
+      return this.$store.state?.submitConf || {}
     },
     skinConf() {
-      return this.$store.state?.skinConf || {};
-    },
+      return this.$store.state?.skinConf || {}
+    }
   },
   methods: {
     submit(e) {
-      const validate = this.validate;
+      const validate = this.validate
       if (e) {
-        e.preventDefault();
+        e.preventDefault()
         validate((valid) => {
           if (valid) {
-            this.$emit('submit');
+            this.$emit('submit')
           }
-        });
+        })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import '@/render/styles/variable.scss';
 .question-submit_wrapper {
   margin: 0 0.4rem;

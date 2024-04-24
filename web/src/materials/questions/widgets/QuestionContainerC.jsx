@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, shallowRef } from 'vue'
+import { defineComponent, onMounted, shallowRef } from 'vue'
 import moduleTitle from './TitleModule/index.jsx'
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
@@ -71,7 +71,7 @@ export default defineComponent({
       onClick,
       onBlur,
       onFocus,
-      onChange,
+      onChange
     }
   },
   render() {
@@ -82,17 +82,19 @@ export default defineComponent({
     const BlockComponent = this.BlockComponent
     return (
       <div class={['question']}>
-        {this.showTitle && <moduleTitle { ...props }  />}
+        {this.showTitle && <moduleTitle {...props} />}
         <div class="question-block">
-          {
-            this.BlockComponent ? <BlockComponent
+          {this.BlockComponent ? (
+            <BlockComponent
               readonly
               {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
               onChange={this.onChange}
-            /> : <span>题型控件加载中</span>
-          }
+            />
+          ) : (
+            <span>题型控件加载中</span>
+          )}
         </div>
       </div>
     )

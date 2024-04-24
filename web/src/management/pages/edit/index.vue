@@ -23,7 +23,7 @@ export default {
   components: {
     commonTemplate,
     navbar,
-    leftMenu,
+    leftMenu
   },
   async created() {
     this.$store.commit('edit/setSurveyId', this.$route.params.id)
@@ -34,11 +34,11 @@ export default {
       // 自动跳转回列表页
       setTimeout(() => {
         this.$router.replace({
-          name: 'survey',
+          name: 'survey'
         })
       }, 1000)
     }
-  },
+  }
 }
 </script>
 

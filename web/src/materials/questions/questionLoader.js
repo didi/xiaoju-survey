@@ -1,62 +1,61 @@
-import { defineAsyncComponent } from 'vue'
-import ComponentLoader from '../utils/componentLoader';
-import moduleList from './common/config/moduleList';
+import ComponentLoader from '../utils/componentLoader'
+import moduleList from './common/config/moduleList'
 
 export class MaterialLoader extends ComponentLoader {
-  metaCache = {};
-  inited = false;
+  metaCache = {}
+  inited = false
   async init({ typeList }) {
     if (this.inited) {
-      return;
+      return
     }
 
-    this.inited = true;
+    this.inited = true
     this.componentInfoList = typeList.map((type) => ({
       type,
-      path: moduleList[type],
-    }));
-    await this.loadComponents();
-    await this.loadMetas();
+      path: moduleList[type]
+    }))
+    await this.loadComponents()
+    await this.loadMetas()
   }
 
   dynamicImport(path) {
     // see https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
-    if(path === 'NpsModule') {
-      path = 'NpsModule/index.vue'
+    if (path === 'NpsModule') {
+      return import('./widgets/NpsModule/IndexModule.vue') // 需要改写
     }
-    return import(`./widgets/${path}`);
+    return import(`./widgets/${path}/index.jsx`)
   }
 
   setMeta(type, config) {
-    this.components[type].meta = config;
+    this.components[type].meta = config
   }
 
   async loadMeta(type, path) {
     if (this.metaCache[type]) {
-      return this.metaCache[type];
+      return this.metaCache[type]
     } else {
       if (!this.components[type]) {
-        console.error('The component has not been loaded yet');
+        console.error('The component has not been loaded yet')
       }
-      path = path || this.components[type]?.path || type;
-      const res = await import(`./widgets/${path}/meta.js`);
-      this.metaCache[type] = res.default || res.meta || null;
-      return this.metaCache[type];
+      path = path || this.components[type]?.path || type
+      const res = await import(`./widgets/${path}/meta.js`)
+      this.metaCache[type] = res.default || res.meta || null
+      return this.metaCache[type]
     }
   }
 
   getMeta(type) {
-    return this.metaCache[type] ? this.metaCache[type] : {};
+    return this.metaCache[type] ? this.metaCache[type] : {}
   }
 
   loadMetas(typeList) {
     if (!typeList) {
-      typeList = this.componentInfoList.map((item) => item.type);
+      typeList = this.componentInfoList.map((item) => item.type)
     }
-    return Promise.all(typeList.map((type) => this.loadMeta(type)));
+    return Promise.all(typeList.map((type) => this.loadMeta(type)))
   }
 }
 
-const quetsionLoader = new MaterialLoader();
+const quetsionLoader = new MaterialLoader()
 
-export default quetsionLoader;
+export default quetsionLoader

@@ -1,4 +1,3 @@
-
 export default [
   {
     label: '顶部图片地址',
@@ -27,7 +26,7 @@ export default [
     type: 'CustomedSwitch',
     direction: 'horizon',
     labelStyle: { width: '120px' },
-    key: 'bgImageAllowJump',
+    key: 'bgImageAllowJump'
   },
   {
     label: '跳转链接',
@@ -36,14 +35,14 @@ export default [
     labelStyle: { width: '120px' },
     key: 'bgImageJumpLink',
     relyFunc: (data) => {
-      return !!data?.bgImageAllowJump;
+      return !!data?.bgImageAllowJump
     },
     content: [
       {
         label: '图片支持点击',
         type: 'CustomedSwitch',
         direction: 'space_between',
-        key: 'bannerConfig.bgImageAllowJump',
+        key: 'bannerConfig.bgImageAllowJump'
       },
       {
         label: '跳转链接',
@@ -52,8 +51,8 @@ export default [
         key: 'bannerConfig.bgImageJumpLink',
         relyFunc: (data) => {
           return !!data?.bannerConfig?.bgImageAllowJump
-        },
-      },
-    ],
-  },
+        }
+      }
+    ]
+  }
 ]

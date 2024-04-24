@@ -2,21 +2,17 @@
   <div class="result-config-preview">
     <div class="result-page-wrap">
       <div class="result-page">
-        <component
-          :is="currentEditStatus"
-          :key="currentEditStatus"
-          :module-config="moduleConfig"
-        />
+        <component :is="currentEditStatus" :key="currentEditStatus" :module-config="moduleConfig" />
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import success from '../components/success.vue';
-import overTime from '../components/overTime.vue';
-import { EDIT_STATUS_MAP } from '../enum';
+import success from '../components/success.vue'
+import overTime from '../components/overTime.vue'
+import { EDIT_STATUS_MAP } from '../enum'
 import { get as _get } from 'lodash-es'
 
 export default {
@@ -28,22 +24,22 @@ export default {
   computed: {
     ...mapState({
       currentEditStatus: (state) => state.edit.currentEditStatus,
-      submitConf: (state) => _get(state, 'edit.schema.submitConf'),
+      submitConf: (state) => _get(state, 'edit.schema.submitConf')
     }),
     moduleConfig() {
       return {
-        submitConf: this.submitConf,
+        submitConf: this.submitConf
       }
-    },
+    }
   },
   components: {
     [EDIT_STATUS_MAP.SUCCESS]: success,
-    [EDIT_STATUS_MAP.OVERTIME]: overTime,
-  },
+    [EDIT_STATUS_MAP.OVERTIME]: overTime
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .result-config-preview {
   width: 100%;
   height: 100%;
@@ -64,8 +60,8 @@ export default {
   overflow-y: auto;
   background-color: var(--primary-background-color);
   padding: 0 0.3rem;
-  .result-page{
-    background: rgba(255, 255, 255, var(--opacity)); 
+  .result-page {
+    background: rgba(255, 255, 255, var(--opacity));
     display: flex;
     flex-direction: column;
     height: 100%;

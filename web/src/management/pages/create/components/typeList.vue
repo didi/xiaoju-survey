@@ -32,29 +32,29 @@ import { SURVEY_TYPE_LIST } from '../types'
 export default {
   name: 'LeftSide',
   components: {
-    NavHeader,
+    NavHeader
   },
   props: {
     selectType: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   computed: {
     renderData() {
       return SURVEY_TYPE_LIST
-    },
+    }
   },
   methods: {
     handleSelectType(key, value) {
       const { type } = value
       this.$emit('selectTypeChange', type)
-    },
-  },
+    }
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .left-side {
   position: relative;
   height: 100%;

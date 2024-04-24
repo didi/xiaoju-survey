@@ -9,8 +9,8 @@ import setting from '../modules/settingModule/setting.vue'
 export default {
   name: 'questionSettingPage',
   components: {
-    setting,
-  },
+    setting
+  }
 }
 </script>
 

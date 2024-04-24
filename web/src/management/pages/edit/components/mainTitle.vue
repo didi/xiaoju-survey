@@ -1,6 +1,6 @@
 <template>
   <div class="title-wrapper" @click="handleClick()">
-    <div class="main-title" :class="{ active: isSelected }" >
+    <div class="main-title" :class="{ active: isSelected }">
       <richEditor
         :modelValue="bannerConf?.titleConfig?.mainTitle"
         @input="onTitleInput"
@@ -20,14 +20,14 @@ export default {
   props: {
     preview: {
       type: Boolean,
-      default: false,
+      default: false
     },
     bannerConf: {
-      type: Object,
+      type: Object
     },
     isSelected: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   computed: {},
   methods: {
@@ -40,17 +40,17 @@ export default {
       }
       this.$emit('change', {
         key: 'titleConfig.mainTitle',
-        value: val,
+        value: val
       })
-    },
+    }
   },
   components: {
-    richEditor,
-  },
+    richEditor
+  }
 }
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .title-wrapper {
   padding: 15px;
 }

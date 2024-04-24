@@ -9,5 +9,5 @@ export default {
     if (res.code === 200) {
       commit('setBannerList', res.data)
     }
-  },
+  }
 }

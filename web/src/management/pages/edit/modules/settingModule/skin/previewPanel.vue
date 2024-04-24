@@ -3,27 +3,16 @@
     <div class="operation-wrapper">
       <div class="box" ref="box">
         <div class="mask"></div>
-        <banner
-          :bannerConf="bannerConf"
-        />
+        <banner :bannerConf="bannerConf" />
         <div class="content">
-          <mainTitle
-            :isSelected="false"
-            :bannerConf="bannerConf"
-          />
-          <materialGroup
-            :questionDataList="questionDataList"
-            ref="materialGroup"
-          />
+          <mainTitle :isSelected="false" :bannerConf="bannerConf" />
+          <materialGroup :questionDataList="questionDataList" ref="materialGroup" />
           <submit
             :submit-conf="submitConf"
             :skin-conf="skinConf"
             :is-selected="currentEditOne === 'submit'"
           />
-          <logo
-            :logo-conf="bottomConf"
-            :is-selected="currentEditOne === 'logo'"
-          />
+          <logo :logo-conf="bottomConf" :is-selected="currentEditOne === 'logo'" />
         </div>
       </div>
     </div>
@@ -31,13 +20,13 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/materialGroup.vue';
-import banner from '../components/banner.vue';
-import mainTitle from '@/management/pages/edit/components/mainTitle.vue';
-import submit from '@/management/pages/edit/components/submit.vue';
-import logo from '@/management/pages/edit/components/logo.vue';
-import { mapState, mapGetters } from 'vuex';
-import { get as _get } from 'lodash-es';
+import materialGroup from '@/management/pages/edit/components/materialGroup.vue'
+import banner from '../components/banner.vue'
+import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
+import submit from '@/management/pages/edit/components/submit.vue'
+import logo from '@/management/pages/edit/components/logo.vue'
+import { mapState, mapGetters } from 'vuex'
+import { get as _get } from 'lodash-es'
 
 export default {
   name: 'previewPanel',
@@ -46,12 +35,12 @@ export default {
     mainTitle,
     submit,
     logo,
-    materialGroup,
+    materialGroup
   },
   data() {
     return {
-      isAnimating: false,
-    };
+      isAnimating: false
+    }
   },
   computed: {
     ...mapState({
@@ -60,25 +49,25 @@ export default {
       bottomConf: (state) => _get(state, 'edit.schema.bottomConf'),
       skinConf: (state) => _get(state, 'edit.schema.skinConf'),
       questionDataList: (state) => _get(state, 'edit.schema.questionDataList'),
-      currentEditOne: (state) => _get(state, 'edit.currentEditOne'),
+      currentEditOne: (state) => _get(state, 'edit.currentEditOne')
     }),
     ...mapGetters({
-      currentEditKey: 'edit/currentEditKey',
-    }),
+      currentEditKey: 'edit/currentEditKey'
+    })
   },
   watch: {
     skinConf: {
-      handler (skinConf)  {
-        const { themeConf, backgroundConf, contentConf} = skinConf
-        const root = document.documentElement;
-        if(themeConf?.color) {
-          root.style.setProperty('--primary-color', themeConf?.color); // 设置主题颜色
+      handler(skinConf) {
+        const { themeConf, backgroundConf, contentConf } = skinConf
+        const root = document.documentElement
+        if (themeConf?.color) {
+          root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
         }
-        if(backgroundConf?.color) {
-          root.style.setProperty('--primary-background-color', backgroundConf?.color); // 设置背景颜色
+        if (backgroundConf?.color) {
+          root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
         }
-        if(contentConf?.opacity.toString()) {
-          root.style.setProperty('--opacity', contentConf?.opacity/100); // 设置全局透明度
+        if (contentConf?.opacity.toString()) {
+          root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
         }
       },
       immediate: true, // 立即触发回调函数
@@ -87,30 +76,30 @@ export default {
   },
   methods: {
     animate(dom, property, targetValue) {
-      const origin = dom[property];
-      const subVal = targetValue - origin;
+      const origin = dom[property]
+      const subVal = targetValue - origin
 
-      const flag = subVal < 0 ? -1 : 1;
+      const flag = subVal < 0 ? -1 : 1
 
-      const step = flag * 50;
+      const step = flag * 50
 
-      const totalCount = Math.floor(subVal / step) + 1;
+      const totalCount = Math.floor(subVal / step) + 1
 
-      let runCount = 0;
+      let runCount = 0
       const run = () => {
-        dom[property] += step;
-        runCount++;
+        dom[property] += step
+        runCount++
         if (runCount < totalCount) {
-          requestAnimationFrame(run);
+          requestAnimationFrame(run)
         } else {
-          this.isAnimating = false;
+          this.isAnimating = false
         }
-      };
+      }
 
-      requestAnimationFrame(run);
-    },
-  },
-};
+      requestAnimationFrame(run)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -143,7 +132,7 @@ export default {
   scrollbar-width: none;
   width: 90%;
   -ms-overflow-style: none;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -151,7 +140,7 @@ export default {
   .box {
     background-color: var(--primary-background-color);
     position: relative;
-    .mask{
+    .mask {
       position: absolute;
       top: 0;
       bottom: 0;

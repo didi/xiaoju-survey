@@ -10,16 +10,16 @@
       class="base-form-root"
       ref="ruleForm"
       :model="current"
-      label-width="80px"
       :rules="rules"
       label-position="top"
-      @submit.native.prevent
+      size="large"
+      @submit.prevent
     >
       <el-form-item label="标题" prop="title">
-        <el-input size="medium" v-model="current.title" />
+        <el-input v-model="current.title" />
       </el-form-item>
       <el-form-item label="备注">
-        <el-input size="medium" v-model="current.remark" />
+        <el-input v-model="current.remark" />
       </el-form-item>
     </el-form>
 
@@ -34,9 +34,9 @@
 </template>
 
 <script>
+import { pick as _pick } from 'lodash-es'
 import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
-import { pick as _pick } from 'lodash-es'
 import { QOP_MAP } from '@/management/utils/constant'
 
 export default {
@@ -45,16 +45,16 @@ export default {
     type: String,
     questionInfo: Object,
     width: String,
-    visible: Boolean,
+    visible: Boolean
   },
   data() {
     return {
       QOP_MAP,
       loadingInstance: null,
       rules: {
-        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
       },
-      current: this.getCurrent(this.questionInfo),
+      current: this.getCurrent(this.questionInfo)
     }
   },
   watch: {
@@ -62,13 +62,13 @@ export default {
       handler(val) {
         this.current = this.getCurrent(val)
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     getCurrent(val) {
       return {
-        ..._pick(val, ['title', 'remark']),
+        ..._pick(val, ['title', 'remark'])
       }
     },
     onClose() {
@@ -87,7 +87,7 @@ export default {
       try {
         const res = await updateSurvey({
           surveyId: this.questionInfo._id,
-          ...this.current,
+          ...this.current
         })
 
         if (res.code === CODE_MAP.SUCCESS) {
@@ -104,7 +104,7 @@ export default {
         const res = await createSurvey({
           createFrom: this.questionInfo._id,
           createMethod: QOP_MAP.COPY,
-          ...this.current,
+          ...this.current
         })
 
         if (res.code === CODE_MAP.SUCCESS) {
@@ -112,8 +112,8 @@ export default {
           this.$router.push({
             name: 'QuestionEditIndex',
             params: {
-              id: data.id,
-            },
+              id: data.id
+            }
           })
         } else {
           this.$message.error(res.errmsg)
@@ -121,7 +121,13 @@ export default {
       } catch (err) {
         this.$message.error(err)
       }
-    },
-  },
+    }
+  }
 }
 </script>
+
+<style lang="scss" rel="lang/scss" scoped>
+.base-form-root {
+  padding: 20px;
+}
+</style>

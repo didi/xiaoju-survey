@@ -3,13 +3,13 @@
     class="process-outer"
     :style="{
       width: processConf.width || 'auto',
-      height: processConf.height || '0.03rem',
+      height: processConf.height || '0.03rem'
     }"
   >
     <div
       class="process-inner"
       :style="{
-        width: processConf.percent || 0,
+        width: processConf.percent || 0
       }"
     ></div>
   </div>
@@ -24,22 +24,22 @@ export default {
         */
     processConf: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {},
   methods: {
     calcVotePercent(option) {
-      const { voteCount = 0, voteTotal = 0 } = option;
+      const { voteCount = 0, voteTotal = 0 } = option
       if (voteTotal === 0) {
-        return '0.0';
+        return '0.0'
       }
-      return ((voteCount * 100) / voteTotal).toFixed(1);
-    },
-  },
-};
+      return ((voteCount * 100) / voteTotal).toFixed(1)
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 @import '../common/css/default.scss';
 .process-outer {
   position: relative;

@@ -1,40 +1,40 @@
-import store from '../store/index';
-import { computed } from 'vue';
+import store from '../store/index'
+import { computed } from 'vue'
 export const useProgressBar = () => {
   const isVariableEmpty = (variable) => {
     if (variable === undefined || variable === null) {
-      return true;
+      return true
     }
     if (typeof variable === 'string' && variable.trim() === '') {
-      return true;
+      return true
     }
     if (Array.isArray(variable) && variable.length === 0) {
-      return true;
+      return true
     }
     if (typeof variable === 'object' && Object.keys(variable).length === 0) {
-      return true;
+      return true
     }
-    return false;
-  };
+    return false
+  }
 
   const surveySchedule = computed(() => {
     let data = {
       fillCount: 0,
-      topicCount: 0,
-    };
-    const formValues = store.state.formValues;
-    for (let key in formValues) {
-      if (key.split('_').length > 1) continue;
-      data.topicCount++;
-      if (!isVariableEmpty(formValues[key])) data.fillCount++;
+      topicCount: 0
     }
-    return data;
-  });
+    const formValues = store.state.formValues
+    for (let key in formValues) {
+      if (key.split('_').length > 1) continue
+      data.topicCount++
+      if (!isVariableEmpty(formValues[key])) data.fillCount++
+    }
+    return data
+  })
 
   const percent = computed(() => {
-    const { fillCount, topicCount } = surveySchedule.value;
-    return Math.floor((100 / topicCount) * fillCount) + '%';
-  });
+    const { fillCount, topicCount } = surveySchedule.value
+    return Math.floor((100 / topicCount) * fillCount) + '%'
+  })
 
-  return { surveySchedule, percent };
-};
+  return { surveySchedule, percent }
+}

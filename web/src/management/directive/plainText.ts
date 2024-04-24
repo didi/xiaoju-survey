@@ -10,7 +10,7 @@ const plainText: Directive & Plugin = {
   updated: _plainText,
   install: function (app) {
     app.directive('plain-text', this)
-  },
+  }
 }
 
 export default plainText

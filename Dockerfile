@@ -22,7 +22,7 @@ COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN cd /xiaoju-survey/server && npm install && npm run build
 
-# 暴露端口 需要跟server的port一致
+# 暴露端口 需要跟nginx的port一致
 # EXPOSE 3000
 EXPOSE 8080
 

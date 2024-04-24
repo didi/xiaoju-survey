@@ -25,58 +25,7 @@ const meta = {
     }
   ],
   formConfig: [
-    // {
-    //   name: 'fieldId',
-    //   label: '题目ID',
-    //   type: 'InputSetter',
-    //   placeholder: '',
-    //   key: 'field',
-    //   tip: '请谨慎修改题目ID，并保证此ID在整个问卷中唯一',
-    //   relyField: 'questionIdCustomize',
-    //   noNeedRelyClean: true,
-    // },
-    // {
-    //   name: 'questionLabel',
-    //   label: '题目标签',
-    //   type: 'InputSetter',
-    //   placeholder: '',
-    //   key: 'label',
-    //   tip: '请谨慎修改题目标签，并保证此标签在整个问卷中唯一',
-    //   relyField: 'questionLabelCustomize',
-    //   noNeedRelyClean: true,
-    // },
-    // {
-    //   name: 'titleOrigin',
-    //   label: '标题引用其他题目选项',
-    //   type: 'TitleOrigin',
-    //   options: [],
-    //   key: 'title',
-    // },
     basicConfig,
-    // {
-    //   name: 'optionOrigin',
-    //   label: '选项引用其他题目选项',
-    //   type: 'SelectSetter',
-    //   options: [],
-    //   key: 'optionOrigin',
-    //   tip: '支持引用多选题、单选题、矩阵单选题',
-    // },
-    // {
-    //   name: 'originType',
-    //   label: '',
-    //   type: 'SelectSetter',
-    //   options: [
-    //     {
-    //       label: '选中项',
-    //       value: 'selected',
-    //     },
-    //     {
-    //       label: '未选中项',
-    //       value: 'noSelected',
-    //     },
-    //   ],
-    //   key: 'originType',
-    // },
     {
       name: 'optionsExtra',
       label: '固定选项配置',

@@ -97,7 +97,6 @@ export default {
             return false
           }
           // Customed：组件组
-          console.log(423534546)
           if (item.type !== 'Customed' && !this.register[item.type]) {
             return false
           }

@@ -17,7 +17,6 @@ const meta = {
           label: '至少选择数',
           type: 'InputNumber',
           key: 'minNum',
-          direction: 'horizon',
           value: '',
           min: 0,
           max: 'maxNum',
@@ -27,7 +26,6 @@ const meta = {
           label: '最多选择数',
           type: 'InputNumber',
           key: 'maxNum',
-          direction: 'horizon',
           value: '',
           min: 'minNum',
           contentClass: 'input-number-config'

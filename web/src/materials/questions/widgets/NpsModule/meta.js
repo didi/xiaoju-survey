@@ -56,7 +56,6 @@ const meta = {
           label: '最小值文案',
           type: 'InputSetter',
           key: 'minMsg',
-          direction: 'horizon',
           placeholder: '极不满意',
           value: '极不满意'
         },
@@ -64,7 +63,6 @@ const meta = {
           label: '最大值文案',
           type: 'InputSetter',
           key: 'maxMsg',
-          direction: 'horizon',
           placeholder: '十分满意',
           value: '十分满意'
         }

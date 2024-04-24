@@ -1,7 +1,7 @@
 export default [
   {
     label: '自定义Logo',
-    type: 'Input',
+    type: 'InputSetter',
     key: 'logoImage',
     tip: '默认尺寸200px*50px',
     direction: 'horizon',

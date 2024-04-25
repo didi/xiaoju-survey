@@ -1,5 +1,5 @@
 export enum EXCEPTION_CODE {
-  AUTHTIFICATION_FAILED = 1001, // 没有权限
+  AUTHENTICATION_FAILED = 1001, // 没有权限
   PARAMETER_ERROR = 1002, // 参数有误
   USER_EXISTS = 2001, // 用户已存在
   USER_NOT_EXISTS = 2002, // 用户不存在
@@ -15,4 +15,6 @@ export enum EXCEPTION_CODE {
   RESPONSE_OVER_LIMIT = 9003, // 超出限制
   RESPONSE_SCHEMA_REMOVED = 9004, // 问卷已删除
   RESPONSE_DATA_DECRYPT_ERROR = 9005, // 问卷已删除
+
+  UPLOAD_FILE_ERROR = 5001, // 上传文件错误
 }

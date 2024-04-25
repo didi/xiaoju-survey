@@ -11,6 +11,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { SurveyModule } from './modules/survey/survey.module';
 import { SurveyResponseModule } from './modules/surveyResponse/surveyResponse.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MessageModule } from './modules/message/message.module';
+import { FileModule } from './modules/file/file.module';
 
 import { join } from 'path';
 
@@ -39,7 +41,6 @@ import { Logger } from './logger';
 @Module({
   imports: [
     ConfigModule.forRoot({}),
-
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -80,9 +81,17 @@ import { Logger } from './logger';
     AuthModule,
     SurveyModule,
     SurveyResponseModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
+    ServeStaticModule.forRootAsync({
+      useFactory: async () => {
+        return [
+          {
+            rootPath: join(__dirname, '..', 'public'),
+          },
+        ];
+      },
     }),
+    MessageModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [

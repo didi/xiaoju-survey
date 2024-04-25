@@ -1,4 +1,8 @@
-// import { generateID } from "@/management/utils";
+import { getRandom } from '@/management/utils/index'
+
+function generateID(prefix = 'r') {
+  return `${prefix}-${getRandom(5)}`
+}
 export type ComposeOperator = 'AND' | 'OR';
 export type BasicOperator = 'in' | 'eq' | 'neq' | 'nin' | 'gt';
 // in：包含, 选择了，任一
@@ -7,65 +11,124 @@ export type BasicOperator = 'in' | 'eq' | 'neq' | 'nin' | 'gt';
 // neq：不等于，不选择，全部，可以实现“填写了”
 export type FieldTypes = string | string[];
 
-// // 定义基本条件的类
-// export class BasicCondition<F extends string, O extends BasicOperator> {
-//   id: string
-//   type: string
-//   constructor(public field: F, public operator: O, public value: FieldTypes) {
-//     this.id = generateID('condi')
-//     this.type = 'basic';
-//   }
-//   changeOperator(operator: O) {
-//     this.operator = operator;
-//   }
-//   changeValue(value: FieldTypes) {
-//     this.value = value;
-//   }
-//   changeField(field: F) {
-//     this.field = field;
-//   }
-// }
+// 定义事实对象类型
+export type Fact = {
+  [key: string]: any;
+};
+export abstract class ConditionNode {
+  constructor() {
+  }
+
+  abstract calculateHash(): any
+  abstract match(fact: Fact) : boolean
+}
+
+// 定义基本条件的类
+
+export class BasicCondition<F extends string, O extends BasicOperator> extends ConditionNode {
+  id: string
+  type: string
+  constructor(public field: F, public operator: O, public value: FieldTypes) {
+    super();
+    this.id = generateID('condi')
+    this.type = 'basic';
+  }
+  changeOperator(operator: O) {
+    this.operator = operator;
+  }
+  changeValue(value: FieldTypes) {
+    this.value = value;
+  }
+  changeField(field: F) {
+    this.field = field;
+  }
+  calculateHash(): string {
+    // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
+    return this.field + this.operator + this.value;
+  }
+  match(fact: Fact): boolean {
+    switch (this.operator) {
+      case 'eq':
+        if(this.value instanceof Array) {
+          return this.value.some(v => fact[this.field].includes(v))
+        } else {
+          return fact[this.field].includes(this.value);
+        }
+      case 'in':
+        if(this.value instanceof Array) {
+          return this.value.some(v => fact[this.field].includes(v))
+        } else {
+          return fact[this.field].includes(this.value);
+        }
+      case 'gt':
+        return fact[this.field] > this.value;
+      // 其他比较操作符的判断逻辑
+      default:
+        return false;
+    }
+  }
+}
 
 // // 定义组合条件的类
-// class ComposeCondition<F extends string, V> {
-//   id: string
-//   type: string
-//   children: (BasicCondition<F, BasicOperator> | ComposeCondition<F, V>)[] = [];
-
-//   constructor(public comparator: ComposeOperator) {
-//     this.id = generateID('condi')
-//     this.type = 'compose';
-//   }
-//    // 查找节点方法
-//   findNode(conditionId: string): BasicCondition<F, BasicOperator> | ComposeCondition<F, V> | null {
-//     if (this.id === conditionId) {
-//       return this;
-//     }
-//     for (const child of this.children) {
-//       if (child instanceof ComposeCondition) {
-//         const found = child.findNode(conditionId);
-//         if (found) {
-//           return found;
-//         }
-//       } else if (child.id === conditionId) {
-//         return child;
-//       }
-//     }
-//     return null;
-//   }
-//   // 加入规则
-//   add(condition: BasicCondition<F, BasicOperator> | ComposeCondition<F, V>) {
-//     this.children.push(condition);
-//   }
-//   // 删除规则
-//   remove(conditionId) {
-//     this.children = this.children.filter(c => c.id !== conditionId);
-//   }
-//   // 改变逻辑关系
-//   changeComparator(comparator: ComposeOperator) {
-//     this.comparator = comparator;
-//   }
-// }
+export class ComposeCondition<F extends string, V> extends ConditionNode {
+  id: string
+  type: string
+  children: (BasicCondition<F, BasicOperator> | ComposeCondition<F, V>)[] = [];
+  constructor(public operator: ComposeOperator) {
+    super();
+    this.id = generateID('condi')
+    this.type = 'compose';
+  }
+  calculateHash() {
+    return this.operator;
+  }
+  // 加入规则
+  add(condition: BasicCondition<F, BasicOperator> | ComposeCondition<F, V>) {
+    this.children.push(condition);
+  }
+  // 删除规则
+  remove(conditionId: string) {
+    this.children = this.children.filter(c => c.id !== conditionId);
+  }
+  
+  // 改变逻辑关系
+  changeComparator(operator: ComposeOperator) {
+    this.operator = operator;
+  }
+  // 查找节点方法
+  findNode(conditionId: string): BasicCondition<F, BasicOperator> | ComposeCondition<F, V> | null {
+    if (this.id === conditionId) {
+      return this;
+    }
+    for (const child of this.children) {
+      if (child instanceof ComposeCondition) {
+        const found = child.findNode(conditionId);
+        if (found) {
+          return found;
+        }
+      } else if (child.id === conditionId) {
+        return child;
+      }
+    }
+    return null;
+  }
+  
+  match(fact: Fact): boolean {
+    if(this.operator === 'AND') {
+      return Array.from(this.children.entries()).every(([key, value]) => {
+        if (value.match(fact)) {
+          return true;
+        }
+      });
+    } else {
+      return Array.from(this.children.entries()).some(([key, value]) => {
+        if (value.match(fact)) {
+          return true;
+        }
+      });
+    } 
+  }
+}
 
 // export type Condition<F extends string, O extends BasicOperator> = BasicCondition<F, O> | ComposeCondition<F, O>;
 

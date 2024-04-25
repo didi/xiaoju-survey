@@ -1,17 +1,19 @@
 <template>
   <form ref="ruleForm" :model="formModel" :rules="rules">
-    <questionWrapper
-      ref="questionWrappers"
-      v-for="(item) in renderData"
-      :key="item.field"
-      class="gap"
-      v-bind="$attrs"
-      :moduleConfig="item"
-      :qIndex="item.qIndex"
-      :indexNumber="item.indexNumber"
-      :showTitle="true"
-      @change="handleChange"
-    ></questionWrapper>
+    <div v-for="(item) in renderData" :key="item.field">
+      <questionWrapper
+        v-if="item.match"
+        ref="questionWrappers"
+        class="gap"
+        v-bind="$attrs"
+        :moduleConfig="item"
+        :qIndex="item.qIndex"
+        :indexNumber="item.indexNumber"
+        :showTitle="true"
+        @change="handleChange"
+      ></questionWrapper>
+    </div>
+    
   </form>
 </template>
 <script setup>

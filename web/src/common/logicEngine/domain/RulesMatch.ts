@@ -12,8 +12,8 @@ export type Fact = {
 
 // 定义条件规则类
 export class ConditionNode<F extends string, O extends BasicOperator> {
-  // id: string;
-  // type: string;
+  // 默认显示
+  public result: boolean | null = null;
   constructor(public field: F, public operator: O, public value: FieldTypes) {
   }
 
@@ -26,22 +26,44 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
     switch (this.operator) {
       case 'eq':
         if(this.value instanceof Array) {
-          return this.value.some(v => fact[this.field].includes(v))
+          const res = this.value.every(v => fact[this.field].includes(v))
+          this.result = res
+          return res
         } else {
           return fact[this.field].includes(this.value);
         }
       case 'in':
         if(this.value instanceof Array) {
-          return this.value.some(v => fact[this.field].includes(v))
+          const res = this.value.some(v => fact[this.field].includes(v))
+          this.result = res
+          return res
         } else {
           return fact[this.field].includes(this.value);
         }
-      case 'gt':
-        return fact[this.field] > this.value;
+      case 'nin':
+        if(this.value instanceof Array) {
+          const res = this.value.some(v => !fact[this.field].includes(v))
+          this.result = res
+          return res
+        } else {
+          return fact[this.field].includes(this.value);
+        }
+      case 'neq':
+        if(this.value instanceof Array) {
+          const res = this.value.every(v => !fact[this.field].includes(v))
+          this.result = res
+          return res
+        } else {
+          return fact[this.field].includes(this.value);
+        }
       // 其他比较操作符的判断逻辑
       default:
         return false;
     }
+  }
+
+  get() {
+    return this.result
   }
 }
 
@@ -49,7 +71,6 @@ export class RuleNode {
   target: string; // 作用目标题
   scope: string; // 作用范围，题目或选项
   conditions: Map<string, ConditionNode<string, BasicOperator>>; // 使用哈希表存储条件规则对象
-
   constructor(target: string, scope: string) {
     this.target = target;
     this.scope = scope;
@@ -64,10 +85,16 @@ export class RuleNode {
   // 匹配条件规则
   match(fact: Fact) {
     return Array.from(this.conditions.entries()).every(([key, value]) => {
-      if (value.match(fact)) {
+      const res = value.match(fact)
+      if (res) {
         return true;
+      } else {
+        return false
       }
     });
+  }
+  get() {
+
   }
 
   // 计算条件规则的哈希值
@@ -78,8 +105,12 @@ export class RuleNode {
 
 }
 
-export class RuleEngine {
+
+
+export class RuleMatch {
   rules: Map<string, RuleNode>;
+  matchCache: Map<string, boolean>;
+
 
   constructor(ruleConf: any) {
     this.rules = new Map();
@@ -91,7 +122,7 @@ export class RuleEngine {
       });
       this.addRule(ruleNode)
     })
-
+    this.matchCache = new Map();
   }
 
   // 添加条件规则到规则引擎中
@@ -104,14 +135,22 @@ export class RuleEngine {
   // 匹配条件规则
   match(target: string, scope: string, fact: Fact) {
     const hash = this.calculateHash(target, scope);
+
     const rule = this.rules.get(hash);
     if (rule) {
-      return rule.match(fact)
+      const result = rule.match(fact)
+      this.matchCache.set(hash, result);
+      return result
     } else {
-      console.log('No matching rule found');
+      // 默认显示
+      return true
     }
   }
-
+  
+  // get(target: string, scope: string,) {
+  //   const hash = this.calculateHash(target, scope);
+  //   const rule = this.rules.get(hash);
+  // }
   // 计算哈希值的方法
   calculateHash(target: string, scope: string): string {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
@@ -119,7 +158,7 @@ export class RuleEngine {
   }
 }
 
-// const engine = new RuleEngine(ruleConf)
+// const engine = new RuleMatch(ruleConf)
 // // 示例数据
 // const fact1: Fact = { q1: ['选项1', '选项2']};
 // // 进行匹配测试

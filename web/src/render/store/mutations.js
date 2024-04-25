@@ -41,5 +41,8 @@ export default {
   },
   setEncryptInfo(state, data) {
     state.encryptInfo = data
-  }
+  },
+  setRuleEgine(state, ruleEngine) {
+    state.ruleEngine = ruleEngine
+  },
 }

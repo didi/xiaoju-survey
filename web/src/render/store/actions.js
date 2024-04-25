@@ -5,6 +5,7 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
+import { RuleMatch } from '@/common/logicEngine/domain/RulesMatch'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -122,5 +123,9 @@ export default {
     } catch (error) {
       console.log(error)
     }
-  }
+  },
+  async initRuleEngine({ commit }, ruleConf) {
+    const ruleEngine = new RuleMatch(ruleConf);
+    commit('setRuleEgine', ruleEngine)
+  },
 }

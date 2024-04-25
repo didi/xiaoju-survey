@@ -30,7 +30,6 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import './domain/RuleEngineSurvey2.ts'
 const props = defineProps({
   questionList: {
     type: Array,

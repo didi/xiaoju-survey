@@ -28,6 +28,9 @@ export default {
           if (Array.isArray(options)) {
             allOptions.push(...options)
           }
+          
+          const match = state.ruleEngine.match(question.field, 'question', formValues)
+          question.match = match
 
           let othersValue = {}
           let voteTotal = 0
@@ -75,12 +78,17 @@ export default {
 
           // 将othersValue赋值给
           question.othersValue = othersValue
+          
           questionArr.push(question)
+
+          
+          
         }
 
         if (questionArr && questionArr.length) {
           pre.push(questionArr)
         }
+        
         return pre
       }, [])
     )

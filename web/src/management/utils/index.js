@@ -1,13 +1,11 @@
 import { defaultQuestionConfig } from '../config/questionConfig'
 import { cloneDeep as _cloneDeep, map as _map } from 'lodash-es'
-import { nanoid } from 'nanoid'
-
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000)
   return `data${num}`
 }
 
-function getRandom(len) {
+export function getRandom(len) {
   return Math.random()
     .toString()
     .slice(len && typeof len === 'number' ? 0 - len : -6)
@@ -81,7 +79,4 @@ export function filterQuestionPreviewData(data, currentEditOne = '') {
 
     return newData
   })
-}
-export function generateID(prefix = 'r') {
-  return `${prefix}-${nanoid(5)}`
 }

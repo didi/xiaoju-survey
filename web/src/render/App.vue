@@ -15,6 +15,7 @@ import alert from './components/alert.vue'
 
 import logo from './components/logo.vue'
 import { get as _get } from 'lodash-es'
+import { ruleConf } from '@/common/logicEngine/ruleConf'
 
 export default {
   name: 'App',
@@ -66,6 +67,7 @@ export default {
             this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath)
             this.$store.dispatch('init', questionData)
+            this.$store.dispatch('initRuleEngine', ruleConf);
             this.$store.dispatch('getEncryptInfo')
           } else {
             throw new Error(res.errmsg)

@@ -52,10 +52,10 @@ import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 const formatValue = ({ item, moduleConfig }) => {
   if (_isFunction(item.valueAdapter)) {
     const value = item.valueAdapter({ moduleConfig })
+
     return value
   } else {
     const { key, keys } = item
-
     let result = null
     if (key) {
       result = _get(moduleConfig, key, item.value)
@@ -70,7 +70,7 @@ const formatValue = ({ item, moduleConfig }) => {
 export default {
   name: 'SettersField',
   props: {
-    formConfigList: Array,
+    formConfigList: Array, // 对应题型组件的meta.js内容
     moduleConfig: Object,
     inline: {
       type: Boolean,
@@ -83,57 +83,63 @@ export default {
   },
   data() {
     return {
-      register: {}
+      register: {},
+      formFieldData: []
     }
   },
   components: {
     FormItem
   },
-  computed: {
-    formFieldData() {
-      const data = this.formConfigList
-        .filter((item) => {
-          if (!item.type) {
+  watch: {
+    formConfigList: {
+      deep: true,
+      immediate: true,
+      async handler (newVal) {
+        if (!newVal || !newVal.length) {
+          return
+        }
+
+        // 组件注册
+        await this.handleComponentRegister(newVal)
+
+        // 渲染数据
+        this.formFieldData = this.setValues(this.formConfigList)
+      }
+    }
+  },
+  methods: {
+    setValues(configList = []) {
+      return configList.filter((item) => {
+          if (!this.register[item.type]) {
             return false
           }
-          // Customed：组件组
-          if (item.type !== 'Customed' && !this.register[item.type]) {
+
+          // 组件组
+          if (item.type === 'Customed') {
+            item.content = this.setValues(item.content)
+            return false
+          }
+
+          if (!item.type) {
             return false
           }
           if (item.hidden) {
             return false
           }
+
           // 动态显隐设置器
           if (_isFunction(item.relyFunc)) {
             return item.relyFunc(this.moduleConfig)
           }
 
           return true
-        })
-        .map((item) => {
+        }).map((item) => {
           return {
             ...item,
-            value: formatValue({ item, moduleConfig: this.moduleConfig })
+            value: formatValue({ item, moduleConfig: this.moduleConfig }) // 动态复值
           }
         })
-
-      return data
-    }
-  },
-  watch: {
-    formConfigList: {
-      deep: true,
-      immediate: true,
-      handler(newVal) {
-        if (!newVal || !newVal.length) {
-          return
-        }
-
-        this.handleComponentRegister(newVal)
-      }
-    }
-  },
-  methods: {
+    },
     async handleComponentRegister(formFieldData) {
       let innerSetters = []
       const setters = formFieldData.map((item) => {

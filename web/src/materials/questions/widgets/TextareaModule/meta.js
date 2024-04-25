@@ -61,7 +61,7 @@ const meta = {
     },
     {
       name: 'textRange',
-      label: '字数限制',
+      title: '字数限制',
       type: 'RangeSetter',
       options: [],
       key: 'textRange',

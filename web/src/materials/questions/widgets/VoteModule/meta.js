@@ -17,7 +17,6 @@ const meta = {
           type: 'CheckBox',
           key: 'innerType',
           value: false,
-          inline: true,
           // 输入转换
           valueAdapter({ moduleConfig }) {
             if (moduleConfig.innerType === 'checkbox') {

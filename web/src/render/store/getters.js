@@ -28,7 +28,7 @@ export default {
           if (Array.isArray(options)) {
             allOptions.push(...options)
           }
-          
+          // console.log('222222')
           const match = state.ruleEngine.match(question.field, 'question', formValues)
           question.match = match
 

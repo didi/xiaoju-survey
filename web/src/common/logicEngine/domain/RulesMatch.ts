@@ -23,6 +23,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
     return this.field + this.operator + this.value;
   }
   match(fact: Fact): boolean {
+    console.log(this.calculateHash())
     switch (this.operator) {
       case 'eq':
         if(this.value instanceof Array) {
@@ -84,6 +85,7 @@ export class RuleNode {
 
   // 匹配条件规则
   match(fact: Fact) {
+    console.log(this.target + '规则匹配')
     return Array.from(this.conditions.entries()).every(([key, value]) => {
       const res = value.match(fact)
       if (res) {
@@ -109,7 +111,7 @@ export class RuleNode {
 
 export class RuleMatch {
   rules: Map<string, RuleNode>;
-  matchCache: Map<string, boolean>;
+  // matchCache: Map<string, boolean>;
 
 
   constructor(ruleConf: any) {
@@ -122,7 +124,7 @@ export class RuleMatch {
       });
       this.addRule(ruleNode)
     })
-    this.matchCache = new Map();
+    // this.matchCache = new Map();
   }
 
   // 添加条件规则到规则引擎中
@@ -139,7 +141,7 @@ export class RuleMatch {
     const rule = this.rules.get(hash);
     if (rule) {
       const result = rule.match(fact)
-      this.matchCache.set(hash, result);
+      // this.matchCache.set(hash, result);
       return result
     } else {
       // 默认显示

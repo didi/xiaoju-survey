@@ -28,7 +28,6 @@ export abstract class ConditionNode {
 }
 
 // 定义基本条件的类
-
 export class BasicCondition<F extends string, O extends BasicOperator> extends ConditionNode {
   constructor(public field: F, public operator: O, public value: FieldTypes) {
     super('basic');
@@ -50,7 +49,6 @@ export class BasicCondition<F extends string, O extends BasicOperator> extends C
       case 'eq':
         if(this.value instanceof Array) {
           const res = this.value.every(v => fact[this.field].includes(v))
-          this.result = res
           return res
         } else {
           return fact[this.field].includes(this.value);

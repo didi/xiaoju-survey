@@ -21,6 +21,8 @@ export default {
   changeFormData(state, data) {
     let { key, value } = data
     set(state, `formValues.${key}`, value)
+
+    
     // set(state, `questionData.${key}.value`, value)
   },
   changeSelectMoreData(state, data) {

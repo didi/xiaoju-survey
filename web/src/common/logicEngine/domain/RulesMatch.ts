@@ -63,7 +63,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
     }
   }
 
-  get() {
+  getResult() {
     return this.result
   }
 }
@@ -72,6 +72,7 @@ export class RuleNode {
   target: string; // 作用目标题
   scope: string; // 作用范围，题目或选项
   conditions: Map<string, ConditionNode<string, BasicOperator>>; // 使用哈希表存储条件规则对象
+  
   constructor(target: string, scope: string) {
     this.target = target;
     this.scope = scope;
@@ -85,8 +86,8 @@ export class RuleNode {
 
   // 匹配条件规则
   match(fact: Fact) {
-    console.log(this.target + '规则匹配')
-    return Array.from(this.conditions.entries()).every(([key, value]) => {
+    // console.log(this.target + '规则匹配')
+    const res =  Array.from(this.conditions.entries()).every(([key, value]) => {
       const res = value.match(fact)
       if (res) {
         return true;
@@ -94,9 +95,13 @@ export class RuleNode {
         return false
       }
     });
+    return res
+    // this.matchCache.set(hash, res);
   }
-  get() {
-
+  getResult() {
+    return Array.from(this.conditions.entries()).map(([key, value]) => {
+      return value.getResult()
+    })
   }
 
   // 计算条件规则的哈希值
@@ -149,10 +154,17 @@ export class RuleMatch {
     }
   }
   
-  // get(target: string, scope: string,) {
-  //   const hash = this.calculateHash(target, scope);
-  //   const rule = this.rules.get(hash);
-  // }
+  getResult(target: string, scope: string) {
+    const hash = this.calculateHash(target, scope);
+    const rule = this.rules.get(hash);
+    if (rule) {
+      const result = rule.getResult()
+      return result
+    } else {
+      // 默认显示
+      return true
+    }
+  }
   // 计算哈希值的方法
   calculateHash(target: string, scope: string): string {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法

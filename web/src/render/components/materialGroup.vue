@@ -2,7 +2,6 @@
   <form ref="ruleForm" :model="formModel" :rules="rules">
     <div v-for="(item) in renderData" :key="item.field">
       <questionWrapper
-        v-if="item.match"
         ref="questionWrappers"
         class="gap"
         v-bind="$attrs"
@@ -19,7 +18,7 @@
 <script setup>
 import { ref, onMounted, provide, computed } from 'vue'
 import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer'
-
+import store from '@/render/store'
 const props = defineProps({
   rules: {
     type: Object,
@@ -44,6 +43,10 @@ const emit = defineEmits(['formChange', 'blur'])
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
+  const { key }  = data
+  debugger
+  // 前置题改变通知目标题更新规则匹配
+  store.state.ruleEngine.match(target, 'question', state.formValues)
   emit('formChange', data)
 }
 // 动态 field 管理
@@ -65,6 +68,9 @@ onMounted(() => {
     fields.value.push(field)
   })
 })
+const questionMatch = (field) => {
+  return store.state.ruleEngine.match(field, 'question', props.formModel)
+}
 
 const validate = (callback) => {
   const length = fields.value.length

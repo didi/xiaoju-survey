@@ -35,21 +35,21 @@ export default {
         this.isPublishing = true
         const saveRes = await saveSurvey(saveData)
         if (saveRes.code !== 200) {
-          this.$message.error(saveRes.errmsg || '问卷保存失败')
+          // this.$message.error(saveRes.errmsg || '问卷保存失败')
           return
         }
         const publishRes = await publishSurvey({ surveyId: this.surveyId })
         if (publishRes.code === 200) {
-          this.$message.success('发布成功')
+          // this.$message.success('发布成功')
           this.$store.dispatch('edit/getSchemaFromRemote')
           this.$router.push({
             name: 'publishResultPage'
           })
         } else {
-          this.$message.error(`发布失败 ${publishRes.errmsg}`)
+          // this.$message.error(`发布失败 ${publishRes.errmsg}`)
         }
       } catch (error) {
-        this.$message.error(`发布失败`)
+        // this.$message.error(`发布失败`)
       } finally {
         this.isPublishing = false
       }

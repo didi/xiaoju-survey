@@ -102,12 +102,12 @@ export default {
         this.isSaving = true
         const res = await this.saveData()
         if (res.code === 200) {
-          this.$message.success('保存成功')
+          // this.$message.success('保存成功')
         } else {
-          this.$message.error(res.errmsg)
+          // this.$message.error(res.errmsg)
         }
       } catch (error) {
-        this.$message.error('保存问卷失败')
+        // this.$message.error('保存问卷失败')
       } finally {
         this.isSaving = false
       }

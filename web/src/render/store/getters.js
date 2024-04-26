@@ -9,7 +9,8 @@ export default {
       questionSeq &&
       questionSeq.reduce((pre, item) => {
         const questionArr = []
-        for (const questionKey of item) {
+        
+        item.forEach(questionKey => {
           const question = { ...questionData[questionKey] }
           const { type, extraOptions, options, rangeConfig } = question
 
@@ -28,9 +29,6 @@ export default {
           if (Array.isArray(options)) {
             allOptions.push(...options)
           }
-          // console.log('222222')
-          const match = state.ruleEngine.match(question.field, 'question', formValues)
-          question.match = match
 
           let othersValue = {}
           let voteTotal = 0
@@ -78,12 +76,15 @@ export default {
 
           // 将othersValue赋值给
           question.othersValue = othersValue
+
+          // 题型显示隐藏通过过滤题目的视图数据实现，保证formModel中数据与视图数据一致
+          const match = state.ruleEngine.getResult(question.field, 'question')
+          if(!match) {
+            return 
+          }
           
           questionArr.push(question)
-
-          
-          
-        }
+        })
 
         if (questionArr && questionArr.length) {
           pre.push(questionArr)

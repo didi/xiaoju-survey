@@ -16,7 +16,11 @@ export type Fact = {
   [key: string]: any;
 };
 export abstract class ConditionNode {
-  constructor() {
+  id: string
+  type: string
+  constructor(type: string) {
+    this.id = generateID('condi')
+    this.type = type;
   }
 
   abstract calculateHash(): any
@@ -26,12 +30,8 @@ export abstract class ConditionNode {
 // 定义基本条件的类
 
 export class BasicCondition<F extends string, O extends BasicOperator> extends ConditionNode {
-  id: string
-  type: string
   constructor(public field: F, public operator: O, public value: FieldTypes) {
-    super();
-    this.id = generateID('condi')
-    this.type = 'basic';
+    super('basic');
   }
   changeOperator(operator: O) {
     this.operator = operator;
@@ -43,26 +43,39 @@ export class BasicCondition<F extends string, O extends BasicOperator> extends C
     this.field = field;
   }
   calculateHash(): string {
-    // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return this.field + this.operator + this.value;
   }
   match(fact: Fact): boolean {
     switch (this.operator) {
       case 'eq':
         if(this.value instanceof Array) {
-          return this.value.some(v => fact[this.field].includes(v))
+          const res = this.value.every(v => fact[this.field].includes(v))
+          this.result = res
+          return res
         } else {
           return fact[this.field].includes(this.value);
         }
       case 'in':
         if(this.value instanceof Array) {
-          return this.value.some(v => fact[this.field].includes(v))
+          const res = this.value.some(v => fact[this.field].includes(v))
+          return res
         } else {
           return fact[this.field].includes(this.value);
         }
-      case 'gt':
-        return fact[this.field] > this.value;
-      // 其他比较操作符的判断逻辑
+      case 'nin':
+        if(this.value instanceof Array) {
+          const res = this.value.some(v => !fact[this.field].includes(v))
+          return res
+        } else {
+          return fact[this.field].includes(this.value);
+        }
+      case 'neq':
+        if(this.value instanceof Array) {
+          const res = this.value.every(v => !fact[this.field].includes(v))
+          return res
+        } else {
+          return fact[this.field].includes(this.value);
+        }
       default:
         return false;
     }
@@ -71,13 +84,9 @@ export class BasicCondition<F extends string, O extends BasicOperator> extends C
 
 // // 定义组合条件的类
 export class ComposeCondition<F extends string, V> extends ConditionNode {
-  id: string
-  type: string
   children: (BasicCondition<F, BasicOperator> | ComposeCondition<F, V>)[] = [];
   constructor(public operator: ComposeOperator) {
-    super();
-    this.id = generateID('condi')
-    this.type = 'compose';
+    super('compose');
   }
   calculateHash() {
     return this.operator;

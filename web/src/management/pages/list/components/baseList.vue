@@ -100,12 +100,22 @@
 
 <script>
 import { get, map } from 'lodash-es'
+
+import { ElMessage, ElMessageBox } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+import 'element-plus/theme-chalk/src/message-box.scss'
+
 import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'
 // 设置中文
 moment.locale('zh-cn')
+
 import empty from '@/management/components/empty.vue'
+import { CODE_MAP } from '@/management/api/base'
+import { QOP_MAP } from '@/management/utils/constant'
+import { getSurveyList, deleteSurvey } from '@/management/api/survey'
+
 import ModifyDialog from './modify.vue'
 import Tag from './tag.vue'
 import State from './state.vue'
@@ -120,9 +130,6 @@ import {
   selectOptionsDict,
   buttonOptionsDict
 } from '../config'
-import { CODE_MAP } from '@/management/api/base'
-import { QOP_MAP } from '@/management/utils/constant'
-import { getSurveyList, deleteSurvey } from '@/management/api/survey'
 
 export default {
   name: 'BaseList',
@@ -231,16 +238,10 @@ export default {
           this.total = res.data.count
           this.data = res.data.data
         } else {
-          this.$message({
-            type: 'error',
-            message: res.errmsg
-          })
+          ElMessage.error(res.errmsg)
         }
       } catch (error) {
-        this.$message({
-          type: 'error',
-          message: error
-        })
+        ElMessage.error(error)
         this.loading = false
       }
     },
@@ -276,7 +277,7 @@ export default {
     },
     async onDelete(row) {
       try {
-        await this.$confirm('是否确认删除？', '提示', {
+        await ElMessageBox.confirm('是否确认删除？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -288,10 +289,10 @@ export default {
 
       const res = await deleteSurvey(row._id)
       if (res.code === CODE_MAP.SUCCESS) {
-        this.$message.success('删除成功')
+        ElMessage.success('删除成功')
         this.init()
       } else {
-        this.$message.error(res.errmsg || '删除失败')
+        ElMessage.error(res.errmsg || '删除失败')
       }
     },
     handleCurrentChange(current) {

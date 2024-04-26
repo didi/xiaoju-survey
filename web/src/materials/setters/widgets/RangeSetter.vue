@@ -6,7 +6,11 @@
   </div>
 </template>
 <script>
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+
 export default {
   name: 'RangeSetter',
   props: {
@@ -38,7 +42,7 @@ export default {
     changeDataMin(value) {
       const key = this.formConfig.key
       if (value > this.formConfig.value.max.value) {
-        this.$message({
+        ElMessage({
           type: 'info',
           message: '最小值大于最大值，请重新输入！'
         })
@@ -52,7 +56,7 @@ export default {
     changeDataMax(value) {
       const key = this.formConfig.key
       if (value < this.formConfig.value.min.value) {
-        this.$message({
+        ElMessage({
           type: 'info',
           message: '最大值小于最小值，请重新输入！'
         })

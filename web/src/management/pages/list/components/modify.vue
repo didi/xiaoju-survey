@@ -35,6 +35,10 @@
 
 <script>
 import { pick as _pick } from 'lodash-es'
+
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
@@ -91,12 +95,12 @@ export default {
         })
 
         if (res.code === CODE_MAP.SUCCESS) {
-          this.$message.success('修改成功')
+          ElMessage.success('修改成功')
         } else {
-          this.$message.error(res.errmsg)
+          ElMessage.error(res.errmsg)
         }
       } catch (err) {
-        this.$message.error(err)
+        ElMessage.error(err)
       }
     },
     async handleCopy() {
@@ -116,10 +120,10 @@ export default {
             }
           })
         } else {
-          this.$message.error(res.errmsg)
+          ElMessage.error(res.errmsg)
         }
       } catch (err) {
-        this.$message.error(err)
+        ElMessage.error(err)
       }
     }
   }

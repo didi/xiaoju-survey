@@ -62,7 +62,7 @@ export default {
   methods: {
     changeData(value) {
       const { key, valueSetter } = this.formConfig
-      console.log(13423423, this.formConfig, 435345, this.moduleConfig)
+
       if (valueSetter && typeof valueSetter == 'function') {
         let status = valueSetter(value, this.moduleConfig)
         if (status) {

@@ -8,7 +8,11 @@
   />
 </template>
 <script>
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+
 export default {
   name: 'InputNumber',
   props: {
@@ -84,7 +88,7 @@ export default {
     changeData(value) {
       const reg = /^(-)?[0-9]+$/
       if (!reg.test(value)) {
-        this.$message.warning('只能输入整数')
+        ElMessage.warning('只能输入整数')
       }
       this.numberValue = value
       const key = this.formConfig.key

@@ -1,5 +1,5 @@
+import { ElMessage } from 'element-plus'
 import basicConfig from '../../common/config/basicConfig'
-// import { ElMessage } from 'element-plus';
 
 const meta = {
   title: '评分',
@@ -20,7 +20,7 @@ const meta = {
       })),
       valueSetter: (val, moduleConfig) => {
         if (moduleConfig['max'] && val >= moduleConfig['max']) {
-          alert('最小值不可大于最大值')
+          ElMessage.info('最小值不可大于最大值')
           return true
         }
       }
@@ -37,11 +37,7 @@ const meta = {
       })),
       valueSetter: (val, moduleConfig) => {
         if (moduleConfig['min'] && val <= moduleConfig['min']) {
-          // Message({
-          //   type: 'info',
-          //   message: '最大值不可小于最小值'
-          // })
-          alert('最大值不可小于最小值')
+          ElMessage.info('最大值不可小于最小值')
           return true
         }
       }

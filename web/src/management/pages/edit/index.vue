@@ -15,9 +15,14 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
+import leftMenu from '@/management/components/leftMenu.vue'
+
 import commonTemplate from './components/commonTemplate.vue'
 import navbar from './components/navbar.vue'
-import leftMenu from '@/management/components/leftMenu.vue'
+
 export default {
   name: 'questionEditPage',
   components: {
@@ -30,7 +35,7 @@ export default {
     try {
       await this.$store.dispatch('edit/init')
     } catch (error) {
-      this.$message.error(error.message)
+      ElMessage.error(error.message)
       // 自动跳转回列表页
       setTimeout(() => {
         this.$router.replace({

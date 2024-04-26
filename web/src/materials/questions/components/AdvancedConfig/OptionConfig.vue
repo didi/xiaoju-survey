@@ -80,9 +80,14 @@
 <script>
 import draggable from 'vuedraggable'
 import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es'
+
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { CirclePlus, Remove } from '@element-plus/icons-vue'
-import ExtraIcon from '../ExtraIcon.vue'
+
 import { cleanRichText } from '@/common/xss'
+import ExtraIcon from '../ExtraIcon.vue'
 
 export default {
   name: 'OptionConfig',
@@ -200,7 +205,7 @@ export default {
         this.importKey = 'single'
         this.popoverVisible = false
       } else {
-        this.$message.warning('最少保留一项')
+        ElMessage.warning('最少保留一项')
       }
     },
     getNewHash() {
@@ -232,7 +237,7 @@ export default {
         this.curOptions.forEach((item, index) => {
           item.label = this.options[index].label || ''
         })
-        this.$message.warning('已存在相同的标签内容，请重新输入')
+        ElMessage.warning('已存在相同的标签内容，请重新输入')
         return
       }
       this.$emit('optionChange', this.curOptions)

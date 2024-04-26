@@ -56,6 +56,9 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { login, register } from '@/management/api/auth'
 import { refreshCaptcha } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
@@ -122,7 +125,7 @@ export default {
             })
             this[`${type}Pending`] = false
             if (res.code !== CODE_MAP.SUCCESS) {
-              this.$message.error(res.errmsg)
+              ElMessage.error(res.errmsg)
               throw new Error('登录/注册失败' + res.errmsg)
             }
             this.$store.dispatch('user/login', {
@@ -156,7 +159,7 @@ export default {
           this.captchaImgData = img
         }
       } catch (error) {
-        this.$message.error('获取验证码失败')
+        ElMessage.error('获取验证码失败')
       }
     }
   }

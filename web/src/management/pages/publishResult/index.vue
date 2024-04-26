@@ -26,11 +26,16 @@
 </template>
 
 <script>
-import ChannelRow from './components/channelRow.vue'
-import empty from '@/management/components/empty.vue'
-import { get as _get } from 'lodash-es'
-import leftMenu from '@/management/components/leftMenu.vue'
 import { mapState } from 'vuex'
+import { get as _get } from 'lodash-es'
+
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
+import empty from '@/management/components/empty.vue'
+import leftMenu from '@/management/components/leftMenu.vue'
+
+import ChannelRow from './components/channelRow.vue'
 
 export default {
   name: 'publishResultPage',
@@ -49,7 +54,7 @@ export default {
     try {
       await this.$store.dispatch('edit/init')
     } catch (error) {
-      this.$message.error(error.message)
+      ElMessage.error(error.message)
       // 自动跳转回列表页
       setTimeout(() => {
         this.$router.replace({

@@ -33,10 +33,14 @@
 </template>
 
 <script>
-import DataTable from './components/table.vue'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import empty from '@/management/components/empty.vue'
 import leftMenu from '@/management/components/leftMenu.vue'
 import { getRecycleList } from '@/management/api/analysis'
+
+import DataTable from './components/table.vue'
 
 export default {
   name: 'analysisPage',
@@ -65,7 +69,7 @@ export default {
   methods: {
     async init() {
       if (!this.$route.params.id) {
-        this.$message.error('没有传入问卷参数~')
+        ElMessage.error('没有传入问卷参数~')
         return
       }
       this.mainTableLoading = true
@@ -82,7 +86,7 @@ export default {
           this.mainTableLoading = false
         }
       } catch (error) {
-        this.$message.error('查询回收数据失败，请重试')
+        ElMessage.error('查询回收数据失败，请重试')
       }
     },
     handleCurrentChange(current) {

@@ -40,7 +40,7 @@ const meta = {
     },
     {
       name: 'numberRange',
-      label: '数字限制',
+      title: '数字限制',
       type: 'RangeSetter',
       options: [],
       key: 'numberRange',

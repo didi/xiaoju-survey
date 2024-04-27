@@ -87,7 +87,6 @@ export default defineComponent({
         })
         
         const index = props.qIndex
-        console.log(23453453, index)
         emit('changeSeq', { type: 'delete', index })
         state.isHover = false
       } catch (error) {

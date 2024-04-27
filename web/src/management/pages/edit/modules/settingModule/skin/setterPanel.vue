@@ -21,7 +21,6 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <!-- -->
   </div>
 </template>
 <script>

@@ -1,24 +1,26 @@
 <template>
-  <el-switch :modelValue="!!formConfig.value" @change="changeData" />
+  <el-switch v-model="newValue" @change="changeData" />
 </template>
-<script>
+<script setup>
+import { ref } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'CustomedSwitch',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
+
+const props = defineProps({
+  formConfig: {
+    type: Object,
+    required: true
   },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+})
+const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
+  
+const newValue = ref(props.formConfig.value)
+
+const changeData = (value) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, {
+    key,
+    value
+  })
 }
 </script>

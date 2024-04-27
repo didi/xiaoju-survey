@@ -1,15 +1,13 @@
 <template>
   <div class="main">
     <template v-for="(item, index) in renderData" :key="index">
-      <div>
-        <materialGroup
-          ref="formGroup"
-          :render-data="item"
-          :rules="rules"
-          :formModel="formModel"
-          @formChange="changeData"
-        />
-      </div>
+      <materialGroup
+        ref="formGroup"
+        :render-data="item"
+        :rules="rules"
+        :formModel="formModel"
+        @formChange="changeData"
+      />
     </template>
   </div>
 </template>

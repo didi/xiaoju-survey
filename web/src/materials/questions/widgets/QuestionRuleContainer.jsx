@@ -29,7 +29,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const validateMessage = ref('')
     const validateState = ref('')
-    // const { proxy: instance } = getCurrentInstance()
 
     const itemClass = computed(() => {
       const classList = []

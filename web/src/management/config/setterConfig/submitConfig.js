@@ -1,13 +1,10 @@
 export default [
   {
-    label: '提交按钮文案',
-    type: 'Input',
+    title: '提交按钮文案',
+    type: 'InputSetter',
     key: 'submitTitle',
     placeholder: '提交',
-    value: '',
-    labelStyle: {
-      fontWeight: 'bold'
-    }
+    value: ''
   },
   {
     title: '提交确认弹窗',
@@ -16,16 +13,16 @@ export default [
     content: [
       {
         label: '是否配置该项',
+        labelStyle: { width: '120px' },
         type: 'CustomedSwitch',
         key: 'confirmAgain.is_again',
-        direction: 'horizon',
         value: true
       },
       {
         label: '二次确认文案',
-        type: 'Input',
+        labelStyle: { width: '120px' },
+        type: 'InputSetter',
         key: 'confirmAgain.again_text',
-        direction: 'horizon',
         placeholder: '确认要提交吗？',
         value: '确认要提交吗？'
       }
@@ -38,27 +35,27 @@ export default [
     content: [
       {
         label: '已提交',
-        type: 'Input',
+        labelStyle: { width: '120px' },
+        type: 'InputSetter',
         key: 'msgContent.msg_9002',
         placeholder: '请勿多次提交！',
-        value: '请勿多次提交！',
-        direction: 'horizon'
+        value: '请勿多次提交！'
       },
       {
         label: '提交结束',
-        type: 'Input',
+        labelStyle: { width: '120px' },
+        type: 'InputSetter',
         key: 'msgContent.msg_9003',
         placeholder: '您来晚了，已经满额！',
-        value: '您来晚了，已经满额！',
-        direction: 'horizon'
+        value: '您来晚了，已经满额！'
       },
       {
         label: '其他提交失败',
-        type: 'Input',
+        labelStyle: { width: '120px' },
+        type: 'InputSetter',
         key: 'msgContent.msg_9004',
         placeholder: '提交失败！',
-        value: '提交失败！',
-        direction: 'horizon'
+        value: '提交失败！'
       }
     ]
   }

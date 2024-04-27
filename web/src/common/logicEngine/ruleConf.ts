@@ -6,11 +6,6 @@ export const ruleConf = [
           "operator": "in",
           "value": ['115019']
         },
-        {
-          "field": "data515",
-          "operator": "nin",
-          "value": ['选项4']
-        }
     ],
     "scope": "question",
     "target": "data648"  // 题目3

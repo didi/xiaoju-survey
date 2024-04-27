@@ -13,7 +13,7 @@ export type Fact = {
 // 定义条件规则类
 export class ConditionNode<F extends string, O extends BasicOperator> {
   // 默认显示
-  public result: boolean | null = null;
+  public result: boolean = false;
   constructor(public field: F, public operator: O, public value: FieldTypes) {
   }
 
@@ -22,45 +22,52 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return this.field + this.operator + this.value;
   }
-  match(fact: Fact): boolean {
-    console.log(this.calculateHash())
+  
+  match(facts: Fact): boolean {
+    // console.log(this.calculateHash())
+    // 如果该特征在事实对象中不存在，则直接返回false
+    if(!facts[this.field]) {
+      this.result = false
+      return this.result
+    }
     switch (this.operator) {
       case 'eq':
         if(this.value instanceof Array) {
-          const res = this.value.every(v => fact[this.field].includes(v))
-          this.result = res
-          return res
+          this.result = this.value.every(v => facts[this.field].includes(v))
+          return this.result
         } else {
-          return fact[this.field].includes(this.value);
+          this.result = facts[this.field].includes(this.value);
+          return this.result
         }
       case 'in':
         if(this.value instanceof Array) {
-          const res = this.value.some(v => fact[this.field].includes(v))
-          this.result = res
-          return res
+          this.result = this.value.some(v => facts[this.field].includes(v))
+          return this.result
         } else {
-          return fact[this.field].includes(this.value);
+          this.result = facts[this.field].includes(this.value);
+          return this.result
         }
       case 'nin':
         if(this.value instanceof Array) {
-          const res = this.value.some(v => !fact[this.field].includes(v))
-          this.result = res
-          return res
+          this.result = this.value.some(v => !facts[this.field].includes(v))
+          return this.result
         } else {
-          return fact[this.field].includes(this.value);
+          this.result = facts[this.field].includes(this.value);
+          return this.result
         }
       case 'neq':
         if(this.value instanceof Array) {
-          const res = this.value.every(v => !fact[this.field].includes(v))
-          this.result = res
-          return res
+          this.result = this.value.every(v => !facts[this.field].includes(v))
+          return this.result
         } else {
-          return fact[this.field].includes(this.value);
+          this.result = facts[this.field].includes(this.value);
+          return this.result
         }
       // 其他比较操作符的判断逻辑
       default:
-        return false;
+        return this.result
     }
+    
   }
 
   getResult() {
@@ -69,13 +76,9 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
 }
 
 export class RuleNode {
-  target: string; // 作用目标题
-  scope: string; // 作用范围，题目或选项
   conditions: Map<string, ConditionNode<string, BasicOperator>>; // 使用哈希表存储条件规则对象
   
-  constructor(target: string, scope: string) {
-    this.target = target;
-    this.scope = scope;
+  constructor(public target: string, public scope: string) {
     this.conditions = new Map();
   }
   // 添加条件规则到规则引擎中
@@ -86,7 +89,7 @@ export class RuleNode {
 
   // 匹配条件规则
   match(fact: Fact) {
-    // console.log(this.target + '规则匹配')
+    console.log(this.target + '规则匹配')
     const res =  Array.from(this.conditions.entries()).every(([key, value]) => {
       const res = value.match(fact)
       if (res) {
@@ -96,12 +99,13 @@ export class RuleNode {
       }
     });
     return res
-    // this.matchCache.set(hash, res);
   }
   getResult() {
-    return Array.from(this.conditions.entries()).map(([key, value]) => {
-      return value.getResult()
+    const res = Array.from(this.conditions.entries()).every(([key, value]) => {
+      const res = value.getResult()
+      return res
     })
+    return res
   }
 
   // 计算条件规则的哈希值
@@ -109,16 +113,28 @@ export class RuleNode {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return this.target + this.scope;
   }
+  toJson() {
+    return {
+      target: this.target,
+      scope: this.scope,
+      conditions: Object.fromEntries(
+        Array.from(this.conditions, ([key, value]) => [key, value.getResult()])
+      )
+    };
+  }
+  batchMatch(facts: Fact) {
+    return {
+      target: this.target,
+      scope: this.scope,
+      matched: this.match(facts)
+    };
+  }
 
 }
 
-
-
 export class RuleMatch {
   rules: Map<string, RuleNode>;
-  // matchCache: Map<string, boolean>;
-
-
+  static ruleConf: any;
   constructor(ruleConf: any) {
     this.rules = new Map();
     ruleConf.forEach((rule: any) => {
@@ -129,7 +145,7 @@ export class RuleMatch {
       });
       this.addRule(ruleNode)
     })
-    // this.matchCache = new Map();
+    RuleMatch.ruleConf = ruleConf
   }
 
   // 添加条件规则到规则引擎中
@@ -169,6 +185,30 @@ export class RuleMatch {
   calculateHash(target: string, scope: string): string {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return target + scope;
+  }
+  findTargets(field: string) {
+    const nodes = RuleMatch.ruleConf.filter((rule: any) => {
+      const conditions =  rule.conditions.filter((item: any) => {
+        return item.field === field
+      })
+      return conditions.length > 0
+    })
+    return nodes.map((item: any) => {
+      return item.target
+    })
+  }
+  toJson() {
+    return Array.from(this.rules.entries()).map(([key, value]) => {
+      return value.toJson()
+    })
+    // return this.rules.forEach((rule) => {
+    //   return rule.toJson()
+    // })
+  }
+  batchMatch(facts: Fact) {
+    return Array.from(this.rules.entries()).map(([key, value]) => {
+      return value.batchMatch(facts)
+    })
   }
 }
 

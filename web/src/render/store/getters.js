@@ -76,9 +76,9 @@ export default {
 
           // 将othersValue赋值给
           question.othersValue = othersValue
-
           // 题型显示隐藏通过过滤题目的视图数据实现，保证formModel中数据与视图数据一致
           const match = state.ruleEngine.getResult(question.field, 'question')
+          console.log({match})
           if(!match) {
             return 
           }

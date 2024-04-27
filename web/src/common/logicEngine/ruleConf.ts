@@ -1,3 +1,4 @@
+// 静态数据
 export const ruleConf = [
   {
     "conditions": [

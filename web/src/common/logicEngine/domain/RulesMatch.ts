@@ -1,14 +1,4 @@
-export type BasicOperator = 'in' | 'eq' | 'neq' | 'nin' | 'gt';
-// in：包含, 选择了，任一
-// eq: 等于，选择了，全部
-// nin: 不包含，不选择，任一
-// neq：不等于，不选择，全部，可以实现“填写了”
-export type FieldTypes = string | string[];
-
-// 定义事实对象类型
-export type Fact = {
-  [key: string]: any;
-};
+import { type BasicOperator, type FieldTypes, type Fact  } from "./BasicType";
 
 // 定义条件规则类
 export class ConditionNode<F extends string, O extends BasicOperator> {
@@ -211,11 +201,3 @@ export class RuleMatch {
     })
   }
 }
-
-// const engine = new RuleMatch(ruleConf)
-// // 示例数据
-// const fact1: Fact = { q1: ['选项1', '选项2']};
-// // 进行匹配测试
-// const res = engine.match('q3-o1', 'option', fact1);
-
-// console.log(engine, res)

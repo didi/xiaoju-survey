@@ -1,4 +1,6 @@
-@import './skin.scss';
+// 定义颜色变量
+$opacity: 1;
+
 $primary-color: #ffa600;
 $primary-color-hover: #fbb733;
 $primary-color-deep: #d48d00;
@@ -23,6 +25,7 @@ $background-color-light: #ffffff;
 $background-color-gray: #f7f9fb;
 $background-color-dark: #e7e9eb;
 $primary-bg-color: #fef6e6;
+$primary-background-color: #fff;
 
 $title-color-deep: #292a36;
 $title-color: #4a4c5b;
@@ -39,6 +42,13 @@ $primary-color-light: hsl(48, 100%, 97%);
 $title-size: 0.32rem;
 $font-size: 0.28rem;
 $tip-size: 0.22rem;
+
+// 使用CSS自定义属性
+:root {
+  --primary-color: #{$primary-color};
+  --primary-background-color: #{$primary-background-color};
+  --opacity: #{$opacity};
+}
 
 .el-radio__input.is-checked + .el-radio__label {
   color: $font-color !important;

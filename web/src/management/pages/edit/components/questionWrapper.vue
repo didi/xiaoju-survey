@@ -1,5 +1,7 @@
 <script lang="jsx">
-import { defineComponent, reactive, toRefs, computed, getCurrentInstance } from 'vue'
+import { defineComponent, reactive, toRefs, computed } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import 'element-plus/theme-chalk/src/message-box.scss'
 
 export default defineComponent({
   name: 'QuestionWrapper',
@@ -31,7 +33,6 @@ export default defineComponent({
     const state = reactive({
       isHover: false
     })
-    const { proxy } = getCurrentInstance()
     const itemClass = computed(() => {
       return {
         'question-wrapper': true,
@@ -63,52 +64,36 @@ export default defineComponent({
     }
     const onCopy = () => {
       const index = props.qIndex
-      // this.changeQuestionSeq({ type: 'copy', index })
       emit('changeSeq', { type: 'copy', index })
       state.isHover = false
     }
     const onMoveUp = () => {
       const index = props.qIndex
-      // this.changeQuestionSeq({ type: 'move', index, range: -1 })
       emit('changeSeq', { type: 'move', index, range: -1 })
       state.isHover = false
     }
-    // const onMoveTop = () => {
-    //   const index = props.qIndex
-    //   // this.changeQuestionSeq({ type: 'move', index, range: -index })
-    //   emit('changeSeq', { type: 'move', index, range: -index })
-    //   state.isHover = false
-    // }
+
     const onMoveDown = () => {
       const index = props.qIndex
-      // this.changeQuestionSeq({ type: 'move', index, range: 1 })
       emit('changeSeq', { type: 'move', index, range: 1 })
       state.isHover = false
     }
     const onDelete = async () => {
       try {
-        await proxy.$confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
+        await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
+        
         const index = props.qIndex
-        // this.changeQuestionSeq({ type: 'move', index, range: 1 })
         emit('changeSeq', { type: 'delete', index })
         state.isHover = false
       } catch (error) {
         console.log('取消删除')
       }
     }
-    // const onMoveBottom = () => {
-    //   const index = props.qIndex
-    //   this.changeQuestionSeq({
-    //     type: 'move',
-    //     index,
-    //     range: props.questionDataList.length - index,
-    //   })
-    //   state.isHover = false
-    // }
+
     const onMove = () => {}
     return {
       ...toRefs(state),
@@ -161,7 +146,7 @@ export default defineComponent({
               </div>
             )}
             <div class="item" onClick={this.onDelete}>
-              <i-ep-delete />
+              <i-ep-close />
             </div>
           </div>
         }

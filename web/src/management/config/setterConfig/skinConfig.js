@@ -12,7 +12,6 @@ export default [
     key: 'skinConf.backgroundConf',
     formConfigList: [
       {
-        direction: 'space_between',
         label: '背景颜色',
         type: 'ColorPicker',
         key: 'color'
@@ -24,7 +23,6 @@ export default [
     key: 'skinConf.themeConf',
     formConfigList: [
       {
-        direction: 'space_between',
         label: '全局应用',
         type: 'ColorPicker',
         key: 'color'
@@ -36,7 +34,6 @@ export default [
     name: '内容区域',
     formConfigList: [
       {
-        direction: 'space_between',
         label: '内容透明度',
         type: 'SliderSetter',
         key: 'opacity'

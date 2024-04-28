@@ -6,7 +6,7 @@
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
   >
-    <el-radio v-for="item in options" :key="item.value" :label="item.value">
+    <el-radio v-for="item in options" :key="item.value" :value="item.value">
       <el-tooltip
         v-if="item.tip"
         class="item right"

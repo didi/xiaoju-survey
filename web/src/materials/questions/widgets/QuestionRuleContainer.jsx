@@ -29,8 +29,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const validateMessage = ref('')
     const validateState = ref('')
-    console.log(props.moduleConfig.field + '题型重新渲染')
-    // const { proxy: instance } = getCurrentInstance()
 
     const itemClass = computed(() => {
       const classList = []

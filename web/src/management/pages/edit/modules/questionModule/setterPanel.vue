@@ -4,7 +4,7 @@
       <img src="/imgs/icons/unselected.webp" />
       <h4 class="tipFont">选中题型可以编辑</h4>
       <span class="tip">来！试试看～</span>
-    </div>
+    </div>    
     <template v-else>
       <div class="setter-title">{{ currentEditMeta?.title || '' }}</div>
       <setterField

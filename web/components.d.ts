@@ -38,6 +38,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     IEpBottom: typeof import('~icons/ep/bottom')['default']
     IEpCheck: typeof import('~icons/ep/check')['default']
+    IEpClose: typeof import('~icons/ep/close')['default']
     IEpCopyDocument: typeof import('~icons/ep/copy-document')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpLoading: typeof import('~icons/ep/loading')['default']

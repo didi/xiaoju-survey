@@ -10,7 +10,7 @@ export default {
   name: 'BackModule',
   methods: {
     onBack() {
-      this.$router.go(-1)
+      window.open("/survey", "_self")
     }
   }
 }

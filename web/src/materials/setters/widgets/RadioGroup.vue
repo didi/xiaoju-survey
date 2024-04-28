@@ -1,6 +1,6 @@
 <template>
   <el-radio-group v-model="validValue" @change="changeData" :disabled="formConfig.disabled">
-    <el-radio v-for="item in options" :key="item.value" :label="item.value" class="customed-radio">
+    <el-radio v-for="item in options" :key="item.value" :value="item.value" class="customed-radio">
       <el-tooltip v-if="item.tip" class="item right" effect="dark">
         <template #content>
           <div v-html="item.tip"></div>

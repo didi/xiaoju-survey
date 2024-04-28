@@ -16,9 +16,7 @@ const meta = {
           label: '设置为多选题',
           type: 'CheckBox',
           key: 'innerType',
-          direction: 'horizon',
           value: false,
-          inline: true,
           // 输入转换
           valueAdapter({ moduleConfig }) {
             if (moduleConfig.innerType === 'checkbox') {
@@ -39,7 +37,6 @@ const meta = {
           label: '至少选择数',
           type: 'InputNumber',
           key: 'minNum',
-          direction: 'horizon',
           value: '',
           min: 0,
           max: 'maxNum',
@@ -49,7 +46,6 @@ const meta = {
           label: '最多选择数',
           type: 'InputNumber',
           key: 'maxNum',
-          direction: 'horizon',
           value: '',
           min: 'minNum',
           contentClass: 'input-number-config'

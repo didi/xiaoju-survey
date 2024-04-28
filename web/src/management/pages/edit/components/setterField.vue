@@ -1,5 +1,5 @@
 <template>
-  <el-form class="config-form" :inline="inline" @submit.prevent>
+  <el-form class="config-form" @submit.prevent>
     <div v-for="(item, index) in formFieldData" :key="`${item.key}${index}`" class="group-wrap">
       <div v-if="item.title" class="group-title">
         {{ item.title }}
@@ -14,8 +14,7 @@
       </div>
 
       <template v-if="item.type === 'Customed'">
-        <FormItem
-          v-for="(content, contentIndex) in item.content"
+        <FormItem        v-for="(content, contentIndex) in item.content"
           :key="`${item.key}${contentIndex}`"
           :form-config="content"
         >
@@ -49,13 +48,14 @@ import setterLoader from '@/materials/setters/setterLoader'
 
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
+// 静态配置设置动态值
 const formatValue = ({ item, moduleConfig }) => {
   if (_isFunction(item.valueAdapter)) {
     const value = item.valueAdapter({ moduleConfig })
+
     return value
   } else {
     const { key, keys } = item
-
     let result = null
     if (key) {
       result = _get(moduleConfig, key, item.value)
@@ -63,6 +63,7 @@ const formatValue = ({ item, moduleConfig }) => {
     if (keys) {
       result = _pick(moduleConfig, keys)
     }
+
     return result
   }
 }
@@ -70,71 +71,80 @@ const formatValue = ({ item, moduleConfig }) => {
 export default {
   name: 'SettersField',
   props: {
-    formConfigList: Array,
+    formConfigList: Array, // 对应题型组件的meta.js内容
     moduleConfig: Object,
-    inline: {
-      type: Boolean,
-      default: false
-    },
-    labelPosition: {
-      type: String, // top | left
-      default: 'top'
-    }
   },
   data() {
     return {
-      register: {}
+      register: {},
+      formFieldData: [],
+      init: true
     }
   },
   components: {
     FormItem
   },
-  computed: {
-    formFieldData() {
-      const data = this.formConfigList
-        .filter((item) => {
-          if (!item.type) {
-            return false
+  watch: {
+    formConfigList: {
+      deep: true,
+      immediate: true,
+      async handler (newVal) {        
+        this.init = true
+        console.log(55)
+        if (!newVal || !newVal.length) {
+          return
+        }
+
+        // 组件注册
+        await this.handleComponentRegister(newVal)
+        
+        this.init = false
+        this.formFieldData = this.setValues(this.formConfigList)
+      }
+    },
+    // schema变化联动
+    moduleConfig: {
+      deep: true,
+      async handler (newVal, oldVal) {
+        // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
+        if (this.init) {
+          return       
+        }
+
+        // TODO: 优化，依赖的schema变化时，均会重新计算
+        this.formFieldData = this.setValues(this.formConfigList)
+      }
+    }
+  },
+  methods: {
+    setValues(configList = []) {
+      return configList.filter((item) => {
+          // 组件组
+          if (item.type === 'Customed') {
+            item.content = this.setValues(item.content)
+            return true
           }
-          // Customed：组件组
-          console.log(423534546)
-          if (item.type !== 'Customed' && !this.register[item.type]) {
+
+          if (!item.type) {
             return false
           }
           if (item.hidden) {
             return false
           }
+
           // 动态显隐设置器
           if (_isFunction(item.relyFunc)) {
             return item.relyFunc(this.moduleConfig)
           }
 
           return true
-        })
-        .map((item) => {
+        }).map((item) => {
           return {
             ...item,
-            value: formatValue({ item, moduleConfig: this.moduleConfig })
+            value: formatValue({ item, moduleConfig: this.moduleConfig }) // 动态复值
           }
         })
-
-      return data
-    }
-  },
-  watch: {
-    formConfigList: {
-      deep: true,
-      immediate: true,
-      handler(newVal) {
-        if (!newVal || !newVal.length) {
-          return
-        }
-
-        this.handleComponentRegister(newVal)
-      }
-    }
-  },
-  methods: {
+    },
     async handleComponentRegister(formFieldData) {
       let innerSetters = []
       const setters = formFieldData.map((item) => {

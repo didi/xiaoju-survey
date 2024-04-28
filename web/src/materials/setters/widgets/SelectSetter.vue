@@ -62,10 +62,11 @@ export default {
   methods: {
     changeData(value) {
       const { key, valueSetter } = this.formConfig
+
       if (valueSetter && typeof valueSetter == 'function') {
         let status = valueSetter(value, this.moduleConfig)
         if (status) {
-          this.validValue = ''
+          this.validValue = this.moduleConfig[key]
           return
         }
       }

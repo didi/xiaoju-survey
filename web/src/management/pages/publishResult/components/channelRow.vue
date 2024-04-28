@@ -31,8 +31,12 @@
 </template>
 
 <script>
-import QRCode from './QRCode.vue'
 import Clipboard from 'clipboard'
+
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
+import QRCode from './QRCode.vue'
 
 export default {
   name: 'ChannelRow',
@@ -44,7 +48,7 @@ export default {
     handleCopy() {
       const clipboard = new Clipboard('.j-copy')
       clipboard.on('success', (e) => {
-        this.$message({
+        ElMessage({
           type: 'success',
           message: `已复制渠道链接：${e.text}`
         })

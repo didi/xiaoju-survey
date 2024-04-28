@@ -2,9 +2,7 @@
   <div class="skin-content">
     <div class="navbar-tab">
       <el-radio-group style="margin-bottom: 30px" v-model="activeRouter">
-        <el-radio-button :label="btnItem.router" :key="btnItem.router" v-for="btnItem in btnList">
-          <span>{{ btnItem.text }}</span>
-        </el-radio-button>
+        <el-radio-button v-for="btnItem in btnList" :key="btnItem.router" :label="btnItem.text" :value="btnItem.router" />
       </el-radio-group>
     </div>
     <router-view></router-view>

@@ -36,8 +36,12 @@
 </template>
 
 <script>
-import { SURVEY_TYPE_LIST } from '../types'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
 import { createSurvey } from '@/management/api/survey'
+
+import { SURVEY_TYPE_LIST } from '../types'
 
 export default {
   name: 'CreateForm',
@@ -96,7 +100,7 @@ export default {
             }
           })
         } else {
-          this.$message.error(res.errmsg || '创建失败')
+          ElMessage.error(res.errmsg || '创建失败')
         }
 
         this.canSubmit = true

@@ -15,10 +15,14 @@
 </template>
 
 <script>
-import { saveSurvey } from '@/management/api/survey'
-import buildData from './buildData'
 import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
+
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
+import { saveSurvey } from '@/management/api/survey'
+import buildData from './buildData'
 
 export default {
   components: {},
@@ -87,7 +91,7 @@ export default {
     async saveData() {
       const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
-        this.$message.error('未获取到问卷id')
+        ElMessage.error('未获取到问卷id')
         return null
       }
       const res = await saveSurvey(saveData)
@@ -102,12 +106,12 @@ export default {
         this.isSaving = true
         const res = await this.saveData()
         if (res.code === 200) {
-          // this.$message.success('保存成功')
+          ElMessage.success('保存成功')
         } else {
-          // this.$message.error(res.errmsg)
+          ElMessage.error(res.errmsg)
         }
       } catch (error) {
-        // this.$message.error('保存问卷失败')
+        ElMessage.error('保存问卷失败')
       } finally {
         this.isSaving = false
       }

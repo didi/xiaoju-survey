@@ -1,11 +1,7 @@
-import { computed, defineComponent } from 'vue'
-import { includes } from 'lodash-es'
-
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
-
 import BaseChoice from '../BaseChoice'
+import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import { includes } from 'lodash-es'
 import metaConfig from './meta.js'
-
 export const meta = metaConfig
 /**
  * 支持配置：
@@ -13,7 +9,7 @@ export const meta = metaConfig
  */
 export default defineComponent({
   name: 'CheckBoxModule',
-  components: { BaseChoice, QuestionWithRule },
+  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -81,16 +77,23 @@ export default defineComponent({
         value
       })
     }
+
+    const selectMoreView = shallowRef(null)
+    if(props.readonly) {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+    } else {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+    }
     return {
       props,
       onChange,
       handleSelectMoreChange,
-      myOptions
+      myOptions,
+      selectMoreView
     }
   },
   render() {
-    const { readonly, field, myOptions, onChange, maxNum, value } = this
-
+    const { readonly, field, myOptions, onChange, maxNum, value, selectMoreView } = this
     return (
       <BaseChoice
         uiTarget="checkbox"
@@ -101,15 +104,15 @@ export default defineComponent({
         onChange={onChange}
         value={value}
       >
-        {{
+         {{
           selectMore: (scoped) => {
             return (
-              <QuestionWithRule
+              <selectMoreView
                 readonly={this.readonly}
                 showTitle={false}
                 moduleConfig={scoped.selectMoreConfig}
                 onChange={(e) => this.handleSelectMoreChange(e)}
-              ></QuestionWithRule>
+              ></selectMoreView>
             )
           }
         }}

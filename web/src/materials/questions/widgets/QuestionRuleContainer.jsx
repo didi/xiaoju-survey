@@ -86,7 +86,6 @@ export default defineComponent({
       nextTick(() => {
         // 对填空题单独设置其value
         let value = unref(form.model)[field]
-        console.log(23452345,field, value)
         validator.validate({
           [field]: value 
         }, { 

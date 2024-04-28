@@ -11,7 +11,7 @@ import { queryVote, getEncryptInfo } from '@/render/api/survey'
 const CODE_MAP = {
   SUCCESS: 200,
   ERROR: 500,
-  NOTAUTH: 403
+  NO_AUTH: 403
 }
 
 export default {

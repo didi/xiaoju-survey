@@ -1,7 +1,7 @@
 <template>
   <div class="text-button-root" @click="onClick">
     <el-button v-bind="{ ...$attrs }">
-      <slot>{{ option.label }}</slot>
+      {{ option.label }}
     </el-button>
   </div>
 </template>

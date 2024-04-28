@@ -45,5 +45,6 @@ export default instance
 export const CODE_MAP = {
   SUCCESS: 200,
   ERROR: 500,
-  NOTAUTH: 403
+  NO_AUTH: 403,
+  ERR_AUTH: 1001
 }

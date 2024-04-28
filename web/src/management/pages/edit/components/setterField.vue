@@ -104,7 +104,7 @@ export default {
     // schema变化联动
     moduleConfig: {
       deep: true,
-      async handler (newVal, oldVal) {
+      async handler () {
         // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
         if (this.init) {
           return       

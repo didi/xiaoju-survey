@@ -71,42 +71,35 @@ export default defineComponent({
     
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger)
+      // 无规则直接执行回调
       if (!rules || rules.length === 0) {
         callback && callback()
         return true
       }
 
-      const { field, options } = props.moduleConfig
+      const { field } = props.moduleConfig
 
-      const descriptor = {}
-      if (rules && rules.length > 0) {
-        rules.forEach((rule) => {
-          // eslint-disable-next-line no-param-reassign
-          delete rule.trigger
-        })
-      }
-      // 有选项的题才需要判断这步，如果没有选项，就不校验，如果有，就要校验
-      if (options && options.length) {
-        const trueOptions = options.filter((i) => !i.hide)
-        if (trueOptions.length === 0) {
-          callback && callback()
-          return true
-        }
-      }
-
-      descriptor[field] = rules
-      const validator = new AsyncValidator(descriptor)
+      const validator = new AsyncValidator({
+        [field]: rules
+      })
       //  因为有些input的value是bind上去的，所以应该在下一帧再去校验，否则会出现第一次blur没反应
       nextTick(() => {
         // 对填空题单独设置其value
         let value = unref(form.model)[field]
-        validator.validate({ [field]: value }, { firstFields: true }, (errors) => {
+        console.log(23452345,field, value)
+        validator.validate({
+          [field]: value 
+        }, { 
+          firstFields: true 
+        }, 
+        (errors) => {
           validateState.value = !errors ? 'success' : 'error'
           validateMessage.value = errors ? errors[0].message : ''
           callback && callback(validateMessage.value)
         })
       })
     }
+
     const onFieldBlur = () => {
       validate('blur')
     }
@@ -150,6 +143,7 @@ export default defineComponent({
   },
   render() {
     const { itemClass, validateMessage } = this
+
     return (
       <div
         class={[

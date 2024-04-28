@@ -14,7 +14,7 @@
   </form>
 </template>
 <script setup>
-import { inject, onMounted, provide, computed, onBeforeMount } from 'vue'
+import { inject, provide, computed, onBeforeMount } from 'vue'
 import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer'
 
 const $bus = inject('$bus')

@@ -5,7 +5,6 @@
         <div class="crc-url-wrap" :class="{ 'no-name': !data.name }">
           <div style="margin-bottom: 16px">
             <el-input
-              size="small"
               class="cru-content"
               :model-value="getFullUrl(data)"
               :readonly="true"

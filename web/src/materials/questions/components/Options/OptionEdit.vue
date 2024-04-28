@@ -9,7 +9,7 @@
     >
       <template #item="{ element, index }">
         <div class="draggdiv dragg-handle">
-          <span class="drag-handle qicon qicon-tuodong"></span>
+          <span class="drag-handle"></span>
           <div class="input-box">
             <RichEditor
               :modelValue="element.text"
@@ -17,7 +17,7 @@
             />
           </div>
 
-          <el-icon v-if="isShowOperation" @click="onAddOption(index)"><CirclePlus /></el-icon>
+          <i-ep-circlePlus v-if="isShowOperation" class="opt-btn-icon" @click="onAddOption(index)" />
           <el-tooltip
             v-if="isShowOperation"
             class="icon delete"
@@ -25,7 +25,7 @@
             content="删除"
             placement="top"
           >
-            <el-icon @click="deleteOption(index)" class="delete"><Remove /></el-icon>
+            <i-ep-remove @click="deleteOption(index)" class="opt-btn-icon delete" />
           </el-tooltip>
         </div>
       </template>
@@ -37,7 +37,6 @@
 import draggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { cloneDeep as _cloneDeep } from 'lodash-es'
-import { CirclePlus, Remove } from '@element-plus/icons-vue'
 import RichEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
@@ -59,8 +58,6 @@ export default {
   components: {
     draggable,
     RichEditor,
-    CirclePlus,
-    Remove
   },
   mounted() {
     // 选项hash兜底
@@ -111,41 +108,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '../../common/css/default.scss';
 .option-edit-wrap {
-  .focus {
-    margin-top: 31px;
-    .input-box {
-      padding: 0 !important;
-    }
-  }
   #sortDraggable {
     user-select: none;
     padding-right: 0.08rem;
-    .sortable-drag,
-    .sortable-ghost {
-      border-color: $primary-color;
-      border-radius: 0.04rem;
-    }
-    .sortable-fallback {
-      background-color: $primary-color;
-    }
   }
+  
   .draggdiv {
     display: block;
-    .remainText {
-      font-size: 0.24rem;
-      margin-left: 10px;
-      color: red;
-      width: 100%;
-    }
     cursor: move;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     border: 1px solid transparent;
-    // border: 1px dashed $placeholder-color;
-    // border-left: 3px solid $placeholder-color;
     margin-bottom: 10px;
     padding-right: 7px;
     position: relative;
@@ -160,52 +135,10 @@ export default {
       border: 1px solid transparent;
       border-left: 3px solid transparent;
       margin-right: 10px;
-      // padding: 10px 0;
-      .fn-box {
-        display: none;
-        position: absolute;
-        height: 28px;
-        padding: 0 6px;
-        left: 0;
-        top: -28px;
-        box-shadow: 0 0 3px 3px #eee;
-        background-color: #fff;
-      }
-    }
-    .icon-mobile {
-      color: $light-focus-color;
-      visibility: hidden;
-    }
-    .img-option {
-      //  display: none;
-      display: inline-block;
-    }
-    .el-icon-error {
-      visibility: hidden;
-    }
-    .el-icon {
-      margin-left: 4px;
-      font-size: 17px;
-      color: #888;
-      cursor: pointer;
-      &.delete:hover {
-        color: red;
-      }
     }
 
     &.dragg-handle {
       border: 1px solid transparent;
-      // border-left: 3px solid $placeholder-color;
-      // background: rgba(242, 244, 247, 0.5);
-      .icon-mobile {
-        visibility: visible;
-      }
-      .img-option {
-        display: inline-block;
-      }
-      .el-icon-error {
-        visibility: visible;
-      }
 
       .input-box {
         margin-left: 5px;
@@ -213,82 +146,12 @@ export default {
         border: 1px solid #e3e4e6;
         border-radius: 2px;
       }
-    }
-    &.dragg-handle-focus {
-      .input-box {
-        padding: 0 !important;
-        .fn-box {
-          display: inline-block;
-        }
+
+      .opt-btn-icon {
+        margin-right: 5px;
+        color: #888;
+        cursor: pointer;
       }
-    }
-    .icon-mobile {
-      margin-left: 5px;
-    }
-    .item-text-input {
-      width: 200px;
-      .el-input__inner {
-        border: none;
-        background: none;
-      }
-    }
-    .input-div {
-      margin-left: 12px;
-      color: #6e707c;
-    }
-    .item-type-input {
-      position: relative;
-      vertical-align: top;
-      width: 0.32rem;
-      height: 0.32rem;
-      margin-left: 0.1rem;
-      border: 1px solid $border-color;
-      border-radius: 100%;
-      background-color: #fff;
-    }
-    .checkbox-type-input {
-      border-radius: 0;
-    }
-    .img-option {
-      .star-imgupload-icon {
-        color: #92949d;
-        background: transparent;
-        padding: 0 5px;
-        .biz-upload-input {
-          cursor: pointer;
-          width: 27px;
-        }
-      }
-    }
-    .el-icon-error {
-      margin-left: 10px;
-      margin-right: 5px;
-      cursor: pointer;
-      color: #92949d;
-    }
-  }
-  .dragg-handle-focus {
-    .input-box {
-      padding: 0 !important;
-    }
-  }
-  .radio-select-config {
-    margin-top: 20px;
-    font-size: 12px;
-    .add-option {
-      line-height: 24px;
-      cursor: pointer;
-      .el-icon-circle-plus {
-        padding-right: 4px;
-        font-size: 17px;
-        vertical-align: -2px;
-      }
-    }
-    .option-advanced-config {
-      line-height: 24px;
-      float: right;
-      color: #0f8a82;
-      cursor: pointer;
     }
   }
 }

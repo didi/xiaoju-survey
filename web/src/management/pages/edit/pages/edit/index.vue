@@ -1,5 +1,5 @@
 <template>
-  <div class="skin-content">
+  <div class="question-content">
     <div class="navbar-tab"> 
       <el-radio-group style="margin-bottom: 30px" v-model="activeRouter">
         <el-radio-button v-for="btnItem in btnList" :key="btnItem.router" :label="btnItem.text" :value="btnItem.router" />
@@ -20,11 +20,10 @@ export default {
           text: '问卷设置',
           router: 'QuestionEditIndex',
           key: 'questionEdit',
-          next: true,
         },
         {
           text: '逻辑设置',
-          router: 'LogicEdit',
+          router: 'LogicIndex',
           key: 'logicEdit',
         },
       ],
@@ -40,7 +39,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.skin-content {
+.question-content {
   display: flex;
   align-items: center;
   justify-content: center;

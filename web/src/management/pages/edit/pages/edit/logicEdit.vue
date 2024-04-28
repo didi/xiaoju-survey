@@ -2,7 +2,7 @@
   <relyList></relyList>
 </template>
 <script>
-import relyList from '../../modules/logicModule/relyList.vue';
+import relyList from '../../modules/logicModule/components/relyList.vue';
 export default {
   name: 'logicEditIndex',
   components: {

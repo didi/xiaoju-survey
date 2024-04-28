@@ -20,12 +20,13 @@ import submit from '../components/submit.vue'
 import mainRenderer from '../components/mainRenderer.vue'
 import alert from '../components/alert.vue'
 import confirm from '../components/confirm.vue'
-import useCommandComponent from '../hooks/useCommandComponent'
 import progressBar from '../components/progressBar.vue'
-
-import { submitForm } from '@/render/api/survey'
-import encrypt from '../utils/encrypt'
 import logo from '../components/logo.vue'
+
+import { submitForm } from '../api/survey'
+import encrypt from '../utils/encrypt'
+
+import useCommandComponent from '../hooks/useCommandComponent'
 
 export default {
   name: 'indexPage',

@@ -1,5 +1,6 @@
+import { defineComponent, ref, nextTick, computed, inject, h, unref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+
 import '../common/css/formItem.scss'
-import { defineComponent, ref, nextTick, computed, inject, h, unref } from 'vue'
 import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
 import ErrorTip from '../components/ErrorTip.vue'
 import { assign } from 'lodash-es'
@@ -29,6 +30,12 @@ export default defineComponent({
   setup(props, { emit }) {
     const validateMessage = ref('')
     const validateState = ref('')
+    const { proxy: instance } = getCurrentInstance();
+    const form = inject('Form', {
+      default: {},
+      type: Object
+    })
+    const $bus = inject('$bus')
 
     const itemClass = computed(() => {
       const classList = []
@@ -48,14 +55,20 @@ export default defineComponent({
       }
       return classList.join(' ')
     })
-    const form = inject('Form', {
-      default: {},
-      type: Object
-    })
+
     const show = computed(() => {
       const { type } = props.moduleConfig
       return !/hidden|mobileHidden/.test(type)
     })
+    
+    onMounted(() => {
+      $bus.emit && $bus.emit('form.addField', instance);
+    });
+
+    onBeforeUnmount(() => {
+      $bus.emit && $bus.emit('form.removeField', instance);
+    });
+    
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger)
       if (!rules || rules.length === 0) {

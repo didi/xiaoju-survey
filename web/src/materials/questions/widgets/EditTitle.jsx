@@ -1,8 +1,10 @@
 import { defineComponent, ref, computed, watch } from 'vue'
 import { filterXSS } from '@/common/xss'
+import RichEditor from '@/common/Editor/RichEditor.vue'
+
 import '../common/css/title.scss'
 import tagList from '../common/config/tagList'
-import RichEditor from '@/common/Editor/RichEditor.vue'
+
 
 export default defineComponent({
   name: 'ModuleTitle',

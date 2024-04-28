@@ -1,8 +1,11 @@
-import BaseChoice from '../BaseChoice'
 import { computed, defineComponent } from 'vue'
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 import { includes } from 'lodash-es'
+
+import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
+
+import BaseChoice from '../BaseChoice'
 import metaConfig from './meta.js'
+
 export const meta = metaConfig
 /**
  * 支持配置：

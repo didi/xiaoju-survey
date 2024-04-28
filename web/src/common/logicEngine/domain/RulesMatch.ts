@@ -79,7 +79,6 @@ export class RuleNode {
 
   // 匹配条件规则
   match(fact: Fact) {
-    console.log(this.target + '规则匹配')
     const res =  Array.from(this.conditions.entries()).every(([key, value]) => {
       const res = value.match(fact)
       if (res) {
@@ -191,9 +190,6 @@ export class RuleMatch {
     return Array.from(this.rules.entries()).map(([key, value]) => {
       return value.toJson()
     })
-    // return this.rules.forEach((rule) => {
-    //   return rule.toJson()
-    // })
   }
   batchMatch(facts: Fact) {
     return Array.from(this.rules.entries()).map(([key, value]) => {

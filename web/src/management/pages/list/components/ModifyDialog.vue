@@ -44,7 +44,7 @@ import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
 
 export default {
-  name: 'modifyDialog',
+  name: 'ModifyDialog',
   props: {
     type: String,
     questionInfo: Object,

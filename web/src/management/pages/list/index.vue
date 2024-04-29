@@ -16,16 +16,16 @@
           <span>创建问卷</span>
         </el-button>
       </div>
-      <base-list />
+      <BaseList />
     </div>
   </div>
 </template>
 
 <script>
-import baseList from './components/baseList.vue'
+import BaseList from './components/BaseList.vue'
 import { mapState, mapActions } from 'vuex'
 export default {
-  components: { baseList },
+  components: { BaseList },
   name: 'listPage',
   computed: {
     ...mapState('user', ['userInfo'])

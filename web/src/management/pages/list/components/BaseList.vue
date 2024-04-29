@@ -89,7 +89,7 @@
       <empty :data="!searchVal ? noListDataConfig : noSearchDataConfig" />
     </div>
 
-    <modify-dialog
+    <ModifyDialog
       :type="modifyType"
       :visible="showModify"
       :question-info="questionInfo"
@@ -116,13 +116,13 @@ import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant'
 import { getSurveyList, deleteSurvey } from '@/management/api/survey'
 
-import ModifyDialog from './modify.vue'
-import Tag from './tag.vue'
-import State from './state.vue'
-import ToolBar from './toolBar.vue'
-import TextSearch from './textSearch.vue'
-import TextSelect from './textSelect.vue'
-import TextButton from './textButton.vue'
+import ModifyDialog from './ModifyDialog.vue'
+import TagModule from './TagModule.vue'
+import StateModule from './StateModule.vue'
+import ToolBar from './ToolBar.vue'
+import TextSearch from './TextSearch.vue'
+import TextSelect from './TextSelect.vue'
+import TextButton from './TextButton.vue'
 import {
   fieldConfig,
   noListDataConfig,
@@ -341,12 +341,12 @@ export default {
   components: {
     empty,
     ModifyDialog,
-    Tag,
+    TagModule,
     ToolBar,
     TextSearch,
     TextSelect,
     TextButton,
-    State
+    StateModule
   }
 }
 </script>

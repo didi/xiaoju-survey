@@ -6,10 +6,9 @@
       style="width: 100%"
       header-row-class-name="thead-cell"
       class="table-border"
-      show-overflow-tooltip
       v-loading="mainTableLoading"
       element-loading-text="数据处理中，请稍等..."
-    >
+      >
       <el-table-column
         v-for="item in tableData.listHead"
         :key="item.field"
@@ -19,61 +18,72 @@
       >
         <template #header="scope">
           <div class="table-row-cell">
-            <span v-popover="scope.column.id">
+            <span 
+            @mouseover="onPopoverRefOver(scope, 'head')"
+            :ref="el => popoverRefMap[scope.column.id] = el"
+            >
               {{ scope.column.label.replace(/&nbsp;/g, '') }}
             </span>
-            <el-popover
-              :ref="scope.column.id"
-              placement="top-start"
-              width="200"
-              trigger="hover"
-              :content="scope.column.label.replace(/&nbsp;/g, '')"
-            >
-            </el-popover>
           </div>
         </template>
         <template #default="scope">
-          <span
-            class="table-row-cell"
-            v-popover="scope.$index + scope.column.property"
-          >
-            {{ getContent(scope.row[scope.column.property]) }}
-          </span>
-          <el-popover
-            :ref="scope.$index + scope.column.property"
-            placement="top-start"
-            trigger="hover"
-            width="300"
-            :content="getContent(scope.row[scope.column.property])"
-          >
-          </el-popover>
+          <div>
+            <span
+              class="table-row-cell"
+              @mouseover="onPopoverRefOver(scope, 'content')"
+              :ref="el => popoverRefMap[scope.$index + scope.column.property] = el"
+            >
+              {{ getContent(scope.row[scope.column.property]) }}
+            </span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
+    <el-popover
+      ref="popover"
+      :virtual-ref="popoverVirtualRef"
+      placement="top"
+      trigger="hover"
+      width="300"
+      virtual-triggering
+      :content="popoverContent"
+    >
+    </el-popover>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import { cleanRichText } from '@/common/xss'
 
-export default {
-  name: 'DataTable',
-  data() {
-    return {}
-  },
-  props: {
-    mainTableLoading: Boolean,
-    tableData: Object,
-  },
+let popoverRefMap = ref({})
+let popoverVirtualRef = ref()
+let popoverContent = ref('')
 
-  methods: {
-    cleanRichText,
-    getContent(value) {
-      const content = cleanRichText(value)
+let props = defineProps({
+  mainTableLoading: Boolean,
+  tableData: Object,
+})
 
-      return content === 0 ? 0 : (content || '未知')
+let getContent = (value) => {
+  const content = cleanRichText(value)
+  return content === 0 ? 0 : (content || '未知')
+}
+let setPopoverContent = (content) => {
+  popoverContent.value = content
+}
+let onPopoverRefOver = (scope, type) => {
+    let popoverContent
+    if(type == 'head'){
+      popoverVirtualRef.value = popoverRefMap.value[scope.column.id]; 
+      popoverContent = scope.column.label.replace(/&nbsp;/g, '')
+
     }
-  },
+    if(type == 'content'){
+      popoverVirtualRef.value = popoverRefMap.value[scope.$index + scope.column.property]; 
+      popoverContent = getContent(scope.row[scope.column.property])
+    }
+    setPopoverContent(popoverContent)
 }
 </script>
 

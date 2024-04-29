@@ -1,11 +1,14 @@
 import { computed, defineComponent, onMounted, shallowRef } from 'vue'
-import EditOptions from './EditOptions.jsx'
-import moduleTitle from './Title.jsx'
-import moduleList from '../common/config/moduleList.js'
-import '../common/css/question.scss'
 
 import questionLoader from '@/materials/questions/questionLoader.js'
+
+import moduleList from '../common/config/moduleList.js'
+import '../common/css/question.scss'
 import '../common/css/title.scss'
+
+import EditOptions from './EditOptions.jsx'
+import moduleTitle from './EditTitle.jsx'
+
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
@@ -49,7 +52,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const BlockComponent = shallowRef(null)
-    const showEditCom = computed(() => {
+    const showEditComponent = computed(() => {
       let result = false
       if (props.isSelected) {
         if (!['text', 'textarea'].includes(props.type)) {
@@ -64,6 +67,7 @@ export default defineComponent({
       const { component } = await getBlockComponent(props.type)
       BlockComponent.value = component
     })
+
     const onBlur = () => {
       emit('blur')
     }
@@ -76,6 +80,7 @@ export default defineComponent({
     const onClick = () => {
       emit('select', props.indexNumber)
     }
+    
     return {
       // isSelected,
       props,
@@ -84,7 +89,7 @@ export default defineComponent({
       onBlur,
       onFocus,
       onChange,
-      showEditCom
+      showEditComponent
       // showOthers
     }
   },
@@ -106,7 +111,7 @@ export default defineComponent({
       <div class={['question', isSelected ? 'isSelected' : '']}>
         {this.showTitle && <moduleTitle {...props} onChange={this.onChange} />}
         <div class="question-block">
-          {this.showEditCom ? (
+          {this.showEditComponent ? (
             <EditOptions moduleConfig={props.moduleConfig}>
               <dynamicComponent
                 {...props}

@@ -1,9 +1,11 @@
 import { defineComponent, onMounted, shallowRef } from 'vue'
-import moduleTitle from './TitleModule/index.jsx'
-import moduleList from '../common/config/moduleList.js'
-import '../common/css/question.scss'
 
 import questionLoader from '@/materials/questions/questionLoader.js'
+
+import moduleTitle from './TitleModule/index.jsx'
+
+import moduleList from '../common/config/moduleList.js'
+import '../common/css/question.scss'
 import '../common/css/title.scss'
 
 export const getBlockComponent = async (type) => {

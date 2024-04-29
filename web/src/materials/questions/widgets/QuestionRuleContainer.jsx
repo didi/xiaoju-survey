@@ -1,5 +1,6 @@
+import { defineComponent, ref, nextTick, computed, inject, h, unref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+
 import '../common/css/formItem.scss'
-import { defineComponent, ref, nextTick, computed, inject, h, unref } from 'vue'
 import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
 import ErrorTip from '../components/ErrorTip.vue'
 import { assign } from 'lodash-es'
@@ -29,6 +30,12 @@ export default defineComponent({
   setup(props, { emit }) {
     const validateMessage = ref('')
     const validateState = ref('')
+    const { proxy: instance } = getCurrentInstance();
+    const form = inject('Form', {
+      default: {},
+      type: Object
+    })
+    const $bus = inject('$bus')
 
     const itemClass = computed(() => {
       const classList = []
@@ -48,52 +55,50 @@ export default defineComponent({
       }
       return classList.join(' ')
     })
-    const form = inject('Form', {
-      default: {},
-      type: Object
-    })
+
     const show = computed(() => {
       const { type } = props.moduleConfig
       return !/hidden|mobileHidden/.test(type)
     })
+    
+    onMounted(() => {
+      $bus.emit && $bus.emit('form.addField', instance);
+    });
+
+    onBeforeUnmount(() => {
+      $bus.emit && $bus.emit('form.removeField', instance);
+    });
+    
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger)
+      // 无规则直接执行回调
       if (!rules || rules.length === 0) {
         callback && callback()
         return true
       }
 
-      const { field, options } = props.moduleConfig
+      const { field } = props.moduleConfig
 
-      const descriptor = {}
-      if (rules && rules.length > 0) {
-        rules.forEach((rule) => {
-          // eslint-disable-next-line no-param-reassign
-          delete rule.trigger
-        })
-      }
-      // 有选项的题才需要判断这步，如果没有选项，就不校验，如果有，就要校验
-      if (options && options.length) {
-        const trueOptions = options.filter((i) => !i.hide)
-        if (trueOptions.length === 0) {
-          callback && callback()
-          return true
-        }
-      }
-
-      descriptor[field] = rules
-      const validator = new AsyncValidator(descriptor)
+      const validator = new AsyncValidator({
+        [field]: rules
+      })
       //  因为有些input的value是bind上去的，所以应该在下一帧再去校验，否则会出现第一次blur没反应
       nextTick(() => {
         // 对填空题单独设置其value
         let value = unref(form.model)[field]
-        validator.validate({ [field]: value }, { firstFields: true }, (errors) => {
+        validator.validate({
+          [field]: value 
+        }, { 
+          firstFields: true 
+        }, 
+        (errors) => {
           validateState.value = !errors ? 'success' : 'error'
           validateMessage.value = errors ? errors[0].message : ''
           callback && callback(validateMessage.value)
         })
       })
     }
+
     const onFieldBlur = () => {
       validate('blur')
     }
@@ -137,6 +142,7 @@ export default defineComponent({
   },
   render() {
     const { itemClass, validateMessage } = this
+
     return (
       <div
         class={[

@@ -1,11 +1,13 @@
 import { defineComponent, ref, computed, watch } from 'vue'
 import { filterXSS } from '@/common/xss'
-import '../common/css/title.scss'
-import tagList from '../common/config/tagList'
 import RichEditor from '@/common/Editor/RichEditor.vue'
 
+import '../common/css/title.scss'
+import tagList from '../common/config/tagList'
+
+
 export default defineComponent({
-  name: 'ModuleTitle',
+  name: 'EditTitle',
   components: { RichEditor },
   props: {
     isSelected: {

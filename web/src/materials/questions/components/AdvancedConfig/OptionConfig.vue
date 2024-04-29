@@ -7,13 +7,13 @@
     :width="dialogWidth"
     size="large"
   >
-    <div class="J-option-handwrite">
+    <div class="option-handwrite">
       <div class="option-header">
-        <div class="ohItem flex-1" v-if="showText">选项内容</div>
-        <div class="ohItem w285" v-if="showOthers">选项后增添输入框</div>
+        <div class="option-item flex-1" v-if="showText">选项内容</div>
+        <div class="option-item w285" v-if="showOthers">选项后增添输入框</div>
       </div>
       <div>
-        <draggable :list="curOptions" handle=".drag-handle">
+        <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
           <template #item="{ element, index }">
             <div class="option-item">
               <span class="drag-handle qicon qicon-tuodong"></span>
@@ -37,28 +37,23 @@
               </div>
 
               <div class="operate-area" v-if="showOperateOption">
-                <el-icon v-if="showOperateOption" @click="addOption('选项', false, index)"
-                  ><CirclePlus
-                /></el-icon>
-                <el-icon v-show="curOptions.length" @click="deleteOption(index)"
-                  ><Remove
-                /></el-icon>
+                <i-ep-circlePlus v-if="showOperateOption" class="area-btn-icon" @click="addOption('选项', false, index)" />
+                <i-ep-remove v-show="curOptions.length" class="area-btn-icon" @click="deleteOption(index)" />
               </div>
             </div>
           </template>
         </draggable>
       </div>
       <div class="add-btn-row">
-        <div class="add-option primary-color" v-if="showOperateOption" @click="addOption()">
-          <span>
-            <i class="el-icon-circle-plus-outline primary-color"></i>
-            添加新选项
+        <div class="add-option" v-if="showOperateOption" @click="addOption()">
+          <span class="add-option-item">
+            <i-ep-circlePlus class="icon" /> 添加新选项
           </span>
         </div>
 
         <div
           v-if="showOperateOption && showOthers"
-          class="add-option primary-color"
+          class="add-option"
           @click="addOtherOption"
         >
           <span>
@@ -83,8 +78,6 @@ import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es'
 
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
-import { CirclePlus, Remove } from '@element-plus/icons-vue'
 
 import { cleanRichText } from '@/common/xss'
 import ExtraIcon from '../ExtraIcon.vue'
@@ -151,8 +144,6 @@ export default {
   components: {
     draggable,
     ExtraIcon,
-    CirclePlus,
-    Remove
   },
   methods: {
     addOtherOption() {
@@ -252,22 +243,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '../../common/css/default.scss';
-.ceilingPopper {
-  max-width: 1000px !important ;
-}
 .option-config-wrapper {
-  .J-option-handwrite {
-    .patch-import-btn {
-      position: absolute;
-      right: 45px;
-      top: 54px;
-      width: 35px;
-      display: flex;
-      justify-content: center;
-      color: #4a4c5b;
-      background: #ffffff;
-    }
+  .option-handwrite {
     .option-header {
       position: relative;
       background: #f9fafc;
@@ -281,23 +258,8 @@ export default {
       padding-right: 50px;
       display: flex;
       overflow: hidden;
-      .el-icon-question {
-        cursor: pointer;
-      }
-      .showMore {
-        position: absolute;
-        right: 0;
-        line-height: 36px;
-        transform: rotate(0deg);
-        width: 30px;
-        text-align: center;
-        cursor: pointer;
-        font-size: 12px;
-        &.toggleLeft {
-          transform: rotate(180deg);
-        }
-      }
-      .ohItem {
+
+      .option-item {
         margin-right: 8px;
         &.mutex-head {
           text-align: center;
@@ -346,6 +308,12 @@ export default {
           }
         }
       }
+
+      .area-btn-icon {
+          margin-right: 5px;
+          cursor: pointer;
+          font-size: 16px;
+        }
     }
     .flex-1 {
       flex: 1;
@@ -360,12 +328,7 @@ export default {
         border: 1px solid #dcdfe6;
       }
     }
-    .w50 {
-      width: 50px;
-    }
-    .w100 {
-      width: 100px;
-    }
+
     .w285 {
       width: 285px;
     }
@@ -385,77 +348,33 @@ export default {
         }
       }
     }
-    .sortable-ghost {
-      background-color: rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .sortable-drag {
-      background-color: rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .sortable-chosen {
-      background-color: rgba(0, 0, 0, 0.1) !important;
-    }
     .drag-handle {
       margin-top: 0;
       cursor: move;
     }
-    .el-select-dropdown__item {
-      font-size: 12px;
-      height: 32px;
-      line-height: 32px;
-    }
-    .scoreconf-type-wrapper {
-      margin-bottom: 10px;
-      .scoreconf-type-label {
-        color: #666;
-        font-weight: 500;
-        height: 30px;
-        line-height: 30px;
-      }
-      .scoreconf-type-select {
-        flex: 1;
-        margin-left: 20px;
-        width: auto;
-        .el-radio__label {
-          font-size: 12px;
-        }
-      }
-      .score-input {
-        flex: 1;
-        margin-left: 68px;
-        width: 200px;
-        .el-radio__label {
-          font-size: 12px;
-        }
-      }
-    }
+  
     .add-btn-row {
       color: $primary-color;
+      display: flex;
+      align-items: center;
       .add-option {
-        display: inline-block;
         padding-left: 23px;
         margin-top: 15px;
         margin-bottom: 15px;
         font-size: 12px;
-        color: $primary-color;
         cursor: pointer;
-        .el-icon-circle-plus {
-          padding-right: 6px;
-          font-size: 16px;
-          vertical-align: -2px;
+        .add-option-item {
+          display: flex;
+          align-items: center;
+          .icon {
+            margin-right: 5px;
+          }
         }
       }
       .add-option:first-child {
         padding-left: 0;
       }
-      .primary-color {
-        color: $primary-color;
-      }
     }
   }
 }
-// .el-icon-circle-plus-outline {
-//   color: $primary-color;
-// }
 </style>

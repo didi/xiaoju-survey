@@ -32,8 +32,8 @@ import { get as _get } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import empty from '@/management/components/empty.vue'
-import leftMenu from '@/management/components/leftMenu.vue'
+import empty from '@/management/components/EmptyIndex.vue'
+import leftMenu from '@/management/components/LeftMenu.vue'
 
 import ChannelRow from './components/channelRow.vue'
 

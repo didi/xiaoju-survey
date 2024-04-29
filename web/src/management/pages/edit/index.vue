@@ -18,7 +18,7 @@
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import leftMenu from '@/management/components/leftMenu.vue'
+import leftMenu from '@/management/components/LeftMenu.vue'
 
 import commonTemplate from './components/commonTemplate.vue'
 import navbar from './components/navbar.vue'

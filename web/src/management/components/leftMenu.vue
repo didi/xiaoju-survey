@@ -1,22 +1,22 @@
 <template>
   <div class="nav">
-    <logo></logo>
-    <router-link v-for="(tab, index) in tabList" :key="index" class="tab-btn" :to="tab.to" replace>
+    <LogoIcon />
+    <RouterLink v-for="(tab, index) in tabList" :key="index" class="tab-btn" :to="tab.to" replace>
       <div class="icon">
         <i class="iconfont" :class="tab.icon"></i>
       </div>
       <p>{{ tab.text }}</p>
-    </router-link>
+    </RouterLink>
   </div>
 </template>
 
 <script>
-import logo from './logo.vue'
+import LogoIcon from './LogoIcon.vue'
 
 export default {
-  name: 'leftMenu',
+  name: 'LeftMenu',
   components: {
-    logo
+    LogoIcon
   },
   data() {
     return {

@@ -94,7 +94,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
-    component: () => import('../pages/analysis/index.vue')
+    component: () => import('../pages/analysis/AnalysisPage.vue')
   },
   {
     path: '/survey/:id/publishResult',
@@ -111,7 +111,7 @@ const routes: RouteRecordRaw[] = [
       needLogin: true,
       title: '创建问卷'
     },
-    component: () => import('../pages/create/index.vue')
+    component: () => import('../pages/create/CreatePage.vue')
   },
   {
     path: '/login',

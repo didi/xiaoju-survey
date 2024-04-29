@@ -1,7 +1,9 @@
 import { defineComponent, ref, computed, onMounted } from 'vue'
+
+import store from '@/management/store'
+
 import OptionEdit from '@/materials/questions/components/Options/OptionEdit.vue'
 import OptionEditBar from '@/materials/questions/components/Options/OptionEditBar.vue'
-import store from '@/management/store'
 import questionLoader from '@/materials/questions/questionLoader'
 import UseOptionBase from '@/materials/questions/components/Options/UseOptionBase'
 

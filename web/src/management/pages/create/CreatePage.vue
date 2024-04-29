@@ -1,19 +1,19 @@
 <template>
   <div class="new">
-    <type-list :selectType="selectType" @selectTypeChange="onSelectTypeChange" />
-    <create-form :selectType="selectType" />
+    <TypeList :selectType="selectType" @selectTypeChange="onSelectTypeChange" />
+    <CreateForm :selectType="selectType" />
   </div>
 </template>
 
 <script>
-import typeList from './components/typeList.vue'
-import createForm from './components/createForm.vue'
+import TypeList from './components/TypeList.vue'
+import CreateForm from './components/CreateForm.vue'
 
 export default {
-  name: 'createPage',
+  name: 'CreatePage',
   components: {
-    typeList,
-    createForm
+    TypeList,
+    CreateForm
   },
   data() {
     return {

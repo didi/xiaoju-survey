@@ -1,10 +1,9 @@
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, shallowRef, defineAsyncComponent } from 'vue'
 import '../../common/css/radioStar.scss'
 import BaseRate from '../BaseRate'
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 export default defineComponent({
   name: 'StarModule',
-  components: { BaseRate, QuestionWithRule },
+  components: { BaseRate },
   props: {
     type: {
       type: String,
@@ -84,13 +83,20 @@ export default defineComponent({
         value
       })
     }
+    const selectMoreView = shallowRef(null)
+    if(props.readonly) {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+    } else {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+    }
     return {
       rating,
       currentRangeConfig,
       starClass,
       isShowInput,
       confirmStar,
-      onMoreDataChange
+      onMoreDataChange,
+      selectMoreView
     }
   },
   render() {
@@ -103,7 +109,8 @@ export default defineComponent({
       currentRangeConfig,
       isShowInput,
       onMoreDataChange,
-      rangeConfig
+      rangeConfig,
+      selectMoreView
     } = this
 
     return (
@@ -117,7 +124,7 @@ export default defineComponent({
         />
         {currentRangeConfig && <p class="explain radio-star">{currentRangeConfig.explain}</p>}
         {isShowInput && (
-          <QuestionWithRule
+          <selectMoreView
             showTitle={false}
             key={`${this.field}_${this.rating}`}
             moduleConfig={{
@@ -127,7 +134,7 @@ export default defineComponent({
               value: rangeConfig[rating]?.othersValue || ''
             }}
             onChange={(e) => onMoreDataChange(e)}
-          ></QuestionWithRule>
+          ></selectMoreView>
         )}
       </div>
     )

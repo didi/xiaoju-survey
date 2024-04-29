@@ -12,7 +12,7 @@
 <script>
 import { get as _get } from 'lodash-es'
 export default {
-  name: 'mainTitle',
+  name: 'MainTitle',
   computed: {
     bannerConf() {
       return _get(this.$store, 'state.bannerConf', {})

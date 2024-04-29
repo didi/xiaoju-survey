@@ -14,7 +14,7 @@
       </div>
 
       <template v-if="item.type === 'Customed'">
-        <FormItem        v-for="(content, contentIndex) in item.content"
+        <FormItem v-for="(content, contentIndex) in item.content"
           :key="`${item.key}${contentIndex}`"
           :form-config="content"
         >
@@ -90,7 +90,6 @@ export default {
       immediate: true,
       async handler (newVal) {        
         this.init = true
-        console.log(55)
         if (!newVal || !newVal.length) {
           return
         }
@@ -105,7 +104,7 @@ export default {
     // schema变化联动
     moduleConfig: {
       deep: true,
-      async handler (newVal, oldVal) {
+      async handler () {
         // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
         if (this.init) {
           return       

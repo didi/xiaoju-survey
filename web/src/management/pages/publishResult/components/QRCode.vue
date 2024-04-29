@@ -8,10 +8,12 @@
         trigger="hover"
       >
         <img :src="qRCodeImg" width="120" height="120" />
+        <template #reference>
+          <el-button>
+            <i style="font-size: 24px" class="iconfont icon-erweima"></i>
+          </el-button>
+        </template>
       </el-popover>
-      <el-button v-popover:popover>
-        <i style="font-size: 24px" class="iconfont icon-erweima"></i>
-      </el-button>
     </div>
   </div>
 </template>

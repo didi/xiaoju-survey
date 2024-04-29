@@ -1,6 +1,5 @@
 import BaseChoice from '../BaseChoice'
-import { defineComponent } from 'vue'
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
+import { defineComponent, shallowRef, defineAsyncComponent } from 'vue'
 
 /**
  * 支持配置：
@@ -8,7 +7,7 @@ import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContaine
  */
 export default defineComponent({
   name: 'RadioModule',
-  components: { BaseChoice, QuestionWithRule },
+  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -34,22 +33,6 @@ export default defineComponent({
       type: Boolean,
       default: false
     }
-    // moduleConfig: {
-    //   type: Object,
-    //   default: () => {
-    //     return {
-    //       field: 'quiestion01',
-    //       component: 'RadioModule',
-    //       options:  [{
-    //           text: '选项2',
-    //           hash: 'item1'
-    //         }, {
-    //           text: '选项2',
-    //           hash: 'item2'
-    //         }]
-    //     }
-    //   }
-    // }
   },
   emits: ['focus', 'change', 'select', 'blur'],
   setup(props, { emit }) {
@@ -67,14 +50,22 @@ export default defineComponent({
         value
       })
     }
+    // 填写更多传入一个动态组件
+    const selectMoreView = shallowRef(null)
+    if(props.readonly) {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+    } else {
+      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+    }
     return {
       props,
       onChange,
-      handleSelectMoreChange
+      handleSelectMoreChange,
+      selectMoreView,
     }
   },
   render() {
-    const { props } = this
+    const { props, selectMoreView } = this
 
     return (
       <div>
@@ -92,12 +83,12 @@ export default defineComponent({
           {{
             selectMore: (scoped) => {
               return (
-                <QuestionWithRule
+                <selectMoreView
                   readonly={this.readonly}
                   showTitle={false}
                   moduleConfig={scoped.selectMoreConfig}
                   onChange={(e) => this.handleSelectMoreChange(e)}
-                ></QuestionWithRule>
+                ></selectMoreView>
               )
             }
           }}

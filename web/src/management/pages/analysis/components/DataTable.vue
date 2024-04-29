@@ -3,7 +3,6 @@
     <el-table
       ref="multipleTable"
       :data="tableData.listBody"
-      tooltip-effect="dark"
       style="width: 100%"
       header-row-class-name="thead-cell"
       class="table-border"
@@ -33,7 +32,7 @@
             </el-popover>
           </div>
         </template>
-        <template  #default="scope">
+        <template #default="scope">
           <span
             class="table-row-cell"
             v-popover="scope.$index + scope.column.property"

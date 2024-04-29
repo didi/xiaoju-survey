@@ -94,8 +94,8 @@ export function generateValidArr(
     if (!isInput) {
       validArr.push({
         required: true,
-        message: '此项未填，请填写完整',
-        trigger: 'change|blur'
+        message: '此项未填，请填写完整'
+        // trigger: 'change|blur'
       })
     } else {
       validArr.push({
@@ -110,8 +110,8 @@ export function generateValidArr(
             errors = [tip]
           }
           callback(errors)
-        },
-        trigger: 'change|blur'
+        }
+        // trigger: 'change|blur'
       })
     }
   }
@@ -130,8 +130,8 @@ export function generateValidArr(
           errors = [tip]
         }
         callback(errors)
-      },
-      trigger: 'change|blur'
+      }
+      // trigger: 'change|blur'
     })
   }
 
@@ -144,8 +144,8 @@ export function generateValidArr(
           errors = [tip]
         }
         callback(errors)
-      },
-      trigger: 'change|blur'
+      }
+      // trigger: 'change|blur'
     })
   }
 
@@ -158,8 +158,8 @@ export function generateValidArr(
           errors = [tip]
         }
         callback(errors)
-      },
-      trigger: 'change|blur'
+      }
+      // trigger: 'change|blur'
     })
   }
 
@@ -172,8 +172,8 @@ export function generateValidArr(
           errors = [tip]
         }
         callback(errors)
-      },
-      trigger: 'change|blur'
+      }
+      // trigger: 'change|blur'
     })
   }
 
@@ -186,8 +186,8 @@ export function generateValidArr(
           errors = [tip]
         }
         callback(errors)
-      },
-      trigger: 'change|blur'
+      }
+      // trigger: 'change|blur'
     })
   }
 

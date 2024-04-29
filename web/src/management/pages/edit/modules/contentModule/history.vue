@@ -1,5 +1,5 @@
 <template>
-  <el-popover placement="top" trigger="click" @show="onShow">
+  <el-popover placement="top" trigger="click" @show="onShow" :width="320">
     <el-tabs v-model="currentTab" class="custom-tab" v-if="visible">
       <el-tab-pane label="修改历史" name="daily" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in dailyList" :key="index">

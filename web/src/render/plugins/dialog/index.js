@@ -1,5 +1,5 @@
-import confirm from '../../components/confirm.vue'
-import alert from '../../components/alert.vue'
+import ConfirmDialog from '../../components/ConfirmDialog.vue'
+import AlertDialog from '../../components/AlertDialog.vue'
 
 import { isFunction as _isFunction } from 'lodash-es'
 
@@ -7,7 +7,7 @@ export default {
   install(Vue) {
     Vue.prototype.$dialog = {
       confirm(options) {
-        const MyComponent = Vue.extend(confirm)
+        const MyComponent = Vue.extend(ConfirmDialog)
         const instance = new MyComponent({
           propsData: options
         })
@@ -32,7 +32,7 @@ export default {
         document.body.append(instance.$el)
       },
       alert(options) {
-        const MyComponent = Vue.extend(alert)
+        const MyComponent = Vue.extend(AlertDialog)
         const instance = new MyComponent({
           propsData: options
         })

@@ -5,15 +5,15 @@
         <img src="/imgs/icons/success.webp" />
         <div class="msg" v-html="successMsg"></div>
       </div>
-      <logo></logo>
+      <LogoIcon />
     </div>
   </div>
 </template>
 <script>
-import logo from '../components/logo.vue'
+import LogoIcon from '../components/LogoIcon.vue'
 export default {
   name: 'resultPage',
-  components: { logo },
+  components: { LogoIcon },
   computed: {
     submitConf() {
       return this.$store?.state?.submitConf || {}

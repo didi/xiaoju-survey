@@ -1,138 +1,120 @@
-<script lang="jsx">
-import OptionConfig from '@/materials/questions/components/AdvancedConfig/OptionConfig.vue'
-import RateConfig from '../AdvancedConfig/RateConfig.vue'
-import { defineComponent, ref, computed, inject } from 'vue'
-import ExtraIcon from '@/materials/questions/components/ExtraIcon.vue'
-
-export default defineComponent({
-  name: 'optionEditBar',
-  components: { OptionConfig, ExtraIcon, RateConfig },
-  props: {
-    optionList: {
-      type: Array,
-      default: () => []
-    },
-    showOthers: {
-      type: Boolean,
-      default: true
-    },
-    hasAdvancedConfig: {
-      type: Boolean,
-      default: true
-    },
-    hasAdvancedRateConfig: {
-      type: Boolean,
-      default: false
-    }
-  },
-  setup(props, { emit }) {
-    const moduleConfig = inject('moduleConfig')
-    const optionConfigVisible = ref(false)
-
-    const addOther = () => {
-      emit('addOther')
-    }
-    const openOptionConfig = () => {
-      console.log('open')
-      optionConfigVisible.value = true
-    }
-    const handleOptionChange = (value) => {
-      emit('optionChange', value)
-    }
-    const handleChange = (data) => {
-      emit('change', data)
-    }
-    const rateConfigVisible = ref(false)
-    const openRateConfig = () => {
-      rateConfigVisible.value = true
-    }
-
-    const isNps = computed(() => {
-      return moduleConfig.value.type === 'radio-nps'
-    })
-
-    const min = computed(() => {
-      const { min, starMin } = moduleConfig.value
-      return isNps.value ? min : starMin
-    })
-
-    const max = computed(() => {
-      const { max, starMax } = moduleConfig.value
-      return isNps.value ? max : starMax
-    })
-
-    const explain = computed(() => {
-      const { type } = moduleConfig.value
-      if (type == 'radio-start') return true
-      if (isNps.value) return false
-      return true
-    })
-
-    return {
-      addOther,
-      optionConfigVisible,
-      openOptionConfig,
-      openRateConfig,
-      handleOptionChange,
-      handleChange,
-      moduleConfig,
-      rateConfigVisible,
-      min,
-      max,
-      isNps,
-      explain
-    }
-  },
-  render() {
-    const { showOthers, hasAdvancedConfig, hasAdvancedRateConfig, min, max, explain, isNps } = this
-    return (
-      <div class="option-edit-bar-wrap">
-        <div class="option-edit-bar">
-          {showOthers && (
-            <div class="add-option primary-color" onClick={this.addOther}>
-              <extra-icon type="add-square"></extra-icon>
-              其他____
-            </div>
-          )}
-          {hasAdvancedConfig && (
-            <span class="option-advanced-config primary-color" onClick={this.openOptionConfig}>
-              {'高级设置>'}
-            </span>
-          )}
-          {hasAdvancedRateConfig && (
-            <span class="option-advanced-config primary-color" onClick={this.openRateConfig}>
-              {'高级评分设置>'}
-            </span>
-          )}
-        </div>
-        <OptionConfig
-          options={this.optionList}
-          show-option-dialog={this.optionConfigVisible}
-          show-others={this.showOthers}
-          show-limit={false}
-          v-model={this.optionConfigVisible}
-          onAddOther={this.addOther}
-          onOptionChange={this.handleOptionChange}
-          onChange={this.handleChange}
-        />
-        <RateConfig
-          min={min}
-          max={max}
-          rangeConfig={this.moduleConfig.rangeConfig}
-          v-model={this.rateConfigVisible}
-          onVisibleChange={(val) => {
-            this.rateConfigVisible = val
-          }}
-          explain={explain}
-          dialogWidth="800px"
-          onConfirm={this.handleChange}
-          class={[isNps ? 'nps-rate-config' : '']}
-        />
+<template>
+  <!-- const { showOthers, hasAdvancedConfig, hasAdvancedRateConfig, min, max, explain, isNps } = this -->
+  <div class="option-edit-bar-wrap">
+    <div class="option-edit-bar">
+      <div v-if="showOthers" class="add-option primary-color" @click="addOther">
+        <extra-icon type="add-square"></extra-icon>
+        其他____
       </div>
-    )
+
+      <span v-if="hasAdvancedConfig" class="option-advanced-config primary-color" @click="openOptionConfig">
+        高级设置>
+      </span>
+
+      <span v-if="hasAdvancedRateConfig" class="option-advanced-config primary-color" @click="openRateConfig">
+        高级评分设置>
+      </span>
+    </div>
+
+    <OptionConfig
+      :options="optionList"
+      :showOptionDialog="optionConfigVisible"
+      :showOthers="showOthers"
+      :showLimit="false"
+      v-model="optionConfigVisible"
+      @addOther="addOther"
+      @optionChange="handleOptionChange"
+      @change="handleChange"
+    />
+
+    <RateConfig
+      :class="isNps ? 'nps-rate-config' : ''"
+      dialogWidth="800px"
+      :min="min"
+      :max="max"
+      :rangeConfig="moduleConfig.rangeConfig"
+      v-model="rateConfigVisible"
+      :explain="explain"
+      @confirm="handleChange"
+      @visibleChange="onVisibleChange"
+    />
+  </div>
+</template>
+
+
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue'
+import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
+import RateConfig from '../AdvancedConfig/RateConfig.vue'
+import ExtraIcon from '../ExtraIcon.vue'
+
+const props = defineProps({
+  optionList: {
+    type: Array,
+    default: () => []
+  },
+  showOthers: {
+    type: Boolean,
+    default: true
+  },
+  hasAdvancedConfig: {
+    type: Boolean,
+    default: true
+  },
+  hasAdvancedRateConfig: {
+    type: Boolean,
+    default: false
   }
 })
+const emit = defineEmits(['addOther', 'optionChange', 'change',])
+
+const moduleConfig = inject('moduleConfig') as any
+const optionConfigVisible = ref(false)
+const openOptionConfig = () => {
+  console.log('open')
+  optionConfigVisible.value = true
+}
+
+const addOther = () => {
+  emit('addOther')
+}
+const handleOptionChange = (value: any[]) => {
+  emit('optionChange', value)
+}
+const handleChange = (data: any) => {
+  emit('change', data)
+}
+
+const rateConfigVisible = ref(false)
+const openRateConfig = () => {
+  rateConfigVisible.value = true
+}
+const onVisibleChange=(val: boolean) => {
+  rateConfigVisible.value = val
+}
+
+const isNps = computed(() => {
+  return moduleConfig.value.type === 'radio-nps'
+})
+
+const min = computed(() => {
+  const { min, starMin } = moduleConfig.value
+  return isNps.value ? min : starMin
+})
+
+const max = computed(() => {
+  const { max, starMax } = moduleConfig.value
+  return isNps.value ? max : starMax
+})
+
+const explain = computed(() => {
+  const { type } = moduleConfig.value
+  if (type == 'radio-start') return true
+  if (isNps.value) return false
+  return true
+})
 </script>
+
 <style lang="scss" scoped>
 .option-edit-bar-wrap {
   margin-top: 20px;
@@ -170,26 +152,5 @@ export default defineComponent({
       height: 32px;
     }
   }
-}
-
-.pop-title {
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: #4a4c5b;
-  letter-spacing: 0;
-  text-align: left;
-}
-
-.pop-tip {
-  font-family: PingFangSC-Regular;
-  font-size: 12px;
-  color: #999999;
-  letter-spacing: 0.65px;
-  text-align: left;
-}
-
-.pop-input {
-  margin-top: 6px;
-  margin-bottom: 16px;
 }
 </style>

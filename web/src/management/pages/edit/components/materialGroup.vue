@@ -7,7 +7,7 @@
     itemKey="field"
   >
     <template #item="{ element, index }">
-      <questionWrapper
+      <QuestionWrapper
         v-bind="$attrs"
         :ref="`questionWrapper-${element.field}`"
         :moduleConfig="element"
@@ -26,7 +26,7 @@
           :readonly="true"
           @select="handleSelect"
         ></QuestionContainerB>
-      </questionWrapper>
+      </QuestionWrapper>
     </template>
   </draggable>
 </template>
@@ -34,14 +34,14 @@
 <script>
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
 import QuestionContainerB from '@/materials/questions/widgets/QuestionContainerB.jsx'
-import questionWrapper from './questionWrapper.vue'
+import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
 export default defineComponent({
   components: {
     draggable,
-    questionWrapper,
+    QuestionWrapper,
     QuestionContainerB
   },
   props: {

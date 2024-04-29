@@ -24,9 +24,6 @@ export default {
       type: Object,
       required: true
     },
-    questionDataList: {
-      type: Array
-    }
   },
   data() {
     return {

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/materialGroup.vue'
+import materialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import banner from '../components/banner.vue'
 import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
 import submit from '@/management/pages/edit/components/submit.vue'

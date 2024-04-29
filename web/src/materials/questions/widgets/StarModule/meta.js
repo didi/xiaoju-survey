@@ -11,7 +11,7 @@ const meta = {
       name: 'starConfig',
       title: '评分显示样式',
       type: 'RadioGroup',
-      key: 'starStyle',
+      key: 'starStyle2',
       options: [
         {
           label: [1, 2, 3, 4, 5]

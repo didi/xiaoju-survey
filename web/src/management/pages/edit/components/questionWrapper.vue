@@ -1,160 +1,129 @@
-<script lang="jsx">
-import { defineComponent, reactive, toRefs, computed } from 'vue'
+<template>
+  <div :class="itemClass" @mouseenter="onMouseenter" @mouseleave="onMouseleave" @click="clickFormItem">
+    <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
+
+    <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
+      <div class="item el-icon-rank" @click.stop.prevent="onMove">
+        <i-ep-rank />
+      </div>
+      <div v-if="showUp" class="item" @click.stop.prevent="onMoveUp">
+        <i-ep-top />
+      </div>
+      <div v-if="showDown" class="item" @click.stop.prevent="onMoveDown">
+        <i-ep-bottom />
+      </div>
+      <div v-if="showCopy" class="item" @click.stop.prevent="onCopy">
+        <i-ep-copyDocument />
+      </div>
+      <div class="item" @click.stop.prevent="onDelete">
+        <i-ep-close />
+      </div>
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 
-export default defineComponent({
-  name: 'QuestionWrapper',
-  props: {
-    qIndex: {
-      type: Number,
-      default: 0
-    },
-    indexNumber: {
-      type: Number,
-      default: 1
-    },
-    isSelected: {
-      type: Boolean,
-      default: false
-    },
-    isLast: {
-      type: Boolean,
-      default: false
-    },
-    moduleConfig: {
-      type: Object,
-      default: () => {
-        return {}
-      }
-    }
+const props = defineProps({
+  qIndex: {
+    type: Number,
+    default: 0
   },
-  setup(props, { emit }) {
-    const state = reactive({
-      isHover: false
-    })
-    const itemClass = computed(() => {
-      return {
-        'question-wrapper': true,
-        'mouse-hover': state.isHover,
-        isSelected: props.isSelected,
-        spliter: props.moduleConfig.showSpliter
-      }
-    })
-    const showHover = computed(() => {
-      return state.isHover
-    })
-    const showUp = computed(() => {
-      return props.qIndex !== 0
-    })
-    const showDown = computed(() => {
-      return !props.isLast
-    })
-    const showCopy = computed(() => {
-      const field = props.moduleConfig.field
-      const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement']
-      return hiddenCopFields.indexOf(field) <= -1
-    })
-    const toggleHoverClass = (status) => {
-      state.isHover = status
-    }
-    const clickFormItem = () => {
-      const index = props.qIndex
-      emit('select', index)
-    }
-    const onCopy = () => {
-      const index = props.qIndex
-      emit('changeSeq', { type: 'copy', index })
-      state.isHover = false
-    }
-    const onMoveUp = () => {
-      const index = props.qIndex
-      emit('changeSeq', { type: 'move', index, range: -1 })
-      state.isHover = false
-    }
-
-    const onMoveDown = () => {
-      const index = props.qIndex
-      emit('changeSeq', { type: 'move', index, range: 1 })
-      state.isHover = false
-    }
-    const onDelete = async () => {
-      try {
-        await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        
-        const index = props.qIndex
-        emit('changeSeq', { type: 'delete', index })
-        state.isHover = false
-      } catch (error) {
-        console.log('取消删除')
-      }
-    }
-
-    const onMove = () => {}
-    return {
-      ...toRefs(state),
-      itemClass,
-      showHover,
-      showUp,
-      showDown,
-      showCopy,
-      onCopy,
-      onMove,
-      onMoveUp,
-      onMoveDown,
-      onDelete,
-      toggleHoverClass,
-      clickFormItem
-    }
+  indexNumber: {
+    type: Number,
+    default: 1
   },
-  render() {
-    const { showHover, itemClass, showUp, showDown, showCopy } = this
-    return (
-      <div
-        class={itemClass}
-        onMouseenter={() => {
-          this.isHover = true
-        }}
-        onMouseleave={() => {
-          this.isHover = false
-        }}
-        onClick={this.clickFormItem}
-      >
-        {this.moduleConfig.type !== 'section' && <div>{this.$slots.default()}</div>}
-        {
-          <div class={[showHover ? 'visibily' : 'hidden', 'hoverItem']}>
-            <div class="item" onClickPrevent={this.onMove}>
-              <i-ep-rank />
-            </div>
-            {showUp && (
-              <div class="item" onClick={this.onMoveUp}>
-                <i-ep-top />
-              </div>
-            )}
-            {showDown && (
-              <div class="item" onClick={this.onMoveDown}>
-                <i-ep-bottom />
-              </div>
-            )}
-            {showCopy && (
-              <div class="item" onClick={this.onCopy}>
-                <i-ep-copyDocument />
-              </div>
-            )}
-            <div class="item" onClick={this.onDelete}>
-              <i-ep-close />
-            </div>
-          </div>
-        }
-      </div>
-    )
+  isSelected: {
+    type: Boolean,
+    default: false
+  },
+  isLast: {
+    type: Boolean,
+    default: false
+  },
+  moduleConfig: {
+    type: Object,
+    default: () => {
+      return {}
+    }
   }
 })
+const emit = defineEmits(['changeSeq', 'select'])
+
+const isHover = ref(false)
+
+const itemClass = computed(() => {
+  return {
+    'question-wrapper': true,
+    'mouse-hover': isHover.value,
+    isSelected: props.isSelected,
+    spliter: props.moduleConfig.showSpliter
+  }
+})
+const showHover = computed(() => {
+  return isHover.value
+})
+const showUp = computed(() => {
+  return props.qIndex !== 0
+})
+const showDown = computed(() => {
+  return !props.isLast
+})
+const showCopy = computed(() => {
+  const field = props.moduleConfig.field
+  const hiddenCopFields = ['mob', 'mobileHidden', 'userAgreement']
+  return hiddenCopFields.indexOf(field) <= -1
+})
+
+const clickFormItem = () => {
+  const index = props.qIndex
+  emit('select', index)
+}
+const onCopy = () => {
+  const index = props.qIndex
+  emit('changeSeq', { type: 'copy', index })
+  isHover.value = false
+
+  return false
+}
+const onMoveUp = () => {
+  const index = props.qIndex
+  emit('changeSeq', { type: 'move', index, range: -1 })
+  isHover.value = false
+}
+
+const onMouseenter=() => {
+  isHover.value = true
+}
+const onMouseleave=() => {
+  isHover.value = false
+}
+const onMoveDown = () => {
+  const index = props.qIndex
+  emit('changeSeq', { type: 'move', index, range: 1 })
+  isHover.value = false
+}
+const onDelete = async () => {
+  try {
+    await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    
+    const index = props.qIndex
+    emit('changeSeq', { type: 'delete', index })
+    isHover.value = false
+  } catch (error) {
+    console.log('取消删除')
+  }
+}
+
+const onMove = () => {}
 </script>
+
 <style lang="scss" scoped>
 .question-wrapper {
   position: relative;
@@ -162,36 +131,6 @@ export default defineComponent({
   border: 1px solid transparent;
   &.spliter {
     border-bottom: 0.12rem solid $spliter-color;
-  }
-  // &:last-child{
-  //   border: none;
-  // }
-  .editor {
-    display: flex;
-    font-size: 0.32rem;
-    margin-bottom: 0.4rem;
-    padding: 0 0.4rem;
-    .icon-required {
-      color: $error-color;
-      position: absolute;
-      left: 0.16rem;
-      font-size: 0.46rem;
-    }
-    .index {
-      flex-shrink: 0;
-    }
-  }
-  .component-wrapper {
-    padding: 0 0.4rem;
-    .editor {
-      padding-left: 0.4rem;
-    }
-  }
-
-  &.no-padding {
-    .component-wrapper {
-      padding: 0;
-    }
   }
 
   &.mouse-hover {
@@ -202,38 +141,6 @@ export default defineComponent({
     box-shadow: 0 0 5px #e3e4e8;
   }
 
-  .clear {
-    clear: both;
-  }
-
-  &.question-type-section {
-    .module-title {
-      padding-bottom: 0;
-    }
-  }
-  &.horizon {
-    display: flex;
-    .module-title .m-title {
-      width: 1.2rem;
-      margin-right: 8px;
-      text-align: justify;
-      position: relative;
-      &::before {
-        content: ':';
-        display: block;
-        position: absolute;
-        right: -5px;
-      }
-      &::after {
-        content: '';
-        display: inline-block;
-        width: 100%;
-      }
-    }
-    .component-wrapper {
-      flex: 1;
-    }
-  }
   .hoverItem {
     position: absolute;
     top: 0;
@@ -265,43 +172,6 @@ export default defineComponent({
         color: #fff;
       }
     }
-    .move {
-      cursor: move;
-      font-size: 14px;
-    }
-    .copy {
-      font-size: 14px;
-    }
-  }
-  .titleGray {
-    color: #ddd;
-  }
-  .relation-show,
-  .jumpto-show,
-  .listenmerge-show {
-    margin-top: 0.4rem;
-    font-size: 12px;
-    color: $placeholder-color;
-    padding: 0 0.4rem;
-  }
-  .relyList {
-    white-space: pre-wrap;
-  }
-  .font-bold {
-    font-weight: 500;
-  }
-  .option-origin-text {
-    color: #ccc;
-    margin-left: 17px;
-  }
-  .sort-tip {
-    font-size: 0.26rem;
-    line-height: 0.26rem;
-    opacity: 0.5;
-    margin-top: -0.24rem;
-    margin-bottom: 0.4rem;
-    padding-left: 0.4rem;
-    color: #92949d;
   }
 }
 </style>

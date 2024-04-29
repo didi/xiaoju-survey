@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/materialGroup.vue'
+import materialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
 import submit from '@/management/pages/edit/components/submit.vue'
 import { mapState, mapGetters } from 'vuex'
@@ -87,9 +87,6 @@ export default {
       const { currentEditOne } = newVal
       if (typeof currentEditOne === 'number') {
         setTimeout(() => {
-          // if (this.isAnimating) {
-          //   return;
-          // }
           const field = this.questionDataList?.[currentEditOne]?.field
           if (field) {
             const questionModule = this.$refs.materialGroup.getQuestionRefByField(field)
@@ -97,10 +94,6 @@ export default {
               questionModule.$el.scrollIntoView({
                 behavior: 'smooth'
               })
-              // this.isAnimating = true;
-              // const maxScrollTop = this.$refs.box.clientHeight - this.$refs.operationWrapper.clientHeight
-              // const targetVal = Math.min(questionModule.$el.offsetTop - this.$refs.operationWrapper.clientHeight / 2, maxScrollTop)
-              // this.animate(this.$refs.operationWrapper, 'scrollTop', targetVal)
             }
           }
         }, 0)

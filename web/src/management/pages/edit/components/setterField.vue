@@ -14,7 +14,7 @@
       </div>
 
       <template v-if="item.type === 'Customed'">
-        <FormItem        v-for="(content, contentIndex) in item.content"
+        <FormItem v-for="(content, contentIndex) in item.content"
           :key="`${item.key}${contentIndex}`"
           :form-config="content"
         >

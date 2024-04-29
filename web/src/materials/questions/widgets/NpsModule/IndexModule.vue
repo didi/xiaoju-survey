@@ -27,6 +27,7 @@
 import { computed } from 'vue'
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 import BaseRate from '../BaseRate'
+
 const props = defineProps({
   field: {
     type: [String, Number],

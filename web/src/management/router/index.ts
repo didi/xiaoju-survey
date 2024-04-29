@@ -21,6 +21,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
+    name: 'QuestionEdit',
     component: () => import('../pages/edit/index.vue'),
     children: [
       {
@@ -28,11 +29,12 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
+        name: 'QuestionEditPage',
         component: () =>
               import('../pages/edit/pages/edit/index.vue'),
         children: [
           {
-            path: 'question',
+            path: '',
             name: 'QuestionEditIndex',
             meta: {
               needLogin: true,

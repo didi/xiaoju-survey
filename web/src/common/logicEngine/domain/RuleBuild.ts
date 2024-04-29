@@ -10,8 +10,16 @@ export class ConditionNode {
   public field: string = '';
   public operator: BasicOperator = 'in'; 
   public value: FieldTypes = ''
-  constructor() {
+  constructor(field: string = '', operator: BasicOperator = 'in', value: FieldTypes = '') {
+    this.field = field;
+    this.operator = operator;
+    this.value = value;
     this.id = generateID('c')
+  }
+  // @ts-ignore
+  set(key, value) {
+    // @ts-ignore
+    this[key] = value
   }
   setField(field: string) {
     this.field = field;
@@ -29,26 +37,39 @@ export class RuleNode {
   conditions: ConditionNode[] = []
   scope: string = 'question'
   target: string = ''
-  constructor() {
+  constructor(scope:string = 'question', target: string = '') {
     this.id = generateID('r')
+    this.scope = scope
+    this.target = target
+  }
+  // @ts-ignore
+  set(key, value) {
+    // @ts-ignore
+    this[key] = value
   }
   addCondition(condition: ConditionNode) {
     this.conditions.push(condition);
+  }
+  removeCondition(index: number) {
+    this.conditions.splice(index, 1)
   }
   findCondition(conditionId: string) {
     return this.conditions.find(condition => condition.id === conditionId);
   }
 }
 
-export class RulesBuild {
+export class RuleBuild {
   rules: RuleNode[] = [];
-  constructor(ruleConf: any) {
+  constructor() {
     this.rules = [];
   }
 
   // 添加条件规则到规则引擎中
   addRule(rule: RuleNode) {
     this.rules.push(rule);
+  }
+  removeRule(ruleId: string) {
+    this.rules = this.rules.filter(rule => rule.id !== ruleId);
   }
   findRule(ruleId: string) {
     return this.rules.find(rule => rule.id === ruleId);
@@ -67,5 +88,18 @@ export class RulesBuild {
         })
       }
     })
+  }
+  fromJson(ruleConf: any) {
+    ruleConf.forEach((rule: any) => {
+      const { scope, target } = rule
+      const ruleNode = new RuleNode(scope, target);
+      rule.conditions.forEach((condition: any) => {
+        const { field, operator, value } = condition
+        const conditionNode = new ConditionNode(field, operator, value);
+        ruleNode.addCondition(conditionNode)
+      })
+      this.addRule(ruleNode)
+    })
+    return this
   }
 }

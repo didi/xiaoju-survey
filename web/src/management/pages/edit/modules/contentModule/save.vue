@@ -88,6 +88,16 @@ export default {
         }, 2000)
       }
     },
+    updateLogicConf() {
+      if(this.$route.name === 'LogicIndex') {
+        debugger
+      }
+      if(this.$store.state.logic.showLogicEngine) {
+        const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
+        // 更新逻辑配置
+        this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+      }
+    },
     async saveData() {
       const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
@@ -102,6 +112,7 @@ export default {
         return
       }
       this.isShowAutoSave = false
+      this.updateLogicConf()
       try {
         this.isSaving = true
         const res = await this.saveData()

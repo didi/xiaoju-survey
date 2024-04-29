@@ -189,7 +189,7 @@ export default {
 }
 
 .operation-wrapper {
-  margin-top: 50px;
+  margin-top: 60px;
   margin-bottom: 45px;
   // min-height: 812px;
   overflow-x: hidden;

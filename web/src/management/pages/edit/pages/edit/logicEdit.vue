@@ -1,14 +1,38 @@
 <template>
-  <relyList></relyList>
+  <div class="logic-wrapper">
+    <RuleListView ></RuleListView>
+  </div>
 </template>
-<script>
-import relyList from '../../modules/logicModule/components/relyList.vue';
-export default {
-  name: 'logicEditIndex',
-  components: {
-    relyList,
-  },
-};
+<script setup lang="ts">
+import { computed, provide, unref } from 'vue'
+import RuleListView from '../../modules/logicModule/components/RuleListView.vue';
+import { filterQuestionPreviewData } from '@/management/utils/index'
+import { useStore } from 'vuex';
+import { cloneDeep } from 'lodash-es'
+const store = useStore()
+// onMounted(() => {
+//   store.dispatch('logic/initShowLogic', store.state.edit.schema.logicConf.showLogicConf)
+// })
+//  store.state.edit.schema.logicConf.showLogicConf)
+
+
+const questionDataList = computed(() => {
+  return store.state.edit.schema.questionDataList
+})
+const renderData = computed(() => {
+  return filterQuestionPreviewData(cloneDeep(questionDataList.value))
+})
+
+provide('renderData', renderData)
+
 </script>
 <style lang="scss" scoped>
+.logic-wrapper{
+  height: calc( 100% - 120px );
+  width: 100%;
+  margin: 12px;
+  background: #fff;
+  text-align: center;
+  overflow: auto;
+}
 </style>

@@ -17,7 +17,7 @@ export default {
       activeRouter: this.$route.name,
       btnList: [
         {
-          text: '问卷设置',
+          text: '内容设置',
           router: 'QuestionEditIndex',
           key: 'questionEdit',
         },

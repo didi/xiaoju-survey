@@ -54,7 +54,7 @@ export default {
           const res = await getPublishedSurveyInfo({ surveyPath })
           if (res.code === 200) {
             const data = res.data
-            const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf } = data.code
+            const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } = data.code
             document.title = data.title
             const questionData = {
               bannerConf,
@@ -67,7 +67,7 @@ export default {
             this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath)
             this.$store.dispatch('init', questionData)
-            this.$store.dispatch('initRuleEngine', ruleConf);
+            this.$store.dispatch('initRuleEngine', logicConf.showLogicConf);
             this.$store.dispatch('getEncryptInfo')
           } else {
             throw new Error(res.errmsg)

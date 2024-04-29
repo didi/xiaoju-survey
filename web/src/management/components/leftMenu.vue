@@ -25,7 +25,7 @@ export default {
           text: '编辑问卷',
           icon: 'icon-bianji',
           to: {
-            name: 'QuestionEditIndex'
+            name: 'QuestionEditPage'
           }
         },
         {

@@ -142,7 +142,6 @@ export class RuleMatch {
     const hash = rule.calculateHash();
     if (this.rules.has(hash)) {
       const existRule = this.rules.get(hash);
-      debugger
       existRule.conditions.forEach((item: ConditionNode) => {
         rule.addCondition(item)
       })

@@ -8,7 +8,7 @@
   ></questionRuleContainer> 
 </template>
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, inject, unref } from 'vue'
 import questionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import store from '@/render/store'
 const props = defineProps({
@@ -24,10 +24,16 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['change'])
+
+const Form = inject('Form',{
+  type: Array,
+  default: ''
+})
+const formModel = Form.model
 onMounted(() => {
   console.log(props.moduleConfig.field, '出现了')
   // 题目显示通知目标题目从新匹配规则
-  let fact = {}
+  let fact = unref(formModel)
   fact[props.moduleConfig.field] = props.moduleConfig.value
   notifyMatch(props.moduleConfig.field, fact)
 })
@@ -36,7 +42,7 @@ onMounted(() => {
 const handleChange = (data) => {
   emit('change', data)
   const { key, value }  = data
-  let fact = {}
+  let fact = unref(formModel)
   fact[key] = value
   notifyMatch(key, fact)
 }
@@ -48,6 +54,8 @@ const notifyMatch = (key, fact) => {
   })
 }
 onUnmounted(() => {
+  let fact = unref(formModel)
+  fact[props.moduleConfig.field] = null
   console.log(props.moduleConfig.field, '隐藏了')
   // 题目隐藏通知目标题目从新匹配规则
   notifyMatch(props.moduleConfig.field, {})

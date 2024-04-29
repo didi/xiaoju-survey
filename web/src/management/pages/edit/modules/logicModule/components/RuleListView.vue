@@ -9,17 +9,20 @@
     >
     </RuleNodeView>
 
-    <el-button type="primary" plain class="add" size="small" icon="el-icon-plus" @click="handleAdd">新增显示逻辑</el-button>
+    <el-button type="primary" plain class="add" @click="handleAdd">
+      <el-icon><Plus /></el-icon>
+      新增显示逻辑
+    </el-button>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, shallowRef, computed, watch, inject } from 'vue';
 import { useStore } from 'vuex';
 import RuleNodeView from './RuleNodeView.vue';
+
 // @ts-ignore
 import { RuleBuild, RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
-// @ts-ignore
-import { qAbleList } from '@/management/utils/constant'
+import { Plus } from '@element-plus/icons-vue';
 
 const store = useStore()
 const props = defineProps({
@@ -64,8 +67,13 @@ defineExpose ({
 </script>
 <style lang="scss">
 .rule-list{
-  width: 800px;
+  width: 824px;
   text-align: left;
   margin: 0 auto;
+  padding: 12px;
+  .add{
+    margin: 12px 0;
+    width: 100%
+  }
 }
 </style>

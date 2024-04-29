@@ -14,7 +14,7 @@
         :ruleNode="ruleNode"
         :conditionNode="conditionNode"
       ></conditionView>
-      <span class="desc">满足以上所有</span> <span class="desc">条件，则显示</span> 
+      <span class="desc">则显示</span> 
       <el-form-item
         prop="target"
         :rules="[
@@ -34,11 +34,12 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <i 
-        class="iconfont icon-shanchu" 
-        style="font-size: 18px; margin-right: 8px"  
+      <el-icon
+        style="font-size: 18px; line-height: 32px"  
         @click="() => handleDelete(ruleNode.id)"
-      ></i>
+      >
+        <Delete/>
+      </el-icon>
     </el-form>
   </div>
 </template>
@@ -49,6 +50,7 @@ import { cloneDeep } from 'lodash-es'
 import conditionView from './ConditionView.vue'
 // @ts-ignore
 import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
+import { Delete } from '@element-plus/icons-vue';
 const renderData = inject('renderData', {
   type: Array,
   default: []
@@ -102,15 +104,15 @@ defineExpose({
   submitForm
 })
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
 .rule-wrapper { 
   width: 800px;
   padding: 20px;
-  margin: 0 auto;
-    border: 1px solid #e3e4e8;
-    border-radius: 2px;
-    display: flex;
-    margin: 12px 24px;
+  border: 1px solid #e3e4e8;
+  border-radius: 2px;
+  display: flex;
+  margin: 12px 0;
+  box-sizing: border-box;
   .desc {
     display: inline-block;
     margin-bottom: 12px;

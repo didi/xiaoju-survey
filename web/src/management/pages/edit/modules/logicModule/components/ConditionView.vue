@@ -56,9 +56,15 @@
     </el-form-item>
     <span class="desc">中的任一选项 </span>
     <i class="iconfont icon-chuangjian" style="font-size: 18px; margin-right: 8px" @click="handleAdd"></i>
-    <i 
+    <el-icon 
       v-if="index > 0"
-      class="iconfont icon-shanchu" style="font-size: 18px; margin-right: 8px"  @click="() => handleDelete(conditionNode.id)"></i>
+      @click="() => handleDelete(conditionNode.id)"
+    >
+      <Minus />
+    </el-icon>
+    <!-- <i 
+      v-if="index > 0"
+      class="iconfont icon-shanchu" style="font-size: 18px; margin-right: 8px"  @click="() => handleDelete(conditionNode.id)"></i> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -67,6 +73,7 @@ import { defineProps, computed, inject } from 'vue';
 import { ConditionNode, RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 // @ts-ignore
 import { qAbleList, operatorOptions } from '@/management/utils/constant.js'
+import { Minus } from '@element-plus/icons-vue'
 const renderData = inject('renderData', {
   type: Array<Object>,
   default: () => {

@@ -1,7 +1,7 @@
 <template>
   <div class="tool-bar-root">
     <template v-if="tools.length">
-      <tool
+      <ToolModule
         v-for="t in tools"
         :key="t.key"
         :type="type"

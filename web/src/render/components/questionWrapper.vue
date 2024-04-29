@@ -55,10 +55,10 @@ const notifyMatch = (key, fact) => {
 }
 onUnmounted(() => {
   let fact = unref(formModel)
-  fact[props.moduleConfig.field] = null
+  fact[props.moduleConfig.field] = ''
   console.log(props.moduleConfig.field, '隐藏了')
   // 题目隐藏通知目标题目从新匹配规则
-  notifyMatch(props.moduleConfig.field, {})
+  notifyMatch(props.moduleConfig.field, fact)
 })
 </script>
 

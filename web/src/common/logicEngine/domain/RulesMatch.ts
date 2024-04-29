@@ -1,3 +1,4 @@
+
 import { type BasicOperator, type FieldTypes, type Fact  } from "./BasicType";
 
 // 定义条件规则类
@@ -141,8 +142,8 @@ export class RuleMatch {
   addRule(rule: RuleNode) {
     const hash = rule.calculateHash();
     if (this.rules.has(hash)) {
-      const existRule = this.rules.get(hash);
-      existRule.conditions.forEach((item: ConditionNode) => {
+      const existRule: any = this.rules.get(hash);
+      existRule.conditions.forEach((item: ConditionNode<string, BasicOperator>) => {
         rule.addCondition(item)
       })
     }

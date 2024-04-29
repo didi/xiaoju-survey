@@ -16,7 +16,7 @@
 
 <script>
 import { QOP_MAP } from '@/management/utils/constant'
-import Tool from './tool.vue'
+import ToolModule from './ToolModule.vue'
 
 export default {
   name: 'ToolBar',
@@ -63,7 +63,7 @@ export default {
     }
   },
   components: {
-    Tool
+    ToolModule
   }
 }
 </script>

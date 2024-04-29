@@ -43,7 +43,7 @@ import { get as _get } from 'lodash-es'
 import { formatLink } from '../utils/index.js'
 
 export default {
-  name: 'TheHeader',
+  name: 'HeaderSetter',
   computed: {
     bannerConf() {
       return _get(this.$store, 'state.bannerConf', {})

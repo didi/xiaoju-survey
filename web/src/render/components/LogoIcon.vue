@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'logoPreview',
+  name: 'LogoIcon',
   computed: {
     logoImage() {
       return this.$store.state?.bottomConf?.logoImage

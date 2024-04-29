@@ -48,7 +48,7 @@ import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
 import RateConfig from '../AdvancedConfig/RateConfig.vue'
 import ExtraIcon from '../ExtraIcon.vue'
 
-const props = defineProps({
+defineProps({
   optionList: {
     type: Array,
     default: () => []

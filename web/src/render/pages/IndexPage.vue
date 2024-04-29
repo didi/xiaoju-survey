@@ -2,10 +2,10 @@
   <div class="index">
     <progressBar />
     <div class="wrapper" ref="box">
-      <HeaderModule></HeaderModule>
+      <HeaderSetter></HeaderSetter>
       <div class="content">
-        <mainTitle></mainTitle>
-        <mainRenderer ref="main"></mainRenderer>
+        <MainTitle></MainTitle>
+        <MainRenderer ref="main"></MainRenderer>
         <submit :validate="validate" :renderData="renderData" @submit="onSubmit"></submit>
         <LogoIcon />
       </div>
@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import HeaderModule from '../components/header.vue'
-import mainTitle from '../components/mainTitle.vue'
-import submit from '../components/submit.vue'
-import mainRenderer from '../components/mainRenderer.vue'
-import alert from '../components/alert.vue'
-import confirm from '../components/confirm.vue'
-import progressBar from '../components/progressBar.vue'
+import HeaderSetter from '../components/HeaderSetter.vue'
+import MainTitle from '../components/MainTitle.vue'
+import submit from '../components/SubmitSetter.vue'
+import MainRenderer from '../components/MainRenderer.vue'
+import AlertDialog from '../components/AlertDialog.vue'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
+import progressBar from '../components/ProgressBar.vue'
 import LogoIcon from '../components/LogoIcon.vue'
 
 import { submitForm } from '../api/survey'
@@ -41,10 +41,10 @@ export default {
     }
   },
   components: {
-    HeaderModule,
-    mainTitle,
+    HeaderSetter,
+    MainTitle,
     submit,
-    mainRenderer,
+    MainRenderer,
     progressBar,
     LogoIcon
   },
@@ -66,8 +66,8 @@ export default {
     }
   },
   created() {
-    this.alert = useCommandComponent(alert)
-    this.confirm = useCommandComponent(confirm)
+    this.alert = useCommandComponent(AlertDialog)
+    this.confirm = useCommandComponent(ConfirmDialog)
   },
   methods: {
     validate(cbk) {

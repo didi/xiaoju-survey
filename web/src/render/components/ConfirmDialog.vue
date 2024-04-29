@@ -11,7 +11,7 @@
 </template>
 <script>
 export default {
-  name: 'ConfirmSetter',
+  name: 'ConfirmDialog',
   props: {
     visible: {
       type: Boolean,

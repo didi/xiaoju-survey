@@ -8,7 +8,7 @@
           @select="onSelectEditOne('mainTitle')"
           @change="handleChange"
         />
-        <materialGroup
+        <MaterialGroup
           :current-edit-one="parseInt(currentEditOne)"
           :questionDataList="questionDataList"
           @select="onSelectEditOne"
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
+import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
 import submit from '@/management/pages/edit/components/submit.vue'
 import { mapState, mapGetters } from 'vuex'
@@ -39,7 +39,7 @@ export default {
   components: {
     mainTitle,
     submit,
-    materialGroup
+    MaterialGroup
   },
   data() {
     return {

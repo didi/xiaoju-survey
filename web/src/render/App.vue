@@ -1,17 +1,17 @@
 <template>
   <Component v-if="$store.state.router" :is="$store.state.router"></Component>
-  <LogoIcon v-if="!['successPage', 'indexPage'].includes($store.state.router)" />
+  <LogoIcon v-if="!['SuccessPage', 'IndexPage'].includes($store.state.router)" />
 </template>
 
 <script>
 import { getPublishedSurveyInfo } from './api/survey'
 import useCommandComponent from './hooks/useCommandComponent'
 
-import emptyPage from './pages/emptyPage.vue'
-import indexPage from './pages/index.vue'
-import errorPage from './pages/errorPage.vue'
-import successPage from './pages/successPage.vue'
-import alert from './components/alert.vue'
+import EmptyPage from './pages/EmptyPage.vue'
+import IndexPage from './pages/IndexPage.vue'
+import ErrorPage from './pages/ErrorPage.vue'
+import SuccessPage from './pages/SuccessPage.vue'
+import AlertDialog from './components/AlertDialog.vue'
 
 import LogoIcon from './components/LogoIcon.vue'
 import { get as _get } from 'lodash-es'
@@ -19,10 +19,10 @@ import { get as _get } from 'lodash-es'
 export default {
   name: 'App',
   components: {
-    emptyPage,
-    indexPage,
-    errorPage,
-    successPage,
+    EmptyPage,
+    IndexPage,
+    ErrorPage,
+    SuccessPage,
     LogoIcon
   },
   data() {
@@ -40,14 +40,14 @@ export default {
   },
   async created() {
     this.init()
-    this.alert = useCommandComponent(alert)
+    this.alert = useCommandComponent(AlertDialog)
   },
   beforeCreate() {},
   methods: {
     async init() {
       const surveyPath = location.pathname.split('/').pop()
       if (!surveyPath) {
-        this.$store.commit('setRouter', 'emptyPage')
+        this.$store.commit('setRouter', 'EmptyPage')
       } else {
         try {
           const res = await getPublishedSurveyInfo({ surveyPath })

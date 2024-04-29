@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-  name: 'AlertSetter',
+  name: 'AlertDialog',
   props: {
     visible: {
       type: Boolean,

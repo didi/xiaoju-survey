@@ -1,6 +1,6 @@
 import { computed, defineComponent } from 'vue'
 import BaseChoice from '../BaseChoice'
-import ProcessModule from '../../components/Progress.vue'
+import ProcessModule from '../../components/ProcessModule.vue'
 import '../../common/css/vote.scss'
 import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 import { includes } from 'lodash-es'

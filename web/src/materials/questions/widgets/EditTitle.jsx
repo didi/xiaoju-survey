@@ -7,7 +7,7 @@ import tagList from '../common/config/tagList'
 
 
 export default defineComponent({
-  name: 'ModuleTitle',
+  name: 'EditTitle',
   components: { RichEditor },
   props: {
     isSelected: {

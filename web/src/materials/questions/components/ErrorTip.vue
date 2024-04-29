@@ -8,7 +8,7 @@
 </template>
 <script>
 export default {
-  name: 'ModuleErrTip',
+  name: 'ErrorTip',
   data() {
     return {}
   },
@@ -19,8 +19,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/render/styles/default.scss';
-
 .module-err-tip {
   color: $error-color;
   padding: 0 0.4rem;

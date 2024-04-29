@@ -14,6 +14,7 @@ export class MinIOHandler implements FileUploadHandler {
   expiryTime: string;
   bucket: string;
   constructor({
+    client,
     accessKey,
     secretKey,
     bucket,
@@ -22,15 +23,27 @@ export class MinIOHandler implements FileUploadHandler {
     useSSL,
     isPrivateRead,
     expiryTime,
+  }: {
+    client?: Client;
+    accessKey?: string;
+    secretKey?: string;
+    bucket?: string;
+    region?: string;
+    endPoint?: string;
+    useSSL?: boolean;
+    isPrivateRead?: boolean;
+    expiryTime?: string;
   }) {
-    const client = new Client({
-      endPoint,
-      accessKey,
-      secretKey,
-      region,
-      useSSL,
-      pathStyle: true,
-    });
+    if (!client) {
+      client = new Client({
+        endPoint,
+        accessKey,
+        secretKey,
+        region,
+        useSSL,
+        pathStyle: true,
+      });
+    }
     this.client = client;
     this.endPoint = endPoint;
     this.useSSL = useSSL;

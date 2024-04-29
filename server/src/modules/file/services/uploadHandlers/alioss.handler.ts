@@ -11,6 +11,7 @@ export class AliOssHandler implements FileUploadHandler {
   isPrivateRead: boolean;
   expiryTime: string;
   constructor({
+    client,
     accessKey,
     secretKey,
     bucket,
@@ -19,13 +20,25 @@ export class AliOssHandler implements FileUploadHandler {
     useSSL,
     isPrivateRead,
     expiryTime,
+  }: {
+    client?: OSS;
+    accessKey?: string;
+    secretKey?: string;
+    bucket?: string;
+    region?: string;
+    endPoint?: string;
+    useSSL?: boolean;
+    isPrivateRead?: boolean;
+    expiryTime?: string;
   }) {
-    const client = new OSS({
-      region,
-      accessKeyId: accessKey,
-      accessKeySecret: secretKey,
-      bucket,
-    });
+    if (!client) {
+      client = new OSS({
+        region,
+        accessKeyId: accessKey,
+        accessKeySecret: secretKey,
+        bucket,
+      });
+    }
     this.client = client;
     this.endPoint = endPoint;
     this.useSSL = useSSL;

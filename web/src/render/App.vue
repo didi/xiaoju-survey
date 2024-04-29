@@ -1,6 +1,8 @@
 <template>
-  <Component v-if="$store.state.router" :is="$store.state.router"></Component>
-  <LogoIcon v-if="!['SuccessPage', 'IndexPage'].includes($store.state.router)" />
+  <div id="app">
+    <Component v-if="$store.state.router" :is="$store.state.router"></Component>
+    <LogoIcon v-if="!['successPage', 'indexPage'].includes($store.state.router)" />
+  </div>
 </template>
 
 <script>

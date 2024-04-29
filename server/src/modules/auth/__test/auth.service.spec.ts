@@ -9,7 +9,7 @@ import { UserService } from '../services/user.service';
 jest.mock('jsonwebtoken', () => {
   return {
     sign: jest.fn(),
-    verify: jest.fn(),
+    verify: jest.fn().mockReturnValue({}),
   };
 });
 
@@ -49,7 +49,6 @@ describe('AuthService', () => {
   describe('verifyToken', () => {
     it('should verifyToken succeed', async () => {
       const token = 'mock token';
-      jest.spyOn(jwt, 'verify').mockReturnValueOnce({});
       jest
         .spyOn(userService, 'getUserByUsername')
         .mockResolvedValue({} as User);

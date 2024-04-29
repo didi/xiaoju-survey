@@ -63,7 +63,7 @@ import { login, register } from '@/management/api/auth'
 import { refreshCaptcha } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
 export default {
-  name: 'loginPage',
+  name: 'LoginPage',
   data() {
     return {
       formData: {

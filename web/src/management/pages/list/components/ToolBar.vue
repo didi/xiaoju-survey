@@ -1,7 +1,7 @@
 <template>
   <div class="tool-bar-root">
     <template v-if="tools.length">
-      <ToolModule
+      <tool
         v-for="t in tools"
         :key="t.key"
         :type="type"
@@ -16,7 +16,7 @@
 
 <script>
 import { QOP_MAP } from '@/management/utils/constant'
-import ToolModule from './ToolModule.vue'
+import Tool from './tool.vue'
 
 export default {
   name: 'ToolBar',
@@ -63,7 +63,7 @@ export default {
     }
   },
   components: {
-    ToolModule
+    Tool
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="publish-result-page">
-    <leftMenu class="left"></leftMenu>
+    <LeftMenu class="left" />
     <div class="right">
       <template v-if="curStatus !== 'new'">
         <div class="preview-container" :style="{ backgroundImage: `url('${this.phoneBg}')` }">
@@ -12,7 +12,7 @@
           >
           <h2>问卷链接</h2>
           <div class="main-channel-wrap">
-            <channel-row
+            <ChannelRow
               :disable-delete="true"
               :data="mainChannel"
               :style-wrap="{ marginBottom: '8px' }"
@@ -20,7 +20,7 @@
           </div>
         </div>
       </template>
-      <empty v-else :data="noDataConfig" />
+      <EmptyIndex v-else :data="noDataConfig" />
     </div>
   </div>
 </template>
@@ -32,13 +32,13 @@ import { get as _get } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import empty from '@/management/components/EmptyIndex.vue'
-import leftMenu from '@/management/components/LeftMenu.vue'
+import EmptyIndex from '@/management/components/EmptyIndex.vue'
+import LeftMenu from '@/management/components/LeftMenu.vue'
 
-import ChannelRow from './components/channelRow.vue'
+import ChannelRow from './components/ChannelRow.vue'
 
 export default {
-  name: 'publishResultPage',
+  name: 'PublishResultPage',
   data() {
     return {
       noDataConfig: {
@@ -83,8 +83,8 @@ export default {
   },
   components: {
     ChannelRow,
-    empty,
-    leftMenu
+    EmptyIndex,
+    LeftMenu
   }
 }
 </script>

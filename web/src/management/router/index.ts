@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
-    component: () => import('../pages/publishResult/index.vue')
+    component: () => import('../pages/publishResult/PublishResultPage.vue')
   },
   {
     path: '/create',
@@ -95,7 +95,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../pages/login/index.vue'),
+    component: () => import('../pages/login/LoginPage.vue'),
     meta: {
       title: '登陆'
     }

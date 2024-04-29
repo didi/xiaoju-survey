@@ -3191,6 +3191,11 @@ prismjs@^1.23.0:
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/prismjs/-/prismjs-1.29.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fprismjs%2F-%2Fprismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
   integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
 
+property-expr@^2.0.5:
+  version "2.0.6"
+  resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/property-expr/-/property-expr-2.0.6.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fproperty-expr%2F-%2Fproperty-expr-2.0.6.tgz#f77bc00d5928a6c748414ad12882e83f24aec1e8"
+  integrity sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==
+
 proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/proxy-from-env/-/proxy-from-env-1.1.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fproxy-from-env%2F-%2Fproxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
@@ -3573,6 +3578,11 @@ thenify-all@^1.0.0:
   dependencies:
     any-promise "^1.0.0"
 
+tiny-case@^1.0.3:
+  version "1.0.3"
+  resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/tiny-case/-/tiny-case-1.0.3.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Ftiny-case%2F-%2Ftiny-case-1.0.3.tgz#d980d66bc72b5d5a9ca86fb7c9ffdb9c898ddd03"
+  integrity sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q==
+
 tiny-emitter@^2.0.0:
   version "2.1.0"
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/tiny-emitter/-/tiny-emitter-2.1.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Ftiny-emitter%2F-%2Ftiny-emitter-2.1.0.tgz#1d1a56edfc51c43e863cbb5382a72330e3555423"
@@ -3594,6 +3604,11 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+toposort@^2.0.2:
+  version "2.0.2"
+  resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/toposort/-/toposort-2.0.2.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Ftoposort%2F-%2Ftoposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
+  integrity sha512-0a5EOkAUp8D4moMi2W8ZF8jcga7BgZd91O/yabJCFY8az+XSzeGyTKs0Aoo897iV1Nj6guFq8orWDS96z91oGg==
 
 tr46@^1.0.1:
   version "1.0.1"
@@ -3653,6 +3668,11 @@ type-fest@^0.20.2:
   version "0.20.2"
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/type-fest/-/type-fest-0.20.2.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Ftype-fest%2F-%2Ftype-fest-0.20.2.tgz#1bf207f4b28f91583666cb5fbd327887301cd5f4"
   integrity sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==
+
+type-fest@^2.19.0:
+  version "2.19.0"
+  resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/type-fest/-/type-fest-2.19.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Ftype-fest%2F-%2Ftype-fest-2.19.0.tgz#88068015bb33036a598b952e55e9311a60fd3a9b"
+  integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
 
 type@^2.7.2:
   version "2.7.2"
@@ -3766,7 +3786,7 @@ util-deprecate@^1.0.2:
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/util-deprecate/-/util-deprecate-1.0.2.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Futil-deprecate%2F-%2Futil-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
 
-vite-plugin-virtual-mpa@^1.10.1:
+vite-plugin-virtual-mpa@^1.11.0:
   version "1.11.0"
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/vite-plugin-virtual-mpa/-/vite-plugin-virtual-mpa-1.11.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fvite-plugin-virtual-mpa%2F-%2Fvite-plugin-virtual-mpa-1.11.0.tgz#6d507379efc95bafceced30a816515b844b5fcbb"
   integrity sha512-zPYQ3YOZ3Tk/Fl8+Jj4wv6gaqH9X+OJOX3JpGSJQ1SSUw6Bb4jPUgNg1R4YLClhi2SfNc/wE9PAzzXJAaI7xvA==
@@ -3993,3 +4013,13 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/yocto-queue/-/yocto-queue-0.1.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fyocto-queue%2F-%2Fyocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+yup@^1.4.0:
+  version "1.4.0"
+  resolved "http://artifactory.intra.xiaojukeji.com/artifactory/api/npm/npm/yup/-/yup-1.4.0.tgz?dl=https%3A%2F%2Fregistry.npmmirror.com%2Fyup%2F-%2Fyup-1.4.0.tgz#898dcd660f9fb97c41f181839d3d65c3ee15a43e"
+  integrity sha512-wPbgkJRCqIf+OHyiTBQoJiP5PFuAXaWiJK6AmYkzQAh5/c2K9hzSApBZG5wV9KoKSePF7sAxmNSvh/13YHkFDg==
+  dependencies:
+    property-expr "^2.0.5"
+    tiny-case "^1.0.3"
+    toposort "^2.0.2"
+    type-fest "^2.19.0"

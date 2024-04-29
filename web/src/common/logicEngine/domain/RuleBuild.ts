@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid';
+import * as yup from 'yup'
 import { type BasicOperator, type FieldTypes } from './BasicType'
 
 export function generateID(prefix = 'r') {
@@ -102,4 +103,24 @@ export class RuleBuild {
     })
     return this
   }
+  validateSchema() {
+    return ruleSchema.validateSync(this.toJson())
+  }
 }
+
+
+export const ruleSchema = yup.object({
+  rules: yup.array().of(
+    yup.object({
+      target: yup.string().required(),
+      scope: yup.string().required(),
+      conditions: yup.array().of(
+        yup.object({
+          field: yup.string().required(),
+          operator: yup.string().required(),
+          value: yup.string().required()
+        })
+      )
+   })
+  )
+})

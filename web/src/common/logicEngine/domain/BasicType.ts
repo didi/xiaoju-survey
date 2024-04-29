@@ -9,3 +9,4 @@ export type FieldTypes = string | string[];
 export type Fact = {
   [key: string]: any;
 };
+

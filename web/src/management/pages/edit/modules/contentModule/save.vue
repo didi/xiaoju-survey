@@ -89,10 +89,18 @@ export default {
       }
     },
     updateLogicConf() {
-      if(this.$route.name === 'LogicIndex') {
-        debugger
-      }
+      // if(this.$route.name === 'LogicIndex') {
+        
+      // }
       if(this.$store.state.logic.showLogicEngine) {
+        try {
+          this.$store.state.logic.showLogicEngine.validateSchema()
+          
+        } catch (error) {
+          throw error
+          return 
+        }
+        debugger
         const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
         // 更新逻辑配置
         this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
@@ -112,7 +120,13 @@ export default {
         return
       }
       this.isShowAutoSave = false
-      this.updateLogicConf()
+      try {
+        this.updateLogicConf()
+      } catch (error) {
+        ElMessage.error('请检查逻辑配置是否有误')
+        return
+      }
+      
       try {
         this.isSaving = true
         const res = await this.saveData()

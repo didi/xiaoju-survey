@@ -52,7 +52,6 @@ export default {
     position: absolute;
     top: 10px;
     cursor: pointer;
-    z-index: 9999;
     :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
       color: $primary-color;
       background-color: #fff !important;

@@ -26,7 +26,7 @@
         </el-pagination>
       </template>
       <div v-else>
-        <empty :data="noDataConfig" />
+        <EmptyIndex :data="noDataConfig" />
       </div>
     </div>
   </div>
@@ -36,14 +36,14 @@
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import empty from '@/management/components/empty.vue'
-import leftMenu from '@/management/components/leftMenu.vue'
+import EmptyIndex from '@/components/EmptyIndex.vue'
+import LeftMenu from '@/management/components/LeftMenu.vue'
 import { getRecycleList } from '@/management/api/analysis'
 
-import DataTable from './components/table.vue'
+import DataTable from './components/DataTable.vue'
 
 export default {
-  name: 'analysisPage',
+  name: 'AnalysisPage',
   data() {
     return {
       mainTableLoading: false,
@@ -130,8 +130,8 @@ export default {
 
   components: {
     DataTable,
-    empty,
-    leftMenu
+    EmptyIndex,
+    LeftMenu
   }
 }
 </script>

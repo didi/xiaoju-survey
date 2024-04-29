@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import { cleanRichText } from '@/common/xss'
 
 export default {

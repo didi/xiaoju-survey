@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import NavHeader from './navHeader.vue'
+import NavHeader from './NavHeader.vue'
 
 import { SURVEY_TYPE_LIST } from '../types'
 

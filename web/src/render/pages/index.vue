@@ -7,7 +7,7 @@
         <mainTitle></mainTitle>
         <mainRenderer ref="main"></mainRenderer>
         <submit :validate="validate" :renderData="renderData" @submit="onSubmit"></submit>
-        <logo></logo>
+        <LogoIcon />
       </div>
     </div>
   </div>
@@ -21,7 +21,7 @@ import mainRenderer from '../components/mainRenderer.vue'
 import alert from '../components/alert.vue'
 import confirm from '../components/confirm.vue'
 import progressBar from '../components/progressBar.vue'
-import logo from '../components/logo.vue'
+import LogoIcon from '../components/LogoIcon.vue'
 
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
@@ -46,7 +46,7 @@ export default {
     submit,
     mainRenderer,
     progressBar,
-    logo
+    LogoIcon
   },
   computed: {
     formModel() {

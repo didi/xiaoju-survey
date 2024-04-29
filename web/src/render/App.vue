@@ -1,6 +1,6 @@
 <template>
   <Component v-if="$store.state.router" :is="$store.state.router"></Component>
-  <logo v-if="!['successPage', 'indexPage'].includes($store.state.router)"></logo>
+  <LogoIcon v-if="!['successPage', 'indexPage'].includes($store.state.router)" />
 </template>
 
 <script>
@@ -13,7 +13,7 @@ import errorPage from './pages/errorPage.vue'
 import successPage from './pages/successPage.vue'
 import alert from './components/alert.vue'
 
-import logo from './components/logo.vue'
+import LogoIcon from './components/LogoIcon.vue'
 import { get as _get } from 'lodash-es'
 
 export default {
@@ -23,7 +23,7 @@ export default {
     indexPage,
     errorPage,
     successPage,
-    logo
+    LogoIcon
   },
   data() {
     return {}

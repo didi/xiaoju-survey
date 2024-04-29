@@ -111,7 +111,7 @@ import 'moment/locale/zh-cn'
 // 设置中文
 moment.locale('zh-cn')
 
-import empty from '@/management/components/empty.vue'
+import empty from '@/management/components/EmptyIndex.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant'
 import { getSurveyList, deleteSurvey } from '@/management/api/survey'

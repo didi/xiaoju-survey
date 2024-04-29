@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'logoIcon',
+  name: 'LogoIcon',
   methods: {
     toHomePage() {
       this.$router.push({

@@ -36,7 +36,7 @@
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import EmptyIndex from '@/components/EmptyIndex.vue'
+import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import LeftMenu from '@/management/components/LeftMenu.vue'
 import { getRecycleList } from '@/management/api/analysis'
 

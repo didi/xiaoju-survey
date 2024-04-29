@@ -24,7 +24,7 @@ import materialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import banner from '../components/banner.vue'
 import mainTitle from '@/management/pages/edit/components/mainTitle.vue'
 import submit from '@/management/pages/edit/components/submit.vue'
-import LogoIcon from '@/management/pages/edit/components/LogoIcon.vue'
+import LogoIcon from '@/management/pages/edit/components/logo.vue'
 import { mapState, mapGetters } from 'vuex'
 import { get as _get } from 'lodash-es'
 

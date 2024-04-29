@@ -136,8 +136,9 @@ const handleAdd = () => {
   // @ts-ignore
   props.ruleNode.addCondition(new ConditionNode())
 }
-const handleDelete = (index) => {
-  props.ruleNode.removeCondition(index)
+const emit = defineEmits(['delete'])
+const handleDelete = (id) => {
+  emit('delete', id)
 }
 </script>
 <style lang='scss' scoped>

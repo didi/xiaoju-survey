@@ -140,6 +140,14 @@ export class RuleMatch {
   // 添加条件规则到规则引擎中
   addRule(rule: RuleNode) {
     const hash = rule.calculateHash();
+    if (this.rules.has(hash)) {
+      const existRule = this.rules.get(hash);
+      debugger
+      existRule.conditions.forEach((item: ConditionNode) => {
+        rule.addCondition(item)
+      })
+    }
+    
     this.rules.set(hash, rule);
   }
 

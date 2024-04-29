@@ -13,6 +13,7 @@
         :index="index"
         :ruleNode="ruleNode"
         :conditionNode="conditionNode"
+        @delete="handleDeleteCondition"
       ></conditionView>
       <span class="desc">则显示</span> 
       <el-form-item
@@ -71,6 +72,9 @@ const handleChange = (ruleNode, key, value) => {
 }
 const handleDelete = (id) => {
   emit('delete', id)
+}
+const handleDeleteCondition = (id) => {
+  props.ruleNode.removeCondition(id)
 }
 const ruleForm = shallowRef(null)
 const submitForm = () => {

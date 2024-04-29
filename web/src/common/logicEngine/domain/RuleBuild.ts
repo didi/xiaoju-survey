@@ -51,8 +51,8 @@ export class RuleNode {
   addCondition(condition: ConditionNode) {
     this.conditions.push(condition);
   }
-  removeCondition(index: number) {
-    this.conditions.splice(index, 1)
+  removeCondition(id: string) {
+    this.conditions = this.conditions.filter(v => v.id !== id);
   }
   findCondition(conditionId: string) {
     return this.conditions.find(condition => condition.id === conditionId);
@@ -109,18 +109,16 @@ export class RuleBuild {
 }
 
 
-export const ruleSchema = yup.object({
-  rules: yup.array().of(
-    yup.object({
-      target: yup.string().required(),
-      scope: yup.string().required(),
-      conditions: yup.array().of(
-        yup.object({
-          field: yup.string().required(),
-          operator: yup.string().required(),
-          value: yup.string().required()
-        })
-      )
-   })
-  )
-})
+export const ruleSchema = yup.array().of(
+  yup.object({
+    target: yup.string().required(),
+    scope: yup.string().required(),
+    conditions: yup.array().of(
+      yup.object({
+        field: yup.string().required(),
+        operator: yup.string().required(),
+        value: yup.string().required()
+      })
+    )
+  })
+)

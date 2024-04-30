@@ -24,26 +24,6 @@ export class FileController {
     private readonly configService: ConfigService,
   ) {}
 
-  private getPathPrefix(fileKeyPrefix: string, data: Record<string, string>) {
-    const regex = /\{([^}]*)\}/g;
-    let matches;
-    const keys = [];
-    while ((matches = regex.exec(fileKeyPrefix)) !== null) {
-      keys.push(matches[1]);
-    }
-    let result = fileKeyPrefix;
-    for (const key of keys) {
-      if (!data[key]) {
-        throw new HttpException(
-          `参数有误：${data[key]}`,
-          EXCEPTION_CODE.PARAMETER_ERROR,
-        );
-      }
-      result = result.replace(new RegExp(`{${key}}`), data[key]);
-    }
-    return result;
-  }
-
   @Post('upload')
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
@@ -56,12 +36,12 @@ export class FileController {
 
     if (!channel || !this.configService.get<string>(channel)) {
       throw new HttpException(
-        `参数有误：${channel}`,
+        `参数有误channel不正确:${reqBody.channel}`,
         EXCEPTION_CODE.PARAMETER_ERROR,
       );
     }
     const configKey = this.configService.get<string>(channel);
-    const needAuth = this.configService.get<boolean>(configKey);
+    const needAuth = this.configService.get<boolean>(`${configKey}.NEED_AUTH`);
     if (needAuth) {
       const token = req.headers.authorization?.split(' ')[1];
 

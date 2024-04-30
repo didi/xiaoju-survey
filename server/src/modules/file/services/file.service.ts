@@ -10,10 +10,6 @@ import { LocalHandler } from './uploadHandlers/local.handler';
 export class FileService {
   constructor(private readonly configService: ConfigService) {}
 
-  private getConfig<T>(channel, key) {
-    return this.configService.get<T>(channel + '_' + key);
-  }
-
   async upload({
     configKey,
     file,

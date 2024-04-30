@@ -28,9 +28,10 @@
           placeholder="请选择"
           @change="(val) => handleChange(ruleNode, 'target', val)">
           <el-option
-            v-for="{ label, value } in targetQuestionList"
+            v-for="{ label, value, disabled } in targetQuestionList"
             :key="value"
             :label="label"
+            :disabled="disabled"
             :value="value">
           </el-option>
         </el-select>
@@ -50,8 +51,10 @@ import { cloneDeep } from 'lodash-es'
 // @ts-ignore
 import conditionView from './ConditionView.vue'
 // @ts-ignore
-import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
+import { RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { Delete } from '@element-plus/icons-vue';
+import { useStore } from 'vuex';
+const store = useStore()
 const renderData = inject('renderData', {
   type: Array,
   default: []
@@ -98,9 +101,9 @@ const targetQuestionList = computed(() => {
   let questionList = cloneDeep(renderData.value.slice(currntIndex+1))
   return questionList.map(item => {
       return {
-          label:item.title,
-          value:item.field
-          // disabled: props.selectedTarget.questionFields.includes(item.field)
+        label:item.title,
+        value:item.field,
+        disabled: store.state.logic.showLogicEngine.findTargetsByScope('question').includes(item.field)
       }
   })
 })

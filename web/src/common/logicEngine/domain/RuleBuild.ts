@@ -106,6 +106,12 @@ export class RuleBuild {
   validateSchema() {
     return ruleSchema.validateSync(this.toJson())
   }
+  findTargetsByScope(scope: string){
+    return this.rules.filter(rule => rule.scope === scope).map(rule => rule.target)
+  }
+  findTargetsByField(field: string){
+    return this.rules.filter(rule => rule.conditions.has(field)).map(rule => rule.target)
+  }
 }
 
 

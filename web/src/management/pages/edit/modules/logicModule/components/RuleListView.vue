@@ -16,22 +16,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, shallowRef, computed, watch, inject } from 'vue';
+import { shallowRef, computed } from 'vue';
 import { useStore } from 'vuex';
 import RuleNodeView from './RuleNodeView.vue';
 
 // @ts-ignore
-import { RuleBuild, RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
+import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
 import { Plus } from '@element-plus/icons-vue';
 
 const store = useStore()
-const props = defineProps({
-  renderData: {
-    type: Array,
-    default: () => {
-      return []
-    }
-  }
+
+const list = computed(() => {
+  return store.state.logic.showLogicEngine?.rules || []
 })
 
 const handleAdd = () => {
@@ -43,9 +39,6 @@ const handleAdd = () => {
 const handleDetele = (id: string) => {
   store.state.logic.showLogicEngine.removeRule(id)
 }
-const list = computed(() => {
-  return store.state.logic.showLogicEngine?.rules || []
-})
 
 const ruleWrappers = shallowRef([])
 

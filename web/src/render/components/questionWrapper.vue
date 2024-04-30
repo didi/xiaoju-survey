@@ -47,7 +47,7 @@ const handleChange = (data) => {
   notifyMatch(key, fact)
 }
 const notifyMatch = (key, fact) => {
-  const targets = store.state.ruleEngine.findTargets(key)
+  const targets = store.state.ruleEngine.findTargetsByField(key) || []
   // 前置题改变通知目标题更新规则匹配
   targets.forEach((target) => {
     store.state.ruleEngine.match(target, 'question', fact)

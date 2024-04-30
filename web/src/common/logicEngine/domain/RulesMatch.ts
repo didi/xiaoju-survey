@@ -124,7 +124,6 @@ export class RuleNode {
 
 export class RuleMatch {
   rules: Map<string, RuleNode>;
-  static ruleConf: any;
   constructor(ruleConf: any) {
     this.rules = new Map();
     ruleConf.forEach((rule: any) => {
@@ -135,7 +134,6 @@ export class RuleMatch {
       });
       this.addRule(ruleNode)
     })
-    RuleMatch.ruleConf = ruleConf
   }
 
   // 添加条件规则到规则引擎中
@@ -183,16 +181,13 @@ export class RuleMatch {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return target + scope;
   }
-  findTargets(field: string) {
-    const nodes = RuleMatch.ruleConf.filter((rule: any) => {
-      const conditions =  rule.conditions.filter((item: any) => {
-        return item.field === field
+  findTargetsByField(field: string) {
+    const rules = new Map([...this.rules.entries()].filter(([key, value]) => {
+      return [...value.conditions.entries()].filter(([key, value]) => {
+        return value.field === field
       })
-      return conditions.length > 0
-    })
-    return nodes.map((item: any) => {
-      return item.target
-    })
+    }))
+    return [...rules.values()].map(obj => obj.target);
   }
   toJson() {
     return Array.from(this.rules.entries()).map(([key, value]) => {

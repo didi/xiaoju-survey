@@ -109,8 +109,17 @@ export class RuleBuild {
   findTargetsByScope(scope: string){
     return this.rules.filter(rule => rule.scope === scope).map(rule => rule.target)
   }
-  findTargetsByField(field: string){
-    return this.rules.filter(rule => rule.conditions.has(field)).map(rule => rule.target)
+  findTargetsByFields(field: string) {
+    // @ts-ignore
+    const nodes = this.rules.filter((rule: RuleNode) => {
+      const conditions =  rule.conditions.filter((item: any) => {
+        return item.field === field
+      })
+      return conditions.length > 0  
+    })
+    return nodes.map((item: any) => {
+      return item.target
+    })
   }
 }
 

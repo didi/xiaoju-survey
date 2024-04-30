@@ -25,6 +25,8 @@
 import { ref, computed } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
+import { useStore } from 'vuex';
+const store = useStore();
 
 const props = defineProps({
   qIndex: {
@@ -106,6 +108,15 @@ const onMoveDown = () => {
   isHover.value = false
 }
 const onDelete = async () => {
+  debugger
+  const target = store.state.logic.showLogicEngine.findTargetsByFields(props.moduleConfig.field)
+  if(target.length) {
+    ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    })
+    return
+  }
   try {
     await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
       confirmButtonText: '确定',

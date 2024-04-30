@@ -1,34 +1,28 @@
 <template>
   <div class="logic-wrapper">
-    <RuleListView ></RuleListView>
+    <RuleListView></RuleListView>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, provide, unref } from 'vue'
-import RuleListView from '../../modules/logicModule/components/RuleListView.vue';
-import { filterQuestionPreviewData } from '@/management/utils/index'
-import { useStore } from 'vuex';
-import { cloneDeep } from 'lodash-es'
-const store = useStore()
-// onMounted(() => {
-//   store.dispatch('logic/initShowLogic', store.state.edit.schema.logicConf.showLogicConf)
-// })
-//  store.state.edit.schema.logicConf.showLogicConf)
-
+import { computed, provide, unref } from "vue";
+import RuleListView from "../../modules/logicModule/components/RuleListView.vue";
+import { filterQuestionPreviewData } from "@/management/utils/index";
+import { useStore } from "vuex";
+import { cloneDeep } from "lodash-es";
+const store = useStore();
 
 const questionDataList = computed(() => {
-  return store.state.edit.schema.questionDataList
-})
+  return store.state.edit.schema.questionDataList;
+});
 const renderData = computed(() => {
-  return filterQuestionPreviewData(cloneDeep(questionDataList.value))
-})
+  return filterQuestionPreviewData(cloneDeep(questionDataList.value));
+});
 
-provide('renderData', renderData)
-
+provide("renderData", renderData);
 </script>
 <style lang="scss" scoped>
-.logic-wrapper{
-  height: calc( 100% - 120px );
+.logic-wrapper {
+  height: calc(100% - 120px);
   width: 100%;
   margin: 12px;
   background: #fff;

@@ -17,11 +17,6 @@ export class ConditionNode {
     this.value = value;
     this.id = generateID('c')
   }
-  // @ts-ignore
-  set(key, value) {
-    // @ts-ignore
-    this[key] = value
-  }
   setField(field: string) {
     this.field = field;
   }

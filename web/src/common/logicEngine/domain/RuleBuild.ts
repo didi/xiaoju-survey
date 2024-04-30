@@ -101,9 +101,11 @@ export class RuleBuild {
   validateSchema() {
     return ruleSchema.validateSync(this.toJson())
   }
+  // 实现目标选择了下拉框置灰效果
   findTargetsByScope(scope: string){
     return this.rules.filter(rule => rule.scope === scope).map(rule => rule.target)
   }
+  // 实现前置题删除校验
   findTargetsByFields(field: string) {
     // @ts-ignore
     const nodes = this.rules.filter((rule: RuleNode) => {
@@ -115,6 +117,10 @@ export class RuleBuild {
     return nodes.map((item: any) => {
       return item.target
     })
+  }
+  // 根据目标题获取显示逻辑
+  findConditionByTarget(target: string) {
+    return this.rules.filter(rule=> rule.target === target).map(item => item.conditions)
   }
 }
 

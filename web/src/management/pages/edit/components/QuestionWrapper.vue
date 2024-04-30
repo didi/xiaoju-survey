@@ -1,7 +1,7 @@
 <template>
   <div :class="itemClass" @mouseenter="onMouseenter" @mouseleave="onMouseleave" @click="clickFormItem">
     <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
-
+    
     <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
       <div class="item el-icon-rank" @click.stop.prevent="onMove">
         <i-ep-rank />
@@ -19,14 +19,13 @@
         <i-ep-close />
       </div>
     </div>
+    <div class="logic-text" v-html="getShowLogicText"></div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
-import { useStore } from 'vuex';
-const store = useStore();
 
 const props = defineProps({
   qIndex: {
@@ -53,6 +52,10 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['changeSeq', 'select'])
+// @ts-ignore
+import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo.ts'
+
+const { getShowLogicText, hasShowLogic } = useShowLogicInfo(props.moduleConfig.field)
 
 const isHover = ref(false)
 
@@ -108,9 +111,8 @@ const onMoveDown = () => {
   isHover.value = false
 }
 const onDelete = async () => {
-  debugger
-  const target = store.state.logic.showLogicEngine.findTargetsByFields(props.moduleConfig.field)
-  if(target.length) {
+  // const target = store.state.logic.showLogicEngine.findTargetsByFields(props.moduleConfig.field)
+  if(hasShowLogic) {
     ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'
@@ -183,6 +185,12 @@ const onMove = () => {}
         color: #fff;
       }
     }
+  }
+  .logic-text{
+    font-size: 12px;
+    color: #c8c9cd;
+    padding: 0 .4rem;
+    line-height: 26px;
   }
 }
 </style>

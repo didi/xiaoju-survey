@@ -1,5 +1,5 @@
 <template>
-  <form ref="ruleForm" :model="formModel" :rules="rules">
+  <form ref="ruleForm" :model="formValues" :rules="rules">
     <QuestionWrapper
       v-for="(item) in renderData"
       :key="item.field"
@@ -25,7 +25,7 @@ const props = defineProps({
       return {}
     }
   },
-  formModel: {
+  formValues: {
     type: Object,
     default: () => {
       return {}
@@ -50,7 +50,7 @@ const handleChange = (data) => {
 const fields = []
 provide('Form', {
   model: computed(() => {
-    return props.formModel
+    return props.formValues
   }),
   rules: computed(() => {
     return props.rules

@@ -50,10 +50,6 @@ export default {
     LogoIcon
   },
   computed: {
-    formValues() {
-      // 提交给后端的数据需要通过显示逻辑的规则引擎过滤
-      return this.$store.state.formValues
-    },
     confirmAgain() {
       return this.$store.state.submitConf.confirmAgain
     },
@@ -97,12 +93,9 @@ export default {
     },
     getSubmitData() {
       const formValues = cloneDeep(this.$store.state.formValues)
+      // 显示逻辑-处理提交数据
       const formModel = Object.keys(formValues)
-        .filter(key => {
-          const match = store.state.ruleEngine.getResult(key, 'question')
-          console.log(key, match)
-          return match
-        })
+        .filter(key => this.$store.state.ruleEngine.getResult(key, 'question'))
         .reduce((obj, key) => {
           obj[key] = formValues[key];
           return obj;

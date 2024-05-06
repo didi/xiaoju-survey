@@ -5,7 +5,7 @@
         ref="formGroup"
         :render-data="item"
         :rules="rules"
-        :formModel="formModel"
+        :formValues="formValues"
         @formChange="changeData"
       />
     </template>
@@ -27,7 +27,7 @@ export default {
     rules() {
       return this.$store.state.rules
     },
-    formModel() {
+    formValues() {
       return this.$store.state.formValues
     }
   },

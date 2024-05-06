@@ -79,13 +79,6 @@ export default {
 
           // 将othersValue赋值给
           question.othersValue = othersValue
-          // 题型显示隐藏通过过滤题目的视图数据实现，保证formModel中数据与视图数据一致
-          
-          // const match = state.ruleEngine.getResult(question.field, 'question')
-          // console.log({match})
-          // if(!match) {
-          //   return 
-          // }
           
           questionArr.push(question)
         })
@@ -97,34 +90,5 @@ export default {
         return pre
       }, [])
     )
-  },
-  // 根据渲染的题目生成的用户输入或者选择的数据
-  formModel: (state, getters) => {
-    const { renderData } = getters
-    const formdata = flatten(renderData).reduce((pre, current) => {
-      const { othersValue, type, field } = current
-      if (othersValue && Object.keys(othersValue).length) {
-        Object.assign(pre, othersValue)
-      }
-      switch (type) {
-        // case 'fillin':
-        //   current.fillinConfig.forEach(item => {
-        //     item.forEach(subItem => {
-        //       if (subItem.blanks > 0) {
-        //         const resultField = `${field}_${subItem.hash}`
-        //         Object.assign(pre, { [resultField]: subItem.value })
-        //       }
-        //     })
-        //   })
-        //   Object.assign(pre, { [field]: formValues[field] })
-        //   break
-        default:
-          Object.assign(pre, { [field]: current.value })
-          break
-      }
-
-      return pre
-    }, {})
-    return formdata
   }
 }

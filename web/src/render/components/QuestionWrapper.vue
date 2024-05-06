@@ -9,7 +9,7 @@
   ></QuestionRuleContainer> 
 </template>
 <script setup>
-import { onMounted, onUnmounted, inject, ref, unref, computed } from 'vue'
+import { onMounted, onUnmounted, unref, computed } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import store from '@/render/store'
 const props = defineProps({
@@ -25,41 +25,36 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['change'])
+
+const formValues = computed(() => {
+  return store.state.formValues
+})
 const questionConfig = computed(() =>{
   return {
     ...props.moduleConfig,
-    value: store.state.formValues[props.moduleConfig.field]
+    value: formValues.value[props.moduleConfig.field]
   }
 })
 const visible = computed(() => {
+  // 显示逻辑-处理视图
+  console.log(props.moduleConfig.field, store.state.ruleEngine.getResult(props.moduleConfig.field, 'question'))
   return store.state.ruleEngine.getResult(props.moduleConfig.field, 'question')
 })
 
 
-const Form = inject('Form',{
-  type: Array,
-  default: ''
-})
-const formModel = Form.model
-
 onMounted(() => {
   console.log(props.moduleConfig.field, '出现了')
   // 题目显示通知目标题目从新匹配规则
-  let fact = unref(formModel)
+  let fact = unref(formValues)
   fact[props.moduleConfig.field] = questionConfig.value.value
   notifyMatch(props.moduleConfig.field, fact)
-  // match.value = store.state.ruleEngine.getResult(props.moduleConfig.field, 'question')
-  // console.log({match})
-  // if(!match) {
-  //   return 
-  // }
 })
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
   emit('change', data)
   const { key, value }  = data
-  let fact = unref(formModel)
+  let fact = unref(formValues)
   fact[key] = value
   notifyMatch(key, fact)
 }
@@ -71,7 +66,7 @@ const notifyMatch = (key, fact) => {
   })
 }
 onUnmounted(() => {
-  let fact = unref(formModel)
+  let fact = unref(formValues)
   fact[props.moduleConfig.field] = ''
   console.log(props.moduleConfig.field, '隐藏了')
   // 题目隐藏通知目标题目从新匹配规则

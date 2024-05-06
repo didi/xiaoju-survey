@@ -41,10 +41,10 @@
     </el-table>
     <el-popover
       ref="popover"
+      popper-style="text-align: center;"
       :virtual-ref="popoverVirtualRef"
       placement="top"
       trigger="hover"
-      width="300"
       virtual-triggering
       :content="popoverContent"
     >

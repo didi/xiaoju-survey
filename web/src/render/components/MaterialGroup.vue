@@ -1,8 +1,8 @@
 <template>
   <form ref="ruleForm" :model="formModel" :rules="rules">
     <questionWrapper
-      v-for="(item) in renderData" :key="item.field"
-      ref="questionWrappers"
+      v-for="(item) in renderData"
+      :key="item.field"
       class="gap"
       v-bind="$attrs"
       :moduleConfig="item"
@@ -14,9 +14,10 @@
   </form>
 </template>
 <script setup>
-import { ref, onMounted, provide, computed } from 'vue'
-// @ts-ignore
-import questionWrapper from './questionWrapper.vue'
+import { inject, provide, computed, onBeforeMount } from 'vue'
+import questionWrapper from '../../materials/questions/widgets/QuestionRuleContainer'
+
+const $bus = inject('$bus')
 
 const props = defineProps({
   rules: {
@@ -39,14 +40,14 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['formChange', 'blur'])
+
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
   emit('formChange', data)
 }
 // 动态 field 管理
-const fields = ref([])
-const ruleForm = ref(null)
+const fields = []
 provide('Form', {
   model: computed(() => {
     return props.formModel
@@ -55,17 +56,24 @@ provide('Form', {
     return props.rules
   })
 })
-// 题目组件ref
-const questionWrappers = ref([])
-onMounted(() => {
-  const childInstances = questionWrappers.value
-  childInstances.forEach((field) => {
-    fields.value.push(field)
-  })
+
+// 记录当前视图中渲染的元素，用于提交时全局表单校验
+onBeforeMount(() => {
+  $bus.on('form.addField', (field) => {
+    if (field) {
+      fields.push(field);
+    }
+  });
+
+  $bus.on('form.removeField', (field) => {
+    if (field) {
+      fields.splice(fields.indexOf(field), 1);
+    }
+  });
 })
 
 const validate = (callback) => {
-  const length = fields.value.length
+  const length = fields.length
   if (length === 0) {
     callback(true)
   }
@@ -74,7 +82,8 @@ const validate = (callback) => {
   let count = 0
   let flag = false // 滚动到第一个未验证成功的元素
 
-  fields.value.forEach((field) => {
+  // 表单校验
+  fields.forEach((field) => {
     field.validate('', (errors) => {
       count++
       if (errors) {

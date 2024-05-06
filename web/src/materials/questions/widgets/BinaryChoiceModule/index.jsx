@@ -35,6 +35,7 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const onChange = (value) => {
       const key = props.field

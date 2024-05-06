@@ -34,11 +34,11 @@ export default {
           }
 
           let othersValue = {}
-          let voteTotal = 0
-          const voteMap = state.voteMap
-          if (/vote/.test(type)) {
-            voteTotal = voteMap?.[questionKey]?.total || 0
-          }
+          // let voteTotal = 0
+          // const voteMap = state.voteMap
+          // if (/vote/.test(type)) {
+          //   voteTotal = voteMap?.[questionKey]?.total || 0
+          // }
           // 遍历所有的选项
           for (const optionItem of allOptions) {
             // 开启了更多输入框，生成othersValue的值

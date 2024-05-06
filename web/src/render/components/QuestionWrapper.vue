@@ -11,6 +11,7 @@
 <script setup>
 import { onMounted, onUnmounted, unref, computed } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
+import { useVoteMap } from '@/render/hooks/useVoteMap'
 import store from '@/render/store'
 const props = defineProps({
   indexNumber: {
@@ -30,8 +31,15 @@ const formValues = computed(() => {
   return store.state.formValues
 })
 const questionConfig = computed(() =>{
+  let moduleConfig = props.moduleConfig
+  const { type, field, options, ...rest } = moduleConfig
+  if(type === 'vote') {
+    const { options, voteTotal } = useVoteMap(field)
+    moduleConfig.options = unref(options)
+    moduleConfig.voteTotal = unref(voteTotal)
+  }
   return {
-    ...props.moduleConfig,
+    ...moduleConfig,
     value: formValues.value[props.moduleConfig.field]
   }
 })
@@ -52,6 +60,11 @@ onMounted(() => {
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
+  console.log({data})
+  if(props.moduleConfig.type === 'vote') {
+    store.dispatch('updateVoteData', data)
+  }
+  
   emit('change', data)
   const { key, value }  = data
   let fact = unref(formValues)

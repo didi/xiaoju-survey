@@ -124,7 +124,6 @@ export default {
     },
     async submitForm() {
       try {
-        debugger
         const submitData = this.getSubmitData()
         
         const res = await submitForm(submitData)

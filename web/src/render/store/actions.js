@@ -6,6 +6,7 @@ moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/domain/RulesMatch'
+import { da } from 'element-plus/es/locales.mjs'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -113,6 +114,51 @@ export default {
     } catch (error) {
       console.log(error)
     }
+  },
+  updateVoteData({ state, commit }, data) {
+    const { key:questionKey, value: questionVal } = data
+    
+    const currentQuestion = state.questionData[questionKey]
+    const options = currentQuestion.options
+    const voteTotal = state.voteMap?.[questionKey]?.total || 0
+    options.forEach(option => {
+      const optionhash = option.hash
+      const voteCount = state.voteMap?.[questionKey]?.[optionhash] || 0
+      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1  
+      if (
+        Array.isArray(questionVal)
+          ? questionVal.includes(optionhash)
+          : questionVal === optionhash
+      ) {
+        const countPayload = {
+          questionKey,
+          voteKey: optionhash,
+          voteValue: voteCount +1
+        }
+        const totalPayload = {
+          questionKey,
+          voteKey: 'total',
+          voteValue: voteTotal +1
+        }
+        commit('updateVoteMapByKey', countPayload )
+        commit('updateVoteMapByKey', totalPayload )
+      } else {
+        const countPayload = {
+          questionKey,
+          voteKey: optionhash,
+          voteValue: voteCount
+        }
+        const totalPayload = {
+          questionKey,
+          voteKey: 'total',
+          voteValue: voteTotal
+        }
+        commit('updateVoteMapByKey', countPayload )
+        commit('updateVoteMapByKey', totalPayload )
+      }
+    })
+
+    
   },
   async getEncryptInfo({ commit }) {
     try {

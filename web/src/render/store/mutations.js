@@ -38,6 +38,10 @@ export default {
   setVoteMap(state, data) {
     state.voteMap = data
   },
+  updateVoteMapByKey(state, data) {
+    const { questionKey, voteKey, voteValue } = data
+    state.voteMap[questionKey][voteKey] = voteValue
+  },
   setQuestionSeq(state, data) {
     state.questionSeq = data
   },

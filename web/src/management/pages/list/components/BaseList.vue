@@ -2,7 +2,7 @@
   <div class="tableview-root">
     <div class="filter-wrap">
       <div class="select">
-        <text-select
+        <TextSelect
           v-for="item in Object.keys(selectOptionsDict)"
           :key="item"
           :effect-fun="onSelectChange"
@@ -11,7 +11,7 @@
         />
       </div>
       <div class="search">
-        <text-button
+        <TextButton
           v-for="item in Object.keys(buttonOptionsDict)"
           :key="item"
           :effect-fun="onButtonChange"
@@ -23,8 +23,8 @@
             ).icon
           "
           link
-        ></text-button>
-        <text-search placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
+        />
+        <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
       </div>
     </div>
     <el-table
@@ -86,7 +86,7 @@
     </div>
 
     <div v-else>
-      <empty :data="!searchVal ? noListDataConfig : noSearchDataConfig" />
+      <EmptyIndex :data="!searchVal ? noListDataConfig : noSearchDataConfig" />
     </div>
 
     <ModifyDialog
@@ -111,7 +111,7 @@ import 'moment/locale/zh-cn'
 // 设置中文
 moment.locale('zh-cn')
 
-import empty from '@/management/components/EmptyIndex.vue'
+import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant'
 import { getSurveyList, deleteSurvey } from '@/management/api/survey'
@@ -339,7 +339,7 @@ export default {
     }
   },
   components: {
-    empty,
+    EmptyIndex,
     ModifyDialog,
     TagModule,
     ToolBar,

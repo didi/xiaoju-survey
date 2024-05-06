@@ -6,7 +6,6 @@ moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/domain/RulesMatch'
-import { da } from 'element-plus/es/locales.mjs'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -15,6 +14,7 @@ const CODE_MAP = {
   ERROR: 500,
   NO_AUTH: 403
 }
+const VOTE_INFO_KEY = 'voteinfo'
 
 export default {
   // 初始化
@@ -103,12 +103,19 @@ export default {
       return
     }
     try {
+      localStorage.removeItem(VOTE_INFO_KEY)
       const voteRes = await queryVote({
         surveyPath,
         fieldList: fieldList.join(',')
       })
 
       if (voteRes.code === 200) {
+        localStorage.setItem(
+          VOTE_INFO_KEY,
+          JSON.stringify({
+            ...voteRes.data
+          })
+        )
         commit('setVoteMap', voteRes.data)
       }
     } catch (error) {
@@ -117,13 +124,16 @@ export default {
   },
   updateVoteData({ state, commit }, data) {
     const { key:questionKey, value: questionVal } = data
-    
+    // 更新前获取接口缓存在localStorage中的数据
+    const localData = localStorage.getItem(VOTE_INFO_KEY)
+    const voteinfo = JSON.parse(localData)
     const currentQuestion = state.questionData[questionKey]
     const options = currentQuestion.options
-    const voteTotal = state.voteMap?.[questionKey]?.total || 0
+    const voteTotal = voteinfo?.[questionKey]?.total || 0
+    
     options.forEach(option => {
       const optionhash = option.hash
-      const voteCount = state.voteMap?.[questionKey]?.[optionhash] || 0
+      const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
       // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1  
       if (
         Array.isArray(questionVal)
@@ -146,7 +156,7 @@ export default {
         const countPayload = {
           questionKey,
           voteKey: optionhash,
-          voteValue: voteCount
+          voteValue: voteCount 
         }
         const totalPayload = {
           questionKey,

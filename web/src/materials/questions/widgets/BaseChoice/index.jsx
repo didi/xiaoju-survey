@@ -80,7 +80,6 @@ export default defineComponent({
         }
       }
       emit('change', values)
-      // return values
     }
     return {
       slots,

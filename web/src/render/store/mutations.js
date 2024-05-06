@@ -40,6 +40,9 @@ export default {
   },
   updateVoteMapByKey(state, data) {
     const { questionKey, voteKey, voteValue } = data
+    if(!state.voteMap[questionKey]){
+      state.voteMap[questionKey] = {}
+    }
     state.voteMap[questionKey][voteKey] = voteValue
   },
   setQuestionSeq(state, data) {

@@ -1,16 +1,16 @@
 <template>
-  <questionRuleContainer
+  <QuestionRuleContainer
     v-if="visible"
     v-bind="$attrs"
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"
     @change="handleChange"
-  ></questionRuleContainer> 
+  ></QuestionRuleContainer> 
 </template>
 <script setup>
 import { onMounted, onUnmounted, inject, ref, unref, computed } from 'vue'
-import questionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
+import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import store from '@/render/store'
 const props = defineProps({
   indexNumber: {

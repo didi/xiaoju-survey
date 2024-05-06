@@ -1,7 +1,8 @@
 <template>
   <form ref="ruleForm" :model="formModel" :rules="rules">
     <questionWrapper
-      v-for="(item) in renderData" :key="item.field"
+      v-for="(item) in renderData" 
+      :key="item.field"
       ref="questionWrappers"
       class="gap"
       v-bind="$attrs"
@@ -17,7 +18,7 @@
 import { ref, onMounted, provide, computed } from 'vue'
 // @ts-ignore
 import questionWrapper from './questionWrapper.vue'
-
+import store from '@/render/store'
 const props = defineProps({
   rules: {
     type: Object,
@@ -38,6 +39,13 @@ const props = defineProps({
     }
   }
 })
+// const questionData = computed(() => {
+//   return props.renderData.filter((item) => {
+//     const match = store.state.ruleEngine.getResult(item.field, 'question')
+//     console.log(item.field, match)
+//     return match
+//   }) 
+// })
 const emit = defineEmits(['formChange', 'blur'])
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event

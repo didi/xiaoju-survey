@@ -27,6 +27,7 @@ import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
 import useCommandComponent from '../hooks/useCommandComponent'
+import { cloneDeep } from 'lodash-es'
 
 export default {
   name: 'indexPage',
@@ -49,8 +50,9 @@ export default {
     LogoIcon
   },
   computed: {
-    formModel() {
-      return this.$store.getters.formModel
+    formValues() {
+      // 提交给后端的数据需要通过显示逻辑的规则引擎过滤
+      return this.$store.state.formValues
     },
     confirmAgain() {
       return this.$store.state.submitConf.confirmAgain
@@ -94,9 +96,21 @@ export default {
       }
     },
     getSubmitData() {
+      const formValues = cloneDeep(this.$store.state.formValues)
+      const formModel = Object.keys(formValues)
+        .filter(key => {
+          const match = store.state.ruleEngine.getResult(key, 'question')
+          console.log(key, match)
+          return match
+        })
+        .reduce((obj, key) => {
+          obj[key] = formValues[key];
+          return obj;
+        }, {});
+
       const result = {
         surveyPath: this.surveyPath,
-        data: JSON.stringify(this.formModel),
+        data: JSON.stringify(formModel),
         difTime: Date.now() - this.$store.state.enterTime,
         clientTime: Date.now()
       }
@@ -117,7 +131,9 @@ export default {
     },
     async submitForm() {
       try {
+        debugger
         const submitData = this.getSubmitData()
+        
         const res = await submitForm(submitData)
         if (res.code === 200) {
           this.$store.commit('setRouter', 'successPage')

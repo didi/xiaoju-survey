@@ -3,7 +3,8 @@ import { flatten } from 'lodash-es'
 export default {
   // 题目列表
   renderData: (state) => {
-    const { questionSeq, questionData, formValues } = state
+    const { questionSeq, questionData } = state
+    
     let index = 1
     return (
       questionSeq &&
@@ -11,12 +12,14 @@ export default {
         const questionArr = []
         
         item.forEach(questionKey => {
+          console.log('题目重新计算')
           const question = { ...questionData[questionKey] }
+          
           const { type, extraOptions, options, rangeConfig } = question
 
-          const questionVal = formValues[questionKey]
+          // const questionVal = formValues[questionKey]
 
-          question.value = questionVal
+          // question.value = questionVal
           // 本题开启了
           if (question.showIndex) {
             question.indexNumber = index++
@@ -42,47 +45,47 @@ export default {
             if (optionItem.others) {
               const opKey = `${questionKey}_${optionItem.hash}`
               optionItem.othersKey = opKey
-              optionItem.othersValue = formValues[opKey]
-              othersValue[opKey] = formValues[opKey]
+              // optionItem.othersValue = formValues[opKey]
+              // othersValue[opKey] = formValues[opKey]
             }
 
             // 投票题，用户手动选择选项后，要实时更新展示数据和进度
-            if (/vote/.test(type)) {
-              const voteCount = voteMap?.[questionKey]?.[optionItem.hash] || 0
-              if (
-                Array.isArray(questionVal)
-                  ? questionVal.includes(optionItem.hash)
-                  : questionVal === optionItem.hash
-              ) {
-                optionItem.voteCount = voteCount + 1
-                voteTotal = voteTotal + 1
-              } else {
-                optionItem.voteCount = voteCount
-              }
-              question.voteTotal = voteTotal
-            }
+            // if (/vote/.test(type)) {
+            //   const voteCount = voteMap?.[questionKey]?.[optionItem.hash] || 0
+            //   if (
+            //     Array.isArray(questionVal)
+            //       ? questionVal.includes(optionItem.hash)
+            //       : questionVal === optionItem.hash
+            //   ) {
+            //     optionItem.voteCount = voteCount + 1
+            //     voteTotal = voteTotal + 1
+            //   } else {
+            //     optionItem.voteCount = voteCount
+            //   }
+            //   question.voteTotal = voteTotal
+            // }
           }
 
           // 开启了更多输入框，要将当前的value赋值给question
-          if (rangeConfig && Object.keys(rangeConfig).length > 0 && rangeConfig[questionVal]) {
-            const curRange = rangeConfig[questionVal]
-            if (curRange?.isShowInput) {
-              const rangeKey = `${questionKey}_${questionVal}`
-              curRange.othersKey = rangeKey
-              curRange.othersValue = formValues[rangeKey]
-              othersValue[rangeKey] = formValues[rangeKey]
-            }
-          }
+          // if (rangeConfig && Object.keys(rangeConfig).length > 0 && rangeConfig[questionVal]) {
+          //   const curRange = rangeConfig[questionVal]
+          //   if (curRange?.isShowInput) {
+          //     const rangeKey = `${questionKey}_${questionVal}`
+          //     curRange.othersKey = rangeKey
+          //     curRange.othersValue = formValues[rangeKey]
+          //     othersValue[rangeKey] = formValues[rangeKey]
+          //   }
+          // }
 
           // 将othersValue赋值给
           question.othersValue = othersValue
           // 题型显示隐藏通过过滤题目的视图数据实现，保证formModel中数据与视图数据一致
           
-          const match = state.ruleEngine.getResult(question.field, 'question')
-          console.log({match})
-          if(!match) {
-            return 
-          }
+          // const match = state.ruleEngine.getResult(question.field, 'question')
+          // console.log({match})
+          // if(!match) {
+          //   return 
+          // }
           
           questionArr.push(question)
         })

@@ -28,7 +28,7 @@ export default {
       return this.$store.state.rules
     },
     formModel() {
-      return this.$store.getters.formModel
+      return this.$store.state.formValues
     }
   },
   mounted() {},

@@ -9,7 +9,7 @@
   ></QuestionRuleContainer> 
 </template>
 <script setup>
-import { onMounted, onUnmounted, unref, computed } from 'vue'
+import { unref, computed } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersValue } from '@/render/hooks/useOthersValue'
@@ -36,7 +36,7 @@ const formValues = computed(() => {
 const questionConfig = computed(() =>{
   let moduleConfig = props.moduleConfig
   const { type, field, options, ...rest } = cloneDeep(moduleConfig)
-  console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
+  // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
   if(type === 'vote') {
     const { options, voteTotal } = useVoteMap(field)
@@ -52,7 +52,7 @@ const questionConfig = computed(() =>{
   }
   if(['radio-star','radio-nps'].includes(props.moduleConfig.type)) {
     let { rangeConfig, othersValue } = useShowInput(field)
-    console.log({rangeConfig, othersValue})
+    // console.log({rangeConfig, othersValue})
     moduleConfig.rangeConfig = unref(rangeConfig)
     moduleConfig.othersValue = unref(othersValue)
   }
@@ -67,7 +67,7 @@ const questionConfig = computed(() =>{
 const visible = computed(() => {
   const { field, type, innerType } = props.moduleConfig
   const matchResult = store.state.ruleEngine.getResult(field, 'question')
-  console.log(field + '重新计算visible：'+ matchResult)
+  // console.log(field + '题目的规则匹配改变，触发重新计算visible：'+ matchResult)
   if(!matchResult) {
     let value = ''
     // 题型是多选，或者子题型是多选（innerType是用于投票）
@@ -84,21 +84,16 @@ const visible = computed(() => {
   // 显示逻辑-处理视图
   return matchResult
 })
-// 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
-// 导致接受到的data是个Event
+
 const handleChange = (data) => {
-  const { key, value }  = data
+  const { key }  = data
+  // console.log(key, '触发change事件')
+  emit('change', data)
   // 处理投票题
   if(props.moduleConfig.type === 'vote') {
     store.dispatch('updateVoteData', data)
   }
-  // 处理选择填写更多
-  // if(['radio','checkbox'].includes(props.moduleConfig.type)) {
-  //   useOthersValue(props.moduleConfig.field)
-  // }
-
-  // 处理评分题填写更多
-  emit('change', data)
+  
   // 处理显示逻辑
   notifyMatch(key)
 }

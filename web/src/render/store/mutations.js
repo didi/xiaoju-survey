@@ -20,11 +20,8 @@ export default {
   },
   changeFormData(state, data) {
     let { key, value } = data
-    console.log('formValues', key, value)
+    // console.log('formValues', key, value)
     set(state, `formValues.${key}`, value)
-
-    
-    // set(state, `questionData.${key}.value`, value)
   },
   changeSelectMoreData(state, data) {
     const { key, value, field } = data

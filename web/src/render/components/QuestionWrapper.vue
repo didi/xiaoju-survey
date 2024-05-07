@@ -13,6 +13,7 @@ import { onMounted, onUnmounted, unref, computed } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersValue } from '@/render/hooks/useOthersValue'
+import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 const props = defineProps({
@@ -47,6 +48,12 @@ const questionConfig = computed(() =>{
     let { options, othersValue } = useOthersValue(field)
     const othersOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
+    moduleConfig.othersValue = unref(othersValue)
+  }
+  if(['radio-star','radio-nps'].includes(props.moduleConfig.type)) {
+    let { rangeConfig, othersValue } = useShowInput(field)
+    console.log({rangeConfig, othersValue})
+    moduleConfig.rangeConfig = unref(rangeConfig)
     moduleConfig.othersValue = unref(othersValue)
   }
   

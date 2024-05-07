@@ -14,9 +14,10 @@
             label-width="200px"
             @submit.prevent
           >
-            <template v-for="(item, index) in form.formList" :key="index">
+            <template v-for="(item, index) in form.formList">
               <FormItem
                 v-if="item.type && !item.hidden && Boolean(register[item.type])"
+                :key="index"
                 :form-config="item"
                 :style="item.style"
               >

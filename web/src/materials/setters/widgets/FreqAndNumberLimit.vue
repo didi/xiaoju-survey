@@ -54,7 +54,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .option-select {
   width: 130px !important;
 }

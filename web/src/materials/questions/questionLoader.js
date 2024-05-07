@@ -20,9 +20,6 @@ export class MaterialLoader extends ComponentLoader {
 
   dynamicImport(path) {
     // see https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
-    if (path === 'NpsModule') {
-      return import('./widgets/NpsModule/IndexModule.vue') // 需要改写
-    }
     return import(`./widgets/${path}/index.jsx`)
   }
 

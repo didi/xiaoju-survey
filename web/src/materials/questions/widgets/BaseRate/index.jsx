@@ -1,5 +1,6 @@
 import { defineComponent, computed } from 'vue'
 import '../../common/css/radioStar.scss'
+
 export default defineComponent({
   name: 'BaseRate',
   props: {

@@ -1,28 +1,26 @@
 <template>
   <div class="custom-time-range">
-    <el-config-provider :locale="zhCn">
-      <el-date-picker
-        v-model="begTime"
-        type="datetime"
-        placeholder="开始日期"
-        format="YYYY-MM-DD HH:mm:ss"
-        @change="changeData(formConfig.keys[0], $event)"
-      >
-      </el-date-picker>
-      <span class="seporator">至</span>
-      <el-date-picker
-        v-model="endTime"
-        type="datetime"
-        placeholder="结束日期"
-        format="YYYY-MM-DD HH:mm:ss"
-        @change="changeData(formConfig.keys[1], $event)"
-      >
-      </el-date-picker>
-    </el-config-provider>
+    <el-date-picker
+      v-model="begTime"
+      type="datetime"
+      placeholder="开始日期"
+      format="YYYY-MM-DD HH:mm:ss"
+      @change="changeData(formConfig.keys[0], $event)"
+    >
+    </el-date-picker>
+    <span class="seporator">至</span>
+    <el-date-picker
+      v-model="endTime"
+      type="datetime"
+      placeholder="结束日期"
+      format="YYYY-MM-DD HH:mm:ss"
+      @change="changeData(formConfig.keys[1], $event)"
+    >
+    </el-date-picker>
   </div>
 </template>
 <script>
-// 要注意，element的format和moment的format的D是不同的
+// 要注意，element的format和moment的format的是不同的
 import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'
@@ -54,11 +52,12 @@ export default {
   watch: {
     'formConfig.value': {
       handler([begTime, endTime]) {
-        if (begTime !== this.begTimeStr) {
+        debugger
+        if (!!begTime && begTime !== this.begTimeStr) {
           this.begTimeStr = begTime
           this.begTime = new Date(begTime)
         }
-        if (endTime !== this.endTimeStr) {
+        if (!!endTime && endTime !== this.endTimeStr) {
           this.endTimeStr = endTime
           this.endTime = new Date(endTime)
         }

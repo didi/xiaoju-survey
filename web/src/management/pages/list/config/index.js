@@ -10,7 +10,7 @@ export const fieldConfig = {
     title: '类型',
     key: 'type',
     width: 150,
-    comp: 'tag'
+    comp: 'TagModule'
   },
   title: {
     title: '标题',
@@ -28,7 +28,7 @@ export const fieldConfig = {
     title: '状态',
     key: 'state',
     width: 140,
-    comp: 'state'
+    comp: 'StateModule'
   },
   owner: {
     title: '所有者',

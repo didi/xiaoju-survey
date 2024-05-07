@@ -110,7 +110,8 @@ export default defineComponent({
       isShowInput,
       onMoreDataChange,
       rangeConfig,
-      selectMoreView
+      selectMoreView,
+      confirmStar
     } = this
 
     return (
@@ -120,16 +121,16 @@ export default defineComponent({
           value={value}
           readonly={readonly}
           iconClass={starClass}
-          onChange={this.confirmStar}
+          onChange={confirmStar}
         />
         {currentRangeConfig && <p class="explain radio-star">{currentRangeConfig.explain}</p>}
         {isShowInput && (
           <selectMoreView
             showTitle={false}
-            key={`${this.field}_${this.rating}`}
+            key={`${field}_${rating}`}
             moduleConfig={{
               type: 'selectMoreModule',
-              field: `${this.field}_${this.rating}`,
+              field: `${field}_${rating}`,
               placeholder: rangeConfig[rating]?.text,
               value: rangeConfig[rating]?.othersValue || ''
             }}

@@ -23,7 +23,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, unref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 
@@ -112,7 +112,7 @@ const onMoveDown = () => {
 }
 const onDelete = async () => {
   // const target = store.state.logic.showLogicEngine.findTargetsByFields(props.moduleConfig.field)
-  if(hasShowLogic) {
+  if(unref(hasShowLogic)) {
     ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'

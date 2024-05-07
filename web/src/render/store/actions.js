@@ -130,7 +130,11 @@ export default {
     const currentQuestion = state.questionData[questionKey]
     const options = currentQuestion.options
     const voteTotal = voteinfo?.[questionKey]?.total || 0
-    
+    let totalPayload = {
+      questionKey,
+      voteKey: 'total',
+      voteValue: voteTotal
+    }
     options.forEach(option => {
       const optionhash = option.hash
       const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
@@ -145,8 +149,8 @@ export default {
           voteKey: optionhash,
           voteValue: voteCount +1
         }
+        totalPayload.voteValue += 1 
         commit('updateVoteMapByKey', countPayload )
-        
       } else {
         const countPayload = {
           questionKey,
@@ -154,11 +158,6 @@ export default {
           voteValue: voteCount 
         }
         commit('updateVoteMapByKey', countPayload )
-      }
-      const totalPayload = {
-        questionKey,
-        voteKey: 'total',
-        voteValue: voteTotal +1
       }
       commit('updateVoteMapByKey', totalPayload )
     })

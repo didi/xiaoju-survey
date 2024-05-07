@@ -14,6 +14,7 @@ import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRul
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersValue } from '@/render/hooks/useOthersValue'
 import store from '@/render/store'
+import { cloneDeep } from 'lodash-es'
 const props = defineProps({
   indexNumber: {
     type: Number,
@@ -32,20 +33,22 @@ const formValues = computed(() => {
   return store.state.formValues
 })
 const questionConfig = computed(() =>{
+  // 这里依赖的formValue，所以change时会触发重新计算
   let moduleConfig = props.moduleConfig
-  const { type, field, options, ...rest } = moduleConfig
+  const { type, field, options, ...rest } = cloneDeep(moduleConfig)
   let alloptions = options
   if(type === 'vote') {
-    const { options:voteOptions, voteTotal } = useVoteMap(field)
-    
+    const { options, voteTotal } = useVoteMap(field)
+    const voteOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
-  // if(['radio','checkbox'].includes(props.moduleConfig.type)) {
-  //   const { options: othersOptions, othersValue } = useOthersValue(field)
-  //   alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
-  //   moduleConfig.othersValue = unref(othersValue)
-  // }
+  if(['radio','checkbox'].includes(props.moduleConfig.type)) {
+    let { options, othersValue } = useOthersValue(field)
+    const othersOptions = unref(options)
+    alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
+    moduleConfig.othersValue = unref(othersValue)
+  }
   
   return {
     ...moduleConfig,

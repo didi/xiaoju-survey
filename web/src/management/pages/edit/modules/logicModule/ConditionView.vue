@@ -73,6 +73,7 @@ import { defineProps, computed, inject } from 'vue';
 import { ConditionNode, RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { qAbleList } from '@/management/utils/constant.js'
 import { Minus } from '@element-plus/icons-vue'
+import { cleanRichText } from '@/common/xss'
 
 const renderData = inject('renderData', {
   type: Array<Object>,
@@ -107,7 +108,7 @@ const fieldList = computed(() => {
   return renderData.value.filter(question => qAbleList.includes(question.type))
     .map((item: any) => {
       return {
-        label: `${item.showIndex ? item.indexNumber + '.' :''} ${item.title}`,
+        label: `${item.showIndex ? item.indexNumber + '.' :''} ${cleanRichText(item.title)}`,
         value: item.field,
       }
     })

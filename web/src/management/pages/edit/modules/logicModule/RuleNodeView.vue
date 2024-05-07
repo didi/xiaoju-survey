@@ -54,6 +54,7 @@ import conditionView from "./ConditionView.vue";
 import { RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { Delete } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
+import { cleanRichText } from '@/common/xss'
 const store = useStore();
 const renderData = inject("renderData", {
   type: Array,
@@ -101,7 +102,7 @@ const targetQuestionList = computed(() => {
   let questionList = cloneDeep(renderData.value.slice(currntIndex + 1));
   return questionList.map((item: any) => {
     return {
-      label: item.title,
+      label: cleanRichText(item.title),
       value: item.field,
       disabled: store.state.logic.showLogicEngine
         .findTargetsByScope("question")

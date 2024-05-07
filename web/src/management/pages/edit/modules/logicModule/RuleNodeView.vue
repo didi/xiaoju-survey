@@ -70,13 +70,13 @@ const emit = defineEmits(["delete"]);
 const formValue = ref({
   ...props.ruleNode,
 });
-const handleChange = (ruleNode, key, value) => {
+const handleChange = (ruleNode: any, key: any, value: any) => {
   ruleNode.set(key, value);
 };
-const handleDelete = (id) => {
+const handleDelete = (id: any) => {
   emit("delete", id);
 };
-const handleDeleteCondition = (id) => {
+const handleDeleteCondition = (id: any) => {
   props.ruleNode.removeCondition(id);
 };
 const ruleForm = shallowRef(null);

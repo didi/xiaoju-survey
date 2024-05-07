@@ -89,16 +89,12 @@ export default {
       }
     },
     updateLogicConf() {
-      // if(this.$route.name === 'LogicIndex') {
-        
-      // }
       if(this.$store.state.logic.showLogicEngine) {
         try {
           this.$store.state.logic.showLogicEngine.validateSchema()
           
         } catch (error) {
           throw error
-          return 
         }
         const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
         // 更新逻辑配置

@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { computed, provide, unref } from "vue";
-import RuleListView from "../../modules/logicModule/components/RuleListView.vue";
+import RuleListView from "../../modules/logicModule/RuleListView.vue";
 import { filterQuestionPreviewData } from "@/management/utils/index";
 import { useStore } from "vuex";
 import { cloneDeep } from "lodash-es";

@@ -112,13 +112,6 @@ export class RuleNode {
       )
     };
   }
-  batchMatch(facts: Fact) {
-    return {
-      target: this.target,
-      scope: this.scope,
-      matched: this.match(facts)
-    };
-  }
 
 }
 
@@ -192,11 +185,6 @@ export class RuleMatch {
   toJson() {
     return Array.from(this.rules.entries()).map(([key, value]) => {
       return value.toJson()
-    })
-  }
-  batchMatch(facts: Fact) {
-    return Array.from(this.rules.entries()).map(([key, value]) => {
-      return value.batchMatch(facts)
     })
   }
 }

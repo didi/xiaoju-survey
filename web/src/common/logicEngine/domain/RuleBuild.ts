@@ -86,16 +86,18 @@ export class RuleBuild {
     })
   }
   fromJson(ruleConf: any) {
-    ruleConf.forEach((rule: any) => {
-      const { scope, target } = rule
-      const ruleNode = new RuleNode(scope, target);
-      rule.conditions.forEach((condition: any) => {
-        const { field, operator, value } = condition
-        const conditionNode = new ConditionNode(field, operator, value);
-        ruleNode.addCondition(conditionNode)
+    if(ruleConf instanceof Array) {
+      ruleConf.forEach((rule: any) => {
+        const { scope, target } = rule
+        const ruleNode = new RuleNode(scope, target);
+        rule.conditions.forEach((condition: any) => {
+          const { field, operator, value } = condition
+          const conditionNode = new ConditionNode(field, operator, value);
+          ruleNode.addCondition(conditionNode)
+        })
+        this.addRule(ruleNode)
       })
-      this.addRule(ruleNode)
-    })
+    }
     return this
   }
   validateSchema() {

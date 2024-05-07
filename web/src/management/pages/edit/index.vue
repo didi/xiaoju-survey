@@ -34,7 +34,7 @@ export default {
     this.$store.commit('edit/setSurveyId', this.$route.params.id)
     try {
       await this.$store.dispatch('edit/init')
-      await this.$store.dispatch('logic/initShowLogic', this.$store.state.edit.schema.logicConf.showLogicConf)
+      await this.$store.dispatch('logic/initShowLogic', this.$store.state.edit.schema.logicConf.showLogicConf || {})
     } catch (error) {
       ElMessage.error(error.message)
       // 自动跳转回列表页

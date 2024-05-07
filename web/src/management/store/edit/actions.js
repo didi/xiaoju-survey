@@ -15,7 +15,7 @@ export default {
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
       document.title = metaData.title
-      const { bannerConf, bottomConf, skinConf, baseConf, submitConf, dataConf, logicConf } =
+      const { bannerConf, bottomConf, skinConf, baseConf, submitConf, dataConf, logicConf = {} } =
         res.data.surveyConfRes.code
       commit('initSchema', {
         metaData,

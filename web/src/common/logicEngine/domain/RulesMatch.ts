@@ -119,14 +119,17 @@ export class RuleMatch {
   rules: Map<string, RuleNode>;
   constructor(ruleConf: any) {
     this.rules = new Map();
-    ruleConf.forEach((rule: any) => {
-      const ruleNode = new RuleNode(rule.target, rule.scope);
-      rule.conditions.forEach((condition: any) => {
-        const conditionNode =  new ConditionNode(condition.field, condition.operator, condition.value);
-          ruleNode.addCondition(conditionNode)
-      });
-      this.addRule(ruleNode)
-    })
+    if(ruleConf instanceof Array) {
+      ruleConf.forEach((rule: any) => {
+        const ruleNode = new RuleNode(rule.target, rule.scope);
+        rule.conditions.forEach((condition: any) => {
+          const conditionNode =  new ConditionNode(condition.field, condition.operator, condition.value);
+            ruleNode.addCondition(conditionNode)
+        });
+        this.addRule(ruleNode)
+      })
+    }
+    
   }
 
   // 添加条件规则到规则引擎中

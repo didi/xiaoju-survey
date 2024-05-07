@@ -145,27 +145,22 @@ export default {
           voteKey: optionhash,
           voteValue: voteCount +1
         }
-        const totalPayload = {
-          questionKey,
-          voteKey: 'total',
-          voteValue: voteTotal +1
-        }
         commit('updateVoteMapByKey', countPayload )
-        commit('updateVoteMapByKey', totalPayload )
+        
       } else {
         const countPayload = {
           questionKey,
           voteKey: optionhash,
           voteValue: voteCount 
         }
-        const totalPayload = {
-          questionKey,
-          voteKey: 'total',
-          voteValue: voteTotal
-        }
         commit('updateVoteMapByKey', countPayload )
-        commit('updateVoteMapByKey', totalPayload )
       }
+      const totalPayload = {
+        questionKey,
+        voteKey: 'total',
+        voteValue: voteTotal +1
+      }
+      commit('updateVoteMapByKey', totalPayload )
     })
 
     

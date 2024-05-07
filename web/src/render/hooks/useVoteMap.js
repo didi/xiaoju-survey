@@ -2,10 +2,9 @@ import { computed } from 'vue'
 import store from '../store/index'
 export const useVoteMap = (questionKey) => {
   
-  let voteTotal = computed(() => store.state.voteMap?.[questionKey]?.total || 0)
+  let voteTotal =  store.state.voteMap?.[questionKey]?.total || 0
 
-  const options = computed(() => {
-     return store.state.questionData[questionKey].options.map(option => {
+  const options =  store.state.questionData[questionKey].options.map(option => {
       const optionHash = option.hash
       const voteCount = store.state.voteMap?.[questionKey]?.[optionHash] || 0
       
@@ -14,7 +13,6 @@ export const useVoteMap = (questionKey) => {
         voteCount
       }
     })
-  })
   
   return { options, voteTotal }
 }

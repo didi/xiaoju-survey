@@ -38,6 +38,7 @@ export default {
   },
   updateVoteMapByKey(state, data) {
     const { questionKey, voteKey, voteValue } = data
+    // 兼容为空的情况
     if(!state.voteMap[questionKey]){
       state.voteMap[questionKey] = {}
     }

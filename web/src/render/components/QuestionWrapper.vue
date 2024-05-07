@@ -1,6 +1,5 @@
 <template>
   <QuestionRuleContainer
-    v-if="visible"
     v-bind="$attrs"
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
@@ -34,9 +33,9 @@ const formValues = computed(() => {
   return store.state.formValues
 })
 const questionConfig = computed(() =>{
-  // 这里依赖的formValue，所以change时会触发重新计算
   let moduleConfig = props.moduleConfig
   const { type, field, options, ...rest } = cloneDeep(moduleConfig)
+  console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
   if(type === 'vote') {
     const { options, voteTotal } = useVoteMap(field)
@@ -44,18 +43,18 @@ const questionConfig = computed(() =>{
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
-  if(['radio','checkbox'].includes(props.moduleConfig.type)) {
-    let { options, othersValue } = useOthersValue(field)
-    const othersOptions = unref(options)
-    alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
-    moduleConfig.othersValue = unref(othersValue)
-  }
-  if(['radio-star','radio-nps'].includes(props.moduleConfig.type)) {
-    let { rangeConfig, othersValue } = useShowInput(field)
-    console.log({rangeConfig, othersValue})
-    moduleConfig.rangeConfig = unref(rangeConfig)
-    moduleConfig.othersValue = unref(othersValue)
-  }
+  // if(['radio','checkbox'].includes(props.moduleConfig.type)) {
+  //   let { options, othersValue } = useOthersValue(field)
+  //   const othersOptions = unref(options)
+  //   alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
+  //   moduleConfig.othersValue = unref(othersValue)
+  // }
+  // if(['radio-star','radio-nps'].includes(props.moduleConfig.type)) {
+  //   let { rangeConfig, othersValue } = useShowInput(field)
+  //   console.log({rangeConfig, othersValue})
+  //   moduleConfig.rangeConfig = unref(rangeConfig)
+  //   moduleConfig.othersValue = unref(othersValue)
+  // }
   
   return {
     ...moduleConfig,
@@ -63,19 +62,14 @@ const questionConfig = computed(() =>{
     value: formValues.value[props.moduleConfig.field]
   }
 })
-const visible = computed(() => {
-  // 显示逻辑-处理视图
-  return store.state.ruleEngine.getResult(props.moduleConfig.field, 'question')
-})
 
-
-onMounted(() => {
-  console.log(props.moduleConfig.field, '出现了')
-  // 题目显示通知目标题目从新匹配规则
-  let fact = unref(formValues)
-  fact[props.moduleConfig.field] = questionConfig.value.value
-  notifyMatch(props.moduleConfig.field, fact)
-})
+// onMounted(() => {
+//   console.log(props.moduleConfig.field, '出现了')
+//   // 题目显示通知目标题目从新匹配规则
+//   let fact = unref(formValues)
+//   fact[props.moduleConfig.field] = questionConfig.value.value
+//   notifyMatch(props.moduleConfig.field, fact)
+// })
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
@@ -105,12 +99,12 @@ const notifyMatch = (key, fact) => {
     store.state.ruleEngine.match(target, 'question', fact)
   })
 }
-onUnmounted(() => {
-  let fact = unref(formValues)
-  fact[props.moduleConfig.field] = ''
-  console.log(props.moduleConfig.field, '隐藏了')
-  // 题目隐藏通知目标题目从新匹配规则
-  notifyMatch(props.moduleConfig.field, fact)
-})
+// onUnmounted(() => {
+//   let fact = unref(formValues)
+//   fact[props.moduleConfig.field] = ''
+//   console.log(props.moduleConfig.field, '隐藏了')
+//   // 题目隐藏通知目标题目从新匹配规则
+//   notifyMatch(props.moduleConfig.field, fact)
+// })
 </script>
 

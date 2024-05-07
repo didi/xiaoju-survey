@@ -1,22 +1,23 @@
 <template>
   <form ref="ruleForm" :model="formValues" :rules="rules">
-    <QuestionWrapper
-      v-for="(item) in renderData"
-      :key="item.field"
-      class="gap"
-      v-bind="$attrs"
-      :moduleConfig="item"
-      :qIndex="item.qIndex"
-      :indexNumber="item.indexNumber"
-      :showTitle="true"
-      @change="handleChange"
-    ></QuestionWrapper>
+    <div v-for="(item) in renderData" :key="item.field">
+      <QuestionWrapper
+        v-if="visible(item.field)"
+        class="gap"
+        v-bind="$attrs"
+        :moduleConfig="item"
+        :qIndex="item.qIndex"
+        :indexNumber="item.indexNumber"
+        :showTitle="true"
+        @change="handleChange"
+      ></QuestionWrapper>
+    </div>
   </form>
 </template>
 <script setup>
 import { inject, provide, computed, onBeforeMount } from 'vue'
 import QuestionWrapper from './QuestionWrapper.vue'
-
+import store from '@/render/store'
 const $bus = inject('$bus')
 const props = defineProps({
   rules: {
@@ -70,6 +71,13 @@ onBeforeMount(() => {
       fields.splice(fields.indexOf(field), 1);
     }
   });
+})
+const visible = computed(() => {
+  return (field) => {
+    console.log(field + '重新计算visible：'+store.state.ruleEngine.getResult(field, 'question'))
+  // 显示逻辑-处理视图
+    return store.state.ruleEngine.getResult(field, 'question')
+  }
 })
 
 const validate = (callback) => {

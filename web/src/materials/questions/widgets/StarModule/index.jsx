@@ -40,6 +40,7 @@ export default defineComponent({
       }
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const rating = computed({
       get() {

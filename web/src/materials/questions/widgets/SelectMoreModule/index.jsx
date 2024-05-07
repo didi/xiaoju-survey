@@ -10,6 +10,7 @@ export default defineComponent({
     placeholder: String,
     value: String
   },
+  emits: ['change', 'blur'],
   setup(props, { emit }) {
     const onBlur = () => {
       emit('blur')

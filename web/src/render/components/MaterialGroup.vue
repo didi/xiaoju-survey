@@ -2,7 +2,6 @@
   <form ref="ruleForm" :model="formValues" :rules="rules">
     <div v-for="(item) in renderData" :key="item.field">
       <QuestionWrapper
-        v-if="visible(item.field)"
         class="gap"
         v-bind="$attrs"
         :moduleConfig="item"
@@ -72,13 +71,13 @@ onBeforeMount(() => {
     }
   });
 })
-const visible = computed(() => {
-  return (field) => {
-    console.log(field + '重新计算visible：'+store.state.ruleEngine.getResult(field, 'question'))
-  // 显示逻辑-处理视图
-    return store.state.ruleEngine.getResult(field, 'question')
-  }
-})
+// const visible = computed(() => {
+//   return (field) => {
+//     console.log(field + '重新计算visible：'+store.state.ruleEngine.getResult(field, 'question'))
+//   // 显示逻辑-处理视图
+//     return store.state.ruleEngine.getResult(field, 'question')
+//   }
+// })
 
 const validate = (callback) => {
   const length = fields.length

@@ -25,29 +25,29 @@ export default {
             question.indexNumber = index++
           }
 
-          const allOptions = []
-          if (Array.isArray(extraOptions)) {
-            allOptions.push(...extraOptions)
-          }
-          if (Array.isArray(options)) {
-            allOptions.push(...options)
-          }
+          // const allOptions = []
+          // if (Array.isArray(extraOptions)) {
+          //   allOptions.push(...extraOptions)
+          // }
+          // if (Array.isArray(options)) {
+          //   allOptions.push(...options)
+          // }
 
-          let othersValue = {}
+          // let othersValue = {}
           // let voteTotal = 0
           // const voteMap = state.voteMap
           // if (/vote/.test(type)) {
           //   voteTotal = voteMap?.[questionKey]?.total || 0
           // }
           // 遍历所有的选项
-          for (const optionItem of allOptions) {
+          // for (const optionItem of allOptions) {
             // 开启了更多输入框，生成othersValue的值
-            if (optionItem.others) {
-              const opKey = `${questionKey}_${optionItem.hash}`
-              optionItem.othersKey = opKey
+            // if (optionItem.others) {
+            //   const opKey = `${questionKey}_${optionItem.hash}`
+            //   optionItem.othersKey = opKey
               // optionItem.othersValue = formValues[opKey]
               // othersValue[opKey] = formValues[opKey]
-            }
+            // }
 
             // 投票题，用户手动选择选项后，要实时更新展示数据和进度
             // if (/vote/.test(type)) {
@@ -64,7 +64,7 @@ export default {
             //   }
             //   question.voteTotal = voteTotal
             // }
-          }
+          // }
 
           // 开启了更多输入框，要将当前的value赋值给question
           // if (rangeConfig && Object.keys(rangeConfig).length > 0 && rangeConfig[questionVal]) {
@@ -78,7 +78,7 @@ export default {
           // }
 
           // 将othersValue赋值给
-          question.othersValue = othersValue
+          // question.othersValue = othersValue
           
           questionArr.push(question)
         })

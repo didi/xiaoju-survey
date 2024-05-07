@@ -93,6 +93,10 @@ export default {
     },
     getSubmitData() {
       const formValues = cloneDeep(this.$store.state.formValues)
+      // 填写更多-处理提交数据
+      
+      
+      
       // 显示逻辑-处理提交数据
       const formModel = Object.keys(formValues)
         .filter(key => this.$store.state.ruleEngine.getResult(key, 'question'))
@@ -100,6 +104,7 @@ export default {
           obj[key] = formValues[key];
           return obj;
         }, {});
+      
 
       const result = {
         surveyPath: this.surveyPath,

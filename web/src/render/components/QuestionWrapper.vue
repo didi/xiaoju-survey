@@ -12,6 +12,7 @@
 import { onMounted, onUnmounted, unref, computed } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
+import { useOthersValue } from '@/render/hooks/useOthersValue'
 import store from '@/render/store'
 const props = defineProps({
   indexNumber: {
@@ -33,19 +34,27 @@ const formValues = computed(() => {
 const questionConfig = computed(() =>{
   let moduleConfig = props.moduleConfig
   const { type, field, options, ...rest } = moduleConfig
+  let alloptions = options
   if(type === 'vote') {
-    const { options, voteTotal } = useVoteMap(field)
-    moduleConfig.options = unref(options)
+    const { options:voteOptions, voteTotal } = useVoteMap(field)
+    
+    alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
+  // if(['radio','checkbox'].includes(props.moduleConfig.type)) {
+  //   const { options: othersOptions, othersValue } = useOthersValue(field)
+  //   alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
+  //   moduleConfig.othersValue = unref(othersValue)
+  // }
+  
   return {
     ...moduleConfig,
+    options: alloptions,
     value: formValues.value[props.moduleConfig.field]
   }
 })
 const visible = computed(() => {
   // 显示逻辑-处理视图
-  console.log(props.moduleConfig.field, store.state.ruleEngine.getResult(props.moduleConfig.field, 'question'))
   return store.state.ruleEngine.getResult(props.moduleConfig.field, 'question')
 })
 
@@ -60,15 +69,24 @@ onMounted(() => {
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
 // 导致接受到的data是个Event
 const handleChange = (data) => {
+  const { key, value }  = data
+  // 处理投票题
   if(props.moduleConfig.type === 'vote') {
     store.dispatch('updateVoteData', data)
   }
+  // 处理选择填写更多
+  // if(['radio','checkbox'].includes(props.moduleConfig.type)) {
+  //   useOthersValue(props.moduleConfig.field)
+  // }
+
+  // 处理评分题填写更多
   
-  emit('change', data)
-  const { key, value }  = data
+  // 处理显示逻辑
   let fact = unref(formValues)
   fact[key] = value
   notifyMatch(key, fact)
+
+  emit('change', data)
 }
 const notifyMatch = (key, fact) => {
   const targets = store.state.ruleEngine.findTargetsByField(key) || []

@@ -1,5 +1,6 @@
 import { defineComponent, ref, computed } from 'vue'
 import { filterXSS } from '@/common/xss'
+
 import '../../common/css/title.scss'
 import tagList from '../../common/config/tagList'
 

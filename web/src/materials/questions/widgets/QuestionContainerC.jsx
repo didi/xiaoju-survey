@@ -2,11 +2,10 @@ import { defineComponent, onMounted, shallowRef } from 'vue'
 
 import questionLoader from '@/materials/questions/questionLoader.js'
 
-import moduleTitle from './TitleModule/index.jsx'
-
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
-import '../common/css/title.scss'
+
+import TitleModule from './TitleModule/index.jsx'
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
@@ -45,9 +44,6 @@ export default defineComponent({
       default: false
     }
   },
-  components: {
-    moduleTitle
-  },
   emits: ['change', 'focus', 'blur'],
   setup(props, { emit }) {
     const BlockComponent = shallowRef(null)
@@ -64,13 +60,9 @@ export default defineComponent({
     const onChange = (data) => {
       emit('change', data)
     }
-    const onClick = () => {
-      // emit('select', props.indexNumber)
-    }
     return {
       props,
       BlockComponent,
-      onClick,
       onBlur,
       onFocus,
       onChange
@@ -84,7 +76,7 @@ export default defineComponent({
     const BlockComponent = this.BlockComponent
     return (
       <div class={['question']}>
-        {this.showTitle && <moduleTitle {...props} />}
+        {this.showTitle && <TitleModule {...props} />}
         <div class="question-block">
           {this.BlockComponent ? (
             <BlockComponent

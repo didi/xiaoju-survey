@@ -5,7 +5,6 @@ import RichEditor from '@/common/Editor/RichEditor.vue'
 import '../common/css/title.scss'
 import tagList from '../common/config/tagList'
 
-
 export default defineComponent({
   name: 'EditTitle',
   components: { RichEditor },
@@ -39,6 +38,7 @@ export default defineComponent({
       default: ''
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const status = ref('')
     watch(
@@ -106,14 +106,12 @@ export default defineComponent({
           <div class="module-title-title">
             {this.showIndex && <span class="index"> {indexNumber}.</span>}
             {this.status === 'edit' ? (
-              // <div class="richeditor">
               <RichEditor
                 class="richeditor"
                 modelValue={filterXSS(this.title)}
                 onChange={this.handleChange}
               />
             ) : (
-              // </div>
               <div v-html={filterXSS(tagTitle)} class="flex module-title-title-text"></div>
             )}
           </div>

@@ -21,13 +21,13 @@
       padding: 0;
     }
   }
-  :deep(.radio-nps-hover) {
-    .star-item {
+  .radio-nps-hover {
+    .rate-item {
       &:hover {
         background-color: $primary-color;
       }
     }
-    &:has(.star-item:hover) .star-item:not(:hover, :hover ~ *) {
+    &:has(.rate-item:hover) .rate-item:not(:hover, :hover ~ *) {
       background-color: $primary-color;
     }
   }

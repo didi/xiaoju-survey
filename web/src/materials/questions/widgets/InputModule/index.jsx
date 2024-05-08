@@ -1,8 +1,11 @@
-import BaseInput from '../BaseInput'
 import { defineComponent, ref } from 'vue'
-import '../../common/css/input.scss'
 import { get } from 'lodash-es'
+
+import BaseInput from '../BaseInput'
+
+import './style.scss'
 import myMeta from './meta'
+
 export const meta = myMeta
 /**
  * 支持配置：
@@ -104,33 +107,34 @@ export default defineComponent({
     }
   },
   render() {
-    const { focusFlag, getLeftTextNumber, valid, textRange, props } =
-      this
+    const { focusFlag, getLeftTextNumber, valid, textRange, props } = this
 
     return (
-      <BaseInput
-        uiTarget="input"
-        type={valid === 'n' ? 'number' : 'text'}
-        field={props.field}
-        name={props.field}
-        value={props.value}
-        placeholder={props.placeholder}
-        textRange={props.textRange}
-        maxlength={textRange.max.value}
-        minlength={textRange.min.value}
-        valid={props.valid}
-        readonly={props.readonly}
-        onBlur={this.onBlur}
-        // onFocus={this.onFocus}
-        // onInput={this.onInput}
-        onChange={this.onChange}
-      >
+      <div>
+        <BaseInput
+          uiTarget="input"
+          type={valid === 'n' ? 'number' : 'text'}
+          field={props.field}
+          name={props.field}
+          value={props.value}
+          placeholder={props.placeholder}
+          textRange={props.textRange}
+          maxlength={textRange.max.value}
+          minlength={textRange.min.value}
+          valid={props.valid}
+          readonly={props.readonly}
+          onBlur={this.onBlur}
+          onFocus={this.onFocus}
+          onInput={this.onInput}
+          onChange={this.onChange}
+        />
+
         {focusFlag && (
           <div class="text-number-tip">
             <p>{getLeftTextNumber}</p>
           </div>
         )}
-      </BaseInput>
+      </div>
     )
   }
 })

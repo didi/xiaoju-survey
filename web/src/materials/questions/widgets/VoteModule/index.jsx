@@ -1,9 +1,12 @@
 import { computed, defineComponent } from 'vue'
-import BaseChoice from '../BaseChoice'
-import ProcessModule from '../../components/ProcessModule.vue'
-import '../../common/css/vote.scss'
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer'
 import { includes } from 'lodash-es'
+
+import ProcessModule from '../../components/ProcessModule.vue'
+import BaseChoice from '../BaseChoice'
+import QuestionWithRule from '../QuestionRuleContainer'
+
+import './style.scss'
+
 export default defineComponent({
   name: 'VoteModule',
   components: { BaseChoice, ProcessModule, QuestionWithRule },
@@ -41,6 +44,7 @@ export default defineComponent({
       default: 1
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {
@@ -128,16 +132,16 @@ export default defineComponent({
                 <div class="vote-count">{`${scoped.option.voteCount || 0}票`}</div>
               </div>
             )
-          },
-          selectMore: (scoped) => {
-            return (
-              <QuestionWithRule
-                showTitle={false}
-                moduleConfig={scoped.selectMoreConfig}
-                onChange={(e) => this.handleSelectMoreChange(e)}
-              ></QuestionWithRule>
-            )
           }
+          // selectMore: (scoped) => {
+          //   return (
+          //     <QuestionWithRule
+          //       showTitle={false}
+          //       moduleConfig={scoped.selectMoreConfig}
+          //       onChange={(e) => this.handleSelectMoreChange(e)}
+          //     ></QuestionWithRule>
+          //   )
+          // }
         }}
       </BaseChoice>
     )

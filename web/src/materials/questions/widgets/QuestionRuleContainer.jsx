@@ -1,10 +1,24 @@
-import { defineComponent, ref, nextTick, computed, inject, h, unref, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+import {
+  defineComponent,
+  ref,
+  nextTick,
+  computed,
+  inject,
+  h,
+  unref,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance
+} from 'vue'
 
-import '../common/css/formItem.scss'
-import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
-import ErrorTip from '../components/ErrorTip.vue'
 import { assign } from 'lodash-es'
 import AsyncValidator from 'async-validator'
+
+import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
+import ErrorTip from '../components/ErrorTip.vue'
+
+import '../common/css/formItem.scss'
+
 export default defineComponent({
   name: 'QuestionRuleContainer',
   components: { ErrorTip },
@@ -26,11 +40,11 @@ export default defineComponent({
       default: 1
     }
   },
-  emits: ['focus', 'change', 'select', 'blur'],
+  emits: ['change', 'blur'],
   setup(props, { emit }) {
     const validateMessage = ref('')
     const validateState = ref('')
-    const { proxy: instance } = getCurrentInstance();
+    const { proxy: instance } = getCurrentInstance()
     const form = inject('Form', {
       default: {},
       type: Object
@@ -60,15 +74,15 @@ export default defineComponent({
       const { type } = props.moduleConfig
       return !/hidden|mobileHidden/.test(type)
     })
-    
+
     onMounted(() => {
-      $bus.emit && $bus.emit('form.addField', instance);
-    });
+      $bus.emit && $bus.emit('form.addField', instance)
+    })
 
     onBeforeUnmount(() => {
-      $bus.emit && $bus.emit('form.removeField', instance);
-    });
-    
+      $bus.emit && $bus.emit('form.removeField', instance)
+    })
+
     const validate = (trigger, callback = () => {}) => {
       const rules = getFilteredRule(trigger)
       // 无规则直接执行回调
@@ -86,16 +100,19 @@ export default defineComponent({
       nextTick(() => {
         // 对填空题单独设置其value
         let value = unref(form.model)[field]
-        validator.validate({
-          [field]: value 
-        }, { 
-          firstFields: true 
-        }, 
-        (errors) => {
-          validateState.value = !errors ? 'success' : 'error'
-          validateMessage.value = errors ? errors[0].message : ''
-          callback && callback(validateMessage.value)
-        })
+        validator.validate(
+          {
+            [field]: value
+          },
+          {
+            firstFields: true
+          },
+          (errors) => {
+            validateState.value = !errors ? 'success' : 'error'
+            validateMessage.value = errors ? errors[0].message : ''
+            callback && callback(validateMessage.value)
+          }
+        )
       })
     }
 

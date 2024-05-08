@@ -4,11 +4,9 @@ import questionLoader from '@/materials/questions/questionLoader.js'
 
 import moduleList from '../common/config/moduleList.js'
 import '../common/css/question.scss'
-import '../common/css/title.scss'
 
 import EditOptions from './EditOptions.jsx'
-import moduleTitle from './EditTitle.jsx'
-
+import EditTitle from './EditTitle.jsx'
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
@@ -47,14 +45,12 @@ export default defineComponent({
       default: false
     }
   },
-  components: {
-    moduleTitle
-  },
+  emits: ['blur', 'focus', 'change', 'select'],
   setup(props, { emit }) {
     const BlockComponent = shallowRef(null)
-    
+
     const questionMeta = ref({})
-    
+
     onMounted(async () => {
       const { componentRes, meta } = await getBlockComponent(props.type)
       BlockComponent.value = componentRes.component
@@ -64,7 +60,7 @@ export default defineComponent({
     const showEditComponent = computed(() => {
       let result = false
       if (props.isSelected) {
-        const { editConfigure = { optionEdit:{ show: false} } } = questionMeta.value
+        const { editConfigure = { optionEdit: { show: false } } } = questionMeta.value
         result = editConfigure?.optionEdit?.show
       }
       return result
@@ -82,7 +78,7 @@ export default defineComponent({
     const onClick = () => {
       emit('select', props.indexNumber)
     }
-    
+
     return {
       questionMeta,
       props,
@@ -110,11 +106,13 @@ export default defineComponent({
     }
     return (
       <div class={['question', isSelected ? 'isSelected' : '']}>
-        {this.showTitle && <moduleTitle {...props} onChange={this.onChange} />}
+        {this.showTitle && <EditTitle {...props} onChange={this.onChange} />}
+
         <div class="question-block">
           {this.showEditComponent ? (
             <EditOptions moduleConfig={props.moduleConfig}></EditOptions>
           ) : (
+            // 输入类题目
             <dynamicComponent
               readonly
               {...props}

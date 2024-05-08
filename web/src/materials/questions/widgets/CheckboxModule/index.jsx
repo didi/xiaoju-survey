@@ -1,7 +1,9 @@
-import BaseChoice from '../BaseChoice'
 import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
 import { includes } from 'lodash-es'
+
+import BaseChoice from '../BaseChoice'
 import metaConfig from './meta.js'
+
 export const meta = metaConfig
 /**
  * 支持配置：
@@ -79,7 +81,7 @@ export default defineComponent({
     }
 
     const selectMoreView = shallowRef(null)
-    if(props.readonly) {
+    if (props.readonly) {
       selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
     } else {
       selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
@@ -104,7 +106,7 @@ export default defineComponent({
         onChange={onChange}
         value={value}
       >
-         {{
+        {{
           selectMore: (scoped) => {
             return (
               <selectMoreView

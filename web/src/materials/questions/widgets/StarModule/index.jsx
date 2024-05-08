@@ -1,6 +1,7 @@
 import { defineComponent, computed, shallowRef, defineAsyncComponent } from 'vue'
-import '../../common/css/radioStar.scss'
 import BaseRate from '../BaseRate'
+import './style.scss'
+
 export default defineComponent({
   name: 'StarModule',
   components: { BaseRate },
@@ -40,6 +41,7 @@ export default defineComponent({
       }
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const rating = computed({
       get() {
@@ -84,7 +86,7 @@ export default defineComponent({
       })
     }
     const selectMoreView = shallowRef(null)
-    if(props.readonly) {
+    if (props.readonly) {
       selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
     } else {
       selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))

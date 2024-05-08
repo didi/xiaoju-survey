@@ -1,5 +1,5 @@
 import { defineComponent, computed } from 'vue'
-import '../../common/css/radioStar.scss'
+import './style.scss'
 
 export default defineComponent({
   name: 'BaseRate',
@@ -29,6 +29,7 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const rating = computed({
       get() {
@@ -63,13 +64,13 @@ export default defineComponent({
     const { rating, range, iconClass } = this
 
     return (
-      <div class="star-wrapper-main">
-        <div class="star-box">
+      <div class="rate-wrapper-main">
+        <div class="rate-box">
           {range.map((num, index) => {
             return (
               <div
-                class={['star-item', num <= rating ? 'on' : 'off', iconClass]}
-                key={'star' + index}
+                class={['rate-item', num <= rating ? 'on' : 'off', iconClass]}
+                key={'rate' + index}
                 onClick={() => {
                   this.handleClick(num)
                 }}

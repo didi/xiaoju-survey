@@ -3,7 +3,6 @@ import basicConfig from '../../common/config/basicConfig'
 
 const meta = {
   title: '评分',
-  questExtra: ['listenMerge'],
   type: 'radio-nps',
   componentName: 'NpsModule',
   formConfig: [

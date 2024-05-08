@@ -2,7 +2,6 @@ import basicConfig from '../../common/config/basicConfig'
 
 export const meta = {
   title: '单行输入框',
-  questExtra: ['listenMerge'],
   type: 'text',
   componentName: 'InputModule',
   formConfig: [

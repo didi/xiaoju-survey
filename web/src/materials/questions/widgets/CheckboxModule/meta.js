@@ -2,7 +2,6 @@ import basicConfig from '../../common/config/basicConfig'
 
 const meta = {
   title: '多选',
-  questExtra: ['listenMerge'],
   type: 'checkbox',
   componentName: 'CheckBoxModule',
   formConfig: [

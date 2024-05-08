@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
-        component: () => import('../pages/edit/pages/edit.vue')
+        component: () => import('../pages/edit/pages/Edit.vue')
       },
       {
         path: 'setting',
@@ -37,7 +37,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
-        component: () => import('../pages/edit/pages/setting.vue')
+        component: () => import('../pages/edit/pages/Setting.vue')
       },
       {
         path: 'skin',
@@ -53,7 +53,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () => import('../pages/edit/pages/skin/content.vue')
+            component: () => import('../pages/edit/pages/skin/Content.vue')
           },
           {
             path: 'result',
@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () => import('../pages/edit/pages/skin/result.vue')
+            component: () => import('../pages/edit/pages/skin/Result.vue')
           }
         ]
       }

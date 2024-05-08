@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import back from '../modules/generalModule/back.vue'
-import pageTitle from '../modules/generalModule/pageTitle.vue'
-import pageNav from '../modules/generalModule/pageNav.vue'
-import history from '../modules/contentModule/history.vue'
-import save from '../modules/contentModule/save.vue'
-import publish from '../modules/contentModule/publish.vue'
+import back from '../modules/generalModule/Back.vue'
+import pageTitle from '../modules/generalModule/PageTitle.vue'
+import pageNav from '../modules/generalModule/PageNav.vue'
+import history from '../modules/contentModule/History.vue'
+import save from '../modules/contentModule/Save.vue'
+import publish from '../modules/contentModule/Publish.vue'
 import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 

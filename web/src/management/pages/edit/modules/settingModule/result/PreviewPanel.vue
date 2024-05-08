@@ -10,8 +10,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import success from '../components/success.vue'
-import overTime from '../components/overTime.vue'
+import success from '../components/Success.vue'
+import overTime from '../components/OverTime.vue'
 import { EDIT_STATUS_MAP } from '../enum'
 import { get as _get } from 'lodash-es'
 

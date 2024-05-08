@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import setting from '../modules/settingModule/setting.vue'
+import setting from '../modules/settingModule/Setting.vue'
 export default {
   name: 'questionSettingPage',
   components: {

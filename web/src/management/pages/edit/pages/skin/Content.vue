@@ -12,10 +12,10 @@
   </commonTemplate>
 </template>
 <script>
-import commonTemplate from '../../components/commonTemplate.vue'
-import catalogPanel from '../../modules/settingModule/skin/catalogPanel.vue'
-import previewPanel from '../../modules/settingModule/skin/previewPanel.vue'
-import setterPanel from '../../modules/settingModule/skin/setterPanel.vue'
+import commonTemplate from '../../components/CommonTemplate.vue'
+import catalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
+import previewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
+import setterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
 
 export default {
   name: 'editIndex',

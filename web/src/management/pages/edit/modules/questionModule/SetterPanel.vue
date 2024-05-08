@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import setterField from '@/management/pages/edit/components/setterField.vue'
+import setterField from '@/management/pages/edit/components/SetterField.vue'
 import { mapGetters } from 'vuex'
 
 export default {

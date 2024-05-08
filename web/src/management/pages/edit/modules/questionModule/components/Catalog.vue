@@ -21,7 +21,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import catalogItem from './catalogItem.vue'
+import catalogItem from './CatalogItem.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
 export default {

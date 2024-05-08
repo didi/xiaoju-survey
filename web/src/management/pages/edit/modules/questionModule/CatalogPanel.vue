@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import TypeList from './components/typeList.vue'
-import Catalog from './components/catalog.vue'
+import TypeList from './components/TypeList.vue'
+import Catalog from './components/Catalog.vue'
 
 export default {
   name: 'EditLeftTabPanel',

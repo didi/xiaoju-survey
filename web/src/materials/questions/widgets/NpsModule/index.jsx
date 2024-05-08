@@ -60,11 +60,11 @@ export default defineComponent({
       rating.value = num
     }
 
-    const minMsg = computed(() => {
+    const minMessage = computed(() => {
       return props.minMsg || '极不满意'
     })
 
-    const maxMsg = computed(() => {
+    const maxMessage = computed(() => {
       return props.maxMsg || '十分满意'
     })
 
@@ -96,8 +96,8 @@ export default defineComponent({
     return {
       rating,
       confirmNps,
-      minMsg,
-      maxMsg,
+      minMessage,
+      maxMessage,
       indexValue,
       isShowInput,
       onMoreDataChange,
@@ -105,23 +105,36 @@ export default defineComponent({
     }
   },
   render() {
-    const { field, rating, confirmNps, indexValue, minMsg, maxMsg } = this
+    const {
+      field,
+      rating,
+      confirmNps,
+      indexValue,
+      minMessage,
+      maxMessage,
+      isShowInput,
+      min,
+      max,
+      readonly,
+      rangeConfig,
+      onMoreDataChange
+    } = this
 
     return (
       <div class="nps-wrapper-main">
         <div class="nps-row-msg">
-          <div class="nps-msg left">{{ minMsg }}</div>
-          <div class="nps-msg right">{{ maxMsg }}</div>
+          <div class="nps-msg left">{{ minMessage }}</div>
+          <div class="nps-msg right">{{ maxMessage }}</div>
         </div>
         <BaseRate
-          name={props.field}
-          min={props.min}
-          max={props.max}
-          readonly={props.readonly}
+          name={field}
+          min={min}
+          max={max}
+          readonly={readonly}
           value={indexValue}
           iconClass="number"
           onChange={confirmNps}
-          class={!props.readonly ? 'radio-nps-hover' : ''}
+          class={!readonly ? 'radio-nps-hover' : ''}
         >
           {isShowInput && (
             <selectMoreView

@@ -26,9 +26,6 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const currentEditOne = computed(() => {
-      return store.state?.edit?.currentEditOne
-    })
     const currentEditKey = computed(() => {
       return store.getters['edit/currentEditKey']
     })
@@ -55,8 +52,7 @@ export default defineComponent({
     const handleChange = ({ key, value }) => {
       store.dispatch('edit/changeSchema', { key, value })
     }
-    // const questionMeta = ref({})
-    const isShowOptionConfig = ref(false)
+
     const hasAdvancedConfig = ref(false)
     const hasAdvancedRateConfig = ref(false)
     const showOthers = ref(false)
@@ -88,10 +84,7 @@ export default defineComponent({
       }
     })
     return {
-      currentEditOne,
-      currentEditKey,
       getOptions,
-      isShowOptionConfig,
       hasAdvancedConfig,
       hasAdvancedRateConfig,
       showOptionEditBar,

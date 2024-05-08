@@ -116,7 +116,6 @@ export default defineComponent({
                           'choice-item'
                         ]}
                         onClick={($event) => {
-                          console.log(722222222222)
                           if (this.readonly) return
                           if (item.disabled) return
                           if (uiTarget === 'radio') this.onRadioClick(item, $event)

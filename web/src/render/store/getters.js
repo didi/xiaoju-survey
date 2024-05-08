@@ -5,7 +5,7 @@ export default {
   renderData: (state) => {
     const { questionSeq, questionData, formValues } = state
     let index = 1
-    return (
+    const a =
       questionSeq &&
       questionSeq.reduce((pre, item) => {
         const questionArr = []
@@ -83,7 +83,9 @@ export default {
         }
         return pre
       }, [])
-    )
+
+    console.log(234234, a)
+    return a
   },
   // 根据渲染的题目生成的用户输入或者选择的数据
   formModel: (state, getters) => {

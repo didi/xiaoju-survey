@@ -41,6 +41,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '../common/css/default.scss';
+
 .process-outer {
   position: relative;
   border-radius: 0.16rem;

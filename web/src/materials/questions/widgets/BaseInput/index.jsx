@@ -1,9 +1,8 @@
-import { defineComponent, } from 'vue'
-import '../../common/css/choice.scss'
-import '../../common/css/input.scss'
+import { defineComponent } from 'vue'
+import './style.scss'
 
 export default defineComponent({
-  name: 'baseInput',
+  name: 'BaseInput',
   props: {
     uiTarget: {
       type: String,
@@ -68,6 +67,7 @@ export default defineComponent({
   },
   render() {
     const { uiTarget, customClass, props } = this
+
     return (
       <div class="input-wrapper">
         <uiTarget
@@ -81,6 +81,7 @@ export default defineComponent({
           maxlength={props.maxlength}
           minlength={props.minlength}
           autocomplete={'off'}
+          onInput={this.onInput}
           onBlur={this.onBlur}
           onChange={this.onChange}
           onFocus={this.onFocus}

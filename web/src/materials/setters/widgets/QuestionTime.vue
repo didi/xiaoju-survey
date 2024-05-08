@@ -52,7 +52,6 @@ export default {
   watch: {
     'formConfig.value': {
       handler([begTime, endTime]) {
-        debugger
         if (!!begTime && begTime !== this.begTimeStr) {
           this.begTimeStr = begTime
           this.begTime = new Date(begTime)

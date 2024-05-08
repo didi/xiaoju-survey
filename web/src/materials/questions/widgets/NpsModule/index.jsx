@@ -1,6 +1,6 @@
 import { defineComponent, computed, shallowRef, defineAsyncComponent } from 'vue'
 import BaseRate from '../BaseRate'
-import './index.scss'
+import './style.scss'
 
 export default defineComponent({
   name: 'NpsModule',
@@ -123,8 +123,8 @@ export default defineComponent({
     return (
       <div class="nps-wrapper-main">
         <div class="nps-row-msg">
-          <div class="nps-msg left">{{ minMessage }}</div>
-          <div class="nps-msg right">{{ maxMessage }}</div>
+          <div class="nps-msg left">{minMessage}</div>
+          <div class="nps-msg right">{maxMessage}</div>
         </div>
         <BaseRate
           name={field}

@@ -1,6 +1,7 @@
-import BaseChoice from '../BaseChoice'
 import { defineComponent } from 'vue'
+import BaseChoice from '../BaseChoice'
 import metaConfig from './meta.js'
+
 export const meta = metaConfig
 /**
  * 支持配置：
@@ -35,6 +36,7 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const onChange = (value) => {
       const key = props.field

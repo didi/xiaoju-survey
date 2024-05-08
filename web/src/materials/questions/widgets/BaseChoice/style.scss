@@ -1,4 +1,4 @@
-@import './default.scss';
+@import '../../common/css/default.scss';
 
 .isPc .choice-wrapper {
   .choice-box .choice-item {
@@ -25,7 +25,6 @@
     padding: 0 0.2rem !important;
     box-sizing: border-box;
 
-    // margin-bottom: -0.22rem;
     .choice-item {
       position: relative;
       display: inline-flex;
@@ -87,26 +86,6 @@
         overflow: hidden;
         word-wrap: break-word;
         cursor: pointer;
-
-        .label-img-wrapper {
-          width: 80%;
-          text-align: center;
-        }
-
-        .label-img {
-          display: inline-block !important;
-          width: 2rem;
-          height: auto;
-          margin-top: 0.25rem;
-        }
-      }
-
-      .center-text {
-        span {
-          display: inline-block;
-          width: 80%;
-          text-align: center;
-        }
       }
 
       &.is-checked {
@@ -143,125 +122,13 @@
       }
     }
 
-    .option-wrapper {
-      display: flex;
-      // justify-content: center;
-    }
-
     .vertical {
       width: 100%;
 
       .item-title .label-img {
         width: 75%;
       }
-
-      // &.choice-item.last2child {
-      //     margin-bottom: .08rem;
-      // }
     }
-  }
-
-  .answer-tip {
-    width: 100%;
-    height: auto;
-    font-size: 0.25rem;
-    color: #666;
-    padding: 5px;
-    border: 1px dashed $border-color;
-  }
-}
-
-.optionRelyTips {
-  text-indent: 16px;
-  width: 100%;
-  height: 15px;
-  font-size: 14px;
-  line-height: 15px;
-  color: #aaa;
-}
-
-.input-wrapper {
-  font-size: 0;
-
-  .input-box {
-    outline: none;
-    font-size: 0.56rem;
-    padding: 0.4rem;
-    border-radius: 0.08rem;
-    background-color: #fff;
-    vertical-align: top;
-
-    border: 1px solid $border-color;
-    width: 200%;
-    height: 1.61rem;
-
-    transform: scale(0.5, 0.5);
-    transform-origin: left top;
-    box-sizing: border-box;
-    margin-bottom: -0.81rem;
-    overflow: hidden;
-    // overflow: hidden;
-    color: $font-color;
-    z-index: 10;
-
-    // &:focus, &.is-focused {
-    //     border: 1px solid $primary-color;
-    // }
-    &:not([readonly]):hover {
-      border: 1px solid $primary-color;
-    }
-
-    &.print {
-      border: none;
-      border-bottom: 1px solid $border-color;
-      border-radius: 0;
-    }
-
-    &::-webkit-input-placeholder {
-      /* WebKit browsers */
-      font-size: 0.56rem;
-      font-weight: 300;
-      color: $placeholder-color;
-    }
-
-    &:-moz-placeholder {
-      /* Mozilla Firefox 4 to 18 */
-      font-size: 0.56rem;
-      font-weight: 300;
-      color: $placeholder-color;
-    }
-
-    &::-moz-placeholder {
-      /* Mozilla Firefox 19+ */
-      font-size: 0.56rem;
-      font-weight: 300;
-      color: $placeholder-color;
-    }
-
-    &:-ms-input-placeholder {
-      /* Internet Explorer 10+ */
-      font-size: 0.56rem;
-      font-weight: 300;
-      color: $placeholder-color;
-    }
-  }
-
-  .text-number-tip {
-    font-size: 0.24rem;
-    color: $font-color;
-    float: right;
-    margin-right: 0.1rem;
-    margin-top: 0.1rem;
-  }
-
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0;
-  }
-
-  input[type='number'] {
-    -moz-appearance: textfield;
   }
 }
 
@@ -312,36 +179,4 @@
       }
     }
   }
-
-  // &.choice-box {
-  //   padding: 0;
-  // }
 }
-
-// input[type="radio"]{
-//   cursor: pointer;
-//   // position: relative;
-//   width: 15px;
-//   height: 15px;
-//   font-size: 14px;
-// }
-// input[type="radio"]::before{
-//   position: relative;
-//   content: '';
-//   width: 15px;
-//   height: 15px;
-// }
-// input[type="radio"]:checked::before{
-//   // position: relative;
-//   content: '';
-//   width: 15px;
-//   height: 15px;
-//   background-color: $primary-color;
-//   border-color: $primary-color;
-// }
-
-// .radio-wrapper .radio-box .radio-item.is-checked .item-input:checked {
-//   background-color: ${primaryColor};
-//   border-color: ${primaryColor};
-//   box-shadow: 0 2px 6px 0 ${shadowColor};
-// }

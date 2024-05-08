@@ -1,7 +1,7 @@
 import { defineComponent, computed } from 'vue'
 import { findIndex, includes, cloneDeep } from 'lodash-es'
 import { filterXSS } from '@/common/xss'
-import '../../common/css/choice.scss'
+import './style.scss'
 
 export default defineComponent({
   name: 'BaseChoice',
@@ -64,6 +64,7 @@ export default defineComponent({
     const onRadioClick = (item, $event) => {
       $event && $event.stopPropagation()
       $event && $event.preventDefault()
+      console.log(8888)
       emit('change', item.hash)
     }
     const onCheckboxClick = (item, $event) => {
@@ -115,6 +116,7 @@ export default defineComponent({
                           'choice-item'
                         ]}
                         onClick={($event) => {
+                          console.log(722222222222)
                           if (this.readonly) return
                           if (item.disabled) return
                           if (uiTarget === 'radio') this.onRadioClick(item, $event)

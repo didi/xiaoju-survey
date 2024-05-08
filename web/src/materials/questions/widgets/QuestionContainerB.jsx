@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, shallowRef } from 'vue'
+import { computed, defineComponent, onMounted, shallowRef, ref } from 'vue'
 
 import questionLoader from '@/materials/questions/questionLoader.js'
 
@@ -12,9 +12,9 @@ import moduleTitle from './EditTitle.jsx'
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
-  const component = await questionLoader.loadComponent(type, path)
-
-  return component
+  const componentRes = await questionLoader.loadComponent(type, path)
+  const meta = await questionLoader.loadMeta(type)
+  return { componentRes, meta }
 }
 
 export default defineComponent({
@@ -52,20 +52,22 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const BlockComponent = shallowRef(null)
+    
+    const questionMeta = ref({})
+    
+    onMounted(async () => {
+      const { componentRes, meta } = await getBlockComponent(props.type)
+      BlockComponent.value = componentRes.component
+      questionMeta.value = meta
+    })
+    // 根据选中状态和是否meta中的编辑态配置判断是否显示编辑态
     const showEditComponent = computed(() => {
       let result = false
       if (props.isSelected) {
-        if (!['text', 'textarea'].includes(props.type)) {
-          result = true
-        }
+        const { editConfigure = { optionEdit:{ show: false} } } = questionMeta.value
+        result = editConfigure?.optionEdit?.show
       }
       return result
-    })
-
-    // const isSelected = ref(false)
-    onMounted(async () => {
-      const { component } = await getBlockComponent(props.type)
-      BlockComponent.value = component
     })
 
     const onBlur = () => {
@@ -82,7 +84,7 @@ export default defineComponent({
     }
     
     return {
-      // isSelected,
+      questionMeta,
       props,
       BlockComponent,
       onClick,
@@ -90,7 +92,6 @@ export default defineComponent({
       onFocus,
       onChange,
       showEditComponent
-      // showOthers
     }
   },
   render() {
@@ -112,14 +113,7 @@ export default defineComponent({
         {this.showTitle && <moduleTitle {...props} onChange={this.onChange} />}
         <div class="question-block">
           {this.showEditComponent ? (
-            <EditOptions moduleConfig={props.moduleConfig}>
-              <dynamicComponent
-                {...props}
-                onBlur={this.onBlur}
-                onFocus={this.onFocus}
-                onChange={this.onChange}
-              />
-            </EditOptions>
+            <EditOptions moduleConfig={props.moduleConfig}></EditOptions>
           ) : (
             <dynamicComponent
               readonly

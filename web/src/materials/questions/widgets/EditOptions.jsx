@@ -60,26 +60,18 @@ export default defineComponent({
     const hasAdvancedConfig = ref(false)
     const hasAdvancedRateConfig = ref(false)
     const showOthers = ref(false)
-    const showOptionEdit = ref(false)
     const showOptionEditBar = ref(true)
     onMounted(() => {
       const questionMeta = questionLoader.getMeta(props.moduleConfig.type)
       const { editConfigure } = questionMeta
 
       if (editConfigure) {
-        showOptionEdit.value = editConfigure.optionEdit.show
         const { optionEditBar } = editConfigure
         showOptionEditBar.value = optionEditBar.show
         showOthers.value = optionEditBar.configure.showOthers
         hasAdvancedConfig.value = Boolean(optionEditBar.configure.showAdvancedConfig)
         hasAdvancedRateConfig.value = Boolean(optionEditBar.configure.showAdvancedRateConfig)
       } else {
-        // meta不存在的兜底程序
-        if (['radio-star', 'text', 'textarea'].includes(props.moduleConfig.type)) {
-          showOptionEdit.value = false
-        } else {
-          showOptionEdit.value = true
-        }
         if (['radio-star'].includes(props.moduleConfig.type)) {
           showOthers.value = false
         } else {
@@ -102,7 +94,6 @@ export default defineComponent({
       isShowOptionConfig,
       hasAdvancedConfig,
       hasAdvancedRateConfig,
-      showOptionEdit,
       showOptionEditBar,
       showOthers,
       handleAddOption,
@@ -114,16 +105,12 @@ export default defineComponent({
   render() {
     return (
       <div class="selected-wrapper radio-selected-wrapper">
-        {this.showOptionEdit ? (
-          <OptionEdit
-            option-list={this.getOptions}
-            onAddOption={this.handleAddOption}
-            onOptionChange={this.handleOptionChange}
-            onChange={this.handleChange}
-          />
-        ) : (
-          this.$slots.default()
-        )}
+        <OptionEdit
+          option-list={this.getOptions}
+          onAddOption={this.handleAddOption}
+          onOptionChange={this.handleOptionChange}
+          onChange={this.handleChange}
+        />
         {this.showOptionEditBar && (
           <OptionEditBar
             ref="optionEditBar"

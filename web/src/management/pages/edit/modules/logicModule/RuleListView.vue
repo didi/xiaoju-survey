@@ -25,7 +25,8 @@ import { useStore } from 'vuex'
 import RuleNodeView from './RuleNodeView.vue'
 
 // @ts-ignore
-import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
+import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
+import { Plus } from '@element-plus/icons-vue'
 
 const store = useStore()
 

@@ -9,7 +9,7 @@ const config = {
   city: '城市选择',
   vote: '投票',
   'binary-choice': '判断',
-  fillin: '填空',
-};
+  fillin: '填空'
+}
 
-export default config;
+export default config

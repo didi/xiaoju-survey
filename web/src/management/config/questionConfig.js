@@ -41,14 +41,14 @@ export const defaultQuestionConfig = {
       text: '选项1',
       others: false,
       othersKey: '',
-      placeholderDesc: '',
+      placeholderDesc: ''
     },
     {
       text: '选项2',
       others: false,
       othersKey: '',
-      placeholderDesc: '',
-    },
+      placeholderDesc: ''
+    }
   ],
   star: 5,
   optionOrigin: '',
@@ -57,21 +57,21 @@ export const defaultQuestionConfig = {
   numberRange: {
     min: {
       placeholder: '0',
-      value: 0,
+      value: 0
     },
     max: {
       placeholder: '1000',
-      value: 1000,
-    },
+      value: 1000
+    }
   },
   textRange: {
     min: {
       placeholder: '0',
-      value: 0,
+      value: 0
     },
     max: {
       placeholder: '500',
-      value: 500,
-    },
-  },
-};
+      value: 500
+    }
+  }
+}

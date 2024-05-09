@@ -1,22 +1,17 @@
-import Vue from 'vue';
-import App from './App.vue';
-import store from './store';
-import { filterXSS } from '@/common/xss';
-import DialogPlugin from '@/render/plugins/dialog/index';
-import './styles/reset.scss';
+import { createApp } from 'vue'
+import App from './App.vue'
+import EventBus from './utils/eventbus'
 
-Vue.config.productionTip = false;
+import store from './store'
+import './styles/reset.scss'
 
-Vue.use(DialogPlugin);
+const app = createApp(App)
 
-Vue.directive('safe-html', {
-  inserted: function (el, binding) {
-    const res = filterXSS(binding.value);
-    el.innerHTML = res;
-  },
-});
+const $bus = new EventBus()
+app.provide('$bus', $bus)
+// 挂载到this上
+app.config.globalProperties.$bus = $bus
 
-new Vue({
-  render: (h) => h(App),
-  store,
-}).$mount('#app');
+app.use(store)
+
+app.mount('#app')

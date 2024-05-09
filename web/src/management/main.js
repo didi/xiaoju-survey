@@ -1,36 +1,17 @@
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import store from './store';
-import ElementUI from 'element-ui';
-import './styles/element-variables.scss';
-import { filterXSS, cleanRichText } from '@/common/xss';
+import { createApp } from 'vue'
+import store from './store'
+import plainText from './directive/plainText'
+import safeHtml from './directive/safeHtml'
 
-Vue.config.productionTip = false;
-Vue.use(ElementUI);
+import App from './App.vue'
+import router from './router'
 
-const safeHtml = function (el, binding) {
-  const res = filterXSS(binding.value);
-  el.innerHTML = res;
-};
+const app = createApp(App)
 
-const plainText = function (el, binding) {
-  const text = cleanRichText(binding.value);
-  el.innerText = text;
-};
+app.use(store)
+app.use(router)
 
-Vue.directive('safe-html', {
-  inserted: safeHtml,
-  componentUpdated: safeHtml,
-});
+app.use(plainText)
+app.use(safeHtml)
 
-Vue.directive('plain-text', {
-  inserted: plainText,
-  componentUpdated: plainText,
-});
-
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount('#app');
+app.mount('#app')

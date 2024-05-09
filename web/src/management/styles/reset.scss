@@ -20,7 +20,12 @@ html * {
 }
 
 body {
-  font-family: Pingfang SC, 'Helvetica Neue', Helvetica, STHeiTi, sans-serif;
+  font-family:
+    Pingfang SC,
+    'Helvetica Neue',
+    Helvetica,
+    STHeiTi,
+    sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
 }
@@ -75,6 +80,13 @@ textarea {
 
 input {
   -webkit-appearance: none;
+}
+// chrome自动填充密码背景色
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 input:-ms-clear {

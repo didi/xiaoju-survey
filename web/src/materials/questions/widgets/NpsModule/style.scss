@@ -1,0 +1,36 @@
+@import '@materials/questions/common/css/default.scss';
+
+.nps-wrapper-main {
+  .nps-row-msg {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    .nps-msg {
+      flex: 1;
+      font-size: 0.22rem;
+      color: #92949d;
+      &.left {
+        text-align: left;
+      }
+      &.right {
+        text-align: right;
+      }
+    }
+  }
+  @media (max-width: 930px) {
+    :deep(.question-block) {
+      padding: 0;
+    }
+  }
+  .radio-nps-hover {
+    .rate-item {
+      &:hover {
+        background-color: $primary-color;
+      }
+    }
+    &:has(.rate-item:hover) .rate-item:not(:hover, :hover ~ *) {
+      background-color: $primary-color;
+    }
+  }
+}

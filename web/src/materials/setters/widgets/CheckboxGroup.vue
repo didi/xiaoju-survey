@@ -1,66 +1,59 @@
 <template>
   <div class="checkbox-group">
-    <div
-      class="customed-checkbox"
-      v-for="item in this.formConfig.options"
-      :key="item.key"
-    >
+    <div class="customed-checkbox" v-for="item in this.formConfig.options" :key="item.key">
       <el-checkbox
         v-model="values[item.key]"
         :label="item.label"
         @change="onChange(item.key, $event)"
       >
       </el-checkbox>
-      <el-tooltip
-        v-if="item.tip"
-        class="tooltip"
-        effect="dark"
-        placement="right"
-      >
-        <div slot="content" v-plain-text="item.tip"></div>
-        <i class="el-icon-question icon-tip"></i>
+      <el-tooltip v-if="item.tip" class="tooltip" effect="dark" placement="right">
+        <template #content>
+          <div v-plain-text="item.tip"></div>
+        </template>
+        <i-ep-questionFilled v-if="item.tip" class="icon-tip" />
       </el-tooltip>
     </div>
   </div>
 </template>
 <script>
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 export default {
   name: 'CheckboxGroup',
   props: {
     formConfig: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   data() {
     return {
-      values: this.formConfig.value,
-    };
+      values: this.formConfig.value
+    }
   },
   watch: {
     'formConfig.value': {
       immediate: true,
       deep: true,
       handler(newVal) {
-        const keys = Object.keys(newVal);
+        const keys = Object.keys(newVal)
         for (const key of keys) {
           if (newVal[key] !== this.values[key]) {
-            this.$set(this.values, key, newVal[key]);
+            this.values[key] = newVal[key]
           }
         }
-      },
-    },
+      }
+    }
   },
   methods: {
     onChange(key, value) {
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
-        value,
-      });
-    },
-  },
-};
+        value
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .customed-checkbox {
@@ -69,6 +62,7 @@ export default {
 }
 
 .icon-tip {
+  font-size: 13px;
   color: #606266;
 }
 </style>

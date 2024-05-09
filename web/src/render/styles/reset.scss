@@ -7,7 +7,14 @@
 
 body {
   height: 100%;
-  font-family: "-apple-system", BlinkMacSystemFont, Droid Sans, Droid Sans Fallback, Helvetica Neue, Helvetica, Arial;
+  font-family:
+    '-apple-system',
+    BlinkMacSystemFont,
+    Droid Sans,
+    Droid Sans Fallback,
+    Helvetica Neue,
+    Helvetica,
+    Arial;
 }
 
 html {
@@ -28,7 +35,9 @@ input {
   background-color: #fff;
 }
 
-button, button:active, button:focus {
+button,
+button:active,
+button:focus {
   border: none;
 }
 
@@ -62,9 +71,13 @@ textarea::-webkit-input-placeholder {
   font-family: normal !important;
 }
 
-
 body {
-  font-family: Pingfang SC, 'Helvetica Neue', Helvetica, STHeiTi, sans-serif;
+  font-family:
+    Pingfang SC,
+    'Helvetica Neue',
+    Helvetica,
+    STHeiTi,
+    sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
 }

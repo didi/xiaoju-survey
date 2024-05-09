@@ -18,44 +18,44 @@
 </template>
 
 <script>
-import { cleanRichText } from '@/common/xss';
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+import { cleanRichText } from '@/common/xss'
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 export default {
-  name: 'Select',
+  name: 'SelectSetter',
   props: {
     formConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
     options() {
-      let options = [];
+      let options = []
       if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options;
+        options = this.formConfig?.options
       }
       return options.map((item) => {
-        item.label = cleanRichText(item.label);
-        return item;
-      });
-    },
+        item.label = cleanRichText(item.label)
+        return item
+      })
+    }
   },
   methods: {
     changeData(value) {
-      const key = this.formConfig.key;
+      const key = this.formConfig.key
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
-        value,
-      });
-    },
-  },
-};
+        value
+      })
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .select-wrapper {
   .el-select-dropdown__item {
     font-size: 12px;

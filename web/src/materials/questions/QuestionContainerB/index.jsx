@@ -46,7 +46,7 @@ export default defineComponent({
     }
   },
   emits: ['blur', 'focus', 'change', 'select'],
-  setup(props, { emit }) {
+  setup(props) {
     const BlockComponent = shallowRef(null)
 
     const questionMeta = ref({})
@@ -61,31 +61,14 @@ export default defineComponent({
       let result = false
       if (props.isSelected) {
         const { editConfigure = { optionEdit: { show: false } } } = questionMeta.value
-        result = editConfigure?.optionEdit?.show
+        result = editConfigure?.optionEdit?.show || editConfigure?.optionEditBar?.show
       }
       return result
     })
 
-    const onBlur = () => {
-      emit('blur')
-    }
-    const onFocus = () => {
-      emit('focus')
-    }
-    const onChange = (data) => {
-      emit('change', data)
-    }
-    const onClick = () => {
-      emit('select', props.indexNumber)
-    }
-
     return {
       props,
       BlockComponent,
-      onClick,
-      onBlur,
-      onFocus,
-      onChange,
       showEditComponent
     }
   },
@@ -109,14 +92,17 @@ export default defineComponent({
 
         <div class="question-block">
           {this.showEditComponent ? (
-            <EditOptions moduleConfig={props.moduleConfig}></EditOptions>
-          ) : (
+            <EditOptions moduleConfig={props.moduleConfig}>
+              <dynamicComponent
+                readonly
+                {...props}
+              />
+            </EditOptions>
+          ) : 
+          (
             <dynamicComponent
               readonly
               {...props}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-              change={this.onChange}
             />
           )}
         </div>

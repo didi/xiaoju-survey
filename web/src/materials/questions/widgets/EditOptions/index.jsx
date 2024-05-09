@@ -57,13 +57,15 @@ export default defineComponent({
     const hasAdvancedConfig = ref(false)
     const hasAdvancedRateConfig = ref(false)
     const showOthers = ref(false)
+    const showOptionEdit = ref(true)
     const showOptionEditBar = ref(true)
     onMounted(() => {
       const questionMeta = questionLoader.getMeta(props.moduleConfig.type)
       const { editConfigure } = questionMeta
 
       if (editConfigure) {
-        const { optionEditBar } = editConfigure
+        const { optionEdit, optionEditBar } = editConfigure
+        showOptionEdit.value = optionEdit.show
         showOptionEditBar.value = optionEditBar.show
         showOthers.value = optionEditBar.configure.showOthers
         hasAdvancedConfig.value = Boolean(optionEditBar.configure.showAdvancedConfig)
@@ -88,6 +90,7 @@ export default defineComponent({
       getOptions,
       hasAdvancedConfig,
       hasAdvancedRateConfig,
+      showOptionEdit,
       showOptionEditBar,
       showOthers,
       handleAddOption,
@@ -99,12 +102,14 @@ export default defineComponent({
   render() {
     return (
       <div class="selected-wrapper radio-selected-wrapper">
-        <OptionEdit
-          option-list={this.getOptions}
-          onAddOption={this.handleAddOption}
-          onOptionChange={this.handleOptionChange}
-          onChange={this.handleChange}
-        />
+        {this.showOptionEdit 
+          ? <OptionEdit
+            option-list={this.getOptions}
+            onAddOption={this.handleAddOption}
+            onOptionChange={this.handleOptionChange}
+            onChange={this.handleChange}
+          /> : this.$slots.default()
+        }
         {this.showOptionEditBar && (
           <OptionEditBar
             ref="optionEditBar"

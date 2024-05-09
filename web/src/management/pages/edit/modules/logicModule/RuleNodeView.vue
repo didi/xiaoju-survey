@@ -37,12 +37,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-icon
-          style="font-size: 18px; line-height: 32px"
-          @click="() => handleDelete(ruleNode.id)"
-        >
-          <i-ep-delete />
-        </el-icon>
+
+        <i-ep-delete style="font-size: 14px" @click="() => handleDelete(ruleNode.id)" />
       </div>
     </el-form>
   </div>
@@ -51,8 +47,6 @@
 import { ref, computed, shallowRef, inject } from 'vue'
 import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'
-
-import { Delete } from '@element-plus/icons-vue'
 
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
@@ -135,12 +129,12 @@ defineExpose({
   display: flex;
   margin: 12px 0;
   box-sizing: border-box;
-  .target{
+  .target {
     margin-top: 12px;
   }
   .desc {
     display: inline-block;
-    
+
     margin-bottom: 12px;
     margin-right: 12px;
     color: #333;

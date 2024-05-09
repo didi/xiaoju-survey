@@ -37,12 +37,15 @@
       </el-select>
     </el-form-item>
     <span class="desc">中的任一选项 </span>
-    <i
-      class="iconfont icon-chuangjian"
-      style="font-size: 18px; margin-right: 8px"
-      @click="handleAdd"
-    ></i>
-    <i-ep-minus v-if="index > 0" @click="() => handleDelete(conditionNode.id)"/>
+    <span class="opt">
+      <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
+      <i-ep-minus
+        class="opt-icon"
+        v-if="index > 0"
+        :size="14"
+        @click="() => handleDelete(conditionNode.id)"
+      />
+    </span>
   </div>
 </template>
 <script setup lang="ts">
@@ -165,6 +168,16 @@ const handleDelete = (id: any) => {
     margin-right: 12px;
     color: #333;
     line-height: 32px;
+  }
+  .opt {
+    .opt-icon {
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .opt-icon-plus {
+      margin-right: 10px;
+    }
   }
   .el-form-item {
     display: inline-block;

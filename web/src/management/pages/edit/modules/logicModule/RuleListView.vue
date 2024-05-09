@@ -14,8 +14,7 @@
     </div>
 
     <el-button type="primary" plain class="add" @click="handleAdd">
-      <el-icon><i-ep-plus /></el-icon>
-      新增显示逻辑
+      <i-ep-plus class="plus-icon" /> 新增显示逻辑
     </el-button>
   </div>
 </template>
@@ -26,7 +25,6 @@ import RuleNodeView from './RuleNodeView.vue'
 
 // @ts-ignore
 import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
-import { Plus } from '@element-plus/icons-vue'
 
 const store = useStore()
 
@@ -71,6 +69,10 @@ defineExpose({
   .add {
     margin: 12px 0;
     width: 100%;
+
+    .plus-icon {
+      margin-right: 5px;
+    }
   }
 }
 

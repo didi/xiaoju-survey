@@ -18,7 +18,7 @@ import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 const props = defineProps({
   indexNumber: {
-    type: Number,
+    type: [Number, String],
     default: 1
   },
   moduleConfig: {

@@ -23,8 +23,7 @@ export const useShowLogicInfo = (field: string) => {
      
      const conditions = flatten(rules).map((item:any) => {
       const { getQuestionTitle,  getOptionTitle } = useQuestionInfo(item.field)
-      console.log(item.value, getOptionTitle.value(item.value))
-      return `<span>【 ${cleanRichText(getQuestionTitle.value())}】 选择了 【${getOptionTitle.value(unref(item.value)).join('')}】</span> <br/>`
+      return `<span>【 ${cleanRichText(getQuestionTitle.value())}】 选择了 【${getOptionTitle.value(unref(item.value)).join('、')}】</span> <br/>`
     })
     return conditions.length ?  conditions.join('') + '<span> &nbsp;满足以上全部，则显示本题</span>' :''
   })

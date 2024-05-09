@@ -59,30 +59,6 @@ import { ConditionNode, RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { qAbleList } from '@/management/utils/constant.js'
 import { Minus } from '@element-plus/icons-vue'
 import { cleanRichText } from '@/common/xss'
-const value1 = ref('')
-
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
-  },
-]
 
 const renderData = inject('renderData', {
   type: Array<Object>,
@@ -129,10 +105,9 @@ const getRelyOptions = computed(() => {
   }
   // @ts-ignore
   const currentQuestion = renderData.value.find(item => item.field === field)
-  console.log({currentQuestion})
   return currentQuestion?.options.map((item:any) => {
     return {
-      label: item.text,
+      label: cleanRichText(item.text),
       value: item.hash,
     }
   }) || []

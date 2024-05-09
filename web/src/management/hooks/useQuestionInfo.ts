@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 import store from '@/management/store'
-
+import { cleanRichText } from '@/common/xss'
 export const useQuestionInfo = (field: string) => {
   const getQuestionTitle = computed(() => {
     // @ts-ignore
@@ -14,17 +14,11 @@ export const useQuestionInfo = (field: string) => {
     const questionDataList = store.state.edit.schema.questionDataList
     return (value: string | Array<string>) => {
       const options = questionDataList.find((item: any) => item.field === field)?.options || []
-      return options?.map((item: any) => {
-        if(value instanceof Array) {
-          return value.map((v: string) => {
-            if (item.hash === v) {
-              return item.text
-            }
-          })
-        } else if (item.hash === value) {
-          return item.text
-        }
-      })
+      if(value instanceof Array) {
+        return options.filter((item: any) => value.includes(item.hash)).map((item: any) => cleanRichText(item.text))
+      } else  {
+        return options.filter((item: any) => item.hash === value).map((item: any) => cleanRichText(item.text))
+      }
     }
   })
   return { getQuestionTitle, getOptionTitle }

@@ -1,5 +1,5 @@
 <template>
-  <div class="condition-wrapper">
+  <div class="condition-wrapper" data-content-before="且">
     <span class="desc">如果</span>
     <el-form-item
       :prop="`conditions[${index}].field`"
@@ -131,12 +131,33 @@ const handleDelete = (id: any) => {
 <style lang="scss" scoped>
 .condition-wrapper {
   width: 100%;
-  &:not(:last-child)::after {
-    content: '';
-    display: block;
-    width: calc(100% - 50px);
-    border-top: 1px dashed #e3e4e8;
-    padding: 10px 0;
+  &:not(:last-child)::before{
+    content: attr(data-content-before);
+    position: relative;
+    bottom: 0px;
+    width: 20px;
+    height: 20px;
+    background: #FEF6E6;
+    border-radius: 2px;
+    color: #FAA600;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 58px;
+  }
+  &:not(:last-child)::after{
+      content: "";
+      display: block;
+      width: calc(100% - 50px);
+      border-top: 1px dashed #e3e4e8;
+  }
+  &:last-child::after{
+      content: "";
+      display: block;
+      width: 100%;
+      border-top: 1px dashed #e3e4e8;
+      padding: 10px 0; 
   }
   .desc {
     display: inline-block;

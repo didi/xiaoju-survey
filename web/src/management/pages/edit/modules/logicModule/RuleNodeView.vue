@@ -15,33 +15,35 @@
         :conditionNode="conditionNode"
         @delete="handleDeleteCondition"
       ></conditionView>
-      <span class="desc">则显示</span>
-      <el-form-item
-        prop="target"
-        :rules="[{ required: true, message: '请选择目标', trigger: 'change' }]"
-      >
-        <el-select
-          class="select field-select"
-          v-model="ruleNode.target"
-          placeholder="请选择"
-          @change="(val: any) => handleChange(ruleNode, 'target', val)"
+      <div class="target">
+        <span class="desc">则显示</span>
+        <el-form-item
+          prop="target"
+          :rules="[{ required: true, message: '请选择目标', trigger: 'change' }]"
         >
-          <el-option
-            v-for="{ label, value, disabled } in targetQuestionList"
-            :key="value"
-            :label="label"
-            :disabled="disabled"
-            :value="value"
+          <el-select
+            class="select field-select"
+            v-model="ruleNode.target"
+            placeholder="请选择"
+            @change="(val: any) => handleChange(ruleNode, 'target', val)"
           >
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-icon
-        style="font-size: 18px; line-height: 32px"
-        @click="() => handleDelete(ruleNode.id)"
-      >
-        <i-ep-delete />
-      </el-icon>
+            <el-option
+              v-for="{ label, value, disabled } in targetQuestionList"
+              :key="value"
+              :label="label"
+              :disabled="disabled"
+              :value="value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-icon
+          style="font-size: 18px; line-height: 32px"
+          @click="() => handleDelete(ruleNode.id)"
+        >
+          <i-ep-delete />
+        </el-icon>
+      </div>
     </el-form>
   </div>
 </template>
@@ -133,8 +135,12 @@ defineExpose({
   display: flex;
   margin: 12px 0;
   box-sizing: border-box;
+  .target{
+    margin-top: 12px;
+  }
   .desc {
     display: inline-block;
+    
     margin-bottom: 12px;
     margin-right: 12px;
     color: #333;

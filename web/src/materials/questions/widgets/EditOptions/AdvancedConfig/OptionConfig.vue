@@ -145,6 +145,11 @@ export default {
     draggable,
     ExtraIcon,
   },
+  watch: {
+    options(val) {
+      this.curOptions = _cloneDeep(val)
+    }
+  },
   methods: {
     addOtherOption() {
       const { field } = this.moduleConfig

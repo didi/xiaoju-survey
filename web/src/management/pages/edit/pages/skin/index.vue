@@ -1,8 +1,13 @@
 <template>
   <div class="skin-content">
     <div class="navbar-tab">
-      <el-radio-group style="margin-bottom: 30px" v-model="activeRouter">
-        <el-radio-button v-for="btnItem in btnList" :key="btnItem.router" :label="btnItem.text" :value="btnItem.router" />
+      <el-radio-group v-model="activeRouter">
+        <el-radio-button
+          v-for="btnItem in btnList"
+          :key="btnItem.router"
+          :label="btnItem.text"
+          :value="btnItem.router"
+        />
       </el-radio-group>
     </div>
     <router-view></router-view>
@@ -52,12 +57,14 @@ export default {
     position: absolute;
     top: 10px;
     cursor: pointer;
+    z-index: 9999;
+    :deep(.el-radio-button__original-radio + .el-radio-button__inner) {
+      font-size: 12px;
+      height: 28px;
+    }
     :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
       color: $primary-color;
-      background-color: #fff !important;
-      // &:active{
-      //   color: $primary-color;
-      // }
+      background-color: #fff;
     }
   }
 }

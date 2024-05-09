@@ -1,7 +1,7 @@
 import { defineComponent, computed } from 'vue'
 import { findIndex, includes, cloneDeep } from 'lodash-es'
 import { filterXSS } from '@/common/xss'
-import '../../common/css/choice.scss'
+import './style.scss'
 
 export default defineComponent({
   name: 'BaseChoice',

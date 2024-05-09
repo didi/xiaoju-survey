@@ -1,5 +1,6 @@
 import { defineComponent, computed } from 'vue'
-import '../../common/css/radioStar.scss'
+import './style.scss'
+
 export default defineComponent({
   name: 'BaseRate',
   props: {
@@ -63,13 +64,13 @@ export default defineComponent({
     const { rating, range, iconClass } = this
 
     return (
-      <div class="star-wrapper-main">
-        <div class="star-box">
+      <div class="rate-wrapper-main">
+        <div class="rate-box">
           {range.map((num, index) => {
             return (
               <div
-                class={['star-item', num <= rating ? 'on' : 'off', iconClass]}
-                key={'star' + index}
+                class={['rate-item', num <= rating ? 'on' : 'off', iconClass]}
+                key={'rate' + index}
                 onClick={() => {
                   this.handleClick(num)
                 }}

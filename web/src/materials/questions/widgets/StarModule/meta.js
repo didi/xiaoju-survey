@@ -1,8 +1,7 @@
-import basicConfig from '../../common/config/basicConfig'
+import basicConfig from '@materials/questions/common/config/basicConfig'
 
 const meta = {
   title: '评分',
-  questExtra: ['listenMerge'],
   type: 'radio-star',
   componentName: 'StarModule',
   formConfig: [
@@ -11,7 +10,7 @@ const meta = {
       name: 'starConfig',
       title: '评分显示样式',
       type: 'RadioGroup',
-      key: 'starStyle2',
+      key: 'starStyle',
       options: [
         {
           label: [1, 2, 3, 4, 5]

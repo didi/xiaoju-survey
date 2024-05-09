@@ -61,15 +61,15 @@ provide('Form', {
 onBeforeMount(() => {
   $bus.on('form.addField', (field) => {
     if (field) {
-      fields.push(field);
+      fields.push(field)
     }
-  });
+  })
 
   $bus.on('form.removeField', (field) => {
     if (field) {
-      fields.splice(fields.indexOf(field), 1);
+      fields.splice(fields.indexOf(field), 1)
     }
-  });
+  })
 })
 // const visible = computed(() => {
 //   return (field) => {

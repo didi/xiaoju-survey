@@ -1,6 +1,7 @@
 import { defineComponent, computed, shallowRef, defineAsyncComponent } from 'vue'
-import '../../common/css/radioStar.scss'
 import BaseRate from '../BaseRate'
+import './style.scss'
+
 export default defineComponent({
   name: 'StarModule',
   components: { BaseRate },
@@ -85,10 +86,14 @@ export default defineComponent({
       })
     }
     const selectMoreView = shallowRef(null)
-    if(props.readonly) {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+    if (props.readonly) {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionContainerB')
+      )
     } else {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionRuleContainer')
+      )
     }
     return {
       rating,
@@ -111,7 +116,8 @@ export default defineComponent({
       isShowInput,
       onMoreDataChange,
       rangeConfig,
-      selectMoreView
+      selectMoreView,
+      confirmStar
     } = this
 
     return (
@@ -121,16 +127,16 @@ export default defineComponent({
           value={value}
           readonly={readonly}
           iconClass={starClass}
-          onChange={this.confirmStar}
+          onChange={confirmStar}
         />
         {currentRangeConfig && <p class="explain radio-star">{currentRangeConfig.explain}</p>}
         {isShowInput && (
           <selectMoreView
             showTitle={false}
-            key={`${this.field}_${this.rating}`}
+            key={`${field}_${rating}`}
             moduleConfig={{
               type: 'selectMoreModule',
-              field: `${this.field}_${this.rating}`,
+              field: `${field}_${rating}`,
               placeholder: rangeConfig[rating]?.text,
               value: rangeConfig[rating]?.othersValue || ''
             }}

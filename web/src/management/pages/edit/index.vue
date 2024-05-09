@@ -1,15 +1,15 @@
 <template>
   <div class="edit-index">
-    <leftMenu class="left"></leftMenu>
+    <LeftMenu class="left"></LeftMenu>
     <div class="right">
-      <commonTemplate style="background-color: #f6f7f9">
+      <CommonTemplate style="background-color: #f6f7f9">
         <template #nav>
-          <navbar class="navbar"></navbar>
+          <Navbar class="navbar"></Navbar>
         </template>
         <template #body>
           <router-view></router-view>
         </template>
-      </commonTemplate>
+      </CommonTemplate>
     </div>
   </div>
 </template>
@@ -18,17 +18,17 @@
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import leftMenu from '@/management/components/LeftMenu.vue'
+import LeftMenu from '@/management/components/LeftMenu.vue'
 
-import commonTemplate from './components/commonTemplate.vue'
-import navbar from './components/navbar.vue'
+import CommonTemplate from './components/CommonTemplate.vue'
+import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'questionEditPage',
   components: {
-    commonTemplate,
-    navbar,
-    leftMenu
+    CommonTemplate,
+    Navbar,
+    LeftMenu
   },
   async created() {
     this.$store.commit('edit/setSurveyId', this.$route.params.id)

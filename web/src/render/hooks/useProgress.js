@@ -25,9 +25,13 @@ export const useProgressBar = () => {
     const formValues = store.state.formValues
     for (let key in formValues) {
       if (key.split('_').length > 1) continue
+
       data.topicCount++
-      if (!isVariableEmpty(formValues[key])) data.fillCount++
+      if (!isVariableEmpty(formValues[key])) {
+        data.fillCount++
+      }
     }
+
     return data
   })
 

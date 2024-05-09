@@ -1,5 +1,10 @@
 <template>
-  <div :class="itemClass" @mouseenter="onMouseenter" @mouseleave="onMouseleave" @click="clickFormItem">
+  <div
+    :class="itemClass"
+    @mouseenter="onMouseenter"
+    @mouseleave="onMouseleave"
+    @click="clickFormItem"
+  >
     <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
     
     <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
@@ -99,10 +104,10 @@ const onMoveUp = () => {
   isHover.value = false
 }
 
-const onMouseenter=() => {
+const onMouseenter = () => {
   isHover.value = true
 }
-const onMouseleave=() => {
+const onMouseleave = () => {
   isHover.value = false
 }
 const onMoveDown = () => {
@@ -125,7 +130,7 @@ const onDelete = async () => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    
+
     const index = props.qIndex
     emit('changeSeq', { type: 'delete', index })
     isHover.value = false

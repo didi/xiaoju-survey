@@ -1,14 +1,22 @@
 <template>
   <div class="text-button-root" @click="onClick">
     <el-button v-bind="{ ...$attrs }">
+      <template #icon>
+        <StaticIcon :icon="icon"/>
+      </template>
       {{ option.label }}
     </el-button>
   </div>
 </template>
 
 <script>
+import StaticIcon from './StaticIcon.vue'
+
 export default {
   name: 'TextButton',
+  components: {
+    StaticIcon
+  },
   data() {
     return {
       iconIndex: 0
@@ -24,7 +32,10 @@ export default {
     },
     effectKey: {
       type: String
-    }
+    },
+    icon: {
+      type: String
+    },
   },
   computed: {
     toggleOptionIcons() {

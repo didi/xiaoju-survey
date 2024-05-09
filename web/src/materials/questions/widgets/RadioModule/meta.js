@@ -1,9 +1,9 @@
-import basicConfig from '../../common/config/basicConfig'
+import basicConfig from '@materials/questions/common/config/basicConfig'
 
 const meta = {
   title: '单选',
-  questExtra: ['listenMerge'],
   type: 'radio',
+  componentName: 'RadioModule',
   props: [
     {
       name: 'title',

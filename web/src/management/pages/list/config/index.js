@@ -1,5 +1,3 @@
-import { Sort, SortDown, SortUp } from '@element-plus/icons-vue'
-
 export const type = {
   normal: '调查问卷',
   vote: '投票评选',
@@ -12,7 +10,7 @@ export const fieldConfig = {
     title: '类型',
     key: 'type',
     width: 150,
-    comp: 'tag'
+    comp: 'TagModule'
   },
   title: {
     title: '标题',
@@ -30,7 +28,7 @@ export const fieldConfig = {
     title: '状态',
     key: 'state',
     width: 140,
-    comp: 'state'
+    comp: 'StateModule'
   },
   owner: {
     title: '所有者',
@@ -138,17 +136,17 @@ export const buttonOptionsDict = Object.freeze({
         name: 'el-icon-sort',
         effectValue: '',
         isDefaultValue: true,
-        icon: Sort
+        icon: 'sort'
       },
       {
         name: 'el-icon-sort-up',
         effectValue: 1,
-        icon: SortUp
+        icon: 'sort-up'
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
-        icon: SortDown
+        icon: 'sort-down'
       }
     ]
   },
@@ -158,18 +156,18 @@ export const buttonOptionsDict = Object.freeze({
       {
         name: 'el-icon-sort',
         effectValue: '',
-        icon: Sort
+        icon: 'sort'
       },
       {
         name: 'el-icon-sort-up',
         effectValue: 1,
-        icon: SortUp
+        icon: 'sort-up'
       },
       {
         name: 'el-icon-sort-down',
         effectValue: -1,
         isDefaultValue: true,
-        icon: SortDown
+        icon: 'sort-down'
       }
     ]
   }

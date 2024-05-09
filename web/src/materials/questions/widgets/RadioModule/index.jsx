@@ -1,5 +1,5 @@
-import BaseChoice from '../BaseChoice'
 import { defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import BaseChoice from '../BaseChoice'
 
 /**
  * 支持配置：
@@ -34,7 +34,7 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['focus', 'change', 'select', 'blur'],
+  emits: ['change'],
   setup(props, { emit }) {
     const onChange = (value) => {
       const key = props.field
@@ -52,16 +52,20 @@ export default defineComponent({
     }
     // 填写更多传入一个动态组件
     const selectMoreView = shallowRef(null)
-    if(props.readonly) {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+    if (props.readonly) {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionContainerB')
+      )
     } else {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionRuleContainer')
+      )
     }
     return {
       props,
       onChange,
       handleSelectMoreChange,
-      selectMoreView,
+      selectMoreView
     }
   },
   render() {

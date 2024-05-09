@@ -9,7 +9,7 @@
 
 <script>
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-import RichEditor from '../../../common/Editor/RichEditor.vue'
+import RichEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
   name: 'RichText',

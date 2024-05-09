@@ -1,0 +1,37 @@
+<template>
+  <commonTemplate>
+    <template #left>
+      <catalogPanel />
+    </template>
+    <template #center>
+      <previewPanel />
+    </template>
+    <template #right>
+      <setterPanel />
+    </template>
+  </commonTemplate>
+</template>
+<script>
+import commonTemplate from '../../components/CommonTemplate.vue'
+import catalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
+import previewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
+import setterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
+
+export default {
+  name: 'editIndex',
+  components: {
+    commonTemplate,
+    catalogPanel,
+    previewPanel,
+    setterPanel
+  },
+  created() {
+    this.$store.dispatch('getBannerData')
+  }
+}
+</script>
+<style lang="scss" scoped>
+.navbar {
+  border-bottom: 1px solid #e7e9eb;
+}
+</style>

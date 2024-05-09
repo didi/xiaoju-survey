@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/survey',
     name: 'survey',
+    // @ts-ignore
     component: () => import('../pages/list/index.vue'),
     meta: {
       needLogin: true,
@@ -22,6 +23,7 @@ const routes: RouteRecordRaw[] = [
       needLogin: true
     },
     name: 'QuestionEdit',
+    // @ts-ignore
     component: () => import('../pages/edit/index.vue'),
     children: [
       {
@@ -31,6 +33,7 @@ const routes: RouteRecordRaw[] = [
         },
         name: 'QuestionEditPage',
         component: () =>
+          // @ts-ignore
               import('../pages/edit/pages/edit/index.vue'),
         children: [
           {
@@ -40,7 +43,8 @@ const routes: RouteRecordRaw[] = [
               needLogin: true,
             },
             component: () =>
-              import('../pages/edit/pages/edit/questionEdit.vue'),
+              // @ts-ignore
+              import('../pages/edit/pages/edit/QuestionEdit.vue'),
           },
           {
             path: 'logic',
@@ -49,7 +53,8 @@ const routes: RouteRecordRaw[] = [
               needLogin: true,
             },
             component: () =>
-              import('../pages/edit/pages/edit/logicEdit.vue'),
+              // @ts-ignore
+              import('../pages/edit/pages/edit/LogicEdit.vue'),
           }
         ],
       },
@@ -59,13 +64,15 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
-        component: () => import('../pages/edit/pages/setting.vue')
+        // @ts-ignore
+        component: () => import('../pages/edit/pages/Setting.vue')
       },
       {
         path: 'skin',
         meta: {
           needLogin: true
         },
+        // @ts-ignore
         component: () => import('../pages/edit/pages/skin/index.vue'),
         children: [
           {
@@ -74,7 +81,8 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () => import('../pages/edit/pages/skin/content.vue')
+            // @ts-ignore
+            component: () => import('../pages/edit/pages/skin/Content.vue')
           },
           {
             path: 'result',
@@ -82,7 +90,8 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () => import('../pages/edit/pages/skin/result.vue')
+            // @ts-ignore
+            component: () => import('../pages/edit/pages/skin/Result.vue')
           }
         ]
       }
@@ -94,6 +103,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
+    // @ts-ignore
     component: () => import('../pages/analysis/AnalysisPage.vue')
   },
   {
@@ -102,6 +112,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
+    // @ts-ignore
     component: () => import('../pages/publishResult/PublishResultPage.vue')
   },
   {
@@ -111,11 +122,13 @@ const routes: RouteRecordRaw[] = [
       needLogin: true,
       title: '创建问卷'
     },
+    // @ts-ignore
     component: () => import('../pages/create/CreatePage.vue')
   },
   {
     path: '/login',
     name: 'login',
+    // @ts-ignore
     component: () => import('../pages/login/LoginPage.vue'),
     meta: {
       title: '登陆'

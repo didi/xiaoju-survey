@@ -1,8 +1,11 @@
-import BaseInput from '../BaseInput'
 import { defineComponent, ref } from 'vue'
-import '../../common/css/input.scss'
 import { get } from 'lodash-es'
+
+import BaseInput from '../BaseInput'
 import myMeta from './meta'
+
+import './style.scss'
+
 export const meta = myMeta
 /**
  * 支持配置：
@@ -106,23 +109,25 @@ export default defineComponent({
       minlength: textRange.min.value
     }
     return (
-      <BaseInput
-        uiTarget="textarea"
-        customClass={focusFlag ? 'is-focused' : ''}
-        {...props}
-        {...{
-          onBlur: this.onBlur,
-          onFocus: this.onFocus,
-          onInput: this.onInput,
-          onChange: this.onChange
-        }}
-      >
+      <div>
+        <BaseInput
+          uiTarget="textarea"
+          customClass={focusFlag ? 'is-focused' : ''}
+          {...props}
+          {...{
+            onBlur: this.onBlur,
+            onFocus: this.onFocus,
+            onInput: this.onInput,
+            onChange: this.onChange
+          }}
+        />
+
         {focusFlag && (
           <div class="text-number-tip">
             <p>{getLeftTextNumber}</p>
           </div>
         )}
-      </BaseInput>
+      </div>
     )
   }
 })

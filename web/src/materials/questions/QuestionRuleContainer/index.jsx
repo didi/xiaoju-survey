@@ -14,8 +14,8 @@ import {
 import { assign } from 'lodash-es'
 import AsyncValidator from 'async-validator'
 
-import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
-import ErrorTip from './ErrorTip.vue'
+import QuestionContainerC from '@/materials/questions/QuestionContainerC'
+import ErrorTip from './ErrorTip/index.vue'
 
 import './style.scss'
 

@@ -43,6 +43,21 @@ const mpaPlugin = createMpaPlugin({
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  optimizeDeps: {
+    include: [
+      'lodash-es',
+      'async-validator',
+      'vuedraggable',
+      'element-plus/es',
+      '@wangeditor/editor-for-vue',
+      'element-plus/es/components/*/style/index',
+      'element-plus/dist/locale/zh-cn.mjs',
+      'clipboard',
+      'qrcode',
+      'moment',
+      'moment/locale/zh-cn'
+    ]
+  },
   plugins: [
     vue(),
     vueJsx(),

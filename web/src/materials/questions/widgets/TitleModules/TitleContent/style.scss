@@ -17,7 +17,7 @@
     transform-origin: left top;
   }
 
-  &-content {
+  .module-content {
     zoom: 1;
     display: flex;
     font-size: $title-size;
@@ -37,23 +37,23 @@
     }
   }
 
-  &-text {
+  .module-text {
     font-size: $title-size;
     p,
     span {
       font-size: inherit;
     }
-  }
 
-  .m-tag {
-    border: 1px solid $primary-color;
-    font-size: 0.18rem;
-    height: 0.4rem;
-    line-height: 0.4rem;
-    display: inline-block;
-    color: $primary-color;
-    padding: 0 0.16rem;
-    margin-left: 0.16rem;
-    border-radius: 0 0.06rem 0 0.06rem;
+    .m-tag {
+      border: 1px solid $primary-color;
+      font-size: 0.18rem;
+      height: 0.4rem;
+      line-height: 0.4rem;
+      display: inline-block;
+      color: $primary-color;
+      padding: 0 0.16rem;
+      margin-left: 0.16rem;
+      border-radius: 0 0.06rem 0 0.06rem;
+    }
   }
 }

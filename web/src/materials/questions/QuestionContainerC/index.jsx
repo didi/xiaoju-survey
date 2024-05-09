@@ -3,9 +3,9 @@ import { defineComponent, onMounted, shallowRef } from 'vue'
 import questionLoader from '@/materials/questions/questionLoader.js'
 
 import moduleList from '../common/config/moduleList.js'
-import '../common/css/question.scss'
+import './style.scss'
 
-import TitleModule from './TitleModule/index.jsx'
+import PreviewTitle from '../widgets/TitleModules/PreviewTitle'
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
@@ -76,7 +76,7 @@ export default defineComponent({
     const BlockComponent = this.BlockComponent
     return (
       <div class={['question']}>
-        {this.showTitle && <TitleModule {...props} />}
+        {this.showTitle && <PreviewTitle {...props} />}
         <div class="question-block">
           {this.BlockComponent ? (
             <BlockComponent

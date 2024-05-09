@@ -88,9 +88,13 @@ export default defineComponent({
 
     const selectMoreView = shallowRef(null)
     if (props.readonly) {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionContainerB.jsx'))
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionContainerB')
+      )
     } else {
-      selectMoreView.value = defineAsyncComponent(() => import('../QuestionRuleContainer.jsx'))
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionRuleContainer')
+      )
     }
 
     return {

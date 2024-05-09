@@ -2,10 +2,11 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 
 import store from '@/management/store'
 
-import OptionEdit from '@/materials/questions/components/Options/OptionEdit.vue'
-import OptionEditBar from '@/materials/questions/components/Options/OptionEditBar.vue'
-import questionLoader from '@/materials/questions/questionLoader'
-import UseOptionBase from '@/materials/questions/components/Options/UseOptionBase'
+import OptionEdit from './Options/OptionEdit.vue'
+import OptionEditBar from './Options/OptionEditBar.vue'
+import UseOptionBase from './Options/UseOptionBase'
+
+import questionLoader from '@materials/questions/questionLoader'
 
 export default defineComponent({
   name: 'EditOptions',

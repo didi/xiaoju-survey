@@ -1,3 +1,5 @@
+@import '@materials/questions/common/css/default.scss';
+
 .module-title {
   position: relative;
   height: auto;
@@ -12,15 +14,10 @@
     left: 0.16rem;
     top: 0rem;
     font-size: 0.2rem;
-    // transform: scale(0.5);
     transform-origin: left top;
   }
-  .score-text {
-    color: #999;
-    margin-left: 0.2rem;
-    font-size: 0.24rem;
-  }
-  &-title {
+
+  &-content {
     zoom: 1;
     display: flex;
     font-size: $title-size;
@@ -32,27 +29,19 @@
       padding-right: 0.06rem;
       font-size: $title-size;
     }
-    &-text {
-      font-size: $title-size;
-      p,
-      span {
-        font-size: inherit;
-      }
-    }
     em {
       font-style: italic;
     }
     u {
       text-decoration: underline;
     }
-    .richeditor {
-      position: relative;
-      cursor: pointer;
-      width: 100%;
-      margin: -10px 0;
-      flex: 1;
-      font-size: 0.32rem;
-      background-color: #fff;
+  }
+
+  &-text {
+    font-size: $title-size;
+    p,
+    span {
+      font-size: inherit;
     }
   }
 

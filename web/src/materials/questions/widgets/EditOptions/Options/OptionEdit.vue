@@ -9,7 +9,7 @@
     >
       <template #item="{ element, index }">
         <div class="draggdiv dragg-handle">
-          <span class="drag-handle"></span>
+          <span class="drag-handle qicon qicon-tuodong"></span>
           <div class="input-box">
             <RichEditor
               :modelValue="element.text"
@@ -17,7 +17,11 @@
             />
           </div>
 
-          <i-ep-circlePlus v-if="isShowOperation" class="opt-btn-icon" @click="onAddOption(index)" />
+          <i-ep-circlePlus
+            v-if="isShowOperation"
+            class="opt-btn-icon"
+            @click="onAddOption(index)"
+          />
           <el-tooltip
             v-if="isShowOperation"
             class="icon delete"
@@ -57,7 +61,7 @@ export default {
   },
   components: {
     draggable,
-    RichEditor,
+    RichEditor
   },
   mounted() {
     // 选项hash兜底
@@ -113,7 +117,7 @@ export default {
     user-select: none;
     padding-right: 0.08rem;
   }
-  
+
   .draggdiv {
     display: block;
     cursor: move;

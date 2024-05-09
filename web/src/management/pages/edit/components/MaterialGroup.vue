@@ -1,7 +1,8 @@
 <template>
   <draggable
     :list="renderData"
-    :options="dragOptions"
+    handle=".question-wrapper.isSelected"
+    filter=".question-wrapper.isSelected .question.isSelected"
     :onEnd="checkEnd"
     :move="checkMove"
     itemKey="field"
@@ -33,7 +34,7 @@
 
 <script>
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
-import QuestionContainerB from '@/materials/questions/widgets/QuestionContainerB.jsx'
+import QuestionContainerB from '@/materials/questions/QuestionContainerB'
 import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
 import { filterQuestionPreviewData } from '@/management/utils/index'
@@ -93,15 +94,6 @@ export default defineComponent({
       handleChangeSeq,
       checkMove,
       checkEnd,
-      dragOptions: {
-        animation: 0,
-        group: 'previewList',
-        handle: '.el-icon-rank',
-        scroll: true,
-        scrollSpeed: 2500,
-        scrollSensitivity: 150,
-        forceFallback: true
-      },
       getQuestionRefByField
     }
   }

@@ -40,7 +40,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import '../common/css/default.scss';
+@import '@materials/questions/common/css/default.scss';
 
 .process-outer {
   position: relative;

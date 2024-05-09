@@ -64,7 +64,6 @@ export default defineComponent({
     const onRadioClick = (item, $event) => {
       $event && $event.stopPropagation()
       $event && $event.preventDefault()
-      console.log(8888)
       emit('change', item.hash)
     }
     const onCheckboxClick = (item, $event) => {

@@ -1,4 +1,4 @@
-import basicConfig from '../../common/config/basicConfig'
+import basicConfig from '@materials/questions/common/config/basicConfig'
 
 const meta = {
   title: '判断题',

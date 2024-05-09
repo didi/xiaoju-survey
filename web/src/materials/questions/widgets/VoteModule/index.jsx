@@ -1,15 +1,14 @@
 import { computed, defineComponent } from 'vue'
 import { includes } from 'lodash-es'
 
-import ProcessModule from '../../components/ProcessModule.vue'
+import AnswerProcess from './AnswerProcess/index.vue'
 import BaseChoice from '../BaseChoice'
-import QuestionWithRule from '../QuestionRuleContainer'
 
 import './style.scss'
 
 export default defineComponent({
   name: 'VoteModule',
-  components: { BaseChoice, ProcessModule, QuestionWithRule },
+  components: { BaseChoice, AnswerProcess },
   props: {
     innerType: {
       type: String,
@@ -120,7 +119,7 @@ export default defineComponent({
           vote: (scoped) => {
             return (
               <div class="vote-detail">
-                <ProcessModule
+                <AnswerProcess
                   process-conf={{
                     percent: `${calcVotePercent(scoped.option, scoped.voteTotal)}%`
                   }}
@@ -133,15 +132,6 @@ export default defineComponent({
               </div>
             )
           }
-          // selectMore: (scoped) => {
-          //   return (
-          //     <QuestionWithRule
-          //       showTitle={false}
-          //       moduleConfig={scoped.selectMoreConfig}
-          //       onChange={(e) => this.handleSelectMoreChange(e)}
-          //     ></QuestionWithRule>
-          //   )
-          // }
         }}
       </BaseChoice>
     )

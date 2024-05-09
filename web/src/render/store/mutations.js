@@ -20,7 +20,6 @@ export default {
   },
   changeFormData(state, data) {
     let { key, value } = data
-    console.log(11111, key, value)
     set(state, `formValues.${key}`, value)
     // set(state, `questionData.${key}.value`, value)
   },

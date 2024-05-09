@@ -3,10 +3,10 @@ import { computed, defineComponent, onMounted, shallowRef, ref } from 'vue'
 import questionLoader from '@/materials/questions/questionLoader.js'
 
 import moduleList from '../common/config/moduleList.js'
-import '../common/css/question.scss'
+import './style.scss'
 
-import EditOptions from './EditOptions.jsx'
-import EditTitle from './EditTitle.jsx'
+import EditOptions from '../widgets/EditOptions'
+import EditTitle from '../widgets/TitleModules/EditTitle'
 
 export const getBlockComponent = async (type) => {
   const path = moduleList[type]
@@ -80,7 +80,6 @@ export default defineComponent({
     }
 
     return {
-      questionMeta,
       props,
       BlockComponent,
       onClick,
@@ -100,7 +99,7 @@ export default defineComponent({
     }
 
     const { BlockComponent } = this
-    let dynamicComponent = <span> 题型组件加载中</span>
+    let dynamicComponent = <span>题型组件加载中</span>
     if (BlockComponent) {
       dynamicComponent = BlockComponent
     }
@@ -112,7 +111,6 @@ export default defineComponent({
           {this.showEditComponent ? (
             <EditOptions moduleConfig={props.moduleConfig}></EditOptions>
           ) : (
-            // 输入类题目
             <dynamicComponent
               readonly
               {...props}

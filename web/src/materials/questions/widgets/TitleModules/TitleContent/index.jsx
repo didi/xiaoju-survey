@@ -1,12 +1,16 @@
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, watch, ref, computed } from 'vue'
 import { filterXSS } from '@/common/xss'
+import tagList from '@materials/questions/common/config/tagList'
 
-import '../../common/css/title.scss'
-import tagList from '../../common/config/tagList'
+import './style.scss'
 
 export default defineComponent({
-  name: 'TitleModule',
+  name: 'TitleContent',
   props: {
+    isSelected: {
+      type: Boolean,
+      default: false
+    },
     showIndex: {
       type: Boolean,
       default: false
@@ -32,8 +36,21 @@ export default defineComponent({
       default: ''
     }
   },
-  setup(props) {
+  setup(props, { slots }) {
     const status = ref('')
+    watch(
+      () => props.isSelected,
+      () => {
+        status.value = 'preview'
+      }
+    )
+
+    const handleClick = () => {
+      if (props.isSelected) {
+        status.value = 'edit'
+      }
+    }
+
     const typeName = computed(() => {
       if (!props.showType) return ''
       const types = props.showType ? [props.type] : []
@@ -48,6 +65,7 @@ export default defineComponent({
       })
       return ret
     })
+
     const tagTitle = computed(() => {
       let htmlText = ''
       htmlText += filterXSS(props.title)
@@ -65,22 +83,22 @@ export default defineComponent({
       }
       return htmlText
     })
-    return {
-      status,
-      typeName,
-      tagTitle
-    }
+
+    return { slots, handleClick, status, tagTitle }
   },
   render() {
-    const { isRequired, tagTitle, indexNumber } = this
+    const { isRequired, indexNumber, slots, status, tagTitle } = this
+
     return (
-      <div class={['module-title', isRequired ? 'is-required' : '']}>
-        <div>
-          {isRequired && <i class="module-title-required">*</i>}
-          <div class="module-title-title">
-            {this.showIndex && <span class="index"> {indexNumber}.</span>}
+      <div class={['module-title', isRequired ? 'is-required' : '']} onClick={this.handleClick}>
+        {isRequired && <i class="module-title-required">*</i>}
+        <div class="module-content">
+          {this.showIndex && <span class="index"> {indexNumber}.</span>}
+          {status === 'edit' && slots.edit ? (
+            slots.edit()
+          ) : (
             <div v-html={filterXSS(tagTitle)} class="flex module-title-title-text"></div>
-          </div>
+          )}
         </div>
       </div>
     )

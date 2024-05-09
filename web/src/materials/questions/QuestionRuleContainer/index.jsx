@@ -15,9 +15,9 @@ import { assign } from 'lodash-es'
 import AsyncValidator from 'async-validator'
 
 import QuestionContainerC from '@/materials/questions/widgets/QuestionContainerC.jsx'
-import ErrorTip from '../components/ErrorTip.vue'
+import ErrorTip from './ErrorTip.vue'
 
-import '../common/css/formItem.scss'
+import './style.scss'
 
 export default defineComponent({
   name: 'QuestionRuleContainer',

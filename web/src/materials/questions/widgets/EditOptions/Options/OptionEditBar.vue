@@ -46,7 +46,7 @@
 import { ref, computed, inject } from 'vue'
 import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
 import RateConfig from '../AdvancedConfig/RateConfig.vue'
-import ExtraIcon from '../ExtraIcon.vue'
+import ExtraIcon from '../ExtraIcon/index.vue'
 
 defineProps({
   optionList: {

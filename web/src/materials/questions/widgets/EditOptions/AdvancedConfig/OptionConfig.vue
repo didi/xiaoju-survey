@@ -80,7 +80,7 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { cleanRichText } from '@/common/xss'
-import ExtraIcon from '../ExtraIcon.vue'
+import ExtraIcon from '../ExtraIcon/index.vue'
 
 export default {
   name: 'OptionConfig',

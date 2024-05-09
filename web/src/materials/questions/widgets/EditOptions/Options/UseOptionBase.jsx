@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 
-import GetHash from '../../common/utils/getOptionHash'
+import GetHash from '@materials/questions/common/utils/getOptionHash'
 
 function useOptionBase(options) {
   const optionList = ref(options)

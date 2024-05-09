@@ -8,10 +8,6 @@ import UseOptionBase from './Options/UseOptionBase'
 
 export default defineComponent({
   name: 'EditOptions',
-  components: {
-    OptionEdit,
-    OptionEditBar
-  },
   provide() {
     return {
       currentEditKey: store.getters['edit/currentEditKey'],
@@ -28,7 +24,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  setup(props, { slots }) {
     const currentEditKey = computed(() => {
       return store.getters['edit/currentEditKey']
     })
@@ -70,6 +66,7 @@ export default defineComponent({
       hasAdvancedRateConfig.value = Boolean(optionEditBar.configure.showAdvancedRateConfig)
     })
     return {
+      slots,
       getOptions,
       hasAdvancedConfig,
       hasAdvancedRateConfig,
@@ -83,16 +80,19 @@ export default defineComponent({
     }
   },
   render() {
+    const { slots } = this
     return (
       <div class="selected-wrapper radio-selected-wrapper">
-        {this.showOptionEdit 
-          ? <OptionEdit
+        {this.showOptionEdit ? (
+          <OptionEdit
             option-list={this.getOptions}
             onAddOption={this.handleAddOption}
             onOptionChange={this.handleOptionChange}
             onChange={this.handleChange}
-          /> : this.$slots.default()
-        }
+          />
+        ) : (
+          slots.default()
+        )}
         {this.showOptionEditBar && (
           <OptionEditBar
             ref="optionEditBar"

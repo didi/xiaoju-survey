@@ -1,29 +1,29 @@
 <template>
   <commonTemplate>
     <template #left>
-      <catalogPanel />
+      <CatalogPanel />
     </template>
     <template #center>
-      <previewPanel />
+      <PreviewPanel />
     </template>
     <template #right>
-      <setterPanel />
+      <SetterPanel />
     </template>
   </commonTemplate>
 </template>
 <script>
 import commonTemplate from '../../components/CommonTemplate.vue'
-import catalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
-import previewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
-import setterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
+import CatalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
+import PreviewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
+import SetterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
 
 export default {
-  name: 'editIndex',
+  name: 'ContentPage',
   components: {
     commonTemplate,
-    catalogPanel,
-    previewPanel,
-    setterPanel
+    CatalogPanel,
+    PreviewPanel,
+    SetterPanel
   },
   created() {
     this.$store.dispatch('getBannerData')

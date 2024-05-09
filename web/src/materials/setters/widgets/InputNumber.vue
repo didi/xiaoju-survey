@@ -23,7 +23,7 @@ export default {
     moduleConfig: {
       type: Object,
       required: true
-    },
+    }
   },
   data() {
     return {

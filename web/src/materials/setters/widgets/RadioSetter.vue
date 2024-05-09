@@ -16,7 +16,7 @@
         <template #content>
           <div v-html="item.tip"></div>
         </template>
-        <span>{{ item.label }} <i-ep-questionFilled  /></span>
+        <span>{{ item.label }} <i-ep-questionFilled /></span>
       </el-tooltip>
       <template v-else-if="item.labelType === 'array'">
         <span

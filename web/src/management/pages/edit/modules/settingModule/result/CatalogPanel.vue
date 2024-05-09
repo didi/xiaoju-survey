@@ -22,7 +22,7 @@ import { mapMutations } from 'vuex'
 import { EDIT_STATUS_MAP } from '../enum'
 
 export default {
-  name: 'resultConfigList',
+  name: 'CatalogPanel',
   data() {
     return {
       statusList: [

@@ -16,7 +16,7 @@ import { publishSurvey, saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 
 export default {
-  name: 'PublishModule',
+  name: 'PublishPanel',
   data() {
     return {
       isPublishing: false

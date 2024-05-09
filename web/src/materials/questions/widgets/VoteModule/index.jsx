@@ -8,7 +8,6 @@ import './style.scss'
 
 export default defineComponent({
   name: 'VoteModule',
-  components: { BaseChoice, AnswerProcess },
   props: {
     innerType: {
       type: String,
@@ -92,7 +91,6 @@ export default defineComponent({
       })
     }
     return {
-      props,
       myOptions,
       calcVotePercent,
       onChange,
@@ -100,19 +98,19 @@ export default defineComponent({
     }
   },
   render() {
-    const { calcVotePercent, innerType, props } = this
+    const { calcVotePercent, innerType } = this
 
     return (
       <BaseChoice
         uiTarget={innerType}
         layout={'vertical'}
-        name={props.field}
-        innerType={props.innerType}
-        value={props.value}
-        options={props.options}
-        readonly={props.readonly}
-        voteTotal={props.voteTotal}
-        maxNum={props.maxNum}
+        name={this.field}
+        innerType={this.innerType}
+        value={this.value}
+        options={this.options}
+        readonly={this.readonly}
+        voteTotal={this.voteTotal}
+        maxNum={this.maxNum}
         onChange={this.onChange}
       >
         {{

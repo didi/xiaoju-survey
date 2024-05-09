@@ -36,7 +36,7 @@ const textMap = {
 }
 
 export default {
-  name: 'StatusEditForm',
+  name: 'SetterPanel',
   components: {
     FormItem
   },

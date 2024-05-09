@@ -7,7 +7,6 @@ import BaseChoice from '../BaseChoice'
  */
 export default defineComponent({
   name: 'RadioModule',
-  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -62,26 +61,25 @@ export default defineComponent({
       )
     }
     return {
-      props,
       onChange,
       handleSelectMoreChange,
       selectMoreView
     }
   },
   render() {
-    const { props, selectMoreView } = this
+    const { selectMoreView } = this
 
     return (
       <div>
         <BaseChoice
           uiTarget="radio"
-          readonly={props.readonly}
-          name={props.field}
-          options={props.options}
-          value={props.value}
-          type={props.type}
-          field={props.field}
-          layout={props.layout}
+          readonly={this.readonly}
+          name={this.field}
+          options={this.options}
+          value={this.value}
+          type={this.type}
+          field={this.field}
+          layout={this.layout}
           onChange={this.onChange}
         >
           {{

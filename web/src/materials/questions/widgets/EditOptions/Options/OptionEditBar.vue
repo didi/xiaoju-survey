@@ -7,11 +7,19 @@
         其他____
       </div>
 
-      <span v-if="hasAdvancedConfig" class="option-advanced-config primary-color" @click="openOptionConfig">
+      <span
+        v-if="hasAdvancedConfig"
+        class="option-advanced-config primary-color"
+        @click="openOptionConfig"
+      >
         高级设置>
       </span>
 
-      <span v-if="hasAdvancedRateConfig" class="option-advanced-config primary-color" @click="openRateConfig">
+      <span
+        v-if="hasAdvancedRateConfig"
+        class="option-advanced-config primary-color"
+        @click="openRateConfig"
+      >
         高级评分设置>
       </span>
     </div>
@@ -41,7 +49,6 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue'
 import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
@@ -66,7 +73,7 @@ defineProps({
     default: false
   }
 })
-const emit = defineEmits(['addOther', 'optionChange', 'change',])
+const emit = defineEmits(['addOther', 'optionChange', 'change'])
 
 const moduleConfig = inject('moduleConfig') as any
 const optionConfigVisible = ref(false)
@@ -89,7 +96,7 @@ const rateConfigVisible = ref(false)
 const openRateConfig = () => {
   rateConfigVisible.value = true
 }
-const onVisibleChange=(val: boolean) => {
+const onVisibleChange = (val: boolean) => {
   rateConfigVisible.value = val
 }
 

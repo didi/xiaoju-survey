@@ -8,7 +8,6 @@ import './style.scss'
 
 export default defineComponent({
   name: 'EditTitle',
-  components: { RichEditor },
   props: {
     isSelected: {
       type: Boolean,
@@ -52,7 +51,7 @@ export default defineComponent({
     }
   },
   render() {
-    const { isRequired, indexNumber, title, showType, type, isSelected } = this
+    const { isRequired, indexNumber, title, showType, type, isSelected, showIndex } = this
 
     return (
       <TitleContent
@@ -60,6 +59,7 @@ export default defineComponent({
         indexNumber={indexNumber}
         title={title}
         showType={showType}
+        showIndex={showIndex}
         type={type}
         isSelected={isSelected}
       >

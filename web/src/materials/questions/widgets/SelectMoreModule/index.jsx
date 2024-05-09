@@ -3,7 +3,6 @@ import BaseInput from '../BaseInput'
 
 export default defineComponent({
   name: 'SelectMoreData',
-  components: { BaseInput },
   props: {
     readonly: Boolean,
     field: String,

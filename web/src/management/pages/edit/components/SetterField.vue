@@ -3,18 +3,15 @@
     <div v-for="(item, index) in formFieldData" :key="`${item.key}${index}`" class="group-wrap">
       <div v-if="item.title" class="group-title">
         {{ item.title }}
-        
-        <el-tooltip
-          v-if="item.tip"
-          :content="item.tip"
-          placement="right"
-        >
+
+        <el-tooltip v-if="item.tip" :content="item.tip" placement="right">
           <i-ep-questionFilled class="icon-tip" />
         </el-tooltip>
       </div>
 
       <template v-if="item.type === 'Customed'">
-        <FormItem v-for="(content, contentIndex) in item.content"
+        <FormItem
+          v-for="(content, contentIndex) in item.content"
           :key="`${item.key}${contentIndex}`"
           :form-config="content"
         >
@@ -72,7 +69,7 @@ export default {
   name: 'SettersField',
   props: {
     formConfigList: Array, // 对应题型组件的meta.js内容
-    moduleConfig: Object,
+    moduleConfig: Object
   },
   data() {
     return {
@@ -88,7 +85,7 @@ export default {
     formConfigList: {
       deep: true,
       immediate: true,
-      async handler (newVal) {        
+      async handler(newVal) {
         this.init = true
         if (!newVal || !newVal.length) {
           return
@@ -96,7 +93,7 @@ export default {
 
         // 组件注册
         await this.handleComponentRegister(newVal)
-        
+
         this.init = false
         this.formFieldData = this.setValues(this.formConfigList)
       }
@@ -104,10 +101,10 @@ export default {
     // schema变化联动
     moduleConfig: {
       deep: true,
-      async handler () {
+      async handler() {
         // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
         if (this.init) {
-          return       
+          return
         }
 
         // TODO: 优化，依赖的schema变化时，均会重新计算
@@ -117,7 +114,8 @@ export default {
   },
   methods: {
     setValues(configList = []) {
-      return configList.filter((item) => {
+      return configList
+        .filter((item) => {
           // 组件组
           if (item.type === 'Customed') {
             item.content = this.setValues(item.content)
@@ -137,7 +135,8 @@ export default {
           }
 
           return true
-        }).map((item) => {
+        })
+        .map((item) => {
           return {
             ...item,
             value: formatValue({ item, moduleConfig: this.moduleConfig }) // 动态复值
@@ -148,7 +147,7 @@ export default {
       let innerSetters = []
       const setters = formFieldData.map((item) => {
         if (item.type === 'Customed') {
-          innerSetters.push(...(item.content || []).map(content => content.type))
+          innerSetters.push(...(item.content || []).map((content) => content.type))
         }
 
         return item.type

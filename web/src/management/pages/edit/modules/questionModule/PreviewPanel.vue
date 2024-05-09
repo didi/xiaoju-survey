@@ -2,7 +2,7 @@
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
-        <mainTitle
+        <MainTitle
           :bannerConf="bannerConf"
           :is-selected="currentEditOne === 'mainTitle'"
           @select="onSelectEditOne('mainTitle')"
@@ -16,7 +16,7 @@
           @changeSeq="onQuestionOperation"
           ref="materialGroup"
         />
-        <submit
+        <SubmitButton
           :submit-conf="submitConf"
           :skin-conf="skinConf"
           :is-selected="currentEditOne === 'submit'"
@@ -29,16 +29,16 @@
 
 <script>
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import mainTitle from '@/management/pages/edit/components/MainTitle.vue'
-import submit from '@/management/pages/edit/components/Submit.vue'
+import MainTitle from '@/management/pages/edit/components/MainTitle.vue'
+import SubmitButton from '@/management/pages/edit/components/SubmitButton.vue'
 import { mapState, mapGetters } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'mainOperation',
+  name: 'PreviewPanel',
   components: {
-    mainTitle,
-    submit,
+    MainTitle,
+    SubmitButton,
     MaterialGroup
   },
   data() {

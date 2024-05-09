@@ -45,7 +45,7 @@ import setterLoader from '@/materials/setters/setterLoader'
 import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get } from 'lodash-es'
 
 export default {
-  name: 'QuestionConfig',
+  name: 'SettingPanel',
   components: {
     FormItem
   },

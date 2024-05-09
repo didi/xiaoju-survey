@@ -15,7 +15,6 @@ export const meta = myMeta
  */
 export default defineComponent({
   name: 'InputModule',
-  components: { BaseInput },
   props: {
     type: {
       type: String,

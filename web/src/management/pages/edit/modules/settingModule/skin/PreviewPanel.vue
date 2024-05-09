@@ -3,16 +3,16 @@
     <div class="operation-wrapper">
       <div class="box" ref="box">
         <div class="mask"></div>
-        <banner :bannerConf="bannerConf" />
+        <BannerContent :bannerConf="bannerConf" />
         <div class="content">
-          <mainTitle :isSelected="false" :bannerConf="bannerConf" />
-          <materialGroup :questionDataList="questionDataList" ref="materialGroup" />
-          <submit
+          <MainTitle :isSelected="false" :bannerConf="bannerConf" />
+          <MaterialGroup :questionDataList="questionDataList" ref="MaterialGroup" />
+          <SubmitButton
             :submit-conf="submitConf"
             :skin-conf="skinConf"
             :is-selected="currentEditOne === 'submit'"
           />
-          <LogoIcon :logo-conf="bottomConf" :is-selected="currentEditOne === 'logo'" />
+          <LogoPreview :logo-conf="bottomConf" :is-selected="currentEditOne === 'logo'" />
         </div>
       </div>
     </div>
@@ -20,22 +20,22 @@
 </template>
 
 <script>
-import materialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import banner from '../components/Banner.vue'
-import mainTitle from '@/management/pages/edit/components/MainTitle.vue'
-import submit from '@/management/pages/edit/components/Submit.vue'
-import LogoIcon from '@/management/pages/edit/components/Logo.vue'
+import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
+import BannerContent from '../components/BannerContent.vue'
+import MainTitle from '@/management/pages/edit/components/MainTitle.vue'
+import SubmitButton from '@/management/pages/edit/components/SubmitButton.vue'
+import LogoPreview from '@/management/pages/edit/components/LogoPreview.vue'
 import { mapState, mapGetters } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'previewPanel',
+  name: 'PreviewPanel',
   components: {
-    banner,
-    mainTitle,
-    submit,
-    LogoIcon,
-    materialGroup
+    BannerContent,
+    MainTitle,
+    SubmitButton,
+    LogoPreview,
+    MaterialGroup
   },
   data() {
     return {

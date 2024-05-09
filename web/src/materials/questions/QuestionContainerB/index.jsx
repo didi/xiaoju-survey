@@ -61,7 +61,7 @@ export default defineComponent({
       let result = false
       if (props.isSelected) {
         const { editConfigure = { optionEdit: { show: false } } } = questionMeta.value
-        result = editConfigure?.optionEdit?.show
+        result = editConfigure?.optionEdit?.show || editConfigure?.optionEditBar?.show
       }
       return result
     })
@@ -109,8 +109,17 @@ export default defineComponent({
 
         <div class="question-block">
           {this.showEditComponent ? (
-            <EditOptions moduleConfig={props.moduleConfig}></EditOptions>
-          ) : (
+            <EditOptions moduleConfig={props.moduleConfig}>
+              <dynamicComponent
+                readonly
+                {...props}
+                onBlur={this.onBlur}
+                onFocus={this.onFocus}
+                change={this.onChange}
+              />
+            </EditOptions>
+          ) : 
+          (
             <dynamicComponent
               readonly
               {...props}

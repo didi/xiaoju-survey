@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import commonTemplate from '../../components/commonTemplate.vue'
+import commonTemplate from '../../components/CommonTemplate.vue'
 import ResultCatalog from '../../modules/settingModule/result/CatalogPanel.vue'
 import ResultPreview from '../../modules/settingModule/result/PreviewPanel.vue'
 import ResultSetter from '../../modules/settingModule/result/SetterPanel.vue'

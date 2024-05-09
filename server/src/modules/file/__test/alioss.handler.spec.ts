@@ -8,7 +8,7 @@ describe('AliOssHandler', () => {
         buffer: Buffer.from('mockFileContent'),
       } as Express.Multer.File;
       const mockPutResult = { name: 'mockFileName.txt' };
-      const mockClient = {
+      const mockClient: any = {
         put: jest.fn().mockResolvedValue(mockPutResult),
       };
       const handler = new AliOssHandler({

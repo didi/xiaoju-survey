@@ -1,51 +1,45 @@
-import { defineComponent } from 'vue';
-import baseInput from '../BaseInput';
+import { defineComponent } from 'vue'
+import BaseInput from '../BaseInput'
 
 export default defineComponent({
   name: 'SelectMoreData',
-  components: { baseInput },
   props: {
     readonly: Boolean,
     field: String,
     placeholder: String,
-    value: String,
+    value: String
   },
+  emits: ['blur', 'change'],
   setup(props, { emit }) {
-    // const moduleConfig = ref({
-    //   type: 'text'
-    // })
     const onBlur = () => {
-      emit('blur');
-    };
+      emit('blur')
+    }
     const onChange = (e) => {
-      const key = props.field;
-      const value = e.target.value;
+      const key = props.field
+      const value = e.target.value
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
       // moduleConfig,
       onBlur,
-      onChange,
-    };
+      onChange
+    }
   },
   render() {
+    const props = this.$props
     return (
-      <baseInput
+      <BaseInput
         readonly={this.readonly}
         uiTarget="input"
-        {...{ props: this.$props }}
+        {...props}
         {...{
-          on: {
-            blur: this.onBlur,
-            // 'focus': this.onFocus,
-            // 'input': this.onInput,
-            change: this.onChange,
-          },
+          onBlur: this.onBlur,
+          onChange: this.onChange
         }}
-      ></baseInput>
-    );
-  },
-});
+      ></BaseInput>
+    )
+  }
+})

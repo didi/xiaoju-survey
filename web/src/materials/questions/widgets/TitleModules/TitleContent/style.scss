@@ -1,0 +1,59 @@
+@import '@materials/questions/common/css/default.scss';
+
+.module-title {
+  position: relative;
+  height: auto;
+  line-height: 0.45rem;
+  font-size: $title-size;
+  padding: 0 0.4rem 0.4rem;
+  color: #000000;
+  font-weight: normal;
+  &-required {
+    color: $error-color;
+    position: absolute;
+    left: 0.16rem;
+    top: 0rem;
+    font-size: 0.2rem;
+    transform-origin: left top;
+  }
+
+  .module-content {
+    zoom: 1;
+    display: flex;
+    font-size: $title-size;
+    img {
+      max-width: 100%;
+    }
+    .index {
+      float: left;
+      padding-right: 0.06rem;
+      font-size: $title-size;
+    }
+    em {
+      font-style: italic;
+    }
+    u {
+      text-decoration: underline;
+    }
+  }
+
+  .module-text {
+    font-size: $title-size;
+    p,
+    span {
+      font-size: inherit;
+    }
+
+    .m-tag {
+      border: 1px solid $primary-color;
+      font-size: 0.18rem;
+      height: 0.4rem;
+      line-height: 0.4rem;
+      display: inline-block;
+      color: $primary-color;
+      padding: 0 0.16rem;
+      margin-left: 0.16rem;
+      border-radius: 0 0.06rem 0 0.06rem;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@import '@materials/questions/common/css/default.scss';
+
+.explain {
+  line-height: 0.48rem;
+  font-size: 0.24rem;
+  color: #92949d;
+  padding: 0 0.4rem;
+}
+
+.radio-star {
+  &.isPc {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.qicon {
+  // color: #e3e4e8;
+  &.on {
+    color: $primary-color;
+  }
+  &.off {
+    color: #e3e4e8;
+  }
+}

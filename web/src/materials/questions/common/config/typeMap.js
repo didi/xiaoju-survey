@@ -5,5 +5,5 @@ export const typeMap = {
   'checkbox-v': 'checkbox',
   'checkbox-h': 'checkbox',
   'vote-checkbox': 'vote',
-  'vote-radio': 'vote',
-};
+  'vote-radio': 'vote'
+}

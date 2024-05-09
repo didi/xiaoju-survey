@@ -1,84 +1,86 @@
-import { defineComponent, computed } from 'vue';
-import '../../common/css/radioStar.scss';
+import { defineComponent, computed } from 'vue'
+import './style.scss'
+
 export default defineComponent({
   name: 'BaseRate',
   props: {
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: [String, Number],
-      default: 0,
+      default: 0
     },
     min: {
       type: Number,
-      default: 1,
+      default: 1
     },
     max: {
       type: Number,
-      default: 5,
+      default: 5
     },
     iconClass: {
       type: String,
-      default: 'number',
+      default: 'number'
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const rating = computed({
       get() {
-        return props.value;
+        return props.value
       },
       set(val) {
-        emit('change', val);
-      },
-    });
+        emit('change', val)
+      }
+    })
     const range = computed(() => {
-      const { min, max } = props;
+      const { min, max } = props
       if (min > max) {
-        return [];
+        return []
       }
-      const res = [];
+      const res = []
       for (let i = min; i <= max; i++) {
-        res.push(i);
+        res.push(i)
       }
-      return res;
-    });
+      return res
+    })
     const handleClick = (num) => {
-      if (props.readonly) return;
-      rating.value = num;
-    };
+      if (props.readonly) return
+      rating.value = num
+    }
     return {
       rating,
       range,
-      handleClick,
-    };
+      handleClick
+    }
   },
   render() {
-    const { rating, range, iconClass } = this;
+    const { rating, range, iconClass } = this
 
     return (
-      <div class="star-wrapper-main">
-        <div class="star-box">
+      <div class="rate-wrapper-main">
+        <div class="rate-box">
           {range.map((num, index) => {
             return (
               <div
-                class={['star-item', num <= rating ? 'on' : 'off', iconClass]}
-                key={'star' + index}
+                class={['rate-item', num <= rating ? 'on' : 'off', iconClass]}
+                key={'rate' + index}
                 onClick={() => {
-                  this.handleClick(num);
+                  this.handleClick(num)
                 }}
               >
                 {iconClass === 'number' ? num : ''}
               </div>
-            );
+            )
           })}
         </div>
       </div>
-    );
-  },
-});
+    )
+  }
+})

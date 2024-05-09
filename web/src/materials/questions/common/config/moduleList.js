@@ -10,5 +10,5 @@ export default {
   city: 'CityModule',
   vote: 'VoteModule',
   'matrix-checkbox': 'GroupModule',
-  selectMoreModule: 'SelectMoreModule',
-};
+  selectMoreModule: 'SelectMoreModule'
+}

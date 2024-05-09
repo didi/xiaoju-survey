@@ -1,69 +1,67 @@
-import baseChoice from '../BaseChoice';
-import { defineComponent } from 'vue';
-import metaConfig from './meta.js';
-export const meta = metaConfig;
+import { defineComponent } from 'vue'
+import BaseChoice from '../BaseChoice'
+import metaConfig from './meta.js'
+
+export const meta = metaConfig
 /**
  * 支持配置：
  * 排列方式, layout
  */
 export default defineComponent({
   name: 'BinaryChoiceModule',
-  components: { baseChoice },
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     return {
-      onChange,
-    };
+      props,
+      onChange
+    }
   },
   render() {
-    const { readonly, field } = this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-    };
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget="radio"
-        {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
-      ></baseChoice>
-    );
-  },
-});
+        type={this.type}
+        readonly={this.readonly}
+        name={this.field}
+        field={this.field}
+        value={this.value}
+        layout={this.layout}
+        options={this.options}
+        onChange={this.onChange}
+      ></BaseChoice>
+    )
+  }
+})

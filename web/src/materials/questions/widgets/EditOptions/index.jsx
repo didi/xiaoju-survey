@@ -6,8 +6,6 @@ import OptionEdit from './Options/OptionEdit.vue'
 import OptionEditBar from './Options/OptionEditBar.vue'
 import UseOptionBase from './Options/UseOptionBase'
 
-import questionLoader from '@materials/questions/questionLoader'
-
 export default defineComponent({
   name: 'EditOptions',
   components: {
@@ -21,6 +19,10 @@ export default defineComponent({
     }
   },
   props: {
+    editConfigure: {
+      type: Object,
+      required: true
+    },
     moduleConfig: {
       type: Object,
       required: true
@@ -60,31 +62,12 @@ export default defineComponent({
     const showOptionEdit = ref(true)
     const showOptionEditBar = ref(true)
     onMounted(() => {
-      const questionMeta = questionLoader.getMeta(props.moduleConfig.type)
-      const { editConfigure } = questionMeta
-
-      if (editConfigure) {
-        const { optionEdit, optionEditBar } = editConfigure
-        showOptionEdit.value = optionEdit.show
-        showOptionEditBar.value = optionEditBar.show
-        showOthers.value = optionEditBar.configure.showOthers
-        hasAdvancedConfig.value = Boolean(optionEditBar.configure.showAdvancedConfig)
-        hasAdvancedRateConfig.value = Boolean(optionEditBar.configure.showAdvancedRateConfig)
-      } else {
-        if (['radio-star'].includes(props.moduleConfig.type)) {
-          showOthers.value = false
-        } else {
-          showOthers.value = true
-        }
-        if (['binary-choice'].includes(props.moduleConfig.type)) {
-          showOptionEditBar.value = false
-        }
-        if (!['radio-star'].includes(props.moduleConfig.type)) {
-          hasAdvancedConfig.value = true
-        } else {
-          hasAdvancedRateConfig.value = true
-        }
-      }
+      const { optionEdit, optionEditBar } = props.editConfigure
+      showOptionEdit.value = optionEdit.show
+      showOptionEditBar.value = optionEditBar.show
+      showOthers.value = optionEditBar.configure.showOthers
+      hasAdvancedConfig.value = Boolean(optionEditBar.configure.showAdvancedConfig)
+      hasAdvancedRateConfig.value = Boolean(optionEditBar.configure.showAdvancedRateConfig)
     })
     return {
       getOptions,

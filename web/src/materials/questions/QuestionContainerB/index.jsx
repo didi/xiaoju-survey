@@ -46,7 +46,7 @@ export default defineComponent({
     }
   },
   emits: ['blur', 'focus', 'change', 'select'],
-  setup(props) {
+  setup(props, { emit }) {
     const BlockComponent = shallowRef(null)
 
     const questionMeta = ref({})
@@ -66,9 +66,26 @@ export default defineComponent({
       return result
     })
 
+    const onBlur = () => {
+      emit('blur')
+    }
+    const onFocus = () => {
+      emit('focus')
+    }
+    const onChange = (data) => {
+      emit('change', data)
+    }
+    const onClick = () => {
+      emit('select', props.indexNumber)
+    }
+
     return {
       props,
       BlockComponent,
+      onClick,
+      onBlur,
+      onFocus,
+      onChange,
       showEditComponent
     }
   },
@@ -96,6 +113,9 @@ export default defineComponent({
               <dynamicComponent
                 readonly
                 {...props}
+                onBlur={this.onBlur}
+                onFocus={this.onFocus}
+                change={this.onChange}
               />
             </EditOptions>
           ) : 
@@ -103,6 +123,9 @@ export default defineComponent({
             <dynamicComponent
               readonly
               {...props}
+              onBlur={this.onBlur}
+              onFocus={this.onFocus}
+              change={this.onChange}
             />
           )}
         </div>

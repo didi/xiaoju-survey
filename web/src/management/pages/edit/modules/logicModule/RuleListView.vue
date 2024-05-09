@@ -1,13 +1,17 @@
 <template>
   <div class="rule-list">
-    <RuleNodeView 
-      v-for="(item, index) in list" 
+    <RuleNodeView
+      v-for="(item, index) in list"
       ref="ruleWrappers"
-      :key="index" 
+      :key="index"
       :ruleNode="item"
       @delete="handleDetele"
     >
     </RuleNodeView>
+
+    <div class="no-logic" v-if="list.length === 0">
+      <img src="/imgs/icons/unselected.webp" />
+    </div>
 
     <el-button type="primary" plain class="add" @click="handleAdd">
       <el-icon><i-ep-plus /></el-icon>
@@ -16,9 +20,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { shallowRef, computed } from 'vue';
-import { useStore } from 'vuex';
-import RuleNodeView from './RuleNodeView.vue';
+import { shallowRef, computed } from 'vue'
+import { useStore } from 'vuex'
+import RuleNodeView from './RuleNodeView.vue'
 
 // @ts-ignore
 import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
@@ -30,9 +34,9 @@ const list = computed(() => {
 })
 
 const handleAdd = () => {
-  const condition = new ConditionNode();
+  const condition = new ConditionNode()
   const ruleNode = new RuleNode()
-  ruleNode.addCondition(condition);
+  ruleNode.addCondition(condition)
   store.state.logic.showLogicEngine.addRule(ruleNode)
 }
 const handleDetele = (id: string) => {
@@ -53,19 +57,30 @@ const handleValide = () => {
   // result 为ture代表校验不通过
   return !result
 }
-defineExpose ({
+defineExpose({
   handleValide
 })
 </script>
 <style lang="scss">
-.rule-list{
+.rule-list {
   width: 824px;
   text-align: left;
   margin: 0 auto;
   padding: 12px;
-  .add{
+  .add {
     margin: 12px 0;
-    width: 100%
+    width: 100%;
+  }
+}
+
+.no-logic {
+  padding: 100px 0 50px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  img {
+    width: 200px;
   }
 }
 </style>

@@ -5,7 +5,7 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
-import { RuleMatch } from '@/common/logicEngine/domain/RulesMatch'
+import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -123,7 +123,7 @@ export default {
     }
   },
   updateVoteData({ state, commit }, data) {
-    const { key:questionKey, value: questionVal } = data
+    const { key: questionKey, value: questionVal } = data
     // 更新前获取接口缓存在localStorage中的数据
     const localData = localStorage.getItem(VOTE_INFO_KEY)
     const voteinfo = JSON.parse(localData)
@@ -135,34 +135,30 @@ export default {
       voteKey: 'total',
       voteValue: voteTotal
     }
-    options.forEach(option => {
+    options.forEach((option) => {
       const optionhash = option.hash
       const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
-      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1  
+      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
       if (
-        Array.isArray(questionVal)
-          ? questionVal.includes(optionhash)
-          : questionVal === optionhash
+        Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
       ) {
         const countPayload = {
           questionKey,
           voteKey: optionhash,
-          voteValue: voteCount +1
+          voteValue: voteCount + 1
         }
-        totalPayload.voteValue += 1 
-        commit('updateVoteMapByKey', countPayload )
+        totalPayload.voteValue += 1
+        commit('updateVoteMapByKey', countPayload)
       } else {
         const countPayload = {
           questionKey,
           voteKey: optionhash,
-          voteValue: voteCount 
+          voteValue: voteCount
         }
-        commit('updateVoteMapByKey', countPayload )
+        commit('updateVoteMapByKey', countPayload)
       }
-      commit('updateVoteMapByKey', totalPayload )
+      commit('updateVoteMapByKey', totalPayload)
     })
-
-    
   },
   async getEncryptInfo({ commit }) {
     try {
@@ -175,7 +171,7 @@ export default {
     }
   },
   async initRuleEngine({ commit }, ruleConf) {
-    const ruleEngine = new RuleMatch(ruleConf);
+    const ruleEngine = new RuleMatch(ruleConf)
     commit('setRuleEgine', ruleEngine)
-  },
+  }
 }

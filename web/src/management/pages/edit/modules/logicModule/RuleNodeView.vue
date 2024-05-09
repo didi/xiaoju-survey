@@ -9,7 +9,7 @@
     >
       <conditionView
         v-for="(conditionNode, index) in ruleNode.conditions"
-        :key="index"
+        :key="conditionNode.id"
         :index="index"
         :ruleNode="ruleNode"
         :conditionNode="conditionNode"

@@ -48,16 +48,13 @@
       style="font-size: 18px; margin-right: 8px"
       @click="handleAdd"
     ></i>
-    <el-icon v-if="index > 0" @click="() => handleDelete(conditionNode.id)">
-      <Minus />
-    </el-icon>
+    <i-ep-minus v-if="index > 0" @click="() => handleDelete(conditionNode.id)"/>
   </div>
 </template>
 <script setup lang="ts">
 import { defineProps, computed, inject, ref } from 'vue';
 import { ConditionNode, RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { qAbleList } from '@/management/utils/constant.js'
-import { Minus } from '@element-plus/icons-vue'
 import { cleanRichText } from '@/common/xss'
 
 const renderData = inject('renderData', {

@@ -40,7 +40,7 @@
         style="font-size: 18px; line-height: 32px"
         @click="() => handleDelete(ruleNode.id)"
       >
-        <Delete />
+        <i-ep-delete />
       </el-icon>
     </el-form>
   </div>
@@ -52,7 +52,6 @@ import { cloneDeep } from "lodash-es";
 import conditionView from "./ConditionView.vue";
 // @ts-ignore
 import { RuleNode } from "@/common/logicEngine/domain/RuleBuild";
-import { Delete } from "@element-plus/icons-vue";
 import { useStore } from "vuex";
 import { cleanRichText } from '@/common/xss'
 const store = useStore();

@@ -10,7 +10,7 @@
     </RuleNodeView>
 
     <el-button type="primary" plain class="add" @click="handleAdd">
-      <el-icon><Plus /></el-icon>
+      <el-icon><i-ep-plus /></el-icon>
       新增显示逻辑
     </el-button>
   </div>
@@ -22,7 +22,6 @@ import RuleNodeView from './RuleNodeView.vue';
 
 // @ts-ignore
 import { RuleNode, ConditionNode } from "@/common/logicEngine/domain/RuleBuild";
-import { Plus } from '@element-plus/icons-vue';
 
 const store = useStore()
 

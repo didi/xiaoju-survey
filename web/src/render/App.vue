@@ -69,7 +69,7 @@ export default {
             this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath)
             this.$store.dispatch('init', questionData)
-            this.$store.dispatch('initRuleEngine', logicConf.showLogicConf);
+            this.$store.dispatch('initRuleEngine', logicConf?.showLogicConf);
             this.$store.dispatch('getEncryptInfo')
           } else {
             throw new Error(res.errmsg)

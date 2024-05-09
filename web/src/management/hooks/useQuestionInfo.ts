@@ -12,10 +12,16 @@ export const useQuestionInfo = (field: string) => {
   const getOptionTitle = computed(() => {
     // @ts-ignore
     const questionDataList = store.state.edit.schema.questionDataList
-    return (value: string) => {
+    return (value: string | Array<string>) => {
       const options = questionDataList.find((item: any) => item.field === field)?.options || []
       return options?.map((item: any) => {
-        if (item.hash === value) {
+        if(value instanceof Array) {
+          return value.map((v: string) => {
+            if (item.hash === v) {
+              return item.text
+            }
+          })
+        } else if (item.hash === value) {
           return item.text
         }
       })

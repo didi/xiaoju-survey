@@ -10,8 +10,8 @@ export class ConditionNode {
   id: string = '';
   public field: string = '';
   public operator: BasicOperator = 'in'; 
-  public value: FieldTypes = ''
-  constructor(field: string = '', operator: BasicOperator = 'in', value: FieldTypes = '') {
+  public value: FieldTypes = []
+  constructor(field: string = '', operator: BasicOperator = 'in', value: FieldTypes = []) {
     this.field = field;
     this.operator = operator;
     this.value = value;
@@ -135,7 +135,7 @@ export const ruleSchema = yup.array().of(
       yup.object({
         field: yup.string().required(),
         operator: yup.string().required(),
-        value: yup.string().required()
+        value: yup.array().of(yup.string().required())
       })
     )
   })

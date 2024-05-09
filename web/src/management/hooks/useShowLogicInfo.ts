@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
 import { useQuestionInfo } from './useQuestionInfo'
 import { flatten } from 'lodash-es'
 import store from '@/management/store'
@@ -23,7 +23,8 @@ export const useShowLogicInfo = (field: string) => {
      
      const conditions = flatten(rules).map((item:any) => {
       const { getQuestionTitle,  getOptionTitle } = useQuestionInfo(item.field)
-      return `<span>【 ${cleanRichText(getQuestionTitle.value())}】 选择了 【${getOptionTitle.value(item.value).join('')}】</span> <br/>`
+      console.log(item.value, getOptionTitle.value(item.value))
+      return `<span>【 ${cleanRichText(getQuestionTitle.value())}】 选择了 【${getOptionTitle.value(unref(item.value)).join('')}】</span> <br/>`
     })
     return conditions.length ?  conditions.join('') + '<span> &nbsp;满足以上全部，则显示本题</span>' :''
   })

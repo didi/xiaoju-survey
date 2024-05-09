@@ -8,10 +8,11 @@
       <el-select
         class="select field-select"
         v-model="conditionNode.field"
-        placeholder="请选择"
+        placeholder="请选择题目"
         @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
         <el-option
+          
           v-for="{ label, value } in fieldList"
           :key="value"
           :label="label"
@@ -21,23 +22,6 @@
       </el-select>
     </el-form-item>
     <span class="desc">选择了</span>
-    <!-- <el-form-item class="select operator-select"
-      :prop="`conditions[${index}].operator`"
-      :rules="[
-          { required: true, message: '请选择', trigger: 'change' },
-      ]">
-      <el-select
-        v-model="conditionNode.operator"
-        placeholder="请选择"
-        @change="(val) => handleChange(conditionNode, 'opreator', val)">
-        <el-option
-          v-for="{label, value } in operatorOptions"
-          :key="value"
-          :label="label"
-          :value="value">
-        </el-option>
-      </el-select>
-    </el-form-item> -->
     <el-form-item
       class="select value-select"
       :prop="`conditions[${index}].value`"
@@ -46,6 +30,7 @@
       <el-select
         v-model="conditionNode.value"
         placeholder="请选择选项"
+        multiple
         @change="(val:any) => handleChange(conditionNode, 'value', val)"
       >
         <el-option
@@ -69,11 +54,35 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, inject } from 'vue';
+import { defineProps, computed, inject, ref } from 'vue';
 import { ConditionNode, RuleNode } from "@/common/logicEngine/domain/RuleBuild";
 import { qAbleList } from '@/management/utils/constant.js'
 import { Minus } from '@element-plus/icons-vue'
 import { cleanRichText } from '@/common/xss'
+const value1 = ref('')
+
+const options = [
+  {
+    value: 'Option1',
+    label: 'Option1',
+  },
+  {
+    value: 'Option2',
+    label: 'Option2',
+  },
+  {
+    value: 'Option3',
+    label: 'Option3',
+  },
+  {
+    value: 'Option4',
+    label: 'Option4',
+  },
+  {
+    value: 'Option5',
+    label: 'Option5',
+  },
+]
 
 const renderData = inject('renderData', {
   type: Array<Object>,

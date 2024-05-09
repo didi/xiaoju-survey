@@ -1,119 +1,126 @@
-import baseChoice from '../BaseChoice';
-import { computed, defineComponent } from 'vue';
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
-import { includes } from 'lodash-es';
-import metaConfig from './meta.js';
-export const meta = metaConfig;
+import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import { includes } from 'lodash-es'
+
+import BaseChoice from '../BaseChoice'
+import metaConfig from './meta.js'
+
+export const meta = metaConfig
 /**
  * 支持配置：
  * 排列方式, layout
  */
 export default defineComponent({
   name: 'CheckBoxModule',
-  components: { baseChoice, QuestionWithRule },
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: Array,
       default: () => {
-        return [];
-      },
+        return []
+      }
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
+      default: false
     },
     maxNum: {
       type: [Number, String],
-      default: 1,
-    },
+      default: 1
+    }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const disableState = computed(() => {
       if (!props.maxNum) {
-        return false;
+        return false
       }
-      return props.value.length >= +props.maxNum;
-    });
+      return props.value.length >= +props.maxNum
+    })
     const isDisabled = (item) => {
-      const { value } = props;
-      return disableState.value && !includes(value, item.value);
-    };
+      const { value } = props
+      return disableState.value && !includes(value, item.value)
+    }
     const myOptions = computed(() => {
-      const { options } = props;
+      const { options } = props
       return options.map((item) => {
         return {
           ...item,
-          disabled: isDisabled(item),
-        };
-      });
-    });
+          disabled: isDisabled(item)
+        }
+      })
+    })
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     const handleSelectMoreChange = (data) => {
-      const { key, value } = data;
+      const { key, value } = data
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
+
+    const selectMoreView = shallowRef(null)
+    if (props.readonly) {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionContainerB')
+      )
+    } else {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionRuleContainer')
+      )
+    }
     return {
       onChange,
       handleSelectMoreChange,
       myOptions,
-    };
+      selectMoreView
+    }
   },
   render() {
-    const { readonly, field, myOptions } = this;
-
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-      options: myOptions,
-    };
+    const { readonly, field, myOptions, onChange, maxNum, value, selectMoreView } = this
     return (
-      <baseChoice
+      <BaseChoice
         uiTarget="checkbox"
-        {...{ props: props }}
-        {...{
-          on: {
-            change: this.onChange,
-          },
-        }}
-        scopedSlots={{
+        readonly={readonly}
+        name={field}
+        maxNum={maxNum}
+        options={myOptions}
+        onChange={onChange}
+        value={value}
+      >
+        {{
           selectMore: (scoped) => {
             return (
-              <QuestionWithRule
+              <selectMoreView
                 readonly={this.readonly}
                 showTitle={false}
                 moduleConfig={scoped.selectMoreConfig}
                 onChange={(e) => this.handleSelectMoreChange(e)}
-              ></QuestionWithRule>
-            );
-          },
+              ></selectMoreView>
+            )
+          }
         }}
-      ></baseChoice>
-    );
-  },
-});
+      </BaseChoice>
+    )
+  }
+})

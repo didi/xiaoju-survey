@@ -8,16 +8,18 @@
         trigger="hover"
       >
         <img :src="qRCodeImg" width="120" height="120" />
+        <template #reference>
+          <el-button>
+            <i style="font-size: 24px" class="iconfont icon-erweima"></i>
+          </el-button>
+        </template>
       </el-popover>
-      <el-button v-popover:popover>
-        <i style="font-size: 24px" class="iconfont icon-erweima"></i>
-      </el-button>
     </div>
   </div>
 </template>
 
 <script>
-import QRCode from 'qrcode';
+import QRCode from 'qrcode'
 
 export default {
   name: 'QRCode',
@@ -25,19 +27,19 @@ export default {
   data() {
     return {
       inQcode: false,
-      qRCodeImg: '',
-    };
+      qRCodeImg: ''
+    }
   },
   methods: {
     initQRCodeImg() {
       QRCode.toDataURL(this.url)
         .then((url) => {
-          this.qRCodeImg = url;
+          this.qRCodeImg = url
         })
         .catch((err) => {
-          console.error(err);
-        });
-    },
+          console.error(err)
+        })
+    }
   },
   watch: {
     url: {
@@ -45,13 +47,13 @@ export default {
       handler(newVal) {
         if (newVal) {
           this.$nextTick(() => {
-            this.initQRCodeImg();
-          });
+            this.initQRCodeImg()
+          })
         }
-      },
-    },
-  },
-};
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

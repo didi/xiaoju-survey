@@ -1,82 +1,71 @@
-import bannerFormConfig from '@/management/config/setterConfig/bannerConfig';
-import logoFormConfig from '@/management/config/setterConfig/logoConfig';
-import submitFormConfig from '@/management/config/setterConfig/submitConfig';
-import questionLoader from '@/materials/questions/questionLoader';
+import submitFormConfig from '@/management/config/setterConfig/submitConfig'
+import questionLoader from '@/materials/questions/questionLoader'
 
 const innerMetaConfig = {
-  banner: {
-    title: '规则说明配置',
-    formConfig: bannerFormConfig,
-  },
-  logo: {
-    title: 'Logo 配置',
-    formConfig: logoFormConfig,
-  },
   submit: {
     title: '提交配置',
-    formConfig: submitFormConfig,
-  },
-};
+    formConfig: submitFormConfig
+  }
+}
 
 export default {
   moduleConfig(state) {
-    const currentEditOne = state.currentEditOne;
+    const currentEditOne = state.currentEditOne
     if (currentEditOne === null) {
-      return null;
+      return null
     }
 
     if (currentEditOne === 'banner' || currentEditOne === 'mainTitle') {
-      return state?.schema?.bannerConf;
+      return state?.schema?.bannerConf
     } else if (currentEditOne === 'submit') {
-      return state?.schema?.submitConf;
+      return state?.schema?.submitConf
     } else if (currentEditOne === 'logo') {
-      return state?.schema?.bottomConf;
+      return state?.schema?.bottomConf
     } else if (!Number.isNaN(currentEditOne)) {
-      return state?.schema?.questionDataList?.[currentEditOne];
+      return state?.schema?.questionDataList?.[currentEditOne]
     } else {
-      return null;
+      return null
     }
   },
   formConfigList(state, getters) {
-    const currentEditOne = state.currentEditOne;
+    const currentEditOne = state.currentEditOne
     if (currentEditOne === null) {
-      return null;
+      return null
     }
 
-    return getters?.currentEditMeta?.formConfig || [];
+    return getters?.currentEditMeta?.formConfig || []
   },
   currentEditMeta(state) {
-    const currentEditOne = state.currentEditOne;
+    const currentEditOne = state.currentEditOne
     if (currentEditOne === null) {
-      return null;
+      return null
     } else if (innerMetaConfig[currentEditOne]) {
-      return innerMetaConfig[currentEditOne];
+      return innerMetaConfig[currentEditOne]
     } else {
-      const questionType =
-        state.schema?.questionDataList?.[currentEditOne]?.type;
-      return questionLoader.getMeta(questionType);
+      const questionType = state.schema?.questionDataList?.[currentEditOne]?.type
+      return questionLoader.getMeta(questionType)
     }
   },
   currentEditKey(state) {
-    const currentEditOne = state.currentEditOne;
+    const currentEditOne = state.currentEditOne
     if (currentEditOne === null) {
-      return null;
+      return null
     }
-    let key = '';
+    let key = ''
     switch (currentEditOne) {
       case 'banner':
       case 'mainTitle':
-        key = 'bannerConf';
-        break;
+        key = 'bannerConf'
+        break
       case 'submit':
-        key = 'submitConf';
-        break;
+        key = 'submitConf'
+        break
       case 'logo':
-        key = 'bottomConf';
-        break;
+        key = 'bottomConf'
+        break
       default:
-        key = `questionDataList.${currentEditOne}`;
+        key = `questionDataList.${currentEditOne}`
     }
-    return key;
-  },
-};
+    return key
+  }
+}

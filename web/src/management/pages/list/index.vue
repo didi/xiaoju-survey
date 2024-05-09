@@ -16,33 +16,34 @@
           <span>创建问卷</span>
         </el-button>
       </div>
-      <base-list />
+      <BaseList />
     </div>
   </div>
 </template>
+
 <script>
-import baseList from './components/baseList.vue';
-import { mapState, mapActions } from 'vuex';
+import BaseList from './components/BaseList.vue'
+import { mapState, mapActions } from 'vuex'
 export default {
-  components: { baseList },
+  components: { BaseList },
   name: 'listPage',
   computed: {
-    ...mapState('user', ['userInfo']),
+    ...mapState('user', ['userInfo'])
   },
   methods: {
     ...mapActions('user', ['logout']),
     onCreate() {
-      this.$router.push('/create');
+      this.$router.push('/create')
     },
     handleLogout() {
-      this.logout();
-      this.$router.replace({ name: 'login' });
-    },
-  },
-};
+      this.logout()
+      this.$router.replace({ name: 'login' })
+    }
+  }
+}
 </script>
 
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .question-list-root {
   height: 100%;
   background-color: #f6f7f9;

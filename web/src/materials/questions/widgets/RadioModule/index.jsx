@@ -1,6 +1,5 @@
-import baseChoice from '../BaseChoice';
-import { defineComponent } from 'vue';
-import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContainer';
+import { defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import BaseChoice from '../BaseChoice'
 
 /**
  * 支持配置：
@@ -8,100 +7,95 @@ import QuestionWithRule from '@/materials/questions/widgets/QuestionRuleContaine
  */
 export default defineComponent({
   name: 'RadioModule',
-  components: { baseChoice, QuestionWithRule },
   props: {
     type: {
       type: String,
-      default: '',
+      default: ''
     },
     field: {
       type: String,
-      default: '',
+      default: ''
     },
     value: {
       type: String,
-      default: '',
+      default: ''
     },
     layout: {
       type: String,
-      default: 'vertical',
+      default: 'vertical'
     },
     options: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     readonly: {
       type: Boolean,
-      default: false,
-    },
-    // moduleConfig: {
-    //   type: Object,
-    //   default: () => {
-    //     return {
-    //       field: 'quiestion01',
-    //       component: 'RadioModule',
-    //       options:  [{
-    //           text: '选项2',
-    //           hash: 'item1'
-    //         }, {
-    //           text: '选项2',
-    //           hash: 'item2'
-    //         }]
-    //     }
-    //   }
-    // }
+      default: false
+    }
   },
+  emits: ['change'],
   setup(props, { emit }) {
     const onChange = (value) => {
-      const key = props.field;
+      const key = props.field
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
     const handleSelectMoreChange = (data) => {
-      const { key, value } = data;
+      const { key, value } = data
       emit('change', {
         key,
-        value,
-      });
-    };
+        value
+      })
+    }
+    // 填写更多传入一个动态组件
+    const selectMoreView = shallowRef(null)
+    if (props.readonly) {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionContainerB')
+      )
+    } else {
+      selectMoreView.value = defineAsyncComponent(
+        () => import('@materials/questions/QuestionRuleContainer')
+      )
+    }
     return {
       onChange,
       handleSelectMoreChange,
-    };
+      selectMoreView
+    }
   },
   render() {
-    const { readonly, field } = this;
-    const props = {
-      ...this.$props,
-      readonly,
-      name: field,
-    };
+    const { selectMoreView } = this
+
     return (
       <div>
-        <baseChoice
+        <BaseChoice
           uiTarget="radio"
-          {...{ props: props }}
-          {...{
-            on: {
-              change: this.onChange,
-            },
-          }}
-          scopedSlots={{
+          readonly={this.readonly}
+          name={this.field}
+          options={this.options}
+          value={this.value}
+          type={this.type}
+          field={this.field}
+          layout={this.layout}
+          onChange={this.onChange}
+        >
+          {{
             selectMore: (scoped) => {
               return (
-                <QuestionWithRule
+                <selectMoreView
                   readonly={this.readonly}
                   showTitle={false}
                   moduleConfig={scoped.selectMoreConfig}
                   onChange={(e) => this.handleSelectMoreChange(e)}
-                ></QuestionWithRule>
-              );
-            },
+                ></selectMoreView>
+              )
+            }
           }}
-        ></baseChoice>
+        </BaseChoice>
       </div>
-    );
-  },
-});
+    )
+  }
+})

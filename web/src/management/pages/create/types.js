@@ -3,7 +3,7 @@ export const SURVEY_TYPE_LIST = [
     type: 'normal',
     title: '基础调查',
     img: '/imgs/create/normal-icon.webp',
-    desc: '市场调研 / 用户分析 / 产品测评 / 需求调研',
+    desc: '市场调研 / 用户分析 / 产品测评 / 需求调研'
   },
   // {
   //   type: 'nps',
@@ -15,12 +15,12 @@ export const SURVEY_TYPE_LIST = [
     type: 'vote',
     title: '投票评选',
     img: '/imgs/create/vote-icon.webp',
-    desc: '才艺比赛 / 优秀员工 / 最佳人气 / 投票选举',
+    desc: '才艺比赛 / 优秀员工 / 最佳人气 / 投票选举'
   },
   {
     type: 'register',
     title: '在线报名',
     img: '/imgs/create/register-icon.webp',
-    desc: '活动报名 / 会议报名',
-  },
-];
+    desc: '活动报名 / 会议报名'
+  }
+]

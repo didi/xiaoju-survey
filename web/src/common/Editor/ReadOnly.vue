@@ -4,33 +4,33 @@
   </div>
 </template>
 <script>
-import { filterXSS } from '@/common/xss';
+import { filterXSS } from '@/common/xss'
 export default {
   name: 'ReadOnly',
   props: {
     realData: {
       type: String,
-      default: () => '',
+      default: () => ''
     },
     viewData: {
       type: String,
-      default: () => '',
+      default: () => ''
     },
     tag: {
       tyle: String,
-      default: () => '',
+      default: () => ''
     },
     border: {
       tyle: Boolean,
-      default: () => false,
+      default: () => false
     },
     defaultStyle: {
       tyle: Boolean,
-      default: () => false,
-    },
+      default: () => false
+    }
   },
   data() {
-    return {};
+    return {}
   },
   computed: {
     tagHtml() {
@@ -47,38 +47,38 @@ export default {
             border-radius: 0 0.06rem;
             background: rgba(250,136,26,0.1);
           ">${this.tag}</span>`
-        : '';
+        : ''
     },
     getHtml() {
-      const title = filterXSS(this.viewData);
-      if (!this.tag) return title;
-      let html = this.isRichText(title) ? title : `<p>${title}</p>`;
-      const index = html.lastIndexOf('</p>');
+      const title = filterXSS(this.viewData)
+      if (!this.tag) return title
+      let html = this.isRichText(title) ? title : `<p>${title}</p>`
+      const index = html.lastIndexOf('</p>')
       if (this.viewData.indexOf(this.tagHtml) < 0) {
-        html = html.slice(0, index) + this.tagHtml + html.slice(index);
+        html = html.slice(0, index) + this.tagHtml + html.slice(index)
       }
-      return html;
+      return html
     },
     getStyle() {
-      let style = '';
+      let style = ''
       if (this.border) {
-        style += 'border:1px solid #c8c9cd;padding:10px;';
+        style += 'border:1px solid #c8c9cd;padding:10px;'
       }
       if (this.defaultStyle) {
-        style += 'color: #6e707c;font-size: 12px;';
+        style += 'color: #6e707c;font-size: 12px;'
       }
-      return style;
-    },
+      return style
+    }
   },
-  destroyed() {
-    this.$emit('onDestroy');
+  unmounted() {
+    this.$emit('onDestroy')
   },
   methods: {
     isRichText(str) {
-      return /^<p[\s\S]*>[\s\S]*<\/p>$/.test(str);
-    },
-  },
-};
+      return /^<p[\s\S]*>[\s\S]*<\/p>$/.test(str)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 .read-only {

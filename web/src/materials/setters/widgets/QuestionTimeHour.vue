@@ -13,67 +13,64 @@
   </el-time-picker>
 </template>
 <script>
-import moment from 'moment';
+import moment from 'moment'
 // 引入中文
-import 'moment/locale/zh-cn';
+import 'moment/locale/zh-cn'
 // 设置中文
-moment.locale('zh-cn');
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant';
+moment.locale('zh-cn')
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 export default {
   name: 'QuestionTimeHour',
   props: {
     formConfig: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       value: [],
-      timeValue: [],
-    };
+      timeValue: []
+    }
   },
   watch: {
     'formConfig.value': {
       handler([answerBeginTime = '00:00:00', answerEndTime = '23:59:59']) {
-        if (
-          answerBeginTime !== this.timeValue[0] ||
-          answerEndTime !== this.timeValue[1]
-        ) {
-          this.timeValue = [answerBeginTime, answerEndTime];
+        if (answerBeginTime !== this.timeValue[0] || answerEndTime !== this.timeValue[1]) {
+          this.timeValue = [answerBeginTime, answerEndTime]
 
-          const ymd = '2023-01-01';
-          const time = [];
-          time.push(`${ymd} ${answerBeginTime}`);
-          time.push(`${ymd} ${answerEndTime}`);
-          this.value = time;
+          const ymd = '2023-01-01'
+          const time = []
+          time.push(`${ymd} ${answerBeginTime}`)
+          time.push(`${ymd} ${answerEndTime}`)
+          this.value = time
         }
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     onTimeChange(data) {
       if (!data) {
-        return;
+        return
       }
-      this.timeValue = data.map((item) => moment(item).format('HH:mm:ss'));
+      this.timeValue = data.map((item) => moment(item).format('HH:mm:ss'))
       this.timeValue.forEach((item, i) => {
-        this.changeData(this.formConfig.keys[i], item);
-      });
+        this.changeData(this.formConfig.keys[i], item)
+      })
     },
     changeData(key, value) {
       this.$emit(FORM_CHANGE_EVENT_KEY, {
         key,
-        value,
-      });
-    },
-  },
-};
+        value
+      })
+    }
+  }
+}
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
 .star-question-begAndEndHour {
   display: flex;
 

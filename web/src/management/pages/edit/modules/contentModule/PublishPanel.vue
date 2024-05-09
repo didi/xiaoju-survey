@@ -32,7 +32,6 @@ export default {
       try {
         this.updateLogicConf()
       } catch (error) {
-        console.error(error)
         ElMessage.error('请检查逻辑配置是否有误')
         return
       }

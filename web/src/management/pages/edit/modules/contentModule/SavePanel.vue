@@ -92,9 +92,9 @@ export default {
       if(this.$store.state.logic.showLogicEngine) {
         try {
           this.$store.state.logic.showLogicEngine.validateSchema()
-          
         } catch (error) {
           throw error
+          return 
         }
         const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
         // 更新逻辑配置
@@ -118,7 +118,7 @@ export default {
       try {
         this.updateLogicConf()
       } catch (error) {
-        console.error(error)
+        // console.error(error)
         ElMessage.error('请检查逻辑配置是否有误')
         return
       }

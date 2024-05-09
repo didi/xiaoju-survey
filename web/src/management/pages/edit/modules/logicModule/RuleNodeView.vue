@@ -42,7 +42,7 @@
     </el-form>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed, shallowRef, inject } from 'vue'
 import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'

@@ -1,5 +1,5 @@
 import { getBannerData } from '@/management/api/skin.js'
-import { RuleBuild } from "@/common/logicEngine/domain/RuleBuild";
+import { RuleBuild } from '@/common/logicEngine/RuleBuild'
 
 export default {
   async getBannerData({ state, commit }) {
@@ -12,7 +12,7 @@ export default {
     }
   },
   initShowLogic({ commit }, ruleConf) {
-    const showLogicEngine = new RuleBuild(ruleConf);
+    const showLogicEngine = new RuleBuild(ruleConf)
     commit('setShowLogicEngine', showLogicEngine)
-  },
+  }
 }

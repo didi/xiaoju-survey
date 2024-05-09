@@ -1,4 +1,4 @@
-import { RuleBuild } from "@/common/logicEngine/domain/RuleBuild";
+import { RuleBuild } from '@/common/logicEngine/RuleBuild'
 
 export default {
   namespaced: true,
@@ -8,12 +8,12 @@ export default {
   mutations: {
     setShowLogicEngine(state, logicEngine) {
       state.showLogicEngine = logicEngine
-    },
+    }
   },
   actions: {
     initShowLogic({ commit }, ruleConf) {
-      const showLogicEngine = new RuleBuild().fromJson(ruleConf);
+      const showLogicEngine = new RuleBuild().fromJson(ruleConf)
       commit('setShowLogicEngine', showLogicEngine)
-    },
-  } 
+    }
+  }
 }

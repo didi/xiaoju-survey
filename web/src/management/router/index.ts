@@ -34,29 +34,29 @@ const routes: RouteRecordRaw[] = [
         name: 'QuestionEditPage',
         component: () =>
           // @ts-ignore
-              import('../pages/edit/pages/edit/index.vue'),
+          import('../pages/edit/pages/edit/index.vue'),
         children: [
           {
             path: '',
             name: 'QuestionEditIndex',
             meta: {
-              needLogin: true,
+              needLogin: true
             },
             component: () =>
               // @ts-ignore
-              import('../pages/edit/pages/edit/QuestionEdit.vue'),
+              import('../pages/edit/pages/edit/QuestionEdit.vue')
           },
           {
             path: 'logic',
             name: 'LogicIndex',
             meta: {
-              needLogin: true,
+              needLogin: true
             },
             component: () =>
               // @ts-ignore
-              import('../pages/edit/pages/edit/LogicEdit.vue'),
+              import('../pages/edit/pages/edit/LogicEdit.vue')
           }
-        ],
+        ]
       },
       {
         path: 'setting',

@@ -36,83 +36,90 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-icon
-        style="font-size: 18px; line-height: 32px"
-        @click="() => handleDelete(ruleNode.id)"
-      >
+      <el-icon style="font-size: 18px; line-height: 32px" @click="() => handleDelete(ruleNode.id)">
         <Delete />
       </el-icon>
     </el-form>
   </div>
 </template>
-<script setup lang="ts">
-import { ref, computed, shallowRef, inject } from "vue";
-import { cloneDeep } from "lodash-es";
-// @ts-ignore
-import conditionView from "./ConditionView.vue";
-// @ts-ignore
-import { RuleNode } from "@/common/logicEngine/domain/RuleBuild";
-import { Delete } from "@element-plus/icons-vue";
-import { useStore } from "vuex";
+<script setup>
+import { ref, computed, shallowRef, inject } from 'vue'
+import { useStore } from 'vuex'
+import { cloneDeep } from 'lodash-es'
+
+import { Delete } from '@element-plus/icons-vue'
+
+import { ElMessageBox } from 'element-plus'
+import 'element-plus/theme-chalk/src/message-box.scss'
+
+import { RuleNode } from '@/common/logicEngine/RuleBuild'
 import { cleanRichText } from '@/common/xss'
-const store = useStore();
-const renderData = inject("renderData", {
+
+import conditionView from './ConditionView.vue'
+
+const store = useStore()
+const renderData = inject('renderData', {
   type: Array,
-  default: [],
-});
+  default: []
+})
 
 const props = defineProps({
   ruleNode: {
     type: RuleNode,
-    default: () => {},
-  },
-});
-const emit = defineEmits(["delete"]);
+    default: () => {}
+  }
+})
+const emit = defineEmits(['delete'])
 const formValue = ref({
-  ...props.ruleNode,
-});
+  ...props.ruleNode
+})
 const handleChange = (ruleNode: any, key: any, value: any) => {
-  ruleNode.set(key, value);
-};
-const handleDelete = (id: any) => {
-  emit("delete", id);
-};
+  ruleNode.set(key, value)
+}
+const handleDelete = async (id: any) => {
+  await ElMessageBox.confirm('是否确认删除规则？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+  emit('delete', id)
+}
 const handleDeleteCondition = (id: any) => {
-  props.ruleNode.removeCondition(id);
-};
-const ruleForm = shallowRef(null);
+  props.ruleNode.removeCondition(id)
+}
+const ruleForm = shallowRef(null)
 const submitForm = () => {
   // @ts-ignore
   ruleForm.value.validate((valid) => {
     if (valid) {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
-  });
-};
+  })
+}
 const targetQuestionList = computed(() => {
-  const currntIndexs: number[] = [];
+  const currntIndexs: number[] = []
   props.ruleNode.conditions.forEach((el) => {
     // @ts-ignore
-    currntIndexs.push(renderData.value.findIndex((item) => item.field === el.field));
-  });
-  const currntIndex = Math.max(...currntIndexs);
+    currntIndexs.push(renderData.value.findIndex((item) => item.field === el.field))
+  })
+  const currntIndex = Math.max(...currntIndexs)
   // @ts-ignore
-  let questionList = cloneDeep(renderData.value.slice(currntIndex + 1));
+  let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
   return questionList.map((item: any) => {
     return {
       label: cleanRichText(item.title),
       value: item.field,
       disabled: store.state.logic.showLogicEngine
-        .findTargetsByScope("question")
-        .includes(item.field),
-    };
-  });
-});
+        .findTargetsByScope('question')
+        .includes(item.field)
+    }
+  })
+})
 defineExpose({
-  submitForm,
-});
+  submitForm
+})
 </script>
 <style lang="scss" scoped>
 .rule-wrapper {

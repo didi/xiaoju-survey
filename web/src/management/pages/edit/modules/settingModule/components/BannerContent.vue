@@ -25,7 +25,7 @@
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'BannerModule',
+  name: 'BannerContent',
   data() {
     return {}
   },
@@ -64,7 +64,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: center;
-    
+
     img {
       width: 100%;
     }

@@ -4,10 +4,10 @@
       <img src="/imgs/icons/unselected.webp" />
       <h4 class="tipFont">选中题型可以编辑</h4>
       <span class="tip">来！试试看～</span>
-    </div>    
+    </div>
     <template v-else>
       <div class="setter-title">{{ currentEditMeta?.title || '' }}</div>
-      <setterField
+      <SetterField
         class="question-config-form"
         :form-config-list="formConfigList"
         :module-config="moduleConfig"
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import setterField from '@/management/pages/edit/components/SetterField.vue'
+import SetterField from '@/management/pages/edit/components/SetterField.vue'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'setterWrapper',
+  name: 'SetterPanel',
   data() {
     return {
       tabSelected: '0'
@@ -40,7 +40,7 @@ export default {
     })
   },
   components: {
-    setterField
+    SetterField
   },
   methods: {
     onFormChange(data) {

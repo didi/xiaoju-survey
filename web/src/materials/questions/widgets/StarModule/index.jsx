@@ -4,7 +4,6 @@ import './style.scss'
 
 export default defineComponent({
   name: 'StarModule',
-  components: { BaseRate },
   props: {
     type: {
       type: String,

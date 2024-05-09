@@ -9,7 +9,7 @@
           :title="collapse.name"
           :name="collapse.key"
         >
-          <setterField
+          <SetterField
             :form-config-list="collapse.formConfigList"
             :module-config="_get(schema, collapse.key, {})"
             @form-change="
@@ -25,13 +25,13 @@
 </template>
 <script>
 import skinConfig from '@/management/config/setterConfig/skinConfig'
-import setterField from '@/management/pages/edit/components/SetterField.vue'
+import SetterField from '@/management/pages/edit/components/SetterField.vue'
 import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 export default {
-  name: 'setterPanel',
+  name: 'SetterPanel',
   components: {
-    setterField
+    SetterField
   },
   data() {
     return {

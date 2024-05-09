@@ -19,7 +19,7 @@ import ResultPreview from '../../modules/settingModule/result/PreviewPanel.vue'
 import ResultSetter from '../../modules/settingModule/result/SetterPanel.vue'
 
 export default {
-  name: 'editIndex',
+  name: 'ResultPage',
   components: {
     commonTemplate,
     ResultCatalog,

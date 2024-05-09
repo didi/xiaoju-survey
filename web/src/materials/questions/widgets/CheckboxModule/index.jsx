@@ -11,7 +11,6 @@ export const meta = metaConfig
  */
 export default defineComponent({
   name: 'CheckBoxModule',
-  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -91,7 +90,6 @@ export default defineComponent({
       )
     }
     return {
-      props,
       onChange,
       handleSelectMoreChange,
       myOptions,

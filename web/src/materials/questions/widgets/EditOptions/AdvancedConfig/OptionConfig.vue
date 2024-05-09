@@ -9,8 +9,8 @@
   >
     <div class="option-handwrite">
       <div class="option-header">
-        <div class="option-item flex-1" v-if="showText">选项内容</div>
-        <div class="option-item w285" v-if="showOthers">选项后增添输入框</div>
+        <div class="header-item flex-1" v-if="showText">选项内容</div>
+        <div class="header-item w285" v-if="showOthers">选项后增添输入框</div>
       </div>
       <div>
         <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
@@ -37,8 +37,16 @@
               </div>
 
               <div class="operate-area" v-if="showOperateOption">
-                <i-ep-circlePlus v-if="showOperateOption" class="area-btn-icon" @click="addOption('选项', false, index)" />
-                <i-ep-remove v-show="curOptions.length" class="area-btn-icon" @click="deleteOption(index)" />
+                <i-ep-circlePlus
+                  v-if="showOperateOption"
+                  class="area-btn-icon"
+                  @click="addOption('选项', false, index)"
+                />
+                <i-ep-remove
+                  v-show="curOptions.length"
+                  class="area-btn-icon"
+                  @click="deleteOption(index)"
+                />
               </div>
             </div>
           </template>
@@ -46,16 +54,10 @@
       </div>
       <div class="add-btn-row">
         <div class="add-option" v-if="showOperateOption" @click="addOption()">
-          <span class="add-option-item">
-            <i-ep-circlePlus class="icon" /> 添加新选项
-          </span>
+          <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 添加新选项 </span>
         </div>
 
-        <div
-          v-if="showOperateOption && showOthers"
-          class="add-option"
-          @click="addOtherOption"
-        >
+        <div v-if="showOperateOption && showOthers" class="add-option" @click="addOtherOption">
           <span>
             <extra-icon type="add-square"></extra-icon>
             其他____
@@ -143,7 +145,7 @@ export default {
   },
   components: {
     draggable,
-    ExtraIcon,
+    ExtraIcon
   },
   watch: {
     options(val) {
@@ -315,10 +317,10 @@ export default {
       }
 
       .area-btn-icon {
-          margin-right: 5px;
-          cursor: pointer;
-          font-size: 16px;
-        }
+        margin-right: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
     }
     .flex-1 {
       flex: 1;
@@ -357,7 +359,7 @@ export default {
       margin-top: 0;
       cursor: move;
     }
-  
+
     .add-btn-row {
       color: $primary-color;
       display: flex;

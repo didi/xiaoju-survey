@@ -5,7 +5,7 @@
         <template #content>
           <div v-html="item.tip"></div>
         </template>
-        <span>{{ item.label }} <i-ep-questionFilled  /></span>
+        <span>{{ item.label }} <i-ep-questionFilled /></span>
       </el-tooltip>
       <div v-else v-html="item.label"></div>
     </el-radio>

@@ -1,30 +1,30 @@
 <template>
   <commonTemplate>
     <template #left>
-      <catalogPanel></catalogPanel>
+      <CatalogPanel></CatalogPanel>
     </template>
     <template #center>
-      <previewPanel></previewPanel>
+      <PreviewPanel></PreviewPanel>
     </template>
     <template #right>
-      <setterPanel></setterPanel>
+      <SetterPanel></SetterPanel>
     </template>
   </commonTemplate>
 </template>
 
 <script>
 import commonTemplate from '../components/CommonTemplate.vue'
-import catalogPanel from '../modules/questionModule/CatalogPanel.vue'
-import previewPanel from '../modules/questionModule/PreviewPanel.vue'
-import setterPanel from '../modules/questionModule/SetterPanel.vue'
+import CatalogPanel from '../modules/questionModule/CatalogPanel.vue'
+import PreviewPanel from '../modules/questionModule/PreviewPanel.vue'
+import SetterPanel from '../modules/questionModule/SetterPanel.vue'
 
 export default {
-  name: 'editIndex',
+  name: 'EditPage',
   components: {
     commonTemplate,
-    catalogPanel,
-    previewPanel,
-    setterPanel
+    CatalogPanel,
+    PreviewPanel,
+    SetterPanel
   }
 }
 </script>

@@ -7,10 +7,10 @@
 
 <script>
 export default {
-  name: 'BackModule',
+  name: 'BackPanel',
   methods: {
     onBack() {
-      window.open("/survey", "_self")
+      window.open('/survey', '_self')
     }
   }
 }

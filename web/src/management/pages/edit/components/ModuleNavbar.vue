@@ -1,39 +1,39 @@
 <template>
   <div class="nav">
     <div class="left-group">
-      <back></back>
-      <pageTitle :style="{ marginLeft: '30px' }" :title="title"></pageTitle>
+      <BackPanel></BackPanel>
+      <TitlePanel :style="{ marginLeft: '30px' }" :title="title"></TitlePanel>
     </div>
     <div class="center-group">
-      <pageNav></pageNav>
+      <NavPanel></NavPanel>
     </div>
     <div class="right-group">
-      <history></history>
-      <save></save>
-      <publish></publish>
+      <HistoryPanel></HistoryPanel>
+      <SavePanel></SavePanel>
+      <PublishPanel></PublishPanel>
     </div>
   </div>
 </template>
 
 <script>
-import back from '../modules/generalModule/Back.vue'
-import pageTitle from '../modules/generalModule/PageTitle.vue'
-import pageNav from '../modules/generalModule/PageNav.vue'
-import history from '../modules/contentModule/History.vue'
-import save from '../modules/contentModule/Save.vue'
-import publish from '../modules/contentModule/Publish.vue'
+import BackPanel from '../modules/generalModule/BackPanel.vue'
+import TitlePanel from '../modules/generalModule/TitlePanel.vue'
+import NavPanel from '../modules/generalModule/NavPanel.vue'
+import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
+import SavePanel from '../modules/contentModule/SavePanel.vue'
+import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import { mapState } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'NavbarModule',
+  name: 'ModuleNavbar',
   components: {
-    back,
-    pageTitle,
-    pageNav,
-    history,
-    save,
-    publish
+    BackPanel,
+    TitlePanel,
+    NavPanel,
+    HistoryPanel,
+    SavePanel,
+    PublishPanel
   },
   data() {
     return {}

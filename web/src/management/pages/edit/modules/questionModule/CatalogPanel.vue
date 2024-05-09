@@ -4,17 +4,17 @@
       <TypeList />
     </el-tab-pane>
     <el-tab-pane label="题目大纲">
-      <Catalog />
+      <QuestionCatalog />
     </el-tab-pane>
   </el-tabs>
 </template>
 
 <script>
 import TypeList from './components/TypeList.vue'
-import Catalog from './components/Catalog.vue'
+import QuestionCatalog from './components/QuestionCatalog.vue'
 
 export default {
-  name: 'EditLeftTabPanel',
+  name: 'CatalogPanel',
   data() {
     return {
       tabSelected: '0'
@@ -22,7 +22,7 @@ export default {
   },
   components: {
     TypeList,
-    Catalog
+    QuestionCatalog
   },
   methods: {}
 }

@@ -10,13 +10,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import success from '../components/Success.vue'
-import overTime from '../components/OverTime.vue'
+import SuccessContent from '../components/SuccessContent.vue'
+import OverTime from '../components/OverTime.vue'
 import { EDIT_STATUS_MAP } from '../enum'
 import { get as _get } from 'lodash-es'
 
 export default {
-  name: 'ResultConfigPreivew',
+  name: 'PreviewPanel',
   props: {},
   data() {
     return {}
@@ -33,8 +33,8 @@ export default {
     }
   },
   components: {
-    [EDIT_STATUS_MAP.SUCCESS]: success,
-    [EDIT_STATUS_MAP.OVERTIME]: overTime
+    [EDIT_STATUS_MAP.SUCCESS]: SuccessContent,
+    [EDIT_STATUS_MAP.OVERTIME]: OverTime
   }
 }
 </script>

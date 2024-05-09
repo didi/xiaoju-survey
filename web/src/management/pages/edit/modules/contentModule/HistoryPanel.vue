@@ -42,7 +42,7 @@ const getItemData = (item) => ({
 })
 
 export default {
-  name: 'HistoryModule',
+  name: 'HistoryPanel',
   computed: {
     ...mapState({
       surveyId: (state) => _get(state, 'edit.surveyId')

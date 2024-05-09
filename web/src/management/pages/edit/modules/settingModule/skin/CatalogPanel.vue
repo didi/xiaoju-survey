@@ -30,7 +30,7 @@ import { mapActions } from 'vuex'
 
 import skinPresets from '@/management/config/skinPresets.js'
 export default {
-  name: 'catalogPanel',
+  name: 'CatalogPanel',
   data() {
     return {
       skinPresets: [],

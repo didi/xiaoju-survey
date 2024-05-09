@@ -1,16 +1,16 @@
 <template>
   <div class="title-wrapper" @click="handleClick()">
     <div class="main-title" :class="{ active: isSelected }">
-      <richEditor
+      <RichEditor
         :modelValue="bannerConf?.titleConfig?.mainTitle"
         @input="onTitleInput"
-      ></richEditor>
+      ></RichEditor>
     </div>
   </div>
 </template>
 
 <script>
-import richEditor from '@/common/Editor/RichEditor.vue'
+import RichEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
   name: 'mainTitlePreview',
@@ -45,7 +45,7 @@ export default {
     }
   },
   components: {
-    richEditor
+    RichEditor
   }
 }
 </script>

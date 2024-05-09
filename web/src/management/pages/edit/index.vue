@@ -21,7 +21,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 import LeftMenu from '@/management/components/LeftMenu.vue'
 
 import CommonTemplate from './components/CommonTemplate.vue'
-import Navbar from './components/Navbar.vue'
+import Navbar from './components/ModuleNavbar.vue'
 
 export default {
   name: 'questionEditPage',

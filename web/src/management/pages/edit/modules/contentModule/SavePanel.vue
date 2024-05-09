@@ -26,7 +26,7 @@ import buildData from './buildData'
 
 export default {
   components: {},
-  name: 'SaveModule',
+  name: 'SavePanel',
   data() {
     return {
       isSaving: false,
@@ -127,7 +127,7 @@ export default {
         this.isSaving = true
         const res = await this.saveData()
         if (res.code === 200) {
-        ElMessage.success('保存成功')
+          ElMessage.success('保存成功')
         } else {
           ElMessage.error(res.errmsg)
         }

@@ -8,7 +8,7 @@
       host-class="catalog-item-ghost"
     >
       <template #item="{ element, index }">
-        <catalogItem
+        <CatalogItem
           :title="element.title"
           :indexNumber="element.indexNumber"
           :showIndex="element.showIndex"
@@ -21,7 +21,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import catalogItem from './CatalogItem.vue'
+import CatalogItem from './CatalogItem.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
 export default {
@@ -39,7 +39,7 @@ export default {
   },
   components: {
     draggable,
-    catalogItem
+    CatalogItem
   },
   methods: {
     onDragEnd(data) {

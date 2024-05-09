@@ -1,15 +1,15 @@
 <template>
   <div class="setting-page">
-    <setting></setting>
+    <SettingPanel></SettingPanel>
   </div>
 </template>
 
 <script>
-import setting from '../modules/settingModule/Setting.vue'
+import SettingPanel from '../modules/settingModule/SettingPanel.vue'
 export default {
-  name: 'questionSettingPage',
+  name: 'SettingPage',
   components: {
-    setting
+    SettingPanel
   }
 }
 </script>

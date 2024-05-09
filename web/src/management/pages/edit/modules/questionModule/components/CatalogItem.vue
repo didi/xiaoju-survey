@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'QuestionCatalogItem',
+  name: 'CatalogItem',
   data() {
     return {}
   },

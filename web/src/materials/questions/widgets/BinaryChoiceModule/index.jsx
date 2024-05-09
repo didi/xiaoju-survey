@@ -9,7 +9,6 @@ export const meta = metaConfig
  */
 export default defineComponent({
   name: 'BinaryChoiceModule',
-  components: { BaseChoice },
   props: {
     type: {
       type: String,
@@ -51,17 +50,16 @@ export default defineComponent({
     }
   },
   render() {
-    const { props } = this
     return (
       <BaseChoice
         uiTarget="radio"
-        type={props.type}
-        readonly={props.readonly}
-        name={props.field}
-        field={props.field}
-        value={props.value}
-        layout={props.layout}
-        options={props.options}
+        type={this.type}
+        readonly={this.readonly}
+        name={this.field}
+        field={this.field}
+        value={this.value}
+        layout={this.layout}
+        options={this.options}
         onChange={this.onChange}
       ></BaseChoice>
     )

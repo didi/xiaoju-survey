@@ -9,6 +9,10 @@ export default defineComponent({
       type: [Number, String],
       default: ''
     },
+    showIndex: {
+      type: Boolean,
+      default: false
+    },
     isRequired: {
       type: Boolean,
       default: true
@@ -28,13 +32,14 @@ export default defineComponent({
   },
   setup() {},
   render() {
-    const { isRequired, indexNumber, title, showType, type } = this
+    const { isRequired, indexNumber, title, showType, type, showIndex } = this
 
     return (
       <TitleContent
         isRequired={isRequired}
         indexNumber={indexNumber}
         title={title}
+        showIndex={showIndex}
         showType={showType}
         type={type}
       />

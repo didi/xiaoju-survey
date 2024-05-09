@@ -97,7 +97,7 @@ export default defineComponent({
           {status === 'edit' && slots.edit ? (
             slots.edit()
           ) : (
-            <div v-html={filterXSS(tagTitle)} class="flex module-title-title-text"></div>
+            <div v-html={filterXSS(tagTitle)} class="flex module-text"></div>
           )}
         </div>
       </div>

@@ -64,8 +64,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
-        // @ts-ignore
-        component: () => import('../pages/edit/pages/Setting.vue')
+        component: () => import('../pages/edit/pages/SettingPage.vue')
       },
       {
         path: 'skin',
@@ -81,8 +80,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            // @ts-ignore
-            component: () => import('../pages/edit/pages/skin/Content.vue')
+            component: () => import('../pages/edit/pages/skin/ContentPage.vue')
           },
           {
             path: 'result',
@@ -90,8 +88,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            // @ts-ignore
-            component: () => import('../pages/edit/pages/skin/Result.vue')
+            component: () => import('../pages/edit/pages/skin/ResultPage.vue')
           }
         ]
       }

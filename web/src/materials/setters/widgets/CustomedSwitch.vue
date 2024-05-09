@@ -9,10 +9,10 @@ const props = defineProps({
   formConfig: {
     type: Object,
     required: true
-  },
+  }
 })
 const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
-  
+
 const newValue = ref(props.formConfig.value)
 
 const changeData = (value) => {

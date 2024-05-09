@@ -4,7 +4,7 @@
       <label class="multiline-label">
         {{ item.label }}
         <el-tooltip v-if="item.tip" class="item" effect="dark" :content="item.tip" placement="top">
-          <i-ep-questionFilled  />
+          <i-ep-questionFilled />
         </el-tooltip>
       </label>
       <el-input

@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'pageNav',
+  name: 'NavPanel',
   props: {},
   data() {
     return {

@@ -86,11 +86,12 @@ export default defineComponent({
       onBlur,
       onFocus,
       onChange,
-      showEditComponent
+      showEditComponent,
+      questionMeta
     }
   },
   render() {
-    const { isSelected } = this
+    const { isSelected, questionMeta } = this
 
     const props = {
       isSelected,
@@ -109,7 +110,10 @@ export default defineComponent({
 
         <div class="question-block">
           {this.showEditComponent ? (
-            <EditOptions moduleConfig={props.moduleConfig}>
+            <EditOptions
+              moduleConfig={props.moduleConfig}
+              editConfigure={questionMeta?.editConfigure}
+            >
               <dynamicComponent
                 readonly
                 {...props}
@@ -118,8 +122,7 @@ export default defineComponent({
                 change={this.onChange}
               />
             </EditOptions>
-          ) : 
-          (
+          ) : (
             <dynamicComponent
               readonly
               {...props}

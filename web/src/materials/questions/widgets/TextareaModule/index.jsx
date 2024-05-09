@@ -15,7 +15,6 @@ export const meta = myMeta
  */
 export default defineComponent({
   name: 'TextareaModule',
-  components: { BaseInput },
   props: {
     type: {},
     field: {},

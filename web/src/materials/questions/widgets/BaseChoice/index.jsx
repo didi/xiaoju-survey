@@ -91,6 +91,7 @@ export default defineComponent({
   },
   render() {
     const { uiTarget, isMatrix, hideText, getOptions, isChecked, slots } = this
+
     return (
       <div class="choice-wrapper">
         <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>

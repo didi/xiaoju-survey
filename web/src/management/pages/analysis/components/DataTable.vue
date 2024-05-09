@@ -8,7 +8,7 @@
       class="table-border"
       v-loading="mainTableLoading"
       element-loading-text="数据处理中，请稍等..."
-      >
+    >
       <el-table-column
         v-for="item in tableData.listHead"
         :key="item.field"
@@ -18,9 +18,9 @@
       >
         <template #header="scope">
           <div class="table-row-cell">
-            <span 
-            @mouseover="onPopoverRefOver(scope, 'head')"
-            :ref="el => popoverRefMap[scope.column.id] = el"
+            <span
+              @mouseover="onPopoverRefOver(scope, 'head')"
+              :ref="(el) => (popoverRefMap[scope.column.id] = el)"
             >
               {{ scope.column.label.replace(/&nbsp;/g, '') }}
             </span>
@@ -31,7 +31,7 @@
             <span
               class="table-row-cell"
               @mouseover="onPopoverRefOver(scope, 'content')"
-              :ref="el => popoverRefMap[scope.$index + scope.column.property] = el"
+              :ref="(el) => (popoverRefMap[scope.$index + scope.column.property] = el)"
             >
               {{ getContent(scope.row[scope.column.property]) }}
             </span>
@@ -60,30 +60,24 @@ let popoverRefMap = ref({})
 let popoverVirtualRef = ref()
 let popoverContent = ref('')
 
-let props = defineProps({
-  mainTableLoading: Boolean,
-  tableData: Object,
-})
-
 let getContent = (value) => {
   const content = cleanRichText(value)
-  return content === 0 ? 0 : (content || '未知')
+  return content === 0 ? 0 : content || '未知'
 }
 let setPopoverContent = (content) => {
   popoverContent.value = content
 }
 let onPopoverRefOver = (scope, type) => {
-    let popoverContent
-    if(type == 'head'){
-      popoverVirtualRef.value = popoverRefMap.value[scope.column.id]; 
-      popoverContent = scope.column.label.replace(/&nbsp;/g, '')
-
-    }
-    if(type == 'content'){
-      popoverVirtualRef.value = popoverRefMap.value[scope.$index + scope.column.property]; 
-      popoverContent = getContent(scope.row[scope.column.property])
-    }
-    setPopoverContent(popoverContent)
+  let popoverContent
+  if (type == 'head') {
+    popoverVirtualRef.value = popoverRefMap.value[scope.column.id]
+    popoverContent = scope.column.label.replace(/&nbsp;/g, '')
+  }
+  if (type == 'content') {
+    popoverVirtualRef.value = popoverRefMap.value[scope.$index + scope.column.property]
+    popoverContent = getContent(scope.row[scope.column.property])
+  }
+  setPopoverContent(popoverContent)
 }
 </script>
 

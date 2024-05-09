@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'SuccessModule',
+  name: 'SuccessContent',
   props: {
     moduleConfig: {
       type: Object,

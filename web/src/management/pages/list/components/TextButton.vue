@@ -2,7 +2,7 @@
   <div class="text-button-root" @click="onClick">
     <el-button v-bind="{ ...$attrs }">
       <template #icon>
-        <StaticIcon :icon="icon"/>
+        <StaticIcon :icon="icon" />
       </template>
       {{ option.label }}
     </el-button>
@@ -35,7 +35,7 @@ export default {
     },
     icon: {
       type: String
-    },
+    }
   },
   computed: {
     toggleOptionIcons() {

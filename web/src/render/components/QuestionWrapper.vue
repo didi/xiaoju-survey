@@ -10,7 +10,7 @@
 </template>
 <script setup>
 import { unref, computed } from 'vue'
-import QuestionRuleContainer from '../../materials/questions/widgets/QuestionRuleContainer'
+import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersValue } from '@/render/hooks/useOthersValue'
 import { useShowInput } from '@/render/hooks/useShowInput'

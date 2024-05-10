@@ -12,7 +12,7 @@
 import { unref, computed, watch } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
-import { useOthersValue } from '@/render/hooks/useOthersValue'
+import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
@@ -44,13 +44,13 @@ const questionConfig = computed(() =>{
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
-  if(['radio','checkbox'].includes(props.moduleConfig.type)) {
-    let { options, othersValue } = useOthersValue(field)
+  if(['radio','checkbox'].includes(type) && options.filter(optionItem => optionItem.others).length > 0) {
+    let { options, othersValue } = useShowOthers(field)
     const othersOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
     moduleConfig.othersValue = unref(othersValue)
   }
-  if(['radio-star','radio-nps'].includes(props.moduleConfig.type)) {
+  if(['radio-star','radio-nps'].includes(type) && Object.keys(rest.rangeConfig).filter(index => rest.rangeConfig[index].isShowInput).length > 0) {
     let { rangeConfig, othersValue } = useShowInput(field)
     // console.log({rangeConfig, othersValue})
     moduleConfig.rangeConfig = unref(rangeConfig)

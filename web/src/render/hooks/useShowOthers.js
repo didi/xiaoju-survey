@@ -1,5 +1,5 @@
 import store from '../store/index'
-export const useOthersValue = (questionKey) => {
+export const useShowOthers = (questionKey) => {
   const formValues = store.state.formValues
   const questionVal = formValues[questionKey]
   let othersValue = {}

@@ -1,61 +1,59 @@
 <template>
   <div class="condition-wrapper" data-content-before="且">
-    <div class="line">
-      <span class="desc">如果</span>
-      <el-form-item
-        :prop="`conditions[${index}].field`"
-        :rules="[{ required: true, message: '请选择题目', trigger: 'change' }]"
+    <span class="desc">如果</span>
+    <el-form-item
+      :prop="`conditions[${index}].field`"
+      :rules="[{ required: true, message: '请选择题目', trigger: 'change' }]"
+    >
+      <el-select
+        class="select field-select"
+        v-model="conditionNode.field"
+        placeholder="请选择题目"
+        @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
-        <el-select
-          class="select field-select"
-          v-model="conditionNode.field"
-          placeholder="请选择题目"
-          @change="(val: any) => handleChange(conditionNode, 'field', val)"
-        >
-          <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <span class="desc">选择了</span>
-      <el-form-item
-        class="select value-select"
-        :prop="`conditions[${index}].value`"
-        :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
+        <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <span class="desc">选择了</span>
+    <el-form-item
+      class="select value-select"
+      :prop="`conditions[${index}].value`"
+      :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
+    >
+      <el-select
+        v-model="conditionNode.value"
+        placeholder="请选择选项"
+        multiple
+        @change="(val: any) => handleChange(conditionNode, 'value', val)"
       >
-        <el-select
-          v-model="conditionNode.value"
-          placeholder="请选择选项"
-          multiple
-          @change="(val: any) => handleChange(conditionNode, 'value', val)"
+        <el-option
+          v-for="{ label, value } in getRelyOptions"
+          :key="value"
+          :label="label"
+          :value="value"
         >
-          <el-option
-            v-for="{ label, value } in getRelyOptions"
-            :key="value"
-            :label="label"
-            :value="value"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <span class="desc">中的任一选项 </span>
-      <span class="opt">
-        <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
-        <i-ep-minus
-          class="opt-icon"
-          v-if="index > 0"
-          :size="14"
-          @click="() => handleDelete(conditionNode.id)"
-        />
-      </span>
-    </div>
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <span class="desc">中的任一选项 </span>
+    <span class="opt">
+      <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
+      <i-ep-minus
+        class="opt-icon"
+        v-if="index > 0"
+        :size="14"
+        @click="() => handleDelete(conditionNode.id)"
+      />
+    </span>
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, inject, ref } from 'vue'
+import { defineProps, computed, inject, ref, type ComputedRef } from 'vue'
 import { ConditionNode, RuleNode } from '@/common/logicEngine/RuleBuild'
 import { qAbleList } from '@/management/utils/constant.js'
 import { cleanRichText } from '@/common/xss'
-const renderData = inject('renderData')
+const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 const props = defineProps({
   index: {
     type: Number,

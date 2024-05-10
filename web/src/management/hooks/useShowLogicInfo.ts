@@ -7,7 +7,6 @@ import { cleanRichText } from '@/common/xss'
 // 目标题的显示逻辑提示文案
 export const useShowLogicInfo = (field: string) => {
   const hasShowLogic = computed(() => {
-    // @ts-ignore
     const logicEngine = store.state.logic.showLogicEngine
     // 判断该题是否作为了显示逻辑前置题
     const isField = logicEngine?.findTargetsByFields(field)?.length > 0
@@ -16,7 +15,6 @@ export const useShowLogicInfo = (field: string) => {
     return isField || isTarget
   })
   const getShowLogicText = computed(() => {
-    // @ts-ignore
     const logicEngine = store.state.logic.showLogicEngine
      // 获取目标题的规则
      const rules = logicEngine?.findConditionByTarget(field) || []

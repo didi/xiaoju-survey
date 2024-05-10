@@ -23,7 +23,6 @@ import { shallowRef, computed } from 'vue'
 import { useStore } from 'vuex'
 import RuleNodeView from './RuleNodeView.vue'
 
-// @ts-ignore
 import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
 
 const store = useStore()
@@ -45,8 +44,7 @@ const handleDetele = (id: string) => {
 const ruleWrappers = shallowRef([])
 
 const formValidate = () => {
-  return ruleWrappers.value.map((item, index) => {
-    // @ts-ignore
+  return ruleWrappers.value.map((item: any) => {
     return item?.submitForm()
   })
 }

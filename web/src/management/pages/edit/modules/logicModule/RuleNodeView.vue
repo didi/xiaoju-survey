@@ -45,7 +45,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, shallowRef, inject } from 'vue'
+import { ref, computed, shallowRef, inject, type ComputedRef } from 'vue'
 import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'
 
@@ -58,10 +58,7 @@ import { cleanRichText } from '@/common/xss'
 import conditionView from './ConditionView.vue'
 
 const store = useStore()
-const renderData = inject('renderData', {
-  type: Array,
-  default: []
-})
+const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 
 const props = defineProps({
   ruleNode: {
@@ -70,11 +67,13 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['delete'])
-const formValue = ref({
-  ...props.ruleNode
-})
+
 const handleChange = (ruleNode: any, key: any, value: any) => {
-  ruleNode.set(key, value)
+  switch (key) {
+    case 'target':
+      ruleNode.setTarget(value)
+      break
+  }
 }
 const handleDelete = async (id: any) => {
   await ElMessageBox.confirm('是否确认删除规则？', '提示', {
@@ -87,10 +86,9 @@ const handleDelete = async (id: any) => {
 const handleDeleteCondition = (id: any) => {
   props.ruleNode.removeCondition(id)
 }
-const ruleForm = shallowRef(null)
+const ruleForm = shallowRef<any>(null)
 const submitForm = () => {
-  // @ts-ignore
-  ruleForm.value.validate((valid) => {
+  ruleForm.value?.validate((valid: any) => {
     if (valid) {
       return true
     } else {
@@ -101,11 +99,9 @@ const submitForm = () => {
 const targetQuestionList = computed(() => {
   const currntIndexs: number[] = []
   props.ruleNode.conditions.forEach((el) => {
-    // @ts-ignore
-    currntIndexs.push(renderData.value.findIndex((item) => item.field === el.field))
+    currntIndexs.push(renderData.value.findIndex((item: { field: string }) => item.field === el.field))
   })
   const currntIndex = Math.max(...currntIndexs)
-  // @ts-ignore
   let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
   return questionList.map((item: any) => {
     return {

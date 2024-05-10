@@ -31,6 +31,7 @@
 import { ref, computed, unref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
+import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo'
 
 const props = defineProps({
   qIndex: {
@@ -57,8 +58,6 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['changeSeq', 'select'])
-// @ts-ignore
-import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo.ts'
 
 const { getShowLogicText, hasShowLogic } = useShowLogicInfo(props.moduleConfig.field)
 

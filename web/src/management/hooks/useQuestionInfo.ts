@@ -3,14 +3,12 @@ import store from '@/management/store'
 import { cleanRichText } from '@/common/xss'
 export const useQuestionInfo = (field: string) => {
   const getQuestionTitle = computed(() => {
-    // @ts-ignore
     const questionDataList = store.state.edit.schema.questionDataList
     return () => {
       return questionDataList.find((item: any) => item.field === field)?.title
     }
   })
   const getOptionTitle = computed(() => {
-    // @ts-ignore
     const questionDataList = store.state.edit.schema.questionDataList
     return (value: string | Array<string>) => {
       const options = questionDataList.find((item: any) => item.field === field)?.options || []

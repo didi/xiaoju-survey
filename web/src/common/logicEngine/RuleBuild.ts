@@ -38,10 +38,8 @@ export class RuleNode {
     this.scope = scope
     this.target = target
   }
-  // @ts-ignore
-  set(key, value) {
-    // @ts-ignore
-    this[key] = value
+  setTarget(value: string) {
+    this.target = value
   }
   addCondition(condition: ConditionNode) {
     this.conditions.push(condition);
@@ -109,7 +107,6 @@ export class RuleBuild {
   }
   // 实现前置题删除校验
   findTargetsByFields(field: string) {
-    // @ts-ignore
     const nodes = this.rules.filter((rule: RuleNode) => {
       const conditions =  rule.conditions.filter((item: any) => {
         return item.field === field

@@ -100,7 +100,7 @@ Server端：Nestjs + MongoDB
 
 # 快速启动
 
-Node版本 >= 16.x，
+Node版本 >= 18.x，
 [查看环境准备指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
 
 复制工程

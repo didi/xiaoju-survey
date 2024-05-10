@@ -79,7 +79,8 @@ const props = defineProps({
   }
 })
 const fieldList = computed(() => {
-  return renderData.value
+  const currentIndex = renderData.value.findIndex((item) => item.field === props.ruleNode.target)
+  return renderData.value.slice(0, currentIndex)
     .filter((question: any) => qAbleList.includes(question.type))
     .map((item: any) => {
       return {

@@ -1,3 +1,4 @@
 export default {
-  bannerList: []
+  bannerList: [],
+  logicEngine: null
 }

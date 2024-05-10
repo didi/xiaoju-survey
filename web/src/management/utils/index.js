@@ -1,12 +1,11 @@
 import { defaultQuestionConfig } from '../config/questionConfig'
 import { cloneDeep as _cloneDeep, map as _map } from 'lodash-es'
-
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000)
   return `data${num}`
 }
 
-function getRandom(len) {
+export function getRandom(len) {
   return Math.random()
     .toString()
     .slice(len && typeof len === 'number' ? 0 - len : -6)

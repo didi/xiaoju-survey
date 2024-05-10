@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
               needLogin: true
             },
             component: () =>
-              import('../pages/edit/pages/edit/QuestionEdit.vue')
+              import('../pages/edit/pages/edit/QuestionEditPage.vue')
           },
           {
             path: 'logic',
@@ -49,7 +49,7 @@ const routes: RouteRecordRaw[] = [
               needLogin: true
             },
             component: () =>
-              import('../pages/edit/pages/edit/LogicEdit.vue')
+              import('../pages/edit/pages/edit/LogicEditPage.vue')
           }
         ]
       },

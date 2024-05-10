@@ -163,6 +163,8 @@ const handleDelete = (id: any) => {
     line-height: 32px;
   }
   .opt {
+    display: flex;
+    align-items: center;
     .opt-icon {
       cursor: pointer;
       font-size: 12px;

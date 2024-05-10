@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { shallowRef, computed } from 'vue'
 import { useStore } from 'vuex'
-import RuleNodeView from './RuleNodeView.vue'
+import RuleNodeView from './components/RuleNodeView.vue'
 
 import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
 

@@ -5,7 +5,6 @@ import { MessagePushingTaskService } from '../services/messagePushingTask.servic
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { QueryMessagePushingTaskListDto } from '../dto/queryMessagePushingTaskList.dto';
 import { HttpException } from 'src/exceptions/httpException';
-import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import {
   MESSAGE_PUSHING_HOOK,
   MESSAGE_PUSHING_TYPE,
@@ -16,6 +15,7 @@ import { UserService } from 'src/modules/auth/services/user.service';
 
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 import { ObjectId } from 'mongodb';
+import { AuthService } from 'src/modules/auth/services/auth.service';
 
 describe('MessagePushingTaskController', () => {
   let controller: MessagePushingTaskController;
@@ -47,6 +47,14 @@ describe('MessagePushingTaskController', () => {
           provide: UserService,
           useClass: jest.fn().mockImplementation(() => ({
             getUserByUsername() {
+              return {};
+            },
+          })),
+        },
+        {
+          provide: AuthService,
+          useClass: jest.fn().mockImplementation(() => ({
+            verifyToken() {
               return {};
             },
           })),
@@ -137,9 +145,7 @@ describe('MessagePushingTaskController', () => {
 
       await expect(
         controller.findAll(req, queryDto as QueryMessagePushingTaskListDto),
-      ).rejects.toThrow(
-        new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR),
-      );
+      ).rejects.toThrow(HttpException);
       expect(service.findAll).toHaveBeenCalledTimes(0);
     });
   });

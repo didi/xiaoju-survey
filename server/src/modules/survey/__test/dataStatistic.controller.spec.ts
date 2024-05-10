@@ -12,6 +12,7 @@ import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 import { Authtication } from 'src/guards/authtication';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
+import { AuthService } from 'src/modules/auth/services/auth.service';
 
 jest.mock('../services/dataStatistic.service');
 jest.mock('../services/surveyMeta.service');
@@ -41,6 +42,14 @@ describe('DataStatisticController', () => {
           provide: UserService,
           useClass: jest.fn().mockImplementation(() => ({
             getUserByUsername() {
+              return {};
+            },
+          })),
+        },
+        {
+          provide: AuthService,
+          useClass: jest.fn().mockImplementation(() => ({
+            varifytoken() {
               return {};
             },
           })),

@@ -37,10 +37,7 @@ export class CreateMessagePushingTaskDto {
       triggerHook: Joi.string()
         .allow(null)
         .default(MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED),
-      surveys: Joi.array()
-        .items(Joi.string().required())
-        .allow(null)
-        .default([]),
+      surveys: Joi.array().items(Joi.string()).allow(null).default([]),
     }).validateAsync(data);
   }
 }

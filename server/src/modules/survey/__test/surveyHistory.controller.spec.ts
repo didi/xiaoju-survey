@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
+
 import { SurveyHistoryController } from '../controllers/surveyHistory.controller';
 import { SurveyHistoryService } from '../services/surveyHistory.service';
 import { SurveyMetaService } from '../services/surveyMeta.service';
+
 import { UserService } from 'src/modules/auth/services/user.service';
 import { Authtication } from 'src/guards/authtication';
-
-import { ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/modules/auth/services/auth.service';
 
 describe('SurveyHistoryController', () => {
   let controller: SurveyHistoryController;
@@ -39,6 +41,14 @@ describe('SurveyHistoryController', () => {
           provide: UserService,
           useClass: jest.fn().mockImplementation(() => ({
             getUserByUsername() {
+              return {};
+            },
+          })),
+        },
+        {
+          provide: AuthService,
+          useClass: jest.fn().mockImplementation(() => ({
+            verifyToken() {
               return {};
             },
           })),

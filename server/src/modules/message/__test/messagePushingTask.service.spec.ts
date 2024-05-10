@@ -65,7 +65,6 @@ describe('MessagePushingTaskService', () => {
       savedTask.type = MESSAGE_PUSHING_TYPE.HTTP;
       savedTask.pushAddress = 'http://example.com';
       savedTask.triggerHook = MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED;
-      savedTask.surveys = ['surveyId1', 'surveyId2'];
 
       const mockOwnerId = '66028642292c50f8b71a9eee';
 

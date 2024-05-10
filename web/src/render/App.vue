@@ -17,6 +17,7 @@ import AlertDialog from './components/AlertDialog.vue'
 
 import LogoIcon from './components/LogoIcon.vue'
 import { get as _get } from 'lodash-es'
+import { ruleConf } from '@/common/logicEngine/ruleConf'
 
 export default {
   name: 'App',
@@ -55,7 +56,7 @@ export default {
           const res = await getPublishedSurveyInfo({ surveyPath })
           if (res.code === 200) {
             const data = res.data
-            const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf } = data.code
+            const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } = data.code
             document.title = data.title
             const questionData = {
               bannerConf,
@@ -68,6 +69,7 @@ export default {
             this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath)
             this.$store.dispatch('init', questionData)
+            this.$store.dispatch('initRuleEngine', logicConf?.showLogicConf);
             this.$store.dispatch('getEncryptInfo')
           } else {
             throw new Error(res.errmsg)
@@ -90,7 +92,6 @@ export default {
         root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
       }
       if (contentConf?.opacity.toString()) {
-        console.log({ opacity: contentConf?.opacity / 100 })
         root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
       }
     }

@@ -10,7 +10,7 @@
         <div
           :class="[
             'navbar-btn',
-            (isActive && btnItem.key === 'skinsettings') || isExactActive
+            (isActive && ['skinsettings', 'edit'].includes(btnItem.key)) || isExactActive
               ? 'router-link-exact-active'
               : ''
           ]"
@@ -19,7 +19,6 @@
           <a :href="href" @click="navigate"
             ><span>{{ btnItem.text }}</span></a
           >
-          <!-- <span>{{ btnItem.text }}</span> -->
         </div>
       </router-link>
     </template>

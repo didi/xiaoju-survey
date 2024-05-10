@@ -108,6 +108,8 @@ const handleChange = (conditionNode: ConditionNode, key: string, value: any) => 
   switch (key) {
     case 'field':
       conditionNode.setField(value)
+      // 前置题改变清空选项
+      conditionNode.setValue([])
       break
     case 'operator':
       conditionNode.setOperator(value)

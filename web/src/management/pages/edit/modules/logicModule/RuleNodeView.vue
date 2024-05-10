@@ -109,7 +109,7 @@ const targetQuestionList = computed(() => {
   let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
   return questionList.map((item: any) => {
     return {
-      label: cleanRichText(item.title),
+      label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
       value: item.field,
       disabled: store.state.logic.showLogicEngine
         .findTargetsByScope('question')

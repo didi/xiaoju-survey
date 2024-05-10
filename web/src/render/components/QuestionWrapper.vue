@@ -9,7 +9,7 @@
   ></QuestionRuleContainer> 
 </template>
 <script setup>
-import { unref, computed } from 'vue'
+import { unref, computed, watch } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersValue } from '@/render/hooks/useOthersValue'
@@ -63,12 +63,19 @@ const questionConfig = computed(() =>{
     value: formValues.value[props.moduleConfig.field]
   }
 })
-
 const visible = computed(() => {
+  const { field } = props.moduleConfig
+  const matchRule = store.state.ruleEngine.rules.get(field+'question')
+  if(matchRule) {
+    return matchRule.result
+  } else {
+    return true
+  }
+})
+watch(() => visible.value, (newVal, oldVal) => {
+  // 题目从显示到隐藏，需要清空值
   const { field, type, innerType } = props.moduleConfig
-  const matchResult = store.state.ruleEngine.getResult(field, 'question')
-  // console.log(field + '题目的规则匹配改变，触发重新计算visible：'+ matchResult)
-  if(!matchResult) {
+  if(!newVal && oldVal) {
     let value = ''
     // 题型是多选，或者子题型是多选（innerType是用于投票）
     if (/checkbox/.test(type) || innerType === 'checkbox') {
@@ -81,8 +88,6 @@ const visible = computed(() => {
     store.commit('changeFormData', data)
     notifyMatch(field)
   }
-  // 显示逻辑-处理视图
-  return matchResult
 })
 
 const handleChange = (data) => {

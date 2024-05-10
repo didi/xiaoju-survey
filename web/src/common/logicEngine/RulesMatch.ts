@@ -68,7 +68,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
 
 export class RuleNode {
   conditions: Map<string, ConditionNode<string, BasicOperator>>; // 使用哈希表存储条件规则对象
-  
+  public result: boolean = false;
   constructor(public target: string, public scope: string) {
     this.conditions = new Map();
   }
@@ -88,6 +88,7 @@ export class RuleNode {
         return false
       }
     });
+    this.result = res
     return res
   }
   getResult() {

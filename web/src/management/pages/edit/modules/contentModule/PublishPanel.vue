@@ -29,6 +29,12 @@ export default {
   },
   methods: {
     async onPublish() {
+      try {
+        this.updateLogicConf()
+      } catch (error) {
+        ElMessage.error('请检查逻辑配置是否有误')
+        return
+      }
       const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
         ElMessage.error('未获取到问卷id')
@@ -37,6 +43,7 @@ export default {
       if (this.isPublishing) {
         return
       }
+      
       try {
         this.isPublishing = true
         const saveRes = await saveSurvey(saveData)
@@ -58,6 +65,20 @@ export default {
         ElMessage.error(`发布失败`)
       } finally {
         this.isPublishing = false
+      }
+    },
+    updateLogicConf() {
+      if(this.$store.state.logic.showLogicEngine) {
+        try {
+          this.$store.state.logic.showLogicEngine.validateSchema()
+          
+        } catch (error) {
+          throw error
+          return 
+        }
+        const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
+        // 更新逻辑配置
+        this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
       }
     }
   }

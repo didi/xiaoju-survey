@@ -184,7 +184,6 @@ export default {
 .operation-wrapper {
   margin-top: 50px;
   margin-bottom: 45px;
-  // min-height: 812px;
   overflow-x: hidden;
   overflow-y: auto;
   padding-right: 30px;

@@ -1,51 +1,53 @@
 <template>
   <div class="condition-wrapper" data-content-before="且">
-    <span class="desc">如果</span>
-    <el-form-item
-      :prop="`conditions[${index}].field`"
-      :rules="[{ required: true, message: '请选择题目', trigger: 'change' }]"
-    >
-      <el-select
-        class="select field-select"
-        v-model="conditionNode.field"
-        placeholder="请选择题目"
-        @change="(val: any) => handleChange(conditionNode, 'field', val)"
+    <div class="line">
+      <span class="desc">如果</span>
+      <el-form-item
+        :prop="`conditions[${index}].field`"
+        :rules="[{ required: true, message: '请选择题目', trigger: 'change' }]"
       >
-        <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <span class="desc">选择了</span>
-    <el-form-item
-      class="select value-select"
-      :prop="`conditions[${index}].value`"
-      :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
-    >
-      <el-select
-        v-model="conditionNode.value"
-        placeholder="请选择选项"
-        multiple
-        @change="(val: any) => handleChange(conditionNode, 'value', val)"
-      >
-        <el-option
-          v-for="{ label, value } in getRelyOptions"
-          :key="value"
-          :label="label"
-          :value="value"
+        <el-select
+          class="select field-select"
+          v-model="conditionNode.field"
+          placeholder="请选择题目"
+          @change="(val: any) => handleChange(conditionNode, 'field', val)"
         >
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <span class="desc">中的任一选项 </span>
-    <span class="opt">
-      <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
-      <i-ep-minus
-        class="opt-icon"
-        v-if="index > 0"
-        :size="14"
-        @click="() => handleDelete(conditionNode.id)"
-      />
-    </span>
+          <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <span class="desc">选择了</span>
+      <el-form-item
+        class="select value-select"
+        :prop="`conditions[${index}].value`"
+        :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
+      >
+        <el-select
+          v-model="conditionNode.value"
+          placeholder="请选择选项"
+          multiple
+          @change="(val: any) => handleChange(conditionNode, 'value', val)"
+        >
+          <el-option
+            v-for="{ label, value } in getRelyOptions"
+            :key="value"
+            :label="label"
+            :value="value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <span class="desc">中的任一选项 </span>
+      <span class="opt">
+        <i-ep-plus class="opt-icon opt-icon-plus" @click="handleAdd" />
+        <i-ep-minus
+          class="opt-icon"
+          v-if="index > 0"
+          :size="14"
+          @click="() => handleDelete(conditionNode.id)"
+        />
+      </span>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -53,13 +55,7 @@ import { defineProps, computed, inject, ref } from 'vue'
 import { ConditionNode, RuleNode } from '@/common/logicEngine/RuleBuild'
 import { qAbleList } from '@/management/utils/constant.js'
 import { cleanRichText } from '@/common/xss'
-
-const renderData = inject('renderData', {
-  type: Array<Object>,
-  default: () => {
-    return []
-  }
-})
+const renderData = inject('renderData')
 const props = defineProps({
   index: {
     type: Number,
@@ -83,9 +79,8 @@ const props = defineProps({
   }
 })
 const fieldList = computed(() => {
-  // @ts-ignore
   return renderData.value
-    .filter((question) => qAbleList.includes(question.type))
+    .filter((question: any) => qAbleList.includes(question.type))
     .map((item: any) => {
       return {
         label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
@@ -98,7 +93,6 @@ const getRelyOptions = computed(() => {
   if (!field) {
     return []
   }
-  // @ts-ignore
   const currentQuestion = renderData.value.find((item) => item.field === field)
   return (
     currentQuestion?.options.map((item: any) => {
@@ -134,9 +128,11 @@ const handleDelete = (id: any) => {
 <style lang="scss" scoped>
 .condition-wrapper {
   width: 100%;
+  position: relative;
+  display: flex;
+  padding: 24px 0;
   &:not(:last-child)::before{
     content: attr(data-content-before);
-    position: relative;
     bottom: 0px;
     width: 20px;
     height: 20px;
@@ -147,24 +143,20 @@ const handleDelete = (id: any) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    top: 58px;
+    position: absolute;
+    bottom: -8px;
   }
   &:not(:last-child)::after{
       content: "";
       display: block;
-      width: calc(100% - 50px);
+      width: calc(100% - 32px);
       border-top: 1px dashed #e3e4e8;
-  }
-  &:last-child::after{
-      content: "";
-      display: block;
-      width: 100%;
-      border-top: 1px dashed #e3e4e8;
-      padding: 10px 0; 
+      position: absolute;
+      left: 32px;
+      bottom: 0;
   }
   .desc {
     display: inline-block;
-    margin-bottom: 12px;
     margin-right: 12px;
     color: #333;
     line-height: 32px;
@@ -183,6 +175,7 @@ const handleDelete = (id: any) => {
     display: inline-block;
     vertical-align: top !important;
     margin-right: 12px;
+    margin-bottom: 0px;
   }
 }
 .select {

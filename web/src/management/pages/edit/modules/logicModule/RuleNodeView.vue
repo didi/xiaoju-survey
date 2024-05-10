@@ -15,29 +15,30 @@
         :conditionNode="conditionNode"
         @delete="handleDeleteCondition"
       ></conditionView>
-      <div class="target">
-        <span class="desc">则显示</span>
-        <el-form-item
-          prop="target"
-          :rules="[{ required: true, message: '请选择目标', trigger: 'change' }]"
-        >
-          <el-select
-            class="select field-select"
-            v-model="ruleNode.target"
-            placeholder="请选择"
-            @change="(val: any) => handleChange(ruleNode, 'target', val)"
+      <div class="target-wrapper">
+        <div class="line">
+          <span class="desc">则显示</span>
+          <el-form-item
+            prop="target"
+            :rules="[{ required: true, message: '请选择目标', trigger: 'change' }]"
           >
-            <el-option
-              v-for="{ label, value, disabled } in targetQuestionList"
-              :key="value"
-              :label="label"
-              :disabled="disabled"
-              :value="value"
+            <el-select
+              class="select field-select"
+              v-model="ruleNode.target"
+              placeholder="请选择"
+              @change="(val: any) => handleChange(ruleNode, 'target', val)"
             >
-            </el-option>
-          </el-select>
-        </el-form-item>
-
+              <el-option
+                v-for="{ label, value, disabled } in targetQuestionList"
+                :key="value"
+                :label="label"
+                :disabled="disabled"
+                :value="value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
         <i-ep-delete style="font-size: 14px" @click="() => handleDelete(ruleNode.id)" />
       </div>
     </el-form>
@@ -123,19 +124,19 @@ defineExpose({
 <style lang="scss" scoped>
 .rule-wrapper {
   width: 800px;
-  padding: 20px;
+  padding: 10px 24px;
   border: 1px solid #e3e4e8;
   border-radius: 2px;
   display: flex;
   margin: 12px 0;
   box-sizing: border-box;
-  .target {
-    margin-top: 12px;
+  .target-wrapper {
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
   }
   .desc {
     display: inline-block;
-
-    margin-bottom: 12px;
     margin-right: 12px;
     color: #333;
     line-height: 32px;
@@ -143,6 +144,7 @@ defineExpose({
   .el-form-item {
     display: inline-block;
     vertical-align: top !important;
+    margin-bottom: 0px;
   }
 }
 .select {

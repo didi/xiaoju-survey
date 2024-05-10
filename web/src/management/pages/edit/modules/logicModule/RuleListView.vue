@@ -3,7 +3,7 @@
     <RuleNodeView
       v-for="(item, index) in list"
       ref="ruleWrappers"
-      :key="index"
+      :key="item.id"
       :ruleNode="item"
       @delete="handleDetele"
     >

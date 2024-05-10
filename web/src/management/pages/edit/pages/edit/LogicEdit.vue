@@ -3,7 +3,7 @@
     <RuleListView></RuleListView>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { computed, provide } from 'vue'
 import RuleListView from '../../modules/logicModule/RuleListView.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'

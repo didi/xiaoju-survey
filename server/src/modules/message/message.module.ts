@@ -28,4 +28,4 @@ import { LoggerProvider } from 'src/logger/logger.provider';
   ],
   exports: [MessagePushingTaskService],
 })
-export class MessagePushingModule {}
+export class MessageModule {}

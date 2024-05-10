@@ -15,6 +15,6 @@ import { ConfigModule } from '@nestjs/config';
   imports: [TypeOrmModule.forFeature([User, Captcha]), ConfigModule],
   controllers: [AuthController],
   providers: [UserService, AuthService, CaptchaService],
-  exports: [UserService],
+  exports: [UserService, AuthService],
 })
 export class AuthModule {}

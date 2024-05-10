@@ -1,16 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Authtication } from './authtication';
-import { UserService } from '../modules/auth/services/user.service';
 import { ConfigService } from '@nestjs/config';
-import { AuthtificationException } from '../exceptions/authException';
+import { Authtication } from './authtication';
+import { AuthService } from 'src/modules/auth/services/auth.service';
+import { AuthenticationException } from 'src/exceptions/authException';
 import { User } from 'src/models/user.entity';
-import * as jwt from 'jsonwebtoken';
 
 jest.mock('jsonwebtoken');
 
 describe('Authtication', () => {
   let guard: Authtication;
-  let userService: UserService;
+  let authService: AuthService;
   let configService: ConfigService;
 
   beforeEach(async () => {
@@ -18,9 +17,9 @@ describe('Authtication', () => {
       providers: [
         Authtication,
         {
-          provide: UserService,
+          provide: AuthService,
           useValue: {
-            getUserByUsername: jest.fn(),
+            verifyToken: jest.fn(),
           },
         },
         {
@@ -33,7 +32,7 @@ describe('Authtication', () => {
     }).compile();
 
     guard = module.get<Authtication>(Authtication);
-    userService = module.get<UserService>(UserService);
+    authService = module.get<AuthService>(AuthService);
     configService = module.get<ConfigService>(ConfigService);
   });
 
@@ -47,7 +46,7 @@ describe('Authtication', () => {
     };
 
     await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
+      AuthenticationException,
     );
   });
 
@@ -62,39 +61,16 @@ describe('Authtication', () => {
       }),
     };
 
-    jest.spyOn(jwt, 'verify').mockReturnValue(new Error('token is invalid'));
+    jest
+      .spyOn(authService, 'verifyToken')
+      .mockRejectedValue(new Error('token is invalid'));
 
     jest
       .spyOn(configService, 'get')
       .mockReturnValue('XIAOJU_SURVEY_JWT_SECRET');
 
     await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
-    );
-  });
-
-  it('should throw exception if user does not exist', async () => {
-    const context = {
-      switchToHttp: () => ({
-        getRequest: () => ({
-          headers: {
-            authorization: 'Bearer validToken',
-          },
-        }),
-      }),
-    };
-
-    const fakeUser = { username: 'testUser' } as User;
-
-    jest.spyOn(jwt, 'verify').mockReturnValue(fakeUser);
-
-    jest
-      .spyOn(configService, 'get')
-      .mockReturnValue('XIAOJU_SURVEY_JWT_SECRET');
-    jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(null);
-
-    await expect(guard.canActivate(context as any)).rejects.toThrow(
-      AuthtificationException,
+      AuthenticationException,
     );
   });
 
@@ -114,9 +90,7 @@ describe('Authtication', () => {
     jest
       .spyOn(configService, 'get')
       .mockReturnValue('XIAOJU_SURVEY_JWT_SECRET');
-    jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(fakeUser);
-
-    jest.spyOn(jwt, 'verify').mockReturnValue(fakeUser);
+    jest.spyOn(authService, 'verifyToken').mockResolvedValue(fakeUser);
 
     const result = await guard.canActivate(context as any);
 

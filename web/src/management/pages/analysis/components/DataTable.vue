@@ -2,15 +2,15 @@
   <div class="data-table-wrapper">
     <el-table
       ref="multipleTable"
-      :data="tableData.listBody"
+      :data="props.tableData.listBody"
       style="width: 100%"
       header-row-class-name="thead-cell"
       class="table-border"
-      v-loading="mainTableLoading"
+      v-loading="props.mainTableLoading"
       element-loading-text="数据处理中，请稍等..."
     >
       <el-table-column
-        v-for="item in tableData.listHead"
+        v-for="item in props.tableData.listHead"
         :key="item.field"
         :prop="item.field"
         :label="cleanRichText(item.title)"
@@ -56,18 +56,26 @@
 import { ref } from 'vue'
 import { cleanRichText } from '@/common/xss'
 
-let popoverRefMap = ref({})
-let popoverVirtualRef = ref()
-let popoverContent = ref('')
+const props = defineProps({
+  tableData: {
+    type: Object
+  },
+  mainTableLoading: {
+    type: Boolean
+  }
+})
+const popoverRefMap = ref({})
+const popoverVirtualRef = ref()
+const popoverContent = ref('')
 
-let getContent = (value) => {
+const getContent = (value) => {
   const content = cleanRichText(value)
   return content === 0 ? 0 : content || '未知'
 }
-let setPopoverContent = (content) => {
+const setPopoverContent = (content) => {
   popoverContent.value = content
 }
-let onPopoverRefOver = (scope, type) => {
+const onPopoverRefOver = (scope, type) => {
   let popoverContent
   if (type == 'head') {
     popoverVirtualRef.value = popoverRefMap.value[scope.column.id]

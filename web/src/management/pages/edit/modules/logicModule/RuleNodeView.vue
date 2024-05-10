@@ -32,7 +32,7 @@
                 v-for="{ label, value, disabled } in targetQuestionList"
                 :key="value"
                 :label="label"
-                :disabled="disabled"
+                :disabled="disabled && ruleNode.target !== value "
                 :value="value"
               >
               </el-option>

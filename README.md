@@ -46,7 +46,7 @@
 _**(个人和企业用户均可快速构建特定领域的调研类解决方案。)**_
 
 # 技术
-Web端：Vue2（Vue3版本24年上半年推出）+ ElementUI
+Web端：Vue3 + ElementPlus
 
 Server端：Nestjs + MongoDB
 

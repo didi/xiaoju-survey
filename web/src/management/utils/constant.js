@@ -6,8 +6,6 @@ export const QOP_MAP = {
 export const qAbleList = [,
   'radio',
   'checkbox',
-  'radio-star', 
-  'radio-nps',
   'binary-choice',
   'vote',
 ]

@@ -12,14 +12,10 @@ declare module 'vue' {
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
-    ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
-    ElIcon: typeof import('element-plus/es')['ElIcon']
-    ElIconCheck: typeof import('@element-plus/icons-vue')['Check']
-    ElIconLoading: typeof import('@element-plus/icons-vue')['Loading']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElOption: typeof import('element-plus/es')['ElOption']
@@ -28,6 +24,7 @@ declare module 'vue' {
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
+    ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
@@ -38,9 +35,6 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    'IEp-[]': typeof import('~icons/ep/[]')['default']
-    'IEp-[test]': typeof import('~icons/ep/[test]')['default']
-    'IEp-]': typeof import('~icons/ep/]')['default']
     IEpBottom: typeof import('~icons/ep/bottom')['default']
     IEpCheck: typeof import('~icons/ep/check')['default']
     IEpCirclePlus: typeof import('~icons/ep/circle-plus')['default']
@@ -52,7 +46,6 @@ declare module 'vue' {
     IEpPlus: typeof import('~icons/ep/plus')['default']
     IEpQuestionFilled: typeof import('~icons/ep/question-filled')['default']
     IEpRank: typeof import('~icons/ep/rank')['default']
-    IEpRankMinus: typeof import('~icons/ep/rank-minus')['default']
     IEpRemove: typeof import('~icons/ep/remove')['default']
     IEpSearch: typeof import('~icons/ep/search')['default']
     IEpSort: typeof import('~icons/ep/sort')['default']
@@ -64,6 +57,5 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
-    vPopover: typeof import('element-plus/es')['ElPopoverDirective']
   }
 }

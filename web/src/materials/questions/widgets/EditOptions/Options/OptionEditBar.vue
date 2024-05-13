@@ -49,7 +49,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, inject } from 'vue'
 import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
 import RateConfig from '../AdvancedConfig/RateConfig.vue'
@@ -75,7 +75,7 @@ defineProps({
 })
 const emit = defineEmits(['addOther', 'optionChange', 'change'])
 
-const moduleConfig = inject('moduleConfig') as any
+const moduleConfig = inject('moduleConfig')
 const optionConfigVisible = ref(false)
 const openOptionConfig = () => {
   console.log('open')
@@ -85,10 +85,10 @@ const openOptionConfig = () => {
 const addOther = () => {
   emit('addOther')
 }
-const handleOptionChange = (value: any[]) => {
+const handleOptionChange = (value) => {
   emit('optionChange', value)
 }
-const handleChange = (data: any) => {
+const handleChange = (data) => {
   emit('change', data)
 }
 
@@ -96,7 +96,7 @@ const rateConfigVisible = ref(false)
 const openRateConfig = () => {
   rateConfigVisible.value = true
 }
-const onVisibleChange = (val: boolean) => {
+const onVisibleChange = (val) => {
   rateConfigVisible.value = val
 }
 

@@ -12,7 +12,7 @@ import useCommandComponent from './hooks/useCommandComponent'
 import EmptyPage from './pages/EmptyPage.vue'
 import IndexPage from './pages/IndexPage.vue'
 import ErrorPage from './pages/ErrorPage.vue'
-import SuccessPage from './pages/SuccessPage.vue'
+import SuccessPage from './pages/success'
 import AlertDialog from './components/AlertDialog.vue'
 
 import LogoIcon from './components/LogoIcon.vue'

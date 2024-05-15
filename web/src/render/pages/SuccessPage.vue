@@ -9,20 +9,17 @@
     </div>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import LogoIcon from '../components/LogoIcon.vue'
-export default {
-  name: 'resultPage',
-  components: { LogoIcon },
-  computed: {
-    submitConf() {
-      return this.$store?.state?.submitConf || {}
-    },
-    successMsg() {
-      return this.submitConf?.msgContent?.msg_200 || '提交成功'
-    }
-  }
-}
+
+const store = useStore()
+
+const successMsg = computed(() => {
+  const msgContent = store.state?.submitConf?.msgContent || {}
+  return msgContent?.msg_200 || '提交成功'
+})
 </script>
 <style lang="scss" scoped>
 @import '@/render/styles/variable.scss';

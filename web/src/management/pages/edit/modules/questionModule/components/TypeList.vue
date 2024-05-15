@@ -6,30 +6,31 @@
       :name="index"
       :key="index"
     >
-      <div class="questiontype-list">
-        <el-popover
-          v-for="(item, index) in item.questionList"
-          :key="item.type"
-          placement="right"
-          trigger="hover"
-          :popper-class="'qtype-popper-' + (index % 3)"
-          :popper-style="{ width: '369px' }"
+        <draggable
+          class="questiontype-list"
+          :list="item.questionList"
+          :group="{ name: DND_GROUP, pull: 'clone', put: false }"
+          :clone="getNewQuestion"
+          @start="onDragStart"
+          @end="onDragEnd"
+          item-key="path"
         >
-          <img :src="item.snapshot" width="345px" />
-          <template #reference>
-            <div :key="item.type" class="qtopic-item" @click="onQuestionType({ type: item.type })">
-              <i class="iconfont" :class="['icon-' + item.icon]"></i>
-              <p class="text">{{ item.title }}</p>
+          <template #item="{ element }">
+            <div :key="element.type" class="qtopic-item" @click="onQuestionType({ type: element.type })">
+              <i class="iconfont" :class="['icon-' + element.icon]"></i>
+              <p class="text">{{ element.title }}</p>
+              
             </div>
           </template>
-        </el-popover>
-      </div>
+        </draggable>
     </el-collapse-item>
   </el-collapse>
 </template>
 
 <script setup>
 import questionLoader from '@/materials/questions/questionLoader'
+import draggable from 'vuedraggable'
+import { DND_GROUP } from '@/management/config/dnd'
 
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { getQuestionByType } from '@/management/utils/index'
@@ -46,7 +47,7 @@ questionLoader.init({
   typeList: questionTypeList.map((item) => item.type)
 })
 
-const onQuestionType = ({ type }) => {
+const getNewQuestion = ({ type }) => {
   const fields = questionDataList.value.map((item) => item.field)
   const currentEditOne = _get(store, 'state.edit.currentEditOne')
   const index =
@@ -56,6 +57,11 @@ const onQuestionType = ({ type }) => {
   if (type === 'vote') {
     newQuestion.innerType = 'radio'
   }
+  return newQuestion
+}
+
+const onQuestionType = ({ type }) => {
+  const newQuestion = getNewQuestion(type)  
   store.dispatch('edit/addQuestion', { question: newQuestion, index })
   store.commit('edit/setCurrentEditOne', index)
 }
@@ -103,9 +109,10 @@ const onQuestionType = ({ type }) => {
       background-color: $primary-color-light;
       border: 1px solid $primary-color;
     }
-
+    
     .text {
       font-size: 12px;
+      user-select: none;
     }
   }
 
@@ -127,5 +134,14 @@ const onQuestionType = ({ type }) => {
 
 .qtype-popper-2 {
   transform: translateX(30px);
+}
+// 设置拖拽到编辑区的样式
+.box .qtopic-item {
+  height: 2px;
+  width: 100%;
+  background-color: var(--primary-color);
+  * {
+    display: none;
+  }
 }
 </style>

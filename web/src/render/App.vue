@@ -18,7 +18,7 @@ import AlertDialog from './components/AlertDialog.vue'
 import LogoIcon from './components/LogoIcon.vue'
 import { get as _get } from 'lodash-es'
 import { ruleConf } from '@/common/logicEngine/ruleConf'
-import { init } from '@/render/hooks/useRuleEngine'
+import { init } from '@/render/hooks/useRuleEngine.js'
 init(ruleConf)
 
 export default {

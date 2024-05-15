@@ -22,7 +22,7 @@ import LeftMenu from '@/management/components/LeftMenu.vue'
 
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
-
+import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
 export default {
   name: 'questionEditPage',
   components: {
@@ -34,7 +34,8 @@ export default {
     this.$store.commit('edit/setSurveyId', this.$route.params.id)
     try {
       await this.$store.dispatch('edit/init')
-      await this.$store.dispatch('logic/initShowLogic', this.$store.state.edit.schema.logicConf.showLogicConf || {})
+      // await this.$store.dispatch('logic/initShowLogic', this.$store.state.edit.schema.logicConf.showLogicConf || {})
+      await initShowLogicEngine(this.$store.state.edit.schema.logicConf.showLogicConf || {})
     } catch (error) {
       ElMessage.error(error.message)
       // 自动跳转回列表页

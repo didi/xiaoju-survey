@@ -5,14 +5,12 @@
 </template>
 
 <script>
+import { get as _get } from 'lodash-es'
 import { mapState } from 'vuex'
-
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
-import { get as _get } from 'lodash-es'
-
 import { publishSurvey, saveSurvey } from '@/management/api/survey'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import buildData from './buildData'
 
 export default {
@@ -68,15 +66,15 @@ export default {
       }
     },
     updateLogicConf() {
-      if(this.$store.state.logic.showLogicEngine) {
+      if(showLogicEngine.value) {
         try {
-          this.$store.state.logic.showLogicEngine.validateSchema()
+          showLogicEngine.value.validateSchema()
           
         } catch (error) {
           throw error
           return 
         }
-        const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
+        const showLogicConf = showLogicEngine.value.toJson()
         // 更新逻辑配置
         this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
       }

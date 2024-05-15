@@ -56,6 +56,7 @@ import { RuleNode } from '@/common/logicEngine/RuleBuild'
 import { cleanRichText } from '@/common/xss'
 
 import conditionView from './ConditionView.vue'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
 const store = useStore()
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
@@ -107,7 +108,7 @@ const targetQuestionList = computed(() => {
     return {
       label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
       value: item.field,
-      disabled: store.state.logic.showLogicEngine
+      disabled: showLogicEngine.value
         .findTargetsByScope('question')
         .includes(item.field)
     }

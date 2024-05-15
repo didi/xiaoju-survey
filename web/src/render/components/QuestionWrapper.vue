@@ -16,6 +16,8 @@ import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
+import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
+
 const props = defineProps({
   indexNumber: {
     type: [Number, String],
@@ -65,7 +67,8 @@ const questionConfig = computed(() =>{
 })
 const visible = computed(() => {
   const { field } = props.moduleConfig
-  const matchRule = store.state.ruleEngine.rules.get(field+'question')
+  const matchRule = ruleEngine.value.rules.get(field+'question')
+  // console.log(ruleEngine, ruleEngine.value, ruleEngine.value.rules)
   if(matchRule) {
     return matchRule.result
   } else {
@@ -104,11 +107,10 @@ const handleChange = (data) => {
 }
 const notifyMatch = (key) => {
   let fact = unref(formValues)
-  const targets = store.state.ruleEngine.findTargetsByField(key) || []
+  const targets = ruleEngine.value.findTargetsByField(key) || []
   // 前置题改变通知目标题更新规则匹配
   targets.forEach((target) => {
-    store.state.ruleEngine.match(target, 'question', fact)
+    ruleEngine.value.match(target, 'question', fact)
   })
 }
 </script>
-

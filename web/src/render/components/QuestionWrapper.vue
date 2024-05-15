@@ -16,7 +16,7 @@ import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
-import { ruleEngine } from '@/render/hooks/useRuleEngine'
+import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
 
 const props = defineProps({
   indexNumber: {
@@ -114,4 +114,3 @@ const notifyMatch = (key) => {
   })
 }
 </script>
-

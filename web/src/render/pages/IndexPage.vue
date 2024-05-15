@@ -28,6 +28,7 @@ import encrypt from '../utils/encrypt'
 
 import useCommandComponent from '../hooks/useCommandComponent'
 import { cloneDeep } from 'lodash-es'
+import { ruleEngine } from '../hooks/useRuleEngine'
 
 export default {
   name: 'indexPage',
@@ -99,7 +100,7 @@ export default {
       
       // 显示逻辑-处理提交数据
       const formModel = Object.keys(formValues)
-        .filter(key => this.$store.state.ruleEngine.getResult(key, 'question'))
+        .filter(key => ruleEngine.value.getResult(key, 'question'))
         .reduce((obj, key) => {
           obj[key] = formValues[key];
           return obj;

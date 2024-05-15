@@ -169,9 +169,5 @@ export default {
     } catch (error) {
       console.log(error)
     }
-  },
-  async initRuleEngine({ commit }, ruleConf) {
-    const ruleEngine = new RuleMatch(ruleConf)
-    commit('setRuleEgine', ruleEngine)
   }
 }

@@ -18,7 +18,7 @@ const errorImageUrl = computed(() => {
   const errorType = store.state?.errorInfo?.errorType
   const imageMap = {
     overTime: '/imgs/icons/overtime.webp',
-    default: '/imgs/icons/error.webp',
+    default: '/imgs/icons/error.webp'
   }
 
   return imageMap[errorType as 'overTime'] || imageMap.default

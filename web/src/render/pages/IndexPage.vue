@@ -31,13 +31,13 @@ import encrypt from '../utils/encrypt'
 import useCommandComponent from '../hooks/useCommandComponent'
 
 interface Props {
-  questionInfo?: any,
-  isMobile?: boolean,
+  questionInfo?: any
+  isMobile?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   questionInfo: {},
-  isMobile: false,
+  isMobile: false
 })
 
 const mainRef = ref<any>()
@@ -111,7 +111,7 @@ const handleSubmit = () => {
       onConfirm: async () => {
         try {
           submitSurver()
-        } catch(error) {
+        } catch (error) {
           console.log(error)
         } finally {
           confirm.close()

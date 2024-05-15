@@ -17,9 +17,7 @@ import AlertDialog from './components/AlertDialog.vue'
 
 import LogoIcon from './components/LogoIcon.vue'
 import { get as _get } from 'lodash-es'
-import { ruleConf } from '@/common/logicEngine/ruleConf'
-import { init } from '@/render/hooks/useRuleEngine.js'
-init(ruleConf)
+import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
 export default {
   name: 'App',
@@ -71,8 +69,7 @@ export default {
             this.setSkin(skinConf)
             this.$store.commit('setSurveyPath', surveyPath)
             this.$store.dispatch('init', questionData)
-            // this.$store.dispatch('initRuleEngine', logicConf?.showLogicConf);
-            init(logicConf?.showLogicConf)
+            initRuleEngine(logicConf?.showLogicConf)
             this.$store.dispatch('getEncryptInfo')
           } else {
             throw new Error(res.errmsg)

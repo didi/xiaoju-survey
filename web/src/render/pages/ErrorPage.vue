@@ -8,29 +8,23 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'errorPage',
-  data() {
-    return {
-      imageMap: {
-        overTime: '/imgs/icons/overtime.webp'
-      }
-    }
-  },
-  computed: {
-    errorImageUrl() {
-      return this.imageMap[this.errorType] || this.imageMap.default
-    },
-    errorType() {
-      return this.$store.state?.errorInfo?.errorType
-    },
-    errorMsg() {
-      return this.$store.state?.errorInfo?.errorMsg
-    }
-  },
-  mounted() {}
-}
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+const errorImageUrl = computed(() => {
+  const errorType = store.state?.errorInfo?.errorType
+  const imageMap = {
+    overTime: '/imgs/icons/overtime.webp',
+    default: '/imgs/icons/error.webp',
+  }
+
+  return imageMap[errorType as 'overTime'] || imageMap.default
+})
+
+const errorMsg = computed(() => store.state?.errorInfo?.errorMsg)
 </script>
 <style lang="scss" scoped>
 .result-page-wrap {

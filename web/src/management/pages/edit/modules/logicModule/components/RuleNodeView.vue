@@ -46,19 +46,14 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, shallowRef, inject, type ComputedRef } from 'vue'
-import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'
-
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
-
 import { RuleNode } from '@/common/logicEngine/RuleBuild'
 import { cleanRichText } from '@/common/xss'
-
-import conditionView from './ConditionView.vue'
 import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
+import conditionView from './ConditionView.vue'
 
-const store = useStore()
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 
 const props = defineProps({

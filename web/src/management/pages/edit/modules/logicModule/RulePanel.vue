@@ -20,12 +20,9 @@
 </template>
 <script setup lang="ts">
 import { shallowRef, computed } from 'vue'
-import { useStore } from 'vuex'
 import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
 import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import RuleNodeView from './components/RuleNodeView.vue'
-
-const store = useStore()
 
 const list = computed(() => {
   return showLogicEngine.value?.rules || []

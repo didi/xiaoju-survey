@@ -6,58 +6,91 @@
       :name="index"
       :key="index"
     >
-      <div class="questiontype-list">
-        <el-popover
-          v-for="(item, index) in item.questionList"
-          :key="item.type"
-          placement="right"
-          trigger="hover"
-          :popper-class="'qtype-popper-' + (index % 3)"
-          :popper-style="{ width: '369px' }"
+        <draggable
+          class="questiontype-list"
+          :list="item.questionList"
+          :group="{ name: DND_GROUP, pull: 'clone', put: false }"
+          :clone="getNewQuestion"
+          item-key="path"
         >
-          <img :src="item.snapshot" width="345px" />
-          <template #reference>
-            <div :key="item.type" class="qtopic-item" @click="onQuestionType({ type: item.type })">
-              <i class="iconfont" :class="['icon-' + item.icon]"></i>
-              <p class="text">{{ item.title }}</p>
-            </div>
+          <template #item="{ element }">
+              <div
+                :key="element.type"
+                class="qtopic-item"
+                :id="'qtopic' + element.type"
+                @click="onQuestionType({ type: element.type })"
+                @mouseenter="showPreview(element, 'qtopic' + element.type)"
+                @mouseleave="isShowPreviewImage = false"
+                @mousedown="isShowPreviewImage = false"
+              >
+                <i class="iconfont" :class="['icon-' + element.icon]"></i>
+                <p class="text">{{ element.title }}</p>
+              </div>
           </template>
-        </el-popover>
-      </div>
+          
+        </draggable>
     </el-collapse-item>
+    <Teleport to="body">
+      <div class="preview-popover" v-show="isShowPreviewImage" :style="{ top: previewTop + 'px'}">
+          <img :src="previewImg" class="preview-image"/>
+          <span class="preview-arrow"></span>
+      </div>
+    </Teleport>
   </el-collapse>
 </template>
 
 <script setup>
 import questionLoader from '@/materials/questions/questionLoader'
+import draggable from 'vuedraggable'
+import { DND_GROUP } from '@/management/config/dnd'
 
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { getQuestionByType } from '@/management/utils/index'
 import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { get as _get, isNumber as _isNumber } from 'lodash-es'
 import { computed, ref } from 'vue'
 
-const activeNames = ref([0, 1])
-
 const store = useStore()
+
+const activeNames = ref([0, 1])
+const previewImg = ref('')
+const isShowPreviewImage = ref(false)
+const previewTop = ref(0)
 const questionDataList = computed(() => _get(store, 'state.edit.schema.questionDataList'))
+const newQuestionIndex = computed(() => {
+  const currentEditOne = _get(store, 'state.edit.currentEditOne')
+  const index = _isNumber(currentEditOne) ? currentEditOne + 1 : questionDataList.value.length
+  return index
+})
 
 questionLoader.init({
   typeList: questionTypeList.map((item) => item.type)
 })
 
-const onQuestionType = ({ type }) => {
+const getNewQuestion = ({ type }) => {
   const fields = questionDataList.value.map((item) => item.field)
-  const currentEditOne = _get(store, 'state.edit.currentEditOne')
-  const index =
-    typeof currentEditOne === 'number' ? currentEditOne + 1 : questionDataList.value.length
   const newQuestion = getQuestionByType(type, fields)
-  newQuestion.title = newQuestion.title = `标题${index + 1}`
+  newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
   if (type === 'vote') {
     newQuestion.innerType = 'radio'
   }
-  store.dispatch('edit/addQuestion', { question: newQuestion, index })
-  store.commit('edit/setCurrentEditOne', index)
+  return newQuestion
+}
+
+const onQuestionType = ({ type }) => {
+  const newQuestion = getNewQuestion({ type })  
+  store.dispatch('edit/addQuestion', { question: newQuestion, index: newQuestionIndex.value })
+  store.commit('edit/setCurrentEditOne', newQuestionIndex.value)
+}
+
+const showPreview = ({ snapshot }, id) => {
+  previewImg.value = snapshot
+  
+  const dragEl = document.getElementById(id)
+  const { top, height } = dragEl.getBoundingClientRect()
+  previewTop.value = top + height / 2
+
+  isShowPreviewImage.value = true
 }
 </script>
 
@@ -103,9 +136,10 @@ const onQuestionType = ({ type }) => {
       background-color: $primary-color-light;
       border: 1px solid $primary-color;
     }
-
+    
     .text {
       font-size: 12px;
+      user-select: none;
     }
   }
 
@@ -127,5 +161,65 @@ const onQuestionType = ({ type }) => {
 
 .qtype-popper-2 {
   transform: translateX(30px);
+}
+// 设置拖拽到编辑区的样式
+.box .qtopic-item {
+  height: 2px;
+  width: 100%;
+  background-color: var(--primary-color);
+  * {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.preview-popover {
+  position: fixed;
+  left: 390px;
+  z-index: 9;
+  width: 371px;
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--el-border-color-light);
+  box-shadow: var(--el-box-shadow-light);
+  transform: translateY(-50%);
+  animation: fadeIn 100ms linear forwards;
+
+  .preview-image {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .preview-arrow {
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    height: 10px;
+    width: 10px;
+    transform: translateX(-50%);
+    background: var(--el-border-color-light);
+    z-index: -1;
+    transform: rotate(-45deg);
+
+    &::before {
+      position: absolute;
+      content: "";
+      height: 10px;
+      width: 10px;
+      border: 1px solid var(--el-border-color-light);
+      background: #ffffff;
+      border-bottom-color: transparent;
+      border-right-color: transparent;
+    }
+
+  }
 }
 </style>

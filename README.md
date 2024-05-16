@@ -4,16 +4,16 @@
   </p>
   <div>
     <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
-        <img src="https://img.shields.io/github/last-commit/didi/xiaoju-survey?color=red" alt="commit">
-    </a>
-    <a href="https://github.com/didi/xiaoju-survey/pulls">
-        <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
+        <img src="https://img.shields.io/badge/node-%3E=18-green" alt="commit">
     </a>
     <a href="https://github.com/didi/xiaoju-survey/issues">
         <img src="https://img.shields.io/github/issues/didi/xiaoju-survey" alt="issues">
     </a>
-    <a href="https://github.com/didi/xiaoju-survey/discussions">
-        <img src="https://img.shields.io/badge/Discussions-%E8%AE%A8%E8%AE%BA-blue" alt="discussions-">
+    <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
+        <img src="https://img.shields.io/github/last-commit/didi/xiaoju-survey?color=red" alt="commit">
+    </a>
+    <a href="https://github.com/didi/xiaoju-survey/pulls">
+        <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
     </a>
     <a href="https://xiaojusurvey.didi.cn">
         <img src="https://img.shields.io/badge/help-%E6%96%87%E6%A1%A3-blue" alt="docs">

@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "serve": "vite",
-    "dev": "vite",
+    "serve": "npm run dev",
+    "dev": "vite --open",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -43,6 +43,7 @@
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
+    "husky": "^9.0.11",
     "npm-run-all2": "^6.1.1",
     "prettier": "^3.0.3",
     "sass": "^1.72.0",
@@ -54,8 +55,19 @@
     "vite-plugin-virtual-mpa": "^1.11.0",
     "vue-tsc": "^1.8.27"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{.vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
   "engines": {
-    "node": ">=14.21.0",
-    "npm": ">=6.14.17"
+    "node": ">=18.0.0",
+    "npm": ">=8.6.0"
   }
 }

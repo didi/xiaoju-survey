@@ -5,7 +5,6 @@
       :title="item.title"
       :name="index"
       :key="index"
-      class="collapse-item"
     >
         <draggable
           class="questiontype-list"
@@ -22,6 +21,7 @@
                 @click="onQuestionType({ type: element.type })"
                 @mouseenter="showPreview(element, 'qtopic' + element.type)"
                 @mouseleave="isShowPreviewImage = false"
+                @mousedown="isShowPreviewImage = false"
               >
                 <i class="iconfont" :class="['icon-' + element.icon]"></i>
                 <p class="text">{{ element.title }}</p>
@@ -78,8 +78,6 @@ const getNewQuestion = ({ type }) => {
 }
 
 const onQuestionType = ({ type }) => {
-  isShowPreviewImage.value = false
-
   const newQuestion = getNewQuestion({ type })  
   store.dispatch('edit/addQuestion', { question: newQuestion, index: newQuestionIndex.value })
   store.commit('edit/setCurrentEditOne', newQuestionIndex.value)

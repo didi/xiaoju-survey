@@ -1,45 +1,42 @@
 <template>
   <div class="question-submit_wrapper">
-    <button class="question-submit-btn" @click="submit">
+    <button class="question-submit-btn" @click="handleSubmit">
       {{ submitConf.submitTitle }}
     </button>
   </div>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
-<script>
-export default {
-  name: 'SubmitSetter',
-  props: {
-    validate: Function,
-    renderData: Array
-  },
-  data() {
-    return {}
-  },
-  computed: {
-    submitConf() {
-      return this.$store.state?.submitConf || {}
-    },
-    skinConf() {
-      return this.$store.state?.skinConf || {}
-    }
-  },
-  methods: {
-    submit(e) {
-      const validate = this.validate
-      if (e) {
-        e.preventDefault()
-        validate((valid) => {
-          if (valid) {
-            this.$emit('submit')
-          }
-        })
+interface Props {
+  validate: (fn: (valid: boolean) => void) => void
+  renderData?: Array<any>
+}
+
+interface Emit {
+  (ev: 'submit'): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
+const store = useStore()
+
+const submitConf = computed(() => store.state?.submitConf || {})
+
+const handleSubmit = (e: Event) => {
+  const validate = props.validate
+  if (e) {
+    e.preventDefault()
+    validate((valid) => {
+      if (valid) {
+        emit('submit')
       }
-    }
+    })
   }
 }
 </script>
-
 <style lang="scss" scoped>
 @import '@/render/styles/variable.scss';
 .question-submit_wrapper {

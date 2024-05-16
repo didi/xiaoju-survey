@@ -9,18 +9,13 @@
     </div>
   </div>
 </template>
-<script>
-import { get as _get } from 'lodash-es'
-export default {
-  name: 'MainTitle',
-  computed: {
-    bannerConf() {
-      return _get(this.$store, 'state.bannerConf', {})
-    }
-  }
-}
-</script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
+const bannerConf = computed(() => store.state?.bannerConf || {})
+</script>
 <style lang="scss" scoped>
 @import '@/render/styles/variable.scss';
 .question-header {

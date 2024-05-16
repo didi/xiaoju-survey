@@ -9,6 +9,8 @@ on:
       - main
       - releases/**
       - feature/**
+  paths:
+    - server/*
   workflow_dispatch:
 
 jobs:

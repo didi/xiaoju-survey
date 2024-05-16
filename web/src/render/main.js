@@ -3,7 +3,6 @@ import App from './App.vue'
 import EventBus from './utils/eventbus'
 
 import store from './store'
-import './styles/reset.scss'
 
 const app = createApp(App)
 

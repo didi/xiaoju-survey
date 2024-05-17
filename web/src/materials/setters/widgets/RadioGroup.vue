@@ -1,5 +1,9 @@
 <template>
-  <el-radio-group v-model="validValue" @change="changeData" :disabled="formConfig.disabled">
+  <el-radio-group
+    v-model="modelValue"
+    @change="handleRadioGroupChange"
+    :disabled="formConfig.disabled"
+  >
     <el-radio v-for="item in options" :key="item.value" :value="item.value" class="customed-radio">
       <el-tooltip v-if="item.tip" class="item right" effect="dark">
         <template #content>
@@ -11,60 +15,47 @@
     </el-radio>
   </el-radio-group>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'RadioGroup',
-  computed: {
-    options() {
-      let options = []
-      if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options
-      }
-      return options.map((item) => {
-        return item
-      })
-    }
-  },
-  data() {
-    let value
-    if (this.formConfig.value === undefined || this.formConfig.value === null) {
-      value = this.formConfig.defaultValue
-    } else {
-      value = this.formConfig.value
-    }
-    return {
-      validValue: value,
-      noMargin: this.formConfig.noMargin,
-      isActive: {}
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object
-    }
-  },
-  watch: {
-    formConfig: {
-      handler(val) {
-        this.validValue =
-          val.value === undefined || val.value === null ? val.defaultValue : val.value
-      },
-      immediate: true,
-      deep: true
-    }
-  },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+interface Props {
+  formConfig: any
 }
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref(props.formConfig.value || props.formConfig.defaultValue)
+const options = computed(
+  () => (Array.isArray(props.formConfig?.options) && props.formConfig?.options) || []
+)
+
+const handleRadioGroupChange = (value: string) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+watch(
+  props.formConfig,
+  (config) => {
+    if (config.value == null || config.value == undefined) {
+      modelValue.value = config.defaultValue
+      return
+    }
+
+    modelValue.value = config.value
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .customed-radio {

@@ -1,10 +1,10 @@
 <template>
   <div class="checkbox-group">
-    <div class="customed-checkbox" v-for="item in this.formConfig.options" :key="item.key">
+    <div class="customed-checkbox" v-for="item in formConfig.options" :key="item.key">
       <el-checkbox
-        v-model="values[item.key]"
+        v-model="optionsValue[item.key]"
         :label="item.label"
-        @change="onChange(item.key, $event)"
+        @change="handleCheckboxChange(item.key, $event)"
       >
       </el-checkbox>
       <el-tooltip v-if="item.tip" class="tooltip" effect="dark" placement="right">
@@ -16,44 +16,43 @@
     </div>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { watch, reactive } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'CheckboxGroup',
-  props: {
-    formConfig: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  data() {
-    return {
-      values: this.formConfig.value
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      immediate: true,
-      deep: true,
-      handler(newVal) {
-        const keys = Object.keys(newVal)
-        for (const key of keys) {
-          if (newVal[key] !== this.values[key]) {
-            this.values[key] = newVal[key]
-          }
-        }
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: boolean }): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  formConfig: {}
+})
+
+const emit = defineEmits<Emit>()
+
+const handleCheckboxChange = (key: string, value: boolean) => {
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+const optionsValue = reactive<any>(props.formConfig?.value)
+
+watch(
+  props.formConfig.value,
+  (val) => {
+    const keys = Object.keys(val)
+
+    for (const key of keys) {
+      if (val[key] !== optionsValue[key]) {
+        optionsValue[key] = val[key]
       }
     }
   },
-  methods: {
-    onChange(key, value) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
-}
+  { immediate: true, deep: true }
+)
 </script>
 <style lang="scss" scoped>
 .customed-checkbox {

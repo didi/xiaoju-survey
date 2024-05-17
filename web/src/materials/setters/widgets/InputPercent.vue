@@ -2,70 +2,44 @@
   <el-input
     class="custom-input"
     :placeholder="formConfig.placeholder"
-    v-model="value"
-    @input="changeData"
-    :min="min"
-    :max="max"
+    v-model="modelValue"
+    @change="handleInputChange"
+    :min="minModelValue"
+    :max="maxModelValue"
     type="number"
   >
     <template #append>%</template>
   </el-input>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'InputPercent',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      value: ''
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      immediate: true,
-      handler(newVal) {
-        let val = parseFloat(newVal)
-        if (val === this.value) {
-          return
-        }
-        this.value = val
-      }
-    }
-  },
-  computed: {
-    max() {
-      let max = parseFloat(this.formConfig.max)
-      if (isNaN(max)) {
-        max = 100
-      }
-      return max
-    },
-    min() {
-      let min = parseFloat(this.formConfig.min)
-      if (isNaN(min)) {
-        min = 0
-      }
-      return min
-    }
-  },
-  methods: {
-    changeData() {
-      const key = this.formConfig.key
-      let value = parseFloat(this.value)
-      value = Math.max(value, this.min)
-      value = Math.min(value, this.max)
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value: `${value}%`
-      })
-    }
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref(parseFloat(props.formConfig.value))
+const maxModelValue = computed(() => parseFloat(props.formConfig.max) || 100)
+const minModelValue = computed(() => parseFloat(props.formConfig.min) || 0)
+
+const handleInputChange = (val: string) => {
+  const key = props.formConfig.key
+  const value = Math.min(Math.max(parseFloat(val), minModelValue.value), maxModelValue.value)
+  let percent = ''
+
+  if (Number.isInteger(value)) {
+    percent = `${value}%`
   }
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value: percent })
 }
 </script>
 <style lang="scss" scoped>

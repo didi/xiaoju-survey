@@ -1,73 +1,81 @@
 <template>
   <div class="range-wrapper">
-    <el-input-number :modelValue="minValue" @change="changeDataMin" :min="0" />
+    <el-input-number
+      :modelValue="minModelValue"
+      @change="handleRangeChange('min', $event)"
+      :min="0"
+    />
     <span class="split-text">至</span>
-    <el-input-number :modelValue="maxValue" @change="changeDataMax" :min="0" />
+    <el-input-number
+      :modelValue="maxModelValue"
+      @change="handleRangeChange('max', $event)"
+      :min="0"
+    />
   </div>
 </template>
-<script>
-import { ElMessage } from 'element-plus'
-import 'element-plus/theme-chalk/src/message.scss'
+<script setup lang="ts">
+import { computed } from 'vue'
 
+import { ElMessage } from 'element-plus'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'RangeSetter',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {}
-  },
-  computed: {
-    minValue() {
-      if (this.formConfig.key === 'textRange') {
-        return parseInt(this.formConfig?.value?.min?.value)
-      } else {
-        return this.formConfig?.value?.min?.value || 1
-      }
-    },
-    maxValue() {
-      if (this.formConfig.key === 'textRange') {
-        return parseInt(this.formConfig?.value?.max?.value)
-      } else {
-        return this.formConfig?.value?.max?.value || 1
-      }
-    }
-  },
-  methods: {
-    changeDataMin(value) {
-      const key = this.formConfig.key
-      if (value > this.formConfig.value.max.value) {
-        ElMessage({
-          type: 'info',
-          message: '最小值大于最大值，请重新输入！'
-        })
-      } else {
-        this.$emit(FORM_CHANGE_EVENT_KEY, {
-          key: key + '.min.value',
-          value
-        })
-      }
-    },
-    changeDataMax(value) {
-      const key = this.formConfig.key
-      if (value < this.formConfig.value.min.value) {
-        ElMessage({
-          type: 'info',
-          message: '最大值小于最小值，请重新输入！'
-        })
-      } else {
-        this.$emit(FORM_CHANGE_EVENT_KEY, {
-          key: key + '.max.value',
-          value
-        })
-      }
-    }
+import 'element-plus/theme-chalk/src/message.scss'
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: number }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const minModelValue = computed(() => {
+  const key = props.formConfig.key
+  const minValue = props.formConfig?.value?.min?.value
+
+  if (key === 'textRange') {
+    return parseInt(minValue)
   }
+
+  return minValue || 1
+})
+
+const maxModelValue = computed(() => {
+  const key = props.formConfig.key
+  const maxValue = props.formConfig?.value?.max?.value
+
+  if (key === 'textRange') {
+    return parseInt(maxValue)
+  }
+
+  return maxValue || 1
+})
+
+const handleRangeChange = (eventType: 'max' | 'min', value: number) => {
+  const key = props.formConfig.key
+  const initMinValue = props.formConfig.value.min.value
+  const initMaxValue = props.formConfig.value.max.value
+
+  if (
+    (eventType === 'max' && value < initMinValue) ||
+    (eventType === 'min' && value > initMaxValue)
+  ) {
+    ElMessage({
+      type: 'info',
+      message:
+        eventType === 'min' ? '最小值大于最大值，请重新输入！' : '最大值小于最小值，请重新输入！'
+    })
+
+    return
+  }
+
+  emit(FORM_CHANGE_EVENT_KEY, {
+    key: `${key}.${eventType}.value`,
+    value
+  })
 }
 </script>
 <style lang="scss" scoped>

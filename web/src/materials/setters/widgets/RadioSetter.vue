@@ -1,18 +1,13 @@
 <template>
   <el-radio-group
-    v-model="validValue"
-    @change="changeData"
+    v-model="modelValue"
+    @change="handleRadioGroupChange"
     class="radio-group"
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
   >
     <el-radio v-for="item in options" :key="item.value" :value="item.value">
-      <el-tooltip
-        v-if="item.tip"
-        class="item right"
-        effect="dark"
-        :placement="setTipPosition(item)"
-      >
+      <el-tooltip v-if="item.tip" class="item right" effect="dark" placement="top">
         <template #content>
           <div v-html="item.tip"></div>
         </template>
@@ -31,66 +26,47 @@
     </el-radio>
   </el-radio-group>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-const tipPosition = {
-  前置限制条件: 'top'
+
+interface Props {
+  formConfig: any
 }
 
-export default {
-  name: 'RadioSetter',
-  computed: {
-    options() {
-      let options = []
-      if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options
-      }
-      return options.map((item) => {
-        return item
-      })
-    }
-  },
-  data() {
-    let value
-    if (this.formConfig.value === undefined || this.formConfig.value === null) {
-      value = this.formConfig.defaultValue
-    } else {
-      value = this.formConfig.value
-    }
-    return {
-      validValue: value,
-      noMargin: this.formConfig.noMargin,
-      isActive: {}
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object
-    }
-  },
-  watch: {
-    formConfig: {
-      handler(val) {
-        this.validValue =
-          val.value === undefined || val.value === null ? val.defaultValue : val.value
-      },
-      immediate: true,
-      deep: true
-    }
-  },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    },
-    setTipPosition(item) {
-      return tipPosition[item.label] || 'right'
-    }
-  }
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
 }
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref(props.formConfig.value || props.formConfig.defaultValue)
+const options = computed(
+  () => (Array.isArray(props.formConfig?.options) && props.formConfig?.options) || []
+)
+
+const handleRadioGroupChange = (value: string) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+watch(
+  props.formConfig,
+  (config) => {
+    if (config.value == null || config.value == undefined) {
+      modelValue.value = config.defaultValue
+      return
+    }
+
+    modelValue.value = config.value
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .star-radio-wrapper {

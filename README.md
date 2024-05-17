@@ -6,6 +6,9 @@
     <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
         <img src="https://img.shields.io/badge/node-%3E=18-green" alt="commit">
     </a>
+    <a href="https://app.codecov.io/github/didi/xiaoju-survey">
+      <img src="https://img.shields.io/codecov/c/github/didi/xiaoju-survey" alt="codecov">
+    </a>
     <a href="https://github.com/didi/xiaoju-survey/issues">
         <img src="https://img.shields.io/github/issues/didi/xiaoju-survey" alt="issues">
     </a>

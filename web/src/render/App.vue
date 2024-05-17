@@ -37,7 +37,6 @@ export default {
   },
   watch: {
     skinConf(value) {
-      console.log(11111111)
       this.setSkin(value)
     }
   },

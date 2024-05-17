@@ -10,7 +10,7 @@ on:
       - releases/**
       - feature/**
     paths:
-      - server/**
+      - web/**
   workflow_dispatch:
 
 jobs:

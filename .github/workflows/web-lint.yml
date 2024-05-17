@@ -31,4 +31,4 @@ jobs:
         run: cd web && npm install
 
       - name: Lint
-        run: npm run lint
+        run: cd web && npm run lint

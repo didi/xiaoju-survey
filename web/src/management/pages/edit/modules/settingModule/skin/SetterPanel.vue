@@ -95,25 +95,4 @@ export default {
     padding: 0 !important;
   }
 }
-.no-select-question {
-  padding-top: 125px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  img {
-    width: 160px;
-    padding: 25px;
-  }
-
-  .tip {
-    font-size: 14px;
-    color: $normal-color;
-    letter-spacing: 0;
-  }
-}
-
-.question-config-form {
-  padding: 30px 20px 50px 20px;
-}
 </style>

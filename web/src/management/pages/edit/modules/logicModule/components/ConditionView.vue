@@ -7,7 +7,7 @@
     >
       <el-select
         class="select field-select"
-        v-model="conditionNode.field"
+        v-model="conditionField"
         placeholder="请选择题目"
         @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
@@ -22,7 +22,7 @@
       :rules="[{ required: true, message: '请选择选项', trigger: 'change' }]"
     >
       <el-select
-        v-model="conditionNode.value"
+        v-model="conditionValue"
         placeholder="请选择选项"
         multiple
         @change="(val: any) => handleChange(conditionNode, 'value', val)"
@@ -101,6 +101,14 @@ const getRelyOptions = computed(() => {
       }
     }) || []
   )
+})
+
+const conditionField = computed(() => {
+  return props.conditionNode.field
+})
+
+const conditionValue = computed(() => {
+  return props.conditionNode.value
 })
 
 const handleChange = (conditionNode: ConditionNode, key: string, value: any) => {

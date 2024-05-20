@@ -16,7 +16,7 @@
 <script setup>
 import { inject, provide, computed, onBeforeMount } from 'vue'
 import QuestionWrapper from './QuestionWrapper.vue'
-import store from '@/render/store'
+
 const $bus = inject('$bus')
 const props = defineProps({
   rules: {

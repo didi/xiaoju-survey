@@ -3,7 +3,7 @@ export const QOP_MAP = {
   COPY: 'copy',
   EDIT: 'edit'
 }
-export const qAbleList = [,
+export const qAbleList = [
   'radio',
   'checkbox',
   'binary-choice',

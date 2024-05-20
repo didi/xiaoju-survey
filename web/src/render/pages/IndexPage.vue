@@ -1,12 +1,12 @@
 <template>
   <div class="index">
-    <progressBar />
+    <ProgressBar />
     <div class="wrapper" ref="box">
       <HeaderSetter></HeaderSetter>
       <div class="content">
         <MainTitle></MainTitle>
         <MainRenderer ref="main"></MainRenderer>
-        <submit :validate="validate" :renderData="renderData" @submit="onSubmit"></submit>
+        <Submit :validate="validate" :renderData="renderData" @submit="onSubmit"></Submit>
         <LogoIcon />
       </div>
     </div>
@@ -16,11 +16,11 @@
 <script>
 import HeaderSetter from '../components/HeaderSetter.vue'
 import MainTitle from '../components/MainTitle.vue'
-import submit from '../components/SubmitSetter.vue'
+import Submit from '../components/SubmitSetter.vue'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
-import progressBar from '../components/ProgressBar.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 import LogoIcon from '../components/LogoIcon.vue'
 
 import { submitForm } from '../api/survey'
@@ -44,9 +44,9 @@ export default {
   components: {
     HeaderSetter,
     MainTitle,
-    submit,
+    Submit,
     MainRenderer,
-    progressBar,
+    ProgressBar,
     LogoIcon
   },
   computed: {
@@ -93,22 +93,10 @@ export default {
     },
     getSubmitData() {
       const formValues = cloneDeep(this.$store.state.formValues)
-      // 填写更多-处理提交数据
-      
-      
-      
-      // 显示逻辑-处理提交数据
-      const formModel = Object.keys(formValues)
-        .filter(key => this.$store.state.ruleEngine.getResult(key, 'question'))
-        .reduce((obj, key) => {
-          obj[key] = formValues[key];
-          return obj;
-        }, {});
-      
 
       const result = {
         surveyPath: this.surveyPath,
-        data: JSON.stringify(formModel),
+        data: JSON.stringify(formValues),
         difTime: Date.now() - this.$store.state.enterTime,
         clientTime: Date.now()
       }

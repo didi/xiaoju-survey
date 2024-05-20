@@ -1,7 +1,6 @@
 import { createStore } from 'vuex'
 import edit from './edit'
 import user from './user'
-import logic from './logic'
 
 import actions from './actions'
 import mutations from './mutations'
@@ -14,7 +13,6 @@ export default createStore({
   actions,
   modules: {
     edit,
-    user,
-    logic
+    user
   }
 })

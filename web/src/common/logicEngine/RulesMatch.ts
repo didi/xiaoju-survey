@@ -1,8 +1,8 @@
 
-import { type BasicOperator, type FieldTypes, type Fact  } from "./BasicType";
+import { Operator, type FieldTypes, type Fact  } from "./BasicType";
 
 // 定义条件规则类
-export class ConditionNode<F extends string, O extends BasicOperator> {
+export class ConditionNode<F extends string, O extends Operator> {
   // 默认显示
   public result: boolean = false;
   constructor(public field: F, public operator: O, public value: FieldTypes) {
@@ -22,7 +22,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
       return this.result
     }
     switch (this.operator) {
-      case 'eq':
+      case Operator.Equal:
         if(this.value instanceof Array) {
           this.result = this.value.every(v => facts[this.field].includes(v))
           return this.result
@@ -30,7 +30,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
           this.result = facts[this.field].includes(this.value);
           return this.result
         }
-      case 'in':
+      case Operator.Include:
         if(this.value instanceof Array) {
           this.result = this.value.some(v => facts[this.field].includes(v))
           return this.result
@@ -38,7 +38,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
           this.result = facts[this.field].includes(this.value);
           return this.result
         }
-      case 'nin':
+      case Operator.NotInclude:
         if(this.value instanceof Array) {
           this.result = this.value.some(v => !facts[this.field].includes(v))
           return this.result
@@ -46,7 +46,7 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
           this.result = facts[this.field].includes(this.value);
           return this.result
         }
-      case 'neq':
+      case Operator.NotEqual:
         if(this.value instanceof Array) {
           this.result = this.value.every(v => !facts[this.field].includes(v))
           return this.result
@@ -67,13 +67,13 @@ export class ConditionNode<F extends string, O extends BasicOperator> {
 }
 
 export class RuleNode {
-  conditions: Map<string, ConditionNode<string, BasicOperator>>; // 使用哈希表存储条件规则对象
+  conditions: Map<string, ConditionNode<string, Operator>>; // 使用哈希表存储条件规则对象
   public result: boolean = false;
   constructor(public target: string, public scope: string) {
     this.conditions = new Map();
   }
   // 添加条件规则到规则引擎中
-  addCondition(condition: ConditionNode<string, BasicOperator>) {
+  addCondition(condition: ConditionNode<string, Operator>) {
     const hash = condition.calculateHash();
     this.conditions.set(hash, condition);
   }
@@ -118,8 +118,16 @@ export class RuleNode {
 
 export class RuleMatch {
   rules: Map<string, RuleNode>;
-  constructor(ruleConf: any) {
+  static instance: any;
+  constructor() {
     this.rules = new Map();
+    if (!RuleMatch.instance) {
+      RuleMatch.instance = this;
+    }
+    
+    return RuleMatch.instance;
+  }
+  fromJson(ruleConf:any) {
     if(ruleConf instanceof Array) {
       ruleConf.forEach((rule: any) => {
         const ruleNode = new RuleNode(rule.target, rule.scope);
@@ -130,7 +138,6 @@ export class RuleMatch {
         this.addRule(ruleNode)
       })
     }
-    
   }
 
   // 添加条件规则到规则引擎中
@@ -138,7 +145,7 @@ export class RuleMatch {
     const hash = rule.calculateHash();
     if (this.rules.has(hash)) {
       const existRule: any = this.rules.get(hash);
-      existRule.conditions.forEach((item: ConditionNode<string, BasicOperator>) => {
+      existRule.conditions.forEach((item: ConditionNode<string, Operator>) => {
         rule.addCondition(item)
       })
     }

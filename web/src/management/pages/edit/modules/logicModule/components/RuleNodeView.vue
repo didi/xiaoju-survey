@@ -7,14 +7,14 @@
       :inline="true"
       :model="ruleNode"
     >
-      <conditionView
+      <ConditionView
         v-for="(conditionNode, index) in ruleNode.conditions"
         :key="conditionNode.id"
         :index="index"
         :ruleNode="ruleNode"
         :conditionNode="conditionNode"
         @delete="handleDeleteCondition"
-      ></conditionView>
+      ></ConditionView>
       <div class="target-wrapper">
         <div class="line">
           <span class="desc">则显示</span>
@@ -46,18 +46,14 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, shallowRef, inject, type ComputedRef } from 'vue'
-import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'
-
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
-
 import { RuleNode } from '@/common/logicEngine/RuleBuild'
 import { cleanRichText } from '@/common/xss'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
+import ConditionView from './ConditionView.vue'
 
-import conditionView from './ConditionView.vue'
-
-const store = useStore()
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 
 const props = defineProps({
@@ -107,7 +103,7 @@ const targetQuestionList = computed(() => {
     return {
       label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
       value: item.field,
-      disabled: store.state.logic.showLogicEngine
+      disabled: showLogicEngine.value
         .findTargetsByScope('question')
         .includes(item.field)
     }

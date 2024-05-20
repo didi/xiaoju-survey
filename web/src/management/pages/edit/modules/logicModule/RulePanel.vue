@@ -20,25 +20,22 @@
 </template>
 <script setup lang="ts">
 import { shallowRef, computed } from 'vue'
-import { useStore } from 'vuex'
+import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import RuleNodeView from './components/RuleNodeView.vue'
 
-import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
-
-const store = useStore()
-
 const list = computed(() => {
-  return store.state.logic.showLogicEngine?.rules || []
+  return showLogicEngine.value?.rules || []
 })
 
 const handleAdd = () => {
   const condition = new ConditionNode()
   const ruleNode = new RuleNode()
   ruleNode.addCondition(condition)
-  store.state.logic.showLogicEngine.addRule(ruleNode)
+  showLogicEngine.value.addRule(ruleNode)
 }
 const handleDetele = (id: string) => {
-  store.state.logic.showLogicEngine.removeRule(id)
+  showLogicEngine.value.removeRule(id)
 }
 
 const ruleWrappers = shallowRef([])

@@ -8,13 +8,12 @@ WORKDIR /xiaoju-survey
 COPY . /xiaoju-survey
 
 # 安装nginx
-RUN apt-get update && \
-    apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx
 
 RUN npm config set registry https://registry.npmjs.org/
 
 # 安装项目依赖
-RUN cd /xiaoju-survey/web && npm install && npm run build
+RUN cd /xiaoju-survey/web && npm install && npm run build-only
 
 # 覆盖nginx配置文件
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf

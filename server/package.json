@@ -5,7 +5,7 @@
   "author": "",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/__test/*.ts\"",
     "local": "ts-node ./scripts/run-local.ts",
     "start": "nest start",
     "dev": "npm run start:dev",

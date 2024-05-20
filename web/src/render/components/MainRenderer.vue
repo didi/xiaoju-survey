@@ -5,7 +5,7 @@
         ref="formGroup"
         :render-data="item"
         :rules="rules"
-        :formModel="formModel"
+        :formValues="formValues"
         @formChange="handleChangeData"
       />
     </template>
@@ -21,7 +21,7 @@ const store = useStore()
 
 const renderData = computed(() => store.getters?.renderData)
 const rules = computed(() => store.state.rules)
-const formModel = computed(() => store.getters.formModel)
+const formValues = computed(() => store.state.formValues)
 
 const handleChangeData = (data: any) => {
   store.dispatch('changeData', data)

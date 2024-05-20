@@ -20,8 +20,8 @@ export default {
   },
   changeFormData(state, data) {
     let { key, value } = data
+    // console.log('formValues', key, value)
     set(state, `formValues.${key}`, value)
-    // set(state, `questionData.${key}.value`, value)
   },
   changeSelectMoreData(state, data) {
     const { key, value, field } = data
@@ -36,10 +36,21 @@ export default {
   setVoteMap(state, data) {
     state.voteMap = data
   },
+  updateVoteMapByKey(state, data) {
+    const { questionKey, voteKey, voteValue } = data
+    // 兼容为空的情况
+    if(!state.voteMap[questionKey]){
+      state.voteMap[questionKey] = {}
+    }
+    state.voteMap[questionKey][voteKey] = voteValue
+  },
   setQuestionSeq(state, data) {
     state.questionSeq = data
   },
   setEncryptInfo(state, data) {
     state.encryptInfo = data
-  }
+  },
+  setRuleEgine(state, ruleEngine) {
+    state.ruleEngine = ruleEngine
+  },
 }

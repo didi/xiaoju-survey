@@ -80,7 +80,7 @@ export class RuleNode {
 
   // 匹配条件规则
   match(fact: Fact) {
-    const res =  Array.from(this.conditions.entries()).every(([key, value]) => {
+    const res =  Array.from(this.conditions.entries()).every(([, value]) => {
       const res = value.match(fact)
       if (res) {
         return true;
@@ -92,7 +92,7 @@ export class RuleNode {
     return res
   }
   getResult() {
-    const res = Array.from(this.conditions.entries()).every(([key, value]) => {
+    const res = Array.from(this.conditions.entries()).every(([, value]) => {
       const res = value.getResult()
       return res
     })
@@ -186,15 +186,15 @@ export class RuleMatch {
     return target + scope;
   }
   findTargetsByField(field: string) {
-    const rules = new Map([...this.rules.entries()].filter(([key, value]) => {
-      return [...value.conditions.entries()].filter(([key, value]) => {
+    const rules = new Map([...this.rules.entries()].filter(([, value]) => {
+      return [...value.conditions.entries()].filter(([, value]) => {
         return value.field === field
       })
     }))
     return [...rules.values()].map(obj => obj.target);
   }
   toJson() {
-    return Array.from(this.rules.entries()).map(([key, value]) => {
+    return Array.from(this.rules.entries()).map(([, value]) => {
       return value.toJson()
     })
   }

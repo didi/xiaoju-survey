@@ -10,7 +10,7 @@ export default {
     }
     dispatch('resetState')
   },
-  async getSchemaFromRemote({ commit, state, dispatch }) {
+  async getSchemaFromRemote({ commit, state }) {
     const res = await getSurveyById(state.surveyId)
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes

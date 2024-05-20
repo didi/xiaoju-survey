@@ -67,13 +67,7 @@ export default {
     },
     updateLogicConf() {
       if(showLogicEngine.value) {
-        try {
-          showLogicEngine.value.validateSchema()
-          
-        } catch (error) {
-          throw error
-          return 
-        }
+        showLogicEngine.value.validateSchema()
         const showLogicConf = showLogicEngine.value.toJson()
         // 更新逻辑配置
         this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })

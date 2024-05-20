@@ -24,7 +24,7 @@
           >
             <el-select
               class="select field-select"
-              v-model="ruleNode.target"
+              v-model="ruleTarget"
               placeholder="请选择"
               @change="(val: any) => handleChange(ruleNode, 'target', val)"
             >
@@ -63,7 +63,9 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['delete'])
-
+const ruleTarget = computed(() => {
+  return props.ruleNode.target
+})
 const handleChange = (ruleNode: any, key: any, value: any) => {
   switch (key) {
     case 'target':

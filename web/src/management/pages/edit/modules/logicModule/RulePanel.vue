@@ -1,7 +1,7 @@
 <template>
   <div class="rule-list">
     <RuleNodeView
-      v-for="(item, index) in list"
+      v-for="(item) in list"
       ref="ruleWrappers"
       :key="item.id"
       :ruleNode="item"

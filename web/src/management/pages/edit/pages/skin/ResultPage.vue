@@ -1,5 +1,5 @@
 <template>
-  <commonTemplate>
+  <CommonTemplate>
     <template #left>
       <ResultCatalog />
     </template>
@@ -9,11 +9,11 @@
     <template #right>
       <ResultSetter />
     </template>
-  </commonTemplate>
+  </CommonTemplate>
 </template>
 
 <script>
-import commonTemplate from '../../components/CommonTemplate.vue'
+import CommonTemplate from '../../components/CommonTemplate.vue'
 import ResultCatalog from '../../modules/settingModule/result/CatalogPanel.vue'
 import ResultPreview from '../../modules/settingModule/result/PreviewPanel.vue'
 import ResultSetter from '../../modules/settingModule/result/SetterPanel.vue'
@@ -21,7 +21,7 @@ import ResultSetter from '../../modules/settingModule/result/SetterPanel.vue'
 export default {
   name: 'ResultPage',
   components: {
-    commonTemplate,
+    CommonTemplate,
     ResultCatalog,
     ResultPreview,
     ResultSetter

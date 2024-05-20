@@ -1,11 +1,11 @@
 <template>
   <div class="logic-wrapper">
-    <RuleListView></RuleListView>
+    <RulePanel></RulePanel>
   </div>
 </template>
 <script setup lang="ts">
 import { computed, provide } from 'vue'
-import RuleListView from '../../modules/logicModule/RulePanel.vue'
+import RulePanel from '../../modules/logicModule/RulePanel.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'

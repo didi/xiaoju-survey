@@ -23,6 +23,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
 export default {
   components: {},
@@ -89,14 +90,14 @@ export default {
       }
     },
     updateLogicConf() {
-      if(this.$store.state.logic.showLogicEngine) {
+      if(showLogicEngine.value) {
         try {
-          this.$store.state.logic.showLogicEngine.validateSchema()
+          showLogicEngine.value.validateSchema()
         } catch (error) {
           throw error
           return 
         }
-        const showLogicConf = this.$store.state.logic.showLogicEngine.toJson()
+        const showLogicConf = showLogicEngine.value.toJson()
         // 更新逻辑配置
         this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
       }

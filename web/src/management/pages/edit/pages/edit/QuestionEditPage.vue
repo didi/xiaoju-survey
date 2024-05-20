@@ -1,28 +1,28 @@
 <template>
-  <commonTemplate>
+  <CommonTemplate>
     <template #left>
-      <catalogPanel  />
+      <CatalogPanel  />
     </template>
     <template #center>
-      <previewPanel />
+      <PreviewPanel />
     </template>
     <template #right>
-      <setterPanel />
+      <SetterPanel />
     </template>
-  </commonTemplate>
+  </CommonTemplate>
 </template>
 <script>
-import commonTemplate from '../../components/CommonTemplate.vue';
-import catalogPanel from '../../modules/questionModule/CatalogPanel.vue';
-import previewPanel from '../../modules/questionModule/PreviewPanel.vue';
-import setterPanel from '../../modules/questionModule/SetterPanel.vue';
+import CommonTemplate from '../../components/CommonTemplate.vue';
+import CatalogPanel from '../../modules/questionModule/CatalogPanel.vue';
+import PreviewPanel from '../../modules/questionModule/PreviewPanel.vue';
+import SetterPanel from '../../modules/questionModule/SetterPanel.vue';
 export default {
-  name: 'editInde1111x',
+  name: 'editIndex',
   components: {
-    commonTemplate,
-    catalogPanel,
-    previewPanel,
-    setterPanel,
+    CommonTemplate,
+    CatalogPanel,
+    PreviewPanel,
+    SetterPanel,
   },
 };
 </script>

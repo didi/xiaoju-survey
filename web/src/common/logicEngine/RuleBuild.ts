@@ -1,26 +1,26 @@
 import { nanoid } from 'nanoid';
 import * as yup from 'yup'
-import { type BasicOperator, type FieldTypes } from './BasicType'
+import { type FieldTypes, PrefixID, Operator, Scope } from './BasicType'
 
-export function generateID(prefix = 'r') {
+export function generateID(prefix = PrefixID.Rule) {
   return `${prefix}-${nanoid(5)}`
 }
 // 定义条件规则类
 export class ConditionNode {
   id: string = '';
   public field: string = '';
-  public operator: BasicOperator = 'in'; 
+  public operator: Operator = Operator.Include; 
   public value: FieldTypes = []
-  constructor(field: string = '', operator: BasicOperator = 'in', value: FieldTypes = []) {
+  constructor(field: string = '', operator: Operator = Operator.Include, value: FieldTypes = []) {
     this.field = field;
     this.operator = operator;
     this.value = value;
-    this.id = generateID('c')
+    this.id = generateID(PrefixID.Condition)
   }
   setField(field: string) {
     this.field = field;
   }
-  setOperator(operator: BasicOperator) {
+  setOperator(operator: Operator) {
     this.operator = operator;
   }
   setValue(value: FieldTypes) {
@@ -31,10 +31,10 @@ export class ConditionNode {
 export class RuleNode {
   id: string = '';
   conditions: ConditionNode[] = []
-  scope: string = 'question'
+  scope: string = Scope.Question
   target: string = ''
-  constructor(scope:string = 'question', target: string = '') {
-    this.id = generateID('r')
+  constructor(scope:string = Scope.Question, target: string = '') {
+    this.id = generateID(PrefixID.Rule)
     this.scope = scope
     this.target = target
   }
@@ -54,8 +54,14 @@ export class RuleNode {
 
 export class RuleBuild {
   rules: RuleNode[] = [];
+  static instance: RuleBuild;
   constructor() {
     this.rules = [];
+    if (!RuleBuild.instance) {
+      RuleBuild.instance = this;
+    }
+    
+    return RuleBuild.instance;
   }
 
   // 添加条件规则到规则引擎中

@@ -1,5 +1,5 @@
 export const type = {
-  normal: '调查问卷',
+  normal: '基础调查',
   vote: '投票评选',
   nps: 'NPS评分',
   register: '在线报名'

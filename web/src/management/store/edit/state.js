@@ -52,6 +52,9 @@ export default {
       },
       link: ''
     },
-    questionDataList: []
+    questionDataList: [],
+    logicConf: {
+      showLogicConf: []
+    }
   }
 }

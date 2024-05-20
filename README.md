@@ -201,4 +201,4 @@ npm run serve
 关注重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 
 ## 分享
-跟大家晒一晒你的分享：[文章](https://github.com/didi/xiaoju-survey/issues)
+跟大家晒一晒你的分享：[文章](https://github.com/didi/xiaoju-survey/issues/85)

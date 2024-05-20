@@ -5,21 +5,15 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'LogoIcon',
-  computed: {
-    logoImage() {
-      return this.$store.state?.bottomConf?.logoImage
-    },
-    logoImageWidth() {
-      return this.$store.state?.bottomConf?.logoImageWidth
-    },
-    isMobile() {
-      return this.$store.state?.isMobile
-    }
-  }
-}
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+const logoImage = computed(() => store.state?.bottomConf?.logoImage)
+const logoImageWidth = computed(() => store.state?.bottomConf?.logoImageWidth)
+const isMobile = computed(() => store.state?.isMobile)
 </script>
 <style lang="scss" scoped>
 .container {

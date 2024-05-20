@@ -1,8 +1,9 @@
 <template>
   <draggable
-    :list="renderData"
+    v-model="renderData"
     handle=".question-wrapper.isSelected"
     filter=".question-wrapper.isSelected .question.isSelected"
+    :group="DND_GROUP"
     :onEnd="checkEnd"
     :move="checkMove"
     itemKey="field"
@@ -34,10 +35,12 @@
 
 <script>
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
+import { useStore } from 'vuex'
 import QuestionContainerB from '@/materials/questions/QuestionContainerB'
 import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
 import { filterQuestionPreviewData } from '@/management/utils/index'
+import { DND_GROUP } from '@/management/config/dnd'
 
 export default defineComponent({
   components: {
@@ -58,8 +61,15 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const renderData = computed(() => {
-      return filterQuestionPreviewData(props.questionDataList)
+    const store = useStore()
+    
+    const renderData = computed({
+      get () {
+        return filterQuestionPreviewData(props.questionDataList)
+      },
+      set (questionDataList) {
+        store.commit('edit/setQuestionDataList', questionDataList)
+      }
     })
     const handleSelect = (index) => {
       emit('select', index)
@@ -89,6 +99,7 @@ export default defineComponent({
     }
 
     return {
+      DND_GROUP,
       renderData,
       handleSelect,
       handleChangeSeq,

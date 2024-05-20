@@ -61,5 +61,8 @@ export default {
     Object.keys(presets).forEach((key) => {
       _set(state.schema, key, presets[key])
     })
+  },
+  setQuestionDataList(state, data) {
+    state.schema.questionDataList = data
   }
 }

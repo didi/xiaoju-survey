@@ -1,19 +1,21 @@
 <template>
   <div class="index">
-    <ProgressBar />
-    <div class="wrapper" ref="box">
+    <progressBar />
+    <div class="wrapper" ref="boxRef">
       <HeaderSetter></HeaderSetter>
       <div class="content">
         <MainTitle></MainTitle>
-        <MainRenderer ref="main"></MainRenderer>
-        <Submit :validate="validate" :renderData="renderData" @submit="onSubmit"></Submit>
+        <MainRenderer ref="mainRef"></MainRenderer>
+        <submit :validate="validate" :renderData="renderData" @submit="handleSubmit"></submit>
         <LogoIcon />
       </div>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
-<script>
 import HeaderSetter from '../components/HeaderSetter.vue'
 import MainTitle from '../components/MainTitle.vue'
 import Submit from '../components/SubmitSetter.vue'
@@ -27,117 +29,102 @@ import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
 import useCommandComponent from '../hooks/useCommandComponent'
-import { cloneDeep } from 'lodash-es'
 
-export default {
-  name: 'indexPage',
-  props: {
-    questionInfo: {
-      type: Object,
-      default: () => ({})
-    },
-    isMobile: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {
-    HeaderSetter,
-    MainTitle,
-    Submit,
-    MainRenderer,
-    ProgressBar,
-    LogoIcon
-  },
-  computed: {
-    confirmAgain() {
-      return this.$store.state.submitConf.confirmAgain
-    },
-    surveyPath() {
-      return this.$store.state.surveyPath
-    },
-    renderData() {
-      return this.$store.getters.renderData
-    },
-    encryptInfo() {
-      return this.$store.state.encryptInfo
-    }
-  },
-  created() {
-    this.alert = useCommandComponent(AlertDialog)
-    this.confirm = useCommandComponent(ConfirmDialog)
-  },
-  methods: {
-    validate(cbk) {
-      const index = 0
-      this.$refs.main.$refs.formGroup[index].validate(cbk)
-    },
-    onSubmit() {
-      const { again_text, is_again } = this.confirmAgain
-      if (is_again) {
-        this.confirm({
-          title: again_text,
-          onConfirm: async () => {
-            try {
-              await this.submitForm()
-            } catch (error) {
-              console.error(error)
-            } finally {
-              this.confirm.close()
-            }
-          }
-        })
-      } else {
-        this.submitForm()
-      }
-    },
-    getSubmitData() {
-      const formValues = cloneDeep(this.$store.state.formValues)
+interface Props {
+  questionInfo?: any
+  isMobile?: boolean
+}
 
-      const result = {
-        surveyPath: this.surveyPath,
-        data: JSON.stringify(formValues),
-        difTime: Date.now() - this.$store.state.enterTime,
-        clientTime: Date.now()
-      }
-      if (this.encryptInfo?.encryptType) {
-        result.encryptType = this.encryptInfo?.encryptType
-        result.data = encrypt[result.encryptType]({
-          data: result.data,
-          secretKey: this.encryptInfo?.data?.secretKey
-        })
-        if (this.encryptInfo?.data?.sessionId) {
-          result.sessionId = this.encryptInfo.data.sessionId
+withDefaults(defineProps<Props>(), {
+  questionInfo: {},
+  isMobile: false
+})
+
+const mainRef = ref<any>()
+const boxRef = ref<HTMLElement>()
+
+const alert = useCommandComponent(AlertDialog)
+const confirm = useCommandComponent(ConfirmDialog)
+
+const store = useStore()
+
+const renderData = computed(() => store.getters.renderData)
+
+const validate = (cbk: (v: boolean) => void) => {
+  const index = 0
+  mainRef.value.$refs.formGroup[index].validate(cbk)
+}
+
+const normalizationRequestBody = () => {
+  const enterTime = store.state.enterTime
+  const encryptInfo = store.state.encryptInfo
+  const formModel = store.getters.formModel
+  const surveyPath = store.state.surveyPath
+
+  const result: any = {
+    surveyPath,
+    data: JSON.stringify(formModel),
+    difTime: Date.now() - enterTime,
+    clientTime: Date.now()
+  }
+
+  if (encryptInfo?.encryptType) {
+    result.encryptType = encryptInfo?.encryptType
+    result.data = encrypt[result.encryptType as 'rsa']({
+      data: result.data,
+      secretKey: encryptInfo?.data?.secretKey
+    })
+    if (encryptInfo?.data?.sessionId) {
+      result.sessionId = encryptInfo.data.sessionId
+    }
+  } else {
+    result.data = JSON.stringify(result.data)
+  }
+
+  return result
+}
+
+const submitSurver = async () => {
+  try {
+    const params = normalizationRequestBody()
+    console.log(params)
+    const res: any = await submitForm(params)
+    if (res.code === 200) {
+      store.commit('setRouter', 'successPage')
+    } else {
+      alert({
+        title: res.errmsg || '提交失败'
+      })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const handleSubmit = () => {
+  const confirmAgain = store.state.submitConf.confirmAgain
+  const { again_text, is_again } = confirmAgain
+
+  if (is_again) {
+    confirm({
+      title: again_text,
+      onConfirm: async () => {
+        try {
+          submitSurver()
+        } catch (error) {
+          console.log(error)
+        } finally {
+          confirm.close()
         }
-      } else {
-        result.data = JSON.stringify(result.data)
       }
-
-      return result
-    },
-    async submitForm() {
-      try {
-        const submitData = this.getSubmitData()
-        
-        const res = await submitForm(submitData)
-        if (res.code === 200) {
-          this.$store.commit('setRouter', 'successPage')
-        } else {
-          this.alert({
-            title: res.errmsg || '提交失败'
-          })
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    })
+  } else {
+    submitSurver()
   }
 }
 </script>
-
 <style scoped lang="scss">
 .index {
-  // padding-bottom: 0.8rem;
   min-height: 100%;
   .wrapper {
     min-height: 100%;

@@ -118,6 +118,10 @@ const onDelete = async () => {
       type: 'warning'
     })
 
+    if (props.isSelected && props.isLast) {
+      emit('select', null)
+    }
+
     const index = props.qIndex
     emit('changeSeq', { type: 'delete', index })
     isHover.value = false

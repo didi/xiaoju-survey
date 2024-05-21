@@ -1,24 +1,23 @@
 <template>
-  <form ref="ruleForm" :model="formModel" :rules="rules">
-    <questionWrapper
-      v-for="item in renderData"
-      :key="item.field"
-      class="gap"
-      v-bind="$attrs"
-      :moduleConfig="item"
-      :qIndex="item.qIndex"
-      :indexNumber="item.indexNumber"
-      :showTitle="true"
-      @change="handleChange"
-    ></questionWrapper>
+  <form ref="ruleForm" :model="formValues" :rules="rules">
+    <div v-for="(item) in renderData" :key="item.field">
+      <QuestionWrapper
+        class="gap"
+        v-bind="$attrs"
+        :moduleConfig="item"
+        :qIndex="item.qIndex"
+        :indexNumber="item.indexNumber"
+        :showTitle="true"
+        @change="handleChange"
+      ></QuestionWrapper>
+    </div>
   </form>
 </template>
 <script setup>
 import { inject, provide, computed, onBeforeMount } from 'vue'
-import questionWrapper from '../../materials/questions/QuestionRuleContainer'
+import QuestionWrapper from './QuestionWrapper.vue'
 
 const $bus = inject('$bus')
-
 const props = defineProps({
   rules: {
     type: Object,
@@ -26,7 +25,7 @@ const props = defineProps({
       return {}
     }
   },
-  formModel: {
+  formValues: {
     type: Object,
     default: () => {
       return {}
@@ -39,6 +38,7 @@ const props = defineProps({
     }
   }
 })
+
 const emit = defineEmits(['formChange', 'blur'])
 
 // 这里不能直接使用change事件，否则父元素监听change的事件，会被绑定到里面的input上
@@ -50,7 +50,7 @@ const handleChange = (data) => {
 const fields = []
 provide('Form', {
   model: computed(() => {
-    return props.formModel
+    return props.formValues
   }),
   rules: computed(() => {
     return props.rules
@@ -71,6 +71,13 @@ onBeforeMount(() => {
     }
   })
 })
+// const visible = computed(() => {
+//   return (field) => {
+//     console.log(field + '重新计算visible：'+store.state.ruleEngine.getResult(field, 'question'))
+//   // 显示逻辑-处理视图
+//     return store.state.ruleEngine.getResult(field, 'question')
+//   }
+// })
 
 const validate = (callback) => {
   const length = fields.length

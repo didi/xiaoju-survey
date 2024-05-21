@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import SettingPanel from '../modules/settingModule/SettingPanel.vue'
+import SettingPanel from '../../modules/settingModule/SettingPanel.vue'
 export default {
   name: 'SettingPage',
   components: {

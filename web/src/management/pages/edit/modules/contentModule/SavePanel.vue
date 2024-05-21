@@ -23,6 +23,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
 export default {
   components: {},
@@ -88,6 +89,14 @@ export default {
         }, 2000)
       }
     },
+    updateLogicConf() {
+      if(showLogicEngine.value) {
+        showLogicEngine.value.validateSchema()
+        const showLogicConf = showLogicEngine.value.toJson()
+        // 更新逻辑配置
+        this.$store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+      }
+    },
     async saveData() {
       const saveData = buildData(this.$store.state.edit.schema)
       if (!saveData.surveyId) {
@@ -102,6 +111,14 @@ export default {
         return
       }
       this.isShowAutoSave = false
+      try {
+        this.updateLogicConf()
+      } catch (error) {
+        // console.error(error)
+        ElMessage.error('请检查逻辑配置是否有误')
+        return
+      }
+      
       try {
         this.isSaving = true
         const res = await this.saveData()

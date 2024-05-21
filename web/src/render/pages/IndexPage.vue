@@ -1,12 +1,12 @@
 <template>
   <div class="index">
-    <progressBar />
+    <ProgressBar />
     <div class="wrapper" ref="boxRef">
       <HeaderSetter></HeaderSetter>
       <div class="content">
         <MainTitle></MainTitle>
         <MainRenderer ref="mainRef"></MainRenderer>
-        <submit :validate="validate" :renderData="renderData" @submit="handleSubmit"></submit>
+        <Submit :validate="validate" :renderData="renderData" @submit="handleSubmit"></Submit>
         <LogoIcon />
       </div>
     </div>
@@ -18,11 +18,11 @@ import { useStore } from 'vuex'
 
 import HeaderSetter from '../components/HeaderSetter.vue'
 import MainTitle from '../components/MainTitle.vue'
-import submit from '../components/SubmitSetter.vue'
+import Submit from '../components/SubmitSetter.vue'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
-import progressBar from '../components/ProgressBar.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 import LogoIcon from '../components/LogoIcon.vue'
 
 import { submitForm } from '../api/survey'
@@ -58,12 +58,12 @@ const validate = (cbk: (v: boolean) => void) => {
 const normalizationRequestBody = () => {
   const enterTime = store.state.enterTime
   const encryptInfo = store.state.encryptInfo
-  const formModel = store.getters.formModel
+  const formValues = store.state.formValues
   const surveyPath = store.state.surveyPath
 
   const result: any = {
     surveyPath,
-    data: JSON.stringify(formModel),
+    data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
   }

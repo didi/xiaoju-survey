@@ -32,3 +32,6 @@ jobs:
 
       - name: Lint
         run: cd web && npm run lint
+
+      - name: Format
+        run: cd web && npm run format

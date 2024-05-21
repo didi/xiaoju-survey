@@ -1,44 +1,33 @@
 <template>
   <RichEditor
     :modelValue="formConfig.value"
-    @change="onChange"
+    @change="handleEditorValueChange('change', $event)"
     :staticToolBar="true"
-    @input="onInput"
+    @input="handleEditorValueChange('input', $event)"
   />
 </template>
 
-<script>
-import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+<script setup lang="ts">
 import RichEditor from '@/common/Editor/RichEditor.vue'
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'RichText',
-  components: {
-    RichEditor
-  },
-  props: {
-    formConfig: {
-      type: Object,
-      default: () => ({})
-    }
-  }, // value 用于自定义 v-model
+interface Props {
+  formConfig: any
+}
 
-  methods: {
-    onChange(newHtml) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key: this.formConfig.key,
-        value: newHtml
-      })
-      this.$emit('change', newHtml)
-    },
-    onInput(newHtml) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key: this.formConfig.key,
-        value: newHtml
-      })
-      this.$emit('input', newHtml)
-    }
-  }
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+  (ev: 'change' | 'input', value: string): void
+}
+
+const emit = defineEmits<Emit>()
+const props = withDefaults(defineProps<Props>(), { formConfig: {} })
+
+const handleEditorValueChange = (eventType: 'change' | 'input', value: string) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+  emit(eventType, value)
 }
 </script>
 <style lang="scss" scoped>

@@ -1,54 +1,48 @@
 <template>
-  <el-input :placeholder="formConfig.placeholder" v-model="inputData" @blur="changeData"></el-input>
+  <el-input
+    :placeholder="formConfig.placeholder"
+    v-model="modelValue"
+    @blur="handleInputBlur"
+  ></el-input>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, watch, computed } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'InputSetter',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      inputData: this.formConfig.value || ''
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      handler(newVal) {
-        if (newVal === this.inputData) {
-          return
-        }
-        this.inputData = newVal
-      }
-    }
-  },
-  methods: {
-    saveData(val) {
-      this.inputData = val
-    },
-    changeData: function () {
-      let key = this.formConfig.key
-      if (this.formConfig.validate) {
-        const validateResult = this.formConfig.validate(this.inputData)
-        if (!validateResult) {
-          return false
-        }
-      }
-      const preValue = this.formConfig.value || ''
-      if (this.inputData === preValue) {
-        return false
-      }
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value: this.inputData
-      })
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref(props.formConfig.value || '')
+const lazyValue = computed(() => props.formConfig.value)
+
+const handleInputBlur = () => {
+  const { key, validate, value } = props.formConfig
+  const preValue = value || ''
+
+  if (validate && typeof validate == 'function') {
+    const validateResult: boolean = validate(modelValue.value)
+
+    if (!validateResult) {
+      return
     }
   }
+
+  if (preValue !== modelValue.value) {
+    emit(FORM_CHANGE_EVENT_KEY, { key, value: modelValue.value })
+  }
 }
+
+watch(lazyValue, (value) => {
+  if (value !== modelValue.value) {
+    modelValue.value = value
+  }
+})
 </script>
-<style lang="scss" scoped></style>

@@ -2,40 +2,36 @@
   <el-form-item class="slider-wrap">
     <el-slider
       :modelValue="formConfig.value"
-      @input="changeData"
+      @input="handleSliderChange"
       :format-tooltip="formatTooltip"
     ></el-slider>
-    <!-- <span>{{ formConfig.value + '%'  }}</span> -->
   </el-form-item>
 </template>
-<script>
+<script setup lang="ts">
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'SliderSetter',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    formatTooltip(val) {
-      return val + '%'
-    },
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: number }): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
+const formatTooltip = (val: string) => val + '%'
+
+const handleSliderChange = (value: number) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 </script>
 <style>
 .slider-wrap {
   flex: 1;
-  /* display: flex; */
   padding: 0 20px;
 }
 </style>

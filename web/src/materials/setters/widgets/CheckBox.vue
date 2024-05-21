@@ -1,92 +1,78 @@
 <template>
   <el-checkbox
-    v-model="validValue"
-    @change="changeData"
+    v-model="modelValue"
+    @change="handleCheckboxChange"
     :disabled="checkBoxDis"
     :class="{ inline: !!formConfig?.inline }"
   >
   </el-checkbox>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'CheckBox',
-  data() {
-    return {
-      validValue: this.formConfig.value
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    },
-    moduleConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    checkBoxDis() {
-      return (
-        this.formConfig.key === 'randomSort' &&
-        this.moduleConfig?.optionOrigin?.length > 0 &&
-        this.moduleConfig?.extraOptions &&
-        this.moduleConfig?.extraOptions.length === 0
-      )
-    },
-    optionOrigin() {
-      return this.moduleConfig.optionOrigin
-    },
-    extraOptionsLength() {
-      return this.moduleConfig?.extraOptions?.length || []
-    }
-  },
-  watch: {
-    optionOrigin(newVal) {
-      if (
-        this.formConfig.key === 'randomSort' &&
-        newVal &&
-        this.moduleConfig?.extraOptions.length === 0
-      ) {
-        this.$emit(FORM_CHANGE_EVENT_KEY, {
-          key: 'randomSort',
-          value: false
-        })
-        this.validValue = false
-      }
-    },
-    extraOptionsLength(newVal) {
-      if (this.formConfig.key === 'randomSort' && this.moduleConfig?.optionOrigin && newVal === 0) {
-        this.$emit(FORM_CHANGE_EVENT_KEY, {
-          key: 'randomSort',
-          value: false
-        })
-        this.validValue = false
-      }
-    },
-    'formConfig.value': {
-      immediate: true,
-      handler(newVal) {
-        if (newVal === this.validValue) {
-          return
-        }
-        this.validValue = !!newVal
-      }
-    }
-  },
 
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+interface Props {
+  formConfig: any
+  moduleConfig: any
 }
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: boolean }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref(props.formConfig.value)
+const checkBoxDis = computed(
+  () =>
+    props.formConfig.key === 'randomSort' &&
+    props.moduleConfig?.optionOrigin?.length > 0 &&
+    props.moduleConfig?.extraOptions &&
+    props.moduleConfig?.extraOptions?.length === 0
+)
+
+const handleCheckboxChange = (value: boolean) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+const watchOptionOrigin = computed(() => props.moduleConfig.optionOrigin)
+const watchExtraOptions = computed(() => props.moduleConfig?.extraOptions?.length || [])
+const watchValue = computed(() => props.formConfig.value)
+
+watch(watchOptionOrigin, (newVal) => {
+  const key = props.formConfig.key
+  const extraLen = props.moduleConfig?.extraOptions.length
+
+  if (key === 'randomSort' && newVal && extraLen === 0) {
+    emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
+    modelValue.value = false
+  }
+})
+
+watch(watchExtraOptions, (newVal) => {
+  const key = props.formConfig.key
+  const origin = props.moduleConfig?.optionOrigin
+
+  if (key === 'randomSort' && origin && newVal === 0) {
+    emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
+    modelValue.value = false
+  }
+})
+
+watch(
+  watchValue,
+  (newVal: boolean) => {
+    if (newVal !== modelValue.value) {
+      modelValue.value == !!newVal
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .inline {

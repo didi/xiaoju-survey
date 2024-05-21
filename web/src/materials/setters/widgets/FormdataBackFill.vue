@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="row">
-      <el-select :modelValue="backfillSelect" @change="onSelectChange">
+      <el-select :modelValue="selectModelValue" @change="handleSelectChange">
         <el-option
           v-for="item in options"
           :label="`${item.label}`"
@@ -13,83 +13,68 @@
     <el-row v-show="showFormdataBackfillHour">
       <el-switch
         :inactive-text="formConfig.labels['baseConf.formdataBackfillHour']"
-        :value="hourSwitch"
-        @change="onSwitchChange"
+        :value="switchModelValue"
+        @change="handleSwitchChange"
       ></el-switch>
     </el-row>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import { cleanRichText } from '@/common/xss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+
 const formdataBackfillKey = 'baseConf.formdataBackfill'
 const formdataBackfillHourKey = 'baseConf.formdataBackfillHour'
 
-export default {
-  name: 'FormDataBackFill',
-  data() {
-    return {
-      backfillSelect: this.formConfig.value[formdataBackfillKey],
-      hourSwitch: !!this.formConfig.value[formdataBackfillHourKey]
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      deep: true,
-      handler(newVal) {
-        const formdataBackfill = newVal[formdataBackfillKey]
-        const formdataBackfillHour = !!newVal[formdataBackfillHourKey]
-        if (formdataBackfill !== this.backfillSelect) {
-          this.backfillSelect = formdataBackfill
-        }
-        if (formdataBackfillHour !== this.hourSwitch) {
-          this.hourSwitch = formdataBackfillHour
-        }
-      }
-    }
-  },
-  computed: {
-    showFormdataBackfillHour() {
-      if (this.backfillSelect === 'notallow') {
-        return false
-      }
-      return true
-    },
-    options() {
-      let options = []
-      if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options
-      }
-      return options.map((item) => {
-        item.label = cleanRichText(item.label)
-        return item
-      })
-    }
-  },
-  methods: {
-    onSelectChange(newVal) {
-      this.changeData({ key: formdataBackfillKey, value: newVal })
-    },
-    onSwitchChange(newVal) {
-      this.changeData({
-        key: formdataBackfillHourKey,
-        value: newVal ? 24 : null
-      })
-    },
-    changeData({ key, value }) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+interface Props {
+  formConfig: any
 }
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const selectModelValue = ref(props.formConfig.value[formdataBackfillKey])
+const switchModelValue = ref(props.formConfig.value[formdataBackfillHourKey])
+const showFormdataBackfillHour = computed(() =>
+  selectModelValue.value !== 'notallow' ? true : false
+)
+const options = computed(() => {
+  if (!Array.isArray(props.formConfig?.options)) {
+    return []
+  }
+
+  return props.formConfig?.options.map((item: any) => {
+    item.label = cleanRichText(item.label)
+    return item
+  })
+})
+
+const handleSelectChange = (value: string) => {
+  emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillKey, value })
+}
+
+const handleSwitchChange = (value: string) => {
+  emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillHourKey, value: value ? 24 : null })
+}
+
+const watchValue = computed(() => props.formConfig.value)
+watch(watchValue, (config) => {
+  const formdataBackfill = config[formdataBackfillKey]
+  const formdataBackfillHour = !!config[formdataBackfillHourKey]
+
+  if (formdataBackfill !== selectModelValue.value) {
+    selectModelValue.value = formdataBackfill
+  }
+
+  if (formdataBackfillHour !== switchModelValue.value) {
+    switchModelValue.value = formdataBackfillHour
+  }
+})
 </script>
 <style lang="scss" scoped>
 .row {

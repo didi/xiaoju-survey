@@ -1,74 +1,74 @@
 <template>
-  <el-time-picker
-    is-range
-    v-model="value"
-    range-separator="-"
-    start-placeholder="开始时间"
-    end-placeholder="结束时间"
-    placeholder="选择时间范围"
-    format="HH:mm:ss"
-    @change="onTimeChange"
-    popper-class="timeRange"
-  >
-  </el-time-picker>
+  <div>
+    <el-config-provider :locale="locale">
+      <el-time-picker
+        is-range
+        v-model="modelValue"
+        range-separator="-"
+        start-placeholder="开始时间"
+        end-placeholder="结束时间"
+        placeholder="选择时间范围"
+        format="HH:mm:ss"
+        @change="handleTimePickerChange"
+        popper-class="timeRange"
+      >
+      </el-time-picker>
+    </el-config-provider>
+  </div>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import moment from 'moment'
-// 引入中文
 import 'moment/locale/zh-cn'
-// 设置中文
-moment.locale('zh-cn')
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'QuestionTimeHour',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      value: [],
-      timeValue: []
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      handler([answerBeginTime = '00:00:00', answerEndTime = '23:59:59']) {
-        if (answerBeginTime !== this.timeValue[0] || answerEndTime !== this.timeValue[1]) {
-          this.timeValue = [answerBeginTime, answerEndTime]
+moment.locale('zh-cn')
 
-          const ymd = '2023-01-01'
-          const time = []
-          time.push(`${ymd} ${answerBeginTime}`)
-          time.push(`${ymd} ${answerEndTime}`)
-          this.value = time
-        }
-      },
-      immediate: true,
-      deep: true
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const locale = ref(zhCn)
+const modelValue = ref<any>([])
+const timeValue = ref<any>([])
+
+const handleTimePickerChange = (values: Array<string>) => {
+  if (!values) {
+    return
+  }
+
+  const keys = props.formConfig.keys
+  const times = values.map((item) => moment(item).format('HH:mm:ss'))
+
+  timeValue.value = times
+  times.forEach((value, idx) => emit(FORM_CHANGE_EVENT_KEY, { key: keys[idx], value }))
+}
+
+const watchValue = computed(() => props.formConfig.value)
+watch(
+  watchValue,
+  ([startTime = '00:00:00', endTime = '23:59:59']: Array<string>) => {
+    if (startTime !== timeValue.value[0] || endTime !== timeValue.value[1]) {
+      const times = [startTime, endTime]
+      const currentDate = moment(Date.now()).format('yyyy-MM-DD')
+
+      modelValue.value = times.map((time) => `${currentDate} ${time}`)
+      timeValue.value = times
     }
   },
-  methods: {
-    onTimeChange(data) {
-      if (!data) {
-        return
-      }
-      this.timeValue = data.map((item) => moment(item).format('HH:mm:ss'))
-      this.timeValue.forEach((item, i) => {
-        this.changeData(this.formConfig.keys[i], item)
-      })
-    },
-    changeData(key, value) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
+  {
+    immediate: true,
+    deep: true
   }
-}
+)
 </script>
 <style lang="scss" scoped>
 .star-question-begAndEndHour {

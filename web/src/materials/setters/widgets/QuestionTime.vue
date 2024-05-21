@@ -1,79 +1,78 @@
 <template>
   <div class="custom-time-range">
-    <el-date-picker
-      v-model="begTime"
-      type="datetime"
-      placeholder="开始日期"
-      format="YYYY-MM-DD HH:mm:ss"
-      @change="changeData(formConfig.keys[0], $event)"
-    >
-    </el-date-picker>
-    <span class="seporator">至</span>
-    <el-date-picker
-      v-model="endTime"
-      type="datetime"
-      placeholder="结束日期"
-      format="YYYY-MM-DD HH:mm:ss"
-      @change="changeData(formConfig.keys[1], $event)"
-    >
-    </el-date-picker>
+    <el-config-provider :locale="locale">
+      <el-date-picker
+        v-model="begModelTime"
+        type="datetime"
+        placeholder="开始日期"
+        format="YYYY-MM-DD HH:mm:ss"
+        @change="handleDatePickerChange(formConfig.keys[0], $event)"
+      />
+      <span class="seporator">至</span>
+      <el-date-picker
+        v-model="endModelTime"
+        type="datetime"
+        placeholder="结束日期"
+        format="YYYY-MM-DD HH:mm:ss"
+        @change="handleDatePickerChange(formConfig.keys[1], $event)"
+      />
+    </el-config-provider>
   </div>
 </template>
-<script>
-// 要注意，element的format和moment的format的是不同的
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 import moment from 'moment'
-// 引入中文
 import 'moment/locale/zh-cn'
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-// 设置中文
-moment.locale('zh-cn')
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'QuestionTime',
-  data() {
-    const defaultBeginTime = new Date()
-    const defaultEndTime = moment(defaultBeginTime).add(10, 'year').toDate()
-    const format = 'yyyy-MM-DD HH:mm:ss'
-    return {
-      begTime: defaultBeginTime,
-      endTime: new Date(defaultEndTime),
-      format,
-      zhCn,
-      begTimeStr: moment(defaultBeginTime).format(format),
-      endTimeStr: moment(defaultEndTime).format(format)
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      handler([begTime, endTime]) {
-        if (!!begTime && begTime !== this.begTimeStr) {
-          this.begTimeStr = begTime
-          this.begTime = new Date(begTime)
-        }
-        if (!!endTime && endTime !== this.endTimeStr) {
-          this.endTimeStr = endTime
-          this.endTime = new Date(endTime)
-        }
-      },
-      immediate: true,
-      deep: true
-    }
-  },
-  methods: {
-    async changeData(key, value) {
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value: moment(value).format(this.format)
-      })
-    }
-  }
+moment.locale('zh-cn')
+
+interface Props {
+  formConfig: any
 }
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const format = 'yyyy-MM-DD HH:mm:ss'
+const defaultBeginTime = new Date()
+const defaultEndTime = moment(defaultBeginTime).add(10, 'year').toDate()
+
+const locale = ref(zhCn)
+const begModelTime = ref(defaultBeginTime)
+const endModelTime = ref(defaultEndTime)
+const begTimeStr = ref(moment(defaultBeginTime).format(format))
+const endTimeStr = ref(moment(defaultEndTime).format(format))
+
+const handleDatePickerChange = (key: string, value: string) => {
+  console.log(key, value)
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+const watchValue = computed(() => props.formConfig.value)
+
+watch(
+  watchValue,
+  ([begTime, endTime]: any) => {
+    if (!!begTime && begTime !== begTimeStr.value) {
+      begTimeStr.value = begTime
+      begModelTime.value = new Date(begTime)
+    }
+
+    if (!!endTime && endTime !== endTimeStr.value) {
+      endTimeStr.value = endTime
+      endModelTime.value = new Date(endTime)
+    }
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .custom-time-range {

@@ -1,100 +1,81 @@
 <template>
   <el-input-number
     :placeholder="formConfig.placeholder"
-    :modelValue="numberValue"
-    @change="changeData"
-    :min="min"
-    :max="max"
+    :modelValue="modelValue"
+    @change="handleInputChange"
+    :min="minModelValue"
+    :max="maxModelValue"
   />
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'InputNumber',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    },
-    moduleConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      numberValue: 0
-    }
-  },
-  watch: {
-    'formConfig.value': {
-      immediate: true,
-      handler(newVal) {
-        const val = parseInt(newVal || '0')
-        if (val === this.numberValue) {
-          return
-        }
-        this.numberValue = val
-      }
-    }
-  },
-  computed: {
-    min() {
-      const { min } = this.formConfig
-      const { type } = this.moduleConfig
-      if (min !== undefined) {
-        if (typeof min === 'string') {
-          return this.judgeType(type)
-            ? Number(this.moduleConfig[min])
-            : Number(Number(this.moduleConfig[min]) + 1)
-        } else if (typeof this.formConfig.min === 'function') {
-          return min(this.moduleConfig)
-        } else {
-          return Number(min)
-        }
-      }
-      return -Infinity
-    },
-    max() {
-      const { type } = this.moduleConfig
-      const { max, min } = this.formConfig
+interface Props {
+  formConfig: any
+  moduleConfig: any
+}
 
-      if (max) {
-        if (typeof max === 'string') {
-          return this.judgeType(type) ? Number(this.moduleConfig[max]) : this.moduleConfig[max] - 1
-        } else if (typeof max === 'function') {
-          return max(this.moduleConfig)
-        }
-        return Number(max)
-      } else if (min !== undefined && Array.isArray(this.moduleConfig?.options)) {
-        // inputNumber 配置了最小值，没有配置最大值（checkbox, vote, matrix-checkbox, 最大选择数 ）
-        return this.moduleConfig.options.length
-      } else {
-        return Infinity
-      }
-    }
-  },
-  methods: {
-    judgeType(type) {
-      return ['checkbox', 'vote'].includes(type)
-    },
-    changeData(value) {
-      const reg = /^(-)?[0-9]+$/
-      if (!reg.test(value)) {
-        ElMessage.warning('只能输入整数')
-      }
-      this.numberValue = value
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: number }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+const setterTypes = ['checkbox', 'vote']
+const modelValue = ref(props.formConfig.value || 0)
+const minModelValue = computed(() => {
+  const { min } = props.formConfig
+  const { type } = props.moduleConfig
+
+  if (min !== undefined) {
+    if (typeof min === 'string') {
+      return setterTypes.includes(type)
+        ? Number(props.moduleConfig[min])
+        : Number(Number(props.moduleConfig[min]) + 1)
+    } else if (typeof props.formConfig.min === 'function') {
+      return min(props.moduleConfig)
+    } else {
+      return Number(min)
     }
   }
+  return -Infinity
+})
+
+const maxModelValue = computed(() => {
+  const { type } = props.moduleConfig
+  const { max, min } = props.formConfig
+
+  if (max) {
+    if (typeof max === 'string') {
+      return setterTypes.includes(type)
+        ? Number(props.moduleConfig[max])
+        : props.moduleConfig[max] - 1
+    } else if (typeof max === 'function') {
+      return max(props.moduleConfig)
+    }
+    return Number(max)
+  } else if (min !== undefined && Array.isArray(props.moduleConfig?.options)) {
+    return props.moduleConfig.options.length
+  } else {
+    return Infinity
+  }
+})
+
+const handleInputChange = (value: number) => {
+  const key = props.formConfig.key
+  const reg = /^(-)?[0-9]+$/
+
+  if (!reg.test(String(value))) {
+    ElMessage.warning('只能输入整数')
+  }
+
+  modelValue.value = value
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 </script>
 <style lang="scss" scoped>

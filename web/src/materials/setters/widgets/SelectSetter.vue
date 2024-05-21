@@ -1,11 +1,9 @@
 <template>
   <el-select
-    :placeholder="
-      ['matrixOptionsRely', 'optionOrigin'].includes(formConfig.key) ? '请选择' : formConfig.label
-    "
-    v-model="validValue"
+    :placeholder="placeholder"
+    v-model="modelValue"
     :empty-values="[null, undefined]"
-    @change="changeData"
+    @change="handleSelectChange"
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
     :class="formConfig.contentClass"
@@ -19,64 +17,74 @@
     />
   </el-select>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, watch, ref } from 'vue'
+
 import { cleanRichText } from '@/common/xss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'SelectSetter',
-  data() {
-    return {
-      validValue: !this.formConfig.value && this.formConfig.value != 0 ? '' : this.formConfig.value
-    }
-  },
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    },
-    moduleConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  watch: {
-    formConfig: {
-      handler(v) {
-        this.validValue = v.value
-      },
-      deep: true
-    }
-  },
-  computed: {
-    options() {
-      let options = []
-      if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options
-      }
-      return options.map((item) => {
-        item.label = cleanRichText(item.label)
-        return item
-      })
-    }
-  },
-  methods: {
-    changeData(value) {
-      const { key, valueSetter } = this.formConfig
 
-      if (valueSetter && typeof valueSetter == 'function') {
-        let status = valueSetter(value, this.moduleConfig)
-        if (status) {
-          this.validValue = this.moduleConfig[key]
-          return
-        }
-      }
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+interface Props {
+  formConfig: any
+  moduleConfig: any
 }
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
+const placeholder = computed(() => {
+  const defaultValue = '请选择'
+
+  if (!['matrixOptionsRely', 'optionOrigin'].includes(props.formConfig.key)) {
+    return props.formConfig.label
+  }
+
+  return defaultValue
+})
+
+const options = computed(() => {
+  if (!Array.isArray(props.formConfig?.options)) {
+    return []
+  }
+
+  return props.formConfig?.options.map((item: any) => {
+    item.label = cleanRichText(item.label)
+    return item
+  })
+})
+
+const modelValue = ref(
+  !props.formConfig.value && props.formConfig.value != 0 ? '' : props.formConfig.value
+)
+
+const handleSelectChange = (value: string) => {
+  const { key, valueSetter } = props.formConfig
+
+  if (valueSetter && typeof valueSetter == 'function') {
+    let verification: boolean = valueSetter(value, props.moduleConfig)
+
+    if (!verification) {
+      return
+    }
+
+    modelValue.value = props.moduleConfig[key]
+  }
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+}
+
+watch(
+  props.formConfig,
+  (newValue) => {
+    if (modelValue.value != newValue.value) {
+      modelValue.value = newValue.value
+    }
+  },
+  { deep: true }
+)
 </script>
 <style lang="scss" scoped>
 .option-list-width {

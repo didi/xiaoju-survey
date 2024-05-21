@@ -1,8 +1,8 @@
 <template>
   <el-select
-    :placeholder="formConfig.placeholder || formConfig.label"
-    :value="formConfig.value"
-    @input="changeData"
+    :placeholder="placeholder"
+    :value="modelValue"
+    @change="handleSelectChange"
     multiple
     popper-class="option-list-width"
     :disabled="formConfig.disabled"
@@ -17,42 +17,39 @@
   </el-select>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, ref } from 'vue'
 import { cleanRichText } from '@/common/xss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-export default {
-  name: 'SelectSetter',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {}
-  },
-  computed: {
-    options() {
-      let options = []
-      if (Array.isArray(this.formConfig?.options)) {
-        options = this.formConfig?.options
-      }
-      return options.map((item) => {
-        item.label = cleanRichText(item.label)
-        return item
-      })
-    }
-  },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: Array<string> }): void
+}
+
+const emit = defineEmits<Emit>()
+const props = defineProps<Props>()
+
+const modelValue = ref([])
+const placeholder = computed(() => props.formConfig.placeholder || props.formConfig.label)
+const options = computed(() => {
+  if (!Array.isArray(props.formConfig?.options)) {
+    return []
   }
+
+  return props.formConfig?.options.map((item: any) => {
+    item.label = cleanRichText(item.label)
+    return item
+  })
+})
+
+const handleSelectChange = (value: Array<string>) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 </script>
 <style lang="scss" scoped>

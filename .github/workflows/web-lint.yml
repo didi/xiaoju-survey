@@ -2,9 +2,14 @@
 name: Web Lint
 
 on:
+  push:
+    branches:
+      - main
+      - releases/**
+    paths:
+      - web/**
   pull_request:
     branches:
-      - feature/workflow
       - develop
       - main
       - releases/**

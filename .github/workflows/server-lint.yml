@@ -2,9 +2,14 @@
 name: Server Lint
 
 on:
+  push:
+    branches:
+      - main
+      - releases/**
+    paths:
+      - server/**
   pull_request:
     branches:
-      - feature/workflow
       - develop
       - main
       - releases/**

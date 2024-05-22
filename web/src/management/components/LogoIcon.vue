@@ -1,22 +1,17 @@
 <template>
-  <div class="navbar-main-logo" @click="toHomePage">
+  <div class="navbar-main-logo" @click="handleNavigate">
     <img src="/imgs/s-logo.webp" />
   </div>
 </template>
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
 
-<script>
-export default {
-  name: 'LogoIcon',
-  methods: {
-    toHomePage() {
-      this.$router.push({
-        name: 'survey'
-      })
-    }
-  }
+const router = useRouter()
+
+const handleNavigate = () => {
+  router.push({ name: 'survey' })
 }
 </script>
-
 <style lang="scss" scoped>
 .navbar-main-logo {
   width: 80px;

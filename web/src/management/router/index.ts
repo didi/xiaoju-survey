@@ -30,8 +30,7 @@ const routes: RouteRecordRaw[] = [
           needLogin: true
         },
         name: 'QuestionEditPage',
-        component: () =>
-          import('../pages/edit/pages/edit/index.vue'),
+        component: () => import('../pages/edit/pages/edit/index.vue'),
         children: [
           {
             path: '',
@@ -39,8 +38,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () =>
-              import('../pages/edit/pages/edit/QuestionEditPage.vue')
+            component: () => import('../pages/edit/pages/edit/QuestionEditPage.vue')
           },
           {
             path: 'logic',
@@ -48,8 +46,7 @@ const routes: RouteRecordRaw[] = [
             meta: {
               needLogin: true
             },
-            component: () =>
-              import('../pages/edit/pages/edit/LogicEditPage.vue')
+            component: () => import('../pages/edit/pages/edit/LogicEditPage.vue')
           }
         ]
       },

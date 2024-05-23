@@ -6,7 +6,7 @@
     @click="clickFormItem"
   >
     <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
-    
+
     <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
       <div class="item el-icon-rank" @click.stop.prevent="onMove">
         <i-ep-rank />
@@ -88,7 +88,10 @@ const showCopy = computed(() => {
 
 const clickFormItem = () => {
   const index = props.qIndex
-  emit('select', index)
+
+  if (!props.isSelected) {
+    emit('select', index)
+  }
 }
 const onCopy = () => {
   const index = props.qIndex
@@ -115,7 +118,7 @@ const onMoveDown = () => {
   isHover.value = false
 }
 const onDelete = async () => {
-  if(unref(hasShowLogic)) {
+  if (unref(hasShowLogic)) {
     ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'
@@ -193,10 +196,10 @@ const onMove = () => {}
       }
     }
   }
-  .logic-text{
+  .logic-text {
     font-size: 12px;
     color: #c8c9cd;
-    padding: 0 .4rem;
+    padding: 0 0.4rem;
     line-height: 26px;
   }
 }

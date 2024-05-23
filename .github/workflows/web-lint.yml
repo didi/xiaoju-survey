@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: cd web && npm install
 
+      - name: Type-Check
+        run: cd web && npm run type-check
+
       - name: Lint
         run: cd web && npm run lint
 

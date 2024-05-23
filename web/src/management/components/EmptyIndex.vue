@@ -5,19 +5,19 @@
     <div class="desc" v-html="data.desc"></div>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'EmptyModule',
-  props: {
-    data: {
-      type: Object,
-      required: true
-    }
-  }
+<script setup lang="ts">
+type DataType = {
+  img: string
+  title: string
+  desc: string
 }
-</script>
 
+interface Props {
+  data: DataType
+}
+
+defineProps<Props>()
+</script>
 <style lang="scss" scoped>
 .default-empty-root {
   width: 350px;

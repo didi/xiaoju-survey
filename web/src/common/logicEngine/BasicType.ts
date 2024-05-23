@@ -8,25 +8,22 @@ export enum Operator {
   Include = 'in',
   Equal = 'eq',
   NotEqual = 'neq',
-  NotInclude = 'nin',
+  NotInclude = 'nin'
 }
-
 
 export enum PrefixID {
   Rule = 'r',
   Condition = 'c'
 }
- 
+
 export enum Scope {
   Question = 'question',
   Option = 'option'
 }
 
-
-export type FieldTypes = string | string[];
+export type FieldTypes = string | string[]
 
 // 定义事实对象类型
 export type Fact = {
-  [key: string]: any;
-};
-
+  [key: string]: any
+}

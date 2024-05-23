@@ -1,7 +1,7 @@
 <template>
   <CommonTemplate>
     <template #left>
-      <CatalogPanel  />
+      <CatalogPanel />
     </template>
     <template #center>
       <PreviewPanel />
@@ -12,19 +12,19 @@
   </CommonTemplate>
 </template>
 <script>
-import CommonTemplate from '../../components/CommonTemplate.vue';
-import CatalogPanel from '../../modules/questionModule/CatalogPanel.vue';
-import PreviewPanel from '../../modules/questionModule/PreviewPanel.vue';
-import SetterPanel from '../../modules/questionModule/SetterPanel.vue';
+import CommonTemplate from '../../components/CommonTemplate.vue'
+import CatalogPanel from '../../modules/questionModule/CatalogPanel.vue'
+import PreviewPanel from '../../modules/questionModule/PreviewPanel.vue'
+import SetterPanel from '../../modules/questionModule/SetterPanel.vue'
 export default {
   name: 'editIndex',
   components: {
     CommonTemplate,
     CatalogPanel,
     PreviewPanel,
-    SetterPanel,
-  },
-};
+    SetterPanel
+  }
+}
 </script>
 <style lang="scss" scoped>
 .navbar {

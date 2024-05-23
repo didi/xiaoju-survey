@@ -1,11 +1,13 @@
 export const QUESTION_TYPE = {
   VOTE: 'vote',
   CHECKBOX: 'checkbox',
-  CHOICES: [ // 选择类题型分类
+  CHOICES: [
+    // 选择类题型分类
     'radio',
-    'checkbox',
+    'checkbox'
   ],
-  RATES: [ // 评分题题型分类
+  RATES: [
+    // 评分题题型分类
     'radio-star',
     'radio-nps'
   ]

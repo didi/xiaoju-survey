@@ -9,30 +9,29 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    boxShadow: {
-      type: Boolean,
-      default: true
-    }
-  },
-  name: 'NavHeader',
-  data() {
-    return {
-      img: '/imgs/s-logo.webp'
-    }
-  },
-  methods: {
-    toHomePage() {
-      this.$router.replace({
-        name: 'survey'
-      })
-    },
-    onBack() {
-      this.$router.go(-1)
-    }
-  }
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+interface Props {
+  boxShadow?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  boxShadow: true
+})
+
+const img = '/imgs/s-logo.webp'
+
+const router = useRouter()
+
+const onBack = () => {
+  router.go(-1)
+}
+
+const toHomePage = () => {
+  router.push({
+    name: 'Home'
+  })
 }
 </script>
 

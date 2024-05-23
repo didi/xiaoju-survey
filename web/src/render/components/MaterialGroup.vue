@@ -1,6 +1,6 @@
 <template>
   <form ref="ruleForm" :model="formValues" :rules="rules">
-    <div v-for="(item) in renderData" :key="item.field">
+    <div v-for="item in renderData" :key="item.field">
       <QuestionWrapper
         class="gap"
         v-bind="$attrs"

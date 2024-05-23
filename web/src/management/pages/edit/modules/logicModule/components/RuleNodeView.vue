@@ -32,7 +32,7 @@
                 v-for="{ label, value, disabled } in targetQuestionList"
                 :key="value"
                 :label="label"
-                :disabled="disabled && ruleNode.target !== value "
+                :disabled="disabled && ruleNode.target !== value"
                 :value="value"
               >
               </el-option>
@@ -97,7 +97,9 @@ const submitForm = () => {
 const targetQuestionList = computed(() => {
   const currntIndexs: number[] = []
   props.ruleNode.conditions.forEach((el) => {
-    currntIndexs.push(renderData.value.findIndex((item: { field: string }) => item.field === el.field))
+    currntIndexs.push(
+      renderData.value.findIndex((item: { field: string }) => item.field === el.field)
+    )
   })
   const currntIndex = Math.max(...currntIndexs)
   let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
@@ -105,9 +107,7 @@ const targetQuestionList = computed(() => {
     return {
       label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
       value: item.field,
-      disabled: showLogicEngine.value
-        .findTargetsByScope('question')
-        .includes(item.field)
+      disabled: showLogicEngine.value.findTargetsByScope('question').includes(item.field)
     }
   })
 })

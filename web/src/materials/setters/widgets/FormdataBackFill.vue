@@ -32,7 +32,7 @@ interface Props {
 }
 
 interface Emit {
-  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string | null }): void
 }
 
 const emit = defineEmits<Emit>()
@@ -59,7 +59,7 @@ const handleSelectChange = (value: string) => {
 }
 
 const handleSwitchChange = (value: string) => {
-  emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillHourKey, value: value ? 24 : null })
+  emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillHourKey, value: value ? '24' : null })
 }
 
 const watchValue = computed(() => props.formConfig.value)

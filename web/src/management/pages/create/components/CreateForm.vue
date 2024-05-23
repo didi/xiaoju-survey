@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectType: 'normal'
 })
 
-const ruleForm = ref(null)
+const ruleForm = ref<any>(null)
 
 const state = reactive({
   rules: {
@@ -72,7 +72,7 @@ const title = computed(() => {
 })
 
 const checkForm = (fn: Function) => {
-  ruleForm.value?.validate((valid: boolean) => {
+  ruleForm.value?.validate?.((valid: boolean) => {
     valid && typeof fn === 'function' && fn()
   })
 }
@@ -89,11 +89,11 @@ const submit = () => {
       return
     }
     state.canSubmit = false
-    const res = await createSurvey({
+    const res:any = await createSurvey({
       surveyType: selectType,
       ...state.form
     })
-    if (res.code === 200 && res?.data?.id) {
+    if (res?.code === 200 && res?.data?.id) {
       const id = res.data.id
       router.push({
         name: 'QuestionEditIndex',
@@ -102,7 +102,7 @@ const submit = () => {
         }
       })
     } else {
-      ElMessage.error(res.errmsg || '创建失败')
+      ElMessage.error(res?.errmsg || '创建失败')
     }
     state.canSubmit = true
   })

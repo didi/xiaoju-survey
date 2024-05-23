@@ -49,12 +49,11 @@
 _**(个人和企业用户均可快速构建特定领域的调研类解决方案。)**_
 
 # 技术
-Web端：Vue3 + ElementPlus
+Web端：Vue3 + ElementPlus；C端多端渲染（在建，[申请加入共建](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE#%E6%88%90%E4%B8%BA%E5%AE%98%E6%96%B9%E4%B8%93%E9%A1%B9%E5%BB%BA%E8%AE%BE%E8%80%85)）
 
-Server端：Nestjs + MongoDB
+Server端：Nestjs + MongoDB；Java（在建，[申请加入共建](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE#%E6%88%90%E4%B8%BA%E5%AE%98%E6%96%B9%E4%B8%93%E9%A1%B9%E5%BB%BA%E8%AE%BE%E8%80%85)）
 
-架构：[架构解读](https://xiaojusurvey.didi.cn/docs/next/document/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E7%90%86/%E6%9E%B6%E6%9E%84)
-
+智能化基座：（在建）
 
 # 项目优势
 **一、具备全面的综合性和专业性**

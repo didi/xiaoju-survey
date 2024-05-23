@@ -75,14 +75,10 @@ export default defineComponent({
     const onChange = (data) => {
       emit('change', data)
     }
-    const onClick = () => {
-      emit('select', props.indexNumber)
-    }
 
     return {
       props,
       BlockComponent,
-      onClick,
       onBlur,
       onFocus,
       onChange,

@@ -44,7 +44,7 @@ const watchValue = computed(() => props.formConfig.value)
 
 watch(watchOptionOrigin, (newVal) => {
   const key = props.formConfig.key
-  const extraLen = props.moduleConfig?.extraOptions.length
+  const extraLen = props.moduleConfig?.extraOptions?.length
 
   if (key === 'randomSort' && newVal && extraLen === 0) {
     emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })

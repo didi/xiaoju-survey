@@ -78,7 +78,8 @@ const props = defineProps({
 })
 const fieldList = computed(() => {
   const currentIndex = renderData.value.findIndex((item) => item.field === props.ruleNode.target)
-  return renderData.value.slice(0, currentIndex)
+  return renderData.value
+    .slice(0, currentIndex)
     .filter((question: any) => qAbleList.includes(question.type))
     .map((item: any) => {
       return {
@@ -140,14 +141,14 @@ const handleDelete = (id: any) => {
   position: relative;
   display: flex;
   padding: 24px 0;
-  &:not(:last-child)::before{
+  &:not(:last-child)::before {
     content: attr(data-content-before);
     bottom: 0px;
     width: 20px;
     height: 20px;
-    background: #FEF6E6;
+    background: #fef6e6;
     border-radius: 2px;
-    color: #FAA600;
+    color: #faa600;
     font-size: 12px;
     display: flex;
     justify-content: center;
@@ -155,14 +156,14 @@ const handleDelete = (id: any) => {
     position: absolute;
     bottom: -8px;
   }
-  &:not(:last-child)::after{
-      content: "";
-      display: block;
-      width: calc(100% - 32px);
-      border-top: 1px dashed #e3e4e8;
-      position: absolute;
-      left: 32px;
-      bottom: 0;
+  &:not(:last-child)::after {
+    content: '';
+    display: block;
+    width: calc(100% - 32px);
+    border-top: 1px dashed #e3e4e8;
+    position: absolute;
+    left: 32px;
+    bottom: 0;
   }
   .desc {
     display: inline-block;

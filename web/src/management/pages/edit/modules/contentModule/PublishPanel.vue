@@ -41,7 +41,7 @@ export default {
       if (this.isPublishing) {
         return
       }
-      
+
       try {
         this.isPublishing = true
         const saveRes = await saveSurvey(saveData)
@@ -66,7 +66,7 @@ export default {
       }
     },
     updateLogicConf() {
-      if(showLogicEngine.value) {
+      if (showLogicEngine.value) {
         showLogicEngine.value.validateSchema()
         const showLogicConf = showLogicEngine.value.toJson()
         // 更新逻辑配置

@@ -77,15 +77,15 @@ onMounted(async () => {
 
     if (res.code === 200) {
       const data = res.data
-      const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } = data.code
+      const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } =
+        data.code
       const questionData = {
         bannerConf,
         baseConf,
         bottomConf,
         dataConf,
         skinConf,
-        submitConf,
-        
+        submitConf
       }
 
       document.title = data.title

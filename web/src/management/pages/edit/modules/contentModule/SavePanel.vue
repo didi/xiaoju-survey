@@ -90,7 +90,7 @@ export default {
       }
     },
     updateLogicConf() {
-      if(showLogicEngine.value) {
+      if (showLogicEngine.value) {
         showLogicEngine.value.validateSchema()
         const showLogicConf = showLogicEngine.value.toJson()
         // 更新逻辑配置
@@ -118,7 +118,7 @@ export default {
         ElMessage.error('请检查逻辑配置是否有误')
         return
       }
-      
+
       try {
         this.isSaving = true
         const res = await this.saveData()

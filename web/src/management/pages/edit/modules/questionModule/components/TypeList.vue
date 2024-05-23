@@ -6,34 +6,33 @@
       :name="index"
       :key="index"
     >
-        <draggable
-          class="questiontype-list"
-          :list="item.questionList"
-          :group="{ name: DND_GROUP, pull: 'clone', put: false }"
-          :clone="getNewQuestion"
-          item-key="path"
-        >
-          <template #item="{ element }">
-              <div
-                :key="element.type"
-                class="qtopic-item"
-                :id="'qtopic' + element.type"
-                @click="onQuestionType({ type: element.type })"
-                @mouseenter="showPreview(element, 'qtopic' + element.type)"
-                @mouseleave="isShowPreviewImage = false"
-                @mousedown="isShowPreviewImage = false"
-              >
-                <i class="iconfont" :class="['icon-' + element.icon]"></i>
-                <p class="text">{{ element.title }}</p>
-              </div>
-          </template>
-          
-        </draggable>
+      <draggable
+        class="questiontype-list"
+        :list="item.questionList"
+        :group="{ name: DND_GROUP, pull: 'clone', put: false }"
+        :clone="getNewQuestion"
+        item-key="path"
+      >
+        <template #item="{ element }">
+          <div
+            :key="element.type"
+            class="qtopic-item"
+            :id="'qtopic' + element.type"
+            @click="onQuestionType({ type: element.type })"
+            @mouseenter="showPreview(element, 'qtopic' + element.type)"
+            @mouseleave="isShowPreviewImage = false"
+            @mousedown="isShowPreviewImage = false"
+          >
+            <i class="iconfont" :class="['icon-' + element.icon]"></i>
+            <p class="text">{{ element.title }}</p>
+          </div>
+        </template>
+      </draggable>
     </el-collapse-item>
     <Teleport to="body">
-      <div class="preview-popover" v-show="isShowPreviewImage" :style="{ top: previewTop + 'px'}">
-          <img :src="previewImg" class="preview-image"/>
-          <span class="preview-arrow"></span>
+      <div class="preview-popover" v-show="isShowPreviewImage" :style="{ top: previewTop + 'px' }">
+        <img :src="previewImg" class="preview-image" />
+        <span class="preview-arrow"></span>
       </div>
     </Teleport>
   </el-collapse>
@@ -78,14 +77,14 @@ const getNewQuestion = ({ type }) => {
 }
 
 const onQuestionType = ({ type }) => {
-  const newQuestion = getNewQuestion({ type })  
+  const newQuestion = getNewQuestion({ type })
   store.dispatch('edit/addQuestion', { question: newQuestion, index: newQuestionIndex.value })
   store.commit('edit/setCurrentEditOne', newQuestionIndex.value)
 }
 
 const showPreview = ({ snapshot }, id) => {
   previewImg.value = snapshot
-  
+
   const dragEl = document.getElementById(id)
   const { top, height } = dragEl.getBoundingClientRect()
   previewTop.value = top + height / 2
@@ -136,7 +135,7 @@ const showPreview = ({ snapshot }, id) => {
       background-color: $primary-color-light;
       border: 1px solid $primary-color;
     }
-    
+
     .text {
       font-size: 12px;
       user-select: none;
@@ -211,7 +210,7 @@ const showPreview = ({ snapshot }, id) => {
 
     &::before {
       position: absolute;
-      content: "";
+      content: '';
       height: 10px;
       width: 10px;
       border: 1px solid var(--el-border-color-light);
@@ -219,7 +218,6 @@ const showPreview = ({ snapshot }, id) => {
       border-bottom-color: transparent;
       border-right-color: transparent;
     }
-
   }
 }
 </style>

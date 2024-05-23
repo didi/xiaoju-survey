@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed } from 'vue'
 import store from '@/management/store'
 import { cleanRichText } from '@/common/xss'
 export const useQuestionInfo = (field) => {
@@ -12,9 +12,11 @@ export const useQuestionInfo = (field) => {
     const questionDataList = store.state.edit.schema.questionDataList
     return (value) => {
       const options = questionDataList.find((item) => item.field === field)?.options || []
-      if(value instanceof Array) {
-        return options.filter((item) => value.includes(item.hash)).map((item) => cleanRichText(item.text))
-      } else  {
+      if (value instanceof Array) {
+        return options
+          .filter((item) => value.includes(item.hash))
+          .map((item) => cleanRichText(item.text))
+      } else {
         return options.filter((item) => item.hash === value).map((item) => cleanRichText(item.text))
       }
     }

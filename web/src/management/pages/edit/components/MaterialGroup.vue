@@ -62,12 +62,12 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const store = useStore()
-    
+
     const renderData = computed({
-      get () {
+      get() {
         return filterQuestionPreviewData(props.questionDataList)
       },
-      set (questionDataList) {
+      set(questionDataList) {
         store.commit('edit/setQuestionDataList', questionDataList)
       }
     })

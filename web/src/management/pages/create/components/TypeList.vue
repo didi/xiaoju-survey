@@ -8,7 +8,7 @@
           v-for="item in renderData"
           class="list-item"
           :key="item.type"
-          @click="handleSelectType('selectType', item)"
+          @click="handleSelectType(item.type)"
         >
           <div class="selected-border" v-if="selectType === item.type" />
           <img class="img" :src="item.img" alt="类别图片" />
@@ -24,34 +24,27 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import NavHeader from './NavHeader.vue'
 
 import { SURVEY_TYPE_LIST } from '../types'
+import { computed } from 'vue'
 
-export default {
-  name: 'LeftSide',
-  components: {
-    NavHeader
-  },
-  props: {
-    selectType: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    renderData() {
-      return SURVEY_TYPE_LIST
-    }
-  },
-  methods: {
-    handleSelectType(key, value) {
-      const { type } = value
-      this.$emit('selectTypeChange', type)
-    }
-  }
+interface Props {
+  selectType?: string
 }
+
+withDefaults(defineProps<Props>(), {
+  selectType: ''
+})
+
+const emit = defineEmits(['selectTypeChange'])
+
+const handleSelectType = (selectType: string) => {
+  emit('selectTypeChange', selectType)
+}
+
+const renderData = computed(() => SURVEY_TYPE_LIST)
 </script>
 
 <style lang="scss" scoped>

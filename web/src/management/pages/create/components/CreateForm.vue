@@ -42,7 +42,6 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { createSurvey } from '@/management/api/survey'
 
 import { SURVEY_TYPE_LIST } from '../types'
-
 export default {
   name: 'CreateForm',
   props: {
@@ -87,10 +86,14 @@ export default {
           return
         }
         this.canSubmit = false
-        const res = await createSurvey({
+        const params = {
           surveyType: selectType,
           ...this.form
-        })
+        }
+        if(this.$store.state.list.workSpaceId) {
+          params.workspaceId = this.$store.state.list.workSpaceId
+        }
+        const res = await createSurvey(params)
         if (res.code === 200 && res?.data?.id) {
           const id = res.data.id
           this.$router.push({

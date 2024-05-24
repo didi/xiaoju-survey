@@ -1,5 +1,6 @@
 // 问卷操作枚举
 export const QOP_MAP = {
+  ADD: 'add',
   COPY: 'copy',
   EDIT: 'edit'
 }

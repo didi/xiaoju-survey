@@ -35,7 +35,9 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, reactive, computed, toRefs } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -43,70 +45,67 @@ import { createSurvey } from '@/management/api/survey'
 
 import { SURVEY_TYPE_LIST } from '../types'
 
-export default {
-  name: 'CreateForm',
-  props: {
-    selectType: {
-      type: String,
-      default: 'normal'
-    }
-  },
-  data() {
-    return {
-      rules: {
-        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
-      },
-      canSubmit: true,
-      form: {
-        title: '问卷调研',
-        remark: '问卷调研'
-      }
-    }
-  },
-  computed: {
-    SURVEY_TYPE_LIST() {
-      return SURVEY_TYPE_LIST
-    },
-    title() {
-      return this.SURVEY_TYPE_LIST.find((item) => item.type === this.selectType)?.title
-    }
-  },
-  methods: {
-    checkForm(fn) {
-      this.$refs.ruleForm.validate((valid) => {
-        valid && typeof fn === 'function' && fn()
-      })
-    },
-    submit() {
-      if (!this.canSubmit) {
-        return
-      }
-      this.checkForm(async () => {
-        const { selectType } = this
-        if (!this.canSubmit) {
-          return
-        }
-        this.canSubmit = false
-        const res = await createSurvey({
-          surveyType: selectType,
-          ...this.form
-        })
-        if (res.code === 200 && res?.data?.id) {
-          const id = res.data.id
-          this.$router.push({
-            name: 'QuestionEditIndex',
-            params: {
-              id
-            }
-          })
-        } else {
-          ElMessage.error(res.errmsg || '创建失败')
-        }
+interface Props {
+  selectType?: string
+}
 
-        this.canSubmit = true
-      })
-    }
+const props = withDefaults(defineProps<Props>(), {
+  selectType: 'normal'
+})
+
+const ruleForm = ref<any>(null)
+
+const state = reactive({
+  rules: {
+    title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
+  },
+  canSubmit: true,
+  form: {
+    title: '问卷调研',
+    remark: '问卷调研'
   }
+})
+const { rules, canSubmit, form } = toRefs(state)
+
+const title = computed(() => {
+  return SURVEY_TYPE_LIST.find((item) => item.type === props.selectType)?.title
+})
+
+const checkForm = (fn: Function) => {
+  ruleForm.value?.validate?.((valid: boolean) => {
+    valid && typeof fn === 'function' && fn()
+  })
+}
+
+const router = useRouter()
+
+const submit = () => {
+  if (!state.canSubmit) {
+    return
+  }
+  checkForm(async () => {
+    const { selectType } = props
+    if (!state.canSubmit) {
+      return
+    }
+    state.canSubmit = false
+    const res:any = await createSurvey({
+      surveyType: selectType,
+      ...state.form
+    })
+    if (res?.code === 200 && res?.data?.id) {
+      const id = res.data.id
+      router.push({
+        name: 'QuestionEditIndex',
+        params: {
+          id
+        }
+      })
+    } else {
+      ElMessage.error(res?.errmsg || '创建失败')
+    }
+    state.canSubmit = true
+  })
 }
 </script>
 

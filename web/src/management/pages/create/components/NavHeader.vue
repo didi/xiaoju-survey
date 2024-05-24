@@ -2,37 +2,36 @@
   <div :class="['nav-header', `${boxShadow ? 'box-shadow' : null}`]">
     <div class="left">
       <div class="logo">
-        <img class="logoImg" :src="img" alt @click="toHomePage" />
+        <img class="logoImg" :src="img" @click="toHomePage" />
       </div>
       <div class="return no-logo-return icon-fanhui" @click="onBack">返回</div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    boxShadow: {
-      type: Boolean,
-      default: true
-    }
-  },
-  name: 'NavHeader',
-  data() {
-    return {
-      img: '/imgs/s-logo.webp'
-    }
-  },
-  methods: {
-    toHomePage() {
-      this.$router.replace({
-        name: 'survey'
-      })
-    },
-    onBack() {
-      this.$router.go(-1)
-    }
-  }
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+interface Props {
+  boxShadow?: boolean
+}
+
+withDefaults(defineProps<Props>(), {
+  boxShadow: true
+})
+
+const img = '/imgs/s-logo.webp'
+
+const router = useRouter()
+
+const onBack = () => {
+  router.go(-1)
+}
+
+const toHomePage = () => {
+  router.push({
+    name: 'Home'
+  })
 }
 </script>
 

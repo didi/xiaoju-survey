@@ -2,7 +2,7 @@
   <div class="index">
     <progressBar />
     <div class="wrapper" ref="boxRef">
-      <HeaderSetter></HeaderSetter>
+      <HeaderContent :bannerConf="" />
       <div class="content">
         <MainTitle></MainTitle>
         <MainRenderer ref="mainRef"></MainRenderer>
@@ -17,6 +17,7 @@ import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import HeaderSetter from '../components/HeaderSetter.vue'
+import HeaderContent from '@materials/communals/widgets/HeaderContent/index.jsx'
 import MainTitle from '../components/MainTitle.vue'
 import submit from '../components/SubmitSetter.vue'
 import MainRenderer from '../components/MainRenderer.vue'

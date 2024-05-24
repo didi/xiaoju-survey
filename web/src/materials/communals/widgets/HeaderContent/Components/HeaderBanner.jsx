@@ -33,27 +33,27 @@ export default defineComponent({
       window.open(formatLink(jumpLink))
     }
 
-    const emptyBannerRender = () => {
-      if(!bgImage.value && props.readonly) {
-        let classStr = 'empty-banner';
-        if (props.isSelected) {
-          classStr += 'banner-active'
-        } 
-        return (
-          <div class={classStr}>
-            <p>点击配置头图</p>
-            <p>若不配置头图，将不在问卷中展示</p>
-          </div>
-        )
-      }
-      return ''
-    }
+    // const emptyBannerRender = () => {
+    //   if(!bgImage.value && !props.readonly) {
+    //     let classStr = 'empty-banner';
+    //     if (props.isSelected) {
+    //       classStr += 'banner-active'
+    //     } 
+    //     return (
+    //       <div class={classStr}>
+    //         <p>点击配置头图</p>
+    //         <p>若不配置头图，将不在问卷中展示</p>
+    //       </div>
+    //     )
+    //   }
+    //   return ''
+    // }
 
     const bannerRender = () => {
       let attribute = {
         class:'banner-img'
       }
-      if (!props.readonly) {
+      if (props.readonly) {
         const allow = _get(props.bannerConf, 'bannerConfig.bgImageAllowJump', false)
         attribute = {
           class: `${attribute.class}  ${allow ? 'pointer' : ''}`,
@@ -67,12 +67,24 @@ export default defineComponent({
           </div>
         )
       }
+      if(!bgImage.value && !props.readonly) {
+        let classStr = 'empty-banner';
+        if (props.isSelected) {
+          classStr += 'banner-active'
+        } 
+        return (
+          <div class={classStr}>
+            <p>点击配置头图</p>
+            <p>若不配置头图，将不在问卷中展示</p>
+          </div>
+        )
+      }
       return '';
     }
     
     return {
       bgImage,
-      emptyBannerRender,
+      // emptyBannerRender,
       bannerRender
     }
   },
@@ -80,7 +92,7 @@ export default defineComponent({
     return (
       <div class="header-banner-wrap">
         {this.bannerRender()}
-        {this.emptyBannerRender()}
+        {/* {this.emptyBannerRender()} */}
       </div>
     )
   }

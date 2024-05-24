@@ -22,7 +22,7 @@ export default defineComponent({
   emits:['select'],
   setup(props, { emit }) { 
     const handleClick = () => {
-      if (!props.readonly) return;
+      if (props.readonly) return;
       emit('select')
     }
 
@@ -32,11 +32,11 @@ export default defineComponent({
     }
   },
   render() {
-    const bannerConf = this.props.bannerConf;
+    const { bannerConf,readonly,isSelected} = this.props;
     return (
       <div class="header-content-warp" onClick={this.handleClick}>
-        <HeaderBanner {...this.props} />
-        {bannerConf?.bannerConfig?.videoLink ? <HeaderVideo {...this.props}/> : ''}
+        <HeaderBanner bannerConf={bannerConf} readonly={readonly} isSelected={isSelected} />
+        {bannerConf?.bannerConfig?.videoLink ? <HeaderVideo bannerConf={bannerConf} readonly={readonly} /> : ''}
       </div>
     )
   }

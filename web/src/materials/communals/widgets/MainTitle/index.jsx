@@ -24,7 +24,7 @@ export default defineComponent({
 
     const titleClass = computed(() => {
       let classStr = '';
-      if (props.readonly) {
+      if (!props.readonly) {
         classStr = `main-title ${props.isSelected ? 'active' : ''}`;
       } else {
         classStr = 'titlePanel';
@@ -34,7 +34,7 @@ export default defineComponent({
     });
 
     const isTitleHide = computed(() => { 
-      if (!props.readonly && !mainTitle.value) {
+      if (props.readonly && !mainTitle.value) {
         return false
       }
       return true;
@@ -45,7 +45,7 @@ export default defineComponent({
     })
 
     const handleClick = () => {
-      if (!props.readonly) return;
+      if (props.readonly) return;
       emit('select')
     }
 
@@ -73,7 +73,7 @@ export default defineComponent({
       <div class={['main-title-warp', this.props.readonly ? 'pd15' : '']} onClick={this.handleClick}>
         {this.isTitleHide ? 
           <div class={this.titleClass}>
-            {this.props.readonly ?
+            {!this.props.readonly ?
               <RichEditor 
                 modelValue={this.mainTitle}
                 onInput={this.onTitleInput}

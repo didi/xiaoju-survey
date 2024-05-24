@@ -58,7 +58,7 @@ const handleSelectChange = (value: string) => {
   emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillKey, value })
 }
 
-const handleSwitchChange = (value: string) => {
+const handleSwitchChange = (value: string | null) => {
   emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillHourKey, value: value ? '24' : null })
 }
 

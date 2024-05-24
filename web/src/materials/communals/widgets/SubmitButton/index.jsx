@@ -6,7 +6,6 @@ export default defineComponent({
   name: 'SubmitButton',
   props: {
     submitConf: Object,
-    isSelected: Boolean,
     skinConf: {
       type: Object,
       required: true
@@ -19,7 +18,7 @@ export default defineComponent({
   setup(props, { emit }) {
     
     const submit = (e) => {
-      if (props.readonly) return;
+      if (!props.readonly) return;
       const validate = props.validate
       if (e) {
         e.preventDefault()
@@ -32,7 +31,7 @@ export default defineComponent({
     }
 
     const handleClick = () => {
-      if (!props.readonly) return;
+      if (props.readonly) return;
       emit('select')
     }
 
@@ -46,7 +45,7 @@ export default defineComponent({
   render() {
     const { readonly,submitConf } = this.props;
     return (
-      <div class={ ['submit-warp',readonly ? 'preview-submit_wrapper' : 'question-submit_wrapper']} onClick={ this.handleClick }>
+      <div class={ ['submit-warp',readonly ? 'question-submit_wrapper' : 'preview-submit_wrapper']} onClick={ this.handleClick }>
         <el-button class="submit-btn" type="primary" onClick={this.submit}>{ submitConf.submitTitle }</el-button>
       </div>
     )

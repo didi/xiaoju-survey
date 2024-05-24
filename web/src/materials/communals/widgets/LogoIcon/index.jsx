@@ -49,12 +49,12 @@ export default defineComponent({
     })
 
     const onSelect = () => {
-      if (!props.readonly) return;
+      if (props.readonly) return;
       emit('select')
     }
 
     const noLogoRender = () => { 
-      if (!logoImage.value && props.readonly) {
+      if ( !props.readonly) {
         return (
           <div class="logo-placeholder-wrapper">
             <div class="logo-placeholder">LOGO</div>
@@ -62,7 +62,6 @@ export default defineComponent({
           </div>
         )
       }
-      return ''
     }
 
     return {
@@ -79,7 +78,7 @@ export default defineComponent({
     const { readonly } = this.props;
     return (
       <div class="logo-icon-warp" onClick={this.onSelect}>
-        <div class={[readonly ? 'question-logo' : 'logo-wrapper']}>
+        <div class={[readonly ? 'logo-wrapper' : 'question-logo']}>
           {this.logoImage
             ?
               <img src={this.logoImage} style={this.logoStyle} />

@@ -25,7 +25,7 @@ const tabs = [
     text: '投放问卷',
     icon: 'icon-toufang',
     to: {
-      name: 'publishResultPage'
+      name: 'publish'
     }
   },
   {

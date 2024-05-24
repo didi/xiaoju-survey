@@ -94,12 +94,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/analysis/AnalysisPage.vue')
   },
   {
-    path: '/survey/:id/publishResult',
-    name: 'publishResultPage',
+    path: '/survey/:id/publish',
+    name: 'publish',
     meta: {
       needLogin: true
     },
-    component: () => import('../pages/publishResult/PublishResultPage.vue')
+    component: () => import('../pages/publish/index.vue')
   },
   {
     path: '/create',

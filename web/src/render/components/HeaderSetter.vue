@@ -5,13 +5,13 @@
         class="banner-img"
         :src="bannerConf.bannerConfig.bgImage"
         :class="{ pointer: bannerConf.bannerConfig.bgImageAllowJump }"
-        @click="onBannerClick"
+        @click="handleBannerClick"
       />
     </div>
     <div class="banner" v-if="bannerConf.bannerConfig && bannerConf.bannerConfig.videoLink">
       <div class="video">
         <video
-          id="video"
+          ref="videoRef"
           controls
           style="margin: 0 auto; width: 100%; display: block"
           preload="auto"
@@ -21,49 +21,50 @@
         </video>
         <div
           class="video-modal"
-          :style="`background-image:url(${bannerConf.bannerConfig.postImg})`"
+          :style="{
+            backgroundImage:
+              bannerConf.bannerConfig.postImg && `url(${bannerConf.bannerConfig.postImg})`,
+            display: displayModel
+          }"
         ></div>
-        <div class="iconfont icon-kaishi play-icon" @click="play()"></div>
+        <div
+          class="iconfont icon-kaishi play-icon"
+          :style="{ display: displayModel }"
+          @click="handlePlay()"
+        ></div>
       </div>
     </div>
-    <!-- <div
-      class="titlePanel"
-      v-if="bannerConf.titleConfig && bannerConf.titleConfig.mainTitle"
-    >
-      <div
-        class="mainTitle"
-        v-if="bannerConf.titleConfig.mainTitle"
-        v-safe-html="bannerConf.titleConfig.mainTitle"
-      ></div>
-    </div> -->
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
+
 import { formatLink } from '../utils/index.js'
 
-export default {
-  name: 'HeaderSetter',
-  computed: {
-    bannerConf() {
-      return _get(this.$store, 'state.bannerConf', {})
-    }
-  },
-  methods: {
-    onBannerClick() {
-      const allow = _get(this.bannerConf, 'bannerConfig.bgImageAllowJump', false)
-      const jumpLink = _get(this.bannerConf, 'bannerConfig.bgImageJumpLink', '')
-      if (!allow || !jumpLink) {
-        return
-      }
-      window.open(formatLink(jumpLink))
-    },
-    play() {
-      const video = document.getElementById('video')
-      document.querySelector('.play-icon').style.display = 'none'
-      document.querySelector('.video-modal').style.display = 'none'
-      video.play()
-    }
+const store = useStore()
+
+const bannerConf = computed<any>(() => _get(store, 'state.bannerConf', {}))
+
+const handleBannerClick = () => {
+  const allow = _get(bannerConf.value, 'bannerConfig.bgImageAllowJump', false)
+  const jumpLink = _get(bannerConf.value, 'bannerConfig.bgImageJumpLink', '')
+
+  if (!allow || !jumpLink) {
+    return
+  }
+
+  window.open(formatLink(jumpLink))
+}
+
+const videoRef = ref<HTMLVideoElement | null>(null)
+const displayModel = ref('block')
+
+const handlePlay = () => {
+  if (bannerConf.value.bannerConfig && bannerConf.value.bannerConfig.videoLink) {
+    videoRef.value?.play()
+    displayModel.value = 'none'
   }
 }
 </script>

@@ -27,6 +27,7 @@ import AlertDialog from './components/AlertDialog.vue'
 
 import LogoIcon from './components/LogoIcon.vue'
 import { get as _get, upperFirst } from 'lodash-es'
+import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
 const store = useStore()
 const skinConf = computed(() => _get(store, 'state.skinConf', {}))
@@ -76,7 +77,8 @@ onMounted(async () => {
 
     if (res.code === 200) {
       const data = res.data
-      const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf } = data.code
+      const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } =
+        data.code
       const questionData = {
         bannerConf,
         baseConf,
@@ -93,6 +95,7 @@ onMounted(async () => {
       store.commit('setSurveyPath', surveyPath)
       store.dispatch('init', questionData)
       store.dispatch('getEncryptInfo')
+      initRuleEngine(logicConf?.showLogicConf)
     } else {
       throw new Error(res.errmsg)
     }

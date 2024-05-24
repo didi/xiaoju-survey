@@ -1,33 +1,34 @@
 <template>
   <el-form-item>
     <el-input
+      v-model="modelValue"
       :placeholder="formConfig.placeholder"
-      :value="formConfig.value"
-      :maxLength="formConfig.maxlength"
-      @change="changeData"
+      :maxlength="formConfig.maxlength"
+      @change="handleInputChange"
     >
       <template #prepend>#</template>
     </el-input>
   </el-form-item>
 </template>
-<script>
+<script setup lang="ts">
+import { ref } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'ColorInput',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+const modelValue = ref(props.formConfig.value)
+
+const handleInputChange = (value: string) => {
+  const key = props.formConfig.key
+
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 </script>

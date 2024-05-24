@@ -3,44 +3,42 @@
     <div class="box">
       <div class="title">{{ title }}</div>
       <div class="btn-box">
-        <div class="btn cancel" @click="onCancel">{{ cancelBtnText }}</div>
-        <div class="btn confirm" @click="onConfirm">{{ confirmBtnText }}</div>
+        <div class="btn cancel" @click="handleCancel">{{ cancelBtnText }}</div>
+        <div class="btn confirm" @click="handleConfirm">{{ confirmBtnText }}</div>
       </div>
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'ConfirmDialog',
-  props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    cancelBtnText: {
-      type: String,
-      default: '取消'
-    },
-    confirmBtnText: {
-      type: String,
-      default: '确定'
-    },
-    title: {
-      type: String,
-      default: ''
-    }
-  },
-  methods: {
-    onCancel() {
-      // this.$emit('cancel');
-      this.$emit('close')
-    },
-    onConfirm() {
-      this.$emit('confirm', () => {
-        this.$emit('close')
-      })
-    }
-  }
+<script setup lang="ts">
+interface Props {
+  visible?: boolean
+  cancelBtnText?: string
+  confirmBtnText?: string
+  title?: string
+}
+
+interface Emit {
+  (ev: 'confirm', callback: () => void): void
+  (ev: 'close'): void
+}
+
+const emit = defineEmits<Emit>()
+
+withDefaults(defineProps<Props>(), {
+  visible: false,
+  cancelBtnText: '取消',
+  confirmBtnText: '确定',
+  title: ''
+})
+
+const handleConfirm = () => {
+  emit('confirm', () => {
+    emit('close')
+  })
+}
+
+const handleCancel = () => {
+  emit('close')
 }
 </script>
 <style lang="scss" scoped>

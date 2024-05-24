@@ -1,27 +1,28 @@
 <template>
   <el-form-item class="pick-wrap">
-    <el-color-picker :modelValue="formConfig.value" @change="changeData"></el-color-picker>
+    <el-color-picker
+      :modelValue="formConfig.value"
+      @change="handleColorPickerChange"
+    ></el-color-picker>
   </el-form-item>
 </template>
-<script>
+<script setup lang="ts">
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-export default {
-  name: 'ColorPicker',
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    changeData(value) {
-      const key = this.formConfig.key
-      this.$emit(FORM_CHANGE_EVENT_KEY, {
-        key,
-        value
-      })
-    }
-  }
+
+interface Props {
+  formConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
+const handleColorPickerChange = (value: string) => {
+  const key = props.formConfig.key
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 </script>
 <style lang="scss" scoped>

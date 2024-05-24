@@ -15,8 +15,15 @@ export default {
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
       document.title = metaData.title
-      const { bannerConf, bottomConf, skinConf, baseConf, submitConf, dataConf } =
-        res.data.surveyConfRes.code
+      const {
+        bannerConf,
+        bottomConf,
+        skinConf,
+        baseConf,
+        submitConf,
+        dataConf,
+        logicConf = {}
+      } = res.data.surveyConfRes.code
       commit('initSchema', {
         metaData,
         codeData: {
@@ -25,7 +32,8 @@ export default {
           skinConf,
           baseConf,
           submitConf,
-          questionDataList: dataConf.dataList
+          questionDataList: dataConf.dataList,
+          logicConf
         }
       })
     } else {

@@ -24,12 +24,14 @@
         <i-ep-close />
       </div>
     </div>
+    <div class="logic-text" v-html="getShowLogicText"></div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, unref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
+import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo'
 
 const props = defineProps({
   qIndex: {
@@ -56,6 +58,8 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['changeSeq', 'select'])
+
+const { getShowLogicText, hasShowLogic } = useShowLogicInfo(props.moduleConfig.field)
 
 const isHover = ref(false)
 
@@ -84,7 +88,10 @@ const showCopy = computed(() => {
 
 const clickFormItem = () => {
   const index = props.qIndex
-  emit('select', index)
+
+  if (!props.isSelected) {
+    emit('select', index)
+  }
 }
 const onCopy = () => {
   const index = props.qIndex
@@ -111,12 +118,23 @@ const onMoveDown = () => {
   isHover.value = false
 }
 const onDelete = async () => {
+  if (unref(hasShowLogic)) {
+    ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    })
+    return
+  }
   try {
     await ElMessageBox.confirm('本次操作会影响数据统计查看，是否确认删除？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
+
+    if (props.isSelected && props.isLast) {
+      emit('select', null)
+    }
 
     const index = props.qIndex
     emit('changeSeq', { type: 'delete', index })
@@ -177,6 +195,12 @@ const onMove = () => {}
         color: #fff;
       }
     }
+  }
+  .logic-text {
+    font-size: 12px;
+    color: #c8c9cd;
+    padding: 0 0.4rem;
+    line-height: 26px;
   }
 }
 </style>

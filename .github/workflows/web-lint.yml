@@ -2,9 +2,14 @@
 name: Web Lint
 
 on:
+  push:
+    branches:
+      - main
+      - releases/**
+    paths:
+      - web/**
   pull_request:
     branches:
-      - feature/workflow
       - develop
       - main
       - releases/**
@@ -30,5 +35,11 @@ jobs:
       - name: Install dependencies
         run: cd web && npm install
 
+      - name: Type-Check
+        run: cd web && npm run type-check
+
       - name: Lint
         run: cd web && npm run lint
+
+      - name: Format
+        run: cd web && npm run format

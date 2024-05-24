@@ -17,20 +17,12 @@
     <slot></slot>
   </el-form-item>
 </template>
-<script>
-export default {
-  name: 'FormItem',
-  components: {},
-  props: {
-    formConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {}
-  }
+<script setup lang="ts">
+interface Props {
+  formConfig: any
 }
+
+defineProps<Props>()
 </script>
 <style lang="scss" scoped>
 .item-label {

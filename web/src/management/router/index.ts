@@ -21,15 +21,34 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true
     },
+    name: 'QuestionEdit',
     component: () => import('../pages/edit/index.vue'),
     children: [
       {
         path: '',
-        name: 'QuestionEditIndex',
         meta: {
           needLogin: true
         },
-        component: () => import('../pages/edit/pages/EditPage.vue')
+        name: 'QuestionEditPage',
+        component: () => import('../pages/edit/pages/edit/index.vue'),
+        children: [
+          {
+            path: '',
+            name: 'QuestionEditIndex',
+            meta: {
+              needLogin: true
+            },
+            component: () => import('../pages/edit/pages/edit/QuestionEditPage.vue')
+          },
+          {
+            path: 'logic',
+            name: 'LogicIndex',
+            meta: {
+              needLogin: true
+            },
+            component: () => import('../pages/edit/pages/edit/LogicEditPage.vue')
+          }
+        ]
       },
       {
         path: 'setting',
@@ -37,11 +56,10 @@ const routes: RouteRecordRaw[] = [
         meta: {
           needLogin: true
         },
-        component: () => import('../pages/edit/pages/SettingPage.vue')
+        component: () => import('../pages/edit/pages/setting/index.vue')
       },
       {
         path: 'skin',
-        // name: 'SkinSetting',
         meta: {
           needLogin: true
         },
@@ -97,7 +115,7 @@ const routes: RouteRecordRaw[] = [
     name: 'login',
     component: () => import('../pages/login/LoginPage.vue'),
     meta: {
-      title: '登陆'
+      title: '登录'
     }
   }
 ]

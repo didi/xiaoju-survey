@@ -1,5 +1,5 @@
 <template>
-  <commonTemplate>
+  <CommonTemplate>
     <template #left>
       <CatalogPanel />
     </template>
@@ -9,10 +9,10 @@
     <template #right>
       <SetterPanel />
     </template>
-  </commonTemplate>
+  </CommonTemplate>
 </template>
 <script>
-import commonTemplate from '../../components/CommonTemplate.vue'
+import CommonTemplate from '../../components/CommonTemplate.vue'
 import CatalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
 import PreviewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
 import SetterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
@@ -20,7 +20,7 @@ import SetterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
 export default {
   name: 'ContentPage',
   components: {
-    commonTemplate,
+    CommonTemplate,
     CatalogPanel,
     PreviewPanel,
     SetterPanel

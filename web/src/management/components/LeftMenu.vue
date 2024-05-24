@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <LogoIcon />
-    <RouterLink v-for="(tab, index) in tabList" :key="index" class="tab-btn" :to="tab.to" replace>
+    <RouterLink v-for="(tab, index) in tabs" :key="index" class="tab-btn" :to="tab.to" replace>
       <div class="icon">
         <i class="iconfont" :class="tab.icon"></i>
       </div>
@@ -10,44 +10,33 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import LogoIcon from './LogoIcon.vue'
 
-export default {
-  name: 'LeftMenu',
-  components: {
-    LogoIcon
+const tabs = [
+  {
+    text: '编辑问卷',
+    icon: 'icon-bianji',
+    to: {
+      name: 'QuestionEditIndex'
+    }
   },
-  data() {
-    return {
-      tabList: [
-        {
-          text: '编辑问卷',
-          icon: 'icon-bianji',
-          to: {
-            name: 'QuestionEditIndex'
-          }
-        },
-        {
-          text: '投放问卷',
-          icon: 'icon-toufang',
-          to: {
-            name: 'publishResultPage'
-          }
-        },
-        {
-          text: '数据统计',
-          icon: 'icon-shujutongji',
-          to: {
-            name: 'analysisPage'
-          }
-        }
-      ]
+  {
+    text: '投放问卷',
+    icon: 'icon-toufang',
+    to: {
+      name: 'publishResultPage'
+    }
+  },
+  {
+    text: '数据统计',
+    icon: 'icon-shujutongji',
+    to: {
+      name: 'analysisPage'
     }
   }
-}
+]
 </script>
-
 <style lang="scss" scoped>
 .nav {
   width: 80px;
@@ -69,7 +58,6 @@ export default {
   &:hover {
     color: $normal-color;
 
-    // background-color: $background-color-light;
     .icon {
       background-color: $disable-color;
     }

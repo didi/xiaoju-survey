@@ -199,5 +199,9 @@ npm run serve
 ## CHANGELOG
 关注重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
 
-## 分享
-跟大家晒一晒你的分享：[文章](https://github.com/didi/xiaoju-survey/issues/85)
+## 文章分享
+文章分享：
+1、[掘金主站](https://juejin.cn/user/3705833332160473/posts)
+2、[InfoQ](https://www.infoq.cn/profile/7E08AC616A07B2/publish)
+
+[欢迎投稿](https://xiaojusurvey.didi.cn/docs/next/article/%E7%AE%80%E4%BB%8B)

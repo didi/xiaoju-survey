@@ -1,10 +1,10 @@
-import { defineComponent,computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import RichEditor from '@/common/Editor/RichEditor.vue'
-import '@/render/styles/variable.scss';
-import './index.scss';
+import '@/render/styles/variable.scss'
+import './index.scss'
 
 export default defineComponent({
-  name: 'HeaderContent',
+  name: 'MainTitle',
   props: {
     bannerConf: {
       type: Object,
@@ -19,33 +19,31 @@ export default defineComponent({
       default: false
     }
   },
-  emits:['select'],
-  setup(props, { emit }) { 
-
+  emits: ['select', 'change'],
+  setup(props, { emit }) {
     const titleClass = computed(() => {
-      let classStr = '';
+      let classStr = ''
       if (!props.readonly) {
-        classStr = `main-title ${props.isSelected ? 'active' : ''}`;
+        classStr = `main-title ${props.isSelected ? 'active' : ''}`
       } else {
-        classStr = 'titlePanel';
-        
+        classStr = 'titlePanel'
       }
       return classStr
-    });
+    })
 
-    const isTitleHide = computed(() => { 
+    const isTitleHide = computed(() => {
       if (props.readonly && !mainTitle.value) {
         return false
       }
-      return true;
+      return true
     })
 
-    const mainTitle = computed(() => { 
+    const mainTitle = computed(() => {
       return props.bannerConf.titleConfig?.mainTitle
     })
 
     const handleClick = () => {
-      if (props.readonly) return;
+      if (props.readonly) return
       emit('select')
     }
 
@@ -65,26 +63,30 @@ export default defineComponent({
       isTitleHide,
       mainTitle,
       handleClick,
-      onTitleInput,
+      onTitleInput
     }
   },
   render() {
     return (
-      <div class={['main-title-warp', this.props.readonly ? 'pd15' : '']} onClick={this.handleClick}>
-        {this.isTitleHide ? 
+      <div
+        class={['main-title-warp', !this.props.readonly ? 'pd15' : '']}
+        onClick={this.handleClick}
+      >
+        {this.isTitleHide ? (
           <div class={this.titleClass}>
-            {!this.props.readonly ?
-              <RichEditor 
+            {!this.props.readonly ? (
+              <RichEditor
                 modelValue={this.mainTitle}
                 onInput={this.onTitleInput}
                 placeholder="请输入标题"
               />
-            :
-              <div class="main-title" v-html={this.mainTitle}></div>
-            }
+            ) : (
+              <div class="mainTitle" v-html={this.mainTitle}></div>
+            )}
           </div>
-        :
-        ''}
+        ) : (
+          ''
+        )}
       </div>
     )
   }

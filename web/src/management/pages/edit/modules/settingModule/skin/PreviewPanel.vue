@@ -3,62 +3,70 @@
     <div class="operation-wrapper">
       <div class="box" ref="box">
         <div class="mask"></div>
-        <BannerContent :bannerConf="bannerConf" />
+        <HeaderContent :bannerConf="bannerConf" :readonly="false" />
         <div class="content">
-          <MainTitle :isSelected="false" :bannerConf="bannerConf" />
+          <MainTitle :isSelected="false" :bannerConf="bannerConf" :readonly="false" />
           <MaterialGroup :questionDataList="questionDataList" ref="MaterialGroup" />
           <SubmitButton
             :submit-conf="submitConf"
             :skin-conf="skinConf"
+            :readonly="false"
             :is-selected="currentEditOne === 'submit'"
           />
-          <LogoPreview :logo-conf="bottomConf" :is-selected="currentEditOne === 'logo'" />
+          <LogoIcon
+            :logo-conf="bottomConf"
+            :readonly="false"
+            :is-selected="currentEditOne === 'logo'"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
+import { computed, defineComponent, ref } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import BannerContent from '../components/BannerContent.vue'
-import MainTitle from '@/management/pages/edit/components/MainTitle.vue'
-import SubmitButton from '@/management/pages/edit/components/SubmitButton.vue'
-import LogoPreview from '@/management/pages/edit/components/LogoPreview.vue'
-import { mapState, mapGetters } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useStore } from 'vuex'
+import communalLoader from '@materials/communals/communalLoader.js'
 
-export default {
-  name: 'PreviewPanel',
+const HeaderContent = ()=>communalLoader.defineAsyncComponent('HeaderContent')
+const MainTitle = ()=>communalLoader.defineAsyncComponent('MainTitle')
+const SubmitButton = ()=>communalLoader.defineAsyncComponent('SubmitButton')
+const LogoIcon = ()=>communalLoader.defineAsyncComponent('LogoIcon')
+
+export default defineComponent({
   components: {
-    BannerContent,
-    MainTitle,
-    SubmitButton,
-    LogoPreview,
-    MaterialGroup
+    MaterialGroup,
+    HeaderContent:HeaderContent(),
+    MainTitle:MainTitle(),
+    SubmitButton:SubmitButton(),
+    LogoIcon:LogoIcon()
   },
-  data() {
+  setup() {
+    const store = useStore()
+
+    const bannerConf = computed(() => store.state.edit.schema.bannerConf)
+    const submitConf = computed(() => store.state.edit.schema.submitConf)
+    const bottomConf = computed(() => store.state.edit.schema.bottomConf)
+    const skinConf = computed(() => store.state.edit.schema.skinConf)
+    const questionDataList = computed(() => store.state.edit.schema.questionDataList)
+    const currentEditOne = computed(() => store.state.edit.currentEditOne)
+    const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
+
     return {
-      isAnimating: false
+      bannerConf,
+      submitConf,
+      bottomConf,
+      skinConf,
+      questionDataList,
+      currentEditOne,
+      currentEditKey
     }
-  },
-  computed: {
-    ...mapState({
-      bannerConf: (state) => _get(state, 'edit.schema.bannerConf'),
-      submitConf: (state) => _get(state, 'edit.schema.submitConf'),
-      bottomConf: (state) => _get(state, 'edit.schema.bottomConf'),
-      skinConf: (state) => _get(state, 'edit.schema.skinConf'),
-      questionDataList: (state) => _get(state, 'edit.schema.questionDataList'),
-      currentEditOne: (state) => _get(state, 'edit.currentEditOne')
-    }),
-    ...mapGetters({
-      currentEditKey: 'edit/currentEditKey'
-    })
   },
   watch: {
     skinConf: {
-      handler(skinConf) {
-        const { themeConf, backgroundConf, contentConf } = skinConf
+      handler(newVal) {
+        const { themeConf, backgroundConf, contentConf } = newVal
         const root = document.documentElement
         if (themeConf?.color) {
           root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
@@ -70,36 +78,11 @@ export default {
           root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
         }
       },
-      immediate: true, // 立即触发回调函数
+      immediate: true,
       deep: true
     }
-  },
-  methods: {
-    animate(dom, property, targetValue) {
-      const origin = dom[property]
-      const subVal = targetValue - origin
-
-      const flag = subVal < 0 ? -1 : 1
-
-      const step = flag * 50
-
-      const totalCount = Math.floor(subVal / step) + 1
-
-      let runCount = 0
-      const run = () => {
-        dom[property] += step
-        runCount++
-        if (runCount < totalCount) {
-          requestAnimationFrame(run)
-        } else {
-          this.isAnimating = false
-        }
-      }
-
-      requestAnimationFrame(run)
-    }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -140,6 +123,7 @@ export default {
   .box {
     background-color: var(--primary-background-color);
     position: relative;
+
     .mask {
       position: absolute;
       top: 0;
@@ -148,6 +132,7 @@ export default {
       right: 0;
       z-index: 999;
     }
+
     .content {
       margin: 0 0.3rem;
       background: rgba(255, 255, 255, var(--opacity));

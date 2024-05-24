@@ -1,11 +1,11 @@
-.header-content-warp{
+.header-content-warp {
   width: 100%;
-  .header-banner-wrap{
+  .header-banner-wrap {
     .banner {
       width: 100%;
       display: flex;
       justify-content: center;
-    } 
+    }
     .banner-img {
       width: 100%;
       &.pointer {
@@ -15,7 +15,7 @@
     .empty-banner {
       height: 120px;
       border: 1px dashed #e3e4e8;
-  
+
       p {
         text-align: center;
         color: #c8c9cd;
@@ -26,14 +26,14 @@
           margin: 20px 0 24px 0;
         }
       }
-  
+
       &.banner-active {
         background-color: #f2f4f7;
         box-shadow: 0 0 5px #e3e4e8;
       }
     }
   }
-  .header-video-warp{
+  .header-video-warp {
     .video {
       width: 100%;
       height: 100%;

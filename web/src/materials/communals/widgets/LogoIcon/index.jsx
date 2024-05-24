@@ -1,5 +1,5 @@
-import { defineComponent,computed } from 'vue'
-import './index.scss';
+import { defineComponent, computed } from 'vue'
+import './index.scss'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -9,7 +9,7 @@ export default defineComponent({
       type: Object,
       default: () => ({
         logoImageWidth: Number,
-        logoImage:String
+        logoImage: String
       })
     },
     readonly: {
@@ -17,17 +17,16 @@ export default defineComponent({
       default: false
     }
   },
-  emits:['select'],
-  setup(props,{emit}) { 
-
+  emits: ['select'],
+  setup(props, { emit }) {
     const store = useStore()
 
-    const logoImage = computed(() => { 
-      return props.logoConf?.logoImage;
+    const logoImage = computed(() => {
+      return props.logoConf?.logoImage
     })
 
-    const logoImageWidth = computed(() => { 
-      return props.logoConf?.logoImageWidth;
+    const logoImageWidth = computed(() => {
+      return props.logoConf?.logoImageWidth
     })
 
     const isMobile = computed(() => {
@@ -35,26 +34,26 @@ export default defineComponent({
     })
 
     const logoStyle = computed(() => {
-      let style = {};
-      if (props.readonly) {
+      let style = {}
+      if (!props.readonly) {
         style = {
           width: logoImageWidth.value
         }
       } else {
-        style={
-          width: !isMobile.value ? '20%' : logoImageWidth.value || '20%'  
+        style = {
+          width: !isMobile.value ? '20%' : logoImageWidth.value || '20%'
         }
       }
       return style
     })
 
     const onSelect = () => {
-      if (props.readonly) return;
+      if (props.readonly) return
       emit('select')
     }
 
-    const noLogoRender = () => { 
-      if ( !props.readonly) {
+    const noLogoRender = () => {
+      if (!props.readonly) {
         return (
           <div class="logo-placeholder-wrapper">
             <div class="logo-placeholder">LOGO</div>
@@ -72,19 +71,17 @@ export default defineComponent({
       onSelect,
       noLogoRender
     }
-
   },
   render() {
-    const { readonly } = this.props;
+    const { readonly } = this.props
     return (
       <div class="logo-icon-warp" onClick={this.onSelect}>
         <div class={[readonly ? 'logo-wrapper' : 'question-logo']}>
-          {this.logoImage
-            ?
-              <img src={this.logoImage} style={this.logoStyle} />
-            :
+          {this.logoImage ? (
+            <img src={this.logoImage} style={this.logoStyle} />
+          ) : (
             this.noLogoRender()
-          }
+          )}
         </div>
       </div>
     )

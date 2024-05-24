@@ -1,6 +1,5 @@
 import { defineComponent, computed } from 'vue'
 
-
 export default defineComponent({
   name: 'HeaderVideo',
   props: {
@@ -13,24 +12,23 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) { 
-
-    const attributeVideo = computed(() => { 
-      const { bannerConf,readonly} = props;
+  setup(props) {
+    const attributeVideo = computed(() => {
+      const { bannerConf, readonly } = props
       let data = {
-        id:'video',
+        id: 'video',
         preload: 'auto',
-        style: readonly ? 'margin: 0 auto; width: 100%; display: block;' : '' ,
-        poster:   bannerConf?.bannerConfig?.postImg,
+        style: readonly ? 'margin: 0 auto; width: 100%; display: block;' : '',
+        poster: bannerConf?.bannerConfig?.postImg,
         controls: '',
-        class:readonly ?  '' : 'custom-video' 
+        class: readonly ? '' : 'custom-video'
       }
-      return data;
+      return data
     })
 
     const play = () => {
-      const video = document.getElementById('video');
-      if(!video) return;
+      const video = document.getElementById('video')
+      if (!video) return
       document.querySelector('.play-icon').style.display = 'none'
       document.querySelector('.video-modal').style.display = 'none'
       video.play()
@@ -43,21 +41,24 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly } = this.props;
+    const { readonly } = this.props
     return (
       <div class="header-video-warp">
         <div class="video">
-          <video {...this.attributeVideo}>
-            <source src={ this.bannerConf?.bannerConfig?.videoLink} type="video/mp4" />
+          <video {...this.attributeVideo} >
+            <source src={this.bannerConf?.bannerConfig?.videoLink} type="video/mp4" />
           </video>
-          {
-            readonly ? (
-              <>
-                <div class="video-modal" style={`background-image:url(${this.attributeVideo.poster})` }></div>
-                <div class="iconfont icon-kaishi play-icon" onClick={this.play}></div>
-              </>
-            ) : ''
-          }
+          {readonly ? (
+            <>
+              <div
+                class="video-modal"
+                style={`background-image:url(${this.attributeVideo.poster})`}
+              ></div>
+              <div class="iconfont icon-kaishi play-icon" onClick={this.play}></div>
+            </>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     )

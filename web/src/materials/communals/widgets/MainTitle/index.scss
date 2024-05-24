@@ -1,17 +1,17 @@
-.main-title-warp{
+.main-title-warp {
   .mainTitle {
     font-size: 0.28rem;
     line-height: 0.4rem;
     color: $title-color;
-  
+
     ol {
       list-style: decimal;
     }
-  
+
     ul {
       list-style: disc;
     }
-  
+
     img {
       width: 100%;
     }
@@ -35,22 +35,22 @@
   }
   .main-title {
     border: 1px solid transparent;
-  
+
     &.active {
       border: 1px solid #e3e4e6;
       background-color: #f6f7f9;
       box-shadow: 0 0 5px #dedede;
-  
+
       :deep(.w-e-text-container) {
         background-color: #f6f7f9;
       }
     }
   }
-  
+
   .main-title:hover {
     border: 1px dashed #eee;
   }
-  &.pd15{
+  &.pd15 {
     padding: 15px;
   }
   .titlePanel {

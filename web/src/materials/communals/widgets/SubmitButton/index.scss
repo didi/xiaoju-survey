@@ -1,10 +1,10 @@
-.submit-warp{
-  &.question-submit_wrapper{
+.submit-warp {
+  &.question-submit_wrapper {
     margin: 0 0.4rem;
     font-size: 0;
     position: relative;
   }
-  &.preview-submit_wrapper{
+  &.preview-submit_wrapper {
     padding: 25px;
     text-align: center;
   }
@@ -22,5 +22,6 @@
     border-radius: 0.08rem;
     margin: 0.4rem 0;
     cursor: pointer;
+    border: none;
   }
 }

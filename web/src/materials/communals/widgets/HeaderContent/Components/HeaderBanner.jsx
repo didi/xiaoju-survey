@@ -1,4 +1,4 @@
-import { defineComponent, onMounted, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { get as _get } from 'lodash-es'
 import { formatLink } from '@materials/communals/common/utils'
 
@@ -18,8 +18,7 @@ export default defineComponent({
       default: false
     }
   },
-  setup(props) { 
-
+  setup(props) {
     const bgImage = computed(() => {
       return _get(props.bannerConf, 'bannerConfig.bgImage', '')
     })
@@ -33,31 +32,15 @@ export default defineComponent({
       window.open(formatLink(jumpLink))
     }
 
-    // const emptyBannerRender = () => {
-    //   if(!bgImage.value && !props.readonly) {
-    //     let classStr = 'empty-banner';
-    //     if (props.isSelected) {
-    //       classStr += 'banner-active'
-    //     } 
-    //     return (
-    //       <div class={classStr}>
-    //         <p>点击配置头图</p>
-    //         <p>若不配置头图，将不在问卷中展示</p>
-    //       </div>
-    //     )
-    //   }
-    //   return ''
-    // }
-
     const bannerRender = () => {
       let attribute = {
-        class:'banner-img'
+        class: 'banner-img'
       }
       if (props.readonly) {
         const allow = _get(props.bannerConf, 'bannerConfig.bgImageAllowJump', false)
         attribute = {
           class: `${attribute.class}  ${allow ? 'pointer' : ''}`,
-          onClick:onBannerClick
+          onClick: onBannerClick
         }
       }
       if (bgImage.value) {
@@ -67,11 +50,11 @@ export default defineComponent({
           </div>
         )
       }
-      if(!bgImage.value && !props.readonly) {
-        let classStr = 'empty-banner';
+      if (!bgImage.value && !props.readonly) {
+        let classStr = 'empty-banner'
         if (props.isSelected) {
           classStr += 'banner-active'
-        } 
+        }
         return (
           <div class={classStr}>
             <p>点击配置头图</p>
@@ -79,9 +62,9 @@ export default defineComponent({
           </div>
         )
       }
-      return '';
+      return ''
     }
-    
+
     return {
       bgImage,
       // emptyBannerRender,

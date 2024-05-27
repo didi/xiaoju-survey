@@ -48,7 +48,7 @@ export default {
           return
         case 'release':
           this.$router.push({
-            name: 'publishResultPage',
+            name: 'publish',
             params: {
               id: this.data._id
             }

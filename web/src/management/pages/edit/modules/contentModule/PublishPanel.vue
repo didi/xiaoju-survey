@@ -53,9 +53,7 @@ export default {
         if (publishRes.code === 200) {
           ElMessage.success('发布成功')
           this.$store.dispatch('edit/getSchemaFromRemote')
-          this.$router.push({
-            name: 'publishResultPage'
-          })
+          this.$router.push({ name: 'publish' })
         } else {
           ElMessage.error(`发布失败 ${publishRes.errmsg}`)
         }

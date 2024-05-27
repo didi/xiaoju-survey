@@ -72,7 +72,7 @@ const itemClass = computed(() => {
   }
 })
 const showHover = computed(() => {
-  return isHover.value
+  return isHover.value || props.isSelected
 })
 const showUp = computed(() => {
   return props.qIndex !== 0

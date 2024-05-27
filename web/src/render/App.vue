@@ -111,7 +111,7 @@ onMounted(async () => {
 @import url('./styles/reset.scss');
 
 html {
-  background: rgb(238, 238, 238);
+  background: #f7f7f7;
 }
 
 #app {

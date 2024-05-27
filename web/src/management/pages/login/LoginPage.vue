@@ -14,7 +14,7 @@
       <el-form
         :model="formData"
         :rules="rules"
-        ref="formData"
+        ref="formDataRef"
         label-width="100px"
         class="login-form"
         @submit.prevent
@@ -36,17 +36,17 @@
 
         <el-form-item class="button-group">
           <el-button
-            :loading="loginPending"
+            :loading="pending.login"
             size="small"
             type="primary"
             class="button"
-            @click="submitForm('formData', 'login')"
+            @click="submitForm('login')"
             >登录</el-button
           >
           <el-button
-            :loading="registerPending"
+            :loading="pending.register"
             class="button register-button"
-            @click="submitForm('formData', 'register')"
+            @click="submitForm('register')"
             >注册</el-button
           >
         </el-form-item>
@@ -55,113 +55,129 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { onMounted, ref, reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { login, register } from '@/management/api/auth'
-import { refreshCaptcha } from '@/management/api/captcha'
+import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
-export default {
-  name: 'LoginPage',
-  data() {
-    return {
-      formData: {
-        name: '',
-        password: '',
-        captcha: '',
-        captchaId: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          {
-            min: 3,
-            max: 10,
-            message: '长度在 3 到 10 个字符',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          {
-            min: 8,
-            max: 16,
-            message: '长度在 8 到 16 个字符',
-            trigger: 'blur'
-          }
-        ],
-        captcha: [
-          {
-            required: true,
-            message: '请输入验证码',
-            trigger: 'blur'
-          }
-        ]
-      },
-      loginPending: false,
-      registerPending: false,
-      captchaImgData: ''
+
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
+
+interface FormData {
+  name: string
+  password: string
+  captcha: string
+  captchaId: string
+}
+
+const formData = reactive<FormData>({
+  name: '',
+  password: '',
+  captcha: '',
+  captchaId: ''
+})
+
+const rules = {
+  name: [
+    { required: true, message: '请输入账号', trigger: 'blur' },
+    {
+      min: 3,
+      max: 10,
+      message: '长度在 3 到 10 个字符',
+      trigger: 'blur'
     }
-  },
-  created() {
-    this.refreshCaptcha()
-  },
-  methods: {
-    submitForm(formName, type) {
-      this.$refs[formName].validate(async (valid) => {
-        if (valid) {
-          try {
-            const submitTypes = {
-              login,
-              register
-            }
-            this[`${type}Pending`] = true
-            const res = await submitTypes[type]({
-              username: this.formData.name,
-              password: this.formData.password,
-              captcha: this.formData.captcha,
-              captchaId: this.formData.captchaId
-            })
-            this[`${type}Pending`] = false
-            if (res.code !== CODE_MAP.SUCCESS) {
-              ElMessage.error(res.errmsg)
-              throw new Error('登录/注册失败' + res.errmsg)
-            }
-            this.$store.dispatch('user/login', {
-              username: res.data.username,
-              token: res.data.token
-            })
-            let redirect = {
-              name: 'survey'
-            }
-            if (this.$route.query.redirect) {
-              redirect = decodeURIComponent(this.$route.query.redirect)
-            }
-            this.$router.replace(redirect)
-          } catch (error) {
-            this[`${type}Pending`] = false
-          }
-          return true
-        } else {
-          return false
-        }
-      })
-    },
-    async refreshCaptcha() {
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    {
+      min: 8,
+      max: 16,
+      message: '长度在 8 到 16 个字符',
+      trigger: 'blur'
+    }
+  ],
+  captcha: [
+    {
+      required: true,
+      message: '请输入验证码',
+      trigger: 'blur'
+    }
+  ]
+}
+
+onMounted(() => {
+  refreshCaptcha()
+})
+
+const pending = reactive({
+  login: false,
+  register: false
+})
+
+const captchaImgData = ref('')
+const formDataRef = ref(null)
+
+const submitForm = (type) => {
+  formDataRef.value.validate(async (valid) => {
+    if (valid) {
       try {
-        const res = await refreshCaptcha({
-          captchaId: this.formData.captchaId
-        })
-        if (res.code === 200) {
-          const { id, img } = res.data
-          this.formData.captchaId = id
-          this.captchaImgData = img
+        const submitTypes = {
+          login,
+          register
         }
+        pending[type] = true
+        const res = await submitTypes[type]({
+          username: formData.name,
+          password: formData.password,
+          captcha: formData.captcha,
+          captchaId: formData.captchaId
+        })
+        pending[type] = false
+        if (res.code !== CODE_MAP.SUCCESS) {
+          ElMessage.error(res.errmsg)
+          throw new Error('登录/注册失败' + res.errmsg)
+        }
+        store.dispatch('user/login', {
+          username: res.data.username,
+          token: res.data.token
+        })
+        let redirect = {
+          name: 'survey'
+        }
+        if (route.query.redirect) {
+          redirect = decodeURIComponent(this.$route.query.redirect)
+        }
+        router.replace(redirect)
       } catch (error) {
-        ElMessage.error('获取验证码失败')
+        pending[type] = false
       }
+      return true
+    } else {
+      return false
     }
+  })
+}
+
+const refreshCaptcha = async () => {
+  try {
+    const res = await refreshCaptchaApi({
+      captchaId: formData.captchaId
+    })
+    if (res.code === 200) {
+      const { id, img } = res.data
+      formData.captchaId = id
+      captchaImgData.value = img
+    }
+  } catch (error) {
+    ElMessage.error('获取验证码失败')
   }
 }
 </script>

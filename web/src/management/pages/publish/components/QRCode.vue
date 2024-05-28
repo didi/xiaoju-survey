@@ -1,5 +1,5 @@
 <template>
-  <div class="qrcode" @mouseover="inQcode = true" @mouseout="inQcode = false">
+  <div class="qrcode">
     <div class="qcode-mask">
       <el-popover
         ref="popover"
@@ -18,42 +18,42 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, watch, computed, nextTick } from 'vue'
+
 import QRCode from 'qrcode'
 
-export default {
-  name: 'QRCode',
-  props: ['url'],
-  data() {
-    return {
-      inQcode: false,
-      qRCodeImg: ''
-    }
-  },
-  methods: {
-    initQRCodeImg() {
-      QRCode.toDataURL(this.url)
-        .then((url) => {
-          this.qRCodeImg = url
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    }
-  },
-  watch: {
-    url: {
-      immediate: true,
-      handler(newVal) {
-        if (newVal) {
-          this.$nextTick(() => {
-            this.initQRCodeImg()
-          })
-        }
-      }
-    }
+interface Props {
+  url: string
+}
+
+const props = defineProps<Props>()
+
+const qRCodeImg = ref<string>('')
+const watchURL = computed<string>(() => props.url)
+
+const convertUrlToQRCode = async (url: string) => {
+  try {
+    const res = await QRCode.toDataURL(url)
+    qRCodeImg.value = res
+  } catch (err) {
+    console.log(err)
   }
 }
+
+watch(
+  watchURL,
+  (value) => {
+    if ((!qRCodeImg.value && value) || watchURL.value !== value) {
+      nextTick(() => {
+        convertUrlToQRCode(value)
+      })
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <style lang="scss" scoped>

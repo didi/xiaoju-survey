@@ -3,7 +3,7 @@
     <LeftMenu class="left" />
     <div class="right">
       <template v-if="curStatus !== 'new'">
-        <div class="preview-container" :style="{ backgroundImage: `url('${this.phoneBg}')` }">
+        <div class="preview-container" :style="{ backgroundImage: `url('${backgroundImage}')` }">
           <iframe :src="mainChannel.fullUrl"></iframe>
         </div>
         <div class="container-content">
@@ -20,13 +20,14 @@
           </div>
         </div>
       </template>
-      <EmptyIndex v-else :data="noDataConfig" />
+      <EmptyIndex v-else :data="defaultConfig" />
     </div>
   </div>
 </template>
-
-<script>
-import { mapState } from 'vuex'
+<script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 import { get as _get } from 'lodash-es'
 
 import { ElMessage } from 'element-plus'
@@ -34,61 +35,43 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import LeftMenu from '@/management/components/LeftMenu.vue'
-
 import ChannelRow from './components/ChannelRow.vue'
 
-export default {
-  name: 'PublishResultPage',
-  data() {
-    return {
-      noDataConfig: {
-        title: '问卷未发布',
-        desc: '点击发布后，问卷就可以对外投放了哦！',
-        img: '/imgs/icons/unpublished.webp'
-      },
-      phoneBg: '/imgs/phone-bg.webp'
-    }
-  },
-  async created() {
-    this.$store.commit('edit/setSurveyId', this.$route.params.id)
-    try {
-      await this.$store.dispatch('edit/init')
-    } catch (error) {
-      ElMessage.error(error.message)
-      // 自动跳转回列表页
-      setTimeout(() => {
-        this.$router.replace({
-          name: 'survey'
-        })
-      }, 1000)
-    }
-  },
-  computed: {
-    ...mapState({
-      metaData: (state) => _get(state, 'edit.schema.metaData')
-    }),
-    curStatus() {
-      return _get(this.metaData, 'curStatus.status', 'new')
-    },
-    mainChannel() {
-      if (!this.metaData) {
-        return {
-          fullUrl: ''
-        }
-      }
-      return {
-        fullUrl: `${location.origin}/render/${this.metaData.surveyPath}`
-      }
-    }
-  },
-  components: {
-    ChannelRow,
-    EmptyIndex,
-    LeftMenu
-  }
+const backgroundImage = '/imgs/phone-bg.webp'
+const defaultConfig = {
+  title: '问卷未发布',
+  desc: '点击发布后，问卷就可以对外投放了哦！',
+  img: '/imgs/icons/unpublished.webp'
 }
-</script>
 
+const store = useStore()
+const metaData = computed(() => _get(store.state, 'edit.schema.metaData'))
+const curStatus = computed(() => _get(metaData.value, 'curStatus.status', 'new'))
+const mainChannel = computed(() => {
+  let fullUrl = ''
+
+  if (metaData.value) {
+    fullUrl = `${location.origin}/render/${metaData.value.surveyPath}`
+  }
+
+  return { fullUrl }
+})
+
+const route = useRoute()
+const router = useRouter()
+onMounted(async () => {
+  store.commit('edit/setSurveyId', route.params.id)
+
+  try {
+    await store.dispatch('edit/init')
+  } catch (err: any) {
+    ElMessage.error(err.message)
+    setTimeout(() => {
+      router.replace({ name: 'survey' })
+    }, 1000)
+  }
+})
+</script>
 <style lang="scss" scoped>
 .publish-result-page {
   width: 100%;

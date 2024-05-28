@@ -35,8 +35,8 @@ import communalLoader from '@materials/communals/communalLoader.js'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { useStore } from 'vuex'
 
-const MainTitle = communalLoader.defineAsyncComponent('MainTitle')
-const SubmitButton = communalLoader.defineAsyncComponent('SubmitButton')
+const MainTitle = communalLoader.loadComponent('MainTitle')
+const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
 const store = useStore()
 const mainOperation = ref(null)

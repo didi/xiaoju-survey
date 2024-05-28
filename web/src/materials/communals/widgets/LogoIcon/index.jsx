@@ -27,14 +27,6 @@ export default defineComponent({
       return props.logoConf?.logoImageWidth
     })
 
-    const logoStyle = computed(() => {
-      let style = {}
-      style = {
-        width: logoImageWidth.value
-      }
-      return style
-    })
-
     const onSelect = () => {
       if (props.readonly) return
       emit('select')
@@ -54,7 +46,6 @@ export default defineComponent({
     return {
       logoImage,
       logoImageWidth,
-      logoStyle,
       props,
       onSelect,
       noLogoRender

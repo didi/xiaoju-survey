@@ -43,10 +43,10 @@ withDefaults(defineProps<Props>(), {
   isMobile: false
 })
 
-const HeaderContent = communalLoader.defineAsyncComponent('HeaderContent')
-const MainTitle = communalLoader.defineAsyncComponent('MainTitle')
-const SubmitButton = communalLoader.defineAsyncComponent('SubmitButton')
-const LogoIcon = communalLoader.defineAsyncComponent('LogoIcon')
+const HeaderContent = communalLoader.loadComponent('HeaderContent')
+const MainTitle = communalLoader.loadComponent('MainTitle')
+const SubmitButton = communalLoader.loadComponent('SubmitButton')
+const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
 const mainRef = ref<any>()
 const boxRef = ref<HTMLElement>()

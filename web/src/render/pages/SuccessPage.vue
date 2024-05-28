@@ -5,17 +5,20 @@
         <img src="/imgs/icons/success.webp" />
         <div class="msg" v-html="successMsg"></div>
       </div>
-      <LogoIcon />
+      <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from 'vuex'
-import LogoIcon from '../components/LogoIcon.vue'
+// @ts-ignore
+import communalLoader from '@materials/communals/communalLoader.js'
 
+const LogoIcon = communalLoader.loadComponent('LogoIcon')
 const store = useStore()
 
+const logoConf = computed(() => store.state?.bottomConf || {})
 const successMsg = computed(() => {
   const msgContent = store.state?.submitConf?.msgContent || {}
   return msgContent?.msg_200 || '提交成功'

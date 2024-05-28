@@ -77,10 +77,10 @@ const handleSelectChange = (value: string) => {
 }
 
 watch(
-  props.formConfig,
-  (newValue) => {
-    if (modelValue.value != newValue.value) {
-      modelValue.value = newValue.value
+  () => props.formConfig?.value,
+  (val) => {
+    if (modelValue.value != val) {
+      modelValue.value = val
     }
   },
   { deep: true }

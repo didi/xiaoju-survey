@@ -17,7 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
@@ -52,9 +52,8 @@ const handleTimePickerChange = (values: Array<string>) => {
   times.forEach((value, idx) => emit(FORM_CHANGE_EVENT_KEY, { key: keys[idx], value }))
 }
 
-const watchValue = computed(() => props.formConfig.value)
 watch(
-  watchValue,
+  () => props.formConfig.value,
   ([startTime = '00:00:00', endTime = '23:59:59']: Array<string>) => {
     if (startTime !== timeValue.value[0] || endTime !== timeValue.value[1]) {
       const times = [startTime, endTime]

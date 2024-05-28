@@ -38,32 +38,34 @@ const handleCheckboxChange = (value: boolean) => {
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 
-const watchOptionOrigin = computed(() => props.moduleConfig.optionOrigin)
-const watchExtraOptions = computed(() => props.moduleConfig?.extraOptions?.length || [])
-const watchValue = computed(() => props.formConfig.value)
+watch(
+  () => props.moduleConfig.optionOrigin,
+  (newVal) => {
+    const key = props.formConfig.key
+    const extraLen = props.moduleConfig?.extraOptions?.length
 
-watch(watchOptionOrigin, (newVal) => {
-  const key = props.formConfig.key
-  const extraLen = props.moduleConfig?.extraOptions?.length
-
-  if (key === 'randomSort' && newVal && extraLen === 0) {
-    emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
-    modelValue.value = false
+    if (key === 'randomSort' && newVal && extraLen === 0) {
+      emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
+      modelValue.value = false
+    }
   }
-})
-
-watch(watchExtraOptions, (newVal) => {
-  const key = props.formConfig.key
-  const origin = props.moduleConfig?.optionOrigin
-
-  if (key === 'randomSort' && origin && newVal === 0) {
-    emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
-    modelValue.value = false
-  }
-})
+)
 
 watch(
-  watchValue,
+  () => props.moduleConfig?.extraOptions?.length || [],
+  (newVal) => {
+    const key = props.formConfig.key
+    const origin = props.moduleConfig?.optionOrigin
+
+    if (key === 'randomSort' && origin && newVal === 0) {
+      emit(FORM_CHANGE_EVENT_KEY, { key: 'randomSort', value: false })
+      modelValue.value = false
+    }
+  }
+)
+
+watch(
+  () => props.formConfig.value,
   (newVal: boolean) => {
     if (newVal !== modelValue.value) {
       modelValue.value == !!newVal

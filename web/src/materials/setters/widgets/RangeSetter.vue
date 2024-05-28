@@ -56,8 +56,8 @@ const maxModelValue = computed(() => {
 
 const handleRangeChange = (eventType: 'max' | 'min', value: number) => {
   const key = props.formConfig.key
-  const initMinValue = props.formConfig.value.min.value
-  const initMaxValue = props.formConfig.value.max.value
+  const initMinValue = minModelValue.value
+  const initMaxValue = maxModelValue.value
 
   if (
     (eventType === 'max' && value < initMinValue) ||

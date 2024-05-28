@@ -11,7 +11,7 @@
       <div class="video">
         <video
           class="custom-video"
-          :poster="bannerConf.bannerConfigpostImg"
+          :poster="bannerConf.bannerConfig.postImg"
           preload="auto"
           controls
           :src="bannerConf.bannerConfig.videoLink"

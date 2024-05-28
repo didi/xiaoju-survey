@@ -12,33 +12,28 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TextSelect',
-  data() {
-    return {
-      selectValue: this.options.default
-    }
-  },
-  props: {
+<script setup>
+  import { computed, ref, watch } from 'vue';
+  
+  const props =  defineProps({
+    value: {
+      type: String,
+      default: ''
+    },
     options: {
       type: Object,
       required: true
-    },
-    effectFun: {
-      type: Function
-    },
-    effectKey: {
-      type: String
     }
-  },
-  watch: {
-    selectValue(newSelect) {
-      const { effectFun } = this
-      typeof effectFun === 'function' && effectFun(newSelect, this.effectKey)
+  })
+  const emit = defineEmits('change')
+  const selectValue = computed({
+    get() {
+      return props.value
+    },
+    set(val) {
+      emit('change', val)
     }
-  }
-}
+  })
 </script>
 
 <style lang="scss" scoped>

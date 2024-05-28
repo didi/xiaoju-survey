@@ -1,5 +1,4 @@
 import { defineComponent, computed,shallowRef,defineAsyncComponent} from 'vue'
-import RichEditor from '@/common/Editor/RichEditor.vue'
 import '@/render/styles/variable.scss'
 import './index.scss'
 

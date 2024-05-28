@@ -24,15 +24,15 @@
   </div>
 </template>
 <script>
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { useStore } from 'vuex'
 import communalLoader from '@materials/communals/communalLoader.js'
 
-const HeaderContent = ()=>communalLoader.defineAsyncComponent('HeaderContent')
-const MainTitle = ()=>communalLoader.defineAsyncComponent('MainTitle')
-const SubmitButton = ()=>communalLoader.defineAsyncComponent('SubmitButton')
-const LogoIcon = ()=>communalLoader.defineAsyncComponent('LogoIcon')
+const HeaderContent = ()=>communalLoader.loadComponent('HeaderContent')
+const MainTitle = ()=>communalLoader.loadComponent('MainTitle')
+const SubmitButton = ()=>communalLoader.loadComponent('SubmitButton')
+const LogoIcon = ()=>communalLoader.loadComponent('LogoIcon')
 
 export default defineComponent({
   components: {

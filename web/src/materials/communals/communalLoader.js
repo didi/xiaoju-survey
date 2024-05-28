@@ -1,11 +1,7 @@
-import ComponentLoader from '@/materials/utils/componentLoader'
 import { defineAsyncComponent } from 'vue'
 
-export class CommunalLoader extends ComponentLoader {
-  dynamicImport(path) {
-    return import(`./widgets/${path}.vue`)
-  }
-  defineAsyncComponent(path) {
+export class CommunalLoader {
+  loadComponent(path) {
     return defineAsyncComponent({
       loader: () => import(`./widgets/${path}/index.jsx`),
       delay: 200,

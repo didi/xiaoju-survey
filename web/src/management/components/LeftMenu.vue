@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <LogoIcon />
-    <RouterLink v-for="(tab, index) in tabs" :key="index" class="tab-btn" :to="tab.to" replace>
+    <RouterLink v-for="(tab, index) in currentTabs" :key="index" class="tab-btn" :to="tab.to" replace>
       <div class="icon">
         <i class="iconfont" :class="tab.icon"></i>
       </div>
@@ -11,8 +11,13 @@
 </template>
 
 <script setup>
-import LogoIcon from './LogoIcon.vue'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
+import LogoIcon from './LogoIcon.vue'
+import { SurveyPermissions } from '@/management/utils/types/workSpace.ts'
+const store = useStore()
+// console.log({metaData: store.state.edit.schema.metaData})
 const tabs = [
   {
     text: '编辑问卷',
@@ -36,6 +41,21 @@ const tabs = [
     }
   }
 ]
+const currentTabs = computed(() => {
+  const { isCollaborated = false, currentPermission = [] } = store.state.edit?.schema?.metaData || {}
+  if(!isCollaborated) {
+  return tabs
+} else {
+  // 如果没有问卷管理权限，则隐藏问卷编辑和投放菜单
+  if (!currentPermission.includes(SurveyPermissions.SurveyManage)) {
+    return tabs.slice(2,3)
+  }
+  // 如果没有数据分析权限，则隐藏数据分析菜单
+  if (!currentPermission.includes(SurveyPermissions.DataManage)) {
+    return tabs.slice(0, 2)
+  }
+}
+})
 </script>
 <style lang="scss" scoped>
 .nav {

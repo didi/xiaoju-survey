@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, computed, inject, ref, type ComputedRef } from 'vue'
+import { computed, inject, ref, type ComputedRef } from 'vue'
 import { ConditionNode, RuleNode } from '@/common/logicEngine/RuleBuild'
 import { qAbleList } from '@/management/utils/constant.js'
 import { cleanRichText } from '@/common/xss'

@@ -41,7 +41,7 @@ const handleCheckboxChange = (key: string, value: boolean) => {
 const optionsValue = reactive<any>(props.formConfig?.value)
 
 watch(
-  props.formConfig.value,
+  () => props.formConfig?.value,
   (val) => {
     const keys = Object.keys(val)
 

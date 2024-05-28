@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <progressBar />
+    <ProgressBar />
     <div class="wrapper" ref="boxRef">
       <HeaderContent :bannerConf="bannerConf" :readonly="true" />
       <div class="content">
@@ -26,7 +26,7 @@ import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
-import progressBar from '../components/ProgressBar.vue'
+import ProgressBar from '../components/ProgressBar.vue'
 
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'

@@ -1,4 +1,4 @@
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed,shallowRef,defineAsyncComponent} from 'vue'
 import RichEditor from '@/common/Editor/RichEditor.vue'
 import '@/render/styles/variable.scss'
 import './index.scss'
@@ -21,6 +21,7 @@ export default defineComponent({
   },
   emits: ['select', 'change'],
   setup(props, { emit }) {
+
     const titleClass = computed(() => {
       let classStr = ''
       if (!props.readonly) {
@@ -57,31 +58,41 @@ export default defineComponent({
       })
     }
 
+    const richEditorView = shallowRef(null)
+    if (!props.readonly) {
+      richEditorView.value = defineAsyncComponent(
+        () => import('@/common/Editor/RichEditor.vue')
+      )
+    }
+
     return {
       props,
       titleClass,
       isTitleHide,
       mainTitle,
+      richEditorView,
       handleClick,
       onTitleInput
     }
   },
   render() {
+    const { readonly,mainTitle,onTitleInput,richEditorView} = this;
     return (
       <div
-        class={['main-title-warp', !this.props.readonly ? 'pd15' : '']}
+        class={['main-title-warp', !readonly ? 'pd15' : '']}
         onClick={this.handleClick}
       >
         {this.isTitleHide ? (
           <div class={this.titleClass}>
-            {!this.props.readonly ? (
-              <RichEditor
-                modelValue={this.mainTitle}
-                onInput={this.onTitleInput}
+            {!readonly ? (
+              <richEditorView
+                modelValue={mainTitle}
+                onInput={onTitleInput}
                 placeholder="请输入标题"
+                class="mainTitle"
               />
             ) : (
-              <div class="mainTitle" v-html={this.mainTitle}></div>
+              <div class="mainTitle" v-html={mainTitle}></div>
             )}
           </div>
         ) : (

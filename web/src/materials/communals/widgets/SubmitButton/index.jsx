@@ -41,10 +41,10 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly, submitConf } = this.props
+    const { submitConf } = this.props
     return (
       <div
-        class={['submit-warp', readonly ? 'question-submit_wrapper' : 'preview-submit_wrapper']}
+        class={['submit-warp', 'preview-submit_wrapper']}
         onClick={this.handleClick}
       >
         <button class="submit-btn" type="primary" onClick={this.submit}>

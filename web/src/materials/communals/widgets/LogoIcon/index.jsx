@@ -1,6 +1,5 @@
 import { defineComponent, computed } from 'vue'
 import './index.scss'
-import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'LogoIcon',
@@ -19,7 +18,6 @@ export default defineComponent({
   },
   emits: ['select'],
   setup(props, { emit }) {
-    const store = useStore()
 
     const logoImage = computed(() => {
       return props.logoConf?.logoImage
@@ -29,20 +27,10 @@ export default defineComponent({
       return props.logoConf?.logoImageWidth
     })
 
-    const isMobile = computed(() => {
-      return store.state?.isMobile
-    })
-
     const logoStyle = computed(() => {
       let style = {}
-      if (!props.readonly) {
-        style = {
-          width: logoImageWidth.value
-        }
-      } else {
-        style = {
-          width: !isMobile.value ? '20%' : logoImageWidth.value || '20%'
-        }
+      style = {
+        width: logoImageWidth.value
       }
       return style
     })
@@ -73,12 +61,11 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly } = this.props
     return (
       <div class="logo-icon-warp" onClick={this.onSelect}>
-        <div class={[readonly ? 'logo-wrapper' : 'question-logo']}>
+        <div class="question-logo">
           {this.logoImage ? (
-            <img src={this.logoImage} style={this.logoStyle} />
+            <img src={this.logoImage} style={{width: this.logoImageWidth}} />
           ) : (
             this.noLogoRender()
           )}

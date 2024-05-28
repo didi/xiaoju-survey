@@ -5,6 +5,35 @@ export const type = {
   register: '在线报名'
 }
 
+export const spaceListConfig = {
+  name: {
+    title: '空间名称',
+    key: 'name',
+    width: 300
+  },
+  surveyTotal: {
+    title: '问卷数',
+    key: 'surveyTotal',
+    width: 150,
+    tip: true
+  },
+  memberTotal: {
+    title: '成员数',
+    key: 'memberTotal',
+    width: 150
+  },
+  owner: {
+    title: '所有者',
+    key: 'owner',
+    width: 150
+  },
+  createDate: {
+    title: '创建时间',
+    key: 'createDate',
+    minWidth: 200
+  }
+}
+
 export const fieldConfig = {
   type: {
     title: '类型',

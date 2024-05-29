@@ -175,13 +175,13 @@ npm run serve
 <br /><br />
 
 ## QQ交流群
-欢迎加入官方群关注项目最新消息和建设计划：
+官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入：
 
 [<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
 
 
 ## 微信交流群
-欢迎加入官方群关注项目最新消息和建设计划，任何问题和合作可以联系小助手：
+官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入。任何问题和合作可以联系小助手：
 
 <img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
 
@@ -194,7 +194,7 @@ npm run serve
 如果你使用了该项目，请记录反馈：[我在使用](https://github.com/didi/xiaoju-survey/issues/64)，你的支持是我们最大的动力。
 
 ## 贡献
-如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)，你的加入使我们最大的荣幸。
+如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE)，你的加入使我们最大的荣幸。
 
 ## Feature
 关注每周推出的建设：[官方Feature](https://github.com/didi/xiaoju-survey/issues/45)

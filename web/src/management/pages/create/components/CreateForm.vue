@@ -89,7 +89,7 @@ const submit = () => {
       return
     }
     state.canSubmit = false
-    const res:any = await createSurvey({
+    const res: any = await createSurvey({
       surveyType: selectType,
       ...state.form
     })

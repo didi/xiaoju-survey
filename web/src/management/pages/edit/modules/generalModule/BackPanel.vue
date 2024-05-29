@@ -5,14 +5,9 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'BackPanel',
-  methods: {
-    onBack() {
-      window.open('/survey', '_self')
-    }
-  }
+<script setup lang="ts">
+const onBack = () => {
+  window.open('/survey', '_self')
 }
 </script>
 

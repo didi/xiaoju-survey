@@ -175,13 +175,13 @@ npm run serve
 <br /><br />
 
 ## QQ交流群
-欢迎加入官方群关注最新消息、讨论交流：
+欢迎加入官方群关注项目最新消息和建设计划：
 
 [<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
 
 
 ## 微信交流群
-欢迎加入官方群关注最新消息、讨论交流，任何问题可以联系小助手：
+欢迎加入官方群关注项目最新消息和建设计划，任何问题和合作可以联系小助手：
 
 <img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
 

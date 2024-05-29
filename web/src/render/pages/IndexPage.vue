@@ -2,12 +2,18 @@
   <div class="index">
     <ProgressBar />
     <div class="wrapper" ref="boxRef">
-      <HeaderSetter></HeaderSetter>
+      <HeaderContent :bannerConf="bannerConf" :readonly="true" />
       <div class="content">
-        <MainTitle></MainTitle>
+        <MainTitle :bannerConf="bannerConf" :readonly="true"></MainTitle>
         <MainRenderer ref="mainRef"></MainRenderer>
-        <Submit :validate="validate" :renderData="renderData" @submit="handleSubmit"></Submit>
-        <LogoIcon />
+        <SubmitButton
+          :validate="validate"
+          :submitConf="submitConf"
+          :readonly="true"
+          :renderData="renderData"
+          @submit="handleSubmit"
+        ></SubmitButton>
+        <LogoIcon :logo-conf="logoConf" :readonly="true" />
       </div>
     </div>
   </div>
@@ -15,15 +21,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
-
-import HeaderSetter from '../components/HeaderSetter.vue'
-import MainTitle from '../components/MainTitle.vue'
-import Submit from '../components/SubmitSetter.vue'
+// @ts-ignore
+import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
-import LogoIcon from '../components/LogoIcon.vue'
 
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
@@ -40,6 +43,11 @@ withDefaults(defineProps<Props>(), {
   isMobile: false
 })
 
+const HeaderContent = communalLoader.loadComponent('HeaderContent')
+const MainTitle = communalLoader.loadComponent('MainTitle')
+const SubmitButton = communalLoader.loadComponent('SubmitButton')
+const LogoIcon = communalLoader.loadComponent('LogoIcon')
+
 const mainRef = ref<any>()
 const boxRef = ref<HTMLElement>()
 
@@ -48,7 +56,10 @@ const confirm = useCommandComponent(ConfirmDialog)
 
 const store = useStore()
 
+const bannerConf = computed(() => store.state?.bannerConf || {})
 const renderData = computed(() => store.getters.renderData)
+const submitConf = computed(() => store.state?.submitConf || {})
+const logoConf = computed(() => store.state?.bottomConf || {})
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -58,12 +69,12 @@ const validate = (cbk: (v: boolean) => void) => {
 const normalizationRequestBody = () => {
   const enterTime = store.state.enterTime
   const encryptInfo = store.state.encryptInfo
-  const formValues = store.state.formValues
+  const formModel = store.getters.formModel
   const surveyPath = store.state.surveyPath
 
   const result: any = {
     surveyPath,
-    data: JSON.stringify(formValues),
+    data: JSON.stringify(formModel),
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
   }
@@ -126,11 +137,13 @@ const handleSubmit = () => {
 <style scoped lang="scss">
 .index {
   min-height: 100%;
+
   .wrapper {
     min-height: 100%;
     background-color: var(--primary-background-color);
     display: flex;
     flex-direction: column;
+
     .content {
       flex: 1;
       margin: 0 0.3rem;

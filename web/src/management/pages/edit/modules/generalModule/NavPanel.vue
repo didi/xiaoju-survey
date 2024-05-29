@@ -25,38 +25,32 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'NavPanel',
-  props: {},
-  data() {
-    return {
-      btnList: [
-        {
-          icon: 'icon-wenjuanbianji',
-          text: '问卷编辑',
-          router: 'QuestionEditIndex',
-          key: 'edit',
-          next: true
-        },
-        {
-          icon: 'icon-wenjuanshezhi',
-          text: '问卷设置',
-          router: 'QuestionEditSetting',
-          key: 'settings',
-          next: true
-        },
-        {
-          icon: 'icon-yangshishezhi',
-          text: '皮肤设置',
-          router: 'QuestionSkinSetting',
-          key: 'skinsettings',
-          next: true
-        }
-      ]
-    }
+<script setup lang="ts">
+import { reactive } from 'vue'
+
+const btnList = reactive([
+  {
+    icon: 'icon-wenjuanbianji',
+    text: '问卷编辑',
+    router: 'QuestionEditIndex',
+    key: 'edit',
+    next: true
+  },
+  {
+    icon: 'icon-wenjuanshezhi',
+    text: '问卷设置',
+    router: 'QuestionEditSetting',
+    key: 'settings',
+    next: true
+  },
+  {
+    icon: 'icon-yangshishezhi',
+    text: '皮肤设置',
+    router: 'QuestionSkinSetting',
+    key: 'skinsettings',
+    next: true
   }
-}
+])
 </script>
 
 <style lang="scss" scoped>

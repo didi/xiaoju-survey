@@ -4,16 +4,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'TitlePanel',
-  props: {
-    title: {
-      type: String,
-      default: ''
-    }
+<script setup lang="ts">
+defineProps({
+  title: {
+    type: String,
+    default: ''
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -69,12 +69,12 @@ const validate = (cbk: (v: boolean) => void) => {
 const normalizationRequestBody = () => {
   const enterTime = store.state.enterTime
   const encryptInfo = store.state.encryptInfo
-  const formModel = store.getters.formModel
+  const formValues = store.state.formValues
   const surveyPath = store.state.surveyPath
 
   const result: any = {
     surveyPath,
-    data: JSON.stringify(formModel),
+    data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
   }

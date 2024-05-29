@@ -13,42 +13,38 @@
     </div>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import LeftMenu from '@/management/components/LeftMenu.vue'
-
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
-import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
-export default {
-  name: 'questionEditPage',
-  components: {
-    CommonTemplate,
-    Navbar,
-    LeftMenu
-  },
-  async created() {
-    this.$store.commit('edit/setSurveyId', this.$route.params.id)
-    try {
-      await this.$store.dispatch('edit/init')
-      // await this.$store.dispatch('logic/initShowLogic', this.$store.state.edit.schema.logicConf.showLogicConf || {})
-      await initShowLogicEngine(this.$store.state.edit.schema.logicConf.showLogicConf || {})
-    } catch (error) {
-      ElMessage.error(error.message)
-      // 自动跳转回列表页
-      setTimeout(() => {
-        this.$router.replace({
-          name: 'survey'
-        })
-      }, 1000)
-    }
-  }
-}
-</script>
 
+import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
+
+const store = useStore()
+const router = useRouter()
+const route = useRoute()
+
+onMounted(async () => {
+  store.commit('edit/setSurveyId', route.params.id)
+
+  try {
+    await store.dispatch('edit/init')
+    await initShowLogicEngine(store.state.edit.schema.logicConf.showLogicConf || {})
+  } catch (err: any) {
+    ElMessage.error(err.message)
+
+    setTimeout(() => {
+      router.replace({ name: 'survey' })
+    }, 1000)
+  }
+})
+</script>
 <style lang="scss" scoped>
 .edit-index {
   height: 100%;

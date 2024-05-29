@@ -8,26 +8,14 @@
     </el-tab-pane>
   </el-tabs>
 </template>
+<script setup lang="ts">
+import { ref } from 'vue'
 
-<script>
 import TypeList from './components/TypeList.vue'
 import QuestionCatalog from './components/QuestionCatalog.vue'
 
-export default {
-  name: 'CatalogPanel',
-  data() {
-    return {
-      tabSelected: '0'
-    }
-  },
-  components: {
-    TypeList,
-    QuestionCatalog
-  },
-  methods: {}
-}
+const tabSelected = ref<string>('0')
 </script>
-
 <style lang="scss" scoped>
 .tab-box {
   width: 300px;

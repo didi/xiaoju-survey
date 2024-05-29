@@ -5,15 +5,18 @@
 </template>
 <script setup lang="ts">
 import { computed, provide } from 'vue'
-import RulePanel from '../../modules/logicModule/RulePanel.vue'
-import { filterQuestionPreviewData } from '@/management/utils/index'
 import { useStore } from 'vuex'
 import { cloneDeep } from 'lodash-es'
+
+import RulePanel from '../../modules/logicModule/RulePanel.vue'
+import { filterQuestionPreviewData } from '@/management/utils/index'
+
 const store = useStore()
 
 const questionDataList = computed(() => {
   return store.state.edit.schema.questionDataList
 })
+
 const renderData = computed(() => {
   return filterQuestionPreviewData(cloneDeep(questionDataList.value))
 })

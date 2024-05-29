@@ -46,7 +46,6 @@ const hideFullTitle = () => {
   tooltipVisible.value = false
 }
 </script>
-
 <style lang="scss" scoped>
 .title-container {
   position: relative;

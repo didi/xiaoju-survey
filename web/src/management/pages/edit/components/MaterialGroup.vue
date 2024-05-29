@@ -87,11 +87,17 @@ export default defineComponent({
     }
 
     const checkEnd = ({ oldIndex, newIndex }) => {
-      emit('changeSeq', {
-        type: 'move',
-        index: oldIndex,
-        range: newIndex - oldIndex
-      })
+      if (oldIndex !== newIndex) {
+        emit('changeSeq', {
+          type: 'move',
+          index: newIndex,
+          range: 0
+        })
+
+        if (props.currentEditOne === oldIndex) {
+          emit('select', newIndex)
+        }
+      }
     }
 
     const instance = getCurrentInstance()

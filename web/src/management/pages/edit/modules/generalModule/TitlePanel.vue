@@ -1,56 +1,25 @@
 <template>
   <div class="title-container">
-    <div
-      class="title"
-      @mouseover="showFullTitle"
-      @mousemove="updateTooltipPosition"
-      @mouseleave="hideFullTitle"
-    >
-      {{ title }}
-    </div>
-    <div
-      class="tooltip"
-      v-if="tooltipVisible"
-      :style="{ top: tooltipPosition.top + 'px', left: tooltipPosition.left + 'px' }"
-    >
-      {{ title }}
+    <div class="title">
+      {{ showTitle }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { defineProps } from 'vue'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     default: ''
   }
 })
-
-const tooltipVisible = ref(false)
-const tooltipPosition = ref({ top: 0, left: 0 })
-
-const showFullTitle = () => {
-  tooltipVisible.value = true
-}
-
-const updateTooltipPosition = (event: MouseEvent) => {
-  tooltipPosition.value = {
-    top: event.clientY + 10,
-    left: event.clientX + 10
-  }
-}
-
-const hideFullTitle = () => {
-  tooltipVisible.value = false
-}
+const showTitle = props.title
 </script>
 
 <style lang="scss" scoped>
 .title-container {
-  position: relative;
   width: 280px;
 }
 
@@ -62,14 +31,16 @@ const hideFullTitle = () => {
   cursor: pointer;
 }
 
-.tooltip {
-  position: fixed;
-  z-index: 10;
+.title:hover {
+  overflow: visible;
+  white-space: normal;
   background: white;
+  position: absolute;
+  z-index: 1;
   padding: 5px;
   border: 1px solid #ddd;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 1200px;
-  white-space: nowrap;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* 设置一个最大宽度，防止标题过长 */
 }
 </style>
+

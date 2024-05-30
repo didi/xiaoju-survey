@@ -96,7 +96,8 @@ const fieldList = computed(() => {
       .map((item: any) => {
         return {
           label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
-          value: item.field
+          value: item.field,
+          disabled: false
         }
       })
   if (showDate.length !== 0) {
@@ -124,7 +125,8 @@ const getRelyOptions = computed(() => {
       currentQuestion?.options.map((item: any) => {
         return {
           label: cleanRichText(item.text),
-          value: item.hash
+          value: item.hash,
+          disabled: false
         }
       }) || [{
         label: '无数据',

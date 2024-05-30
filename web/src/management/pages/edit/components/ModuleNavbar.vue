@@ -15,35 +15,19 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
 import NavPanel from '../modules/generalModule/NavPanel.vue'
 import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
-import { mapState } from 'vuex'
+import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
+import { computed } from 'vue'
 
-export default {
-  name: 'ModuleNavbar',
-  components: {
-    BackPanel,
-    TitlePanel,
-    NavPanel,
-    HistoryPanel,
-    SavePanel,
-    PublishPanel
-  },
-  data() {
-    return {}
-  },
-  computed: {
-    ...mapState({
-      title: (state) => _get(state, 'edit.schema.metaData.title')
-    })
-  }
-}
+const store = useStore()
+const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
 </script>
 
 <style lang="scss" scoped>

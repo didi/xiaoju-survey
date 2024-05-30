@@ -85,6 +85,16 @@ export class AuthController {
       throw new HttpException('验证码不正确', EXCEPTION_CODE.CAPTCHA_INCORRECT);
     }
 
+    const username = await this.userService.getUserByUsername(
+      userInfo.username,
+    );
+    if (!username) {
+      throw new HttpException(
+        '账号未注册，请进行注册',
+        EXCEPTION_CODE.USER_NOT_EXISTS,
+      );
+    }
+
     const user = await this.userService.getUser({
       username: userInfo.username,
       password: userInfo.password,
@@ -92,7 +102,7 @@ export class AuthController {
     if (user === null) {
       throw new HttpException(
         '用户名或密码错误',
-        EXCEPTION_CODE.USER_NOT_EXISTS,
+        EXCEPTION_CODE.USER_PASSWORD_WRONG,
       );
     }
     let token;

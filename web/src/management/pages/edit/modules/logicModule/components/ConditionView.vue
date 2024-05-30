@@ -13,7 +13,7 @@
           class="select field-select"
           v-model="conditionField"
           placeholder="请选择题目"
-          @change="(val) => handleChange(conditionNode, 'field', val)"
+          @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
         <el-option
             v-for="{ label, value, disabled } in fieldList"
@@ -34,7 +34,7 @@
           v-model="conditionValue"
           placeholder="请选择选项"
           multiple
-          @change="(val) => handleChange(conditionNode, 'value', val)"
+          @change="(val: any) => handleChange(conditionNode, 'value', val)"
       >
         <el-option
             v-for="{ label, value, disabled } in getRelyOptions"
@@ -92,8 +92,8 @@ const fieldList = computed(() => {
   const currentIndex = renderData.value.findIndex((item) => item.field === props.ruleNode.target)
   const showDate = renderData.value
       .slice(0, currentIndex)
-      .filter((question) => qAbleList.includes(question.type))
-      .map((item) => {
+      .filter((question: any) => qAbleList.includes(question.type))
+      .map((item: any) => {
         return {
           label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
           value: item.field
@@ -121,7 +121,7 @@ const getRelyOptions = computed(() => {
   }
   const currentQuestion = renderData.value.find((item) => item.field === field)
   return (
-      currentQuestion?.options.map((item) => {
+      currentQuestion?.options.map((item: any) => {
         return {
           label: cleanRichText(item.text),
           value: item.hash
@@ -146,7 +146,7 @@ const isLastCondition = computed(() => {
   return props.index === props.ruleNode.conditions.length - 1
 })
 
-const handleChange = (conditionNode, key, value) => {
+const handleChange = (conditionNode: ConditionNode, key: string, value: any) => {
   switch (key) {
     case 'field':
       conditionNode.setField(value)
@@ -167,7 +167,7 @@ const handleAdd = () => {
 }
 
 const emit = defineEmits(['delete'])
-const handleDelete = (id) => {
+const handleDelete = (id: any) => {
   emit('delete', id)
 }
 </script>

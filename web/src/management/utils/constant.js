@@ -1,8 +1,10 @@
 // 问卷操作枚举
 export const QOP_MAP = {
+  ADD: 'add',
   COPY: 'copy',
   EDIT: 'edit'
 }
+
 export const qAbleList = ['radio', 'checkbox', 'binary-choice', 'vote']
 export const operatorOptions = [
   {

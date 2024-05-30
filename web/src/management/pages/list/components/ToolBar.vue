@@ -1,8 +1,8 @@
 <template>
-  <div class="tool-bar-root">
-    <template v-if="tools.length">
+  <div class="tool-bar-root" @click="handleClick">
+    <template v-if="iconTools.length">
       <ToolModule
-        v-for="t in tools"
+        v-for="t in iconTools"
         :key="t.key"
         :type="type"
         :value="t.key"
@@ -10,61 +10,44 @@
         :width="toolWidth"
         @call="onCall"
       />
+      <MoreTool
+        v-if="moreTools.length"
+        :type="type"
+        :width="toolWidth"
+        :tools="moreTools"
+        @call="onCall"
+      ></MoreTool>
     </template>
   </div>
 </template>
 
-<script>
-import { QOP_MAP } from '@/management/utils/constant'
+<script setup>
+import { computed } from 'vue'
+import { slice } from 'lodash-es'
 import ToolModule from './ToolModule.vue'
+import MoreTool from './MoreTool.vue'
 
-export default {
-  name: 'ToolBar',
-  props: {
-    data: Object,
-    type: String,
-    toolWidth: Number,
-    tools: Array
-  },
-  data() {
-    return {}
-  },
-  methods: {
-    onCall(val) {
-      switch (val.key) {
-        case QOP_MAP.EDIT:
-          this.$emit('on-modify', this.data, QOP_MAP.EDIT)
-          return
-        case QOP_MAP.COPY:
-          this.$emit('on-modify', this.data, QOP_MAP.COPY)
-          return
-        case 'analysis':
-          this.$router.push({
-            name: 'analysisPage',
-            params: {
-              id: this.data._id
-            }
-          })
-          return
-        case 'release':
-          this.$router.push({
-            name: 'publish',
-            params: {
-              id: this.data._id
-            }
-          })
-          return
-        case 'delete':
-          this.$emit('on-delete', this.data)
-          return
-        default:
-          return
-      }
-    }
-  },
-  components: {
-    ToolModule
-  }
+const props = defineProps({
+  data: Object,
+  type: String,
+  toolWidth: Number,
+  tools: Array
+})
+const emit = defineEmits(['click'])
+const limit = 4
+const iconTools = computed(() => {
+  return slice(props.tools, 0, limit - 1)
+})
+const moreTools = computed(() => {
+  return slice(props.tools, limit - 1)
+})
+const onCall = (val) => {
+  emit('click', val.key, props.data)
+}
+const handleClick = (e) => {
+  // 防止事件冒泡，触发父组件的点击事件
+  e.preventDefault()
+  e.stopPropagation()
 }
 </script>
 

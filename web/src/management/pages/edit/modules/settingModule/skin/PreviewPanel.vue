@@ -29,18 +29,18 @@ import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { useStore } from 'vuex'
 import communalLoader from '@materials/communals/communalLoader.js'
 
-const HeaderContent = ()=>communalLoader.loadComponent('HeaderContent')
-const MainTitle = ()=>communalLoader.loadComponent('MainTitle')
-const SubmitButton = ()=>communalLoader.loadComponent('SubmitButton')
-const LogoIcon = ()=>communalLoader.loadComponent('LogoIcon')
+const HeaderContent = () => communalLoader.loadComponent('HeaderContent')
+const MainTitle = () => communalLoader.loadComponent('MainTitle')
+const SubmitButton = () => communalLoader.loadComponent('SubmitButton')
+const LogoIcon = () => communalLoader.loadComponent('LogoIcon')
 
 export default defineComponent({
   components: {
     MaterialGroup,
-    HeaderContent:HeaderContent(),
-    MainTitle:MainTitle(),
-    SubmitButton:SubmitButton(),
-    LogoIcon:LogoIcon()
+    HeaderContent: HeaderContent(),
+    MainTitle: MainTitle(),
+    SubmitButton: SubmitButton(),
+    LogoIcon: LogoIcon()
   },
   setup() {
     const store = useStore()

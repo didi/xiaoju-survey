@@ -43,6 +43,7 @@ export default {
     text-align: center;
     line-height: 16px;
     cursor: pointer;
+    // font-weight: 500;
   }
 }
 </style>

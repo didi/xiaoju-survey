@@ -9,59 +9,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from 'vue'
 import StaticIcon from './StaticIcon.vue'
-
-export default {
-  name: 'TextButton',
-  components: {
-    StaticIcon
+const props = defineProps({
+  option: {
+    type: Object,
+    required: true
   },
-  data() {
-    return {
-      iconIndex: 0
-    }
-  },
-  props: {
-    option: {
-      type: Object,
-      required: true
-    },
-    effectFun: {
-      type: Function
-    },
-    effectKey: {
-      type: String
-    },
-    icon: {
-      type: String
-    }
-  },
-  computed: {
-    toggleOptionIcons() {
-      return this.option.icons.slice(1)
-    },
-    iconsLength() {
-      return this.toggleOptionIcons.length
-    },
-    currentIconItem() {
-      let finalIconIndex = this.iconIndex % this.iconsLength
-      return this.toggleOptionIcons[finalIconIndex]
-    }
-  },
-  methods: {
-    onClick() {
-      this.iconIndex++
-      if (this.iconIndex >= this.iconsLength) {
-        this.iconIndex = 0
-      }
-      typeof this.effectFun === 'function' &&
-        this.effectFun(this.currentIconItem.effectValue, this.effectKey)
-    }
-  },
-  created() {
-    this.iconIndex = this.toggleOptionIcons.findIndex((iconItem) => iconItem.isDefaultValue)
+  icon: {
+    type: String
   }
+})
+const emit = defineEmits(['change'])
+const toggleOptionIcons = computed(() => {
+  return props.option.icons.slice(1)
+})
+const iconIndex = ref(0)
+iconIndex.value = toggleOptionIcons.value.findIndex((iconItem) => iconItem.isDefaultValue)
+const iconsLength = computed(() => {
+  return toggleOptionIcons.value.length
+})
+const currentIconItem = computed(() => {
+  let finalIconIndex = iconIndex.value % iconsLength.value
+  return toggleOptionIcons.value[finalIconIndex]
+})
+const onClick = () => {
+  iconIndex.value++
+  if (iconIndex.value >= iconsLength.value) {
+    iconIndex.value = 0
+  }
+
+  emit('change', currentIconItem.value.effectValue)
 }
 </script>
 

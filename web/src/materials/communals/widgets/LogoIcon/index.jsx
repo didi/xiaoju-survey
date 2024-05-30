@@ -18,7 +18,6 @@ export default defineComponent({
   },
   emits: ['select'],
   setup(props, { emit }) {
-
     const logoImage = computed(() => {
       return props.logoConf?.logoImage
     })
@@ -56,7 +55,7 @@ export default defineComponent({
       <div class="logo-icon-warp" onClick={this.onSelect}>
         <div class="question-logo">
           {this.logoImage ? (
-            <img src={this.logoImage} style={{width: this.logoImageWidth}} />
+            <img src={this.logoImage} style={{ width: this.logoImageWidth }} />
           ) : (
             this.noLogoRender()
           )}

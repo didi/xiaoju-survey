@@ -103,13 +103,22 @@ const targetQuestionList = computed(() => {
   })
   const currntIndex = Math.max(...currntIndexs)
   let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
-  return questionList.map((item: any) => {
+  const returnData = questionList.map((item: any) => {
     return {
       label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
       value: item.field,
       disabled: showLogicEngine.value.findTargetsByScope('question').includes(item.field)
     }
   })
+  if(returnData.length !== 0){
+    return returnData
+  } else {
+    return [{
+      label: '无数据',
+      value: null,
+      disabled: true
+    }]
+  }
 })
 defineExpose({
   submitForm

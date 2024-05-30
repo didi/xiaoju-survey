@@ -3,6 +3,7 @@ export enum EXCEPTION_CODE {
   PARAMETER_ERROR = 1002, // 参数有误
   USER_EXISTS = 2001, // 用户已存在
   USER_NOT_EXISTS = 2002, // 用户不存在
+  USER_PASSWORD_WRONG = 2003, // 用户名或密码错误
   NO_SURVEY_PERMISSION = 3001, // 没有问卷权限
   SURVEY_STATUS_TRANSFORM_ERROR = 3002, // 问卷状态转换报错
   SURVEY_TYPE_ERROR = 3003, // 问卷类型错误

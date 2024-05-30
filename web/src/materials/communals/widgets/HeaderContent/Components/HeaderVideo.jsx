@@ -45,7 +45,7 @@ export default defineComponent({
     return (
       <div class="header-video-warp">
         <div class="video">
-          <video {...this.attributeVideo} >
+          <video {...this.attributeVideo}>
             <source src={this.bannerConf?.bannerConfig?.videoLink} type="video/mp4" />
           </video>
           {readonly ? (

@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useStore } from 'vuex'
+import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -19,7 +22,8 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/survey/:id/edit',
     meta: {
-      needLogin: true
+      needLogin: true,
+      premissions: [SurveyPermissions.SurveyManage]
     },
     name: 'QuestionEdit',
     component: () => import('../pages/edit/index.vue'),
@@ -89,7 +93,8 @@ const routes: RouteRecordRaw[] = [
     path: '/survey/:id/analysis',
     name: 'analysisPage',
     meta: {
-      needLogin: true
+      needLogin: true,
+      premissions: [SurveyPermissions.DataManage]
     },
     component: () => import('../pages/analysis/AnalysisPage.vue')
   },
@@ -97,7 +102,8 @@ const routes: RouteRecordRaw[] = [
     path: '/survey/:id/publish',
     name: 'publish',
     meta: {
-      needLogin: true
+      needLogin: true,
+      premissions: [SurveyPermissions.SurveyManage]
     },
     component: () => import('../pages/publish/PublishPage.vue')
   },
@@ -125,7 +131,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const store = useStore()
   if (!store.state.user?.initialized) {
     store?.dispatch('user/init')
@@ -135,7 +141,24 @@ router.beforeEach((to, from, next) => {
   }
   if (to.meta.needLogin) {
     if (store?.state?.user?.hasLogined) {
-      next()
+      if (to.meta.premissions) {
+        const params = to.params
+        await store.dispatch('fetchCooperPermissions', params.id)
+        if (
+          (to.meta.premissions as []).some((permission) =>
+            store.state?.cooperPermissions?.includes(permission)
+          )
+        ) {
+          next()
+        } else {
+          ElMessage.warning('您没有该问卷的相关协作权限')
+          next({
+            name: 'survey'
+          })
+        }
+      } else {
+        next()
+      }
     } else {
       next({
         name: 'login',
@@ -149,4 +172,17 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+// router.afterEach(async (to, from) => {
+//   const store = useStore()
+//   if (to.meta.premissions) {
+//     const params = to.params
+//     await store.dispatch('fetchCooperPermissions', params.id)
+//     if (!(to.meta.premissions as []).some((permission) => store.state?.cooperPermissions?.includes(permission))) {
+//       ElMessage.warning('您没有该问卷的相关协作权限')
+//       router.push({
+//         name: 'survey'
+//       })
+//     }
+//   }
+// })
 export default router

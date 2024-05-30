@@ -18,7 +18,9 @@ jest.mock('../../surveyResponse/services/responseScheme.service');
 jest.mock('../services/contentSecurity.service');
 jest.mock('../services/surveyHistory.service');
 
-jest.mock('src/guards/authtication');
+jest.mock('src/guards/authentication.guard');
+jest.mock('src/guards/survey.guard');
+jest.mock('src/guards/workspace.guard');
 
 describe('SurveyController', () => {
   let controller: SurveyController;
@@ -98,7 +100,7 @@ describe('SurveyController', () => {
         );
 
       const result = await controller.createSurvey(surveyInfo, {
-        user: { username: 'testUser' },
+        user: { username: 'testUser', _id: new ObjectId() },
       });
 
       expect(result).toEqual({
@@ -123,9 +125,6 @@ describe('SurveyController', () => {
         createMethod: 'copy',
         createFrom: existsSurveyId.toString(),
       };
-      jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(existsSurveyMeta));
 
       jest
         .spyOn(surveyMetaService, 'createSurveyMeta')
@@ -136,7 +135,10 @@ describe('SurveyController', () => {
           return Promise.resolve(result);
         });
 
-      const request = { user: { username: 'testUser' } }; // 模拟请求对象，根据实际情况进行调整
+      const request = {
+        user: { username: 'testUser', _id: new ObjectId() },
+        surveyMeta: existsSurveyMeta,
+      }; // 模拟请求对象，根据实际情况进行调整
       const result = await controller.createSurvey(params, request);
       expect(result?.data?.id).toBeDefined();
     });
@@ -151,9 +153,6 @@ describe('SurveyController', () => {
         owner: 'testUser',
       } as SurveyMeta;
 
-      jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(surveyMeta));
       jest
         .spyOn(surveyConfService, 'saveSurveyConf')
         .mockResolvedValue(undefined);
@@ -183,6 +182,7 @@ describe('SurveyController', () => {
 
       const result = await controller.updateConf(reqBody, {
         user: { username: 'testUser', _id: 'testUserId' },
+        surveyMeta,
       });
 
       expect(result).toEqual({
@@ -201,19 +201,16 @@ describe('SurveyController', () => {
       } as SurveyMeta;
 
       jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(surveyMeta));
-      jest
         .spyOn(surveyMetaService, 'deleteSurveyMeta')
         .mockResolvedValue(undefined);
       jest
         .spyOn(responseSchemaService, 'deleteResponseSchema')
         .mockResolvedValue(undefined);
 
-      const result = await controller.deleteSurvey(
-        { surveyId: surveyId.toString() },
-        { user: { username: 'testUser' } },
-      );
+      const result = await controller.deleteSurvey({
+        user: { username: 'testUser' },
+        surveyMeta,
+      });
 
       expect(result).toEqual({
         code: 200,
@@ -231,10 +228,6 @@ describe('SurveyController', () => {
       } as SurveyMeta;
 
       jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(surveyMeta));
-
-      jest
         .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
         .mockResolvedValue(
           Promise.resolve({
@@ -243,7 +236,10 @@ describe('SurveyController', () => {
           } as SurveyConf),
         );
 
-      const request = { user: { username: 'testUser' } };
+      const request = {
+        user: { username: 'testUser', _id: new ObjectId() },
+        surveyMeta,
+      };
       const result = await controller.getSurvey(
         { surveyId: surveyId.toString() },
         request,
@@ -261,10 +257,6 @@ describe('SurveyController', () => {
         surveyType: 'exam',
         owner: 'testUser',
       } as SurveyMeta;
-
-      jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(surveyMeta));
 
       jest
         .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
@@ -296,7 +288,7 @@ describe('SurveyController', () => {
 
       const result = await controller.publishSurvey(
         { surveyId: surveyId.toString() },
-        { user: { username: 'testUser', _id: 'testUserId' } },
+        { user: { username: 'testUser', _id: 'testUserId' }, surveyMeta },
       );
 
       expect(result).toEqual({
@@ -311,10 +303,6 @@ describe('SurveyController', () => {
         surveyType: 'normal',
         owner: 'testUser',
       } as SurveyMeta;
-
-      jest
-        .spyOn(surveyMetaService, 'checkSurveyAccess')
-        .mockResolvedValue(Promise.resolve(surveyMeta));
 
       jest
         .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
@@ -338,7 +326,7 @@ describe('SurveyController', () => {
       await expect(
         controller.publishSurvey(
           { surveyId: surveyId.toString() },
-          { user: { username: 'testUser', _id: 'testUserId' } },
+          { user: { username: 'testUser', _id: 'testUserId' }, surveyMeta },
         ),
       ).rejects.toThrow(
         new HttpException(

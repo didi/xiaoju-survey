@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 
 import { MessageModule } from '../message/message.module';
 
@@ -11,15 +13,13 @@ import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
+import { Logger } from 'src/logger';
 
 import { ClientEncryptController } from './controllers/clientEncrpt.controller';
 import { CounterController } from './controllers/counter.controller';
 import { ResponseSchemaController } from './controllers/responseSchema.controller';
 import { SurveyResponseController } from './controllers/surveyResponse.controller';
 import { SurveyResponseUIController } from './controllers/surveyResponseUI.controller';
-
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -44,6 +44,7 @@ import { ConfigModule } from '@nestjs/config';
     SurveyResponseService,
     CounterService,
     ClientEncryptService,
+    Logger,
   ],
   exports: [
     ResponseSchemaService,

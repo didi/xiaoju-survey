@@ -13,6 +13,6 @@ export class QueryMessagePushingTaskListDto {
     return Joi.object({
       surveyId: Joi.string().required(),
       triggerHook: Joi.string().required(),
-    }).validateAsync(data);
+    }).validate(data);
   }
 }

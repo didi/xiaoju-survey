@@ -62,19 +62,21 @@ const handleSwitchChange = (value: string | null) => {
   emit(FORM_CHANGE_EVENT_KEY, { key: formdataBackfillHourKey, value: value ? '24' : null })
 }
 
-const watchValue = computed(() => props.formConfig.value)
-watch(watchValue, (config) => {
-  const formdataBackfill = config[formdataBackfillKey]
-  const formdataBackfillHour = !!config[formdataBackfillHourKey]
+watch(
+  () => props.formConfig.value,
+  (config) => {
+    const formdataBackfill = config[formdataBackfillKey]
+    const formdataBackfillHour = !!config[formdataBackfillHourKey]
 
-  if (formdataBackfill !== selectModelValue.value) {
-    selectModelValue.value = formdataBackfill
-  }
+    if (formdataBackfill !== selectModelValue.value) {
+      selectModelValue.value = formdataBackfill
+    }
 
-  if (formdataBackfillHour !== switchModelValue.value) {
-    switchModelValue.value = formdataBackfillHour
+    if (formdataBackfillHour !== switchModelValue.value) {
+      switchModelValue.value = formdataBackfillHour
+    }
   }
-})
+)
 </script>
 <style lang="scss" scoped>
 .row {

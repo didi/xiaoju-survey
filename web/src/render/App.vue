@@ -9,7 +9,7 @@
       "
     >
     </Component>
-    <LogoIcon v-if="!['successPage', 'indexPage'].includes(store.state.router)" />
+    <LogoIcon v-if="!['successPage', 'indexPage'].includes(store.state.router)" :logo-conf="logoConf" :readonly="true"  />
   </div>
 </template>
 <script setup lang="ts">
@@ -24,12 +24,15 @@ import IndexPage from './pages/IndexPage.vue'
 import ErrorPage from './pages/ErrorPage.vue'
 import SuccessPage from './pages/SuccessPage.vue'
 import AlertDialog from './components/AlertDialog.vue'
-
-import LogoIcon from './components/LogoIcon.vue'
+// @ts-ignore
+import communalLoader from '@materials/communals/communalLoader.js'
 import { get as _get, upperFirst } from 'lodash-es'
 import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
+const LogoIcon = communalLoader.loadComponent('LogoIcon')
+
 const store = useStore()
+const logoConf = computed(() => store.state?.bottomConf || {})
 const skinConf = computed(() => _get(store, 'state.skinConf', {}))
 const components = {
   EmptyPage,
@@ -111,7 +114,7 @@ onMounted(async () => {
 @import url('./styles/reset.scss');
 
 html {
-  background: rgb(238, 238, 238);
+  background: #f7f7f7;
 }
 
 #app {

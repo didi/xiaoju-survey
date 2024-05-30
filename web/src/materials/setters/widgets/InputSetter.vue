@@ -6,7 +6,7 @@
   ></el-input>
 </template>
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {
@@ -21,7 +21,6 @@ const emit = defineEmits<Emit>()
 const props = defineProps<Props>()
 
 const modelValue = ref(props.formConfig.value || '')
-const lazyValue = computed(() => props.formConfig.value)
 
 const handleInputBlur = () => {
   const { key, validate, value } = props.formConfig
@@ -40,9 +39,12 @@ const handleInputBlur = () => {
   }
 }
 
-watch(lazyValue, (value) => {
-  if (value !== modelValue.value) {
-    modelValue.value = value
+watch(
+  () => props.formConfig.value,
+  (value) => {
+    if (value !== modelValue.value) {
+      modelValue.value = value
+    }
   }
-})
+)
 </script>

@@ -20,7 +20,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
@@ -49,14 +49,11 @@ const begTimeStr = ref(moment(defaultBeginTime).format(format))
 const endTimeStr = ref(moment(defaultEndTime).format(format))
 
 const handleDatePickerChange = (key: string, value: string) => {
-  console.log(key, value)
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 
-const watchValue = computed(() => props.formConfig.value)
-
 watch(
-  watchValue,
+  () => props.formConfig.value,
   ([begTime, endTime]: any) => {
     if (!!begTime && begTime !== begTimeStr.value) {
       begTimeStr.value = begTime

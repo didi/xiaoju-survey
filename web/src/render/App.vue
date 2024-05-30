@@ -9,7 +9,11 @@
       "
     >
     </Component>
-    <LogoIcon v-if="!['successPage', 'indexPage'].includes(store.state.router)" :logo-conf="logoConf" :readonly="true"  />
+    <LogoIcon
+      v-if="!['successPage', 'indexPage'].includes(store.state.router)"
+      :logo-conf="logoConf"
+      :readonly="true"
+    />
   </div>
 </template>
 <script setup lang="ts">

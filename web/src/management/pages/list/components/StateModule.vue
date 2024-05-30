@@ -1,7 +1,7 @@
 <template>
-  <div :class="['list-state', 'list-state-' + value.curStatus.status]">
+  <div :class="['list-state', 'list-state-' + value.curStatus?.status]">
     <span class="list-state-badge" />
-    <span>{{ statusMaps[value.curStatus.status] }}</span>
+    <span>{{ statusMaps[value.curStatus?.status] }}</span>
   </div>
 </template>
 

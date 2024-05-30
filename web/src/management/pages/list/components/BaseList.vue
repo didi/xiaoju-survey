@@ -61,7 +61,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" :width="300" class-name="table-options">
+      <el-table-column label="操作" :width="300" class-name="table-options" fixed="right">
         <template #default="scope">
           <ToolBar
             :data="scope.row"

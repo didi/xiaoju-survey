@@ -13,6 +13,7 @@ import { SurveyResponseModule } from './modules/surveyResponse/surveyResponse.mo
 import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
 import { FileModule } from './modules/file/file.module';
+import { WorkspaceModule } from './modules/workspace/workspace.module';
 
 import { join } from 'path';
 
@@ -31,6 +32,9 @@ import { ClientEncrypt } from './models/clientEncrypt.entity';
 import { Word } from './models/word.entity';
 import { MessagePushingTask } from './models/messagePushingTask.entity';
 import { MessagePushingLog } from './models/messagePushingLog.entity';
+import { WorkspaceMember } from './models/workspaceMember.entity';
+import { Workspace } from './models/workspace.entity';
+import { Collaborator } from './models/collaborator.entity';
 
 import { LoggerProvider } from './logger/logger.provider';
 import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
@@ -74,6 +78,9 @@ import { Logger } from './logger';
             Word,
             MessagePushingTask,
             MessagePushingLog,
+            Workspace,
+            WorkspaceMember,
+            Collaborator,
           ],
         };
       },
@@ -92,6 +99,7 @@ import { Logger } from './logger';
     }),
     MessageModule,
     FileModule,
+    WorkspaceModule,
   ],
   controllers: [AppController],
   providers: [

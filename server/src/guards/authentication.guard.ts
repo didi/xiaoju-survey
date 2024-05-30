@@ -3,7 +3,7 @@ import { AuthenticationException } from '../exceptions/authException';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 
 @Injectable()
-export class Authtication implements CanActivate {
+export class Authentication implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

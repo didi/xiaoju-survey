@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyMetaController } from '../controllers/surveyMeta.controller';
 import { SurveyMetaService } from '../services/surveyMeta.service';
-import { Authtication } from 'src/guards/authtication';
-import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { LoggerProvider } from 'src/logger/logger.provider';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { CollaboratorService } from '../services/collaborator.service';
+import { ObjectId } from 'mongodb';
+
+jest.mock('src/guards/authentication.guard');
+jest.mock('src/guards/survey.guard');
+jest.mock('src/guards/workspace.guard');
 
 describe('SurveyMetaController', () => {
   let controller: SurveyMetaController;
@@ -18,7 +22,6 @@ describe('SurveyMetaController', () => {
         {
           provide: SurveyMetaService,
           useValue: {
-            checkSurveyAccess: jest.fn().mockResolvedValue({}),
             editSurveyMeta: jest.fn().mockResolvedValue(undefined),
             getSurveyMetaList: jest
               .fn()
@@ -26,13 +29,14 @@ describe('SurveyMetaController', () => {
           },
         },
         LoggerProvider,
+        {
+          provide: CollaboratorService,
+          useValue: {
+            getCollaboratorListByUserId: jest.fn().mockResolvedValue([]),
+          },
+        },
       ],
-    })
-      .overrideGuard(Authtication)
-      .useValue({
-        canActivate: () => true,
-      })
-      .compile();
+    }).compile();
 
     controller = module.get<SurveyMetaController>(SurveyMetaController);
     surveyMetaService = module.get<SurveyMetaService>(SurveyMetaService);
@@ -44,29 +48,20 @@ describe('SurveyMetaController', () => {
       title: 'Test title',
       surveyId: 'test-survey-id',
     };
-    const req = {
-      user: {
-        username: 'test-user',
-      },
-    };
 
     const survey = {
       title: '',
       remark: '',
     };
 
-    jest
-      .spyOn(surveyMetaService, 'checkSurveyAccess')
-      .mockImplementation(() => {
-        return Promise.resolve(survey) as Promise<SurveyMeta>;
-      });
+    const req = {
+      user: {
+        username: 'test-user',
+      },
+      surveyMeta: survey,
+    };
 
     const result = await controller.updateMeta(reqBody, req);
-
-    expect(surveyMetaService.checkSurveyAccess).toHaveBeenCalledWith({
-      surveyId: reqBody.surveyId,
-      username: req.user.username,
-    });
 
     expect(surveyMetaService.editSurveyMeta).toHaveBeenCalledWith({
       title: reqBody.title,
@@ -91,7 +86,6 @@ describe('SurveyMetaController', () => {
       expect(error.code).toBe(EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    expect(surveyMetaService.checkSurveyAccess).not.toHaveBeenCalled();
     expect(surveyMetaService.editSurveyMeta).not.toHaveBeenCalled();
   });
 
@@ -100,65 +94,66 @@ describe('SurveyMetaController', () => {
       curPage: 1,
       pageSize: 10,
     };
+    const userId = new ObjectId().toString();
     const req = {
       user: {
         username: 'test-user',
+        _id: new ObjectId(userId),
       },
     };
 
-    try {
-      jest
-        .spyOn(surveyMetaService, 'getSurveyMetaList')
-        .mockImplementation(() => {
-          const date = new Date().getTime();
-          return Promise.resolve({
-            count: 10,
-            data: [
-              {
-                id: '1',
-                createDate: date,
-                updateDate: date,
-                curStatus: {
-                  date: date,
-                },
-              },
-            ],
-          });
-        });
-
-      const result = await controller.getList(queryInfo, req);
-
-      expect(result).toEqual({
-        code: 200,
-        data: {
+    jest
+      .spyOn(surveyMetaService, 'getSurveyMetaList')
+      .mockImplementation(() => {
+        const date = new Date().getTime();
+        return Promise.resolve({
           count: 10,
-          data: expect.arrayContaining([
-            expect.objectContaining({
-              createDate: expect.stringMatching(
+          data: [
+            {
+              _id: new ObjectId(),
+              createDate: date,
+              updateDate: date,
+              curStatus: {
+                date: date,
+              },
+            },
+          ],
+        });
+      });
+
+    const result = await controller.getList(queryInfo, req);
+
+    expect(result).toEqual({
+      code: 200,
+      data: {
+        count: 10,
+        data: expect.arrayContaining([
+          expect.objectContaining({
+            createDate: expect.stringMatching(
+              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+            ),
+            updateDate: expect.stringMatching(
+              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+            ),
+            curStatus: expect.objectContaining({
+              date: expect.stringMatching(
                 /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
               ),
-              updateDate: expect.stringMatching(
-                /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-              ),
-              curStatus: expect.objectContaining({
-                date: expect.stringMatching(
-                  /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-                ),
-              }),
             }),
-          ]),
-        },
-      });
-      expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
-        pageNum: queryInfo.curPage,
-        pageSize: queryInfo.pageSize,
-        username: req.user.username,
-        filter: {},
-        order: {},
-      });
-    } catch (error) {
-      console.log(error);
-    }
+          }),
+        ]),
+      },
+    });
+    expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
+      pageNum: queryInfo.curPage,
+      pageSize: queryInfo.pageSize,
+      username: req.user.username,
+      filter: {},
+      order: {},
+      surveyIdList: [],
+      userId,
+      workspaceId: undefined,
+    });
   });
 
   it('should get survey meta list with filter and order', async () => {
@@ -177,25 +172,26 @@ describe('SurveyMetaController', () => {
       ]),
       order: JSON.stringify([{ field: 'createDate', value: -1 }]),
     };
+    const userId = new ObjectId().toString();
     const req = {
       user: {
         username: 'test-user',
+        _id: new ObjectId(userId),
       },
     };
 
-    try {
-      const result = await controller.getList(queryInfo, req);
+    const result = await controller.getList(queryInfo, req);
 
-      expect(result.code).toEqual(200);
-      expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
-        pageNum: queryInfo.curPage,
-        pageSize: queryInfo.pageSize,
-        username: req.user.username,
-        filter: { surveyType: 'normal', title: { $regex: 'hahah' } },
-        order: { createDate: -1 },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    expect(result.code).toEqual(200);
+    expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
+      pageNum: queryInfo.curPage,
+      pageSize: queryInfo.pageSize,
+      username: req.user.username,
+      surveyIdList: [],
+      userId,
+      filter: { surveyType: 'normal', title: { $regex: 'hahah' } },
+      order: { createDate: -1 },
+      workspaceId: undefined,
+    });
   });
 });

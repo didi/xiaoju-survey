@@ -29,8 +29,8 @@ export class CreateMessagePushingTaskDto {
   })
   surveys?: string[];
 
-  static async validate(data) {
-    return await Joi.object({
+  static validate(data) {
+    return Joi.object({
       name: Joi.string().required(),
       type: Joi.string().allow(null).default(MESSAGE_PUSHING_TYPE.HTTP),
       pushAddress: Joi.string().required(),
@@ -38,6 +38,6 @@ export class CreateMessagePushingTaskDto {
         .allow(null)
         .default(MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED),
       surveys: Joi.array().items(Joi.string()).allow(null).default([]),
-    }).validateAsync(data);
+    }).validate(data);
   }
 }

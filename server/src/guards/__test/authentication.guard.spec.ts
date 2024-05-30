@@ -1,21 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { Authtication } from './authtication';
+import { Authentication } from '../authentication.guard';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { AuthenticationException } from 'src/exceptions/authException';
 import { User } from 'src/models/user.entity';
 
 jest.mock('jsonwebtoken');
 
-describe('Authtication', () => {
-  let guard: Authtication;
+describe('Authentication', () => {
+  let guard: Authentication;
   let authService: AuthService;
   let configService: ConfigService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        Authtication,
+        Authentication,
         {
           provide: AuthService,
           useValue: {
@@ -31,7 +31,7 @@ describe('Authtication', () => {
       ],
     }).compile();
 
-    guard = module.get<Authtication>(Authtication);
+    guard = module.get<Authentication>(Authentication);
     authService = module.get<AuthService>(AuthService);
     configService = module.get<ConfigService>(ConfigService);
   });

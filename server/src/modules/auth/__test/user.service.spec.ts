@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { hash256 } from 'src/utils/hash256';
+import { RECORD_STATUS } from 'src/enums';
 
 describe('UserService', () => {
   let service: UserService;
@@ -135,7 +136,10 @@ describe('UserService', () => {
     const user = await service.getUserByUsername(username);
 
     expect(userRepository.findOne).toHaveBeenCalledWith({
-      where: { username: username },
+      where: {
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        username: username,
+      },
     });
     expect(user).toEqual(userInfo);
   });

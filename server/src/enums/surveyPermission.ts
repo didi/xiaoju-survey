@@ -1,0 +1,20 @@
+export enum SURVEY_PERMISSION {
+  SURVEY_CONF_MANAGE = 'SURVEY_CONF_MANAGE',
+  SURVEY_RESPONSE_MANAGE = 'SURVEY_RESPONSE_MANAGE',
+  SURVEY_COOPERATION_MANAGE = 'SURVEY_COOPERATION_MANAGE',
+}
+
+export const SURVEY_PERMISSION_DESCRIPTION = {
+  SURVEY_CONF_MANAGE: {
+    name: '问卷配置管理',
+    value: SURVEY_PERMISSION.SURVEY_CONF_MANAGE,
+  },
+  surveyResponseManage: {
+    name: '问卷分析管理',
+    value: SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE,
+  },
+  surveyCooperatorManage: {
+    name: '协作者管理',
+    value: SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+  },
+};

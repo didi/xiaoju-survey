@@ -22,8 +22,14 @@ export class SurveyMeta extends BaseEntity {
   owner: string;
 
   @Column()
+  ownerId: string;
+
+  @Column()
   createMethod: string;
 
   @Column()
   createFrom: string;
+
+  @Column()
+  workspaceId: string;
 }

@@ -10,7 +10,7 @@ import {
   MESSAGE_PUSHING_TYPE,
 } from 'src/enums/messagePushing';
 import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
-import { Authtication } from 'src/guards/authtication';
+import { Authentication } from 'src/guards/authentication.guard';
 import { UserService } from 'src/modules/auth/services/user.service';
 
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
@@ -38,7 +38,7 @@ describe('MessagePushingTaskController', () => {
           },
         },
         {
-          provide: Authtication,
+          provide: Authentication,
           useClass: jest.fn().mockImplementation(() => ({
             canActivate: () => true,
           })),

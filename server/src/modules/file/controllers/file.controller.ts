@@ -8,14 +8,16 @@ import {
   Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ConfigService } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 
 import { FileService } from '../services/file.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { AuthenticationException } from 'src/exceptions/authException';
-import { ConfigService } from '@nestjs/config';
 
+@ApiTags('file')
 @Controller('/api/file')
 export class FileController {
   constructor(

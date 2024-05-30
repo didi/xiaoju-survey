@@ -1,5 +1,9 @@
 <template>
-  <div class="condition-wrapper" data-content-before="且">
+  <div
+      class="condition-wrapper"
+      :class="{ 'is-last': isLastCondition }"
+      :data-content-before="!isLastCondition ? '且' : ''"
+  >
     <span class="desc">如果</span>
     <el-form-item
       :prop="`conditions[${index}].field`"
@@ -11,8 +15,16 @@
         placeholder="请选择题目"
         @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
-        <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
+        <el-option
+            v-for="{ label, value } in fieldList"
+            :key="value"
+            :label="label"
+            :value="value"
+        >
         </el-option>
+        <template #empty>
+          无数据
+        </template>
       </el-select>
     </el-form-item>
     <span class="desc">选择了</span>
@@ -32,8 +44,10 @@
           :key="value"
           :label="label"
           :value="value"
-        >
-        </el-option>
+        ></el-option>
+        <template #empty>
+          无数据
+        </template>
       </el-select>
     </el-form-item>
     <span class="desc">中的任一选项 </span>
@@ -112,6 +126,10 @@ const conditionValue = computed(() => {
   return props.conditionNode.value
 })
 
+const isLastCondition = computed(() => {
+  return props.index === props.ruleNode.conditions.length - 1
+})
+
 const handleChange = (conditionNode: ConditionNode, key: string, value: any) => {
   switch (key) {
     case 'field':
@@ -127,21 +145,34 @@ const handleChange = (conditionNode: ConditionNode, key: string, value: any) => 
       break
   }
 }
+
 const handleAdd = () => {
   props.ruleNode.addCondition(new ConditionNode())
 }
+
 const emit = defineEmits(['delete'])
 const handleDelete = (id: any) => {
   emit('delete', id)
 }
 </script>
+
 <style lang="scss" scoped>
 .condition-wrapper {
   width: 100%;
   position: relative;
   display: flex;
   padding: 24px 0;
-  &:not(:last-child)::before {
+  &.is-last::before,
+  &.is-last::after {
+    content: '';
+    display: block;
+    width: calc(100% - 32px);
+    border-top: 1px dashed #e3e4e8;
+    position: absolute;
+    left: 32px;
+    bottom: 0;
+  }
+  &:not(.is-last)::before {
     content: attr(data-content-before);
     bottom: 0px;
     width: 20px;
@@ -156,7 +187,7 @@ const handleDelete = (id: any) => {
     position: absolute;
     bottom: -8px;
   }
-  &:not(:last-child)::after {
+  &:not(.is-last)::after {
     content: '';
     display: block;
     width: calc(100% - 32px);

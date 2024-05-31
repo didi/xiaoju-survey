@@ -1,17 +1,17 @@
 <template>
   <div class="title-container">
     <div
-        class="title"
-        @mouseover="showFullTitle"
-        @mousemove="updateTooltipPosition"
-        @mouseleave="hideFullTitle"
+      class="title"
+      @mouseover="showFullTitle"
+      @mousemove="updateTooltipPosition"
+      @mouseleave="hideFullTitle"
     >
       {{ title }}
     </div>
     <div
-        class="tooltip"
-        v-if="tooltipVisible"
-        :style="{ top: tooltipPosition.top + 'px', left: tooltipPosition.left + 'px' }"
+      class="tooltip"
+      v-if="tooltipVisible"
+      :style="{ top: tooltipPosition.top + 'px', left: tooltipPosition.left + 'px' }"
     >
       {{ title }}
     </div>
@@ -73,5 +73,3 @@ const hideFullTitle = () => {
   white-space: nowrap;
 }
 </style>
-
-

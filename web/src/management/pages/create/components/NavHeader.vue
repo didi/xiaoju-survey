@@ -30,7 +30,7 @@ const onBack = () => {
 
 const toHomePage = () => {
   router.push({
-    name: 'Home'
+    name: 'survey'
   })
 }
 </script>

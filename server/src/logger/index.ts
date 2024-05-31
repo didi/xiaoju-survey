@@ -34,10 +34,10 @@ export class Logger {
 
   _log(message, options: { dltag?: string; level: string; req?: Request }) {
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
-    const level = options.level;
-    const dltag = options.dltag ? `${options.dltag}||` : '';
-    const traceIdStr = options?.req['traceId']
-      ? `traceid=${options?.req['traceId']}||`
+    const level = options?.level;
+    const dltag = options?.dltag ? `${options.dltag}||` : '';
+    const traceIdStr = options?.req?.['traceId']
+      ? `traceid=${options?.req?.['traceId']}||`
       : '';
     return log4jsLogger[level](
       `[${datetime}][${level.toUpperCase()}]${dltag}${traceIdStr}${message}`,

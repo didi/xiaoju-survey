@@ -1,4 +1,4 @@
-import { defineComponent, computed,shallowRef,defineAsyncComponent} from 'vue'
+import { defineComponent, computed, shallowRef, defineAsyncComponent } from 'vue'
 import '@/render/styles/variable.scss'
 import './index.scss'
 
@@ -20,7 +20,6 @@ export default defineComponent({
   },
   emits: ['select', 'change'],
   setup(props, { emit }) {
-
     const titleClass = computed(() => {
       let classStr = ''
       if (!props.readonly) {
@@ -59,9 +58,7 @@ export default defineComponent({
 
     const richEditorView = shallowRef(null)
     if (!props.readonly) {
-      richEditorView.value = defineAsyncComponent(
-        () => import('@/common/Editor/RichEditor.vue')
-      )
+      richEditorView.value = defineAsyncComponent(() => import('@/common/Editor/RichEditor.vue'))
     }
 
     return {
@@ -75,12 +72,9 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly,mainTitle,onTitleInput,richEditorView} = this;
+    const { readonly, mainTitle, onTitleInput, richEditorView } = this
     return (
-      <div
-        class={['main-title-warp', !readonly ? 'pd15' : '']}
-        onClick={this.handleClick}
-      >
+      <div class={['main-title-warp', !readonly ? 'pd15' : '']} onClick={this.handleClick}>
         {this.isTitleHide ? (
           <div class={this.titleClass}>
             {!readonly ? (

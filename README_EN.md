@@ -14,7 +14,7 @@
     </a>
     <a href="https://github.com/didi/xiaoju-survey/graphs/contributors">
       <img src="https://img.shields.io/github/last-commit/didi/xiaoju-survey?color=red" alt="commit">
-    </a>a
+    </a>
     <a href="https://github.com/didi/xiaoju-survey/pulls">
       <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
     </a>

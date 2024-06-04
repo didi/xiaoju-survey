@@ -223,6 +223,38 @@ export class SurveyController {
     };
   }
 
+  @Get('/getPreviewSchema')
+  @HttpCode(200)
+  async getPreviewSchema(
+    @Query()
+    queryInfo: {
+      surveyPath: string;
+    },
+    @Request()
+    req,
+  ) {
+    const { value, error } = Joi.object({
+      surveyId: Joi.string().required(),
+    }).validate({ surveyId: queryInfo.surveyPath });
+
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const surveyId = value.surveyId;
+    const surveyConf =
+      await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
+    const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
+    return {
+      code: 200,
+      data: {
+        ...surveyConf,
+        title: surveyMeta?.title,
+        surveyPath: surveyMeta?.surveyPath,
+      },
+    };
+  }
+
   @Post('/publishSurvey')
   @HttpCode(200)
   @UseGuards(SurveyGuard)

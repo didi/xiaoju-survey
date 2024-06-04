@@ -60,6 +60,7 @@ const bannerConf = computed(() => store.state?.bannerConf || {})
 const renderData = computed(() => store.getters.renderData)
 const submitConf = computed(() => store.state?.submitConf || {})
 const logoConf = computed(() => store.state?.bottomConf || {})
+const surveyPath = computed(() => store.state?.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -70,10 +71,9 @@ const normalizationRequestBody = () => {
   const enterTime = store.state.enterTime
   const encryptInfo = store.state.encryptInfo
   const formValues = store.state.formValues
-  const surveyPath = store.state.surveyPath
 
   const result: any = {
-    surveyPath,
+    surveyPath: surveyPath.value,
     data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
@@ -96,6 +96,10 @@ const normalizationRequestBody = () => {
 }
 
 const submitSurver = async () => {
+  if (surveyPath.value.length > 8) {
+    store.commit('setRouter', 'successPage')
+    return
+  }
   try {
     const params = normalizationRequestBody()
     console.log(params)

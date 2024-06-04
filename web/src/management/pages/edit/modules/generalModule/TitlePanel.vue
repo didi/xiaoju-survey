@@ -20,7 +20,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { defineProps } from 'vue'
 
 defineProps({
   title: {

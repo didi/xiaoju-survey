@@ -16,10 +16,10 @@
       @submit.prevent
       :disabled="formDisabled"
     >
-      <el-form-item label="团队名称" prop="name">
+      <el-form-item label="团队空间名称" prop="name">
         <el-input v-model="formModel.name" />
       </el-form-item>
-      <el-form-item label="空间描述">
+      <el-form-item label="团队空间空间描述">
         <el-input v-model="formModel.description" />
       </el-form-item>
       <el-form-item label="添加成员" prop="members">
@@ -63,7 +63,7 @@ const props = defineProps({
 const ruleForm = shallowRef<any>(null)
 
 const formTitle = computed(() => {
-  return props.type === QOP_MAP.ADD ? '创建团队' : '修改团队'
+  return props.type === QOP_MAP.ADD ? '创建团队空间' : '管理团队空间'
 })
 const formModel = ref<IWorkspace>({
   name: '',
@@ -71,7 +71,7 @@ const formModel = ref<IWorkspace>({
   members: [] as IMember[]
 })
 const rules = {
-  name: [{ required: true, message: '请输入团队名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入团队空间名称', trigger: 'blur' }],
   members: [
     {
       trigger: 'change',

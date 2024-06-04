@@ -12,6 +12,8 @@ public class SurveyWebMvcConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/auth/login", "/api/auth/register");
+        // 增加api log拦截器
+        registry.addInterceptor(new ApiLogInterceptor()).addPathPatterns("/**");
     }
 }
 

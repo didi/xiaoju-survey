@@ -10,7 +10,6 @@
       row-class-name="tableview-row"
       cell-class-name="tableview-cell"
       style="width: 100%"
-      @row-click="onRowClick"
     >
       <el-table-column column-key="space" width="20" />
       <el-table-column
@@ -98,9 +97,7 @@ const isAdmin = (id: string) => {
     UserRole.Admin
   )
 }
-const onRowClick = () => {
-  console.log('onRowClick')
-}
+
 const handleModify = async (id: string) => {
   await store.dispatch('list/getSpaceDetail', id)
   modifyType.value = 'edit'

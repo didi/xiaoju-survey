@@ -82,7 +82,7 @@ const handleSelect = (id: string) => {
     }
 
     &.bottom {
-      border-bottom: 1px solid #e3e4e8;
+      border-bottom: 1px solid #f6f5f2;
     }
     &.main-item {
       // margin: 10px 0;
@@ -104,12 +104,13 @@ const handleSelect = (id: string) => {
     .title-content {
       display: flex;
       align-items: center;
+      font-weight: 400;
     }
   }
   :deep(.el-menu-item-group) {
     > ul {
       > li {
-        padding-left: 40px !important;
+        padding-left: 45px !important;
       }
     }
   }
@@ -124,7 +125,7 @@ const handleSelect = (id: string) => {
 }
 .iconfont {
   font-size: 16px;
-  margin-right: 5px;
+  margin-right: 10px;
   color: #faa600 !important;
 }
 </style>

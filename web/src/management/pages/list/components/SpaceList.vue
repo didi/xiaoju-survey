@@ -47,7 +47,7 @@
               class="tool-root-btn-text"
               :style="{ width: 50 + 'px' }"
               @click.stop="handleModify(scope.row._id)"
-              >{{ isAdmin(scope.row._id) ? '修改' : '查看' }}</el-button
+              >{{ isAdmin(scope.row._id) ? '管理' : '查看' }}</el-button
             >
             <el-button
               text

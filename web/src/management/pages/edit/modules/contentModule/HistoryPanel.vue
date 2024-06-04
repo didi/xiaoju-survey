@@ -1,6 +1,6 @@
 <template>
   <el-popover placement="top" trigger="click" @show="onShow" :width="320">
-    <el-tabs v-model="currentTab" class="custom-tab" v-if="visible">
+    <el-tabs v-model="currentTab" class="custom-tab" v-if="visible" v-loading="paneLoading">
       <el-tab-pane label="修改历史" name="daily" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in dailyList" :key="index">
           <span class="operator">{{ his.operator }}</span>
@@ -59,26 +59,23 @@ export default {
       dailyHis: [],
       publishHis: [],
       currentTab: 'daily',
-      visible: false
+      visible: false,
+      paneLoading: false
     }
   },
   watch: {
-    surveyId: {
+    visible: {
+      async handler(newVal) {
+        if (this.visible && newVal) {
+          this.fetchHis()
+        }
+      }
+    },
+    currentTab: {
       immediate: true,
       async handler(newVal) {
-        if (newVal) {
-          const [dailyHis, publishHis] = await Promise.all([
-            getSurveyHistory({
-              surveyId: this.surveyId,
-              historyType: 'dailyHis'
-            }),
-            getSurveyHistory({
-              surveyId: this.surveyId,
-              historyType: 'publishHis'
-            })
-          ])
-          this.dailyHis = dailyHis.data || []
-          this.publishHis = publishHis.data || []
+        if (this.visible && newVal) {
+          this.fetchHis()
         }
       }
     }
@@ -86,6 +83,36 @@ export default {
   methods: {
     onShow() {
       this.visible = true
+    },
+    fetchHis() {
+      this.paneLoading = true
+      switch (this.currentTab) {
+        case 'daily':
+          getSurveyHistory({
+            surveyId: this.surveyId,
+            historyType: 'dailyHis'
+          })
+            .then((dailyHis) => {
+              this.dailyHis = dailyHis.data || []
+            })
+            .finally(() => {
+              this.paneLoading = false
+            })
+          break
+
+        case 'publish':
+          getSurveyHistory({
+            surveyId: this.surveyId,
+            historyType: 'publishHis'
+          })
+            .then((publishHis) => {
+              this.publishHis = publishHis.data || []
+            })
+            .finally(() => {
+              this.paneLoading = false
+            })
+          break
+      }
     }
   }
 }
@@ -93,8 +120,10 @@ export default {
 
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
+
 .custom-tab {
   width: 300px;
+
   :deep(.el-tabs__nav) {
     width: 100%;
 

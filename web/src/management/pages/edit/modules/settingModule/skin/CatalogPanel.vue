@@ -8,7 +8,7 @@
           :class="[groupName === item.value ? 'current' : '', 'tag']"
           type="info"
           :key="item.value"
-          @click="() => changeGroup(item.value)"
+          @click="() => handleChangeGroup(item.value)"
         >
           {{ item.label }}
         </el-tag>
@@ -25,75 +25,63 @@
     </div>
   </div>
 </template>
-<script>
-import { mapActions } from 'vuex'
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
 import skinPresets from '@/management/config/skinPresets.js'
-export default {
-  name: 'CatalogPanel',
-  data() {
-    return {
-      skinPresets: [],
-      groupName: 'temp'
-    }
-  },
-  computed: {
-    bannerList() {
-      return this.$store?.state?.bannerList || []
-    },
-    groupList() {
-      return Object.keys(this.bannerList).map((key) => {
-        return {
-          label: this.bannerList[key].name,
-          value: key
-        }
-      })
-    },
-    currentBannerList() {
-      const arr = Object.keys(this.bannerList)
-        .map((key) => {
-          return this.bannerList[key]
-        })
-        .map((data) => {
-          return data.list.map((item) => {
-            item.group = data.key
-            return item
-          })
-        })
-      const allbanner = arr.reduce((acc, curr) => {
-        return acc.concat(curr)
-      }, [])
-      return allbanner.filter((item) => {
-        if (this.groupName === 'temp') {
-          return true
-        } else {
-          return item.group === this.groupName
-        }
-      })
-    }
-  },
-  mounted() {},
-  methods: {
-    ...mapActions({
-      changeThemePreset: 'edit/changeThemePreset'
-    }),
-    changeGroup(value) {
-      this.groupName = value
-    },
-    changePreset(banner) {
-      const name = banner.group + '-' + banner.title
-      let presets = {
-        'bannerConf.bannerConfig.bgImage': banner.src,
-        'skinConf.themeConf.color': '#FAA600',
-        'skinConf.backgroundConf.color': '#fff'
-      }
-      if (skinPresets[name]) {
-        presets = Object.assign(presets, skinPresets[name])
-      }
 
-      this.changeThemePreset(presets)
+const store = useStore()
+const groupName = ref<string>('temp')
+const bannerList = computed(() => store?.state?.bannerList || [])
+const groupList = computed(() =>
+  Object.keys(bannerList.value).map((key) => ({
+    label: bannerList.value[key].name,
+    value: key
+  }))
+)
+const currentBannerList = computed(() => {
+  const arr = Object.keys(bannerList.value)
+    .map((key) => {
+      return bannerList.value[key]
+    })
+    .map((data) => {
+      return data.list.map((item: any) => {
+        item.group = data.key
+        return item
+      })
+    })
+
+  const allbanner = arr.reduce((acc, curr) => {
+    return acc.concat(curr)
+  }, [])
+
+  return allbanner.filter((item: any) => {
+    if (groupName.value === 'temp') {
+      return true
+    } else {
+      return item.group === groupName.value
     }
+  })
+})
+
+const handleChangeGroup = (value: string) => {
+  groupName.value = value
+}
+
+const changePreset = (banner: any) => {
+  const name = banner.group + '-' + banner.title
+  let presets = {
+    'bannerConf.bannerConfig.bgImage': banner.src,
+    'skinConf.themeConf.color': '#FAA600',
+    'skinConf.backgroundConf.color': '#fff'
   }
+
+  if ((skinPresets as any)[name]) {
+    presets = Object.assign(presets, (skinPresets as any)[name])
+  }
+
+  store.dispatch('edit/changeThemePreset', presets)
 }
 </script>
 <style lang="scss" scoped>

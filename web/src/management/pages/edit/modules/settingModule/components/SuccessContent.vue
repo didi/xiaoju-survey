@@ -9,24 +9,15 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue'
 
-<script>
-export default {
-  name: 'SuccessContent',
-  props: {
-    moduleConfig: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    successText() {
-      return this.moduleConfig?.submitConf?.msgContent?.msg_200 || ''
-    }
-  }
+interface Props {
+  moduleConfig: any
 }
+const props = defineProps<Props>()
+const successText = computed(() => props.moduleConfig?.msgContent?.msg_200 || '')
 </script>
-
 <style lang="scss" scoped>
 /*成功页面跳转全屏展示浮层*/
 .suc-page {

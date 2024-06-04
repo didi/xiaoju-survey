@@ -4,134 +4,98 @@
       {{ currentEditText }}
     </div>
     <el-form class="question-config-form" label-position="top" @submit.prevent>
-      <template v-for="(item, index) in formFieldData" :key="index">
+      <template v-for="(item, index) in formFields" :key="index">
         <FormItem
-          v-if="item.type && !item.hidden && Boolean(register[item.type])"
+          v-if="item.type && !item.hidden && Boolean(registerTypes[item.type])"
           :form-config="item"
           :style="item.style"
         >
           <Component
-            v-if="Boolean(register[item.type])"
-            :is="item.type"
+            v-if="Boolean(registerTypes[item.type])"
+            :is="components[item.type]"
             :module-config="moduleConfig"
             :form-config="item"
-            @form-change="onFormChange"
+            @form-change="handleFormChange"
           />
         </FormItem>
       </template>
     </el-form>
   </div>
 </template>
+<script setup lang="ts">
+import { computed, ref, shallowRef } from 'vue'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash-es'
 
-<script>
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
 import statusConfig from '../config/statusConfig'
-import { mapState } from 'vuex'
-import { get as _get, pick as _pick } from 'lodash-es'
 
 const textMap = {
   Success: '提交成功页面配置',
   OverTime: '问卷过期页面配置'
 }
 
-export default {
-  name: 'SetterPanel',
-  components: {
-    FormItem
-  },
-  data() {
+const store = useStore()
+
+const components = shallowRef<any>({})
+const registerTypes = ref<any>({})
+const moduleConfig = computed(() => _get(store.state, 'edit.schema.submitConf'))
+const currentEditText = computed(() => (textMap as any)[store.state.edit.currentEditStatus])
+const formFields = computed(() => {
+  const currentStatus = store.state.edit.currentEditStatus
+  const formList = (statusConfig as any)[currentStatus] || []
+  const list = formList.map((item: any) => {
+    const value = _get(moduleConfig.value, item.key, item.value)
+
+    return { ...item, value }
+  })
+
+  registerComponents(list)
+
+  return list
+})
+
+const handleFormChange = ({ key, value }: any) => {
+  store.dispatch('edit/changeSchema', {
+    key: `submitConf.${key}`,
+    value
+  })
+}
+
+const registerComponents = async (formFieldData: any) => {
+  const setters = formFieldData.map((item: any) => item.type)
+  const settersSet = new Set(setters)
+  const settersArr = Array.from(settersSet)
+  const allSetters = settersArr.map((item) => {
     return {
-      register: {}
+      type: item,
+      path: item
     }
-  },
-  computed: {
-    formFieldData() {
-      const formList = statusConfig[this.currentEditStatus] || []
-      return formList.map((item) => {
-        const value = _get(this.moduleConfig, item.key, item.value)
-        return {
-          ...item,
-          value
-        }
-      })
-    },
-    currentEditText() {
-      return textMap[this.currentEditStatus] || ''
-    },
-    ...mapState({
-      currentEditStatus: (state) => state.edit.currentEditStatus,
-      submitConf: (state) => _get(state, 'edit.schema.submitConf')
-    }),
-    moduleConfig() {
-      return this.submitConf
-    }
-  },
-  watch: {
-    formFieldData: {
-      immediate: true,
-      handler(newVal) {
-        if (Array.isArray(newVal)) {
-          this.handleComponentRegister(newVal)
-        }
+  })
+
+  try {
+    const comps = await setterLoader.loadComponents(allSetters)
+
+    for (const comp of comps) {
+      if (!comp) {
+        continue
+      }
+
+      const { type, component, err } = comp
+
+      if (!err) {
+        const componentName = component.name
+
+        components.value[type] = component
+        registerTypes.value[type] = componentName
       }
     }
-  },
-  methods: {
-    async handleComponentRegister(formFieldData) {
-      const setters = formFieldData.map((item) => item.type)
-      const settersSet = new Set(setters)
-      const settersArr = Array.from(settersSet)
-      const allSetters = settersArr.map((item) => {
-        return {
-          type: item,
-          path: item
-        }
-      })
-      try {
-        const comps = await setterLoader.loadComponents(allSetters)
-        for (const comp of comps) {
-          if (!comp) {
-            continue
-          }
-          const { type, component, err } = comp
-          if (!err) {
-            const componentName = component.name
-            this.$options.components[componentName] = component
-            this.register[type] = componentName
-          }
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    getValueFromModuleConfig(item) {
-      const { key, keys } = item
-      const moduleConfig = this.moduleConfig
-      let result = item
-      if (key) {
-        result = {
-          ...item,
-          value: _get(moduleConfig, key, item.value)
-        }
-      }
-      if (keys) {
-        result = {
-          ...item,
-          value: _pick(moduleConfig, keys)
-        }
-      }
-      return result
-    },
-    onFormChange(data) {
-      const { key, value } = data
-      const resultKey = `submitConf.${key}`
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    }
+  } catch (err) {
+    console.error(err)
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .question-edit-form {
   width: 360px;

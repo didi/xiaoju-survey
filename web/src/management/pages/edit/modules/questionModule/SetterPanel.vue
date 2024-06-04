@@ -11,47 +11,31 @@
         class="question-config-form"
         :form-config-list="formConfigList"
         :module-config="moduleConfig"
-        @form-change="onFormChange"
+        @form-change="handleFormChange"
       />
     </template>
   </div>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 
-<script>
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
-import { mapGetters } from 'vuex'
 
-export default {
-  name: 'SetterPanel',
-  data() {
-    return {
-      tabSelected: '0'
-    }
-  },
-  computed: {
-    currentEditOne() {
-      return this.$store.state?.edit?.currentEditOne
-    },
-    ...mapGetters({
-      formConfigList: 'edit/formConfigList',
-      moduleConfig: 'edit/moduleConfig',
-      currentEditKey: 'edit/currentEditKey',
-      currentEditMeta: 'edit/currentEditMeta'
-    })
-  },
-  components: {
-    SetterField
-  },
-  methods: {
-    onFormChange(data) {
-      const { key, value } = data
-      const resultKey = `${this.currentEditKey}.${key}`
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    }
-  }
+const store = useStore()
+
+const currentEditOne = computed(() => store.state?.edit?.currentEditOne)
+const formConfigList = computed(() => store.getters['edit/formConfigList'])
+const moduleConfig = computed(() => store.getters['edit/moduleConfig'])
+const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
+const currentEditMeta = computed(() => store.getters['edit/currentEditMeta'])
+
+const handleFormChange = (data: any) => {
+  const { key, value } = data
+  const resultKey = `${currentEditKey.value}.${key}`
+  store.dispatch('edit/changeSchema', { key: resultKey, value })
 }
 </script>
-
 <style lang="scss" scoped>
 .setter-wrapper {
   width: 360px;

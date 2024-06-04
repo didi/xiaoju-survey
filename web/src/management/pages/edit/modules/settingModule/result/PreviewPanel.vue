@@ -2,43 +2,35 @@
   <div class="result-config-preview">
     <div class="result-page-wrap">
       <div class="result-page">
-        <component :is="currentEditStatus" :key="currentEditStatus" :module-config="moduleConfig" />
+        <component
+          :is="components[currentEditStatus]"
+          :key="currentEditStatus"
+          :module-config="moduleConfig"
+        />
       </div>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash-es'
 
-<script>
-import { mapState } from 'vuex'
 import SuccessContent from '../components/SuccessContent.vue'
 import OverTime from '../components/OverTime.vue'
 import { EDIT_STATUS_MAP } from '../enum'
-import { get as _get } from 'lodash-es'
 
-export default {
-  name: 'PreviewPanel',
-  props: {},
-  data() {
-    return {}
-  },
-  computed: {
-    ...mapState({
-      currentEditStatus: (state) => state.edit.currentEditStatus,
-      submitConf: (state) => _get(state, 'edit.schema.submitConf')
-    }),
-    moduleConfig() {
-      return {
-        submitConf: this.submitConf
-      }
-    }
-  },
-  components: {
-    [EDIT_STATUS_MAP.SUCCESS]: SuccessContent,
-    [EDIT_STATUS_MAP.OVERTIME]: OverTime
-  }
+const components = {
+  [EDIT_STATUS_MAP.SUCCESS]: SuccessContent,
+  [EDIT_STATUS_MAP.OVERTIME]: OverTime
 }
-</script>
 
+const store = useStore()
+const currentEditStatus = computed(() => store.state?.edit?.currentEditStatus)
+const moduleConfig = computed(() => {
+  return _get(store.state, 'edit.schema.submitConf')
+})
+</script>
 <style lang="scss" scoped>
 .result-config-preview {
   width: 100%;

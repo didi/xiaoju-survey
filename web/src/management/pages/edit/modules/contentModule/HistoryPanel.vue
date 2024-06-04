@@ -25,7 +25,6 @@
   </el-popover>
 </template>
 
-
 <script>
 import { getSurveyHistory } from '@/management/api/survey'
 import moment from 'moment'
@@ -65,10 +64,9 @@ export default {
     }
   },
   watch: {
-    surveyId: {
-      immediate: true,
+    visible: {
       async handler(newVal) {
-        if (newVal) {
+        if (this.visible && newVal) {
           this.fetchHis()
         }
       }
@@ -76,7 +74,7 @@ export default {
     currentTab: {
       immediate: true,
       async handler(newVal) {
-        if (newVal) {
+        if (this.visible && newVal) {
           this.fetchHis()
         }
       }
@@ -89,26 +87,32 @@ export default {
     fetchHis() {
       this.paneLoading = true
       switch (this.currentTab) {
-
         case 'daily':
           getSurveyHistory({
             surveyId: this.surveyId,
             historyType: 'dailyHis'
-          }).then((dailyHis) => {
-            this.dailyHis = dailyHis.data || []
           })
-          break;
+            .then((dailyHis) => {
+              this.dailyHis = dailyHis.data || []
+            })
+            .finally(() => {
+              this.paneLoading = false
+            })
+          break
 
         case 'publish':
           getSurveyHistory({
             surveyId: this.surveyId,
             historyType: 'publishHis'
-          }).then((publishHis) => {
-            this.publishHis = publishHis.data || []
           })
-          break;
+            .then((publishHis) => {
+              this.publishHis = publishHis.data || []
+            })
+            .finally(() => {
+              this.paneLoading = false
+            })
+          break
       }
-      this.paneLoading = false
     }
   }
 }

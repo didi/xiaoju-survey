@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RestController
 public class UserController {
     @Resource
@@ -18,6 +18,6 @@ public class UserController {
 
     @RequestMapping("/findAllUser")
     public RpcResult<List<User>> findAllUser() {
-        return RpcResultUtil.createSuccessResult(userService.findAllUser());
+        return RpcResult.ok(userService.findAllUser());
     }
 }

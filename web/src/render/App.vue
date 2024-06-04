@@ -1,49 +1,24 @@
 <template>
   <div id="app">
-    <Component
-      v-if="store.state.router"
-      :is="
-        components[
-          upperFirst(store.state.router) as 'IndexPage' | 'EmptyPage' | 'ErrorPage' | 'SuccessPage'
-        ]
-      "
-    >
-    </Component>
-    <LogoIcon
-      v-if="!['successPage', 'indexPage'].includes(store.state.router)"
-      :logo-conf="logoConf"
-      :readonly="true"
-    />
+    <router-view></router-view>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 
 import { getPublishedSurveyInfo } from './api/survey'
 import useCommandComponent from './hooks/useCommandComponent'
 
-import EmptyPage from './pages/EmptyPage.vue'
-import IndexPage from './pages/IndexPage.vue'
-import ErrorPage from './pages/ErrorPage.vue'
-import SuccessPage from './pages/SuccessPage.vue'
 import AlertDialog from './components/AlertDialog.vue'
-// @ts-ignore
-import communalLoader from '@materials/communals/communalLoader.js'
-import { get as _get, upperFirst } from 'lodash-es'
+import { get as _get  } from 'lodash-es'
 import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
-const LogoIcon = communalLoader.loadComponent('LogoIcon')
-
 const store = useStore()
-const logoConf = computed(() => store.state?.bottomConf || {})
+const route = useRoute()
+const router = useRouter()
 const skinConf = computed(() => _get(store, 'state.skinConf', {}))
-const components = {
-  EmptyPage,
-  IndexPage,
-  ErrorPage,
-  SuccessPage
-}
 
 const updateSkinConfig = (value: any) => {
   const root = document.documentElement
@@ -68,15 +43,13 @@ const updateSkinConfig = (value: any) => {
 watch(skinConf, (value) => {
   updateSkinConfig(value)
 })
+watch(() => route.params.surveyId, (surveyId)=> {
+    router.push({name: 'indexPage', params: {surveyId: surveyId} })
+    store.commit('setSurveyPath', surveyId)
+    getDetail(surveyId as string)
+})
 
-onMounted(async () => {
-  const surveyPath = location.pathname.split('/').pop()
-
-  if (!surveyPath) {
-    store.commit('setRouter', 'EmptyPage')
-    return
-  }
-
+const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
 
   try {
@@ -99,7 +72,7 @@ onMounted(async () => {
 
       updateSkinConfig(skinConf)
 
-      store.commit('setSurveyPath', surveyPath)
+      // store.commit('setSurveyPath', surveyPath)
       store.dispatch('init', questionData)
       store.dispatch('getEncryptInfo')
       initRuleEngine(logicConf?.showLogicConf)
@@ -110,7 +83,8 @@ onMounted(async () => {
     console.log(error)
     alert({ title: error.message || '获取问卷失败' })
   }
-})
+}
+
 </script>
 <style lang="scss">
 @import url('./styles/icon.scss');

@@ -16,28 +16,28 @@
           :form-config="content"
         >
           <Component
-            :is="content.type"
+            :is="components[content.type]"
             :form-config="content"
             :module-config="moduleConfig"
-            @form-change="onFormChange($event, content)"
+            @form-change="handleFormChange($event, content)"
             :class="content.contentClass"
           />
         </FormItem>
       </template>
       <FormItem v-else :form-config="item">
         <Component
-          :is="item.type"
+          :is="components[item.type]"
           :form-config="item"
           :module-config="moduleConfig"
-          @form-change="onFormChange($event, item)"
+          @form-change="handleFormChange($event, item)"
           :class="item.contentClass"
         />
       </FormItem>
     </div>
   </el-form>
 </template>
-
-<script>
+<script setup lang="ts">
+import { watch, ref, shallowRef } from 'vue'
 import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash-es'
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
@@ -45,8 +45,20 @@ import setterLoader from '@/materials/setters/setterLoader'
 
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
+interface Props {
+  formConfigList: Array<any>
+  moduleConfig: any
+}
+
+interface Emit {
+  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: any }): void
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emit>()
+
 // 静态配置设置动态值
-const formatValue = ({ item, moduleConfig }) => {
+const formatValue = ({ item, moduleConfig }: any) => {
   if (_isFunction(item.valueAdapter)) {
     const value = item.valueAdapter({ moduleConfig })
 
@@ -65,141 +77,130 @@ const formatValue = ({ item, moduleConfig }) => {
   }
 }
 
-export default {
-  name: 'SettersField',
-  props: {
-    formConfigList: Array, // 对应题型组件的meta.js内容
-    moduleConfig: Object
-  },
-  data() {
-    return {
-      register: {},
-      formFieldData: [],
-      init: true
-    }
-  },
-  components: {
-    FormItem
-  },
-  watch: {
-    formConfigList: {
-      deep: true,
-      immediate: true,
-      async handler(newVal) {
-        this.init = true
-        if (!newVal || !newVal.length) {
-          return
-        }
+const formFieldData = ref<Array<any>>([])
+const init = ref<boolean>(true)
+const components = shallowRef<any>({})
 
-        // 组件注册
-        await this.handleComponentRegister(newVal)
+const handleFormChange = (data: any, formConfig: any) => {
+  if (_isFunction(formConfig?.setterAdapter)) {
+    const resultData = formConfig.setterAdapter(data)
 
-        this.init = false
-        this.formFieldData = this.setValues(this.formConfigList)
-      }
-    },
-    // schema变化联动
-    moduleConfig: {
-      deep: true,
-      async handler() {
-        // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
-        if (this.init) {
-          return
-        }
-
-        // TODO: 优化，依赖的schema变化时，均会重新计算
-        this.formFieldData = this.setValues(this.formConfigList)
-      }
-    }
-  },
-  methods: {
-    setValues(configList = []) {
-      return configList
-        .filter((item) => {
-          // 组件组
-          if (item.type === 'Customed') {
-            item.content = this.setValues(item.content)
-            return true
-          }
-
-          if (!item.type) {
-            return false
-          }
-          if (item.hidden) {
-            return false
-          }
-
-          // 动态显隐设置器
-          if (_isFunction(item.relyFunc)) {
-            return item.relyFunc(this.moduleConfig)
-          }
-
-          return true
-        })
-        .map((item) => {
-          return {
-            ...item,
-            value: formatValue({ item, moduleConfig: this.moduleConfig }) // 动态复值
-          }
-        })
-    },
-    async handleComponentRegister(formFieldData) {
-      let innerSetters = []
-      const setters = formFieldData.map((item) => {
-        if (item.type === 'Customed') {
-          innerSetters.push(...(item.content || []).map((content) => content.type))
-        }
-
-        return item.type
+    if (Array.isArray(resultData)) {
+      resultData.forEach((item) => {
+        emit(FORM_CHANGE_EVENT_KEY, item)
       })
-
-      const settersSet = new Set([...setters, ...innerSetters])
-      const settersArr = Array.from(settersSet)
-      const allSetters = settersArr.map((item) => {
-        return {
-          type: item,
-          path: item
-        }
-      })
-      try {
-        const comps = await setterLoader.loadComponents(allSetters)
-        for (const comp of comps) {
-          if (!comp) {
-            continue
-          }
-          const { type, component, err } = comp
-          if (!err) {
-            const componentName = component.name
-            if (!this.$options.components) {
-              this.$options.components = {}
-            }
-            this.$options.components[componentName] = component
-            this.register[type] = componentName
-          }
-        }
-      } catch (err) {
-        console.error(err)
-      }
-    },
-
-    onFormChange(data, formConfig) {
-      if (_isFunction(formConfig?.setterAdapter)) {
-        const resultData = formConfig.setterAdapter(data)
-        if (Array.isArray(resultData)) {
-          resultData.forEach((item) => {
-            this.$emit(FORM_CHANGE_EVENT_KEY, item)
-          })
-        } else {
-          this.$emit(FORM_CHANGE_EVENT_KEY, resultData)
-        }
-      } else {
-        this.$emit(FORM_CHANGE_EVENT_KEY, data)
-      }
+    } else {
+      emit(FORM_CHANGE_EVENT_KEY, resultData)
     }
+  } else {
+    emit(FORM_CHANGE_EVENT_KEY, data)
   }
 }
-</script>
 
+const normalizationValues = (configList: Array<any> = []) => {
+  return configList
+    .filter((item: any) => {
+      // 组件组
+      if (item.type === 'Customed') {
+        item.content = normalizationValues(item.content)
+        return true
+      }
+
+      if (!item.type) {
+        return false
+      }
+
+      if (item.hidden) {
+        return false
+      }
+
+      // 动态显隐设置器
+      if (_isFunction(item.relyFunc)) {
+        return item.relyFunc(props.moduleConfig)
+      }
+
+      return true
+    })
+    .map((item: any) => {
+      return {
+        ...item,
+        value: formatValue({ item, moduleConfig: props.moduleConfig }) // 动态复值
+      }
+    })
+}
+
+const registerComponents = async (formFieldData: any) => {
+  let innerSetters: Array<any> = []
+
+  const setters = formFieldData.map((item: any) => {
+    if (item.type === 'Customed') {
+      innerSetters.push(...(item.content || []).map((content: any) => content.type))
+    }
+
+    return item.type
+  })
+
+  const settersSet = new Set([...setters, ...innerSetters])
+  const settersArr = Array.from(settersSet)
+  const allSetters = settersArr.map((item) => ({
+    type: item,
+    path: item
+  }))
+
+  try {
+    const comps = await setterLoader.loadComponents(allSetters)
+
+    for (const comp of comps) {
+      if (!comp) {
+        continue
+      }
+
+      const { type, component, err } = comp
+
+      if (!err) {
+        components.value[type] = component
+      }
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+watch(
+  () => props.formConfigList,
+  async (newVal: Array<any>) => {
+    init.value = true
+
+    if (!newVal || !newVal.length) {
+      return
+    }
+
+    await registerComponents(newVal)
+    init.value = false
+    formFieldData.value = normalizationValues(newVal)
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
+
+watch(
+  () => props.moduleConfig,
+  () => {
+    // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
+    if (init.value) {
+      return
+    }
+
+    // TODO: 优化，依赖的schema变化时，均会重新计算
+    formFieldData.value = normalizationValues(props.formConfigList)
+  },
+  {
+    deep: true
+  }
+)
+</script>
 <style lang="scss" scoped>
 .config-form {
   padding: 15px 0;

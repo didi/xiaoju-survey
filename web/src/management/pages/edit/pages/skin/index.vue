@@ -3,46 +3,47 @@
     <div class="navbar-tab">
       <el-radio-group v-model="activeRouter">
         <el-radio-button
-          v-for="btnItem in btnList"
-          :key="btnItem.router"
-          :label="btnItem.text"
-          :value="btnItem.router"
+          v-for="item in routes"
+          :key="item.router"
+          :label="item.text"
+          :value="item.router"
         />
       </el-radio-group>
     </div>
     <router-view></router-view>
   </div>
 </template>
-<script>
-export default {
-  name: 'skinPage',
-  props: {},
-  data() {
-    return {
-      activeRouter: this.$route.name,
-      btnList: [
-        {
-          text: '内容页',
-          router: 'QuestionSkinSetting',
-          key: 'skinsettings',
-          next: true
-        },
-        {
-          text: '结果页',
-          router: 'QuestionEditResultConfig',
-          key: 'status'
-        }
-      ]
-    }
+<script setup lang="ts">
+import { watch, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
+const routes = [
+  {
+    text: '内容页',
+    router: 'QuestionSkinSetting',
+    key: 'skinsettings',
+    next: true
   },
-  watch: {
-    activeRouter: {
-      handler(val) {
-        this.$router.push({ name: val })
-      }
-    }
+  {
+    text: '结果页',
+    router: 'QuestionEditResultConfig',
+    key: 'status'
   }
-}
+]
+
+const router = useRouter()
+const route = useRoute()
+const activeRouter = ref(route.name)
+
+watch(
+  activeRouter,
+  (val: any) => {
+    router.push({ name: val })
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .skin-content {

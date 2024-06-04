@@ -1,5 +1,5 @@
 <template>
-  <div class="question-catalog-item" @click="onSelect()">
+  <div class="question-catalog-item" @click="handleSelect()">
     <div class="iconfont icon-tuodong draggHandle"></div>
     <div class="catalog-item-body">
       <div class="catalog-item-index" v-if="showIndex">{{ indexNumber }}.</div>
@@ -7,37 +7,29 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+interface Props {
+  title: string
+  indexNumber: string | number
+  showIndex: boolean
+}
 
-<script>
-export default {
-  name: 'CatalogItem',
-  data() {
-    return {}
-  },
-  computed: {},
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    indexNumber: {
-      type: [String, Number],
-      default: ''
-    },
-    showIndex: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {},
-  methods: {
-    onSelect() {
-      this.$emit('select')
-    }
-  }
+interface Emit {
+  (ev: 'select'): void
+}
+
+withDefaults(defineProps<Props>(), {
+  title: '',
+  indexNumber: '',
+  showIndex: false
+})
+
+const emit = defineEmits<Emit>()
+
+const handleSelect = () => {
+  emit('select')
 }
 </script>
-
 <style lang="scss" scoped>
 .question-catalog-item {
   position: relative;

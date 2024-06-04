@@ -14,7 +14,7 @@
             :module-config="_get(schema, collapse.key, {})"
             @form-change="
               (key) => {
-                onFormChange(key, collapse.key)
+                handleFormChange(key, collapse.key)
               }
             "
           />
@@ -23,37 +23,24 @@
     </div>
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash-es'
+
 import skinConfig from '@/management/config/setterConfig/skinConfig'
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
-import { mapState } from 'vuex'
-import { get as _get } from 'lodash-es'
-export default {
-  name: 'SetterPanel',
-  components: {
-    SetterField
-  },
-  data() {
-    return {
-      collapse: '',
-      skinConfig
-    }
-  },
-  computed: {
-    ...mapState({
-      skinConf: (state) => _get(state, 'edit.schema.skinConf'),
-      schema: (state) => _get(state, 'edit.schema')
-    })
-  },
-  methods: {
-    _get,
-    onFormChange(data, collapse) {
-      const { key, value } = data
-      const currentEditKey = `${collapse}`
-      const resultKey = `${currentEditKey}.${key}`
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    }
-  }
+
+const store = useStore()
+const collapse = ref<string>('')
+const schema = computed(() => _get(store.state, 'edit.schema'))
+
+const handleFormChange = (data: any, collapse: string) => {
+  const { key, value } = data
+  const currentEditKey = `${collapse}`
+  const resultKey = `${currentEditKey}.${key}`
+
+  store.dispatch('edit/changeSchema', { key: resultKey, value })
 }
 </script>
 <style lang="scss" scoped>

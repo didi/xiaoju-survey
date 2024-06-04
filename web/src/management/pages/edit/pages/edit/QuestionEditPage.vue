@@ -11,20 +11,11 @@
     </template>
   </CommonTemplate>
 </template>
-<script>
+<script setup lang="ts">
 import CommonTemplate from '../../components/CommonTemplate.vue'
 import CatalogPanel from '../../modules/questionModule/CatalogPanel.vue'
 import PreviewPanel from '../../modules/questionModule/PreviewPanel.vue'
 import SetterPanel from '../../modules/questionModule/SetterPanel.vue'
-export default {
-  name: 'editIndex',
-  components: {
-    CommonTemplate,
-    CatalogPanel,
-    PreviewPanel,
-    SetterPanel
-  }
-}
 </script>
 <style lang="scss" scoped>
 .navbar {

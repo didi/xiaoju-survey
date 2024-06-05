@@ -75,8 +75,7 @@ const loadData = (res: any, surveyPath: string) => {
       dataConf,
       skinConf,
       submitConf,
-      logicConf,
-      isPreview
+      logicConf
     } = data.code
     const questionData = {
       bannerConf,
@@ -84,8 +83,7 @@ const loadData = (res: any, surveyPath: string) => {
       bottomConf,
       dataConf,
       skinConf,
-      submitConf,
-      isPreview
+      submitConf
     }
 
     document.title = data.title
@@ -94,7 +92,6 @@ const loadData = (res: any, surveyPath: string) => {
 
     store.commit('setSurveyPath', surveyPath)
     store.dispatch('init', questionData)
-    store.dispatch('getEncryptInfo')
     initRuleEngine(logicConf?.showLogicConf)
   } else {
     throw new Error(res.errmsg)
@@ -121,6 +118,7 @@ onMounted(async () => {
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
       loadData(res, surveyPath)
+      store.dispatch('getEncryptInfo')
     }
   } catch (error: any) {
     console.log(error)

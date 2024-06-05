@@ -6,15 +6,17 @@
     </div>
     <el-dialog
       :z-index="99999"
+      top="50px"
       class="preview-config-wrapper"
       :destroy-on-close="true"
       :show-close="false"
       @open="openDialog"
       @closed="closedDialog"
       v-model="dialogTableVisible"
-      :width="`${previewTab == 1 ? '328' : '1290'}`"
+      :width="`${previewTab == 1 ? '398' : '1290'}`"
     >
-      <div class="preview-tab">
+      <div class="ml75">
+        <div class="preview-tab">
         <div :class="`preview-tab-item ${previewTab == 1 ? 'active' : ''}`" @click="previewTab = 1">
           <i-ep-iphone />
         </div>
@@ -38,6 +40,7 @@
             ></iframe>
           </div>
         </div>
+      </div>
       </div>
     </el-dialog>
   </div>
@@ -71,6 +74,9 @@ const closedDialog = () => {
     background-color: transparent;
     box-shadow: none;
     padding: 0;
+  }
+  .ml75{
+    margin-left: 75px;
   }
 
   .preview-btn {
@@ -113,7 +119,7 @@ const closedDialog = () => {
     }
 
     &-item {
-      width: 60px;
+      width: 80px;
       height: 30px;
       display: flex;
       align-items: center;

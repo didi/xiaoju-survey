@@ -15,16 +15,20 @@ const CODE_MAP = {
   NO_AUTH: 403
 }
 const VOTE_INFO_KEY = 'voteinfo'
-
+import router from '../router'
 export default {
   // 初始化
-  init({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
+  init(
+    { state, commit, dispatch },
+    { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }
+  ) {
     commit('setEnterTime')
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
     if (now < new Date(begTime).getTime()) {
-      commit('setRouter', 'errorPage')
+      // commit('setRouter', 'errorPage')
+      router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
         errorMsg: `<p>问卷未到开始填写时间，暂时无法进行填写<p/>
@@ -32,7 +36,8 @@ export default {
       })
       return
     } else if (now > new Date(endTime).getTime()) {
-      commit('setRouter', 'errorPage')
+      // commit('setRouter', 'errorPage')
+      router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
         errorMsg: msgContent.msg_9001 || '您来晚了，感谢支持问卷~'
@@ -44,7 +49,8 @@ export default {
       const momentStartTime = moment(`${todayStr} ${answerBegTime}`)
       const momentEndTime = moment(`${todayStr} ${answerEndTime}`)
       if (momentNow.isBefore(momentStartTime) || momentNow.isAfter(momentEndTime)) {
-        commit('setRouter', 'errorPage')
+        // commit('setRouter', 'errorPage')
+        router.push({ name: 'errorPage' })
         commit('setErrorInfo', {
           errorType: 'overTime',
           errorMsg: `<p>不在答题时间范围内，暂时无法进行填写<p/>
@@ -53,7 +59,9 @@ export default {
         return
       }
     }
-    commit('setRouter', 'indexPage')
+    // commit('setRouter', 'indexPage')
+    const surveyPath = state.surveyPath
+    router.push({ name: 'indexPage', params: { surveyId: surveyPath } })
 
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({

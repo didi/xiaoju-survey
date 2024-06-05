@@ -1,5 +1,6 @@
 package com.xiaojusurvey.engine.common.util;
 
+import com.xiaojusurvey.engine.common.rpc.IdResult;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 
 public class RpcResultUtil {
@@ -45,4 +46,22 @@ public class RpcResultUtil {
         result.setSuccess(Boolean.FALSE);
         return result;
     }
+
+    /**
+     * 为应对前端单独返回id的情况
+     * @param id
+     * @return
+     * @param <T>
+     */
+    public static <T> RpcResult<IdResult<T>> createSuccessIdResult(T id) {
+        IdResult<T> idResult = new IdResult<>();
+        idResult.setId(id);
+        RpcResult<IdResult<T>> result = new RpcResult<>();
+        result.setCode(SUCCESS);
+        result.setData(idResult);
+        result.setMsg(DEFAULT_SUCC_MSG);
+        result.setSuccess(Boolean.TRUE);
+        return result;
+    }
+
 }

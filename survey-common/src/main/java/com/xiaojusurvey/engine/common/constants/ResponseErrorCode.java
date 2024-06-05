@@ -1,0 +1,39 @@
+package com.xiaojusurvey.engine.common.constants;
+
+import lombok.Getter;
+
+@Getter
+public enum ResponseErrorCode {
+    AUTHENTICATION_FAILED(1001, "没有权限"),
+    PARAMETER_ERROR(1002, "参数有误"),
+    USER_EXISTS(2001, "用户已存在"),
+    USER_NOT_EXISTS(2002, "用户不存在"),
+    NO_SURVEY_PERMISSION(3001, "没有问卷权限"),
+    SURVEY_STATUS_TRANSFORM_ERROR(3002, "问卷状态转换报错"),
+    SURVEY_TYPE_ERROR(3003, "问卷类型错误"),
+    SURVEY_NOT_FOUND(3004, "问卷不存在"),
+    SURVEY_CONTENT_NOT_ALLOW(3005, "存在禁用内容"),
+    CAPTCHA_INCORRECT(4001, "验证码不正确"),
+    RESPONSE_SIGN_ERROR(9001, "签名不正确"),
+    RESPONSE_CURRENT_TIME_NOT_ALLOW(9002, "当前时间不允许提交"),
+    RESPONSE_OVER_LIMIT(9003, "超出限制"),
+    RESPONSE_SCHEMA_REMOVED(9004, "问卷已删除"),
+    RESPONSE_DATA_DECRYPT_ERROR(9005, "问卷已删除"),
+    UPLOAD_FILE_ERROR(5001, "上传文件错误");
+
+    private final int code;
+    private final String message;
+
+    ResponseErrorCode(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}

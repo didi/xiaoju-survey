@@ -21,7 +21,7 @@ public class MongoRepositoryImpl implements MongoRepository {
 
     @Override
     public <T extends BaseEntity> T save(T saveObject) {
-        return null;
+        return mongoTemplate.save(saveObject);
     }
 
     @Override

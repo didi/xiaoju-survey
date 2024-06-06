@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.core.survey.impl;
 
-import com.xiaojusurvey.engine.common.entity.survey.Survey;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
+import com.xiaojusurvey.engine.common.rpc.IdResult;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,9 @@ public class SurveyServiceImpl implements SurveyService {
      * 创建问卷
      */
     @Override
-    public String createSurvey(Survey survey) {
-        return mongoRepository.save(survey).getId();
+    public IdResult<String> createSurvey(SurveyMeta surveyMeta) {
+        IdResult<String> idResult = new IdResult<>();
+        idResult.setId(mongoRepository.save(surveyMeta).getId());
+        return idResult;
     }
 }

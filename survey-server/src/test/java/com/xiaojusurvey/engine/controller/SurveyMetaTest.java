@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.xiaojusurvey.engine.SurveyApplication;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +14,7 @@ import javax.annotation.Resource;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = SurveyApplication.class)
-public class SurveyTest {
+public class SurveyMetaTest {
 
     @Resource
     private SurveyController surveyController;
@@ -21,6 +22,11 @@ public class SurveyTest {
 
     @Test
     public void createSurvey() {
-
+        SurveyMeta surveyMeta = new SurveyMeta();
+        surveyMeta.setTitle("测试问卷");
+        surveyMeta.setSurveyType("1");
+        surveyMeta.setCreateMethod("1");
+        surveyMeta.setCreateFrom("1");
+        surveyController.createSurvey(surveyMeta);
     }
 }

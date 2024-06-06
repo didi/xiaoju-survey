@@ -1,6 +1,6 @@
 package com.xiaojusurvey.engine.core.user;
 
-import com.xiaojusurvey.engine.common.entity.User;
+import com.xiaojusurvey.engine.common.entity.user.User;
 
 import java.util.List;
 

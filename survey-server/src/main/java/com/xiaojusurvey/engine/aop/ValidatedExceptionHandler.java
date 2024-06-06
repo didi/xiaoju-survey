@@ -1,6 +1,6 @@
 package com.xiaojusurvey.engine.aop;
 
-import com.xiaojusurvey.engine.common.constants.ResponseErrorCode;
+import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class ValidatedExceptionHandler {
     public RpcResult handleBindException(BindException e) {
         log.error(e.getMessage(), e);
         String message = e.getAllErrors().get(0).getDefaultMessage();
-        return RpcResultUtil.createFailedResult(ResponseErrorCode.PARAMETER_ERROR.getCode(), message);
+        return RpcResultUtil.createFailedResult(RespErrorCode.PARAMETER_ERROR.getCode(), message);
     }
 
 }

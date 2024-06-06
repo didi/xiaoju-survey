@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -15,11 +14,11 @@ import javax.validation.constraints.NotNull;
  * @CreateTime: 2024-06-05
  * @Description: 问卷Survey
  */
-@Document("survey")
+@Document("surveyMeta")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
-public class Survey extends BaseEntity {
+public class SurveyMeta extends BaseEntity {
 
     /**
      * 问卷类型

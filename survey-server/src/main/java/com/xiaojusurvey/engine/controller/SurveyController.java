@@ -1,15 +1,16 @@
 package com.xiaojusurvey.engine.controller;
 
-import com.xiaojusurvey.engine.common.entity.User;
-import com.xiaojusurvey.engine.common.entity.survey.Survey;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import com.xiaojusurvey.engine.common.rpc.IdResult;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author: LYF
@@ -26,7 +27,7 @@ public class SurveyController {
      * 创建问卷
      */
     @RequestMapping("/createSurvey")
-    public RpcResult<IdResult<String>> createSurvey(@Validated @RequestBody Survey survey) {
-        return RpcResultUtil.createSuccessIdResult(surveyService.createSurvey(survey));
+    public RpcResult<IdResult<String>> createSurvey(@Validated @RequestBody SurveyMeta surveyMeta) {
+        return RpcResultUtil.createSuccessResult(surveyService.createSurvey(surveyMeta));
     }
 }

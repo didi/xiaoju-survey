@@ -98,7 +98,6 @@ const normalizationRequestBody = () => {
 const submitSurver = async () => {
   try {
     const params = normalizationRequestBody()
-    console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
       store.commit('setRouter', 'successPage')

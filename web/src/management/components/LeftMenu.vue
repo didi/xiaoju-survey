@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 const route = useRoute()
@@ -58,18 +58,17 @@ const tabArr = [
   }
 ]
 const tabs = ref([])
-onMounted(async () => {
-  await store.dispatch('fetchCooperPermissions', route.params.id)
+watch(() => store.state.cooperPermissions, (newVal) => {
   // 如果有问卷管理权限，则加入问卷编辑和投放菜单
-  if (store.state.cooperPermissions.includes(SurveyPermissions.SurveyManage)) {
+  if (newVal.includes(SurveyPermissions.SurveyManage)) {
     tabs.value.push(tabArr[0])
     tabs.value.push(tabArr[1])
-  }
+  } 
   // 如果有数据分析权限，则加入数据分析菜单
-  if (store.state.cooperPermissions.includes(SurveyPermissions.DataManage)) {
+  if (newVal.includes(SurveyPermissions.DataManage))  {
     tabs.value.push(tabArr[2])
   }
-})
+}, { immediate: true })
 </script>
 <style lang="scss" scoped>
 .nav {

@@ -1,5 +1,5 @@
 import { getBannerData } from '@/management/api/skin.js'
-import { getCollaboratorPermissionsMemorize } from '@/management/api/space.ts'
+import { getCollaboratorPermissions } from '@/management/api/space.ts'
 import { CODE_MAP } from '../api/base'
 
 export default {

@@ -21,6 +21,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
@@ -55,6 +56,7 @@ const alert = useCommandComponent(AlertDialog)
 const confirm = useCommandComponent(ConfirmDialog)
 
 const store = useStore()
+const router = useRouter()
 
 const bannerConf = computed(() => store.state?.bannerConf || {})
 const renderData = computed(() => store.getters.renderData)
@@ -101,7 +103,8 @@ const submitSurver = async () => {
     console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
-      store.commit('setRouter', 'successPage')
+      // store.commit('setRouter', 'successPage')
+      router.push({ name: 'successPage' })
     } else {
       alert({
         title: res.errmsg || '提交失败'

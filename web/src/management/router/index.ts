@@ -171,18 +171,4 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 })
-
-// router.afterEach(async (to, from) => {
-//   const store = useStore()
-//   if (to.meta.premissions) {
-//     const params = to.params
-//     await store.dispatch('fetchCooperPermissions', params.id)
-//     if (!(to.meta.premissions as []).some((permission) => store.state?.cooperPermissions?.includes(permission))) {
-//       ElMessage.warning('您没有该问卷的相关协作权限')
-//       router.push({
-//         name: 'survey'
-//       })
-//     }
-//   }
-// })
 export default router

@@ -3,11 +3,12 @@ package com.xiaojusurvey.engine.common.constants;
 import lombok.Getter;
 
 @Getter
-public enum ResponseErrorCode {
+public enum RespErrorCode {
     AUTHENTICATION_FAILED(1001, "没有权限"),
     PARAMETER_ERROR(1002, "参数有误"),
     USER_EXISTS(2001, "用户已存在"),
     USER_NOT_EXISTS(2002, "用户不存在"),
+    USER_PASSWORD_ERROR(2003, "用户名或密码错误"),
     NO_SURVEY_PERMISSION(3001, "没有问卷权限"),
     SURVEY_STATUS_TRANSFORM_ERROR(3002, "问卷状态转换报错"),
     SURVEY_TYPE_ERROR(3003, "问卷类型错误"),
@@ -24,7 +25,7 @@ public enum ResponseErrorCode {
     private final int code;
     private final String message;
 
-    ResponseErrorCode(int code, String message) {
+    RespErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
     }

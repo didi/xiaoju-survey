@@ -8,5 +8,8 @@
 *.njsproj
 *.sln
 *.sw?
-
+*.iml
 .history
+
+*/target
+/logs

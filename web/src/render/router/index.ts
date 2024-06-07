@@ -3,12 +3,12 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/:surveyId',
-    component: () => import('../pages/RenderPage.vue'),
+    component: () => import('../pages/IndexPage.vue'),
     children: [
       {
         path: '',
         name: 'indexPage',
-        component: () => import('../pages/IndexPage.vue')
+        component: () => import('../pages/RenderPage.vue')
       },
       {
         path: 'success',

@@ -3,7 +3,7 @@
  */
 
 import { get as _get, map as _map } from 'lodash-es'
-
+import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 // 处理选择题的options
 function handleOptions(item) {
   const { type } = item
@@ -13,7 +13,7 @@ function handleOptions(item) {
     const cleanOption = {}
 
     // 投票逻辑处理
-    if (type.indexOf('vote') > -1) {
+    if (type.indexOf(QUESTION_TYPE.VOTE) > -1) {
       cleanOption.voteCount = 0
     }
 

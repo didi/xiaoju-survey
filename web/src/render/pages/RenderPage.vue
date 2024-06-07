@@ -103,7 +103,6 @@ const submitSurver = async () => {
     console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
-      // store.commit('setRouter', 'successPage')
       router.push({ name: 'successPage' })
     } else {
       alert({

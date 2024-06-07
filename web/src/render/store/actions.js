@@ -27,7 +27,6 @@ export default {
     const { msgContent } = submitConf
     const now = Date.now()
     if (now < new Date(begTime).getTime()) {
-      // commit('setRouter', 'errorPage')
       router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
@@ -36,7 +35,6 @@ export default {
       })
       return
     } else if (now > new Date(endTime).getTime()) {
-      // commit('setRouter', 'errorPage')
       router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
@@ -49,7 +47,6 @@ export default {
       const momentStartTime = moment(`${todayStr} ${answerBegTime}`)
       const momentEndTime = moment(`${todayStr} ${answerEndTime}`)
       if (momentNow.isBefore(momentStartTime) || momentNow.isAfter(momentEndTime)) {
-        // commit('setRouter', 'errorPage')
         router.push({ name: 'errorPage' })
         commit('setErrorInfo', {
           errorType: 'overTime',
@@ -59,9 +56,8 @@ export default {
         return
       }
     }
-    // commit('setRouter', 'indexPage')
     const surveyPath = state.surveyPath
-    router.push({ name: 'indexPage', params: { surveyId: surveyPath } })
+    router.push({ name: 'renderPage', params: { surveyId: surveyPath } })
 
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({

@@ -5,7 +5,7 @@ import {
   keys as _keys,
   set as _set
 } from 'lodash-es'
-import { INPUT, RATES, QUESTION_TYPE } from '../constant'
+import { INPUT, RATES, QUESTION_TYPE } from '../constant/index.ts'
 
 const regexpMap = {
   nd: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,

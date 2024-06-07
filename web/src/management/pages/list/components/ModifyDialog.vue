@@ -41,7 +41,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
-import { QOP_MAP } from '@/management/utils/constant'
+import { QOP_MAP } from '@/management/utils/constant.ts'
 
 export default {
   name: 'ModifyDialog',

@@ -3,7 +3,7 @@
  */
 
 import { get as _get, map as _map } from 'lodash-es'
-import { QUESTION_TYPE } from '../constant'
+import { QUESTION_TYPE } from '../constant/index.ts'
 // 处理选择题的options
 function handleOptions(item) {
   const { type } = item

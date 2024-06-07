@@ -1,5 +1,5 @@
 // 定义提交的数据结构：{ field1: '', field2: [], field1_hash1: '', }
-import { QUESTION_TYPE } from "../constant"
+import { QUESTION_TYPE } from "../constant/index.ts"
 export default function ({ dataConf }) {
   const dataList = dataConf.dataList
   const formValues = {}

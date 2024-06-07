@@ -17,7 +17,7 @@ import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
-import { CHOICES, RATES, QUESTION_TYPE } from '@/render/constant/index'
+import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/render/constant/index.ts'
 
 const props = defineProps({
   indexNumber: {
@@ -48,7 +48,7 @@ const questionConfig = computed(() => {
     moduleConfig.voteTotal = unref(voteTotal)
   }
   if (
-    CHOICES.includes(type) &&
+    NORMAL_CHOICES.includes(type) &&
     options.filter((optionItem) => optionItem.others).length > 0
   ) {
     let { options, othersValue } = useShowOthers(field)

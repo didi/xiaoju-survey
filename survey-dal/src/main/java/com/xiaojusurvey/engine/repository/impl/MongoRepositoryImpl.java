@@ -4,6 +4,8 @@ import com.xiaojusurvey.engine.common.entity.BaseEntity;
 import com.xiaojusurvey.engine.common.exception.DaoException;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -21,7 +23,7 @@ public class MongoRepositoryImpl implements MongoRepository {
 
     @Override
     public <T extends BaseEntity> T save(T saveObject) {
-        return null;
+        return mongoTemplate.save(saveObject);
     }
 
     @Override
@@ -35,5 +37,17 @@ public class MongoRepositoryImpl implements MongoRepository {
     @Override
     public <T extends BaseEntity> List<T> findAll(Class<T> entityClass) {
         return mongoTemplate.findAll(entityClass);
+    }
+
+
+    @Override
+    public <T extends BaseEntity> T findOne(Query query, Class<T> entityClass) {
+        return mongoTemplate.findOne(query,entityClass);
+    }
+
+    @Override
+    public <T extends BaseEntity> void deleteById(Object id, Class<T> entityClass) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        mongoTemplate.remove(query, entityClass);
     }
 }

@@ -30,6 +30,8 @@
         <java.compiler.target.version>1.8</java.compiler.target.version>
         <lombok.version>1.18.8</lombok.version>
         <junit.version>4.12</junit.version>
+        <lang3.version>3.14.0</lang3.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
 
     <dependencyManagement>

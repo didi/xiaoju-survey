@@ -1,8 +1,7 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.xiaojusurvey.engine.SurveyApplication;
-import com.xiaojusurvey.engine.common.entity.User;
+import com.xiaojusurvey.engine.common.entity.user.User;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.core.user.UserService;
 import org.junit.Assert;

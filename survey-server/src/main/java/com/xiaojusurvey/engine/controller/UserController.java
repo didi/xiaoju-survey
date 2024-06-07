@@ -1,6 +1,6 @@
 package com.xiaojusurvey.engine.controller;
 
-import com.xiaojusurvey.engine.common.entity.User;
+import com.xiaojusurvey.engine.common.entity.user.User;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.user.UserService;

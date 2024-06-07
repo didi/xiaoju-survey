@@ -1,5 +1,6 @@
-package com.xiaojusurvey.engine.common.entity.user;
+package com.xiaojusurvey.engine.core.auth.domain;
 
+import com.xiaojusurvey.engine.common.entity.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
-public class UserDTO extends User{
+public class UserParam extends User {
     /**
      * 验证码ID
      */

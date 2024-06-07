@@ -9,6 +9,7 @@ public enum RespErrorCode {
     USER_EXISTS(2001, "用户已存在"),
     USER_NOT_EXISTS(2002, "用户不存在"),
     USER_PASSWORD_ERROR(2003, "用户名或密码错误"),
+    USER_CREDENTIALS_ERROR(2004, "用户凭证错误"),
     NO_SURVEY_PERMISSION(3001, "没有问卷权限"),
     SURVEY_STATUS_TRANSFORM_ERROR(3002, "问卷状态转换报错"),
     SURVEY_TYPE_ERROR(3003, "问卷类型错误"),

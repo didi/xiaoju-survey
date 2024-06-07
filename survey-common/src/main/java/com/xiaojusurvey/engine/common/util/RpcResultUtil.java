@@ -1,6 +1,5 @@
 package com.xiaojusurvey.engine.common.util;
 
-import com.xiaojusurvey.engine.common.rpc.IdResult;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 
 public class RpcResultUtil {

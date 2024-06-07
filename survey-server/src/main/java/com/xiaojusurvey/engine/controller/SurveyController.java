@@ -1,7 +1,7 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
-import com.xiaojusurvey.engine.common.rpc.IdResult;
+import com.xiaojusurvey.engine.core.reslut.IdResult;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
@@ -27,7 +27,7 @@ public class SurveyController {
      * 创建问卷
      */
     @RequestMapping("/createSurvey")
-    public RpcResult<IdResult<String>> createSurvey(@Validated @RequestBody SurveyMeta surveyMeta) {
+    public RpcResult<IdResult> createSurvey(@Validated @RequestBody SurveyMeta surveyMeta) {
         return RpcResultUtil.createSuccessResult(surveyService.createSurvey(surveyMeta));
     }
 }

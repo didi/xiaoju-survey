@@ -1,7 +1,7 @@
 package com.xiaojusurvey.engine.core.survey;
 
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
-import com.xiaojusurvey.engine.common.rpc.IdResult;
+import com.xiaojusurvey.engine.core.reslut.IdResult;
 
 /**
  * @Author: LYF
@@ -9,5 +9,5 @@ import com.xiaojusurvey.engine.common.rpc.IdResult;
  * @Description: 问卷Service
  */
 public interface SurveyService {
-    IdResult<String> createSurvey(SurveyMeta surveyMeta);
+    IdResult createSurvey(SurveyMeta surveyMeta);
 }

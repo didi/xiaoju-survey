@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserService {
 
     List<User> findAllUser();
+
+    User loadUserByUsernameAndPassword(String username, String password);
 }

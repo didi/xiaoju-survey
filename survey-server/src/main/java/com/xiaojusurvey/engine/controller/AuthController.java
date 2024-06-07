@@ -1,8 +1,8 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
-import com.xiaojusurvey.engine.common.entity.user.UserDTO;
-import com.xiaojusurvey.engine.common.entity.user.UserVo;
+import com.xiaojusurvey.engine.core.auth.domain.UserParam;
+import com.xiaojusurvey.engine.core.auth.domain.UserVo;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.auth.AuthService;
@@ -41,8 +41,8 @@ public class AuthController {
      * @return 结果
      */
     @PostMapping("/register")
-    public RpcResult<UserVo> register(@Validated @RequestBody UserDTO userDTO) {
-        return RpcResultUtil.createSuccessResult(authService.register(userDTO));
+    public RpcResult<UserVo> register(@Validated @RequestBody UserParam userParam) {
+        return RpcResultUtil.createSuccessResult(authService.register(userParam));
     }
 
 
@@ -51,8 +51,8 @@ public class AuthController {
      * @return 结果
      */
     @PostMapping("/login")
-    public RpcResult<UserVo> login(@Validated @RequestBody UserDTO userDTO) {
-        return RpcResultUtil.createSuccessResult(authService.login(userDTO));
+    public RpcResult<UserVo> login(@Validated @RequestBody UserParam userParam) {
+        return RpcResultUtil.createSuccessResult(authService.login(userParam));
     }
 
 

@@ -2,18 +2,20 @@ package com.xiaojusurvey.engine.core.auth.impl;
 
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.entity.token.Token;
-import com.xiaojusurvey.engine.common.entity.user.*;
+import com.xiaojusurvey.engine.common.entity.user.Captcha;
+import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
+import com.xiaojusurvey.engine.common.entity.user.User;
 import com.xiaojusurvey.engine.common.exception.ServiceException;
-import com.xiaojusurvey.engine.common.util.AuthUtil;
-import com.xiaojusurvey.engine.common.util.JwtTokenUtil;
-import com.xiaojusurvey.engine.common.util.captcha.CaptchaGenerator;
 import com.xiaojusurvey.engine.core.auth.AuthService;
+import com.xiaojusurvey.engine.core.auth.captcha.CaptchaGenerator;
+import com.xiaojusurvey.engine.core.auth.domain.UserParam;
+import com.xiaojusurvey.engine.core.auth.domain.UserVo;
+import com.xiaojusurvey.engine.core.auth.util.AuthUtil;
+import com.xiaojusurvey.engine.core.auth.util.JwtTokenUtil;
+import com.xiaojusurvey.engine.core.user.UserService;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -35,8 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private JwtTokenUtil jwtTokenUtil;
+
     @Resource
-    private AuthenticationManager authenticationManager;
+    private UserService userService;
 
 
     @Override
@@ -47,56 +50,47 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserVo register(UserDTO userDTO) {
-        checkCaptchaIsCorrect(userDTO.getCaptchaId(), userDTO.getCaptcha());
+    public UserVo register(UserParam userParam) {
+        checkCaptchaIsCorrect(userParam.getCaptchaId(), userParam.getCaptcha());
         //查询用户名是否存在
         Query query = new Query();
-        query.addCriteria(Criteria.where("username").is(userDTO.getUsername()));
+        query.addCriteria(Criteria.where("username").is(userParam.getUsername()));
         if (!ObjectUtils.isEmpty(mongoRepository.findOne(query, User.class))) {
             throw new ServiceException(RespErrorCode.USER_EXISTS.getMessage(), RespErrorCode.USER_EXISTS.getCode());
         }
         //保存
         User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(AuthUtil.encryptPassword(userDTO.getPassword()));
+        user.setUsername(userParam.getUsername());
+        user.setPassword(AuthUtil.encryptPassword(userParam.getPassword(), userParam.getUsername()));
         mongoRepository.save(user);
-        return createTokenAndDeleteCaptcha(userDTO);
+        return createTokenAndDeleteCaptcha(userParam);
     }
 
     /**
      * 生成token,并删除验证码
      *
-     * @param userDTO
+     * @param userParam
      * @return
      */
-    private UserVo createTokenAndDeleteCaptcha(UserDTO userDTO) {
+    private UserVo createTokenAndDeleteCaptcha(UserParam userParam) {
         //生成token
-        Token token = jwtTokenUtil.generateToken(userDTO.getUsername());
+        Token token = jwtTokenUtil.generateToken(userParam);
         // 验证过的验证码要删掉，防止被别人保存重复调用
-        mongoRepository.deleteById(userDTO.getCaptchaId(), Captcha.class);
+        mongoRepository.deleteById(userParam.getCaptchaId(), Captcha.class);
         UserVo userVo = new UserVo();
         userVo.setToken(token.getToken());
-        userVo.setUsername(userDTO.getUsername());
+        userVo.setUsername(userParam.getUsername());
         return userVo;
     }
 
     @Override
-    public UserVo login(UserDTO userDTO) {
+    public UserVo login(UserParam userParam) {
         //验证码
-        checkCaptchaIsCorrect(userDTO.getCaptchaId(), userDTO.getCaptcha());
-        // 用户验证
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword());
-            authenticationManager.authenticate(authenticationToken);
-        } catch (Exception e) {
-            if (e instanceof BadCredentialsException) {
-                throw new ServiceException(RespErrorCode.USER_PASSWORD_ERROR.getMessage(), RespErrorCode.USER_PASSWORD_ERROR.getCode());
-            } else {
-                throw new ServiceException(RespErrorCode.USER_NOT_EXISTS.getMessage(), RespErrorCode.USER_NOT_EXISTS.getCode());
-            }
-        }
+        checkCaptchaIsCorrect(userParam.getCaptchaId(), userParam.getCaptcha());
+        //用户验证
+        userService.loadUserByUsernameAndPassword(userParam.getUsername(), userParam.getPassword());
         //生成token
-        return createTokenAndDeleteCaptcha(userDTO);
+        return createTokenAndDeleteCaptcha(userParam);
     }
 
 

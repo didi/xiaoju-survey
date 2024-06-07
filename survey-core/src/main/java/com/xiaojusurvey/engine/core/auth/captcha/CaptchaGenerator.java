@@ -1,4 +1,4 @@
-package com.xiaojusurvey.engine.common.util.captcha;
+package com.xiaojusurvey.engine.core.auth.captcha;
 
 import com.xiaojusurvey.engine.common.entity.user.Captcha;
 import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;

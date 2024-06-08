@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestSecurityProcessor implements SecurityProcessor {
 
+    private static final int ORDER = 100;
 
     @Override
     public void before(Invocation invocation) {
@@ -17,5 +18,10 @@ public class TestSecurityProcessor implements SecurityProcessor {
     @Override
     public Result after(Result result) {
         return new Result();
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }

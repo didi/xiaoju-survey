@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestMessageProcessor implements MessageProcessor {
 
+    private static final int ORDER = 99;
 
     @Override
     public void before(Invocation invocation) {
@@ -18,5 +19,10 @@ public class TestMessageProcessor implements MessageProcessor {
     @Override
     public Result after(Result result) {
         return new Result();
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }

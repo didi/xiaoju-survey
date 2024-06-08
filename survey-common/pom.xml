@@ -31,8 +31,6 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-
-
         <!-- jwt-->
         <dependency>
             <groupId>com.auth0</groupId>

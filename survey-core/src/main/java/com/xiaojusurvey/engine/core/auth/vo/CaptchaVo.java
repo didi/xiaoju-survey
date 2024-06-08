@@ -1,4 +1,4 @@
-package com.xiaojusurvey.engine.common.entity.user;
+package com.xiaojusurvey.engine.core.auth.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CaptchaVo{
+public class CaptchaVo {
 
     private String id;
 

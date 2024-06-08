@@ -16,6 +16,7 @@
 
     <packaging>pom</packaging>
     <modules>
+        <module>survey-checkstyle</module>
         <module>survey-server</module>
         <module>survey-common</module>
         <module>survey-dal</module>
@@ -72,6 +73,16 @@
                 <artifactId>java-jwt</artifactId>
                 <version>${jwt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${lang3.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
@@ -122,6 +133,86 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <!-- PMD插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.16.0</version>
+                    <configuration>
+                        <verbose>true</verbose>
+                        <!-- 规范的配置 -->
+                        <rulesets>
+                            <ruleset>rulesets/java/ali-concurrent.xml</ruleset>
+                            <ruleset>rulesets/java/ali-constant.xml</ruleset>
+                            <ruleset>rulesets/java/ali-exception.xml</ruleset>
+                            <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>
+                            <ruleset>rulesets/java/ali-naming.xml</ruleset>
+                            <ruleset>rulesets/java/ali-oop.xml</ruleset>
+                            <ruleset>rulesets/java/ali-orm.xml</ruleset>
+                            <ruleset>rulesets/java/ali-other.xml</ruleset>
+                            <ruleset>rulesets/java/ali-set.xml</ruleset>
+                        </rulesets>
+                        <printFailingErrors>true</printFailingErrors>
+
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>pmd-check-verify</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.alibaba.p3c</groupId>
+                            <artifactId>p3c-pmd</artifactId>
+                            <version>2.1.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.2</version>
+                    <configuration>
+                        <configLocation>checkstyle-rule.xml</configLocation>
+                        <encoding>UTF-8</encoding>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>true</failsOnError>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.xiaojusurvey.engine</groupId>
+                            <artifactId>survey-checkstyle</artifactId>
+                            <version>base</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>8.41.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <skip>false</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

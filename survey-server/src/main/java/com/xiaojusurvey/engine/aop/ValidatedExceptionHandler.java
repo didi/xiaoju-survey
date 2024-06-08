@@ -11,20 +11,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 全局异常处理器
+ *
  * @Author: LYF
  * @CreateTime: 2024-06-05
  * @Description: 全局异常处理器
  */
 @RestControllerAdvice
 public class ValidatedExceptionHandler {
-    private static final Logger log = LoggerFactory.getLogger(ValidatedExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ValidatedExceptionHandler.class);
 
     /**
      * 自定义验证异常
      */
     @ExceptionHandler(BindException.class)
     public RpcResult handleBindException(BindException e) {
-        log.error(e.getMessage(), e);
+        LOG.error(e.getMessage(), e);
         String message = e.getAllErrors().get(0).getDefaultMessage();
         return RpcResultUtil.createFailedResult(RespErrorCode.PARAMETER_ERROR.getCode(), message);
     }

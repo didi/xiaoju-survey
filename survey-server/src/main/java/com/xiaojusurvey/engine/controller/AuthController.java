@@ -1,8 +1,8 @@
 package com.xiaojusurvey.engine.controller;
 
-import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
-import com.xiaojusurvey.engine.core.auth.domain.UserParam;
-import com.xiaojusurvey.engine.core.auth.domain.UserVo;
+import com.xiaojusurvey.engine.core.auth.vo.CaptchaVo;
+import com.xiaojusurvey.engine.core.auth.param.UserParam;
+import com.xiaojusurvey.engine.core.auth.vo.UserVo;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.auth.AuthService;

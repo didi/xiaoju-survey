@@ -42,7 +42,7 @@ public class MongoRepositoryImpl implements MongoRepository {
 
     @Override
     public <T extends BaseEntity> T findOne(Query query, Class<T> entityClass) {
-        return mongoTemplate.findOne(query,entityClass);
+        return mongoTemplate.findOne(query, entityClass);
     }
 
     @Override

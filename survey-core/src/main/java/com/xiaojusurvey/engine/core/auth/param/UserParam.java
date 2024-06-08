@@ -1,4 +1,4 @@
-package com.xiaojusurvey.engine.core.auth.domain;
+package com.xiaojusurvey.engine.core.auth.param;
 
 import com.xiaojusurvey.engine.common.entity.user.User;
 import lombok.Data;

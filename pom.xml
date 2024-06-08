@@ -109,12 +109,6 @@
                 <spring.profiles.active>prod</spring.profiles.active>
             </properties>
         </profile>
-        <profile>
-            <id>junit</id>
-            <properties>
-                <spring.profiles.active>junit</spring.profiles.active>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
@@ -211,6 +205,14 @@
                             <version>8.41.1</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <skip>false</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

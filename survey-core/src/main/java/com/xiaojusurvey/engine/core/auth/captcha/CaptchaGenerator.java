@@ -1,7 +1,7 @@
 package com.xiaojusurvey.engine.core.auth.captcha;
 
 import com.xiaojusurvey.engine.common.entity.user.Captcha;
-import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
+import com.xiaojusurvey.engine.core.auth.vo.CaptchaVo;
 
 /**
  * @Author: LYF

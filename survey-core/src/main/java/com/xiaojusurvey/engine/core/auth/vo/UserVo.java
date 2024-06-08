@@ -1,4 +1,4 @@
-package com.xiaojusurvey.engine.core.auth.domain;
+package com.xiaojusurvey.engine.core.auth.vo;
 
 import lombok.Data;
 

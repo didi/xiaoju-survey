@@ -33,18 +33,19 @@ public class JwtTokenUtil {
     /**
      * 认证头
      */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * 空格
      */
-    public static final String SPACE = " ";
+    private static final String SPACE = " ";
 
     /**
      * 令牌前缀正则表达式
      */
-    public static final String BEARER_PATTERN = "^Bearer$";
+    private static final String BEARER_PATTERN = "^Bearer$";
 
+    private static final int LENGTH = 2;
 
     /**
      * 生成token
@@ -81,8 +82,6 @@ public class JwtTokenUtil {
         }
     }
 
-
-    private static final int LENGTH = 2;
 
     public DecodedJWT getTokenStrByRequest(HttpServletRequest request) {
         String header = request.getHeader(AUTHORIZATION_HEADER);

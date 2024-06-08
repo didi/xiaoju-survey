@@ -11,6 +11,7 @@ import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
 public interface CaptchaGenerator {
     /**
      * 根据文本生成SVG
+     *
      * @param text
      * @return
      */
@@ -19,15 +20,16 @@ public interface CaptchaGenerator {
 
     /**
      * 生成验证码持久对象
+     *
      * @param length
      * @return
      */
     Captcha generateRandomText(int length);
 
     default CaptchaVo generateRandomSvg(Captcha captcha) {
-        if (captcha == null || captcha.getId() == null){
+        if (captcha == null || captcha.getId() == null) {
             throw new IllegalArgumentException("captcha or id is null");
-        }else {
+        } else {
             return new CaptchaVo(captcha.getId(), generateRandomSvg(captcha.getText()));
         }
     }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class CaptchaVo{
+public class CaptchaVo {
 
     private String id;
 

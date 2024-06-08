@@ -8,7 +8,7 @@ import lombok.Data;
  * @Description: 用户vo
  */
 @Data
-public class UserVo{
+public class UserVo {
 
     private String token;
     private String username;

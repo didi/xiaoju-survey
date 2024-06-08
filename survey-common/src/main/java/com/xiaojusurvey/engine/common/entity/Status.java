@@ -3,7 +3,6 @@ package com.xiaojusurvey.engine.common.entity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 public class Status implements Serializable {

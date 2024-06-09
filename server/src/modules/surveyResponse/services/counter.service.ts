@@ -65,4 +65,26 @@ export class CounterService {
       return pre;
     }, {});
   }
+
+  async createCounters({ surveyPath, dataList}) {
+    const optionList = dataList.filter((questionItem) => {
+      return (
+        Array.isArray(questionItem.options) &&
+        questionItem.options.length > 0
+      );
+    });
+    optionList.forEach(option => {
+      let data = {};
+      option.options.forEach(option => {
+        data[option.hash] = 0;
+      });
+      data["total"] = 0;
+      this.set({
+        surveyPath,
+        key: option.field,
+        type: 'option',
+        data: data
+      });
+    });
+  }
 }

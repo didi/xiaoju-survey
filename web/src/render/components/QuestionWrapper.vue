@@ -41,7 +41,7 @@ const questionConfig = computed(() => {
   const { type, field, options, ...rest } = cloneDeep(moduleConfig)
   // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
-  if (type === QUESTION_TYPE.VOTE) {
+  if (type === QUESTION_TYPE.VOTE || QUESTION_TYPE.CHOICES.includes(type)) {
     const { options, voteTotal } = useVoteMap(field)
     const voteOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))

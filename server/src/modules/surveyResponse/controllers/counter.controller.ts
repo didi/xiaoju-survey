@@ -3,6 +3,8 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { CounterService } from '../services/counter.service';
 import { ApiTags } from '@nestjs/swagger';
+import { Authtication } from 'src/guards/authtication';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('surveyResponse')
 @Controller('/api/counter')

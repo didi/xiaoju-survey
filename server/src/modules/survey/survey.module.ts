@@ -25,6 +25,8 @@ import { SurveyConfService } from './services/surveyConf.service';
 import { SurveyHistoryService } from './services/surveyHistory.service';
 import { SurveyMetaService } from './services/surveyMeta.service';
 import { ContentSecurityService } from './services/contentSecurity.service';
+import { Counter } from 'src/models/counter.entity';
+import { CounterService } from '../surveyResponse/services/counter.service';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { ContentSecurityService } from './services/contentSecurity.service';
       SurveyHistory,
       SurveyResponse,
       Word,
+      Counter
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -54,6 +57,7 @@ import { ContentSecurityService } from './services/contentSecurity.service';
     PluginManagerProvider,
     ContentSecurityService,
     LoggerProvider,
+    CounterService
   ],
 })
 export class SurveyModule {}

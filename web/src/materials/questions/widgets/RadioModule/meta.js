@@ -36,6 +36,11 @@ const meta = {
       options: [],
       keys: 'extraOptions',
       hidden: true
+    },
+    {
+      key: "quotaConfig",
+      name: "quotaConfig",
+      type: "QuotaConfig",
     }
   ],
   editConfigure: {

@@ -1,24 +1,23 @@
 package com.xiaojusurvey.engine.core.auth.util;
 
+import java.util.Date;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.sun.javafx.binding.StringConstant;
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.entity.token.Token;
 import com.xiaojusurvey.engine.common.entity.user.User;
 import com.xiaojusurvey.engine.common.exception.ServiceException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
 @Component
 public class JwtTokenUtil {

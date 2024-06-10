@@ -1,6 +1,5 @@
 package com.xiaojusurvey.engine.core.auth.util;
 
-import com.xiaojusurvey.engine.common.entity.user.User;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,9 +13,10 @@ public class AuthUtil {
 
     /**
      * 生成BCryptPasswordEncoder密码
+     *
      * @return 加密字符串
      */
-    public static String encryptPassword(String password,String username) {
+    public static String encryptPassword(String password, String username) {
         String inputWithSalt = password + username;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -30,7 +30,6 @@ public class AuthUtil {
             throw new RuntimeException("");
         }
     }
-
 
 
 }

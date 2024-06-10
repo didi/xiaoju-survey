@@ -1,10 +1,10 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.xiaojusurvey.engine.SurveyApplication;
-import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
+import com.xiaojusurvey.engine.core.auth.vo.CaptchaVo;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
-import com.xiaojusurvey.engine.core.auth.domain.UserParam;
-import com.xiaojusurvey.engine.core.auth.domain.UserVo;
+import com.xiaojusurvey.engine.core.auth.param.UserParam;
+import com.xiaojusurvey.engine.core.auth.vo.UserVo;
 import com.xiaojusurvey.engine.core.auth.util.JwtTokenUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +22,6 @@ public class AuthTest {
 
     @Resource
     private JwtTokenUtil jwtTokenUtil;
-
-
 
     @Resource
     AuthController authController;
@@ -58,6 +56,5 @@ public class AuthTest {
         System.out.println(register);
 
     }
-
 
 }

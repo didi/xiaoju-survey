@@ -3,7 +3,7 @@ package com.xiaojusurvey.engine.repository.enums;
 
 public enum ErrorEnum {
 
-    PARAM_NULL_ERROR("%s is null",1);
+    PARAM_NULL_ERROR("%s is null", 1);
 
     private String errorMsg;
 

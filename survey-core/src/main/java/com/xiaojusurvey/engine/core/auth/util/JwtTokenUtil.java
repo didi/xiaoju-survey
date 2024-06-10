@@ -1,11 +1,5 @@
 package com.xiaojusurvey.engine.core.auth.util;
 
-import java.util.Date;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -14,10 +8,14 @@ import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.entity.token.Token;
 import com.xiaojusurvey.engine.common.entity.user.User;
 import com.xiaojusurvey.engine.common.exception.ServiceException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Component
 public class JwtTokenUtil {
@@ -35,21 +33,23 @@ public class JwtTokenUtil {
     /**
      * 认证头
      */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * 空格
      */
-    public static final String SPACE = " ";
+    private static final String SPACE = " ";
 
     /**
      * 令牌前缀正则表达式
      */
-    public final static String BEARER_PATTERN = "^Bearer$";
+    private static final String BEARER_PATTERN = "^Bearer$";
 
+    private static final int LENGTH = 2;
 
     /**
      * 生成token
+     *
      * @param user
      * @return
      */
@@ -63,11 +63,12 @@ public class JwtTokenUtil {
                 .withExpiresAt(expiryDate)
                 .withJWTId(UUID.randomUUID().toString())
                 .sign(Algorithm.HMAC256(secret));
-        return new Token(user.getUsername(), token,new Date(now.getTime() + expirationTime * HOUR_SECOND));
+        return new Token(user.getUsername(), token, new Date(now.getTime() + expirationTime * HOUR_SECOND));
     }
 
     /**
      * 解密访问令牌
+     *
      * @param tokenString 令牌
      * @return 密钥内容
      */
@@ -76,11 +77,10 @@ public class JwtTokenUtil {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).build();
             DecodedJWT jwt = verifier.verify(tokenString);
             return jwt;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException(RespErrorCode.USER_NOT_EXISTS.getMessage(), RespErrorCode.USER_NOT_EXISTS.getCode());
         }
     }
-
 
 
     public DecodedJWT getTokenStrByRequest(HttpServletRequest request) {
@@ -89,7 +89,7 @@ public class JwtTokenUtil {
             throw new ServiceException(RespErrorCode.USER_CREDENTIALS_ERROR.getMessage(), RespErrorCode.USER_CREDENTIALS_ERROR.getCode());
         }
         String[] splits = header.split(SPACE);
-        if (splits.length != 2) {
+        if (splits.length != LENGTH) {
             throw new ServiceException(RespErrorCode.USER_CREDENTIALS_ERROR.getMessage(), RespErrorCode.USER_CREDENTIALS_ERROR.getCode());
         }
         if (!Pattern.matches(BEARER_PATTERN, splits[0])) {

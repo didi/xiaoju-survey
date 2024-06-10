@@ -1,8 +1,8 @@
 package com.xiaojusurvey.engine.core.auth;
 
-import com.xiaojusurvey.engine.common.entity.user.CaptchaVo;
-import com.xiaojusurvey.engine.core.auth.domain.UserParam;
-import com.xiaojusurvey.engine.core.auth.domain.UserVo;
+import com.xiaojusurvey.engine.core.auth.vo.CaptchaVo;
+import com.xiaojusurvey.engine.core.auth.param.UserParam;
+import com.xiaojusurvey.engine.core.auth.vo.UserVo;
 
 /**
  * @Author: LYF

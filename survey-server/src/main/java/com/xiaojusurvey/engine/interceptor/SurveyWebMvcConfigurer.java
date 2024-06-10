@@ -8,9 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class SurveyWebMvcConfigurer implements WebMvcConfigurer {
 
-
     @Bean
-    public LoginInterceptor loginInterceptor(){
+    public LoginInterceptor loginInterceptor() {
         return new LoginInterceptor();
     }
 

@@ -1,33 +1,33 @@
 package com.xiaojusurvey.engine.extensions.processor.aop;
 
-
 import com.xiaojusurvey.engine.extensions.processor.Invocation;
 import com.xiaojusurvey.engine.extensions.processor.Result;
-import com.xiaojusurvey.engine.extensions.processor.annotation.Message;
-import com.xiaojusurvey.engine.extensions.processor.annotation.Security;
-import com.xiaojusurvey.engine.extensions.router.MessageProcessorRouter;
-import com.xiaojusurvey.engine.extensions.router.SecurityProcessorRouter;
+import com.xiaojusurvey.engine.extensions.router.BaseRouter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Aspect
 @Component
-public class ExtensionAspect {
+public class ExtensionAspect implements InitializingBean {
 
     @Autowired
-    private MessageProcessorRouter messageProcessorRouter;
+    private List<BaseRouter> routerList;
 
-    @Autowired
-    private SecurityProcessorRouter securityProcessorRouter;
+    private Map<Class, BaseRouter> routerMap = new LinkedHashMap<>();
+
 
     @Pointcut("@annotation(com.xiaojusurvey.engine.extensions.processor.annotation.Message) || @annotation(com.xiaojusurvey.engine.extensions.processor.annotation.Security)")
     public void pointcut() {
@@ -37,24 +37,25 @@ public class ExtensionAspect {
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
-        Message message = method.getAnnotation(Message.class);
-        Security security = method.getAnnotation(Security.class);
-        if (!Objects.isNull(message)) {
-            Invocation invocation = new Invocation(method.getName(), method.getParameterTypes(), pjp.getArgs());
-            messageProcessorRouter.before(invocation);
-        }
-        if (!Objects.isNull(security)) {
-            Invocation invocation = new Invocation(method.getName(), method.getParameterTypes(), pjp.getArgs());
-            securityProcessorRouter.before(invocation);
+        for (Map.Entry<Class, BaseRouter> routerEntry : routerMap.entrySet()) {
+            if (null != method.getAnnotation(routerEntry.getKey())) {
+                Invocation invocation = new Invocation(method.getName(), method.getParameterTypes(), pjp.getArgs());
+                routerEntry.getValue().before(invocation);
+            }
         }
         Result result = new Result(pjp.proceed(pjp.getArgs()));
-        if (!Objects.isNull(message)) {
-            result = messageProcessorRouter.after(result);
-        }
-        if (!Objects.isNull(security)) {
-            result = securityProcessorRouter.after(result);
+        for (Map.Entry<Class, BaseRouter> routerEntry : routerMap.entrySet()) {
+            if (null != method.getAnnotation(routerEntry.getKey())) {
+                result = routerEntry.getValue().after(result);
+            }
         }
         return result.getValue();
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (!CollectionUtils.isEmpty(routerList)) {
+            routerList.forEach(e -> routerMap.put(e.annotationClass(), e));
+        }
+    }
 }

@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 查询用户
+     *
      * @param username
      * @param password
      * @return
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
         query.addCriteria(Criteria.where("username").is(username).and("password").is(encryptPassword));
         //查询用户并返回
         User user = mongoRepository.findOne(query, User.class);
-        if (ObjectUtils.isEmpty(user)){
+        if (ObjectUtils.isEmpty(user)) {
             throw new ServiceException(RespErrorCode.USER_PASSWORD_ERROR.getMessage(), RespErrorCode.USER_PASSWORD_ERROR.getCode());
         }
         return user;

@@ -14,15 +14,15 @@ public abstract class BaseException extends RuntimeException {
 
     public BaseException(String errorMsg, Integer code) {
         super(errorMsg);
-        this.code=code;
-        this.errorMsg=errorMsg;
-        this.message=errorMsg;
+        this.code = code;
+        this.errorMsg = errorMsg;
+        this.message = errorMsg;
     }
 
-    public BaseException(String errorMsg, Integer code,Throwable t) {
-        super(errorMsg,t);
-        this.code=code;
-        this.errorMsg=errorMsg;
-        this.message=errorMsg;
+    public BaseException(String errorMsg, Integer code, Throwable t) {
+        super(errorMsg, t);
+        this.code = code;
+        this.errorMsg = errorMsg;
+        this.message = errorMsg;
     }
 }

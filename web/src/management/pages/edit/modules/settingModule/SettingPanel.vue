@@ -67,13 +67,13 @@ const setterList = computed(() => {
         }
       } else {
         formValue = _get(store.state.edit.schema, formKey, formItem.value)
+        console.log("formVaue:", formValue)
         dataConfig[formKey] = formValue
       }
       formItem.value = formValue
     }
 
     form.dataConfig = dataConfig
-
     return form
   })
 })

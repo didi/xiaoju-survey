@@ -20,8 +20,19 @@ export default {
   },
   changeFormData(state, data) {
     let { key, value } = data
-    // console.log('formValues', key, value)
     set(state, `formValues.${key}`, value)
+
+    //数据加密
+    var formData = Object.assign({}, state.formValues);
+    for(const key in formData){
+      formData[key] = encodeURIComponent(formData[key])
+    }
+
+    //浏览器存储
+    localStorage.removeItem(state.surveyPath + "_questionData")
+    localStorage.setItem(state.surveyPath + "_questionData", JSON.stringify(formData))
+    localStorage.setItem('isSubmit', JSON.stringify(false))
+
   },
   changeSelectMoreData(state, data) {
     const { key, value, field } = data

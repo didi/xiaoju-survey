@@ -79,6 +79,18 @@ const normalizationRequestBody = () => {
     clientTime: Date.now()
   }
 
+  //浏览器缓存数据
+  localStorage.removeItem(surveyPath + "_questionData")
+  localStorage.removeItem("isSubmit")
+
+  //数据加密
+  var formData  = Object.assign({}, store.state.formValues)
+    for(const key in formData){
+      formData[key] = encodeURIComponent(formData[key])
+    }
+  localStorage.setItem(surveyPath + "_questionData", JSON.stringify(formData))
+  localStorage.setItem('isSubmit', JSON.stringify(true))
+
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo?.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({
@@ -100,6 +112,7 @@ const submitSurver = async () => {
     const params = normalizationRequestBody()
     console.log(params)
     const res: any = await submitForm(params)
+
     if (res.code === 200) {
       store.commit('setRouter', 'successPage')
     } else {

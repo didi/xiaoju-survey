@@ -31,7 +31,7 @@ jobs:
         run: mvn clean install -DskipTests -U && mvn pmd:check
 
       - name: checkstyle with Maven
-        run: mvn checkstyle:chek
+        run: mvn checkstyle:check
 
       - name: test with Maven
         run: mvn test

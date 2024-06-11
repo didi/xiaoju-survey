@@ -1,6 +1,6 @@
 <template>
   <div class="preview-panel">
-    <div class="preview-btn" @click="dialogTableVisible = true">
+    <div class="btn preview-btn" @click="dialogTableVisible = true">
       <i-ep-view class="view-icon" :size="20" />
       <span class="btn-txt">预览</span>
     </div>
@@ -17,30 +17,36 @@
     >
       <div class="ml75">
         <div class="preview-tab">
-        <div :class="`preview-tab-item ${previewTab == 1 ? 'active' : ''}`" @click="previewTab = 1">
-          <i-ep-iphone />
-        </div>
-        <div :class="`preview-tab-item ${previewTab == 2 ? 'active' : ''}`" @click="previewTab = 2">
-          <i-ep-monitor />
-        </div>
-      </div>
-      <div :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`">
-        <div class="wrapper">
-          <div class="tips-wrapper">
-            <i-ep-WarningFilled /> <span>用户预览模式，数据不保存！</span>
+          <div
+            :class="`preview-tab-item ${previewTab == 1 ? 'active' : ''}`"
+            @click="previewTab = 1"
+          >
+            <i-ep-iphone />
           </div>
-          <div v-loading="loading" element-loading-text="加载中..." style="height: 100%">
-            <iframe
-              v-loading="loading"
-              id="iframe-preview"
-              :src="`/management/preview/${surveyId}`"
-              frameborder="0"
-              width="100%"
-              height="100%"
-            ></iframe>
+          <div
+            :class="`preview-tab-item ${previewTab == 2 ? 'active' : ''}`"
+            @click="previewTab = 2"
+          >
+            <i-ep-monitor />
           </div>
         </div>
-      </div>
+        <div :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`">
+          <div class="wrapper">
+            <div class="tips-wrapper">
+              <i-ep-WarningFilled /> <span>用户预览模式，数据不保存！</span>
+            </div>
+            <div v-loading="loading" element-loading-text="加载中..." style="height: 100%">
+              <iframe
+                v-loading="loading"
+                id="iframe-preview"
+                :src="`/management/preview/${surveyId}`"
+                frameborder="0"
+                width="100%"
+                height="100%"
+              ></iframe>
+            </div>
+          </div>
+        </div>
       </div>
     </el-dialog>
   </div>
@@ -69,35 +75,22 @@ const closedDialog = () => {
 }
 </script>
 <style lang="scss" scoped>
+@import url('@/management/styles/edit-btn.scss');
+
 .preview-panel {
   :deep(.preview-config-wrapper) {
     background-color: transparent;
     box-shadow: none;
     padding: 0;
   }
-  .ml75{
+  .ml75 {
     margin-left: 75px;
   }
 
-  .preview-btn {
-    width: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #4a4c5b;
-    cursor: pointer;
-
-    i {
-      font-size: 20px;
-    }
-
-    .btn-txt {
-      font-size: 12px;
-    }
-  }
   .view-icon {
-    font-size: 18px;
-    margin-bottom: 4px;
+    font-size: 20px;
+    height: 29px;
+    line-height: 29px;
   }
 
   .preview-tab {

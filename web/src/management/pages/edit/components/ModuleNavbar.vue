@@ -8,6 +8,7 @@
       <NavPanel></NavPanel>
     </div>
     <div class="right-group">
+      <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
       <SavePanel></SavePanel>
       <PublishPanel></PublishPanel>
@@ -23,6 +24,7 @@ import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
 import NavPanel from '../modules/generalModule/NavPanel.vue'
 import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
+import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 

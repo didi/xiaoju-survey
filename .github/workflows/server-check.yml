@@ -4,12 +4,12 @@ name: Server Check
 on:
   push:
     branches:
-      - feature/java
-      - releases/java
+      - feature/server-java
+      - releases/server-java
   pull_request:
     branches:
-      - feature/java
-      - releases/java
+      - feature/server-java
+      - releases/server-java
   workflow_dispatch:
 
 jobs:

@@ -28,7 +28,7 @@ jobs:
           java-version: "8"
 
       - name: check with Maven
-        run: mvn pmd:check
+        run: mvn clean install -DskipTests -U && mvn pmd:check
 
       - name: checkstyle with Maven
         run: mvn checkstyle:chek

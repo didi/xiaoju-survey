@@ -139,7 +139,7 @@ import {
   noSearchDataConfig,
   selectOptionsDict,
   buttonOptionsDict
-} from '../config'
+} from '@/management/config/listConfig'
 
 const store = useStore()
 const router = useRouter()

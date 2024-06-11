@@ -1,8 +1,8 @@
 <template>
   <div
-      class="condition-wrapper"
-      :class="{ 'is-last': isLastCondition }"
-      :data-content-before="!isLastCondition ? '且' : ''"
+    class="condition-wrapper"
+    :class="{ 'is-last': isLastCondition }"
+    :data-content-before="!isLastCondition ? '且' : ''"
   >
     <span class="desc">如果</span>
     <el-form-item
@@ -15,16 +15,9 @@
         placeholder="请选择题目"
         @change="(val: any) => handleChange(conditionNode, 'field', val)"
       >
-        <el-option
-            v-for="{ label, value } in fieldList"
-            :key="value"
-            :label="label"
-            :value="value"
-        >
+        <el-option v-for="{ label, value } in fieldList" :key="value" :label="label" :value="value">
         </el-option>
-        <template #empty>
-          无数据
-        </template>
+        <template #empty> 无数据 </template>
       </el-select>
     </el-form-item>
     <span class="desc">选择了</span>
@@ -45,9 +38,7 @@
           :label="label"
           :value="value"
         ></el-option>
-        <template #empty>
-          无数据
-        </template>
+        <template #empty> 无数据 </template>
       </el-select>
     </el-form-item>
     <span class="desc">中的任一选项 </span>

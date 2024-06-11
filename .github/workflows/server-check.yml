@@ -1,0 +1,37 @@
+# Check
+name: Server Check
+
+on:
+  push:
+    branches:
+      - feature/java
+      - releases/java
+  pull_request:
+    branches:
+      - feature/java
+      - releases/java
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Zulu JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "8"
+
+      - name: check with Maven
+        run: mvn pmd:check
+
+      - name: checkstyle with Maven
+        run: mvn checkstyle:chek
+
+      - name: test with Maven
+        run: mvn test

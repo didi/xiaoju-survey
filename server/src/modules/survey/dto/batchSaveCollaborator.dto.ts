@@ -3,7 +3,10 @@ import Joi from 'joi';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 export class CollaboratorDto {
-  @ApiProperty({ description: '用户id', required: false })
+  @ApiProperty({ description: '协作id', required: false })
+  _id?: string;
+
+  @ApiProperty({ description: '用户id', required: true })
   userId: string;
 
   @ApiProperty({
@@ -16,7 +19,7 @@ export class CollaboratorDto {
       SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE,
     ],
   })
-  permissions: Array<number>;
+  permissions: Array<string>;
 }
 
 export class BatchSaveCollaboratorDto {

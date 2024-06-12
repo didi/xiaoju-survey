@@ -12,6 +12,7 @@
           <span class="drag-handle qicon qicon-tuodong"></span>
           <div class="input-box">
             <RichEditor
+              :needUploadImage="true"
               :modelValue="element.text"
               @change="(value) => handleChange(index, value)"
             />

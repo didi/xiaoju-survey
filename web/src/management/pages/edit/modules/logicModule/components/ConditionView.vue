@@ -66,7 +66,7 @@
 import { computed, inject, ref, type ComputedRef } from 'vue'
 import { ConditionNode, RuleNode } from '@/common/logicEngine/RuleBuild'
 import { qAbleList } from '@/management/utils/constant.js'
-import { cleanRichText } from '@/common/xss'
+import { cleanRichText, cleanRichTextWithMediaTag } from '@/common/xss'
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 const props = defineProps({
   index: {
@@ -97,7 +97,7 @@ const fieldList = computed(() => {
     .filter((question: any) => qAbleList.includes(question.type))
     .map((item: any) => {
       return {
-        label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,
+        label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichTextWithMediaTag(item.title)}`,
         value: item.field
       }
     })
@@ -111,7 +111,7 @@ const getRelyOptions = computed(() => {
   return (
     currentQuestion?.options.map((item: any) => {
       return {
-        label: cleanRichText(item.text),
+        label: cleanRichTextWithMediaTag(item.text),
         value: item.hash
       }
     }) || []

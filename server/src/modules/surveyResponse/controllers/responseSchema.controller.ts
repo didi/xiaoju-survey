@@ -34,6 +34,10 @@ export class ResponseSchemaController {
         EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
       );
     }
+
+    // 去掉C端的敏感字段
+    responseSchema.code.baseConf.password = null;
+    responseSchema.code.baseConf.whitelist = null;
     return {
       code: 200,
       data: responseSchema,

@@ -3,10 +3,6 @@ package com.xiaojusurvey.engine.repository.impl;
 import com.xiaojusurvey.engine.common.entity.BaseEntity;
 import com.xiaojusurvey.engine.common.exception.DaoException;
 import com.xiaojusurvey.engine.repository.MongoRepository;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import javax.annotation.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -15,6 +11,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 import static com.xiaojusurvey.engine.repository.enums.ErrorEnum.PARAM_NULL_ERROR;
 

@@ -1,12 +1,13 @@
 package com.xiaojusurvey.engine.repository;
 
 import com.xiaojusurvey.engine.common.entity.BaseEntity;
-import java.util.Collection;
-import java.util.List;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface MongoRepository {
 

@@ -20,6 +20,9 @@ import { CounterController } from './controllers/counter.controller';
 import { ResponseSchemaController } from './controllers/responseSchema.controller';
 import { SurveyResponseController } from './controllers/surveyResponse.controller';
 import { SurveyResponseUIController } from './controllers/surveyResponseUI.controller';
+import { AuthModule } from '../auth/auth.module';
+import { WorkspaceModule } from '../workspace/workspace.module';
+import { WhitelistService } from '../auth/services/whitelist.service';
 
 @Module({
   imports: [
@@ -31,6 +34,8 @@ import { SurveyResponseUIController } from './controllers/surveyResponseUI.contr
     ]),
     ConfigModule,
     MessageModule,
+    AuthModule,
+    WorkspaceModule,
   ],
   controllers: [
     ClientEncryptController,

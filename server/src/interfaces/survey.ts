@@ -95,7 +95,7 @@ export interface SubmitConf {
 }
 
 // 白名单类型
-enum WhitelistType {
+export enum WhitelistType {
   ALL = 'ALL',
   // 空间成员
   MEMBER = 'MEMBER',
@@ -104,7 +104,7 @@ enum WhitelistType {
 }
 
 // 白名单用户类型
-enum MemberType {
+export enum MemberType {
   // 手机号
   MOBILE = 'MOBILE',
   // 邮箱

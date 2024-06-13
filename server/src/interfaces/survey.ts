@@ -63,6 +63,7 @@ export interface DataItem {
 }
 
 export interface Option {
+  limit: number; //此选项总数限额， 0为无限
   text: string;
   others: boolean;
   mustOthers?: boolean;

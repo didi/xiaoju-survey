@@ -44,7 +44,7 @@ import { computed, ref, shallowRef, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import MemberSelect from './MemberSelect.vue'
-import { getPermissionList, getCollaborator, saveCollaborator } from '@/management/api/space'
+import { getPermissionListMemorize, getCollaborator, saveCollaborator } from '@/management/api/space'
 import { type IMember, SurveyPermissions } from '@/management/utils/types/workSpace'
 import { CODE_MAP } from '@/management/api/base'
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
@@ -64,7 +64,7 @@ const formTitle = ref('协作管理')
 
 const cooperOptions = ref([])
 onMounted(async () => {
-  const res: any = await getPermissionList()
+  const res: any = await getPermissionListMemorize()
   if (res.code === CODE_MAP.SUCCESS) {
     cooperOptions.value = res.data.map((item: any) => {
       return {

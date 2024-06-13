@@ -20,7 +20,7 @@
 import { computed, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
-import { getPublishedSurveyInfo } from './api/survey'
+import { getPublishedSurveyInfo, getPreviewSchema } from './api/survey'
 import useCommandComponent from './hooks/useCommandComponent'
 
 import EmptyPage from './pages/EmptyPage.vue'
@@ -65,6 +65,39 @@ const updateSkinConfig = (value: any) => {
   }
 }
 
+const loadData = (res: any, surveyPath: string) => {
+  if (res.code === 200) {
+    const data = res.data
+    const {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      logicConf
+    } = data.code
+    const questionData = {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf
+    }
+
+    document.title = data.title
+
+    updateSkinConfig(skinConf)
+
+    store.commit('setSurveyPath', surveyPath)
+    store.dispatch('init', questionData)
+    initRuleEngine(logicConf?.showLogicConf)
+  } else {
+    throw new Error(res.errmsg)
+  }
+}
+
 watch(skinConf, (value) => {
   updateSkinConfig(value)
 })
@@ -78,33 +111,14 @@ onMounted(async () => {
   }
 
   const alert = useCommandComponent(AlertDialog)
-
   try {
-    const res: any = await getPublishedSurveyInfo({ surveyPath })
-
-    if (res.code === 200) {
-      const data = res.data
-      const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } =
-        data.code
-      const questionData = {
-        bannerConf,
-        baseConf,
-        bottomConf,
-        dataConf,
-        skinConf,
-        submitConf
-      }
-
-      document.title = data.title
-
-      updateSkinConfig(skinConf)
-
-      store.commit('setSurveyPath', surveyPath)
-      store.dispatch('init', questionData)
-      store.dispatch('getEncryptInfo')
-      initRuleEngine(logicConf?.showLogicConf)
+    if (surveyPath.length > 8) {
+      const res: any = await getPreviewSchema({ surveyPath })
+      loadData(res, surveyPath)
     } else {
-      throw new Error(res.errmsg)
+      const res: any = await getPublishedSurveyInfo({ surveyPath })
+      loadData(res, surveyPath)
+      store.dispatch('getEncryptInfo')
     }
   } catch (error: any) {
     console.log(error)

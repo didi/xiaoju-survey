@@ -128,6 +128,7 @@ export class SurveyController {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
       configData: Joi.any().required(),
+      sessionId: Joi.string().required(),
     }).validate(surveyInfo);
     if (error) {
       this.logger.error(error.message, { req });
@@ -135,7 +136,7 @@ export class SurveyController {
     }
     const username = req.user.username;
     const surveyId = value.surveyId;
-
+    const sessionId = value.sessionId;
     const configData = value.configData;
     await this.surveyConfService.saveSurveyConf({
       surveyId,
@@ -149,6 +150,7 @@ export class SurveyController {
         _id: req.user._id.toString(),
         username,
       },
+      sessionId: sessionId,
     });
     return {
       code: 200,
@@ -237,6 +239,7 @@ export class SurveyController {
   ) {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
+      sessionId: Joi.string().required(),
     }).validate(surveyInfo);
     if (error) {
       this.logger.error(error.message, { req });
@@ -244,6 +247,7 @@ export class SurveyController {
     }
     const username = req.user.username;
     const surveyId = value.surveyId;
+    const sessionId = value.sessionId;
     const surveyMeta = req.surveyMeta;
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
@@ -278,6 +282,7 @@ export class SurveyController {
         _id: req.user._id.toString(),
         username,
       },
+      sessionId: sessionId,
     });
     return {
       code: 200,

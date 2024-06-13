@@ -20,13 +20,13 @@ export const getSurveyById = (id) => {
   })
 }
 
-export const saveSurvey = ({ surveyId, configData }) => {
-  return axios.post('/survey/updateConf', { surveyId, configData })
+export const saveSurvey = ({ surveyId, configData, sessionId }) => {
+  return axios.post('/survey/updateConf', { surveyId, configData, sessionId })
 }
 
-export const publishSurvey = ({ surveyId }) => {
+export const publishSurvey = ({ surveyId, sessionId }) => {
   return axios.post('/survey/publishSurvey', {
-    surveyId
+    surveyId, sessionId
   })
 }
 
@@ -39,6 +39,16 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
     params: {
       surveyId,
       historyType
+    }
+  })
+}
+
+export const getConflictHistory = ({ surveyId, historyType, sessionId }) => {
+  return axios.get('/surveyHisotry/getConflictList', {
+    params: {
+      surveyId,
+      historyType,
+      sessionId
     }
   })
 }

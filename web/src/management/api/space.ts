@@ -1,5 +1,4 @@
 import axios from './base'
-
 // 空间
 export const createSpace = ({ name, description, members }: any) => {
   return axios.post('/workspace', { name, description, members })
@@ -29,7 +28,7 @@ export const getUserList = (username: string) => {
   })
 }
 
-// 协作权限列表
+// 获取协作权限下拉框枚举
 export const getPermissionList = () => {
   return axios.get('collaborator/getPermissionList')
 }

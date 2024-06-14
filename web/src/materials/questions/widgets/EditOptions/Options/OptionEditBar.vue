@@ -79,7 +79,6 @@ const emit = defineEmits(['addOther', 'optionChange', 'change'])
 const moduleConfig = inject('moduleConfig')
 const optionConfigVisible = ref(false)
 const openOptionConfig = () => {
-  console.log('open')
   optionConfigVisible.value = true
 }
 

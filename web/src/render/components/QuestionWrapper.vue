@@ -1,7 +1,6 @@
 <template>
   <QuestionRuleContainer
     v-if="visible"
-    v-bind="$attrs"
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"

@@ -1,5 +1,5 @@
 import { getBannerData } from '@/management/api/skin.js'
-import { getCollaboratorPermissions } from '@/management/api/space.ts'
+import { getCollaboratorPermissionsMemorize } from '@/management/api/space.ts'
 import { CODE_MAP } from '../api/base'
 
 export default {
@@ -13,8 +13,7 @@ export default {
     }
   },
   async fetchCooperPermissions({ commit }, id) {
-    const res = await getCollaboratorPermissions(id)
-    console.log(res.data)
+    const res = await getCollaboratorPermissionsMemorize(id)
     if (res.code === CODE_MAP.SUCCESS) {
       commit('setCooperPermissions', res.data.permissions)
     }

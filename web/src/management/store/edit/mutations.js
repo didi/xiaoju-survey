@@ -1,4 +1,4 @@
-import { set as _set, merge as _merge } from 'lodash-es'
+import { set as _set, merge as _merge, set } from 'lodash-es'
 
 export default {
   setCurrentEditOne(state, data) {
@@ -64,5 +64,8 @@ export default {
   },
   setQuestionDataList(state, data) {
     state.schema.questionDataList = data
+  },
+  setDownloadPath(state, data) {
+    state.downloadPath = data
   }
 }

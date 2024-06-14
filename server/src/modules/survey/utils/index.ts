@@ -6,6 +6,8 @@ import npsCode from '../template/surveyTemplate/survey/nps.json';
 import registerCode from '../template/surveyTemplate/survey/register.json';
 import voteCode from '../template/surveyTemplate/survey/vote.json';
 
+
+
 const schemaDataMap = {
   normal: normalCode,
   nps: npsCode,

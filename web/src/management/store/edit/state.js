@@ -56,5 +56,6 @@ export default {
     logicConf: {
       showLogicConf: []
     }
-  }
+  },
+  downloadPath:'',
 }

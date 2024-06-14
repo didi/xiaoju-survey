@@ -20,6 +20,14 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/survey/download/',
+    name: 'download',
+    component: () => import('../pages/download/SurveyDownloadPage.vue'),
+    meta: {
+      needLogin: true
+    }
+  },
+  {
     path: '/survey/:id/edit',
     meta: {
       needLogin: true,

@@ -21,5 +21,18 @@ export default {
     tip: '问卷仅在指定时间段内可填写',
     type: 'QuestionTimeHour',
     placement: 'top'
+  },
+  interview_pwd: {
+    key: 'baseConf.interviewPwd',
+    label: '访问密码',
+    type: 'SwitchInput',
+    placeholder: '请输入访问密码'
+  },
+  answer_list: {
+    key: 'baseConf.interviewPwd',
+    label: '答题名单',
+    type: 'AnswerRadio',
+    placeholder: '请输入访问密码'
   }
+
 }

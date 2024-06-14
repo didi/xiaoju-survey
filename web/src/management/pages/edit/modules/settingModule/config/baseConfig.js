@@ -8,5 +8,9 @@ export default [
     title: '提交限制',
     key: 'limitConfig',
     formList: ['limit_tLimit']
+  }, {
+    title: '作答限制',
+    key: 'respondConfig',
+    formList: ['interview_pwd','answer_list']
   }
 ]

@@ -1,49 +1,15 @@
 <template>
   <div id="app">
-    <Component
-      v-if="store.state.router"
-      :is="
-        components[
-          upperFirst(store.state.router) as 'IndexPage' | 'EmptyPage' | 'ErrorPage' | 'SuccessPage'
-        ]
-      "
-    >
-    </Component>
-    <LogoIcon
-      v-if="!['successPage', 'indexPage'].includes(store.state.router)"
-      :logo-conf="logoConf"
-      :readonly="true"
-    />
+    <router-view></router-view>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
-
-import { getPublishedSurveyInfo, getPreviewSchema } from './api/survey'
-import useCommandComponent from './hooks/useCommandComponent'
-
-import EmptyPage from './pages/EmptyPage.vue'
-import IndexPage from './pages/IndexPage.vue'
-import ErrorPage from './pages/ErrorPage.vue'
-import SuccessPage from './pages/SuccessPage.vue'
-import AlertDialog from './components/AlertDialog.vue'
-// @ts-ignore
-import communalLoader from '@materials/communals/communalLoader.js'
-import { get as _get, upperFirst } from 'lodash-es'
-import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
-
-const LogoIcon = communalLoader.loadComponent('LogoIcon')
+import { get as _get } from 'lodash-es'
 
 const store = useStore()
-const logoConf = computed(() => store.state?.bottomConf || {})
 const skinConf = computed(() => _get(store, 'state.skinConf', {}))
-const components = {
-  EmptyPage,
-  IndexPage,
-  ErrorPage,
-  SuccessPage
-}
 
 const updateSkinConfig = (value: any) => {
   const root = document.documentElement
@@ -65,65 +31,8 @@ const updateSkinConfig = (value: any) => {
   }
 }
 
-const loadData = (res: any, surveyPath: string) => {
-  if (res.code === 200) {
-    const data = res.data
-    const {
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf,
-      logicConf
-    } = data.code
-    const questionData = {
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf
-    }
-
-    document.title = data.title
-
-    updateSkinConfig(skinConf)
-
-    store.commit('setSurveyPath', surveyPath)
-    store.dispatch('init', questionData)
-    initRuleEngine(logicConf?.showLogicConf)
-  } else {
-    throw new Error(res.errmsg)
-  }
-}
-
 watch(skinConf, (value) => {
   updateSkinConfig(value)
-})
-
-onMounted(async () => {
-  const surveyPath = location.pathname.split('/').pop()
-
-  if (!surveyPath) {
-    store.commit('setRouter', 'EmptyPage')
-    return
-  }
-
-  const alert = useCommandComponent(AlertDialog)
-  try {
-    if (surveyPath.length > 8) {
-      const res: any = await getPreviewSchema({ surveyPath })
-      loadData(res, surveyPath)
-    } else {
-      const res: any = await getPublishedSurveyInfo({ surveyPath })
-      loadData(res, surveyPath)
-      store.dispatch('getEncryptInfo')
-    }
-  } catch (error: any) {
-    console.log(error)
-    alert({ title: error.message || '获取问卷失败' })
-  }
 })
 </script>
 <style lang="scss">

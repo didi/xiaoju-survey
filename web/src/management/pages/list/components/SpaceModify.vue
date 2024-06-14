@@ -48,7 +48,6 @@ import { useStore } from 'vuex'
 import { pick as _pick } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
 import { QOP_MAP } from '@/management/utils/constant'
 import MemberSelect from './MemberSelect.vue'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'

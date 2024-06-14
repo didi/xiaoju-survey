@@ -5,6 +5,7 @@ import {
   keys as _keys,
   set as _set
 } from 'lodash-es'
+import { INPUT, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 
 const regexpMap = {
   nd: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
@@ -28,13 +29,11 @@ const msgMap = {
   e: '请输入邮箱',
   licensePlate: '请输入车牌号'
 }
-const inputType = ['text', 'textarea']
 const checkBoxTip = '至少选择#min#项，少选择了#less#项'
 const checkBoxTipSame = '请选择#min#项，少选择了#less#项'
 const textRangeMinTip = '至少输入#min#字'
 const numberRangeMinTip = '数字最小为#min#'
 const numberRangeMaxTip = '数字最大为#max#'
-const radioType = ['radio-star', 'radio-nps']
 
 // 多选题的选项数目限制
 export function optionValidator(value, minNum, maxNum) {
@@ -88,7 +87,7 @@ export function generateValidArr(
   numberRangeMax
 ) {
   const validArr = []
-  const isInput = inputType.indexOf(type) !== -1
+  const isInput = INPUT.indexOf(type) !== -1
   if (isRequired || valid === '*') {
     // 输入框的必填校验做trim
     if (!isInput) {
@@ -199,14 +198,14 @@ const generateOthersKeyMap = (question) => {
   const { type, field, options, rangeConfig } = question
   let othersKeyMap = undefined
 
-  if (radioType.includes(type)) {
+  if (RATES.includes(type)) {
     othersKeyMap = {}
     for (const key in rangeConfig) {
       if (rangeConfig[key].isShowInput) {
         othersKeyMap[`${field}_${key}`] = key
       }
     }
-  } else if (type.includes('radio') || type.includes('checkbox')) {
+  } else if (type.includes(QUESTION_TYPE.RADIO) || type.includes(QUESTION_TYPE.CHECKBOX)) {
     othersKeyMap = {}
     options
       .filter((op) => op.others)
@@ -258,7 +257,7 @@ export default function (questionConfig) {
 
     // 对于选择题支持填写更多信息的，需要做是否必填的校验
     if (_keys(othersKeyMap).length) {
-      if (radioType.includes(type)) {
+      if (RATES.includes(type)) {
         if (rangeConfig) {
           for (const key in rangeConfig) {
             if (rangeConfig[key].isShowInput && rangeConfig[key].required) {

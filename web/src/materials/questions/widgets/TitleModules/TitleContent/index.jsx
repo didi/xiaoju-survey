@@ -1,6 +1,6 @@
 import { defineComponent, watch, ref, computed } from 'vue'
 import { filterXSS } from '@/common/xss'
-import tagList from '@materials/questions/common/config/tagList'
+import { typeTagLabels } from '@/common/typeEnum.ts'
 
 import './style.scss'
 
@@ -58,7 +58,7 @@ export default defineComponent({
       let ret = ''
       types.forEach((t) => {
         if (ret) return
-        const tv = tagList && tagList[t]
+        const tv = typeTagLabels && typeTagLabels[t]
         if (tv && typeof tv === 'string') {
           ret = tv.trim()
         }

@@ -1,4 +1,5 @@
 // 定义提交的数据结构：{ field1: '', field2: [], field1_hash1: '', }
+import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 export default function ({ dataConf }) {
   const dataList = dataConf.dataList
   const formValues = {}
@@ -17,7 +18,7 @@ export default function ({ dataConf }) {
     // }
 
     // 题型是多选，或者子题型是多选（innerType是用于投票）
-    if (/checkbox/.test(type) || innerType === 'checkbox') {
+    if (/checkbox/.test(type) || innerType === QUESTION_TYPE.CHECKBOX) {
       value = value ? [value] : []
     }
     formValues[key] = value

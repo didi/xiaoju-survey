@@ -10,4 +10,6 @@ import com.xiaojusurvey.engine.core.reslut.IdResult;
  */
 public interface SurveyService {
     IdResult createSurvey(SurveyMeta surveyMeta);
+
+    SurveyMeta getSurveyMeta(String surveyId);
 }

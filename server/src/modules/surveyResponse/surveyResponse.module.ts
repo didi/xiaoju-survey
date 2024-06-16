@@ -22,7 +22,6 @@ import { SurveyResponseController } from './controllers/surveyResponse.controlle
 import { SurveyResponseUIController } from './controllers/surveyResponseUI.controller';
 import { AuthModule } from '../auth/auth.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
-import { WhitelistService } from '../auth/services/whitelist.service';
 
 @Module({
   imports: [

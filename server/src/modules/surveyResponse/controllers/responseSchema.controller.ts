@@ -57,8 +57,10 @@ export class ResponseSchemaController {
     }
 
     // 去掉C端的敏感字段
-    responseSchema.code.baseConf.password = null;
-    responseSchema.code.baseConf.whitelist = null;
+    if (responseSchema.code?.baseConf) {
+      responseSchema.code.baseConf.password = null;
+      responseSchema.code.baseConf.whitelist = [];
+    }
     return {
       code: 200,
       data: responseSchema,
@@ -73,8 +75,8 @@ export class ResponseSchemaController {
     @Body() body,
   ): Promise<string> {
     const { value, error } = Joi.object({
-      password: Joi.string(),
-      value: Joi.string(),
+      password: Joi.string().allow(null, ''),
+      value: Joi.string().allow(null, ''),
     }).validate(body, { allowUnknown: true });
 
     if (error) {

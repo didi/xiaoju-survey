@@ -119,17 +119,17 @@ export interface BaseConf {
   tLimit: number;
   language: string;
   // 访问密码开关
-  passwordSwitch: boolean;
+  passwordSwitch?: boolean;
   // 密码
-  password: string;
+  password?: string | null;
   // 白名单类型
-  whitelistType: WhitelistType;
+  whitelistType?: WhitelistType;
   // 白名单用户类型
-  memberType: MemberType;
+  memberType?: MemberType;
   // 白名单列表
-  whitelist: string[];
+  whitelist?: string[];
   // 提示语
-  whitelistTip: string;
+  whitelistTip?: string;
 }
 
 export interface SkinConf {

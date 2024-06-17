@@ -21,6 +21,11 @@ import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugi
 import { RECORD_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Logger } from 'src/logger';
+import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
+import { MemberType, WhitelistType } from 'src/interfaces/survey';
+import { ResponseSchema } from 'src/models/responseSchema.entity';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
 
 const mockDecryptErrorBody = {
   surveyPath: 'EBzdmnSp',
@@ -76,6 +81,7 @@ describe('SurveyResponseController', () => {
   let responseSchemaService: ResponseSchemaService;
   let surveyResponseService: SurveyResponseService;
   let clientEncryptService: ClientEncryptService;
+  let whitelistService: WhitelistService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -124,6 +130,12 @@ describe('SurveyResponseController', () => {
             info: jest.fn(),
           },
         },
+        {
+          provide: WhitelistService,
+          useValue: {
+            match: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -136,6 +148,7 @@ describe('SurveyResponseController', () => {
     );
     clientEncryptService =
       module.get<ClientEncryptService>(ClientEncryptService);
+    whitelistService = module.get<WhitelistService>(WhitelistService);
 
     const pluginManager = module.get<XiaojuSurveyPluginManager>(
       XiaojuSurveyPluginManager,
@@ -304,6 +317,65 @@ describe('SurveyResponseController', () => {
 
       await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
         HttpException,
+      );
+    });
+
+    it('should throw HttpException if verifyId is empty', async () => {
+      const reqBody = { ...mockSubmitData };
+
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce({
+          curStatus: {
+            status: RECORD_STATUS.PUBLISHED,
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+              whitelistType: WhitelistType.CUSTOM,
+              memberType: MemberType.MOBILE,
+              whitelist: ['13500000000'],
+            },
+          },
+        } as ResponseSchema);
+
+      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+        new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
+      );
+    });
+
+    it('should throw HttpException if verifyId does not match', async () => {
+      const reqBody = {
+        ...mockSubmitData,
+        verifyId: 'xxx',
+        sign: '6e9fda60c7fd9466eda480e3c5a03c2de0e33becc193b82f6aa6d25ff3b69146.1710400229589',
+      };
+
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce({
+          curStatus: {
+            status: RECORD_STATUS.PUBLISHED,
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+              whitelistType: WhitelistType.CUSTOM,
+              memberType: MemberType.MOBILE,
+              whitelist: ['13500000000'],
+            },
+          },
+        } as ResponseSchema);
+
+      jest.spyOn(whitelistService, 'match').mockResolvedValueOnce({
+        _id: new ObjectId('c79c6fee22cbed6f0b087a27'),
+        surveyPath: reqBody.surveyPath,
+      } as WhitelistVerify);
+
+      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+        new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
       );
     });
   });

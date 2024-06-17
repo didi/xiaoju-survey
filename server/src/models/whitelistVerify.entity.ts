@@ -5,7 +5,4 @@ import { BaseEntity } from './base.entity';
 export class WhitelistVerify extends BaseEntity {
   @Column()
   surveyPath: string;
-
-  @Column()
-  verifyId: string;
 }

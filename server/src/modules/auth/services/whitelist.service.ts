@@ -12,9 +12,10 @@ export class WhitelistService {
 
   // 创建
   async create(surveyPath: string) {
-    return await this.whitelistVerifyRepo.create({
+    const data = this.whitelistVerifyRepo.create({
       surveyPath,
     });
+    return await this.whitelistVerifyRepo.save(data);
   }
 
   // 匹配

@@ -15,7 +15,10 @@
 
           if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
             width = width < PC_W ? width : PC_W
-            docEl.className += ' ispc-html'
+            var docElClass = docEl.className
+            if (!docElClass.match(/(?:^|\s)ispc-html(?!\S)/)) {
+              docEl.className += ' ispc-html'
+            }
           }
 
           var f = Math.min(width / 7.5, 50)

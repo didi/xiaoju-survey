@@ -47,6 +47,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             throw new ServiceException(RespErrorCode.USER_CREDENTIALS_ERROR.getMessage(), RespErrorCode.USER_CREDENTIALS_ERROR.getCode());
         }
         User user = userService.loadUserByUsernameAndPassword(username, password);
+        request.setAttribute("user", user);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }

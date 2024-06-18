@@ -369,10 +369,7 @@ describe('SurveyResponseController', () => {
           },
         } as ResponseSchema);
 
-      jest.spyOn(whitelistService, 'match').mockResolvedValueOnce({
-        _id: new ObjectId('c79c6fee22cbed6f0b087a27'),
-        surveyPath: reqBody.surveyPath,
-      } as WhitelistVerify);
+      jest.spyOn(whitelistService, 'match').mockResolvedValueOnce(null);
 
       await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
         new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),

@@ -19,6 +19,7 @@
   
   interface Emit {
     (ev: 'confirm', callback: () => void): void
+    (ev: 'cancel', callback: () => void): void
     (ev: 'close'): void
   }
   

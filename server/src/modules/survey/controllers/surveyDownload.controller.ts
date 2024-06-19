@@ -9,12 +9,11 @@ import {
   Res,
   // Response,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
 import { Authentication } from 'src/guards/authentication.guard';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
@@ -22,12 +21,15 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 //后添加
 import { SurveyDownloadService } from '../services/surveyDownload.service';
-import { DownloadFileByNameDto, GetDownloadDto, GetDownloadListDto } from '../dto/getdownload.dto';
+import {
+  DownloadFileByNameDto,
+  GetDownloadDto,
+  GetDownloadListDto,
+} from '../dto/getdownload.dto';
 import { join } from 'path';
-import * as util from 'util'
+import * as util from 'util';
 import * as fs from 'fs';
 import { Response } from 'express';
-import { findKey } from 'lodash';
 import moment from 'moment';
 import { MessageService } from '../services/message.service';
 
@@ -40,7 +42,7 @@ export class SurveyDownloadController {
     private readonly surveyDownloadService: SurveyDownloadService,
     private readonly logger: Logger,
     private readonly messageService: MessageService,
-  ) { }
+  ) {}
 
   @Get('/download')
   @HttpCode(200)
@@ -61,20 +63,19 @@ export class SurveyDownloadController {
     const { surveyId, isDesensitive } = value;
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPageId(surveyId);
-    const id= await this.surveyDownloadService.createDownload({
+    const id = await this.surveyDownloadService.createDownload({
       surveyId,
-      responseSchema
+      responseSchema,
     });
     this.messageService.addMessage({
-        responseSchema,
-        surveyId,
-        isDesensitive,
-        id,
-      });
+      responseSchema,
+      surveyId,
+      isDesensitive,
+      id,
+    });
     return {
       code: 200,
-      data: { message: '正在生成下载文件，请稍后查看'
-      },
+      data: { message: '正在生成下载文件，请稍后查看' },
     };
   }
   @Get('/getdownloadList')
@@ -103,8 +104,8 @@ export class SurveyDownloadController {
     return {
       code: 200,
       data: {
-        total:total,
-        listBody:listBody.map((data) => {
+        total: total,
+        listBody: listBody.map((data) => {
           const fmt = 'YYYY-MM-DD HH:mm:ss';
           const units = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
           let unitIndex = 0;
@@ -135,33 +136,33 @@ export class SurveyDownloadController {
     if (error) {
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-  
+
     const { owner, fileName } = value;
     const rootDir = process.cwd(); // 获取当前工作目录
     const filePath = join(rootDir, 'download', owner, fileName);
-  
+
     // 使用 util.promisify 将 fs.access 转换为返回 Promise 的函数
     const access = util.promisify(fs.access);
     try {
       console.log('检查文件路径:', filePath);
       await access(filePath, fs.constants.F_OK);
-  
+
       // 文件存在，设置响应头并流式传输文件
       res.setHeader('Content-Type', 'application/octet-stream');
       console.log('文件存在，设置响应头');
       const encodedFileName = encodeURIComponent(fileName);
-      const contentDisposition = `attachment; filename="${encodedFileName}"; filename*=UTF-8''${encodedFileName}`
+      const contentDisposition = `attachment; filename="${encodedFileName}"; filename*=UTF-8''${encodedFileName}`;
       res.setHeader('Content-Disposition', contentDisposition);
       console.log('设置响应头成功，文件名:', encodedFileName);
-  
+
       const fileStream = fs.createReadStream(filePath);
       console.log('创建文件流成功');
       fileStream.pipe(res);
-  
+
       fileStream.on('end', () => {
         console.log('文件传输完成');
       });
-  
+
       fileStream.on('error', (streamErr) => {
         console.error('文件流错误:', streamErr);
         res.status(500).send('文件传输中出现错误');
@@ -171,7 +172,6 @@ export class SurveyDownloadController {
       res.status(404).send('文件不存在');
     }
   }
-
 
   @Get('/deletefileByName')
   @HttpCode(200)
@@ -187,11 +187,14 @@ export class SurveyDownloadController {
     if (error) {
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { owner,fileName } = value;
-  
+    const { owner, fileName } = value;
+
     try {
-      const result = await this.surveyDownloadService.deleteDownloadFile({ owner,fileName });
-  
+      const result = await this.surveyDownloadService.deleteDownloadFile({
+        owner,
+        fileName,
+      });
+
       // 根据 deleteDownloadFile 的返回值执行不同操作
       if (result === 0) {
         return res.status(404).json({
@@ -199,7 +202,7 @@ export class SurveyDownloadController {
           message: '文件状态已删除或文件不存在',
         });
       }
-  
+
       return res.status(200).json({
         code: 200,
         message: '文件删除成功',

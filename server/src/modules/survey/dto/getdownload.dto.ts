@@ -10,7 +10,7 @@ export class GetDownloadDto {
   static validate(data) {
     return Joi.object({
       surveyId: Joi.string().required(),
-        isDesensitive: Joi.boolean().default(true), // 默认true就是需要脱敏
+      isDesensitive: Joi.boolean().default(true), // 默认true就是需要脱敏
     }).validate(data);
   }
 }

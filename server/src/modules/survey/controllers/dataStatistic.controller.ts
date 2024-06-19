@@ -20,9 +20,6 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-//后添加
-import { writeFile } from 'fs';
-import { join } from 'path';
 import { SurveyDownloadService } from '../services/surveyDownload.service';
 
 @ApiTags('survey')
@@ -76,8 +73,6 @@ export class DataStatisticController {
         this.pluginManager.triggerHook('desensitiveData', item);
       });
     }
-
-
 
     return {
       code: 200,

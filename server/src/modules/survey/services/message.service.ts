@@ -4,32 +4,27 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 
 interface QueueItem {
-    surveyId: string;
-    responseSchema: ResponseSchema;
-    isDesensitive: boolean;
-    id: object;
+  surveyId: string;
+  responseSchema: ResponseSchema;
+  isDesensitive: boolean;
+  id: object;
 }
 
 @Injectable()
 export class MessageService extends EventEmitter {
-
-      
-    private queue: QueueItem[];
-    private concurrency: number;
-    private processing: number;
-   
-  
+  private queue: QueueItem[];
+  private concurrency: number;
+  private processing: number;
 
   constructor(
-    @Inject('NumberToken') concurrency: number ,
-    private readonly surveyDownloadService: SurveyDownloadService
-) {
+    @Inject('NumberToken') concurrency: number,
+    private readonly surveyDownloadService: SurveyDownloadService,
+  ) {
     super();
     this.queue = [];
     this.concurrency = concurrency;
     this.processing = 0;
     this.on('messageAdded', this.processMessages);
-    
   }
 
   public addMessage({
@@ -58,16 +53,21 @@ export class MessageService extends EventEmitter {
       return;
     }
 
-    const messagesToProcess = Math.min(this.queue.length, this.concurrency - this.processing);
+    const messagesToProcess = Math.min(
+      this.queue.length,
+      this.concurrency - this.processing,
+    );
     const messages = this.queue.splice(0, messagesToProcess);
 
     this.processing += messagesToProcess;
 
-    await Promise.all(messages.map(async (message) => {
-      console.log(`开始计算: ${message}`);
-      await this.handleMessage(message);
-      this.emit('messageProcessed', message);
-    }));
+    await Promise.all(
+      messages.map(async (message) => {
+        console.log(`开始计算: ${message}`);
+        await this.handleMessage(message);
+        this.emit('messageProcessed', message);
+      }),
+    );
 
     this.processing -= messagesToProcess;
     if (this.queue.length > 0) {
@@ -76,14 +76,12 @@ export class MessageService extends EventEmitter {
   };
 
   async handleMessage(message: QueueItem) {
-    const { surveyId, responseSchema, isDesensitive,id } = message;
+    const { surveyId, responseSchema, isDesensitive, id } = message;
     await this.surveyDownloadService.getDownloadPath({
-        responseSchema,
-        surveyId,
-        isDesensitive,
-        id
-      });
+      responseSchema,
+      surveyId,
+      isDesensitive,
+      id,
+    });
   }
 }
-
-

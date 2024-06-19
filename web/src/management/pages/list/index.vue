@@ -5,7 +5,7 @@
         <img class="logo-img" src="/imgs/Logo.webp" alt="logo" />
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
           <el-menu-item index="1">问卷列表</el-menu-item>
-          <el-menu-item index="2"@click="handleDownload">下载页面</el-menu-item>
+          <el-menu-item index="2" @click="handleDownload">下载页面</el-menu-item>
         </el-menu>
       </div>
       <div class="login-info">
@@ -241,13 +241,10 @@ const handleDownload = () => {
       }
 
       .create-btn {
-
         background: #4a4c5b;
       }
       .space-btn {
         background: $primary-color;
-
-
       }
       .btn {
         width: 132px;

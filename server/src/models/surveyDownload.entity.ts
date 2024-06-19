@@ -17,24 +17,22 @@ export class SurveyDownload extends BaseEntity {
   filePath: string;
 
   @Column()
-  onwer:string;
+  onwer: string;
 
   @Column()
-  filename:string;
+  filename: string;
 
   @Column()
-  fileSize:string;
+  fileSize: string;
 
   @Column()
-  fileType:string;
-
+  fileType: string;
 
   // @Column()
   // ownerId: string;
 
   @Column()
   downloadTime: string;
-
 
   @BeforeInsert()
   async onDataInsert() {

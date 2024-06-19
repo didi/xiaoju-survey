@@ -9,7 +9,7 @@ export const getRecycleList = (data) => {
   })
 }
 //问卷下载
-export const downloadSurvey = ({surveyId,isDesensitive}) => {
+export const downloadSurvey = ({ surveyId, isDesensitive }) => {
   return axios.get('/survey/surveyDownload/download', {
     params: {
       surveyId,

@@ -8,9 +8,6 @@ import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { getListHeadByDataList } from '../utils';
-//后添加
-import { writeFile } from 'fs';
-import { join } from 'path';
 
 @Injectable()
 export class DataStatisticService {

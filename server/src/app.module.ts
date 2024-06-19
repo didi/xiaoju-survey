@@ -82,7 +82,7 @@ import { SurveyDownload } from './models/surveyDownload.entity';
             Workspace,
             WorkspaceMember,
             Collaborator,
-            SurveyDownload
+            SurveyDownload,
           ],
         };
       },

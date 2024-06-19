@@ -35,7 +35,6 @@ import { SurveyDownloadService } from './services/surveyDownload.service';
 import { SurveyDownloadController } from './controllers/surveyDownload.controller';
 import { MessageService } from './services/message.service';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -46,7 +45,7 @@ import { MessageService } from './services/message.service';
       Word,
       Collaborator,
       //后添加
-      SurveyDownload
+      SurveyDownload,
     ]),
     ConfigModule,
     SurveyResponseModule,

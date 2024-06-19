@@ -5,7 +5,7 @@
         <img class="logo-img" src="/imgs/Logo.webp" alt="logo" />
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
           <el-menu-item index="1" @click="handleSurvey">问卷列表</el-menu-item>
-          <el-menu-item index="2">下载页面</el-menu-item> 
+          <el-menu-item index="2">下载页面</el-menu-item>
         </el-menu>
       </div>
       <div class="login-info">
@@ -16,12 +16,11 @@
     </div>
     <div class="table-container">
       <DownloadList
-          :loading="loading"
-          :data="surveyList"
-          :total="surveyTotal"
-          @reflush="fetchSurveyList"
-          
-        ></DownloadList>
+        :loading="loading"
+        :data="surveyList"
+        :total="surveyTotal"
+        @reflush="fetchSurveyList"
+      ></DownloadList>
     </div>
   </div>
 </template>
@@ -43,7 +42,7 @@ const surveyList = computed(() => {
 const surveyTotal = computed(() => {
   return store.state.download.surveyTotal
 })
-const handleSurvey=()=>{
+const handleSurvey = () => {
   router.push('/survey')
 }
 const handleLogout = () => {
@@ -53,7 +52,6 @@ const handleLogout = () => {
 const loading = ref(false)
 
 onMounted(() => {
-
   fetchSurveyList()
 })
 const fetchSurveyList = async (params?: any) => {
@@ -63,8 +61,7 @@ const fetchSurveyList = async (params?: any) => {
       curPage: 1
     }
   }
-  params.ownerId = store.state.user.userInfo.username,
-  loading.value = true
+  ;(params.ownerId = store.state.user.userInfo.username), (loading.value = true)
   await store.dispatch('download/getDownloadList', params)
   loading.value = false
 }
@@ -124,8 +121,8 @@ const activeIndex = ref('2')
   .table-container {
     padding: 20px;
     display: flex;
-    justify-content: center; 
-    height: 100%; 
+    justify-content: center;
+    height: 100%;
     width: 100%; /* 确保容器宽度为100% */
   }
 }

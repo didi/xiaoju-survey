@@ -4,22 +4,23 @@ import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 
 import moment from 'moment';
-import _, { keyBy } from 'lodash';
+import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { getListHeadByDataList } from '../utils';
 //后添加
-import { writeFile, stat,promises } from 'fs';
+import { promises } from 'fs';
 import { join } from 'path';
 import { SurveyDownload } from 'src/models/surveyDownload.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import e from 'express';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 import { RECORD_STATUS } from 'src/enums';
 import * as cron from 'node-cron';
+import fs from 'fs';
+import path from 'path';
 
 @Injectable()
-export class SurveyDownloadService implements OnModuleInit{
+export class SurveyDownloadService implements OnModuleInit {
   private radioType = ['radio-star', 'radio-nps'];
 
   constructor(
@@ -30,19 +31,18 @@ export class SurveyDownloadService implements OnModuleInit{
     @InjectRepository(SurveyMeta)
     private readonly SurveyDmetaRepository: MongoRepository<SurveyMeta>,
     private readonly pluginManager: XiaojuSurveyPluginManager,
-  ) { }
+  ) {}
   //初始化一个自动删除过期文件的方法
   async onModuleInit() {
     cron.schedule('0 0 * * *', async () => {
-
       try {
         const files = await this.SurveyDownloadRepository.find({
           where: {
             'curStatus.status': {
               $ne: RECORD_STATUS.REMOVED,
             },
-        }
-      });
+          },
+        });
         const now = Date.now();
 
         for (const file of files) {
@@ -51,13 +51,13 @@ export class SurveyDownloadService implements OnModuleInit{
           }
 
           const fileSaveDate = Number(file.downloadTime);
-          const diffDays = (now-fileSaveDate) / (1000 * 60 * 60 * 24);
+          const diffDays = (now - fileSaveDate) / (1000 * 60 * 60 * 24);
 
           if (diffDays > 10) {
             this.deleteDownloadFile({
               owner: file.onwer,
               fileName: file.filename,
-            })
+            });
           }
         }
       } catch (err) {
@@ -65,7 +65,6 @@ export class SurveyDownloadService implements OnModuleInit{
       }
     });
   }
-  
 
   async createDownload({
     surveyId,
@@ -83,7 +82,7 @@ export class SurveyDownloadService implements OnModuleInit{
       pageId: surveyId,
       surveyPath: responseSchema.surveyPath,
       title: responseSchema.title,
-      fileSize: "计算中",
+      fileSize: '计算中',
       downloadTime: String(Date.now()),
       onwer: surveyMeta.owner,
     });
@@ -92,29 +91,28 @@ export class SurveyDownloadService implements OnModuleInit{
       date: Date.now(),
     };
     return (await this.SurveyDownloadRepository.save(newSurveyDownload))._id;
-
   }
 
   private formatHead(listHead = []) {
-    const head = []
+    const head = [];
 
     listHead.forEach((headItem) => {
       head.push({
         field: headItem.field,
-        title: headItem.title
-      })
+        title: headItem.title,
+      });
 
       if (headItem.othersCode?.length) {
         headItem.othersCode.forEach((item) => {
           head.push({
             field: item.code,
-            title: `${headItem.title}-${item.option}`
-          })
-        })
+            title: `${headItem.title}-${item.option}`,
+          });
+        });
       }
-    })
+    });
 
-    return head
+    return head;
   }
   async getDownloadPath({
     surveyId,
@@ -129,7 +127,7 @@ export class SurveyDownloadService implements OnModuleInit{
   }) {
     const dataList = responseSchema?.code?.dataConf?.dataList || [];
     const Head = getListHeadByDataList(dataList);
-    const listHead=this.formatHead(Head);
+    const listHead = this.formatHead(Head);
     const dataListMap = keyBy(dataList, 'field');
     const where = {
       pageId: surveyId,
@@ -137,7 +135,7 @@ export class SurveyDownloadService implements OnModuleInit{
         $ne: 'removed',
       },
     };
-    const [surveyResponseList, total] =
+    const [surveyResponseList] =
       await this.surveyResponseRepository.findAndCount({
         where,
         order: {
@@ -184,8 +182,8 @@ export class SurveyDownloadService implements OnModuleInit{
           const optionTextMap = keyBy(itemConfig.options, 'hash');
           data[itemKey] = Array.isArray(data[itemKey])
             ? data[itemKey]
-              .map((item) => optionTextMap[item]?.text || item)
-              .join(',')
+                .map((item) => optionTextMap[item]?.text || item)
+                .join(',')
             : optionTextMap[data[itemKey]]?.text || data[itemKey];
         }
       }
@@ -204,17 +202,24 @@ export class SurveyDownloadService implements OnModuleInit{
       });
     }
 
-    let titlesCsv = listHead.map(question => `"${question.title.replace(/<[^>]*>/g, '')}"`).join(',') + '\n';
+    let titlesCsv =
+      listHead
+        .map((question) => `"${question.title.replace(/<[^>]*>/g, '')}"`)
+        .join(',') + '\n';
     // 获取工作区根目录的路径
     const rootDir = process.cwd();
     const timestamp = Date.now();
-    const fs = require('fs');
-    const path = require('path');
-    const filePath = join(rootDir, 'download',`${surveyMeta.owner}`, `${surveyMeta.title}_${timestamp}.csv`);
+
+    const filePath = join(
+      rootDir,
+      'download',
+      `${surveyMeta.owner}`,
+      `${surveyMeta.title}_${timestamp}.csv`,
+    );
     const dirPath = path.dirname(filePath);
     fs.mkdirSync(dirPath, { recursive: true });
-    listBody.forEach(row => {
-      const rowValues = listHead.map(head => {
+    listBody.forEach((row) => {
+      const rowValues = listHead.map((head) => {
         const value = row[head.field];
         if (typeof value === 'string') {
           // 处理字符串中的特殊字符
@@ -226,11 +231,11 @@ export class SurveyDownloadService implements OnModuleInit{
     });
     const BOM = '\uFEFF';
     let size = 0;
-    const newSurveyDownload= await this.SurveyDownloadRepository.findOne({
+    const newSurveyDownload = await this.SurveyDownloadRepository.findOne({
       where: {
         _id: id,
-    }
-  });
+      },
+    });
     fs.writeFile(filePath, BOM + titlesCsv, { encoding: 'utf8' }, (err) => {
       if (err) {
         console.error('保存文件时出错:', err);
@@ -244,30 +249,29 @@ export class SurveyDownloadService implements OnModuleInit{
             size = stats.size;
             const filename = `${surveyMeta.title}_${timestamp}.csv`;
             const fileType = 'csv';
-            newSurveyDownload.pageId= surveyId,
-            newSurveyDownload.surveyPath=responseSchema.surveyPath,
-            newSurveyDownload.title=responseSchema.title,
-            newSurveyDownload.filePath= filePath,
-            newSurveyDownload.filename=filename,
-            newSurveyDownload.fileType=fileType,
-            newSurveyDownload.fileSize=String(size),
-            newSurveyDownload.downloadTime=String(Date.now()),
-            newSurveyDownload.onwer=surveyMeta.owner
+            (newSurveyDownload.pageId = surveyId),
+              (newSurveyDownload.surveyPath = responseSchema.surveyPath),
+              (newSurveyDownload.title = responseSchema.title),
+              (newSurveyDownload.filePath = filePath),
+              (newSurveyDownload.filename = filename),
+              (newSurveyDownload.fileType = fileType),
+              (newSurveyDownload.fileSize = String(size)),
+              (newSurveyDownload.downloadTime = String(Date.now())),
+              (newSurveyDownload.onwer = surveyMeta.owner);
             newSurveyDownload.curStatus = {
               status: RECORD_STATUS.NEW,
               date: Date.now(),
             };
-            
+
             this.SurveyDownloadRepository.save(newSurveyDownload);
           }
         });
       }
     });
 
-
     return {
-      filePath
-    }
+      filePath,
+    };
   }
 
   async getDownloadList({
@@ -310,11 +314,9 @@ export class SurveyDownloadService implements OnModuleInit{
       listBody,
     };
   }
-  async test({
-    fileName,
-  }: {
-    fileName: string;
-  }) {return null;}
+  async test({}: { fileName: string }) {
+    return null;
+  }
 
   async deleteDownloadFile({
     owner,
@@ -323,19 +325,17 @@ export class SurveyDownloadService implements OnModuleInit{
     owner: string;
     fileName: string;
   }) {
-    const a=fileName;
     const where = {
       filename: fileName,
     };
-  
-    const [surveyDownloadList] =
-      await this.SurveyDownloadRepository.find({
-        where,
-      });
+
+    const [surveyDownloadList] = await this.SurveyDownloadRepository.find({
+      where,
+    });
     if (surveyDownloadList.curStatus.status === RECORD_STATUS.REMOVED) {
       return 0;
     }
-    
+
     const newStatusInfo = {
       status: RECORD_STATUS.REMOVED,
       date: Date.now(),
@@ -347,7 +347,7 @@ export class SurveyDownloadService implements OnModuleInit{
     //   survey.statusList = [newStatusInfo];
     // }
     const rootDir = process.cwd(); // 获取当前工作目录
-    const filePath = join(rootDir, 'download', owner,fileName);
+    const filePath = join(rootDir, 'download', owner, fileName);
     try {
       await promises.unlink(filePath);
       console.log(`File at ${filePath} has been successfully deleted.`);

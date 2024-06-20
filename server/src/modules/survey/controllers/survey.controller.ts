@@ -7,7 +7,10 @@ import {
   HttpCode,
   UseGuards,
   Request,
+  SetMetadata,
 } from '@nestjs/common';
+import * as Joi from 'joi';
+import { ApiTags } from '@nestjs/swagger';
 
 import { SurveyMetaService } from '../services/surveyMeta.service';
 import { SurveyConfService } from '../services/surveyConf.service';
@@ -17,14 +20,18 @@ import { SurveyHistoryService } from '../services/surveyHistory.service';
 import { CounterService } from 'src/modules/surveyResponse/services/counter.service';
 
 import BannerData from '../template/banner/index.json';
+import { CreateSurveyDto } from '../dto/createSurvey.dto';
 
-import * as Joi from 'joi';
-import { ApiTags } from '@nestjs/swagger';
-import { Authtication } from 'src/guards/authtication';
+import { Authentication } from 'src/guards/authentication.guard';
 import { HISTORY_TYPE } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { Logger } from 'src/logger';
+import { SurveyGuard } from 'src/guards/survey.guard';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
+
+import { WorkspaceGuard } from 'src/guards/workspace.guard';
+import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -48,66 +55,57 @@ export class SurveyController {
     };
   }
 
-  @UseGuards(Authtication)
   @Post('/createSurvey')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.createFrom')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(WorkspaceGuard)
+  @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.READ_SURVEY])
+  @SetMetadata('workspaceId', { key: 'body.workspaceId', optional: true })
+  @UseGuards(Authentication)
   async createSurvey(
     @Body()
-    reqBody,
+    reqBody: CreateSurveyDto,
     @Request()
     req,
   ) {
-    let validationResult;
-    try {
-      validationResult = await Joi.object({
-        title: Joi.string().required(),
-        remark: Joi.string().allow(null, '').default(''),
-        surveyType: Joi.string().when('createMethod', {
-          is: 'copy',
-          then: Joi.allow(null),
-          otherwise: Joi.required(),
-        }),
-        createMethod: Joi.string().allow(null).default('basic'),
-        createFrom: Joi.string().when('createMethod', {
-          is: 'copy',
-          then: Joi.required(),
-          otherwise: Joi.allow(null),
-        }),
-      }).validateAsync(reqBody);
-    } catch (error) {
+    const { error, value } = CreateSurveyDto.validate(reqBody);
+    if (error) {
       this.logger.error(`createSurvey_parameter error: ${error.message}`, {
         req,
       });
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    const { title, remark, createMethod, createFrom } = validationResult;
+    const { title, remark, createMethod, createFrom } = value;
 
-    const username = req.user.username;
-    let surveyType = '';
+    let surveyType = '',
+      workspaceId = null;
     if (createMethod === 'copy') {
-      const survey = await this.surveyMetaService.checkSurveyAccess({
-        surveyId: createFrom,
-        username,
-      });
+      const survey = req.surveyMeta;
       surveyType = survey.surveyType;
+      workspaceId = survey.workspaceId;
     } else {
-      surveyType = validationResult.surveyType;
+      surveyType = value.surveyType;
+      workspaceId = value.workspaceId;
     }
 
     const surveyMeta = await this.surveyMetaService.createSurveyMeta({
       title,
       remark,
       surveyType,
-      username,
+      username: req.user.username,
+      userId: req.user._id.toString(),
       createMethod,
       createFrom,
+      workspaceId,
     });
     await this.surveyConfService.createSurveyConf({
       surveyId: surveyMeta._id.toString(),
       surveyType: surveyType,
-      createMethod: validationResult.createMethod,
-      createFrom: validationResult.createFrom,
+      createMethod: value.createMethod,
+      createFrom: value.createFrom,
     });
     return {
       code: 200,
@@ -117,26 +115,30 @@ export class SurveyController {
     };
   }
 
-  @UseGuards(Authtication)
   @Post('/updateConf')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
   async updateConf(
     @Body()
     surveyInfo,
     @Request()
     req,
   ) {
-    const validationResult = await Joi.object({
+    const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
       configData: Joi.any().required(),
-    }).validateAsync(surveyInfo);
+    }).validate(surveyInfo);
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
     const username = req.user.username;
-    const surveyId = validationResult.surveyId;
-    await this.surveyMetaService.checkSurveyAccess({
-      surveyId,
-      username,
-    });
-    const configData = validationResult.configData;
+    const surveyId = value.surveyId;
+
+    const configData = value.configData;
     await this.surveyConfService.saveSurveyConf({
       surveyId,
       schema: configData,
@@ -155,23 +157,18 @@ export class SurveyController {
     };
   }
 
-  @UseGuards(Authtication)
   @HttpCode(200)
   @Post('/deleteSurvey')
-  async deleteSurvey(@Body() reqBody, @Request() req) {
-    const validationResult = await Joi.object({
-      surveyId: Joi.string().required(),
-    }).validateAsync(reqBody, { allowUnknown: true });
-    const username = req.user.username;
-    const surveyId = validationResult.surveyId;
-    const survey = await this.surveyMetaService.checkSurveyAccess({
-      surveyId,
-      username,
-    });
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async deleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
 
-    await this.surveyMetaService.deleteSurveyMeta(survey);
+    await this.surveyMetaService.deleteSurveyMeta(surveyMeta);
     await this.responseSchemaService.deleteResponseSchema({
-      surveyPath: survey.surveyPath,
+      surveyPath: surveyMeta.surveyPath,
     });
 
     return {
@@ -179,9 +176,16 @@ export class SurveyController {
     };
   }
 
-  @UseGuards(Authtication)
   @Get('/getSurvey')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [
+    SURVEY_PERMISSION.SURVEY_CONF_MANAGE,
+    SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+    SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE,
+  ])
+  @UseGuards(Authentication)
   async getSurvey(
     @Query()
     queryInfo: {
@@ -190,18 +194,27 @@ export class SurveyController {
     @Request()
     req,
   ) {
-    const validationResult = await Joi.object({
+    const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
-    }).validateAsync(queryInfo);
+    }).validate(queryInfo);
 
-    const username = req.user.username;
-    const surveyId = validationResult.surveyId;
-    const surveyMeta = await this.surveyMetaService.checkSurveyAccess({
-      surveyId,
-      username,
-    });
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+
+    const surveyId = value.surveyId;
+    const surveyMeta = req.surveyMeta;
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
+
+    surveyMeta.currentUserId = req.user._id.toString();
+    if (req.collaborator) {
+      surveyMeta.isCollaborated = true;
+      surveyMeta.currentPermission = req.collaborator.permissions;
+    } else {
+      surveyMeta.isCollaborated = false;
+    }
 
     return {
       code: 200,
@@ -212,24 +225,60 @@ export class SurveyController {
     };
   }
 
-  @UseGuards(Authtication)
+  @Get('/getPreviewSchema')
+  @HttpCode(200)
+  async getPreviewSchema(
+    @Query()
+    queryInfo: {
+      surveyPath: string;
+    },
+    @Request()
+    req,
+  ) {
+    const { value, error } = Joi.object({
+      surveyId: Joi.string().required(),
+    }).validate({ surveyId: queryInfo.surveyPath });
+
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const surveyId = value.surveyId;
+    const surveyConf =
+      await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
+    const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
+    return {
+      code: 200,
+      data: {
+        ...surveyConf,
+        title: surveyMeta?.title,
+        surveyPath: surveyMeta?.surveyPath,
+      },
+    };
+  }
+
   @Post('/publishSurvey')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
   async publishSurvey(
     @Body()
     surveyInfo,
     @Request()
     req,
   ) {
-    const validationResult = await Joi.object({
+    const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
-    }).validateAsync(surveyInfo);
+    }).validate(surveyInfo);
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
     const username = req.user.username;
-    const surveyId = validationResult.surveyId;
-    const surveyMeta = await this.surveyMetaService.checkSurveyAccess({
-      surveyId,
-      username,
-    });
+    const surveyId = value.surveyId;
+    const surveyMeta = req.surveyMeta;
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 

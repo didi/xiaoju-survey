@@ -1,5 +1,6 @@
 import { defaultQuestionConfig } from '../config/questionConfig'
 import { cloneDeep as _cloneDeep, map as _map } from 'lodash-es'
+import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000)
   return `data${num}`
@@ -24,7 +25,7 @@ const generateHash = (hashList) => {
 
 function getOptions(type) {
   const options = [].concat({ ..._cloneDeep(defaultQuestionConfig) }.options)
-  if (type === 'binary-choice') {
+  if (type === QUESTION_TYPE.BINARY_CHOICE) {
     options[0].text = '对'
     options[1].text = '错'
   }

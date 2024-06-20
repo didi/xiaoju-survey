@@ -48,7 +48,7 @@ import { getQuestionByType } from '@/management/utils/index'
 import { useStore } from 'vuex'
 import { get as _get, isNumber as _isNumber } from 'lodash-es'
 import { computed, ref } from 'vue'
-
+import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 const store = useStore()
 
 const activeNames = ref([0, 1])
@@ -70,8 +70,8 @@ const getNewQuestion = ({ type }) => {
   const fields = questionDataList.value.map((item) => item.field)
   const newQuestion = getQuestionByType(type, fields)
   newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
-  if (type === 'vote') {
-    newQuestion.innerType = 'radio'
+  if (type === QUESTION_TYPE.VOTE) {
+    newQuestion.innerType = QUESTION_TYPE.RADIO
   }
   return newQuestion
 }

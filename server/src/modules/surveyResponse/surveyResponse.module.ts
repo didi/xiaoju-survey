@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-
 import { MessageModule } from '../message/message.module';
 
 import { ResponseSchemaService } from './services/responseScheme.service';
@@ -11,6 +10,7 @@ import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
+import { Logger } from 'src/logger';
 
 import { ClientEncryptController } from './controllers/clientEncrpt.controller';
 import { CounterController } from './controllers/counter.controller';
@@ -46,6 +46,7 @@ import { MutexModule } from '../mutex/mutex.module';
     SurveyResponseService,
     CounterService,
     ClientEncryptService,
+    Logger,
   ],
   exports: [
     ResponseSchemaService,

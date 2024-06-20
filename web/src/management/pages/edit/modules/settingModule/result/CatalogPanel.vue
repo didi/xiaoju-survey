@@ -6,7 +6,7 @@
         v-for="(status, index) in statusList"
         :key="index"
         class="status-item"
-        @click="filterDisabledStatus({ type: status.type })"
+        @click="handleChangePreview({ type: status.type })"
       >
         <span>{{ status.title }}</span>
         <div class="preview-item">
@@ -16,41 +16,32 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapMutations } from 'vuex'
+<script setup lang="ts">
+import { useStore } from 'vuex'
 import { EDIT_STATUS_MAP } from '../enum'
 
-export default {
-  name: 'CatalogPanel',
-  data() {
-    return {
-      statusList: [
-        {
-          type: EDIT_STATUS_MAP.SUCCESS,
-          title: '提交成功',
-          previewImg: '/imgs/icons/success.webp'
-        },
-        {
-          type: EDIT_STATUS_MAP.OVERTIME,
-          title: '问卷过期',
-          previewImg: '/imgs/icons/overtime.webp'
-        }
-      ]
-    }
+const store = useStore()
+const statusList = [
+  {
+    type: EDIT_STATUS_MAP.SUCCESS,
+    title: '提交成功',
+    previewImg: '/imgs/icons/success.webp'
   },
-  computed: {},
-  methods: {
-    ...mapMutations({
-      changeStatusPreview: 'edit/changeStatusPreview'
-    }),
-    filterDisabledStatus(data) {
-      this.changeStatusPreview(data)
-    }
+  {
+    type: EDIT_STATUS_MAP.OVERTIME,
+    title: '问卷过期',
+    previewImg: '/imgs/icons/overtime.webp'
+  }
+]
+
+const handleChangePreview = (data: any) => {
+  const currentStatus = store.state?.edit?.currentEditStatus
+
+  if (currentStatus && currentStatus !== data.type) {
+    store.commit('edit/changeStatusPreview', data)
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .tab-box {
   width: 300px;

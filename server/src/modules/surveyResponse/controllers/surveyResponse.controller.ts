@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Request } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
@@ -15,6 +15,7 @@ import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
+import { Logger } from 'src/logger';
 import { MutexService } from 'src/modules/mutex/services/mutexService.service';
 import { CounterService } from '../services/counter.service';
 
@@ -26,27 +27,35 @@ export class SurveyResponseController {
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
+    private readonly logger: Logger,
     private readonly mutexService: MutexService,
     private readonly counterService: CounterService,
   ) {}
 
   @Post('/createResponse')
   @HttpCode(200)
-  async createResponse(@Body() reqBody) {
+  async createResponse(@Body() reqBody, @Request() req) {
     // 检查签名
     checkSign(reqBody);
     // 校验参数
-    const validationResult = await Joi.object({
+    const { value, error } = Joi.object({
       surveyPath: Joi.string().required(),
       data: Joi.any().required(),
       encryptType: Joi.string(),
       sessionId: Joi.string(),
       clientTime: Joi.number().required(),
       difTime: Joi.number(),
-    }).validateAsync(reqBody, { allowUnknown: true });
+    }).validate(reqBody, { allowUnknown: true });
+
+    if (error) {
+      this.logger.error(`updateMeta_parameter error: ${error.message}`, {
+        req,
+      });
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
 
     const { surveyPath, encryptType, data, sessionId, clientTime, difTime } =
-      validationResult;
+      value;
 
     // 查询schema
     const responseSchema =
@@ -205,7 +214,7 @@ export class SurveyResponseController {
     // 入库
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse({
-        surveyPath: validationResult.surveyPath,
+        surveyPath: value.surveyPath,
         data: decryptedData,
         clientTime,
         difTime,

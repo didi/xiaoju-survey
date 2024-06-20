@@ -1,21 +1,18 @@
 <template>
-  <div class="back-btn" @click="onBack">
+  <div class="back-btn" @click="handleNavigateHome">
     <i class="iconfont icon-fanhui"></i>
     <span>返回</span>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BackPanel',
-  methods: {
-    onBack() {
-      window.open('/survey', '_self')
-    }
-  }
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const handleNavigateHome = () => {
+  router.push({
+    name: 'survey'
+  })
 }
 </script>
-
 <style lang="scss" scoped>
 .back-btn {
   height: 100%;

@@ -96,12 +96,21 @@ describe('AuthController', () => {
       jest
         .spyOn(captchaService, 'checkCaptchaIsCorrect')
         .mockResolvedValue(true);
+
       jest.spyOn(userService, 'getUser').mockResolvedValue(
         Promise.resolve({
           username: 'testUser',
           _id: new ObjectId(),
         } as User),
       );
+
+      jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(
+        Promise.resolve({
+          username: 'testUser',
+          _id: new ObjectId(),
+        } as User),
+      );
+
       jest.spyOn(authService, 'generateToken').mockResolvedValue('testToken');
 
       const result = await controller.login(mockUserInfo);
@@ -143,10 +152,40 @@ describe('AuthController', () => {
       jest
         .spyOn(captchaService, 'checkCaptchaIsCorrect')
         .mockResolvedValue(true);
+      jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(null);
+
+      await expect(controller.login(mockUserInfo)).rejects.toThrow(
+        new HttpException(
+          '账号未注册，请进行注册',
+          EXCEPTION_CODE.USER_NOT_EXISTS,
+        ),
+      );
+    });
+
+    it('should throw HttpException with USER_NOT_EXISTS code when user is not found', async () => {
+      const mockUserInfo = {
+        username: 'testUser',
+        password: 'testPassword',
+        captchaId: 'testCaptchaId',
+        captcha: 'testCaptcha',
+      };
+
+      jest
+        .spyOn(captchaService, 'checkCaptchaIsCorrect')
+        .mockResolvedValue(true);
+      jest.spyOn(userService, 'getUserByUsername').mockResolvedValue(
+        Promise.resolve({
+          username: 'testUser',
+          _id: new ObjectId(),
+        } as User),
+      );
       jest.spyOn(userService, 'getUser').mockResolvedValue(null);
 
       await expect(controller.login(mockUserInfo)).rejects.toThrow(
-        new HttpException('用户名或密码错误', EXCEPTION_CODE.USER_NOT_EXISTS),
+        new HttpException(
+          '用户名或密码错误',
+          EXCEPTION_CODE.USER_PASSWORD_WRONG,
+        ),
       );
     });
   });

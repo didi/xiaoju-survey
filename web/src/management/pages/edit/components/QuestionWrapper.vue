@@ -72,7 +72,7 @@ const itemClass = computed(() => {
   }
 })
 const showHover = computed(() => {
-  return isHover.value
+  return isHover.value || props.isSelected
 })
 const showUp = computed(() => {
   return props.qIndex !== 0
@@ -102,8 +102,13 @@ const onCopy = () => {
 }
 const onMoveUp = () => {
   const index = props.qIndex
+
   emit('changeSeq', { type: 'move', index, range: -1 })
   isHover.value = false
+
+  if (props.isSelected) {
+    emit('select', index - 1)
+  }
 }
 
 const onMouseenter = () => {
@@ -114,8 +119,13 @@ const onMouseleave = () => {
 }
 const onMoveDown = () => {
   const index = props.qIndex
+
   emit('changeSeq', { type: 'move', index, range: 1 })
   isHover.value = false
+
+  if (props.isSelected) {
+    emit('select', index + 1)
+  }
 }
 const onDelete = async () => {
   if (unref(hasShowLogic)) {

@@ -4,9 +4,7 @@ import { MongoRepository, FindOptionsOrder } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
-import { NoSurveyPermissionException } from 'src/exceptions/noSurveyPermissionException';
 import { HttpException } from 'src/exceptions/httpException';
-import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 
@@ -34,18 +32,10 @@ export class SurveyMetaService {
     return surveyPath;
   }
 
-  async checkSurveyAccess({ surveyId, username }) {
-    const survey = await this.surveyRepository.findOne({
+  async getSurveyById({ surveyId }) {
+    return this.surveyRepository.findOne({
       where: { _id: new ObjectId(surveyId) },
     });
-
-    if (!survey) {
-      throw new SurveyNotFoundException('问卷不存在');
-    }
-    if (survey.owner !== username) {
-      throw new NoSurveyPermissionException('没有权限');
-    }
-    return survey;
   }
 
   async createSurveyMeta(params: {
@@ -53,11 +43,21 @@ export class SurveyMetaService {
     remark: string;
     surveyType: string;
     username: string;
+    userId: string;
     createMethod: string;
     createFrom: string;
+    workspaceId?: string;
   }) {
-    const { title, remark, surveyType, username, createMethod, createFrom } =
-      params;
+    const {
+      title,
+      remark,
+      surveyType,
+      username,
+      createMethod,
+      createFrom,
+      userId,
+      workspaceId,
+    } = params;
     const surveyPath = await this.getNewSurveyPath();
     const newSurvey = this.surveyRepository.create({
       title,
@@ -66,8 +66,10 @@ export class SurveyMetaService {
       surveyPath,
       creator: username,
       owner: username,
+      ownerId: userId,
       createMethod,
       createFrom,
+      workspaceId,
     });
 
     return await this.surveyRepository.save(newSurvey);
@@ -112,22 +114,48 @@ export class SurveyMetaService {
     pageNum: number;
     pageSize: number;
     username: string;
+    userId: string;
     filter: Record<string, any>;
     order: Record<string, any>;
+    workspaceId?: string;
+    surveyIdList?: Array<string>;
   }): Promise<{ data: any[]; count: number }> {
-    const { pageNum, pageSize, username } = condition;
+    const { pageNum, pageSize, userId, username, workspaceId, surveyIdList } =
+      condition;
     const skip = (pageNum - 1) * pageSize;
     try {
-      const query = Object.assign(
+      const query: Record<string, any> = Object.assign(
         {},
         {
-          owner: username,
           'curStatus.status': {
             $ne: 'removed',
           },
         },
         condition.filter,
       );
+      if (workspaceId) {
+        query.workspaceId = workspaceId;
+      } else {
+        query.workspaceId = {
+          $exists: false,
+        };
+        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用owenrId字段进行关联更加合理，此处做了兼容
+        query.$or = [
+          {
+            owner: username,
+          },
+          {
+            ownerId: userId,
+          },
+        ];
+        if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+          query.$or.push({
+            _id: {
+              $in: surveyIdList.map((item) => new ObjectId(item)),
+            },
+          });
+        }
+      }
       const order =
         condition.order && Object.keys(condition.order).length > 0
           ? (condition.order as FindOptionsOrder<SurveyMeta>)
@@ -159,5 +187,15 @@ export class SurveyMetaService {
       surveyMeta.statusList = [curStatus];
     }
     return this.surveyRepository.save(surveyMeta);
+  }
+
+  async countSurveyMetaByWorkspaceId({ workspaceId }) {
+    const total = await this.surveyRepository.count({
+      workspaceId,
+      'curStatus.status': {
+        $ne: RECORD_STATUS.REMOVED,
+      },
+    });
+    return total;
   }
 }

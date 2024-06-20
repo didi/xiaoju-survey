@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <template v-for="btnItem in btnList" :key="btnItem.key">
+    <template v-for="route in routes" :key="route.key">
       <router-link
-        :to="{ name: btnItem.router }"
+        :to="{ name: route.router }"
         replace
         v-slot="{ href, navigate, isActive, isExactActive }"
         custom
@@ -10,55 +10,45 @@
         <div
           :class="[
             'navbar-btn',
-            (isActive && ['skinsettings', 'edit'].includes(btnItem.key)) || isExactActive
+            (isActive && ['skinsettings', 'edit'].includes(route.key)) || isExactActive
               ? 'router-link-exact-active'
               : ''
           ]"
         >
-          <i class="iconfont" :class="[btnItem.icon]"></i>
+          <i class="iconfont" :class="[route.icon]"></i>
           <a :href="href" @click="navigate"
-            ><span>{{ btnItem.text }}</span></a
+            ><span>{{ route.text }}</span></a
           >
         </div>
       </router-link>
     </template>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'NavPanel',
-  props: {},
-  data() {
-    return {
-      btnList: [
-        {
-          icon: 'icon-wenjuanbianji',
-          text: '问卷编辑',
-          router: 'QuestionEditIndex',
-          key: 'edit',
-          next: true
-        },
-        {
-          icon: 'icon-wenjuanshezhi',
-          text: '问卷设置',
-          router: 'QuestionEditSetting',
-          key: 'settings',
-          next: true
-        },
-        {
-          icon: 'icon-yangshishezhi',
-          text: '皮肤设置',
-          router: 'QuestionSkinSetting',
-          key: 'skinsettings',
-          next: true
-        }
-      ]
-    }
+<script setup lang="ts">
+const routes = [
+  {
+    icon: 'icon-wenjuanbianji',
+    text: '问卷编辑',
+    router: 'QuestionEditIndex',
+    key: 'edit',
+    next: true
+  },
+  {
+    icon: 'icon-wenjuanshezhi',
+    text: '问卷设置',
+    router: 'QuestionEditSetting',
+    key: 'settings',
+    next: true
+  },
+  {
+    icon: 'icon-yangshishezhi',
+    text: '皮肤设置',
+    router: 'QuestionSkinSetting',
+    key: 'skinsettings',
+    next: true
   }
-}
+]
 </script>
-
 <style lang="scss" scoped>
 .content {
   display: flex;

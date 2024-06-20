@@ -1,6 +1,6 @@
 <template>
-  <el-popover placement="top" trigger="click" @show="onShow" :width="320">
-    <el-tabs v-model="currentTab" class="custom-tab" v-if="visible">
+  <el-popover placement="top" trigger="click" @show="handlePopoverShow" :width="320">
+    <el-tabs v-model="currentTab" class="custom-tab" v-if="visible" v-loading="loading">
       <el-tab-pane label="修改历史" name="daily" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in dailyList" :key="index">
           <span class="operator">{{ his.operator }}</span>
@@ -24,77 +24,83 @@
     </template>
   </el-popover>
 </template>
-
-<script>
-import { getSurveyHistory } from '@/management/api/survey'
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash-es'
 import moment from 'moment'
-// 引入中文
 import 'moment/locale/zh-cn'
-// 设置中文
 moment.locale('zh-cn')
 
-import { mapState } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { getSurveyHistory } from '@/management/api/survey'
 
-const getItemData = (item) => ({
+const getItemData = (item: any) => ({
   operator: item?.operator?.username || '未知用户',
   time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
 })
 
-export default {
-  name: 'HistoryPanel',
-  computed: {
-    ...mapState({
-      surveyId: (state) => _get(state, 'edit.surveyId')
-    }),
-    dailyList() {
-      return this.dailyHis.map(getItemData)
-    },
-    publishList() {
-      return this.publishHis.map(getItemData)
+const dailyList = ref<Array<any>>([])
+const publishList = ref<Array<any>>([])
+const currentTab = ref<'daily' | 'publish'>('daily')
+const visible = ref<boolean>(false)
+
+const store = useStore()
+
+const queryHistories = async () => {
+  if (dirtyMonitor.value) {
+    loading.value = true
+    dirtyMonitor.value = false
+
+    const surveyId = _get(store.state, 'edit.surveyId')
+    const [dHis, pHis] = await Promise.all([
+      getSurveyHistory({
+        surveyId,
+        historyType: 'dailyHis'
+      }),
+      getSurveyHistory({
+        surveyId,
+        historyType: 'publishHis'
+      })
+    ]).finally(() => {
+      loading.value = false
+    })
+
+    if ((dHis.data || []).length !== dailyList.value.length) {
+      dailyList.value = (dHis.data || []).map(getItemData)
     }
-  },
-  data() {
-    return {
-      dailyHis: [],
-      publishHis: [],
-      currentTab: 'daily',
-      visible: false
-    }
-  },
-  watch: {
-    surveyId: {
-      immediate: true,
-      async handler(newVal) {
-        if (newVal) {
-          const [dailyHis, publishHis] = await Promise.all([
-            getSurveyHistory({
-              surveyId: this.surveyId,
-              historyType: 'dailyHis'
-            }),
-            getSurveyHistory({
-              surveyId: this.surveyId,
-              historyType: 'publishHis'
-            })
-          ])
-          this.dailyHis = dailyHis.data || []
-          this.publishHis = publishHis.data || []
-        }
-      }
-    }
-  },
-  methods: {
-    onShow() {
-      this.visible = true
+
+    if ((pHis.data || []).length !== publishList.value.length) {
+      publishList.value = (pHis.data || []).map(getItemData)
     }
   }
 }
-</script>
 
+const handlePopoverShow = async () => {
+  visible.value = true
+  queryHistories()
+}
+const loading = ref<boolean>(false)
+const dirtyMonitor = ref<boolean>(true)
+const schemaUpdateTime = computed(() => _get(store.state, 'edit.schemaUpdateTime'))
+
+watch(
+  schemaUpdateTime,
+  () => {
+    if (!dirtyMonitor.value) {
+      dirtyMonitor.value = true
+    }
+  },
+  {
+    immediate: true
+  }
+)
+</script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
+
 .custom-tab {
   width: 300px;
+
   :deep(.el-tabs__nav) {
     width: 100%;
 

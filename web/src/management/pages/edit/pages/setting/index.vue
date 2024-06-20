@@ -3,17 +3,9 @@
     <SettingPanel></SettingPanel>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
 import SettingPanel from '../../modules/settingModule/SettingPanel.vue'
-export default {
-  name: 'SettingPage',
-  components: {
-    SettingPanel
-  }
-}
 </script>
-
 <style lang="scss" scoped>
 .setting-page {
   width: 100%;

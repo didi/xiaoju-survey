@@ -53,7 +53,10 @@ const handleRadioGroupChange = (value: string) => {
 }
 
 watch(
-  props.formConfig,
+  () => ({
+    value: props.formConfig?.value,
+    defaultValue: props.formConfig?.defaultValue
+  }),
   (config) => {
     if (config.value == null || config.value == undefined) {
       modelValue.value = config.defaultValue

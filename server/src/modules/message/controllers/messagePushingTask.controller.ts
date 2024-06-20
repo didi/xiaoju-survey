@@ -25,9 +25,9 @@ import { QueryMessagePushingTaskListDto } from '../dto/queryMessagePushingTaskLi
 
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { Authtication } from 'src/guards/authtication';
+import { Authentication } from 'src/guards/authentication.guard';
 
-@UseGuards(Authtication)
+@UseGuards(Authentication)
 @ApiBearerAuth()
 @ApiTags('messagePushingTasks')
 @Controller('/api/messagePushingTasks')
@@ -47,12 +47,10 @@ export class MessagePushingTaskController {
     req,
     @Body() createMessagePushingTaskDto: CreateMessagePushingTaskDto,
   ) {
-    let data;
-    try {
-      data = await CreateMessagePushingTaskDto.validate(
-        createMessagePushingTaskDto,
-      );
-    } catch (error) {
+    const { error, value } = CreateMessagePushingTaskDto.validate(
+      createMessagePushingTaskDto,
+    );
+    if (error) {
       throw new HttpException(
         `参数错误: ${error.message}`,
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -61,7 +59,7 @@ export class MessagePushingTaskController {
     const userId = req.user._id;
 
     const messagePushingTask = await this.messagePushingTaskService.create({
-      ...data,
+      ...value,
       ownerId: userId,
     });
     return {
@@ -83,10 +81,8 @@ export class MessagePushingTaskController {
     req,
     @Query() query: QueryMessagePushingTaskListDto,
   ) {
-    let data;
-    try {
-      data = await QueryMessagePushingTaskListDto.validate(query);
-    } catch (error) {
+    const { error, value } = QueryMessagePushingTaskListDto.validate(query);
+    if (error) {
       throw new HttpException(
         `参数错误: ${error.message}`,
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -94,8 +90,8 @@ export class MessagePushingTaskController {
     }
     const userId = req.user._id;
     const list = await this.messagePushingTaskService.findAll({
-      surveyId: data.surveyId,
-      hook: data.triggerHook,
+      surveyId: value.surveyId,
+      hook: value.triggerHook,
       ownerId: userId,
     });
     return {

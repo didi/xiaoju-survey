@@ -4,49 +4,56 @@ import {
   Query,
   HttpCode,
   UseGuards,
+  SetMetadata,
   Request,
 } from '@nestjs/common';
+import * as Joi from 'joi';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { DataStatisticService } from '../services/dataStatistic.service';
-import { SurveyMetaService } from '../services/surveyMeta.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
-import * as Joi from 'joi';
-import { ApiTags } from '@nestjs/swagger';
-import { Authtication } from 'src/guards/authtication';
+import { Authentication } from 'src/guards/authentication.guard';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { SurveyGuard } from 'src/guards/survey.guard';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
+import { Logger } from 'src/logger';
+import { HttpException } from 'src/exceptions/httpException';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
 @ApiTags('survey')
+@ApiBearerAuth()
 @Controller('/api/survey/dataStatistic')
 export class DataStatisticController {
   constructor(
-    private readonly surveyMetaService: SurveyMetaService,
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly dataStatisticService: DataStatisticService,
     private readonly pluginManager: XiaojuSurveyPluginManager,
+    private readonly logger: Logger,
   ) {}
 
-  @UseGuards(Authtication)
   @Get('/dataTable')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE])
+  @UseGuards(Authentication)
   async data(
     @Query()
     queryInfo,
-    @Request()
-    req,
+    @Request() req,
   ) {
-    const validationResult = await Joi.object({
+    const { value, error } = await Joi.object({
       surveyId: Joi.string().required(),
       isDesensitive: Joi.boolean().default(true), // 默认true就是需要脱敏
       page: Joi.number().default(1),
       pageSize: Joi.number().default(10),
-    }).validateAsync(queryInfo);
-    const { surveyId, isDesensitive, page, pageSize } = validationResult;
-    const username = req.user.username;
-    await this.surveyMetaService.checkSurveyAccess({
-      surveyId,
-      username,
-    });
+    }).validate(queryInfo);
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const { surveyId, isDesensitive, page, pageSize } = value;
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPageId(surveyId);
     const { total, listHead, listBody } =

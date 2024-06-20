@@ -4,6 +4,7 @@
       <div class="box content" ref="box">
         <MainTitle
           :bannerConf="bannerConf"
+          :readonly="false"
           :is-selected="currentEditOne === 'mainTitle'"
           @select="onSelectEditOne('mainTitle')"
           @change="handleChange"
@@ -18,6 +19,7 @@
         />
         <SubmitButton
           :submit-conf="submitConf"
+          :readonly="false"
           :skin-conf="skinConf"
           :is-selected="currentEditOne === 'submit'"
           @select="onSelectEditOne('submit')"
@@ -27,139 +29,107 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, ref, watch } from 'vue'
+import communalLoader from '@materials/communals/communalLoader.js'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import MainTitle from '@/management/pages/edit/components/MainTitle.vue'
-import SubmitButton from '@/management/pages/edit/components/SubmitButton.vue'
-import { mapState, mapGetters } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'PreviewPanel',
-  components: {
-    MainTitle,
-    SubmitButton,
-    MaterialGroup
-  },
-  data() {
-    return {
-      isAnimating: false
-    }
-  },
-  computed: {
-    ...mapState({
-      bannerConf: (state) => _get(state, 'edit.schema.bannerConf'),
-      submitConf: (state) => _get(state, 'edit.schema.submitConf'),
-      skinConf: (state) => _get(state, 'edit.schema.skinConf'),
-      bottomConf: (state) => _get(state, 'edit.schema.bottomConf'),
-      questionDataList: (state) => _get(state, 'edit.schema.questionDataList'),
-      currentEditOne: (state) => _get(state, 'edit.currentEditOne')
-    }),
-    ...mapGetters({
-      currentEditKey: 'edit/currentEditKey'
-    }),
-    autoScrollData() {
-      return {
-        currentEditOne: this.currentEditOne,
-        len: this.questionDataList.length
-      }
-    }
-  },
-  watch: {
-    skinConf: {
-      handler(skinConf) {
-        const { themeConf, backgroundConf, contentConf } = skinConf
-        const root = document.documentElement
-        if (themeConf?.color) {
-          root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
-        }
-        if (backgroundConf?.color) {
-          root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
-        }
-        if (contentConf?.opacity) {
-          root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
-        }
-      },
-      immediate: true, // 立即触发回调函数
-      deep: true
-    },
-    autoScrollData(newVal) {
-      const { currentEditOne } = newVal
-      if (typeof currentEditOne === 'number') {
-        setTimeout(() => {
-          const field = this.questionDataList?.[currentEditOne]?.field
-          if (field) {
-            const questionModule = this.$refs.materialGroup.getQuestionRefByField(field)
-            if (questionModule && questionModule.$el) {
-              questionModule.$el.scrollIntoView({
-                behavior: 'smooth'
-              })
-            }
-          }
-        }, 0)
-      }
-    }
-  },
-  methods: {
-    animate(dom, property, targetValue) {
-      const origin = dom[property]
-      const subVal = targetValue - origin
+const MainTitle = communalLoader.loadComponent('MainTitle')
+const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
-      const flag = subVal < 0 ? -1 : 1
+const store = useStore()
+const mainOperation = ref(null)
+const materialGroup = ref(null)
 
-      const step = flag * 50
+const bannerConf = computed(() => store.state.edit.schema.bannerConf)
+const submitConf = computed(() => store.state.edit.schema.submitConf)
+const skinConf = computed(() => store.state.edit.schema.skinConf)
+const questionDataList = computed(() => store.state.edit.schema.questionDataList)
+const currentEditOne = computed(() => store.state.edit.currentEditOne)
+const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
+const autoScrollData = computed(() => {
+  return {
+    currentEditOne: currentEditOne.value,
+    len: questionDataList.value.length
+  }
+})
 
-      const totalCount = Math.floor(subVal / step) + 1
+const onSelectEditOne = async (currentEditOne) => {
+  store.commit('edit/setCurrentEditOne', currentEditOne)
+}
 
-      let runCount = 0
-      const run = () => {
-        dom[property] += step
-        runCount++
-        if (runCount < totalCount) {
-          requestAnimationFrame(run)
-        } else {
-          this.isAnimating = false
-        }
-      }
+const handleChange = (data) => {
+  if (currentEditOne.value === null) {
+    return
+  }
+  const { key, value } = data
+  const resultKey = `${currentEditKey.value}.${key}`
+  store.dispatch('edit/changeSchema', { key: resultKey, value })
+}
 
-      requestAnimationFrame(run)
-    },
-    async onSelectEditOne(currentEditOne) {
-      this.$store.commit('edit/setCurrentEditOne', currentEditOne)
-    },
-    handleChange(data) {
-      if (this.currentEditOne === null) {
-        return
-      }
-      const { key, value } = data
-      const resultKey = `${this.currentEditKey}.${key}`
-      this.$store.dispatch('edit/changeSchema', { key: resultKey, value })
-    },
-    onMainClick(e) {
-      if (e.target === this.$refs.mainOperation) {
-        this.$store.commit('edit/setCurrentEditOne', null)
-      }
-    },
-    onQuestionOperation(data) {
-      switch (data.type) {
-        case 'move':
-          this.$store.dispatch('edit/moveQuestion', {
-            index: data.index,
-            range: data.range
-          })
-          break
-        case 'delete':
-          this.$store.dispatch('edit/deleteQuestion', { index: data.index })
-          break
-        case 'copy':
-          this.$store.dispatch('edit/copyQuestion', { index: data.index })
-          break
-        default:
-          break
-      }
-    }
+const onMainClick = (e) => {
+  if (e.target === mainOperation.value) {
+    store.commit('edit/setCurrentEditOne', null)
   }
 }
+
+const onQuestionOperation = (data) => {
+  switch (data.type) {
+    case 'move':
+      store.dispatch('edit/moveQuestion', {
+        index: data.index,
+        range: data.range
+      })
+      break
+    case 'delete':
+      store.dispatch('edit/deleteQuestion', { index: data.index })
+      break
+    case 'copy':
+      store.dispatch('edit/copyQuestion', { index: data.index })
+      break
+    default:
+      break
+  }
+}
+
+watch(
+  skinConf,
+  (newVal) => {
+    const { themeConf, backgroundConf, contentConf } = newVal
+    const root = document.documentElement
+    if (themeConf?.color) {
+      root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
+    }
+    if (backgroundConf?.color) {
+      root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
+    }
+    if (contentConf?.opacity) {
+      root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
+    }
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
+
+watch(autoScrollData, (newVal) => {
+  const { currentEditOne } = newVal
+  if (typeof currentEditOne === 'number') {
+    setTimeout(() => {
+      const field = questionDataList.value?.[currentEditOne]?.field
+      if (field) {
+        const questionModule = materialGroup.value?.getQuestionRefByField(field)
+        if (questionModule && questionModule.$el) {
+          questionModule.$el.scrollIntoView({
+            behavior: 'smooth'
+          })
+        }
+      }
+    }, 0)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -198,6 +168,7 @@ export default {
 
   .content {
     background-color: #fff;
+    padding-top: 40px;
   }
 }
 </style>

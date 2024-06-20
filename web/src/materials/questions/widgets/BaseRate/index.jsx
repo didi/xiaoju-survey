@@ -52,7 +52,10 @@ export default defineComponent({
     })
     const handleClick = (num) => {
       if (props.readonly) return
-      rating.value = num
+
+      if (rating.value !== num) {
+        rating.value = num
+      }
     }
     return {
       rating,

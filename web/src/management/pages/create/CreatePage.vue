@@ -5,26 +5,15 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref } from 'vue'
 import TypeList from './components/TypeList.vue'
 import CreateForm from './components/CreateForm.vue'
 
-export default {
-  name: 'CreatePage',
-  components: {
-    TypeList,
-    CreateForm
-  },
-  data() {
-    return {
-      selectType: 'normal'
-    }
-  },
-  methods: {
-    onSelectTypeChange(selectType) {
-      this.selectType = selectType
-    }
-  }
+const selectType = ref<string>('normal')
+
+const onSelectTypeChange = (type: string) => {
+  selectType.value = type
 }
 </script>
 

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-cron": "^3.0.3"
+  }
+}

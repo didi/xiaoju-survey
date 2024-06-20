@@ -29,6 +29,11 @@ import { SurveyHistoryService } from './services/surveyHistory.service';
 import { SurveyMetaService } from './services/surveyMeta.service';
 import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
+//后添加
+import { SurveyDownload } from 'src/models/surveyDownload.entity';
+import { SurveyDownloadService } from './services/surveyDownload.service';
+import { SurveyDownloadController } from './controllers/surveyDownload.controller';
+import { MessageService } from './services/message.service';
 
 @Module({
   imports: [
@@ -39,6 +44,8 @@ import { CollaboratorService } from './services/collaborator.service';
       SurveyResponse,
       Word,
       Collaborator,
+      //后添加
+      SurveyDownload,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -52,6 +59,8 @@ import { CollaboratorService } from './services/collaborator.service';
     SurveyMetaController,
     SurveyUIController,
     CollaboratorController,
+    //后添加
+    SurveyDownloadController,
   ],
   providers: [
     DataStatisticService,
@@ -62,6 +71,13 @@ import { CollaboratorService } from './services/collaborator.service';
     ContentSecurityService,
     CollaboratorService,
     LoggerProvider,
+    //后添加
+    SurveyDownloadService,
+    MessageService,
+    {
+      provide: 'NumberToken', // 使用一个唯一的标识符
+      useValue: 10, // 假设这是你想提供的值
+    },
   ],
 })
 export class SurveyModule {}

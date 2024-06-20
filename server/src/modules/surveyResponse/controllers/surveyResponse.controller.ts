@@ -15,9 +15,9 @@ import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
-import { Logger } from 'src/logger';
 import { MutexService } from 'src/modules/mutex/services/mutexService.service';
 import { CounterService } from '../services/counter.service';
+import { Logger } from 'src/logger';
 
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
@@ -27,9 +27,9 @@ export class SurveyResponseController {
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
-    private readonly logger: Logger,
     private readonly mutexService: MutexService,
     private readonly counterService: CounterService,
+    private readonly logger: Logger,
   ) {}
 
   @Post('/createResponse')

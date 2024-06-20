@@ -14,12 +14,14 @@ import { SurveyHistoryController } from './controllers/surveyHistory.controller'
 import { SurveyMetaController } from './controllers/surveyMeta.controller';
 import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
+import { CollaboratorController } from './controllers/collaborator.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Word } from 'src/models/word.entity';
+import { Collaborator } from 'src/models/collaborator.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 

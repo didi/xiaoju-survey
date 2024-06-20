@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { computed, inject, ref, type ComputedRef } from 'vue'
 import { ConditionNode, RuleNode } from '@/common/logicEngine/RuleBuild'
-import { qAbleList } from '@/management/utils/constant.js'
+import { CHOICES } from '@/common/typeEnum'
 import { cleanRichText } from '@/common/xss'
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])
 const props = defineProps({
@@ -85,7 +85,7 @@ const fieldList = computed(() => {
   const currentIndex = renderData.value.findIndex((item) => item.field === props.ruleNode.target)
   return renderData.value
     .slice(0, currentIndex)
-    .filter((question: any) => qAbleList.includes(question.type))
+    .filter((question: any) => CHOICES.includes(question.type))
     .map((item: any) => {
       return {
         label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,

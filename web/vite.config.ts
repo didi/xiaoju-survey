@@ -35,6 +35,10 @@ const mpaPlugin = createMpaPlugin({
       to: () => normalizePath('/src/render/index.html')
     },
     {
+      from: /management\/preview/,
+      to: () => normalizePath('/src/render/index.html')
+    },
+    {
       from: /\/|\/management\/.?/,
       to: () => normalizePath('/src/management/index.html')
     }

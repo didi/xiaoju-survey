@@ -1,7 +1,6 @@
 <template>
   <QuestionRuleContainer
     v-if="visible"
-    v-bind="$attrs"
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"
@@ -17,7 +16,8 @@ import { useShowInput } from '@/render/hooks/useShowInput'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
-import { QUESTION_TYPE } from '@/render/constant/index'
+
+import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 
 const props = defineProps({
   indexNumber: {
@@ -48,7 +48,7 @@ const questionConfig = computed(() => {
     moduleConfig.voteTotal = unref(voteTotal)
   }
   if (
-    QUESTION_TYPE.CHOICES.includes(type) &&
+    NORMAL_CHOICES.includes(type) &&
     options.filter((optionItem) => optionItem.others).length > 0
   ) {
     let { options, othersValue } = useShowOthers(field)
@@ -57,7 +57,7 @@ const questionConfig = computed(() => {
     moduleConfig.othersValue = unref(othersValue)
   }
   if (
-    QUESTION_TYPE.RATES.includes(type) &&
+    RATES.includes(type) &&
     Object.keys(rest.rangeConfig).filter((index) => rest.rangeConfig[index].isShowInput).length > 0
   ) {
     let { rangeConfig, othersValue } = useShowInput(field)

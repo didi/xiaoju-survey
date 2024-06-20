@@ -1,6 +1,6 @@
 import { computed, defineComponent } from 'vue'
 import { includes } from 'lodash-es'
-
+import { QUESTION_TYPE } from '@/common/typeEnum'
 import AnswerProcess from './AnswerProcess/index.vue'
 import BaseChoice from '../BaseChoice'
 
@@ -56,7 +56,7 @@ export default defineComponent({
     }
     const myOptions = computed(() => {
       const { options } = props
-      if (props.innerType === 'checkbox') {
+      if (props.innerType === QUESTION_TYPE.CHECKBOX) {
         return options.map((item) => {
           return {
             ...item,

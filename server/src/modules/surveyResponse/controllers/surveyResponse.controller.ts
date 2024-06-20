@@ -15,6 +15,7 @@ import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
+
 import { MutexService } from 'src/modules/mutex/services/mutexService.service';
 import { CounterService } from '../services/counter.service';
 import { Logger } from 'src/logger';
@@ -162,7 +163,7 @@ export class SurveyResponseController {
         pre[cur.field] = arr;
         return pre;
       }, {});
-    
+
     //选项配额校验
     await this.mutexService.runLocked(async () => {
       for (const field in decryptedData) {

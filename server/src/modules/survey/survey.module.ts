@@ -22,9 +22,7 @@ import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
-import { Collaborator } from 'src/models/collaborator.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-
 import { DataStatisticService } from './services/dataStatistic.service';
 import { SurveyConfService } from './services/surveyConf.service';
 import { SurveyHistoryService } from './services/surveyHistory.service';
@@ -33,6 +31,7 @@ import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
 import { Counter } from 'src/models/counter.entity';
 import { CounterService } from '../surveyResponse/services/counter.service';
+
 
 @Module({
   imports: [

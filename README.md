@@ -22,7 +22,7 @@
       <img src="https://img.shields.io/badge/help-%E5%AE%98%E7%BD%91-blue" alt="docs">
     </a>
     <a href="https://github.com/didi/xiaoju-survey/blob/main/README_EN.md">
-      <img src="https://img.shields.io/badge/help-%E8%8B%B1%E6%96%87README-50c62a" alt="docs">
+      <img src="https://img.shields.io/badge/help-README_EN-50c62a" alt="docs">
     </a>
   </div>
 </div>

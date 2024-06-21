@@ -11,7 +11,7 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
+import { QUESTION_TYPE } from '@/common/typeEnum'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {
@@ -25,7 +25,7 @@ interface Emit {
 
 const emit = defineEmits<Emit>()
 const props = defineProps<Props>()
-const setterTypes = ['checkbox', 'vote']
+const setterTypes = [QUESTION_TYPE.CHECKBOX, QUESTION_TYPE.VOTE]
 const modelValue = ref(props.formConfig.value || 0)
 const minModelValue = computed(() => {
   const { min } = props.formConfig

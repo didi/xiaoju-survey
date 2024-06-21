@@ -9,9 +9,6 @@ export default {
   setQuestionData(state, data) {
     state.questionData = data
   },
-  setRouter(state, data) {
-    state.router = data
-  },
   setErrorInfo(state, { errorType, errorMsg }) {
     state.errorInfo = {
       errorType,

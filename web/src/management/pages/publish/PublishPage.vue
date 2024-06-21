@@ -51,7 +51,7 @@ const mainChannel = computed(() => {
   let fullUrl = ''
 
   if (metaData.value) {
-    fullUrl = `${location.origin}/render/${metaData.value.surveyPath}`
+    fullUrl = `${location.origin}/render/${metaData.value.surveyPath}?t=${Date.now()}`
   }
 
   return { fullUrl }

@@ -14,6 +14,7 @@ import { SurveyHistoryController } from './controllers/surveyHistory.controller'
 import { SurveyMetaController } from './controllers/surveyMeta.controller';
 import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
+import { CollaboratorController } from './controllers/collaborator.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -22,13 +23,14 @@ import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-
 import { DataStatisticService } from './services/dataStatistic.service';
 import { SurveyConfService } from './services/surveyConf.service';
 import { SurveyHistoryService } from './services/surveyHistory.service';
 import { SurveyMetaService } from './services/surveyMeta.service';
 import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
+import { Counter } from 'src/models/counter.entity';
+import { CounterService } from '../surveyResponse/services/counter.service';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { CollaboratorService } from './services/collaborator.service';
       SurveyResponse,
       Word,
       Collaborator,
+      Counter,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -62,6 +65,7 @@ import { CollaboratorService } from './services/collaborator.service';
     ContentSecurityService,
     CollaboratorService,
     LoggerProvider,
+    CounterService,
   ],
 })
 export class SurveyModule {}

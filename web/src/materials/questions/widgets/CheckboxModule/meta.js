@@ -28,8 +28,13 @@ const meta = {
           value: '',
           min: 'minNum',
           contentClass: 'input-number-config'
-        }
+        },
       ]
+    },
+    {
+      key: "quotaConfig",
+      name: "quotaConfig",
+      type: "QuotaConfig",
     }
   ],
   editConfigure: {

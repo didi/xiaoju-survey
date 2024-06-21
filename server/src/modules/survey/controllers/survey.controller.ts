@@ -17,6 +17,7 @@ import { SurveyConfService } from '../services/surveyConf.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 import { ContentSecurityService } from '../services/contentSecurity.service';
 import { SurveyHistoryService } from '../services/surveyHistory.service';
+import { CounterService } from 'src/modules/surveyResponse/services/counter.service';
 
 import BannerData from '../template/banner/index.json';
 import { CreateSurveyDto } from '../dto/createSurvey.dto';
@@ -42,6 +43,7 @@ export class SurveyController {
     private readonly contentSecurityService: ContentSecurityService,
     private readonly surveyHistoryService: SurveyHistoryService,
     private readonly logger: Logger,
+    private readonly counterService: CounterService,
   ) {}
 
   @Get('/getBannerData')
@@ -300,6 +302,11 @@ export class SurveyController {
       surveyPath: surveyMeta.surveyPath,
       code: surveyConf.code,
       pageId: surveyId,
+    });
+
+    await this.counterService.createCounters({
+      surveyPath: surveyMeta.surveyPath,
+      dataList: surveyConf.code.dataConf.dataList,
     });
 
     await this.surveyHistoryService.addHistory({

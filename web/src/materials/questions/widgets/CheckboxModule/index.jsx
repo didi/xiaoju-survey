@@ -41,6 +41,10 @@ export default defineComponent({
     maxNum: {
       type: [Number, String],
       default: 1
+    },
+    noDisplay:{
+      type: Boolean,
+      default: false
     }
   },
   emits: ['change'],
@@ -97,7 +101,7 @@ export default defineComponent({
     }
   },
   render() {
-    const { readonly, field, myOptions, onChange, maxNum, value, selectMoreView } = this
+    const { readonly, field, myOptions, onChange, maxNum, value, noDisplay, selectMoreView } = this
     return (
       <BaseChoice
         uiTarget="checkbox"
@@ -107,6 +111,7 @@ export default defineComponent({
         options={myOptions}
         onChange={onChange}
         value={value}
+        noDisplay={noDisplay}
       >
         {{
           selectMore: (scoped) => {

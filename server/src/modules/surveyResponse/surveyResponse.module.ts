@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-
 import { MessageModule } from '../message/message.module';
 
 import { ResponseSchemaService } from './services/responseScheme.service';
@@ -21,6 +18,10 @@ import { ResponseSchemaController } from './controllers/responseSchema.controlle
 import { SurveyResponseController } from './controllers/surveyResponse.controller';
 import { SurveyResponseUIController } from './controllers/surveyResponseUI.controller';
 
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { MutexModule } from '../mutex/mutex.module';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -31,6 +32,7 @@ import { SurveyResponseUIController } from './controllers/surveyResponseUI.contr
     ]),
     ConfigModule,
     MessageModule,
+    MutexModule,
   ],
   controllers: [
     ClientEncryptController,

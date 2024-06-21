@@ -31,6 +31,10 @@ export default defineComponent({
     readonly: {
       type: Boolean,
       default: false
+    },
+    noDisplay:{
+      type: Boolean,
+      default: false
     }
   },
   emits: ['change'],
@@ -81,6 +85,7 @@ export default defineComponent({
           field={this.field}
           layout={this.layout}
           onChange={this.onChange}
+          noDisplay={this.noDisplay}
         >
           {{
             selectMore: (scoped) => {

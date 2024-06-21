@@ -11,6 +11,7 @@ import { NoPermissionException } from 'src/exceptions/noPermissionException';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 describe('SurveyGuard', () => {
   let guard: SurveyGuard;
@@ -81,7 +82,19 @@ describe('SurveyGuard', () => {
     );
   });
 
-  it('should allow access if user is the owner of the survey', async () => {
+  it('should allow access if user is the owner of the survey by ownerId', async () => {
+    const context = createMockExecutionContext();
+    const surveyMeta = { ownerId: 'testUserId', workspaceId: null };
+    jest.spyOn(reflector, 'get').mockReturnValue('params.surveyId');
+    jest
+      .spyOn(surveyMetaService, 'getSurveyById')
+      .mockResolvedValue(surveyMeta as SurveyMeta);
+
+    const result = await guard.canActivate(context);
+    expect(result).toBe(true);
+  });
+
+  it('should allow access if user is the owner of the survey by username', async () => {
     const context = createMockExecutionContext();
     const surveyMeta = { owner: 'testUser', workspaceId: null };
     jest.spyOn(reflector, 'get').mockReturnValue('params.surveyId');
@@ -108,7 +121,35 @@ describe('SurveyGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should throw NoPermissionException if user has no permissions', async () => {
+  it('should throw NoPermissionException if user is not a workspace member', async () => {
+    const context = createMockExecutionContext();
+    const surveyMeta = { owner: 'anotherUser', workspaceId: 'workspaceId' };
+    jest.spyOn(reflector, 'get').mockReturnValue('params.surveyId');
+    jest
+      .spyOn(surveyMetaService, 'getSurveyById')
+      .mockResolvedValue(surveyMeta as SurveyMeta);
+    jest.spyOn(workspaceMemberService, 'findOne').mockResolvedValue(null);
+
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      NoPermissionException,
+    );
+  });
+
+  it('should throw NoPermissionException if no permissions are provided', async () => {
+    const context = createMockExecutionContext();
+    const surveyMeta = { owner: 'anotherUser', workspaceId: null };
+    jest.spyOn(reflector, 'get').mockReturnValueOnce('params.surveyId');
+    jest.spyOn(reflector, 'get').mockReturnValueOnce(null);
+    jest
+      .spyOn(surveyMetaService, 'getSurveyById')
+      .mockResolvedValue(surveyMeta as SurveyMeta);
+
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      NoPermissionException,
+    );
+  });
+
+  it('should throw NoPermissionException if user has no matching permissions', async () => {
     const context = createMockExecutionContext();
     const surveyMeta = { owner: 'anotherUser', workspaceId: null };
     jest.spyOn(reflector, 'get').mockReturnValueOnce('params.surveyId');
@@ -123,6 +164,24 @@ describe('SurveyGuard', () => {
     await expect(guard.canActivate(context)).rejects.toThrow(
       NoPermissionException,
     );
+  });
+
+  it('should allow access if user has the required permissions', async () => {
+    const context = createMockExecutionContext();
+    const surveyMeta = { owner: 'anotherUser', workspaceId: null };
+    jest.spyOn(reflector, 'get').mockReturnValueOnce('params.surveyId');
+    jest
+      .spyOn(reflector, 'get')
+      .mockReturnValueOnce([SURVEY_PERMISSION.SURVEY_CONF_MANAGE]);
+    jest
+      .spyOn(surveyMetaService, 'getSurveyById')
+      .mockResolvedValue(surveyMeta as SurveyMeta);
+    jest.spyOn(collaboratorService, 'getCollaborator').mockResolvedValue({
+      permissions: [SURVEY_PERMISSION.SURVEY_CONF_MANAGE],
+    } as Collaborator);
+
+    const result = await guard.canActivate(context);
+    expect(result).toBe(true);
   });
 
   function createMockExecutionContext(): ExecutionContext {

@@ -32,7 +32,7 @@ import { MutexModule } from '../mutex/mutex.module';
     ]),
     ConfigModule,
     MessageModule,
-    MutexModule
+    MutexModule,
   ],
   controllers: [
     ClientEncryptController,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Mutex } from 'async-mutex';
 import { HttpException } from 'src/exceptions/httpException';
-import { EXCEPTION_CODE } from 'src/enums/exceptionCode';  
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
 @Injectable()
 export class MutexService {
@@ -14,7 +14,10 @@ export class MutexService {
       return await callback();
     } catch (error) {
       if (error instanceof HttpException) {
-        throw new HttpException(error.message, EXCEPTION_CODE.RESPONSE_OVER_LIMIT);
+        throw new HttpException(
+          error.message,
+          EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
+        );
       } else {
         throw error;
       }

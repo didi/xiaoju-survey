@@ -66,24 +66,23 @@ export class CounterService {
     }, {});
   }
 
-  async createCounters({ surveyPath, dataList}) {
+  async createCounters({ surveyPath, dataList }) {
     const optionList = dataList.filter((questionItem) => {
       return (
-        Array.isArray(questionItem.options) &&
-        questionItem.options.length > 0
+        Array.isArray(questionItem.options) && questionItem.options.length > 0
       );
     });
-    optionList.forEach(option => {
-      let data = {};
-      option.options.forEach(option => {
+    optionList.forEach((option) => {
+      const data = {};
+      option.options.forEach((option) => {
         data[option.hash] = 0;
       });
-      data["total"] = 0;
+      data['total'] = 0;
       this.set({
         surveyPath,
         key: option.field,
         type: 'option',
-        data: data
+        data: data,
       });
     });
   }

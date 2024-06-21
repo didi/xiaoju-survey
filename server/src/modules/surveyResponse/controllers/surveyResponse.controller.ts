@@ -158,7 +158,7 @@ export class SurveyResponseController {
         const arr = cur.options.map((optionItem) => ({
           hash: optionItem.hash,
           text: optionItem.text,
-          quota: optionItem.quota
+          quota: optionItem.quota,
         }));
         pre[cur.field] = arr;
         return pre;
@@ -171,30 +171,38 @@ export class SurveyResponseController {
         const values = Array.isArray(value) ? value : [value];
         if (field in optionTextAndId) {
           const optionCountData = await this.counterService.get({
-              key: field,
-              surveyPath,
-              type: 'option'
+            key: field,
+            surveyPath,
+            type: 'option',
           });
 
           //遍历选项hash值
           for (const val of values) {
-            const option = optionTextAndId[field].find(opt => opt["hash"] === val);
-            if (option["quota"] != 0 && option["quota"] <= optionCountData[val]) {
-                const item = dataList.find(item => item["field"] === field);
-                throw new HttpException(`${item['title']}中的${option['text']}所选人数已达到上限，请重新选择`, EXCEPTION_CODE.RESPONSE_OVER_LIMIT);
+            const option = optionTextAndId[field].find(
+              (opt) => opt['hash'] === val,
+            );
+            if (
+              option['quota'] != 0 &&
+              option['quota'] <= optionCountData[val]
+            ) {
+              const item = dataList.find((item) => item['field'] === field);
+              throw new HttpException(
+                `${item['title']}中的${option['text']}所选人数已达到上限，请重新选择`,
+                EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
+              );
             }
           }
         }
-      };
+      }
 
       for (const field in decryptedData) {
         const value = decryptedData[field];
         const values = Array.isArray(value) ? value : [value];
         if (field in optionTextAndId) {
           const optionCountData = await this.counterService.get({
-              key: field,
-              surveyPath,
-              type: 'option'
+            key: field,
+            surveyPath,
+            type: 'option',
           });
           for (const val of values) {
             optionCountData[val]++;
@@ -202,15 +210,13 @@ export class SurveyResponseController {
               key: field,
               surveyPath,
               type: 'option',
-              data: optionCountData
+              data: optionCountData,
             });
           }
           optionCountData['total']++;
         }
-      };
-
-    })
-
+      }
+    });
 
     // 入库
     const surveyResponse =

@@ -32,7 +32,6 @@ import { CollaboratorService } from './services/collaborator.service';
 import { Counter } from 'src/models/counter.entity';
 import { CounterService } from '../surveyResponse/services/counter.service';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -42,7 +41,7 @@ import { CounterService } from '../surveyResponse/services/counter.service';
       SurveyResponse,
       Word,
       Collaborator,
-      Counter
+      Counter,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -66,7 +65,7 @@ import { CounterService } from '../surveyResponse/services/counter.service';
     ContentSecurityService,
     CollaboratorService,
     LoggerProvider,
-    CounterService
+    CounterService,
   ],
 })
 export class SurveyModule {}

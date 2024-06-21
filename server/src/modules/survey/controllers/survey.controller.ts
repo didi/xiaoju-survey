@@ -43,7 +43,7 @@ export class SurveyController {
     private readonly contentSecurityService: ContentSecurityService,
     private readonly surveyHistoryService: SurveyHistoryService,
     private readonly logger: Logger,
-    private readonly counterService: CounterService
+    private readonly counterService: CounterService,
   ) {}
 
   @Get('/getBannerData')
@@ -306,9 +306,9 @@ export class SurveyController {
 
     await this.counterService.createCounters({
       surveyPath: surveyMeta.surveyPath,
-      dataList: surveyConf.code.dataConf.dataList
-    })
-    
+      dataList: surveyConf.code.dataConf.dataList,
+    });
+
     await this.surveyHistoryService.addHistory({
       surveyId,
       schema: surveyConf.code,

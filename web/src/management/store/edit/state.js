@@ -42,7 +42,9 @@ export default {
       tLimit: 0,
       answerBegTime: '',
       answerEndTime: '',
-      answerLimitTime: 0
+      answerLimitTime: 0,
+      breakAnswer: false,
+      backAnswer: false
     },
     submitConf: {
       submitTitle: '',

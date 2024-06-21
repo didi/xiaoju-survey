@@ -19,6 +19,7 @@ const CODE_MAP = {
 }
 const VOTE_INFO_KEY = 'voteinfo'
 import router from '../router'
+
 const confirm = useCommandComponent(BackAnswerDialog)
 
 export default {

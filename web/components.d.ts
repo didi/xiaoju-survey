@@ -40,6 +40,7 @@ declare module 'vue' {
     IEpSort: typeof import('~icons/ep/sort')['default']
     IEpSortDown: typeof import('~icons/ep/sort-down')['default']
     IEpSortUp: typeof import('~icons/ep/sort-up')['default']
+    IEpTop: typeof import('~icons/ep/top')['default']
     IEpView: typeof import('~icons/ep/view')['default']
     IEpWarningFilled: typeof import('~icons/ep/warning-filled')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

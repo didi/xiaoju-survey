@@ -75,7 +75,7 @@ import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
-import { spaceListConfig } from '../config'
+import { spaceListConfig } from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
 

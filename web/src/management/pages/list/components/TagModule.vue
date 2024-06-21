@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { type as surveyType } from '../config'
+import { type as surveyType } from '@/management/config/listConfig'
 export default {
   name: 'TagModule',
   props: {

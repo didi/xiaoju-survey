@@ -53,11 +53,11 @@ _**(个人和企业用户均可快速构建特定领域的调研类解决方案�
 
 # 技术
 
-Web 端：Vue3 + ElementPlus；C 端多端渲染（在建，[申请加入共建](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE#%E6%88%90%E4%B8%BA%E5%AE%98%E6%96%B9%E4%B8%93%E9%A1%B9%E5%BB%BA%E8%AE%BE%E8%80%85)）
+Web 端：Vue3 + ElementPlus；C 端多端渲染（规划中）
 
-Server 端：Nestjs + MongoDB；Java（在建，[申请加入共建](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE#%E6%88%90%E4%B8%BA%E5%AE%98%E6%96%B9%E4%B8%93%E9%A1%B9%E5%BB%BA%E8%AE%BE%E8%80%85)）
+Server 端：Nestjs + MongoDB；Java（在建，[欢迎加入共建](https://github.com/didi/xiaoju-survey/issues/306)）
 
-智能化基座：（在建）
+智能化基座：（规划中）
 
 # 项目优势
 

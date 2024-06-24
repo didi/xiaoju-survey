@@ -53,11 +53,11 @@ _**(Both individual and enterprise users can quickly build survey solutions spec
 
 # Technology
 
-Web: Vue3 + ElementPlus; Multi-end rendering for C-end (under construction, application for co-construction welcome).
+Web: Vue3 + ElementPlus; Multi-end rendering for C-end (planning).
 
-Server: Nestjs + MongoDB; Java (under construction).
+Server: Nestjs + MongoDB; Java ([under construction](https://github.com/didi/xiaoju-survey/issues/306)).
 
-Intelligent Foundation: (under construction).
+Intelligent Foundation: (planning).
 
 # Project Advantages
 

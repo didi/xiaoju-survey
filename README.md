@@ -194,17 +194,17 @@ npm run serve
 
 <br /><br />
 
+## 微信交流群（推荐）
+
+官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入。任何问题和合作可以联系小助手：
+
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
+
 ## QQ 交流群
 
 官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入：
 
 [<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
-
-## 微信交流群
-
-官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入。任何问题和合作可以联系小助手：
-
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
 
 ## Star
 

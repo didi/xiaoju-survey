@@ -47,17 +47,17 @@
 
 > For more comprehensive features, please refer to the official Feature documentation.
 
-<img src="https://github.com/didi/xiaoju-survey/assets/16012672/dd427471-368d-49d9-bc44-13c34d84e3be"  width="700" />
+<img src="https://github.com/didi/xiaoju-survey/assets/16012672/508ce30f-0ae8-4f5f-84a7-e96de8238a7f"  width="700" />
 
 _**(Both individual and enterprise users can quickly build survey solutions specific to their fields.)**_
 
 # Technology
 
-Web: Vue3 + ElementPlus; Multi-end rendering for C-end (under construction, application for co-construction welcome).
+Web: Vue3 + ElementPlus; Multi-end rendering for C-end (planning).
 
-Server: Nestjs + MongoDB; Java (under construction).
+Server: Nestjs + MongoDB; Java ([under construction](https://github.com/didi/xiaoju-survey/issues/306)).
 
-Intelligent Foundation: (under construction).
+Intelligent Foundation: (planning).
 
 # Project Advantages
 
@@ -194,17 +194,17 @@ Create and publish a questionnaire.
 
 <br /><br />
 
-## QQ Group
-
-The official group will release the latest project news, construction plans, and community activities. Welcome to join:
-
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
-
 ## WeChat Group
 
 The official group will release the latest project news, construction plans, and community activities. Any questions and cooperation can contact the assistant:
 
 <img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
+
+## QQ Group
+
+The official group will release the latest project news, construction plans, and community activities. Welcome to join:
+
+[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
 
 ## Star
 

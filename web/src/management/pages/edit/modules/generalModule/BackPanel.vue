@@ -5,7 +5,13 @@
   </div>
 </template>
 <script setup lang="ts">
-const handleNavigateHome = () => window.open('/survey', '_self')
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const handleNavigateHome = () => {
+  router.push({
+    name: 'survey'
+  })
+}
 </script>
 <style lang="scss" scoped>
 .back-btn {

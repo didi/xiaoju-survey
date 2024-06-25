@@ -6,23 +6,72 @@ import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { RECORD_STATUS } from 'src/enums';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
+import { Logger } from 'src/logger';
+import { UserService } from 'src/modules/auth/services/user.service';
+import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
+import { AuthService } from 'src/modules/auth/services/auth.service';
+import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
+import { ObjectId } from 'mongodb';
+import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
 
 jest.mock('../services/responseScheme.service');
 
 describe('ResponseSchemaController', () => {
   let controller: ResponseSchemaController;
   let responseSchemaService: ResponseSchemaService;
+  let whitelistService: WhitelistService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ResponseSchemaController],
-      providers: [ResponseSchemaService],
+      providers: [
+        ResponseSchemaService,
+        AuthService,
+        {
+          provide: Logger,
+          useValue: {
+            info: jest.fn(),
+          },
+        },
+        {
+          provide: UserService,
+          useValue: {
+            getUserByUsername: jest.fn(),
+          },
+        },
+        {
+          provide: WorkspaceMemberService,
+          useValue: {
+            findAllByUserId: jest.fn(),
+          },
+        },
+        {
+          provide: WhitelistService,
+          useValue: {
+            create: jest.fn(),
+          },
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            create: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            error: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<ResponseSchemaController>(ResponseSchemaController);
     responseSchemaService = module.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
+    whitelistService = module.get<WhitelistService>(WhitelistService);
   });
 
   describe('getSchema', () => {
@@ -66,5 +115,157 @@ describe('ResponseSchemaController', () => {
         new HttpException('问卷已删除', EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED),
       );
     });
+
+    it('whitelistValidate should throw SurveyNotFoundException when survey is removed', async () => {
+      const surveyPath = '';
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue(null);
+      await expect(
+        controller.whitelistValidate(surveyPath, {
+          password: '123456',
+        }),
+      ).rejects.toThrow(new SurveyNotFoundException('该问卷不存在,无法提交'));
+    });
+
+    it('whitelistValidate should throw WHITELIST_ERROR code when password is incorrect', async () => {
+      const surveyPath = '';
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue({
+          curStatus: {
+            status: 'published',
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+            },
+          },
+        } as ResponseSchema);
+      await expect(
+        controller.whitelistValidate(surveyPath, {
+          password: '123457',
+        }),
+      ).rejects.toThrow(
+        new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
+      );
+    });
+
+    it('whitelistValidate should return verifyId successfully', async () => {
+      const surveyPath = 'test';
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue({
+          curStatus: {
+            status: 'published',
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+            },
+          },
+        } as ResponseSchema);
+
+      const id = 'c79c6fee22cbed6f0b087a27';
+      jest.spyOn(whitelistService, 'create').mockResolvedValue({
+        _id: new ObjectId(id),
+        surveyPath,
+      } as WhitelistVerify);
+      await expect(
+        controller.whitelistValidate(surveyPath, {
+          password: '123456',
+        }),
+      ).resolves.toBe(id);
+    });
+
+    it('whitelistValidate should throw WHITELIST_ERROR code when mobile or email is incorrect', async () => {
+      const surveyPath = '';
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue({
+          curStatus: {
+            status: 'published',
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+              whitelistType: 'CUSTOM',
+              memberType: 'MOBILE',
+              whitelist: ['13500000000'],
+            },
+          },
+        } as ResponseSchema);
+      await expect(
+        controller.whitelistValidate(surveyPath, {
+          password: '123456',
+          value: '13500000001',
+        }),
+      ).rejects.toThrow(
+        new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
+      );
+    });
+
+    it('whitelistValidate should throw WHITELIST_ERROR code when member is incorrect', async () => {
+      const surveyPath = '';
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue({
+          curStatus: {
+            status: 'published',
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+              whitelistType: 'MEMBER',
+              whitelist: ['Jack'],
+            },
+          },
+        } as ResponseSchema);
+      await expect(
+        controller.whitelistValidate(surveyPath, {
+          password: '123456',
+          value: 'James',
+        }),
+      ).rejects.toThrow(
+        new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
+      );
+    });
+  });
+
+  it('whitelistValidate should return verifyId successfully', async () => {
+    const surveyPath = '';
+    jest
+      .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+      .mockResolvedValue({
+        curStatus: {
+          status: 'published',
+        },
+        code: {
+          baseConf: {
+            passwordSwitch: true,
+            password: '123456',
+            whitelistType: 'CUSTOM',
+            memberType: 'MOBILE',
+            whitelist: ['13500000000'],
+          },
+        },
+      } as ResponseSchema);
+
+    const id = 'c79c6fee22cbed6f0b087a27';
+    jest.spyOn(whitelistService, 'create').mockResolvedValue({
+      _id: new ObjectId(id),
+      surveyPath,
+    } as WhitelistVerify);
+
+    await expect(
+      controller.whitelistValidate(surveyPath, {
+        password: '123456',
+        value: '13500000000',
+      }),
+    ).resolves.toBe(id);
   });
 });

@@ -49,7 +49,7 @@ const getSpaceMenus = async () => {
     if (v.id == "group") {
       const promiseList = []
       v.children?.map((item) => {
-        promiseList.push(store.dispatch('list/getSpaceDetail', item.id).then(res => {
+        promiseList.push(store.dispatch('list/getSpaceDetail', item.id).then(() => {
           treeData.value.push({
             id: item.id,
             label: item.name,

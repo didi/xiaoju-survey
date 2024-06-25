@@ -1,16 +1,33 @@
 <template>
   <div class="answer-radio-wrap">
-    <el-radio-group v-model="answerVal">
-      <el-radio :value="1">所有人</el-radio>
-      <el-radio :value="2">空间成员</el-radio>
-      <el-radio :value="3">白名单</el-radio>
+    <el-radio-group v-model="whitelistType"   @change="handleRadioGroupChange">
+      <el-radio value="ALL">所有人</el-radio>
+      <el-radio value="MEMBER">空间成员</el-radio>
+      <el-radio value="CUSTOM">白名单</el-radio>
     </el-radio-group>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
 
-const answerVal = ref(false)
+import { ref } from 'vue'
+import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+
+const props = defineProps({
+  formConfig: Object,
+})
+const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
+
+const whitelistType = ref(props.formConfig?.value || 'ALL')
+
+const handleRadioGroupChange = (value) => {
+  const key = props.formConfig.key
+  emit(FORM_CHANGE_EVENT_KEY, { key, value })
+  emit(FORM_CHANGE_EVENT_KEY, { key:'baseConf.whitelist', value: [] })
+  emit(FORM_CHANGE_EVENT_KEY, { key: 'baseConf.memberType', value: 'MOBILE' })
+  if (whitelistType.value == 'All') { 
+    emit(FORM_CHANGE_EVENT_KEY, { key:'baseConf.whitelistTip', value:'' })
+  }
+}
 
 
 </script>

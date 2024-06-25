@@ -8,26 +8,12 @@
               {{ form.title }}
             </span>
           </div>
-          <el-form
-            class="question-config-form"
-            label-position="left"
-            label-width="200px"
-            @submit.prevent
-          >
+          <el-form class="question-config-form" label-position="left" label-width="200px" @submit.prevent>
             <template v-for="(item, index) in form.formList">
-              <FormItem
-                v-if="item.type && !item.hidden && Boolean(registerTypes[item.type])"
-                :key="index"
-                :form-config="item"
-                :style="item.style"
-              >
-                <Component
-                  v-if="Boolean(registerTypes[item.type])"
-                  :is="components[item.type]"
-                  :module-config="form.dataConfig"
-                  :form-config="item"
-                  @form-change="handleFormChange"
-                />
+              <FormItem v-if="item.type && !item.hidden && Boolean(registerTypes[item.type])" :key="index"
+                :form-config="item" :style="item.style">
+                <Component v-if="Boolean(registerTypes[item.type])" :is="components[item.type]"
+                  :module-config="form.dataConfig" :form-config="item" @form-change="handleFormChange" />
               </FormItem>
             </template>
           </el-form>
@@ -37,9 +23,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, onMounted, shallowRef } from 'vue'
+import { computed, ref, onMounted, watch, shallowRef } from 'vue'
 import { useStore } from 'vuex'
-import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get } from 'lodash-es'
+import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get,isFunction as _isFunction} from 'lodash-es'
 
 import baseConfig from './config/baseConfig'
 import baseFormConfig from './config/baseFormConfig'
@@ -49,6 +35,9 @@ import setterLoader from '@/materials/setters/setterLoader'
 const formConfigList = ref<Array<any>>([])
 const components = shallowRef<any>({})
 const registerTypes = ref<any>({})
+const store = useStore()
+const schemaBaseConf = computed(() => store.state.edit?.schema?.baseConf || {})
+
 const setterList = computed(() => {
   const list = _cloneDeep(formConfigList.value)
 
@@ -71,6 +60,14 @@ const setterList = computed(() => {
       }
       formItem.value = formValue
     }
+    // 动态显隐设置器
+    form.formList = form.formList.filter((item:any) => {
+      if (_isFunction(item.relyFunc)) {
+          return item.relyFunc(schemaBaseConf.value)
+        }
+        return true
+    })
+
 
     form.dataConfig = dataConfig
 
@@ -78,7 +75,6 @@ const setterList = computed(() => {
   })
 })
 
-const store = useStore()
 const handleFormChange = (data: any) => {
   store.dispatch('edit/changeSchema', {
     key: data.key,
@@ -87,7 +83,7 @@ const handleFormChange = (data: any) => {
 }
 
 onMounted(async () => {
-  formConfigList.value = baseConfig.map((item) => ({
+  formConfigList.value =  baseConfig.map((item) => ({
     ...item,
     formList: item.formList.map((key) => (baseFormConfig as any)[key]).filter((config) => !!config)
   }))

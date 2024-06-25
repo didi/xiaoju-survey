@@ -16,6 +16,7 @@
         <LogoIcon :logo-conf="logoConf" :readonly="true" />
       </div>
     </div>
+    <VerifyWhiteDialog/>
   </div>
 </template>
 <script setup lang="ts">
@@ -27,6 +28,7 @@ import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
+import VerifyWhiteDialog from '../components/VerifyWhiteDialog.vue'
 
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'

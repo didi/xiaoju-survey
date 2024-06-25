@@ -11,6 +11,8 @@ export default [
   }, {
     title: '作答限制',
     key: 'respondConfig',
-    formList: ['interview_pwd','answer_list']
+    formList: ['interview_pwd','answer_type','white_placeholder','white_list','team_list']
   }
 ]
+
+

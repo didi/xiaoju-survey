@@ -127,7 +127,6 @@ export class ResponseSchemaController {
 
     // 返回verifyId
     const res = await this.whitelistService.create(surveyPath);
-
     return {
       code: 200,
       data: {

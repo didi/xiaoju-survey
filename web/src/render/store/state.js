@@ -3,7 +3,6 @@ import { isMobile } from '../utils/index'
 export default {
   surveyPath: '',
   questionData: null,
-  router: '',
   isMobile: isMobile(),
   errorInfo: {
     errorType: '',

@@ -121,7 +121,7 @@ moment.locale('zh-cn')
 
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import { CODE_MAP } from '@/management/api/base'
-import { QOP_MAP } from '@/management/utils/constant'
+import { QOP_MAP } from '@/management/utils/constant.ts'
 import { deleteSurvey } from '@/management/api/survey'
 import ModifyDialog from './ModifyDialog.vue'
 import TagModule from './TagModule.vue'
@@ -139,7 +139,7 @@ import {
   noSearchDataConfig,
   selectOptionsDict,
   buttonOptionsDict
-} from '../config'
+} from '@/management/config/listConfig'
 
 const store = useStore()
 const router = useRouter()

@@ -6,6 +6,7 @@ import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { hash256 } from 'src/utils/hash256';
 import { RECORD_STATUS } from 'src/enums';
+import { ObjectId } from 'mongodb';
 
 describe('UserService', () => {
   let service: UserService;
@@ -21,6 +22,7 @@ describe('UserService', () => {
             create: jest.fn(),
             save: jest.fn(),
             findOne: jest.fn(),
+            find: jest.fn(),
           },
         },
       ],
@@ -30,6 +32,10 @@ describe('UserService', () => {
     userRepository = module.get<MongoRepository<User>>(
       getRepositoryToken(User),
     );
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
   it('should create a user', async () => {
@@ -102,7 +108,7 @@ describe('UserService', () => {
     expect(user).toEqual({ ...userInfo, password: hashedPassword });
   });
 
-  it('should return undefined when user is not found by credentials', async () => {
+  it('should return null when user is not found by credentials', async () => {
     const userInfo = {
       username: 'nonExistingUser',
       password: 'nonExistingPassword',
@@ -129,7 +135,8 @@ describe('UserService', () => {
     const userInfo = {
       username: username,
       password: 'existingPassword',
-    } as User;
+      curStatus: { status: 'ACTIVE' },
+    } as unknown as User;
 
     jest.spyOn(userRepository, 'findOne').mockResolvedValue(userInfo);
 
@@ -137,10 +144,129 @@ describe('UserService', () => {
 
     expect(userRepository.findOne).toHaveBeenCalledWith({
       where: {
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
         username: username,
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
     });
     expect(user).toEqual(userInfo);
+  });
+
+  it('should return null when user is not found by username', async () => {
+    const username = 'nonExistingUser';
+
+    const findOneSpy = jest
+      .spyOn(userRepository, 'findOne')
+      .mockResolvedValue(null);
+
+    const user = await service.getUserByUsername(username);
+
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: {
+        username: username,
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+      },
+    });
+    expect(user).toBe(null);
+  });
+
+  it('should return a user by id', async () => {
+    const id = '60c72b2f9b1e8a5f4b123456';
+    const userInfo = {
+      _id: new ObjectId(id),
+      username: 'testUser',
+      curStatus: { status: 'ACTIVE' },
+    } as unknown as User;
+
+    jest.spyOn(userRepository, 'findOne').mockResolvedValue(userInfo);
+
+    const user = await service.getUserById(id);
+
+    expect(userRepository.findOne).toHaveBeenCalledWith({
+      where: {
+        _id: new ObjectId(id),
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+      },
+    });
+    expect(user).toEqual(userInfo);
+  });
+
+  it('should return null when user is not found by id', async () => {
+    const id = '60c72b2f9b1e8a5f4b123456';
+
+    const findOneSpy = jest
+      .spyOn(userRepository, 'findOne')
+      .mockResolvedValue(null);
+
+    const user = await service.getUserById(id);
+
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: {
+        _id: new ObjectId(id),
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+      },
+    });
+    expect(user).toBe(null);
+  });
+
+  it('should return a list of users by username', async () => {
+    const username = 'test';
+    const userList = [
+      { _id: new ObjectId(), username: 'testUser1', createDate: new Date() },
+      { _id: new ObjectId(), username: 'testUser2', createDate: new Date() },
+    ];
+
+    jest
+      .spyOn(userRepository, 'find')
+      .mockResolvedValue(userList as unknown as User[]);
+
+    const result = await service.getUserListByUsername({
+      username,
+      skip: 0,
+      take: 10,
+    });
+
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {
+        username: new RegExp(username),
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+      },
+      skip: 0,
+      take: 10,
+      select: ['_id', 'username', 'createDate'],
+    });
+    expect(result).toEqual(userList);
+  });
+
+  it('should return a list of users by ids', async () => {
+    const idList = ['60c72b2f9b1e8a5f4b123456', '60c72b2f9b1e8a5f4b123457'];
+    const userList = [
+      {
+        _id: new ObjectId(idList[0]),
+        username: 'testUser1',
+        createDate: new Date(),
+      },
+      {
+        _id: new ObjectId(idList[1]),
+        username: 'testUser2',
+        createDate: new Date(),
+      },
+    ];
+
+    jest
+      .spyOn(userRepository, 'find')
+      .mockResolvedValue(userList as unknown as User[]);
+
+    const result = await service.getUserListByIds({ idList });
+
+    expect(userRepository.find).toHaveBeenCalledWith({
+      where: {
+        _id: {
+          $in: idList.map((id) => new ObjectId(id)),
+        },
+        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+      },
+      select: ['_id', 'username', 'createDate'],
+    });
+    expect(result).toEqual(userList);
   });
 });

@@ -197,7 +197,6 @@ describe('DataStatisticService', () => {
             data413_3: expect.any(String),
             data413: expect.any(Number),
             data863: expect.any(String),
-            data413_custom: expect.any(String),
             difTime: expect.any(String),
             createDate: expect.any(String),
           }),
@@ -306,6 +305,163 @@ describe('DataStatisticService', () => {
             data770: expect.any(String),
             difTime: expect.any(String),
           }),
+        ]),
+      );
+    });
+  });
+
+  describe('aggregationStatis', () => {
+    it('should return correct aggregation data', async () => {
+      const surveyId = '65afc62904d5db18534c0f78';
+      const mockAggregationResult = {
+        data515: [
+          {
+            count: 1,
+            data: {
+              data515: '115019',
+            },
+          },
+          {
+            count: 1,
+            data: {
+              data515: '115020',
+            },
+          },
+        ],
+        data893: [
+          {
+            count: 1,
+            data: {
+              data893: ['466671'],
+            },
+          },
+          {
+            count: 1,
+            data: {
+              data893: ['466671', '095415'],
+            },
+          },
+        ],
+        data820: [
+          {
+            count: 1,
+            data: {
+              data820: 8,
+            },
+          },
+        ],
+        data549: [
+          {
+            count: 1,
+            data: {
+              data549: 5,
+            },
+          },
+        ],
+      };
+
+      const fieldList = Object.keys(mockAggregationResult);
+
+      jest.spyOn(surveyResponseRepository, 'aggregate').mockReturnValue({
+        next: jest.fn().mockResolvedValue(mockAggregationResult),
+      } as any);
+
+      const result = await service.aggregationStatis({
+        surveyId,
+        fieldList,
+      });
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            field: 'data515',
+            data: {
+              aggregation: [
+                {
+                  id: '115019',
+                  count: 1,
+                },
+                {
+                  id: '115020',
+                  count: 1,
+                },
+              ],
+              submitionCount: 2,
+            },
+          },
+          {
+            field: 'data893',
+            data: {
+              aggregation: [
+                {
+                  id: '466671',
+                  count: 2,
+                },
+                {
+                  id: '095415',
+                  count: 1,
+                },
+              ],
+              submitionCount: 2,
+            },
+          },
+          {
+            field: 'data820',
+            data: {
+              aggregation: [
+                {
+                  id: '8',
+                  count: 1,
+                },
+              ],
+              submitionCount: 1,
+            },
+          },
+          {
+            field: 'data549',
+            data: {
+              aggregation: [
+                {
+                  id: '5',
+                  count: 1,
+                },
+              ],
+              submitionCount: 1,
+            },
+          },
+        ]),
+      );
+    });
+
+    it('should return empty aggregation data when no responses', async () => {
+      const surveyId = '65afc62904d5db18534c0f78';
+      const fieldList = ['data458', 'data515'];
+
+      jest.spyOn(surveyResponseRepository, 'aggregate').mockReturnValue({
+        next: jest.fn().mockResolvedValue({}),
+      } as any);
+
+      const result = await service.aggregationStatis({
+        surveyId,
+        fieldList,
+      });
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            field: 'data458',
+            data: {
+              aggregation: [],
+              submitionCount: 0,
+            },
+          },
+          {
+            field: 'data515',
+            data: {
+              aggregation: [],
+              submitionCount: 0,
+            },
+          },
         ]),
       );
     });

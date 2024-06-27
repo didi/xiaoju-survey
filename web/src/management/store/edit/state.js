@@ -42,7 +42,13 @@ export default {
       tLimit: 0,
       answerBegTime: '',
       answerEndTime: '',
-      answerLimitTime: 0
+      answerLimitTime: 0,
+      passwordSwitch: false,
+      password:'',
+      whitelistType: 'ALL',
+      whitelistTip:'',
+      whitelist: [],
+      memberType:'MOBILE',
     },
     submitConf: {
       submitTitle: '',

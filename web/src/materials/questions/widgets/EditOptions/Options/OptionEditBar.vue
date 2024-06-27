@@ -54,6 +54,7 @@ import { ref, computed, inject } from 'vue'
 import OptionConfig from '../AdvancedConfig/OptionConfig.vue'
 import RateConfig from '../AdvancedConfig/RateConfig.vue'
 import ExtraIcon from '../ExtraIcon/index.vue'
+import { QUESTION_TYPE } from '@/common/typeEnum'
 
 defineProps({
   optionList: {
@@ -78,7 +79,6 @@ const emit = defineEmits(['addOther', 'optionChange', 'change'])
 const moduleConfig = inject('moduleConfig')
 const optionConfigVisible = ref(false)
 const openOptionConfig = () => {
-  console.log('open')
   optionConfigVisible.value = true
 }
 
@@ -101,7 +101,7 @@ const onVisibleChange = (val) => {
 }
 
 const isNps = computed(() => {
-  return moduleConfig.value.type === 'radio-nps'
+  return moduleConfig.value.type === QUESTION_TYPE.RADIO_NPS
 })
 
 const min = computed(() => {

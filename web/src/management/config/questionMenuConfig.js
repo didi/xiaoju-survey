@@ -1,4 +1,4 @@
-const menuItems = {
+export const menuItems = {
   text: {
     type: 'text',
     snapshot: '/imgs/question-type-snapshot/iL84te6xxU1657702189333.webp',

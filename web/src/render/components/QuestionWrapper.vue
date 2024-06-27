@@ -58,6 +58,7 @@ const questionConfig = computed(() => {
   }
   if (
     RATES.includes(type) &&
+    rest.rangeConfig &&
     Object.keys(rest.rangeConfig).filter((index) => rest.rangeConfig[index].isShowInput).length > 0
   ) {
     let { rangeConfig, othersValue } = useShowInput(field)

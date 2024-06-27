@@ -25,7 +25,6 @@ import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
 import { MemberType, WhitelistType } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
 
 const mockDecryptErrorBody = {
   surveyPath: 'EBzdmnSp',

@@ -14,6 +14,7 @@
           @submit="handleSubmit"
         ></SubmitButton>
         <LogoIcon :logo-conf="logoConf" :readonly="true" />
+        <VerifyWhiteDialog v-if="store.state?.bannerConf" />
       </div>
     </div>
   </div>
@@ -26,6 +27,7 @@ import { useRouter } from 'vue-router'
 import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
+import VerifyWhiteDialog from '../components/VerifyWhiteDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 

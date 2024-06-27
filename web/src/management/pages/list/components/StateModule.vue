@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { statusMaps } from '../config'
+import { statusMaps } from '@/management/config/listConfig'
 export default {
   name: 'StateModule',
   props: {

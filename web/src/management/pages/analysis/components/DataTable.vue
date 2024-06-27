@@ -17,22 +17,23 @@
         minWidth="200"
       >
         <template #header="scope">
-          <div class="table-row-cell">
-            <span
-              @mouseover="onPopoverRefOver(scope, 'head')"
-              :ref="(el) => (popoverRefMap[scope.column.id] = el)"
-            >
+          <div
+            class="table-row-cell"
+            @mouseover="onPopoverRefOver(scope, 'head')"
+            :ref="(el) => (popoverRefMap[scope.column.id] = el)"
+          >
+            <span>
               {{ scope.column.label.replace(/&nbsp;/g, '') }}
             </span>
           </div>
         </template>
         <template #default="scope">
-          <div>
-            <span
-              class="table-row-cell"
-              @mouseover="onPopoverRefOver(scope, 'content')"
-              :ref="(el) => (popoverRefMap[scope.$index + scope.column.property] = el)"
-            >
+          <div
+            class="table-row-cell"
+            @mouseover="onPopoverRefOver(scope, 'content')"
+            :ref="(el) => (popoverRefMap[scope.$index + scope.column.property] = el)"
+          >
+            <span>
               {{ getContent(scope.row[scope.column.property]) }}
             </span>
           </div>
@@ -44,6 +45,7 @@
       popper-style="text-align: center;"
       :virtual-ref="popoverVirtualRef"
       placement="top"
+      width="400"
       trigger="hover"
       virtual-triggering
       :content="popoverContent"
@@ -62,6 +64,10 @@ const props = defineProps({
   },
   mainTableLoading: {
     type: Boolean
+  },
+  tableMinHeight: {
+    type: String,
+    default: '620px'
   }
 })
 const popoverRefMap = ref({})
@@ -94,15 +100,18 @@ const onPopoverRefOver = (scope, type) => {
   position: relative;
   width: 100%;
   padding-bottom: 20px;
-  min-height: 620px;
+  min-height: v-bind('tableMinHeight');
   background: #fff;
   padding: 10px 20px;
+
   .table-border {
     box-sizing: border-box;
     text-align: center;
   }
+
   :deep(.el-table__header) {
     width: 100%;
+
     .thead-cell .el-table__cell {
       .cell {
         height: 24px;
@@ -111,10 +120,16 @@ const onPopoverRefOver = (scope, type) => {
       }
     }
   }
+
   .table-row-cell {
-    white-space: nowrap; /* 禁止自动换行 */
-    overflow: hidden; /* 超出部分隐藏 */
-    text-overflow: ellipsis; /* 显示省略号 */
+    max-width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    /* 禁止自动换行 */
+    overflow: hidden;
+    /* 超出部分隐藏 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
   }
 }
 </style>

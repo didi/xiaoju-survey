@@ -70,10 +70,7 @@ export class ResponseSchemaController {
   // 白名单验证
   @Post('/:surveyPath/validate')
   @HttpCode(200)
-  async whitelistValidate(
-    @Param('surveyPath') surveyPath,
-    @Body() body,
-  ): Promise<string> {
+  async whitelistValidate(@Param('surveyPath') surveyPath, @Body() body) {
     const { value, error } = Joi.object({
       password: Joi.string().allow(null, ''),
       value: Joi.string().allow(null, ''),
@@ -130,6 +127,12 @@ export class ResponseSchemaController {
 
     // 返回verifyId
     const res = await this.whitelistService.create(surveyPath);
-    return res._id.toString();
+
+    return {
+      code: 200,
+      data: {
+        verifyId: res._id.toString(),
+      },
+    };
   }
 }

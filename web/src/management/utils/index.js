@@ -1,6 +1,7 @@
 import { defaultQuestionConfig } from '../config/questionConfig'
-import { cloneDeep as _cloneDeep, map as _map } from 'lodash-es'
-import { QUESTION_TYPE } from '@/common/typeEnum.ts'
+import { map as _map } from 'lodash-es'
+import questionLoader from '@/materials/questions/questionLoader'
+
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000)
   return `data${num}`
@@ -23,15 +24,6 @@ const generateHash = (hashList) => {
   return hash
 }
 
-function getOptions(type) {
-  const options = [].concat({ ..._cloneDeep(defaultQuestionConfig) }.options)
-  if (type === QUESTION_TYPE.BINARY_CHOICE) {
-    options[0].text = '对'
-    options[1].text = '错'
-  }
-  return options
-}
-
 export const getNewField = (fields) => {
   let field = generateQuestionField()
   let isFieldExists = fields.includes(field)
@@ -44,16 +36,30 @@ export const getNewField = (fields) => {
 }
 
 export const getQuestionByType = (type, fields) => {
-  const newQuestion = _cloneDeep(defaultQuestionConfig)
-  newQuestion.type = type
-  newQuestion.field = getNewField(fields)
-  newQuestion.options = getOptions(type)
-  const hashList = []
-  for (const option of newQuestion.options) {
-    const hash = generateHash(hashList)
-    hashList.push(hash)
-    option.hash = hash
+  const questionMeta = questionLoader.getMeta(type)
+  const { attrs } = questionMeta
+  let newQuestion = defaultQuestionConfig
+  if( attrs ) {
+    let questionSchema = {}
+    attrs.forEach(element => {
+      questionSchema[element.name] = element.defaultValue
+    });
+    newQuestion = questionSchema
+  } else {
+    newQuestion = defaultQuestionConfig
+    newQuestion.type = type
   }
+  
+  newQuestion.field = getNewField(fields) // 动态生成题目id
+  if('options ' in newQuestion) {  // 动态更新选项的hash-id
+    const hashList = []
+    for (const option of newQuestion.options) {
+      const hash = generateHash(hashList)
+      hashList.push(hash)
+      option.hash = hash
+    }
+  }
+  
   return newQuestion
 }
 

@@ -121,7 +121,8 @@ export default defineComponent({
       max,
       readonly,
       rangeConfig,
-      onMoreDataChange
+      onMoreDataChange,
+      selectMoreView
     } = this
 
     return (
@@ -139,21 +140,20 @@ export default defineComponent({
           iconClass="number"
           onChange={confirmNps}
           class={!readonly ? 'radio-nps-hover' : ''}
-        >
-          {isShowInput && (
-            <selectMoreView
-              showTitle={false}
-              key={`${field}_${rating}`}
-              moduleConfig={{
-                type: 'selectMoreModule',
-                field: `${field}_${rating}`,
-                placeholder: rangeConfig[rating]?.text,
-                value: rangeConfig[rating]?.othersValue || ''
-              }}
-              onChange={(e) => onMoreDataChange(e)}
-            ></selectMoreView>
-          )}
-        </BaseRate>
+        />
+        {isShowInput && (
+          <selectMoreView
+            showTitle={false}
+            key={`${field}_${rating}`}
+            moduleConfig={{
+              type: 'selectMoreModule',
+              field: `${field}_${rating}`,
+              placeholder: rangeConfig[rating]?.text,
+              value: rangeConfig[rating]?.othersValue || ''
+            }}
+            onChange={(e) => onMoreDataChange(e)}
+          ></selectMoreView>
+        )}
       </div>
     )
   }

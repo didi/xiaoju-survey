@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
     )
   }
   const logout = () =>  {
-    userinfo = null
+    userinfo.value = null
     hasLogined.value = false
     localStorage.removeItem(USER_INFO_KEY)
   }

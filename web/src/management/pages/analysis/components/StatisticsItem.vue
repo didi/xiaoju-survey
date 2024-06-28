@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { reactive, toRefs, defineProps, computed, watch, onMounted, onUnmounted, ref } from 'vue'
+import { reactive, toRefs, computed, watch, onMounted, onUnmounted, ref } from 'vue'
 import _cloneDeep from 'lodash/cloneDeep'
 import {
   separateItemListHead,

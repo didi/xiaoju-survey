@@ -59,8 +59,8 @@ const emit = defineEmits<Emit>()
 
 // 静态配置设置动态值
 const formatValue = ({ item, moduleConfig }: any) => {
-  if (_isFunction(item.valueAdapter)) {
-    const value = item.valueAdapter({ moduleConfig })
+  if (_isFunction(item.valueGetter)) {
+    const value = item.valueGetter({ moduleConfig })
 
     return value
   } else {
@@ -82,8 +82,8 @@ const init = ref<boolean>(true)
 const components = shallowRef<any>({})
 
 const handleFormChange = (data: any, formConfig: any) => {
-  if (_isFunction(formConfig?.setterAdapter)) {
-    const resultData = formConfig.setterAdapter(data)
+  if (_isFunction(formConfig?.valueSetter)) {
+    const resultData = formConfig.valueSetter(data)
 
     if (Array.isArray(resultData)) {
       resultData.forEach((item) => {

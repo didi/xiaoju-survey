@@ -38,7 +38,7 @@ const formValues = computed(() => {
 })
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
-  const { type, field, options, ...rest } = cloneDeep(moduleConfig)
+  const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
   // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
   if (type === QUESTION_TYPE.VOTE) {
@@ -57,9 +57,8 @@ const questionConfig = computed(() => {
     moduleConfig.othersValue = unref(othersValue)
   }
   if (
-    RATES.includes(type) &&
-    rest.rangeConfig &&
-    Object.keys(rest.rangeConfig).filter((index) => rest.rangeConfig[index].isShowInput).length > 0
+    RATES.includes(type) && rest?.rangeConfig && 
+    Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length > 0
   ) {
     let { rangeConfig, othersValue } = useShowInput(field)
     moduleConfig.rangeConfig = unref(rangeConfig)

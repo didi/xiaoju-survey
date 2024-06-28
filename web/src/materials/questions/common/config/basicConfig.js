@@ -24,7 +24,7 @@ export default {
       tip: '题目下方分割线，仅在移动端展示。'
     }
   ],
-  valueAdapter({ moduleConfig }) {
+  valueGetter({ moduleConfig }) {
     return _pick(
       moduleConfig,
       this.options.map((item) => item.key)

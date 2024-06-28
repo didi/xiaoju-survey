@@ -33,25 +33,15 @@ const emit = defineEmits<Emit>()
 const props = defineProps<Props>()
 
 const minModelValue = computed(() => {
-  const key = props.formConfig.key
   const minValue = props.formConfig?.value?.min?.value
 
-  if (key === 'textRange') {
-    return parseInt(minValue)
-  }
-
-  return minValue || 1
+  return parseInt(minValue)
 })
 
 const maxModelValue = computed(() => {
-  const key = props.formConfig.key
   const maxValue = props.formConfig?.value?.max?.value
 
-  if (key === 'textRange') {
-    return parseInt(maxValue)
-  }
-
-  return maxValue || 1
+  return maxValue ? parseInt(maxValue) : 1
 })
 
 const handleRangeChange = (eventType: 'max' | 'min', value: number) => {

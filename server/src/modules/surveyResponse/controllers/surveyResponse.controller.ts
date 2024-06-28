@@ -17,6 +17,8 @@ import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
 import { Logger } from 'src/logger';
+import { WhitelistType } from 'src/interfaces/survey';
+import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
 
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
@@ -28,6 +30,7 @@ export class SurveyResponseController {
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
     private readonly logger: Logger,
+    private readonly whitelistService: WhitelistService,
   ) {}
 
   @Post('/createResponse')
@@ -43,6 +46,7 @@ export class SurveyResponseController {
       sessionId: Joi.string(),
       clientTime: Joi.number().required(),
       difTime: Joi.number(),
+      verifyId: Joi.string().allow(null, ''),
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
@@ -52,14 +56,45 @@ export class SurveyResponseController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    const { surveyPath, encryptType, data, sessionId, clientTime, difTime } =
-      value;
+    const {
+      surveyPath,
+      encryptType,
+      data,
+      sessionId,
+      clientTime,
+      difTime,
+      verifyId,
+    } = value;
 
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
     if (!responseSchema || responseSchema.curStatus.status === 'removed') {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
+    }
+
+    // 白名单的verifyId校验
+    const baseConf = responseSchema.code.baseConf;
+    const shouldValidateVerifyId =
+      (baseConf?.passwordSwitch && baseConf.password) ||
+      (baseConf?.whitelistType && baseConf.whitelistType !== WhitelistType.ALL);
+    if (shouldValidateVerifyId) {
+      // 无verifyId
+      if (!verifyId) {
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
+      }
+
+      // 从数据库中查询是否存在对应的verifyId
+      const record = await this.whitelistService.match(surveyPath, verifyId);
+      if (!record) {
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
+      }
     }
 
     const now = Date.now();

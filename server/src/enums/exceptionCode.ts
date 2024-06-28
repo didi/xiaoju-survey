@@ -12,6 +12,7 @@ export enum EXCEPTION_CODE {
   SURVEY_NOT_FOUND = 3004, // 问卷不存在
   SURVEY_CONTENT_NOT_ALLOW = 3005, // 存在禁用内容
   CAPTCHA_INCORRECT = 4001, // 验证码不正确
+  WHITELIST_ERROR = 4002, // 白名单校验错误
 
   RESPONSE_SIGN_ERROR = 9001, // 签名不正确
   RESPONSE_CURRENT_TIME_NOT_ALLOW = 9002, // 当前时间不允许提交

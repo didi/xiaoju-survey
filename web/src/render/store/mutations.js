@@ -49,5 +49,8 @@ export default {
   },
   setRuleEgine(state, ruleEngine) {
     state.ruleEngine = ruleEngine
+  },
+  setVerifyId(state, verifyId) {
+    state.verifyId = verifyId
   }
 }

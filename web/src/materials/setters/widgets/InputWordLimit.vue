@@ -1,6 +1,6 @@
 <template>
   <el-input
-      :maxlength="maxlength"
+      :maxlength="maxLength"
       v-model="modelValue"
       :placeholder="placeholder"
       show-word-limit
@@ -19,7 +19,7 @@ const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
 
 const modelValue = ref(props.formConfig.value || '')
 
-const maxlength = computed(() => props.formConfig.maxlength || 10)
+const maxLength = computed(() => props.formConfig.maxLength || 10)
 
 const placeholder = computed(() => props.formConfig.placeholder || '')
 
@@ -27,7 +27,6 @@ const handleInputChange = (value) => {
   const key = props.formConfig.key
 
   modelValue.value = value
-
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 

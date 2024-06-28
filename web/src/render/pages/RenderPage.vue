@@ -14,7 +14,7 @@
           @submit="handleSubmit"
         ></SubmitButton>
         <LogoIcon :logo-conf="logoConf" :readonly="true" />
-        <VerifyWhiteDialog v-if="store.state?.bannerConf" />
+        <VerifyWhiteDialog />
       </div>
     </div>
   </div>
@@ -65,6 +65,7 @@ const renderData = computed(() => store.getters.renderData)
 const submitConf = computed(() => store.state?.submitConf || {})
 const logoConf = computed(() => store.state?.bottomConf || {})
 const surveyPath = computed(() => store.state?.surveyPath || '')
+const verifyId = computed(() => store.state?.verifyId || '')
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -81,6 +82,10 @@ const normalizationRequestBody = () => {
     data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
+  }
+
+  if(verifyId.value){
+    result.verifyId = verifyId.value
   }
 
   if (encryptInfo?.encryptType) {

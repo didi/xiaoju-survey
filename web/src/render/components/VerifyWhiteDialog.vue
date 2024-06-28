@@ -17,14 +17,14 @@
       </div>
     </template>
     <div class="verify-white-body">
-      <el-input v-if="isPwd" v-model="state.password" class="wd255"  placeholder="请输入6位字符串类型访问密码"  />
-      <el-input v-if="isValue" v-model="state.value" class="wd255 mt16"  :placeholder="placeholder"  />
+      <el-input v-if="isPwd" v-model="state.password" class="wd255 mb16"  placeholder="请输入6位字符串类型访问密码"  />
+      <el-input v-if="isValue" v-model="state.value" class="wd255 mb16"  :placeholder="placeholder"  />
       <div class="submit-btn" @click="handleSubmit">验证并开始答题</div>
     </div>
   </el-dialog>
 </template>
 <script setup>
-import { ref,reactive,computed,onMounted } from 'vue'
+import { ref,reactive,computed,watch} from 'vue'
 import { validate } from '../api/survey'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
@@ -83,9 +83,11 @@ const handleSubmit = async() => {
     return
   }
   whiteVisible.value = false
+  store.commit('setVerifyId', res.data.verifyId)
 }
 
-onMounted(() => {
+watch(()=>baseConf.value, () => {
+  if (whiteVisible.value) return
   if(isValue.value || isPwd.value){
     whiteVisible.value = true;
   }
@@ -103,8 +105,8 @@ onMounted(() => {
     margin-bottom: 8px;
     margin-top:2px;
   }
-  .mt16{
-    margin-top:16px;
+  .mb16{
+    margin-bottom:16px;
   }
   .verify-white-tips{
     text-align: center;
@@ -130,7 +132,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top:20px;
+    margin-top:4px;
     margin-bottom:14px;
   }
 }

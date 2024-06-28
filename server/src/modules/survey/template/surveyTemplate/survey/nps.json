@@ -6,29 +6,21 @@
         "showIndex": true,
         "showType": true,
         "showSpliter": true,
-        "placeholderDesc": "",
         "placeholder": "",
         "isRequired": true,
-        "randomSort": false,
-        "innerRandom": false,
-        "hideSubTitleIndex": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
-        "relyType": "and",
-        "extraOptions": [],
-        "importKey": "single",
-        "importData": "",
-        "npsMin": 0,
-        "urlKey": "",
-        "hasRely": true,
-        "relyList": [],
-        "optionOrigin": "",
-        "answerTip": "",
         "type": "text",
         "valid": "",
         "title": "标题1",
-        "answer": "",
+        "numberRange": {
+          "max": {
+            "placeholder": "1000",
+            "value": 1000
+          },
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          }
+        },
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -45,46 +37,12 @@
         "showIndex": true,
         "showType": true,
         "showSpliter": true,
-        "placeholderDesc": "",
         "placeholder": "",
         "isRequired": true,
-        "randomSort": false,
-        "innerRandom": false,
-        "hideSubTitleIndex": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
-        "relyType": "and",
-        "extraOptions": [],
-        "importKey": "single",
-        "importData": "",
-        "cOption": "",
-        "cOptions": [],
-        "npsMin": 0,
-        "star": 5,
-        "urlKey": "",
-        "defaultProps": {
-          "children": "children",
-          "label": "name",
-          "id": "id"
-        },
-        "hasRely": true,
-        "relyList": [],
-        "optionOrigin": "",
-        "answerTip": "",
+        "starMin": "",
+        "starMax": "",
         "type": "radio-star",
-        "title": "标题2",
-        "answer": "",
-        "textRange": {
-          "min": {
-            "placeholder": "0",
-            "value": 0
-          },
-          "max": {
-            "placeholder": "500",
-            "value": 500
-          }
-        }
+        "title": "标题2"
       }
     ]
   }

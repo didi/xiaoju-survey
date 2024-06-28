@@ -24,7 +24,7 @@ const handleRadioGroupChange = (value) => {
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
   emit(FORM_CHANGE_EVENT_KEY, { key:'baseConf.whitelist', value: [] })
   emit(FORM_CHANGE_EVENT_KEY, { key: 'baseConf.memberType', value: 'MOBILE' })
-  if (whitelistType.value == 'All') { 
+  if (whitelistType.value == 'ALL') { 
     emit(FORM_CHANGE_EVENT_KEY, { key:'baseConf.whitelistTip', value:'' })
   }
 }

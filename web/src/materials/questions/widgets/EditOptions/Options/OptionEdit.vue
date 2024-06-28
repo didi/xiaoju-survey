@@ -39,17 +39,11 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { mapGetters } from 'vuex'
 import { cloneDeep as _cloneDeep } from 'lodash-es'
 import RichEditor from '@/common/Editor/RichEditor.vue'
 
 export default {
   name: 'OptionEdit',
-  computed: {
-    ...mapGetters({
-      currentEditKey: 'edit/currentEditKey'
-    })
-  },
   props: {
     optionList: {
       type: Array
@@ -92,7 +86,7 @@ export default {
     handleChange(index, value) {
       // 更新单个选项文案
       const optionKey = `options[${index}].text`
-      const key = `${this.currentEditKey}.${optionKey}`
+      const key = `${optionKey}`
       this.$emit('change', { key, value })
     },
     onAddOption(index) {

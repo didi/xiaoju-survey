@@ -5,6 +5,7 @@ import { SurveyPermissions } from '@/management/utils/types/workSpace'
 import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+import { useUserStore } from '@/management/stores/user'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -156,10 +157,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const store = useStore();
+  const store = useStore()
+  const userStore = useUserStore()
   // 初始化用户信息
-  if (!store.state.user?.initialized) {
-    await store.dispatch('user/init');
+  if (!userStore?.initialized) {
+    await userStore.init();
   }
   // 更新页面标题
   if (to.meta.title) {
@@ -174,7 +176,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function handleLoginGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, store: Store<any>) {
-  if (store.state.user?.hasLogined) {
+  const userStore = useUserStore();
+  if (userStore?.hasLogined) {
     await handlePermissionsGuard(to, from, next, store);
   } else {
     next({

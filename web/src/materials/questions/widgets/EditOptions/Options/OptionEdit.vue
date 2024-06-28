@@ -52,7 +52,8 @@ export default {
   },
   props: {
     optionList: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     isShowOperation: {
       type: Boolean,

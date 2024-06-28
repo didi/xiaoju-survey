@@ -33,8 +33,10 @@ import {
   roleLabels
 } from '@/management/utils/types/workSpace'
 import { CODE_MAP } from '@/management/api/base'
+import { useUserStore } from '@/management/stores/user'
 
 const store = useStore()
+const userStore = useUserStore()
 const props = withDefaults(
   defineProps<{
     members?: IMember[]
@@ -65,7 +67,7 @@ const remoteMethod = async (query: string) => {
     if (res.code === CODE_MAP.SUCCESS) {
       selectOptions.value = res.data.map((item: any) => {
         // 不可以选中自己
-        const currentUser = item.username === store.state.user.userInfo.username
+        const currentUser = item.username === userStore.userInfo.username
         return {
           value: item.userId,
           label: item.username,

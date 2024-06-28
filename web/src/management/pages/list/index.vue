@@ -67,11 +67,12 @@ import SpaceList from './components/SpaceList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
-
+import { useUserStore } from '@/management/stores/user'
 const store = useStore()
+const userStore = useUserStore()
 const router = useRouter()
 const userInfo = computed(() => {
-  return store.state.user.userInfo
+  return userStore.userInfo
 })
 const loading = ref(false)
 const surveyList = computed(() => {
@@ -152,7 +153,7 @@ const onCreate = () => {
   router.push('/create')
 }
 const handleLogout = () => {
-  store.dispatch('user/logout')
+  userStore.logout()
   router.replace({ name: 'login' })
 }
 </script>

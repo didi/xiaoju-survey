@@ -66,8 +66,10 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { login, register } from '@/management/api/auth'
 import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
+import { useUserStore } from '@/management/stores/user'
 
 const store = useStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -150,7 +152,10 @@ const submitForm = (type: 'login' | 'register') => {
           ElMessage.error(res.errmsg)
           throw new Error('登录/注册失败' + res.errmsg)
         }
-        store.dispatch('user/login', {
+        const userStore = useUserStore()
+        console.log({userStore})
+        debugger
+        userStore.login({
           username: res.data.username,
           token: res.data.token
         })

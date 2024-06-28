@@ -56,6 +56,7 @@ export default {
         return
       }
     }
+    router.push({ name: 'renderPage' })
 
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({

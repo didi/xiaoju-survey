@@ -80,7 +80,7 @@ const normalizationRequestBody = () => {
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
   }
-
+  
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo?.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({

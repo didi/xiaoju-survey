@@ -11,7 +11,6 @@ import useCommandComponent from '../hooks/useCommandComponent'
 
 import AlertDialog from '../components/AlertDialog.vue'
 import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
-
 const store = useStore()
 const route = useRoute()
 const loadData = (res: any, surveyPath: string) => {

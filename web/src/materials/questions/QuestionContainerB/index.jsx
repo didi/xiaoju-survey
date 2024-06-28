@@ -109,13 +109,13 @@ export default defineComponent({
             <EditOptions
               moduleConfig={props.moduleConfig}
               editConfigure={questionMeta?.editConfigure}
+              onChange={this.onChange}
             >
               <dynamicComponent
                 readonly
                 {...props}
                 onBlur={this.onBlur}
                 onFocus={this.onFocus}
-                change={this.onChange}
               />
             </EditOptions>
           ) : (
@@ -124,7 +124,6 @@ export default defineComponent({
               {...props}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
-              change={this.onChange}
             />
           )}
         </div>

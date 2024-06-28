@@ -26,7 +26,8 @@ export default {
     keys: ['baseConf.passwordSwitch', 'baseConf.password'],
     label: '访问密码',
     type: 'SwitchInput',
-    placeholder: '请输入访问密码'
+    placeholder: '请输入6位字符串类型访问密码 ',
+    maxLength: 6,
   },
   answer_type: {
     key: 'baseConf.whitelistType',
@@ -38,7 +39,7 @@ export default {
     label: '名单登录提示语',
     placeholder:'请输入名单提示语',
     type: 'InputWordLimit',
-    maxlength: 40,
+    maxLength: 40,
     relyFunc: (data) => {
       return  ['CUSTOM','MEMBER'].includes(data.whitelistType)
     }

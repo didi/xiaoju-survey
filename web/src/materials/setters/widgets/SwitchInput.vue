@@ -1,37 +1,45 @@
 <template>
   <div class="switch-input-wrap">
     <el-switch v-model="passwordSwitch" @change="changeData(props.formConfig.keys[0],passwordSwitch)"  />
-    <el-input
+    <InputWordLimit
       v-if="passwordSwitch"
       class="mt16"
-      maxlength="6"
-      placeholder="请输入6位字符串类型访问密码"
-      show-word-limit
-      v-model="password"
-      type="text"
-      @blur="changeData(props.formConfig.keys[1],password)"
+      @form-change="handleFormChange"
+      :formConfig="{
+        ...props.formConfig,
+        key: props.formConfig.keys[1],
+        value:props.formConfig?.value[1]
+      }"
     />
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
+import { useStore } from 'vuex'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+import InputWordLimit from './InputWordLimit.vue'
 
+const store = useStore();
 const props = defineProps({
   formConfig: Object,
 })
 const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
 const passwordSwitch = ref(props.formConfig?.value[0] || false);
-const password = ref(props.formConfig?.value[1] || '');
 
-const changeData = (key,value) => {
+
+const changeData = (key, value) => {
   emit(FORM_CHANGE_EVENT_KEY, {
     key,
     value
   })
 
 }
-
+const handleFormChange = (data) => {
+  store.dispatch('edit/changeSchema', {
+    key: data.key,
+    value: data.value
+  })
+}
 
 </script>
 <style lang="scss" scoped>

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class WhitelistService {
@@ -23,7 +24,7 @@ export class WhitelistService {
     return await this.whitelistVerifyRepo.findOne({
       where: {
         surveyPath,
-        _id: verifyId,
+        _id: new ObjectId(verifyId),
       },
     });
   }

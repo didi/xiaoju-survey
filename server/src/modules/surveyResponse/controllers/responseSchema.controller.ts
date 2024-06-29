@@ -118,7 +118,7 @@ export class ResponseSchemaController {
       }
 
       const workspaceMember = await this.workspaceMemberService.findAllByUserId(
-        { userId: user._id },
+        { userId: user._id.toString() },
       );
       if (!workspaceMember.length) {
         throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);

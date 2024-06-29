@@ -177,7 +177,7 @@ describe('ResponseSchemaController', () => {
         controller.whitelistValidate(surveyPath, {
           password: '123456',
         }),
-      ).resolves.toBe(id);
+      ).resolves.toEqual({ code: 200, data: { verifyId: id } });
     });
 
     it('whitelistValidate should throw WHITELIST_ERROR code when mobile or email is incorrect', async () => {
@@ -266,6 +266,6 @@ describe('ResponseSchemaController', () => {
         password: '123456',
         value: '13500000000',
       }),
-    ).resolves.toBe(id);
+    ).resolves.toEqual({ code: 200, data: { verifyId: id } });
   });
 });

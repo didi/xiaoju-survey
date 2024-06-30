@@ -29,7 +29,7 @@ const defaultProps = {
 
 const handleChange = () => {
   const key = props.formConfig.key;
-  const userKeys = treeRef.value?.getCheckedKeys(false);
+  const userKeys = treeRef.value?.getCheckedKeys(true);
   emit(FORM_CHANGE_EVENT_KEY, { key: key, value: userKeys });
 }
 

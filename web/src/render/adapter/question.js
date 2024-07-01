@@ -2,7 +2,17 @@
  * 处理单题的配置
  */
 
-import { get as _get } from 'lodash-es'
+import { get as _get, map as _map } from 'lodash-es'
+// 处理选择题的options
+function handleOptions(item) {
+  const options = item.options || []
+
+  const arr = _map(options, (optionItem) => {
+    return { ...optionItem }
+  })
+
+  return { options: arr }
+}
 
 export default function (questionConfig) {
   let dataList = _get(questionConfig, 'dataConf.dataList')
@@ -12,7 +22,8 @@ export default function (questionConfig) {
       [item.field]: {
         indexNumber: '',
         voteTotal: 0,
-        ...item
+        ...item,
+        ...handleOptions(item)
       }
     })
     return pre

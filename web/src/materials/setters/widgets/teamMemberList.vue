@@ -29,7 +29,7 @@ const defaultProps = {
 
 const handleChange = () => {
   const key = props.formConfig.key;
-  const userKeys = treeRef.value?.getCheckedKeys(false);
+  const userKeys = treeRef.value?.getCheckedKeys(true);
   emit(FORM_CHANGE_EVENT_KEY, { key: key, value: userKeys });
 }
 
@@ -43,9 +43,13 @@ const selectCount = computed(() => {
   return treeRef.value?.getCheckedKeys(true).length || 0
 })
 
+const spaceMenus = computed(() => {
+  return store.state.list.spaceMenus
+})
+
 const getSpaceMenus = async () => {
   await store.dispatch('list/getSpaceList')
-  store.state?.list?.spaceMenus.map((v) => {
+  spaceMenus.value.map((v) => {
     if (v.id == "group") {
       const promiseList = []
       v.children?.map((item) => {

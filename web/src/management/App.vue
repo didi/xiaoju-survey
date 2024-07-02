@@ -14,6 +14,7 @@ export default {
 @import url('./styles/icon.scss');
 @import url('../materials/questions/common/css/icon.scss');
 @import url('./styles/reset.scss');
+@import url('./styles/common.scss');
 
 html {
   font-size: 50px;

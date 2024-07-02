@@ -44,7 +44,8 @@
 
 <script lang="ts" setup>
 import { computed, ref, shallowRef, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useListStore } from '@/management/stores/list'
 import { pick as _pick } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -52,7 +53,9 @@ import { QOP_MAP } from '@/management/utils/constant'
 import MemberSelect from './MemberSelect.vue'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'
 
-const store = useStore()
+const listStore = useListStore()
+const { spaceDetail, teamSpaceList } = storeToRefs(listStore)
+const { updateSpace, addSpace } = listStore
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = defineProps({
   type: String,
@@ -85,13 +88,10 @@ const rules = {
     }
   ]
 }
-const spaceDetail = computed(() => {
-  return store.state.list.spaceDetail
-})
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? store.state.list.teamSpaceList.find((item: any) => item._id === spaceDetail.value._id)
-        .currentUserRole !== UserRole.Admin
+    ? (teamSpaceList.value.find((item: any) => item._id === spaceDetail.value._id) as any)
+        ?.currentUserRole !== UserRole.Admin
     : false
 })
 
@@ -107,7 +107,7 @@ const onClose = () => {
     members: [] as IMember[]
   }
   // 清空空间详情
-  store.commit('list/setSpaceDetail', null)
+  spaceDetail.value = null
   emit('on-close-codify')
 }
 
@@ -142,10 +142,10 @@ const handleMembersChange = (val: IMember[]) => {
   formModel.value.members = val
 }
 const handleUpdate = async () => {
-  await store.dispatch('list/updateSpace', formModel.value)
+  await updateSpace(formModel.value)
 }
 const handleAdd = async () => {
-  await store.dispatch('list/addSpace', formModel.value)
+  await addSpace(formModel.value)
 }
 </script>
 

@@ -105,7 +105,8 @@
 
 <script setup>
 import { ref, computed, unref } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useListStore } from '@/management/stores/list'
 import { useRouter } from 'vue-router'
 import { get, map } from 'lodash-es'
 
@@ -141,7 +142,10 @@ import {
   buttonOptionsDict
 } from '@/management/config/listConfig'
 
-const store = useStore()
+const listStore = useListStore()
+const { searchVal, selectValueMap, buttonValueMap, workSpaceId, listFilter, listOrder } =
+  storeToRefs(listStore)
+const { changeSelectValueMap, changeButtonValueMap, resetButtonValueMap } = listStore
 const router = useRouter()
 const props = defineProps({
   loading: {
@@ -164,15 +168,6 @@ const modifyType = ref('')
 const questionInfo = ref({})
 
 const currentPage = ref(1)
-const searchVal = computed(() => {
-  return store.state.list.searchVal
-})
-const selectValueMap = computed(() => {
-  return store.state.list.selectValueMap
-})
-const buttonValueMap = computed(() => {
-  return store.state.list.buttonValueMap
-})
 const currentComponent = computed(() => {
   return (componentName) => {
     switch (componentName) {
@@ -205,62 +200,17 @@ const dataList = computed(() => {
     }
   })
 })
-const filter = computed(() => {
-  return [
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'title',
-          value: searchVal.value,
-          comparator: '$regex'
-        }
-      ]
-    },
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'curStatus.status',
-          value: selectValueMap.value['curStatus.status']
-        }
-      ]
-    },
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'surveyType',
-          value: selectValueMap.value.surveyType
-        }
-      ]
-    }
-  ]
-})
-const order = computed(() => {
-  const formatOrder = Object.entries(buttonValueMap.value)
-    .filter(([, effectValue]) => effectValue)
-    .reduce((prev, item) => {
-      const [effectKey, effectValue] = item
-      prev.push({ field: effectKey, value: effectValue })
-      return prev
-    }, [])
-  return JSON.stringify(formatOrder)
-})
-const workSpaceId = computed(() => {
-  return store.state.list.workSpaceId
-})
 
 const onReflush = async () => {
   const filterString = JSON.stringify(
-    filter.value.filter((item) => {
+    listFilter.value.filter((item) => {
       return item.condition[0].value
     })
   )
   let params = {
     curPage: currentPage.value,
     filter: filterString,
-    order: order.value
+    order: listOrder.value
   }
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
@@ -298,7 +248,7 @@ const getToolConfig = (row) => {
       label: '协作'
     }
   ]
-  if (!store.state.list.workSpaceId) {
+  if (!workSpaceId.value) {
     if (!row.isCollaborated) {
       // 创建人显示协作按钮
       funcList = funcList.concat(permissionsBtn)
@@ -430,19 +380,19 @@ const onRowClick = (row) => {
   })
 }
 const onSearchText = (e) => {
-  store.commit('list/setSearchVal', e)
+  searchVal.value = e
   currentPage.value = 1
   onReflush()
 }
 const onSelectChange = (selectKey, selectValue) => {
-  store.commit('list/changeSelectValueMap', { key: selectKey, value: selectValue })
+  changeSelectValueMap({ key: selectKey, value: selectValue })
   // selectValueMap.value[selectKey] = selectValue
   currentPage.value = 1
   onReflush()
 }
 const onButtonChange = (effectKey, effectValue) => {
-  store.commit('list/reserButtonValueMap')
-  store.commit('list/changeButtonValueMap', { key: effectKey, value: effectValue })
+  resetButtonValueMap()
+  changeButtonValueMap({ key: effectKey, value: effectValue })
   onReflush()
 }
 

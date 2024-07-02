@@ -16,11 +16,13 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useListStore } from '@/management/stores/list'
 import { type IMember, type ListItem } from '@/management/utils/types/workSpace'
 import OperationSelect from './OperationSelect.vue'
 
-const store = useStore()
+const listStore = useListStore()
+const { spaceDetail } = storeToRefs(listStore)
 const props = withDefaults(
   defineProps<{
     members: IMember[]
@@ -43,7 +45,7 @@ const list = computed({
   }
 })
 const currentUserId = computed(() => {
-  return store.state.list.spaceDetail?.currentUserId
+  return spaceDetail.value?.currentUserId
 })
 const handleRemove = (index: number) => {
   list.value.splice(index, 1)

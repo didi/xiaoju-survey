@@ -59,72 +59,59 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/management/stores/user'
+import { useListStore } from '@/management/stores/list'
 import { useRouter } from 'vue-router'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
-import { useUserStore } from '@/management/stores/user'
-const store = useStore()
-const userStore = useUserStore()
+
 const router = useRouter()
-const userInfo = computed(() => {
-  return userStore.userInfo
-})
+
+const userStore = useUserStore()
+const { userInfo } = storeToRefs(userStore)
+
+const listStore = useListStore()
+const { spaceMenus, workSpaceId, spaceType, surveyList, surveyTotal } = storeToRefs(listStore)
+const { changeSpaceType, changeWorkSpace, getSpaceList, getSurveyList } = listStore
+
 const loading = ref(false)
-const surveyList = computed(() => {
-  return store.state.list.surveyList
-})
-const surveyTotal = computed(() => {
-  return store.state.list.surveyTotal
-})
 const activeIndex = ref('1')
 
-const spaceMenus = computed(() => {
-  return store.state.list.spaceMenus
-})
-const workSpaceId = computed(() => {
-  return store.state.list.workSpaceId
-})
-const spaceType = computed(() => {
-  return store.state.list.spaceType
-})
 const handleSpaceSelect = (id: any) => {
   if (id === SpaceType.Personal) {
     // 点击个人空间菜单
-    if (store.state.list.spaceType === SpaceType.Personal) {
+    if (spaceType.value === SpaceType.Personal) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Personal)
-    store.commit('list/changeWorkSpace', '')
+    changeSpaceType(SpaceType.Personal)
+    changeWorkSpace('')
   } else if (id === SpaceType.Group) {
     // 点击团队空间组菜单
-    if (store.state.list.spaceType === SpaceType.Group) {
+    if (spaceType.value === SpaceType.Group) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Group)
-    store.commit('list/changeWorkSpace', '')
+    changeSpaceType(SpaceType.Group)
+    changeWorkSpace('')
   } else if (!Object.values(SpaceType).includes(id)) {
     // 点击具体团队空间
-    if (store.state.list.workSpaceId === id) {
+    if (workSpaceId.value === id) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Teamwork)
-    store.commit('list/changeWorkSpace', id)
+    changeSpaceType(SpaceType.Teamwork)
+    changeWorkSpace(id)
   }
 
   fetchSurveyList()
 }
 onMounted(() => {
-  fetchSpaceList()
+  getSpaceList()
   fetchSurveyList()
 })
-const fetchSpaceList = () => {
-  store.dispatch('list/getSpaceList')
-}
 const fetchSurveyList = async (params?: any) => {
   if (!params) {
     params = {
@@ -136,7 +123,7 @@ const fetchSurveyList = async (params?: any) => {
     params.workspaceId = workSpaceId.value
   }
   loading.value = true
-  await store.dispatch('list/getSurveyList', params)
+  await getSurveyList(params)
   loading.value = false
 }
 const modifyType = ref('add')
@@ -144,7 +131,7 @@ const showSpaceModify = ref(false)
 
 const onCloseModify = (type: string) => {
   showSpaceModify.value = false
-  if (type === 'update') fetchSpaceList()
+  if (type === 'update') getSpaceList()
 }
 const onSpaceCreate = () => {
   showSpaceModify.value = true

@@ -3,7 +3,7 @@
     <el-table
       ref="multipleListTable"
       class="list-table"
-      :data="dataList"
+      :data="teamSpaceList"
       empty-text="暂无数据"
       row-key="_id"
       header-row-class-name="tableview-header"
@@ -71,7 +71,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useListStore } from '@/management/stores/list'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
@@ -81,25 +82,24 @@ import { UserRole } from '@/management/utils/types/workSpace'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
-const store = useStore()
+const listStore = useListStore()
+const { teamSpaceList } = storeToRefs(listStore)
+const { getSpaceDetail, getSpaceList, deleteSpace } = listStore
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
     return get(spaceListConfig, f, null)
   })
 })
-const dataList = computed(() => {
-  return store.state.list.teamSpaceList
-})
 const isAdmin = (id: string) => {
   return (
-    store.state.list.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
+    (teamSpaceList.value.find((item: any) => item._id === id) as any)?.currentUserRole ===
     UserRole.Admin
   )
 }
 
 const handleModify = async (id: string) => {
-  await store.dispatch('list/getSpaceDetail', id)
+  await getSpaceDetail(id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -115,14 +115,14 @@ const handleDelete = (id: string) => {
     }
   )
     .then(async () => {
-      await store.dispatch('list/deleteSpace', id)
-      await store.dispatch('list/getSpaceList')
+      await deleteSpace(id)
+      await getSpaceList()
     })
     .catch(() => {})
 }
 const onCloseModify = () => {
   showSpaceModify.value = false
-  store.dispatch('list/getSpaceList')
+  getSpaceList()
 }
 // const handleCurrentChange = (current) => {
 //   this.currentPage = current

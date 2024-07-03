@@ -12,9 +12,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { toRef } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 
 import SuccessContent from '../components/SuccessContent.vue'
 import OverTime from '../components/OverTime.vue'
@@ -25,11 +25,10 @@ const components = {
   [EDIT_STATUS_MAP.OVERTIME]: OverTime
 }
 
-const store = useStore()
-const currentEditStatus = computed(() => store.state?.edit?.currentEditStatus)
-const moduleConfig = computed(() => {
-  return _get(store.state, 'edit.schema.submitConf')
-})
+const editStore = useEditStore()
+const { currentEditStatus } = storeToRefs(editStore)
+const { schema } = editStore
+const moduleConfig = toRef(schema, 'submitConf')
 </script>
 <style lang="scss" scoped>
 .result-config-preview {

@@ -23,8 +23,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, shallowRef } from 'vue'
-import { useStore } from 'vuex'
+import { computed, ref, shallowRef, toRef } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import { get as _get } from 'lodash-es'
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
@@ -36,15 +37,16 @@ const textMap = {
   OverTime: '问卷过期页面配置'
 }
 
-const store = useStore()
+const editStore = useEditStore()
+const { currentEditStatus } = storeToRefs(editStore)
+const { schema, changeSchema } = editStore
 
 const components = shallowRef<any>({})
 const registerTypes = ref<any>({})
-const moduleConfig = computed(() => _get(store.state, 'edit.schema.submitConf'))
-const currentEditText = computed(() => (textMap as any)[store.state.edit.currentEditStatus])
+const moduleConfig = toRef(schema, 'submitConf')
+const currentEditText = computed(() => (textMap as any)[currentEditStatus.value])
 const formFields = computed(() => {
-  const currentStatus = store.state.edit.currentEditStatus
-  const formList = (statusConfig as any)[currentStatus] || []
+  const formList = (statusConfig as any)[currentEditStatus.value] || []
   const list = formList.map((item: any) => {
     const value = _get(moduleConfig.value, item.key, item.value)
 
@@ -57,7 +59,7 @@ const formFields = computed(() => {
 })
 
 const handleFormChange = ({ key, value }: any) => {
-  store.dispatch('edit/changeSchema', {
+  changeSchema({
     key: `submitConf.${key}`,
     value
   })

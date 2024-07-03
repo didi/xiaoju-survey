@@ -51,8 +51,9 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { QOP_MAP } from '@/management/utils/constant'
 import MemberSelect from './MemberSelect.vue'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'
+import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 
-const store = useStore()
+const listSpaceStore = useTeamSpaceStore()
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = defineProps({
   type: String,
@@ -86,11 +87,11 @@ const rules = {
   ]
 }
 const spaceDetail = computed(() => {
-  return store.state.list.spaceDetail
+  return listSpaceStore.spaceDetail
 })
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? store.state.list.teamSpaceList.find((item: any) => item._id === spaceDetail.value._id)
+    ? listSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value._id)
         .currentUserRole !== UserRole.Admin
     : false
 })
@@ -107,7 +108,7 @@ const onClose = () => {
     members: [] as IMember[]
   }
   // 清空空间详情
-  store.commit('list/setSpaceDetail', null)
+  listSpaceStore.setSpaceDetail(null)
   emit('on-close-codify')
 }
 
@@ -142,10 +143,10 @@ const handleMembersChange = (val: IMember[]) => {
   formModel.value.members = val
 }
 const handleUpdate = async () => {
-  await store.dispatch('list/updateSpace', formModel.value)
+  await listSpaceStore.updateSpace(formModel.value)
 }
 const handleAdd = async () => {
-  await store.dispatch('list/addSpace', formModel.value)
+  await listSpaceStore.addSpace(formModel.value)
 }
 </script>
 

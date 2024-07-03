@@ -71,17 +71,17 @@
 </template>
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
 import { spaceListConfig } from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
+import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
-const store = useStore()
+const listSpaceStore = useTeamSpaceStore()
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
@@ -89,17 +89,17 @@ const fieldList = computed(() => {
   })
 })
 const dataList = computed(() => {
-  return store.state.list.teamSpaceList
+  return listSpaceStore.teamSpaceList
 })
 const isAdmin = (id: string) => {
   return (
-    store.state.list.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
+    listSpaceStore.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
     UserRole.Admin
   )
 }
 
 const handleModify = async (id: string) => {
-  await store.dispatch('list/getSpaceDetail', id)
+  await listSpaceStore.getSpaceDetail(id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -115,15 +115,17 @@ const handleDelete = (id: string) => {
     }
   )
     .then(async () => {
-      await store.dispatch('list/deleteSpace', id)
-      await store.dispatch('list/getSpaceList')
+      await listSpaceStore.deleteSpace(id)
+      await listSpaceStore.getSpaceList()
     })
     .catch(() => {})
 }
+
 const onCloseModify = () => {
   showSpaceModify.value = false
-  store.dispatch('list/getSpaceList')
+  listSpaceStore.getSpaceList()
 }
+
 // const handleCurrentChange = (current) => {
 //   this.currentPage = current
 //   this.init()
@@ -133,6 +135,7 @@ const onCloseModify = () => {
 .list-wrap {
   padding: 20px;
   background: #fff;
+
   .list-table {
     :deep(.el-table__header) {
       .tableview-header .el-table__cell {
@@ -143,22 +146,28 @@ const onCloseModify = () => {
         }
       }
     }
+
     :deep(.tableview-row) {
       .tableview-cell {
         padding: 5px 0;
+
         &.link {
           cursor: pointer;
         }
+
         .cell .cell-span {
           font-size: 14px;
         }
       }
     }
+
     .tool-root {
       display: flex;
+
       &:first-child {
         margin-left: -10px;
       }
+
       .tool-root-btn-text {
         font-weight: normal !important;
       }

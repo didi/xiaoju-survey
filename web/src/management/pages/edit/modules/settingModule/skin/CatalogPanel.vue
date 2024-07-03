@@ -27,7 +27,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/management/stores'
 import { useEditStore } from '@/management/stores/edit'
 
 import skinPresets from '@/management/config/skinPresets.js'
@@ -36,24 +36,28 @@ const store = useStore()
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
 const groupName = ref<string>('temp')
-const bannerList = computed(() => store?.state?.bannerList || [])
+const bannerList = computed(() => store.bannerList || [])
 const groupList = computed(() =>
-  Object.keys(bannerList.value).map((key) => ({
-    label: bannerList.value[key].name,
-    value: key
-  }))
+  bannerList.value
+    ? Object.keys(bannerList.value).map((key) => ({
+        label: bannerList.value[key].name,
+        value: key
+      }))
+    : []
 )
 const currentBannerList = computed(() => {
-  const arr = Object.keys(bannerList.value)
-    .map((key) => {
-      return bannerList.value[key]
-    })
-    .map((data) => {
-      return data.list.map((item: any) => {
-        item.group = data.key
-        return item
-      })
-    })
+  const arr = bannerList.value
+    ? Object.keys(bannerList.value)
+        .map((key) => {
+          return bannerList.value[key]
+        })
+        .map((data: any) => {
+          return data.list.map((item: any) => {
+            item.group = data.key
+            return item
+          })
+        })
+    : []
 
   const allbanner = arr.reduce((acc, curr) => {
     return acc.concat(curr)

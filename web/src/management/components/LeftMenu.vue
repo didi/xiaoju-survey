@@ -27,7 +27,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/management/stores'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 import LogoIcon from './LogoIcon.vue'
@@ -58,18 +58,22 @@ const tabArr = [
   }
 ]
 const tabs = ref([])
-watch(() => store.state.cooperPermissions, (newVal) => {
-  tabs.value = []
-  // 如果有问卷管理权限，则加入问卷编辑和投放菜单
-  if (newVal.includes(SurveyPermissions.SurveyManage)) {
-    tabs.value.push(tabArr[0])
-    tabs.value.push(tabArr[1])
-  } 
-  // 如果有数据分析权限，则加入数据分析菜单
-  if (newVal.includes(SurveyPermissions.DataManage))  {
-    tabs.value.push(tabArr[2])
-  }
-}, { immediate: true })
+watch(
+  () => store.cooperPermissions,
+  (newVal) => {
+    tabs.value = []
+    // 如果有问卷管理权限，则加入问卷编辑和投放菜单
+    if (newVal.includes(SurveyPermissions.SurveyManage)) {
+      tabs.value.push(tabArr[0])
+      tabs.value.push(tabArr[1])
+    }
+    // 如果有数据分析权限，则加入数据分析菜单
+    if (newVal.includes(SurveyPermissions.DataManage)) {
+      tabs.value.push(tabArr[2])
+    }
+  },
+  { immediate: true }
+)
 </script>
 <style lang="scss" scoped>
 .nav {

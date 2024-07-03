@@ -222,7 +222,6 @@ function useSurveyList(workSpaceId) {
       const res = await fetchSurveyList(params)
       if (res.code === CODE_MAP.SUCCESS) {
         const { data, count } = res.data
-        console.log(data, count)
         surveyList.value = data
         surveyTotal.value = count
       } else {

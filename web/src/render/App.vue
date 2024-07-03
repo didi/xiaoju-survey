@@ -4,12 +4,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { watch, toRef } from 'vue'
+import { useStore } from '@/render/stores'
 
 const store = useStore()
-const skinConf = computed(() => _get(store, 'state.skinConf', {}))
+const { state } = store
+const skinConf = toRef(state, 'skinConf')
 
 const updateSkinConfig = (value: any) => {
   const root = document.documentElement

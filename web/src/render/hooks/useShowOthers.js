@@ -1,5 +1,8 @@
-import store from '../store/index'
+import { useStore } from '@/render/stores'
 export const useShowOthers = (questionKey) => {
+  const store = useStore()
+  const { changeData } = store
+
   const formValues = store.state.formValues
   const questionVal = formValues[questionKey]
   let othersValue = {}
@@ -13,7 +16,7 @@ export const useShowOthers = (questionKey) => {
           key: opKey,
           value: ''
         }
-        store.commit('changeFormData', data)
+        changeData(data)
       }
       return {
         ...optionItem,

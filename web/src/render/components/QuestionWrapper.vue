@@ -8,12 +8,12 @@
   ></QuestionRuleContainer>
 </template>
 <script setup>
-import { unref, computed, watch } from 'vue'
+import { unref, computed, watch, toRef } from 'vue'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
-import store from '@/render/store'
+import { useStore } from '@/render/stores'
 import { cloneDeep } from 'lodash-es'
 import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
 
@@ -31,11 +31,13 @@ const props = defineProps({
     }
   }
 })
+
+const store = useStore()
+const { changeData, updateVoteData, state } = store
+
 const emit = defineEmits(['change'])
 
-const formValues = computed(() => {
-  return store.state.formValues
-})
+const formValues = toRef(state, 'formValues')
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
   const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
@@ -57,8 +59,10 @@ const questionConfig = computed(() => {
     moduleConfig.othersValue = unref(othersValue)
   }
   if (
-    RATES.includes(type) && rest?.rangeConfig && 
-    Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length > 0
+    RATES.includes(type) &&
+    rest?.rangeConfig &&
+    Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length >
+      0
   ) {
     let { rangeConfig, othersValue } = useShowInput(field)
     moduleConfig.rangeConfig = unref(rangeConfig)
@@ -94,7 +98,7 @@ watch(
         key: field,
         value: value
       }
-      store.commit('changeFormData', data)
+      changeData(data)
     }
   }
 )
@@ -103,7 +107,7 @@ const handleChange = (data) => {
   emit('change', data)
   // 处理投票题
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
-    store.dispatch('updateVoteData', data)
+    updateVoteData(data)
   }
 }
 </script>

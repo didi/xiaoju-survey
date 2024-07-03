@@ -1,6 +1,8 @@
-import store from '../store/index'
+import { useStore } from '@/render/stores'
 import { computed } from 'vue'
 export const useProgressBar = () => {
+  const store = useStore()
+
   const isVariableEmpty = (variable) => {
     if (variable === undefined || variable === null) {
       return true

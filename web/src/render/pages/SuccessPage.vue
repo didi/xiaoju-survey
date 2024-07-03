@@ -11,16 +11,17 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/render/stores'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
 
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 const store = useStore()
+const { state } = store
 
-const logoConf = computed(() => store.state?.bottomConf || {})
+const logoConf = computed(() => state?.bottomConf || {})
 const successMsg = computed(() => {
-  const msgContent = store.state?.submitConf?.msgContent || {}
+  const msgContent = (state?.submitConf as any)?.msgContent || {}
   return msgContent?.msg_200 || '提交成功'
 })
 </script>

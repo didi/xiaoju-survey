@@ -11,16 +11,17 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '@/render/stores'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
 
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
 const store = useStore()
+const { errorInfo, state } = store
 
 const errorImageUrl = computed(() => {
-  const errorType = store.state?.errorInfo?.errorType
+  const errorType = errorInfo?.errorType
   const imageMap = {
     overTime: '/imgs/icons/overtime.webp',
     default: '/imgs/icons/error.webp'
@@ -29,8 +30,8 @@ const errorImageUrl = computed(() => {
   return imageMap[errorType as 'overTime'] || imageMap.default
 })
 
-const errorMsg = computed(() => store.state?.errorInfo?.errorMsg || '提交失败')
-const logoConf = computed(() => store.state?.bottomConf || {})
+const errorMsg = computed(() => errorInfo?.errorMsg || '提交失败')
+const logoConf = computed(() => state?.bottomConf || {})
 </script>
 <style lang="scss" scoped>
 .result-page-wrap {

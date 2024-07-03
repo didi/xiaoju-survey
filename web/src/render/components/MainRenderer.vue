@@ -6,24 +6,20 @@
         :render-data="item"
         :rules="rules"
         :formValues="formValues"
-        @formChange="handleChangeData"
+        @formChange="changeData"
       />
     </template>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useStore } from '@/render/stores'
 
 import MaterialGroup from './MaterialGroup.vue'
 
 const store = useStore()
-
-const renderData = computed(() => store.getters?.renderData)
-const rules = computed(() => store.state.rules)
-const formValues = computed(() => store.state.formValues)
-
-const handleChangeData = (data: any) => {
-  store.dispatch('changeData', data)
-}
+const { renderData } = storeToRefs(store)
+const { state, changeData } = store
+const { rules, formValues } = toRefs(state)
 </script>

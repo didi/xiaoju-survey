@@ -1,10 +1,14 @@
-import store from '../store/index'
-export const useVoteMap = (questionKey) => {
-  let voteTotal = store.state.voteMap?.[questionKey]?.total || 0
+import { useStore } from '@/render/stores'
+import { storeToRefs } from 'pinia'
 
-  const options = store.state.questionData[questionKey].options.map((option) => {
+export const useVoteMap = (questionKey) => {
+  const store = useStore()
+  const { voteMap, questionData } = storeToRefs(store)
+  let voteTotal = voteMap.value?.[questionKey]?.total || 0
+
+  const options = questionData.value[questionKey].options.map((option) => {
     const optionHash = option.hash
-    const voteCount = store.state.voteMap?.[questionKey]?.[optionHash] || 0
+    const voteCount = voteMap.value?.[questionKey]?.[optionHash] || 0
 
     return {
       ...option,

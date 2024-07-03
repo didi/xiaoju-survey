@@ -1,5 +1,7 @@
-import store from '../store/index'
+import { useStore } from '@/render/stores'
 export const useShowInput = (questionKey) => {
+  const store = useStore()
+  const { changeData } = store
   const formValues = store.state.formValues
   const questionVal = formValues[questionKey]
   let rangeConfig = store.state.questionData[questionKey].rangeConfig
@@ -18,7 +20,7 @@ export const useShowInput = (questionKey) => {
             key: rangeKey,
             value: ''
           }
-          store.commit('changeFormData', data)
+          changeData(data)
         }
       }
     }

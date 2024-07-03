@@ -20,7 +20,8 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useStore } from '@/render/stores'
 import { useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -56,13 +57,13 @@ const alert = useCommandComponent(AlertDialog)
 const confirm = useCommandComponent(ConfirmDialog)
 
 const store = useStore()
+const { renderData, surveyPath, enterTime, encryptInfo } = storeToRefs(store)
+const { state } = store
 const router = useRouter()
 
-const bannerConf = computed(() => store.state?.bannerConf || {})
-const renderData = computed(() => store.getters.renderData)
-const submitConf = computed(() => store.state?.submitConf || {})
-const logoConf = computed(() => store.state?.bottomConf || {})
-const surveyPath = computed(() => store.state?.surveyPath || '')
+const bannerConf = computed(() => state.bannerConf || {})
+const submitConf = computed(() => state.submitConf || {})
+const logoConf = computed(() => state.bottomConf || {})
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -70,25 +71,23 @@ const validate = (cbk: (v: boolean) => void) => {
 }
 
 const normalizationRequestBody = () => {
-  const enterTime = store.state.enterTime
-  const encryptInfo = store.state.encryptInfo
-  const formValues = store.state.formValues
+  const formValues = state.formValues
 
   const result: any = {
     surveyPath: surveyPath.value,
     data: JSON.stringify(formValues),
-    difTime: Date.now() - enterTime,
+    difTime: Date.now() - enterTime.value,
     clientTime: Date.now()
   }
-  
-  if (encryptInfo?.encryptType) {
-    result.encryptType = encryptInfo?.encryptType
+
+  if (encryptInfo.value?.encryptType) {
+    result.encryptType = encryptInfo.value?.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({
       data: result.data,
-      secretKey: encryptInfo?.data?.secretKey
+      secretKey: encryptInfo.value?.data?.secretKey
     })
-    if (encryptInfo?.data?.sessionId) {
-      result.sessionId = encryptInfo.data.sessionId
+    if (encryptInfo.value?.data?.sessionId) {
+      result.sessionId = encryptInfo.value.data.sessionId
     }
   } else {
     result.data = JSON.stringify(result.data)
@@ -119,7 +118,7 @@ const submitSurver = async () => {
 }
 
 const handleSubmit = () => {
-  const confirmAgain = store.state.submitConf.confirmAgain
+  const confirmAgain = (state.submitConf as any)?.confirmAgain
   const { again_text, is_again } = confirmAgain
 
   if (is_again) {

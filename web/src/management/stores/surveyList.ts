@@ -24,7 +24,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   } = useSearchSurvey()
 
   const listSpaceStore = useTeamSpaceStore()
-  async function getSurveyList(payload) {
+  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
     const filterString = JSON.stringify(
       listFilter.value.filter((item) => {
         return item.condition[0].value
@@ -32,7 +32,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
     )
     const orderString = JSON.stringify(listOrder.value)
     try {
-      let params = {
+      const params = {
         curPage: payload?.curPage || 1,
         pageSize: payload?.pageSize || 10, // 默认一页10条
         filter: filterString,
@@ -40,7 +40,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         workspaceId: listSpaceStore.workSpaceId
       }
 
-      const res = await getSurveyListReq(params)
+      const res: any = await getSurveyListReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
         surveyList.value = res.data.data
         surveyTotal.value = res.data.count
@@ -71,11 +71,11 @@ export const useSurveyListStore = defineStore('surveyList', () => {
 
 function useSearchSurvey() {
   const searchVal = ref('')
-  const selectValueMap = ref({
+  const selectValueMap = ref<Record<string, any>>({
     surveyType: '',
     'curStatus.status': ''
   })
-  const buttonValueMap = ref({
+  const buttonValueMap = ref<Record<string, any>>({
     'curStatus.date': '',
     createDate: -1
   })
@@ -115,7 +115,7 @@ function useSearchSurvey() {
   const listOrder = computed(() => {
     return Object.entries(buttonValueMap.value)
       .filter(([, effectValue]) => effectValue)
-      .reduce((prev, item) => {
+      .reduce((prev: { field: string, value: string | number }[], item) => {
         const [effectKey, effectValue] = item
         prev.push({ field: effectKey, value: effectValue })
         return prev
@@ -136,11 +136,11 @@ function useSearchSurvey() {
     }
   }
 
-  function changeSelectValueMap(key, value) {
+  function changeSelectValueMap(key: string, value: string | number) {
     selectValueMap.value[key] = value
   }
 
-  function changeButtonValueMap(key, value) {
+  function changeButtonValueMap(key: string, value: string | number) {
     buttonValueMap.value[key] = value
   }
 

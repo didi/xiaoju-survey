@@ -1,21 +1,7 @@
 <template>
-  <el-dialog
-    class="base-dialog-root"
-    :model-value="visible"
-    width="40%"
-    :title="formTitle"
-    @close="onClose"
-  >
-    <el-form
-      class="base-form-root"
-      ref="ruleForm"
-      :model="formModel"
-      :rules="rules"
-      label-position="top"
-      size="large"
-      @submit.prevent
-      :disabled="formDisabled"
-    >
+  <el-dialog class="base-dialog-root" :model-value="visible" width="40%" :title="formTitle" @close="onClose">
+    <el-form class="base-form-root" ref="ruleForm" :model="formModel" :rules="rules" label-position="top" size="large"
+      @submit.prevent :disabled="formDisabled">
       <el-form-item label="团队空间名称" prop="name">
         <el-input v-model="formModel.name" />
       </el-form-item>
@@ -23,11 +9,7 @@
         <el-input v-model="formModel.description" />
       </el-form-item>
       <el-form-item label="添加成员" prop="members">
-        <MemberSelect
-          :members="formModel.members"
-          @select="handleMemberSelect"
-          @change="handleMembersChange"
-        />
+        <MemberSelect :members="formModel.members" @select="handleMemberSelect" @change="handleMembersChange" />
       </el-form-item>
     </el-form>
 
@@ -44,7 +26,6 @@
 
 <script lang="ts" setup>
 import { computed, ref, shallowRef, onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { pick as _pick } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -91,14 +72,14 @@ const spaceDetail = computed(() => {
 })
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? listSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value._id)
-        .currentUserRole !== UserRole.Admin
+    ? listSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
+        ?.currentUserRole !== UserRole.Admin
     : false
 })
 
 onMounted(() => {
   if (props.type === QOP_MAP.EDIT) {
-    formModel.value = _pick(spaceDetail.value, ['_id', 'name', 'description', 'members'])
+    formModel.value = _pick(spaceDetail.value as any, ['_id', 'name', 'description', 'members'])
   }
 })
 const onClose = () => {

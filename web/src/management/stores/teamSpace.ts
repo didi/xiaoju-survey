@@ -11,6 +11,27 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useSurveyListStore } from './surveyList'
+import { type IMember } from '@/management/utils/types/workSpace'
+
+interface SpaceDetail {
+  _id?: string
+  name: string
+  currentUserId?: string
+  description: string
+  members: IMember
+}
+
+
+type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
+  createDate: string
+  curStatus: { date: number, status: string }
+  memberTotal: number
+  currentUserRole: string
+  owner: string
+  ownerId: string
+  surveyTotal: number
+}
+
 
 export const useTeamSpaceStore = defineStore('teamSpace', () => {
   // list空间
@@ -29,18 +50,18 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
   ])
   const spaceType = ref(SpaceType.Personal)
   const workSpaceId = ref('')
-  const spaceDetail = ref(null)
-  const teamSpaceList = ref([])
+  const spaceDetail = ref<SpaceDetail | null>(null)
+  const teamSpaceList = ref<SpaceItem[]>([])
 
   const surveyListStore = useSurveyListStore()
 
   async function getSpaceList() {
     try {
-      const res = await getSpaceListReq()
+      const res: any = await getSpaceListReq()
 
       if (res.code === CODE_MAP.SUCCESS) {
         const { list } = res.data
-        const teamSpace = list.map((item) => {
+        const teamSpace = list.map((item: SpaceDetail) => {
           return {
             id: item._id,
             name: item.name
@@ -56,10 +77,10 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     }
   }
 
-  async function getSpaceDetail(id) {
+  async function getSpaceDetail(id: string) {
     try {
       const _id = id || workSpaceId.value
-      const res = await getSpaceDetailReq(_id)
+      const res: any = await getSpaceDetailReq(_id)
       if (res.code === CODE_MAP.SUCCESS) {
         spaceDetail.value = res.data
       } else {
@@ -70,47 +91,46 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     }
   }
 
-  function changeSpaceType(id) {
+  function changeSpaceType(id: SpaceType) {
     spaceType.value = id
   }
 
-  function changeWorkSpace(id) {
-    console.log('changeWorkSpace =>', id)
+  function changeWorkSpace(id: string) {
     workSpaceId.value = id
     surveyListStore.resetSearch()
   }
 
-  async function deleteSpace(id) {
+  async function deleteSpace(id: string) {
     try {
-      const res = await deleteSpaceReq(id)
+      const res: any = await deleteSpaceReq(id)
 
       if (res.code === CODE_MAP.SUCCESS) {
         ElMessage.success('删除成功')
       } else {
         ElMessage.error(res.errmsg)
       }
-    } catch (err) {
+    } catch (err: any) {
       ElMessage.error(err)
     }
   }
 
-  async function updateSpace(params) {
-    const res = await updateSpaceReq({
+  async function updateSpace(params: any) {
+    const res: any = await updateSpaceReq({
       workspaceId: params._id,
       name: params.name,
       description: params.description,
       members: params.members
     })
 
-    if (res.code === CODE_MAP.SUCCESS) {
+    if (res?.code === CODE_MAP.SUCCESS) {
       ElMessage.success('更新成功')
     } else {
-      ElMessage.error(res.errmsg)
+      ElMessage.error(res?.errmsg)
     }
   }
 
-  async function addSpace(params) {
-    const res = await createSpace({
+  async function addSpace(params: any) {
+    const res: any = await createSpace({
       name: params.name,
       description: params.description,
       members: params.members
@@ -123,7 +143,7 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     }
   }
 
-  function setSpaceDetail(data) {
+  function setSpaceDetail(data: null | SpaceDetail) {
     spaceDetail.value = data
   }
 

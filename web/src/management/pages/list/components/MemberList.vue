@@ -20,7 +20,7 @@ import { type IMember, type ListItem } from '@/management/utils/types/workSpace'
 import OperationSelect from './OperationSelect.vue'
 import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 
-const listSpaceStore = useTeamSpaceStore()
+const teamSpaceStore = useTeamSpaceStore()
 const props = withDefaults(
   defineProps<{
     members: IMember[]
@@ -43,7 +43,7 @@ const list = computed({
   }
 })
 const currentUserId = computed(() => {
-  return listSpaceStore.spaceDetail?.currentUserId
+  return teamSpaceStore.spaceDetail?.currentUserId
 })
 const handleRemove = (index: number) => {
   list.value.splice(index, 1)

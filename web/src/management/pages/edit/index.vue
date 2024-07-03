@@ -15,7 +15,8 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -26,16 +27,18 @@ import Navbar from './components/ModuleNavbar.vue'
 
 import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
-const store = useStore()
+const editStore = useEditStore()
+const { surveyId } = storeToRefs(editStore)
+const { schema, init } = editStore
 const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-  store.commit('edit/setSurveyId', route.params.id)
+  surveyId.value = route.params.id as string
 
   try {
-    await store.dispatch('edit/init')
-    await initShowLogicEngine(store.state.edit.schema.logicConf.showLogicConf || {})
+    await init()
+    await initShowLogicEngine(schema.logicConf.showLogicConf || {})
   } catch (err: any) {
     ElMessage.error(err.message)
 

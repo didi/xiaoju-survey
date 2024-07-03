@@ -74,7 +74,6 @@ const router = useRouter()
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
-
 const listStore = useListStore()
 const { spaceMenus, workSpaceId, spaceType, surveyList, surveyTotal } = storeToRefs(listStore)
 const { changeSpaceType, changeWorkSpace, getSpaceList, getSurveyList } = listStore

@@ -34,7 +34,8 @@
 
 <script>
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import QuestionContainerB from '@/materials/questions/QuestionContainerB'
 import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
@@ -61,13 +62,14 @@ export default defineComponent({
   },
   emits: ['change', 'select', 'changeSeq'],
   setup(props, { emit }) {
-    const store = useStore()
+    const editStore = useEditStore()
+    const { questionDataList } = storeToRefs(editStore)
     const renderData = computed({
       get() {
         return filterQuestionPreviewData(props.questionDataList)
       },
-      set(questionDataList) {
-        store.commit('edit/setQuestionDataList', questionDataList)
+      set(value) {
+        questionDataList.value = value
       }
     })
     const handleSelect = (index) => {

@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -15,7 +15,8 @@ import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import buildData from './buildData'
 
 const isPublishing = ref<boolean>(false)
-const store = useStore()
+const editStore = useEditStore()
+const { schema, changeSchema, getSchemaFromRemote } = editStore
 const router = useRouter()
 
 const updateLogicConf = () => {
@@ -27,7 +28,7 @@ const updateLogicConf = () => {
     showLogicEngine.value.validateSchema()
     const showLogicConf = showLogicEngine.value.toJson()
     // 更新逻辑配置
-    store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+    changeSchema({ key: 'logicConf', value: { showLogicConf } })
   }
 }
 
@@ -46,7 +47,7 @@ const handlePublish = async () => {
     return
   }
 
-  const saveData = buildData(store.state.edit.schema)
+  const saveData = buildData(schema)
   if (!saveData.surveyId) {
     isPublishing.value = false
     ElMessage.error('未获取到问卷id')
@@ -64,7 +65,7 @@ const handlePublish = async () => {
     const publishRes: any = await publishSurvey({ surveyId: saveData.surveyId })
     if (publishRes.code === 200) {
       ElMessage.success('发布成功')
-      store.dispatch('edit/getSchemaFromRemote')
+      getSchemaFromRemote()
       router.push({ name: 'publish' })
     } else {
       ElMessage.error(`发布失败 ${publishRes.errmsg}`)

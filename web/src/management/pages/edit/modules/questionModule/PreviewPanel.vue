@@ -30,24 +30,22 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, toRefs } from 'vue'
 import communalLoader from '@materials/communals/communalLoader.js'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 
 const MainTitle = communalLoader.loadComponent('MainTitle')
 const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
-const store = useStore()
+const editStore = useEditStore()
+const { questionDataList, currentEditOne, currentEditKey } = storeToRefs(editStore)
+const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion } = editStore
 const mainOperation = ref(null)
 const materialGroup = ref(null)
 
-const bannerConf = computed(() => store.state.edit.schema.bannerConf)
-const submitConf = computed(() => store.state.edit.schema.submitConf)
-const skinConf = computed(() => store.state.edit.schema.skinConf)
-const questionDataList = computed(() => store.state.edit.schema.questionDataList)
-const currentEditOne = computed(() => store.state.edit.currentEditOne)
-const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
+const { bannerConf, submitConf, skinConf } = toRefs(schema)
 const autoScrollData = computed(() => {
   return {
     currentEditOne: currentEditOne.value,
@@ -55,8 +53,8 @@ const autoScrollData = computed(() => {
   }
 })
 
-const onSelectEditOne = async (currentEditOne) => {
-  store.commit('edit/setCurrentEditOne', currentEditOne)
+const onSelectEditOne = (_currentEditOne) => {
+  currentEditOne.value = _currentEditOne
 }
 
 const handleChange = (data) => {
@@ -65,34 +63,33 @@ const handleChange = (data) => {
   }
   const { key, value } = data
   const resultKey = `${currentEditKey.value}.${key}`
-  store.dispatch('edit/changeSchema', { key: resultKey, value })
+  changeSchema({ key: resultKey, value })
 }
 
 const onMainClick = (e) => {
   if (e.target === mainOperation.value) {
-    store.commit('edit/setCurrentEditOne', null)
+    currentEditOne.value = null
   }
 }
 
 const onQuestionOperation = (data) => {
   switch (data.type) {
     case 'move':
-      store.dispatch('edit/moveQuestion', {
+      moveQuestion({
         index: data.index,
         range: data.range
       })
       break
     case 'delete':
-      store.dispatch('edit/deleteQuestion', { index: data.index })
+      deleteQuestion({ index: data.index })
       break
     case 'copy':
-      store.dispatch('edit/copyQuestion', { index: data.index })
+      copyQuestion({ index: data.index })
       break
     default:
       break
   }
 }
-
 watch(
   skinConf,
   (newVal) => {

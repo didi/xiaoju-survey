@@ -25,9 +25,9 @@
   </el-popover>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
@@ -44,21 +44,21 @@ const publishList = ref<Array<any>>([])
 const currentTab = ref<'daily' | 'publish'>('daily')
 const visible = ref<boolean>(false)
 
-const store = useStore()
+const editStore = useEditStore()
+const { surveyId, schemaUpdateTime } = storeToRefs(editStore)
 
 const queryHistories = async () => {
   if (dirtyMonitor.value) {
     loading.value = true
     dirtyMonitor.value = false
 
-    const surveyId = _get(store.state, 'edit.surveyId')
     const [dHis, pHis] = await Promise.all([
       getSurveyHistory({
-        surveyId,
+        surveyId: surveyId.value,
         historyType: 'dailyHis'
       }),
       getSurveyHistory({
-        surveyId,
+        surveyId: surveyId.value,
         historyType: 'publishHis'
       })
     ]).finally(() => {
@@ -81,7 +81,6 @@ const handlePopoverShow = async () => {
 }
 const loading = ref<boolean>(false)
 const dirtyMonitor = ref<boolean>(true)
-const schemaUpdateTime = computed(() => _get(store.state, 'edit.schemaUpdateTime'))
 
 watch(
   schemaUpdateTime,

@@ -8,6 +8,7 @@ import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { getListHeadByDataList } from '../utils';
+
 @Injectable()
 export class DataStatisticService {
   private radioType = ['radio-star', 'radio-nps'];

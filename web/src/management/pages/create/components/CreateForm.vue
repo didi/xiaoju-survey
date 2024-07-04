@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectType: 'normal'
 })
 
-const listSpaceStore = useTeamSpaceStore()
+const teamSpaceStore = useTeamSpaceStore()
 const ruleForm = ref<any>(null)
 
 const state = reactive({
@@ -92,8 +92,8 @@ const submit = () => {
       surveyType: selectType,
       ...state.form
     }
-    if (listSpaceStore.workSpaceId) {
-      payload.workspaceId = listSpaceStore.workSpaceId
+    if (teamSpaceStore.workSpaceId) {
+      payload.workspaceId = teamSpaceStore.workSpaceId
     }
     const res: any = await createSurvey(payload)
     if (res?.code === 200 && res?.data?.id) {

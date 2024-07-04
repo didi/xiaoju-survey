@@ -17,13 +17,13 @@ export const useSurveyListStore = defineStore('surveyList', () => {
     listFilter,
     listOrder,
     resetSearch,
-    reserSelectValueMap,
-    reserButtonValueMap,
+    resetSelectValueMap,
+    resetButtonValueMap,
     changeSelectValueMap,
     changeButtonValueMap
   } = useSearchSurvey()
 
-  const listSpaceStore = useTeamSpaceStore()
+  const teamSpaceStore = useTeamSpaceStore()
   async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
     const filterString = JSON.stringify(
       listFilter.value.filter((item) => {
@@ -37,7 +37,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         pageSize: payload?.pageSize || 10, // 默认一页10条
         filter: filterString,
         order: orderString,
-        workspaceId: listSpaceStore.workSpaceId
+        workspaceId: teamSpaceStore.workSpaceId
       }
 
       const res: any = await getSurveyListReq(params)
@@ -62,8 +62,8 @@ export const useSurveyListStore = defineStore('surveyList', () => {
     listOrder,
     resetSearch,
     getSurveyList,
-    reserSelectValueMap,
-    reserButtonValueMap,
+    resetSelectValueMap,
+    resetButtonValueMap,
     changeSelectValueMap,
     changeButtonValueMap
   }
@@ -75,6 +75,7 @@ function useSearchSurvey() {
     surveyType: '',
     'curStatus.status': ''
   })
+
   const buttonValueMap = ref<Record<string, any>>({
     'curStatus.date': '',
     createDate: -1
@@ -112,6 +113,7 @@ function useSearchSurvey() {
       }
     ]
   })
+
   const listOrder = computed(() => {
     return Object.entries(buttonValueMap.value)
       .filter(([, effectValue]) => effectValue)
@@ -122,14 +124,14 @@ function useSearchSurvey() {
       }, [])
   })
 
-  function reserSelectValueMap() {
+  function resetSelectValueMap() {
     selectValueMap.value = {
       surveyType: '',
       'curStatus.status': ''
     }
   }
 
-  function reserButtonValueMap() {
+  function resetButtonValueMap() {
     buttonValueMap.value = {
       'curStatus.date': '',
       createDate: -1
@@ -146,8 +148,8 @@ function useSearchSurvey() {
 
   function resetSearch() {
     searchVal.value = ''
-    reserSelectValueMap()
-    reserButtonValueMap()
+    resetSelectValueMap()
+    resetButtonValueMap()
   }
 
   return {
@@ -157,8 +159,8 @@ function useSearchSurvey() {
     listFilter,
     listOrder,
     resetSearch,
-    reserSelectValueMap,
-    reserButtonValueMap,
+    resetSelectValueMap,
+    resetButtonValueMap,
     changeSelectValueMap,
     changeButtonValueMap
   }

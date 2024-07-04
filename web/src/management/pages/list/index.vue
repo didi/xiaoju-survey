@@ -72,11 +72,11 @@ import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 
 const userStore = useUserStore()
-const listSpaceStore = useTeamSpaceStore()
+const teamSpaceStore = useTeamSpaceStore()
 const surveyListStore = useSurveyListStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
-const { spaceMenus, workSpaceId, spaceType } = storeToRefs(listSpaceStore)
+const { spaceMenus, workSpaceId, spaceType } = storeToRefs(teamSpaceStore)
 const router = useRouter()
 const userInfo = computed(() => {
   return userStore.userInfo
@@ -87,25 +87,25 @@ const activeIndex = ref('1')
 const handleSpaceSelect = (id: any) => {
   if (id === SpaceType.Personal) {
     // 点击个人空间菜单
-    if (listSpaceStore.spaceType === SpaceType.Personal) {
+    if (teamSpaceStore.spaceType === SpaceType.Personal) {
       return
     }
-    listSpaceStore.changeSpaceType(SpaceType.Personal)
-    listSpaceStore.changeWorkSpace('')
+    teamSpaceStore.changeSpaceType(SpaceType.Personal)
+    teamSpaceStore.changeWorkSpace('')
   } else if (id === SpaceType.Group) {
     // 点击团队空间组菜单
-    if (listSpaceStore.spaceType === SpaceType.Group) {
+    if (teamSpaceStore.spaceType === SpaceType.Group) {
       return
     }
-    listSpaceStore.changeSpaceType(SpaceType.Group)
-    listSpaceStore.changeWorkSpace('')
+    teamSpaceStore.changeSpaceType(SpaceType.Group)
+    teamSpaceStore.changeWorkSpace('')
   } else if (!Object.values(SpaceType).includes(id)) {
     // 点击具体团队空间
-    if (listSpaceStore.workSpaceId === id) {
+    if (teamSpaceStore.workSpaceId === id) {
       return
     }
-    listSpaceStore.changeSpaceType(SpaceType.Teamwork)
-    listSpaceStore.changeWorkSpace(id)
+    teamSpaceStore.changeSpaceType(SpaceType.Teamwork)
+    teamSpaceStore.changeWorkSpace(id)
   }
 
   fetchSurveyList()
@@ -115,7 +115,7 @@ onMounted(() => {
   fetchSurveyList()
 })
 const fetchSpaceList = () => {
-  listSpaceStore.getSpaceList()
+  teamSpaceStore.getSpaceList()
 }
 const fetchSurveyList = async (params?: any) => {
   if (!params) {

@@ -11,26 +11,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useSurveyListStore } from './surveyList'
-import { type IMember } from '@/management/utils/types/workSpace'
-
-interface SpaceDetail {
-  _id?: string
-  name: string
-  currentUserId?: string
-  description: string
-  members: IMember
-}
-
-
-type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
-  createDate: string
-  curStatus: { date: number, status: string }
-  memberTotal: number
-  currentUserRole: string
-  owner: string
-  ownerId: string
-  surveyTotal: number
-}
+import { type SpaceDetail, type SpaceItem, type IWorkspace } from '@/management/utils/types/workSpace'
 
 
 export const useTeamSpaceStore = defineStore('teamSpace', () => {
@@ -114,13 +95,9 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     }
   }
 
-  async function updateSpace(params: any) {
-    const res: any = await updateSpaceReq({
-      workspaceId: params._id,
-      name: params.name,
-      description: params.description,
-      members: params.members
-    })
+  async function updateSpace(params: Required<IWorkspace>) {
+    const { _id: workspaceId, name, description, members } = params
+    const res: any = await updateSpaceReq({ workspaceId, name, description, members })
 
     if (res?.code === CODE_MAP.SUCCESS) {
       ElMessage.success('更新成功')
@@ -129,12 +106,9 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     }
   }
 
-  async function addSpace(params: any) {
-    const res: any = await createSpace({
-      name: params.name,
-      description: params.description,
-      members: params.members
-    })
+  async function addSpace(params: IWorkspace) {
+    const { name, description, members } = params
+    const res: any = await createSpace({ name, description, members })
 
     if (res.code === CODE_MAP.SUCCESS) {
       ElMessage.success('添加成功')

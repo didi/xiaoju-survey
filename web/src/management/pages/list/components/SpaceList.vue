@@ -81,7 +81,7 @@ import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
-const listSpaceStore = useTeamSpaceStore()
+const teamSpaceStore = useTeamSpaceStore()
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
@@ -89,17 +89,17 @@ const fieldList = computed(() => {
   })
 })
 const dataList = computed(() => {
-  return listSpaceStore.teamSpaceList
+  return teamSpaceStore.teamSpaceList
 })
 const isAdmin = (id: string) => {
   return (
-    listSpaceStore.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
+    teamSpaceStore.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
     UserRole.Admin
   )
 }
 
 const handleModify = async (id: string) => {
-  await listSpaceStore.getSpaceDetail(id)
+  await teamSpaceStore.getSpaceDetail(id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -115,15 +115,15 @@ const handleDelete = (id: string) => {
     }
   )
     .then(async () => {
-      await listSpaceStore.deleteSpace(id)
-      await listSpaceStore.getSpaceList()
+      await teamSpaceStore.deleteSpace(id)
+      await teamSpaceStore.getSpaceList()
     })
     .catch(() => {})
 }
 
 const onCloseModify = () => {
   showSpaceModify.value = false
-  listSpaceStore.getSpaceList()
+  teamSpaceStore.getSpaceList()
 }
 
 // const handleCurrentChange = (current) => {

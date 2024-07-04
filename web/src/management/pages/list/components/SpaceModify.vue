@@ -34,7 +34,7 @@ import MemberSelect from './MemberSelect.vue'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'
 import { useTeamSpaceStore } from '@/management/stores/teamSpace'
 
-const listSpaceStore = useTeamSpaceStore()
+const teamSpaceStore = useTeamSpaceStore()
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = defineProps({
   type: String,
@@ -46,7 +46,8 @@ const ruleForm = shallowRef<any>(null)
 const formTitle = computed(() => {
   return props.type === QOP_MAP.ADD ? '创建团队空间' : '管理团队空间'
 })
-const formModel = ref<IWorkspace>({
+const formModel = ref<Required<IWorkspace>>({
+  _id: '',
   name: '',
   description: '',
   members: [] as IMember[]
@@ -68,11 +69,11 @@ const rules = {
   ]
 }
 const spaceDetail = computed(() => {
-  return listSpaceStore.spaceDetail
+  return teamSpaceStore.spaceDetail
 })
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? listSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
+    ? teamSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
         ?.currentUserRole !== UserRole.Admin
     : false
 })
@@ -84,12 +85,13 @@ onMounted(() => {
 })
 const onClose = () => {
   formModel.value = {
+    _id: '',
     name: '',
     description: '',
     members: [] as IMember[]
   }
   // 清空空间详情
-  listSpaceStore.setSpaceDetail(null)
+  teamSpaceStore.setSpaceDetail(null)
   emit('on-close-codify')
 }
 
@@ -124,10 +126,10 @@ const handleMembersChange = (val: IMember[]) => {
   formModel.value.members = val
 }
 const handleUpdate = async () => {
-  await listSpaceStore.updateSpace(formModel.value)
+  await teamSpaceStore.updateSpace(formModel.value)
 }
 const handleAdd = async () => {
-  await listSpaceStore.addSpace(formModel.value)
+  await teamSpaceStore.addSpace(formModel.value)
 }
 </script>
 

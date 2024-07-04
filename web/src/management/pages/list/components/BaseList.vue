@@ -144,8 +144,8 @@ import {
 } from '@/management/config/listConfig'
 
 const surveyListStore = useSurveyListStore()
-const listSpaceStore = useTeamSpaceStore()
-const { workSpaceId } = storeToRefs(listSpaceStore)
+const teamSpaceStore = useTeamSpaceStore()
+const { workSpaceId } = storeToRefs(teamSpaceStore)
 const router = useRouter()
 const props = defineProps({
   loading: {

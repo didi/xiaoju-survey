@@ -73,7 +73,9 @@ watch(
 </script>
 <style lang="scss" scoped>
 .custom-time-range {
+  width: 100%;
   display: flex;
+  justify-content: space-between;
 
   .seporator {
     margin: 0 10px;

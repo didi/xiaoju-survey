@@ -156,6 +156,12 @@ const handleSubmit = () => {
       background: rgba(255, 255, 255, var(--opacity));
       border-radius: 8px 8px 0 0;
       height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      :deep(.logo-icon-warp) {
+        margin-top: auto;
+      }
     }
   }
 }

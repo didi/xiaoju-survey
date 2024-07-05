@@ -18,6 +18,7 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { val } from 'cheerio/lib/api/attributes';
 
 @ApiTags('survey')
 @Controller('/api/surveyHisotry')
@@ -66,4 +67,52 @@ export class SurveyHistoryController {
       data,
     };
   }
+
+
+  @Get('/getConflictList')
+  @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [
+    SURVEY_PERMISSION.SURVEY_CONF_MANAGE,
+    SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+    SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE,
+  ])
+  @UseGuards(Authentication)
+  async getConflictList(
+    @Query()
+    queryInfo: {
+      surveyId: string;
+      historyType: string;
+      sessionId: string;
+    },
+    @Request() req,
+  ) {
+    const { value, error } = Joi.object({
+      surveyId: Joi.string().required(),
+      historyType: Joi.string().required(),
+      sessionId: Joi.string().required(),
+    }).validate(queryInfo);
+
+    if (error) {
+      this.logger.error(error.message, { req });
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+
+    const surveyId = value.surveyId;
+    const historyType = value.historyType;
+    const sessionId = value.sessionId;
+    
+    const data = await this.surveyHistoryService.getConflictList({
+      surveyId,
+      historyType,
+      sessionId,
+    });
+    
+    return {
+      code: 200,
+      data,
+    };
+  }
+
 }

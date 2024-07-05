@@ -14,15 +14,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, nextTick, watch } from 'vue'
+import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
-import { ElMessage } from 'element-plus'
+import { v4 as uuidv4 } from 'uuid'
+
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { saveSurvey } from '@/management/api/survey'
 import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import buildData from './buildData'
+import { getSurveyHistory, getConflictHistory } from '@/management/api/survey'
 
 const isSaving = ref<boolean>(false)
 const isShowAutoSave = ref<boolean>(false)
@@ -38,15 +41,61 @@ const saveText = computed(
 
 const store = useStore()
 
-const saveData = async () => {
-  const saveData = buildData(store.state.edit.schema)
+onMounted(() => {
+  if (!sessionStorage.getItem('sessionUUID')) {
+    sessionStorage.setItem('sessionUUID', uuidv4());
+  }
+})
+const checkConflict = async (surveyid: string) => {
+  try {
+    const dailyHis = await getConflictHistory({surveyId: surveyid, historyType: 'dailyHis', sessionId: sessionStorage.getItem('sessionUUID')})
+    //sconsole.log(dailyHis)
+    if (dailyHis.data.length > 0) {
+      const lastHis = dailyHis.data.at(0)
+      if (Date.now() - lastHis.createDate > 2 * 60 * 1000) {
+        return [false, '']
+      } else {
+        return [true, lastHis.operator.username]
+      }
+    }
+  }catch (error) {
+    console.log(error)
+  }
+  return [false, '']
+}
+
+const onSave = async () => {
+  let res
+  const saveData = buildData(store.state.edit.schema, sessionStorage.getItem('sessionUUID'))
 
   if (!saveData.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null
   }
 
-  const res = await saveSurvey(saveData)
+  // 增加冲突检测
+  const [isconflict, conflictName] = await checkConflict(saveData.surveyId)
+  if(isconflict) {
+    if (conflictName == store.state.user.userInfo.username) {
+      ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
+        confirmButtonText: '确认',
+        callback: () => {
+          location.reload(); 
+        }
+      });
+    } else {
+      ElMessageBox.alert(`当前问卷2分钟内由${conflictName}编辑，刷新以获取最新内容。`, '提示', {
+        confirmButtonText: '确认',
+        callback: () => {
+          location.reload(); 
+        }
+      });
+    }
+    return null
+  } else {
+    // 保存数据
+    res = await saveSurvey(saveData)
+  }
   return res
 }
 
@@ -78,7 +127,7 @@ const triggerAutoSave = () => {
       isShowAutoSave.value = true
       nextTick(async () => {
         try {
-          const res: any = await saveData()
+          const res: any = await handleSave()
           if (res.code === 200) {
             autoSaveStatus.value = 'succeed'
           } else {
@@ -115,12 +164,17 @@ const handleSave = async () => {
   }
 
   try {
-    const res: any = await saveData()
+    const res: any = await onSave()
+    if(!res) {
+      return
+    }
     if (res.code === 200) {
       ElMessage.success('保存成功')
-    } else {
+    } 
+    if(res.code !== 200) {
       ElMessage.error(res.errmsg)
     }
+    
   } catch (error) {
     ElMessage.error('保存问卷失败')
   } finally {

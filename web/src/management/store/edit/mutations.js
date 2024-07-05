@@ -64,5 +64,8 @@ export default {
   },
   setQuestionDataList(state, data) {
     state.schema.questionDataList = data
+  },
+  setDownloadPath(state, data) {
+    state.downloadPath = data
   }
 }

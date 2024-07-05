@@ -14,7 +14,6 @@ export default {
   },
   async fetchCooperPermissions({ commit }, id) {
     const res = await getCollaboratorPermissions(id)
-    console.log(res.data)
     if (res.code === CODE_MAP.SUCCESS) {
       commit('setCooperPermissions', res.data.permissions)
     }

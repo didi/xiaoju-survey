@@ -2,7 +2,7 @@
   <div class="question-catalog-wrapper">
     <draggable
       :list="renderData"
-      @end="onDragEnd"
+      @end="handleDragEnd"
       itemKey="field"
       handle=".draggHandle"
       host-class="catalog-item-ghost"
@@ -12,50 +12,43 @@
           :title="element.title"
           :indexNumber="element.indexNumber"
           :showIndex="element.showIndex"
-          @select="onSelect(index)"
+          @select="handleSelect(index)"
         />
       </template>
     </draggable>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import draggable from 'vuedraggable'
+
 import CatalogItem from './CatalogItem.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
-export default {
-  name: 'QuestionCatalog',
-  data() {
-    return {}
-  },
-  computed: {
-    questionDataList() {
-      return this.$store.state.edit.schema.questionDataList
-    },
-    renderData() {
-      return filterQuestionPreviewData(this.questionDataList) || []
-    }
-  },
-  components: {
-    draggable,
-    CatalogItem
-  },
-  methods: {
-    onDragEnd(data) {
-      const { newIndex, oldIndex } = data
-      this.$store.dispatch('edit/moveQuestion', {
-        index: oldIndex,
-        range: newIndex - oldIndex
-      })
-    },
-    onSelect(index) {
-      this.$store.commit('edit/setCurrentEditOne', index)
-    }
+const store = useStore()
+const renderData = computed(() => {
+  const questions = store.state.edit.schema.questionDataList
+  return filterQuestionPreviewData(questions) || []
+})
+
+const handleDragEnd = ({ newIndex, oldIndex }: any) => {
+  const currentActivityKey = store.state.edit.currentEditOne
+
+  if (currentActivityKey === oldIndex) {
+    handleSelect(newIndex)
   }
+
+  store.dispatch('edit/moveQuestion', {
+    index: oldIndex,
+    range: newIndex - oldIndex
+  })
+}
+
+const handleSelect = (idx: number) => {
+  store.commit('edit/setCurrentEditOne', idx)
 }
 </script>
-
 <style lang="scss" scoped>
 .question-catalog-wrapper {
   padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的

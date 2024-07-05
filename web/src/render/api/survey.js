@@ -8,6 +8,14 @@ export const getPublishedSurveyInfo = ({ surveyPath }) => {
   })
 }
 
+export const getPreviewSchema = ({ surveyPath }) => {
+  return axios.get('/survey/getPreviewSchema', {
+    params: {
+      surveyPath
+    }
+  })
+}
+
 export const submitForm = (data) => {
   return axios.post('/surveyResponse/createResponse', data)
 }

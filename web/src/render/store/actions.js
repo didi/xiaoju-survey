@@ -6,6 +6,9 @@ moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
+import state from './state'
+import useCommandComponent from '../hooks/useCommandComponent'
+import BackAnswerDialog from '../components/BackAnswerDialog.vue'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -15,16 +18,22 @@ const CODE_MAP = {
   NO_AUTH: 403
 }
 const VOTE_INFO_KEY = 'voteinfo'
+import router from '../router'
+
+const confirm = useCommandComponent(BackAnswerDialog)
 
 export default {
   // 初始化
-  init({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
+  init(
+    { commit, dispatch },
+    { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }
+  ) {
     commit('setEnterTime')
-    const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
+    const { begTime, endTime, answerBegTime, answerEndTime, breakAnswer, backAnswer} = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
     if (now < new Date(begTime).getTime()) {
-      commit('setRouter', 'errorPage')
+      router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
         errorMsg: `<p>问卷未到开始填写时间，暂时无法进行填写<p/>
@@ -32,7 +41,7 @@ export default {
       })
       return
     } else if (now > new Date(endTime).getTime()) {
-      commit('setRouter', 'errorPage')
+      router.push({ name: 'errorPage' })
       commit('setErrorInfo', {
         errorType: 'overTime',
         errorMsg: msgContent.msg_9001 || '您来晚了，感谢支持问卷~'
@@ -44,7 +53,7 @@ export default {
       const momentStartTime = moment(`${todayStr} ${answerBegTime}`)
       const momentEndTime = moment(`${todayStr} ${answerEndTime}`)
       if (momentNow.isBefore(momentStartTime) || momentNow.isAfter(momentEndTime)) {
-        commit('setRouter', 'errorPage')
+        router.push({ name: 'errorPage' })
         commit('setErrorInfo', {
           errorType: 'overTime',
           errorMsg: `<p>不在答题时间范围内，暂时无法进行填写<p/>
@@ -53,33 +62,73 @@ export default {
         return
       }
     }
-    commit('setRouter', 'indexPage')
 
-    // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
-    const { questionData, questionSeq, rules, formValues } = adapter.generateData({
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf
-    })
+    //回填，断点续填
+    const localData = JSON.parse(localStorage.getItem(state.surveyPath + "_questionData"))
 
-    // 将数据设置到state上
-    commit('assignState', {
-      questionData,
-      questionSeq,
-      rules,
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf,
-      formValues
-    })
-    // 获取已投票数据
-    dispatch('initVoteData')
+    //数据解密
+    for(const key in localData){
+      localData[key] = decodeURIComponent(localData[key])
+    }
+
+    const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
+    if(localData) {
+      if(isSubmit){
+        if(!backAnswer) {
+          clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+        } else {
+          confirm({
+            title: "您之前已提交过问卷，是否要回填？",
+            onConfirm: async () => {
+              try {
+                loadFormData({ commit, dispatch }, {bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, localData)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            },
+            onCancel: async() => {
+              try {
+                clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            }
+          })
+        }
+      } else{
+        if(!breakAnswer) {
+          clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+        } else {
+          confirm({
+            title: "您之前已填写部分内容, 是否要继续填写?",
+            onConfirm: async () => {
+              try {
+                loadFormData({ commit, dispatch }, {bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, localData)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            },
+            onCancel: async() => {
+              try {
+                clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            }
+          })
+        }
+      }
+    } else {
+      clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+    }
   },
   // 用户输入或者选择后，更新表单数据
   changeData({ commit }, data) {
@@ -175,3 +224,71 @@ export default {
     commit('setRuleEgine', ruleEngine)
   }
 }
+
+  // 加载上次填写过的数据到问卷页
+  function loadFormData({ commit, dispatch }, {bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, formData) {
+    commit('setRouter', 'indexPage')
+
+    // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
+    const { questionData, questionSeq, rules, formValues } = adapter.generateData({
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf
+    })
+    console.log("formdata", formData)
+
+    for(const key in formData){
+      formValues[key] = formData[key]
+      console.log("formValues",formValues)
+    }
+
+    // 将数据设置到state上
+    commit('assignState', {
+      questionData,
+      questionSeq,
+      rules,
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      formValues
+    })
+    // 获取已投票数据
+    dispatch('initVoteData')
+  }
+
+  // 加载空白页面
+  function clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
+    commit('setRouter', 'indexPage')
+
+    // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
+    const { questionData, questionSeq, rules, formValues } = adapter.generateData({
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf
+    })
+
+    // 将数据设置到state上
+    commit('assignState', {
+      questionData,
+      questionSeq,
+      rules,
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      formValues
+    })
+    // 获取已投票数据
+    dispatch('initVoteData')
+  }

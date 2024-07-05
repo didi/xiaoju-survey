@@ -11,6 +11,17 @@
             @input="onIsShowOriginChange"
           >
           </el-switch>
+          <div style="display: flex; justify-content: flex-end">
+            <el-switch
+              :model-value="isDownloadDesensitive"
+              active-text="是否下载脱敏数据"
+              @input="onisDownloadDesensitive"
+              style="margin-right: 20px"
+            >
+            </el-switch>
+            <el-button type="primary" @click="onDownload">导出数据</el-button>
+          </div>
+          <!-- <el-button type="primary" @click="exportData">导出数据</el-button> -->
         </div>
       </template>
 
@@ -38,7 +49,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import LeftMenu from '@/management/components/LeftMenu.vue'
-import { getRecycleList } from '@/management/api/analysis'
+import { getRecycleList, downloadSurvey } from '@/management/api/analysis'
 
 import DataTable from './components/DataTable.vue'
 
@@ -59,7 +70,8 @@ export default {
       },
       currentPage: 1,
       isShowOriginData: false,
-      tmpIsShowOriginData: false
+      tmpIsShowOriginData: false,
+      isDownloadDesensitive: true
     }
   },
   computed: {},
@@ -88,6 +100,34 @@ export default {
       } catch (error) {
         ElMessage.error('查询回收数据失败，请重试')
       }
+    },
+    async onDownload() {
+      try {
+        await ElMessageBox.confirm('是否确认下载？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+      } catch (error) {
+        console.log('取消下载')
+        return
+      }
+      this.exportData()
+      this.gotoDownloadList()
+    },
+    async gotoDownloadList() {
+      try {
+        await ElMessageBox.confirm('计算中，是否前往下载中心？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+      } catch (error) {
+        console.log('取消跳转')
+        return
+      }
+
+      this.$router.push('/survey/download')
     },
     handleCurrentChange(current) {
       if (this.mainTableLoading) {
@@ -125,6 +165,29 @@ export default {
       this.tmpIsShowOriginData = data
       await this.init()
       this.isShowOriginData = data
+    },
+    async onisDownloadDesensitive() {
+      if (this.isDownloadDesensitive) {
+        this.isDownloadDesensitive = false
+      } else {
+        this.isDownloadDesensitive = true
+      }
+    },
+
+    async exportData() {
+      try {
+        const res = await downloadSurvey({
+          surveyId: String(this.$route.params.id),
+          isDesensitive: this.isDownloadDesensitive
+        })
+        console.log(this.$route.params.id)
+        if (res.code === 200) {
+          ElMessage.success('下载成功')
+        }
+      } catch (error) {
+        ElMessage.error('下载失败')
+        ElMessage.error(error.message)
+      }
     }
   },
 
@@ -158,6 +221,8 @@ export default {
 
 .menus {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .content-wrapper {

@@ -19,10 +19,10 @@
       <img src="https://img.shields.io/badge/PRs-welcome-%23ffa600" alt="pr">
     </a>
     <a href="https://xiaojusurvey.didi.cn">
-      <img src="https://img.shields.io/badge/help-%E5%AE%98%E7%BD%91-blue" alt="docs">
+      <img src="https://img.shields.io/badge/help-website-blue" alt="docs">
     </a>
     <a href="https://github.com/didi/xiaoju-survey/blob/main/README.md">
-      <img src="https://img.shields.io/badge/help-README-50c62a" alt="docs">
+      <img src="https://img.shields.io/badge/help-README_ZH-50c62a" alt="docs">
     </a>
   </div>
 </div>

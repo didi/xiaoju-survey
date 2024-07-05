@@ -11,20 +11,9 @@
     </template>
   </CommonTemplate>
 </template>
-
-<script>
+<script setup lang="ts">
 import CommonTemplate from '../../components/CommonTemplate.vue'
 import ResultCatalog from '../../modules/settingModule/result/CatalogPanel.vue'
 import ResultPreview from '../../modules/settingModule/result/PreviewPanel.vue'
 import ResultSetter from '../../modules/settingModule/result/SetterPanel.vue'
-
-export default {
-  name: 'ResultPage',
-  components: {
-    CommonTemplate,
-    ResultCatalog,
-    ResultPreview,
-    ResultSetter
-  }
-}
 </script>

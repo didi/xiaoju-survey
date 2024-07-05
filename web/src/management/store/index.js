@@ -5,6 +5,7 @@ import list from './list'
 import actions from './actions'
 import mutations from './mutations'
 import state from './state'
+import download from './download'
 
 export default createStore({
   state,
@@ -14,6 +15,7 @@ export default createStore({
   modules: {
     edit,
     user,
-    list
+    list,
+    download
   }
 })

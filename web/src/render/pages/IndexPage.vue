@@ -1,156 +1,71 @@
 <template>
-  <div class="index">
-    <ProgressBar />
-    <div class="wrapper" ref="boxRef">
-      <HeaderContent :bannerConf="bannerConf" :readonly="true" />
-      <div class="content">
-        <MainTitle :bannerConf="bannerConf" :readonly="true"></MainTitle>
-        <MainRenderer ref="mainRef"></MainRenderer>
-        <SubmitButton
-          :validate="validate"
-          :submitConf="submitConf"
-          :readonly="true"
-          :renderData="renderData"
-          @submit="handleSubmit"
-        ></SubmitButton>
-        <LogoIcon :logo-conf="logoConf" :readonly="true" />
-      </div>
-    </div>
-  </div>
+  <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useStore } from 'vuex'
-// @ts-ignore
-import communalLoader from '@materials/communals/communalLoader.js'
-import MainRenderer from '../components/MainRenderer.vue'
-import AlertDialog from '../components/AlertDialog.vue'
-import ConfirmDialog from '../components/ConfirmDialog.vue'
-import ProgressBar from '../components/ProgressBar.vue'
+import { useRoute } from 'vue-router'
 
-import { submitForm } from '../api/survey'
-import encrypt from '../utils/encrypt'
-
+import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
 import useCommandComponent from '../hooks/useCommandComponent'
 
-interface Props {
-  questionInfo?: any
-  isMobile?: boolean
-}
-
-withDefaults(defineProps<Props>(), {
-  questionInfo: {},
-  isMobile: false
-})
-
-const HeaderContent = communalLoader.loadComponent('HeaderContent')
-const MainTitle = communalLoader.loadComponent('MainTitle')
-const SubmitButton = communalLoader.loadComponent('SubmitButton')
-const LogoIcon = communalLoader.loadComponent('LogoIcon')
-
-const mainRef = ref<any>()
-const boxRef = ref<HTMLElement>()
-
-const alert = useCommandComponent(AlertDialog)
-const confirm = useCommandComponent(ConfirmDialog)
+import AlertDialog from '../components/AlertDialog.vue'
+import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
 const store = useStore()
-
-const bannerConf = computed(() => store.state?.bannerConf || {})
-const renderData = computed(() => store.getters.renderData)
-const submitConf = computed(() => store.state?.submitConf || {})
-const logoConf = computed(() => store.state?.bottomConf || {})
-
-const validate = (cbk: (v: boolean) => void) => {
-  const index = 0
-  mainRef.value.$refs.formGroup[index].validate(cbk)
-}
-
-const normalizationRequestBody = () => {
-  const enterTime = store.state.enterTime
-  const encryptInfo = store.state.encryptInfo
-  const formValues = store.state.formValues
-  const surveyPath = store.state.surveyPath
-
-  const result: any = {
-    surveyPath,
-    data: JSON.stringify(formValues),
-    difTime: Date.now() - enterTime,
-    clientTime: Date.now()
-  }
-
-  if (encryptInfo?.encryptType) {
-    result.encryptType = encryptInfo?.encryptType
-    result.data = encrypt[result.encryptType as 'rsa']({
-      data: result.data,
-      secretKey: encryptInfo?.data?.secretKey
-    })
-    if (encryptInfo?.data?.sessionId) {
-      result.sessionId = encryptInfo.data.sessionId
+const route = useRoute()
+const loadData = (res: any, surveyPath: string) => {
+  if (res.code === 200) {
+    const data = res.data
+    const {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      logicConf
+    } = data.code
+    const questionData = {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf
     }
+
+    document.title = data.title
+
+    store.commit('setSurveyPath', surveyPath)
+    store.dispatch('init', questionData)
+    initRuleEngine(logicConf?.showLogicConf)
   } else {
-    result.data = JSON.stringify(result.data)
+    throw new Error(res.errmsg)
   }
-
-  return result
 }
+onMounted(() => {
+  const surveyId = route.params.surveyId
+  console.log({ surveyId })
+  store.commit('setSurveyPath', surveyId)
+  getDetail(surveyId as string)
+})
 
-const submitSurver = async () => {
+const getDetail = async (surveyPath: string) => {
+  const alert = useCommandComponent(AlertDialog)
+
   try {
-    const params = normalizationRequestBody()
-    console.log(params)
-    const res: any = await submitForm(params)
-    if (res.code === 200) {
-      store.commit('setRouter', 'successPage')
+    if (surveyPath.length > 8) {
+      const res: any = await getPreviewSchema({ surveyPath })
+      loadData(res, surveyPath)
     } else {
-      alert({
-        title: res.errmsg || '提交失败'
-      })
+      const res: any = await getPublishedSurveyInfo({ surveyPath })
+      loadData(res, surveyPath)
+      store.dispatch('getEncryptInfo')
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error)
-  }
-}
-
-const handleSubmit = () => {
-  const confirmAgain = store.state.submitConf.confirmAgain
-  const { again_text, is_again } = confirmAgain
-
-  if (is_again) {
-    confirm({
-      title: again_text,
-      onConfirm: async () => {
-        try {
-          submitSurver()
-        } catch (error) {
-          console.log(error)
-        } finally {
-          confirm.close()
-        }
-      }
-    })
-  } else {
-    submitSurver()
+    alert({ title: error.message || '获取问卷失败' })
   }
 }
 </script>
-<style scoped lang="scss">
-.index {
-  min-height: 100%;
-
-  .wrapper {
-    min-height: 100%;
-    background-color: var(--primary-background-color);
-    display: flex;
-    flex-direction: column;
-
-    .content {
-      flex: 1;
-      margin: 0 0.3rem;
-      background: rgba(255, 255, 255, var(--opacity));
-      border-radius: 8px 8px 0 0;
-      height: 100%;
-    }
-  }
-}
-</style>

@@ -3,11 +3,8 @@
     <div v-for="item in renderData" :key="item.field">
       <QuestionWrapper
         class="gap"
-        v-bind="$attrs"
         :moduleConfig="item"
-        :qIndex="item.qIndex"
         :indexNumber="item.indexNumber"
-        :showTitle="true"
         @change="handleChange"
       ></QuestionWrapper>
     </div>

@@ -10,7 +10,6 @@ export default {
         const questionArr = []
 
         item.forEach((questionKey) => {
-          console.log('题目重新计算')
           const question = { ...questionData[questionKey] }
           // 开启显示序号
           if (question.showIndex) {

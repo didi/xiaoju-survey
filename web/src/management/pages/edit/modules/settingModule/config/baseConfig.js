@@ -7,6 +7,6 @@ export default [
   {
     title: '提交限制',
     key: 'limitConfig',
-    formList: ['limit_tLimit']
+    formList: ['limit_tLimit', 'limit_breakAnswer', 'limit_backAnswer']
   }
 ]

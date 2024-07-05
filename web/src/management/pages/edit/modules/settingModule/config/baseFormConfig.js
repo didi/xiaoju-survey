@@ -21,5 +21,19 @@ export default {
     tip: '问卷仅在指定时间段内可填写',
     type: 'QuestionTimeHour',
     placement: 'top'
+  },
+  limit_breakAnswer: {
+    key: 'baseConf.breakAnswer',
+    label: '允许断点续答',
+    tip: '回填前一次作答中的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
+    type: 'ELSwitch',
+    value: false
+  },
+  limit_backAnswer: {
+    key: 'baseConf.backAnswer',
+    label: '自动填充上次填写内容',
+    tip: '回填前一次提交的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
+    type: 'ELSwitch',
+    value: false
   }
 }

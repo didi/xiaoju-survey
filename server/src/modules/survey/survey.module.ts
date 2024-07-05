@@ -14,7 +14,6 @@ import { SurveyHistoryController } from './controllers/surveyHistory.controller'
 import { SurveyMetaController } from './controllers/surveyMeta.controller';
 import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
-import { CollaboratorController } from './controllers/collaborator.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -31,6 +30,11 @@ import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
 import { Counter } from 'src/models/counter.entity';
 import { CounterService } from '../surveyResponse/services/counter.service';
+//后添加
+import { SurveyDownload } from 'src/models/surveyDownload.entity';
+import { SurveyDownloadService } from './services/surveyDownload.service';
+import { SurveyDownloadController } from './controllers/surveyDownload.controller';
+import { MessageService } from './services/message.service';
 
 @Module({
   imports: [
@@ -42,6 +46,8 @@ import { CounterService } from '../surveyResponse/services/counter.service';
       Word,
       Collaborator,
       Counter,
+      //后添加
+      SurveyDownload,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -55,6 +61,8 @@ import { CounterService } from '../surveyResponse/services/counter.service';
     SurveyMetaController,
     SurveyUIController,
     CollaboratorController,
+    //后添加
+    SurveyDownloadController,
   ],
   providers: [
     DataStatisticService,
@@ -66,6 +74,13 @@ import { CounterService } from '../surveyResponse/services/counter.service';
     CollaboratorService,
     LoggerProvider,
     CounterService,
+    //后添加
+    SurveyDownloadService,
+    MessageService,
+    {
+      provide: 'NumberToken', // 使用一个唯一的标识符
+      useValue: 10, // 假设这是你想提供的值
+    },
   ],
 })
 export class SurveyModule {}

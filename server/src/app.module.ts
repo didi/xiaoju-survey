@@ -41,6 +41,7 @@ import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
 import { XiaojuSurveyPluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
+import { SurveyDownload } from './models/surveyDownload.entity';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { Logger } from './logger';
             Workspace,
             WorkspaceMember,
             Collaborator,
+            SurveyDownload,
           ],
         };
       },

@@ -143,7 +143,7 @@ export default {
 
     for (const field in questionData) {
       const { type } = questionData[field]
-      if (/vote/.test(type)) {
+      if (/vote/.test(type) || /radio/.test(type) || /checkbox/.test(type)) {
         fieldList.push(field)
       }
     }

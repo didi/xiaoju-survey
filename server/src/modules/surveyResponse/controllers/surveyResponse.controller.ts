@@ -7,7 +7,6 @@ import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
-import { CounterService } from '../services/counter.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
@@ -16,6 +15,9 @@ import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
+
+import { MutexService } from 'src/modules/mutex/services/mutexService.service';
+import { CounterService } from '../services/counter.service';
 import { Logger } from 'src/logger';
 
 @ApiTags('surveyResponse')
@@ -23,10 +25,11 @@ import { Logger } from 'src/logger';
 export class SurveyResponseController {
   constructor(
     private readonly responseSchemaService: ResponseSchemaService,
-    private readonly counterService: CounterService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
+    private readonly mutexService: MutexService,
+    private readonly counterService: CounterService,
     private readonly logger: Logger,
   ) {}
 
@@ -155,39 +158,65 @@ export class SurveyResponseController {
         const arr = cur.options.map((optionItem) => ({
           hash: optionItem.hash,
           text: optionItem.text,
+          quota: optionItem.quota,
         }));
         pre[cur.field] = arr;
         return pre;
       }, {});
 
-    // 对用户提交的数据进行遍历处理
-    for (const field in decryptedData) {
-      const val = decryptedData[field];
-      const vals = Array.isArray(val) ? val : [val];
-      if (field in optionTextAndId) {
-        // 记录选项的提交数量，用于投票题回显、或者拓展上限限制功能
-        const optionCountData: Record<string, any> =
-          (await this.counterService.get({
-            surveyPath,
+    //选项配额校验
+    await this.mutexService.runLocked(async () => {
+      for (const field in decryptedData) {
+        const value = decryptedData[field];
+        const values = Array.isArray(value) ? value : [value];
+        if (field in optionTextAndId) {
+          const optionCountData = await this.counterService.get({
             key: field,
+            surveyPath,
             type: 'option',
-          })) || { total: 0 };
-        optionCountData.total++;
-        for (const val of vals) {
-          if (!optionCountData[val]) {
-            optionCountData[val] = 1;
-          } else {
-            optionCountData[val]++;
+          });
+
+          //遍历选项hash值
+          for (const val of values) {
+            const option = optionTextAndId[field].find(
+              (opt) => opt['hash'] === val,
+            );
+            if (
+              option['quota'] != 0 &&
+              option['quota'] <= optionCountData[val]
+            ) {
+              const item = dataList.find((item) => item['field'] === field);
+              throw new HttpException(
+                `${item['title']}中的${option['text']}所选人数已达到上限，请重新选择`,
+                EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
+              );
+            }
           }
         }
-        this.counterService.set({
-          surveyPath,
-          key: field,
-          data: optionCountData,
-          type: 'option',
-        });
       }
-    }
+
+      for (const field in decryptedData) {
+        const value = decryptedData[field];
+        const values = Array.isArray(value) ? value : [value];
+        if (field in optionTextAndId) {
+          const optionCountData = await this.counterService.get({
+            key: field,
+            surveyPath,
+            type: 'option',
+          });
+          for (const val of values) {
+            optionCountData[val]++;
+            this.counterService.set({
+              key: field,
+              surveyPath,
+              type: 'option',
+              data: optionCountData,
+            });
+          }
+          optionCountData['total']++;
+        }
+      }
+    });
 
     // 入库
     const surveyResponse =

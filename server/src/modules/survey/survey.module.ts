@@ -22,13 +22,14 @@ import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-
 import { DataStatisticService } from './services/dataStatistic.service';
 import { SurveyConfService } from './services/surveyConf.service';
 import { SurveyHistoryService } from './services/surveyHistory.service';
 import { SurveyMetaService } from './services/surveyMeta.service';
 import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
+import { Counter } from 'src/models/counter.entity';
+import { CounterService } from '../surveyResponse/services/counter.service';
 //后添加
 import { SurveyDownload } from 'src/models/surveyDownload.entity';
 import { SurveyDownloadService } from './services/surveyDownload.service';
@@ -44,6 +45,7 @@ import { MessageService } from './services/message.service';
       SurveyResponse,
       Word,
       Collaborator,
+      Counter,
       //后添加
       SurveyDownload,
     ]),
@@ -71,6 +73,7 @@ import { MessageService } from './services/message.service';
     ContentSecurityService,
     CollaboratorService,
     LoggerProvider,
+    CounterService,
     //后添加
     SurveyDownloadService,
     MessageService,

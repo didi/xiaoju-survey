@@ -6,14 +6,15 @@ moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
+import { useSurveyStore } from '@/render/stores/survey'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
-const CODE_MAP = {
-  SUCCESS: 200,
-  ERROR: 500,
-  NO_AUTH: 403
-}
+// const CODE_MAP = {
+//   SUCCESS: 200,
+//   ERROR: 500,
+//   NO_AUTH: 403
+// }
 const VOTE_INFO_KEY = 'voteinfo'
 import router from '../router'
 export default {
@@ -22,7 +23,8 @@ export default {
     { commit, dispatch },
     { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }
   ) {
-    commit('setEnterTime')
+    const surveyStore = useSurveyStore()
+    surveyStore.setEnterTime();
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
@@ -90,8 +92,9 @@ export default {
   },
   // 初始化投票题的数据
   async initVoteData({ state, commit }) {
+    const surveyStore = useSurveyStore()
     const questionData = state.questionData
-    const surveyPath = state.surveyPath
+    const surveyPath = surveyStore.surveyPath
 
     const fieldList = []
 
@@ -163,16 +166,16 @@ export default {
       commit('updateVoteMapByKey', totalPayload)
     })
   },
-  async getEncryptInfo({ commit }) {
-    try {
-      const res = await getEncryptInfo()
-      if (res.code === CODE_MAP.SUCCESS) {
-        commit('setEncryptInfo', res.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  },
+  // async getEncryptInfo({ commit }) {
+  //   try {
+  //     const res = await getEncryptInfo()
+  //     if (res.code === CODE_MAP.SUCCESS) {
+  //       commit('setEncryptInfo', res.data)
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // },
   async initRuleEngine({ commit }, ruleConf) {
     const ruleEngine = new RuleMatch(ruleConf)
     commit('setRuleEgine', ruleEngine)

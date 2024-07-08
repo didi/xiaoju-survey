@@ -24,12 +24,12 @@ export default {
     const { key, value, field } = data
     set(state, `questionData.${field}.othersValue.${key}`, value)
   },
-  setEnterTime(state) {
-    state.enterTime = Date.now()
-  },
-  setSurveyPath(state, data) {
-    state.surveyPath = data
-  },
+  // setEnterTime(state) {
+  //   state.enterTime = Date.now()
+  // },
+  // setSurveyPath(state, data) {
+  //   state.surveyPath = data
+  // },
   setVoteMap(state, data) {
     state.voteMap = data
   },
@@ -44,9 +44,9 @@ export default {
   setQuestionSeq(state, data) {
     state.questionSeq = data
   },
-  setEncryptInfo(state, data) {
-    state.encryptInfo = data
-  },
+  // setEncryptInfo(state, data) {
+  //   state.encryptInfo = data
+  // },
   setRuleEgine(state, ruleEngine) {
     state.ruleEngine = ruleEngine
   }

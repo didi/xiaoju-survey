@@ -60,60 +60,52 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
 import { useUserStore } from '@/management/stores/user'
-const store = useStore()
+import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useSurveyListStore } from '@/management/stores/surveyList'
+
 const userStore = useUserStore()
+const teamSpaceStore = useTeamSpaceStore()
+const surveyListStore = useSurveyListStore()
+
+const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
+const { spaceMenus, workSpaceId, spaceType } = storeToRefs(teamSpaceStore)
 const router = useRouter()
 const userInfo = computed(() => {
   return userStore.userInfo
 })
-const loading = ref(false)
-const surveyList = computed(() => {
-  return store.state.list.surveyList
-})
-const surveyTotal = computed(() => {
-  return store.state.list.surveyTotal
-})
-const activeIndex = ref('1')
 
-const spaceMenus = computed(() => {
-  return store.state.list.spaceMenus
-})
-const workSpaceId = computed(() => {
-  return store.state.list.workSpaceId
-})
-const spaceType = computed(() => {
-  return store.state.list.spaceType
-})
+const loading = ref(false)
+const activeIndex = ref('1')
 const handleSpaceSelect = (id: any) => {
   if (id === SpaceType.Personal) {
     // 点击个人空间菜单
-    if (store.state.list.spaceType === SpaceType.Personal) {
+    if (teamSpaceStore.spaceType === SpaceType.Personal) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Personal)
-    store.commit('list/changeWorkSpace', '')
+    teamSpaceStore.changeSpaceType(SpaceType.Personal)
+    teamSpaceStore.changeWorkSpace('')
   } else if (id === SpaceType.Group) {
     // 点击团队空间组菜单
-    if (store.state.list.spaceType === SpaceType.Group) {
+    if (teamSpaceStore.spaceType === SpaceType.Group) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Group)
-    store.commit('list/changeWorkSpace', '')
+    teamSpaceStore.changeSpaceType(SpaceType.Group)
+    teamSpaceStore.changeWorkSpace('')
   } else if (!Object.values(SpaceType).includes(id)) {
     // 点击具体团队空间
-    if (store.state.list.workSpaceId === id) {
+    if (teamSpaceStore.workSpaceId === id) {
       return
     }
-    store.commit('list/changeSpaceType', SpaceType.Teamwork)
-    store.commit('list/changeWorkSpace', id)
+    teamSpaceStore.changeSpaceType(SpaceType.Teamwork)
+    teamSpaceStore.changeWorkSpace(id)
   }
 
   fetchSurveyList()
@@ -123,7 +115,7 @@ onMounted(() => {
   fetchSurveyList()
 })
 const fetchSpaceList = () => {
-  store.dispatch('list/getSpaceList')
+  teamSpaceStore.getSpaceList()
 }
 const fetchSurveyList = async (params?: any) => {
   if (!params) {
@@ -136,7 +128,7 @@ const fetchSurveyList = async (params?: any) => {
     params.workspaceId = workSpaceId.value
   }
   loading.value = true
-  await store.dispatch('list/getSurveyList', params)
+  await surveyListStore.getSurveyList(params)
   loading.value = false
 }
 const modifyType = ref('add')
@@ -172,27 +164,33 @@ const handleLogout = () => {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+
     .left {
       display: flex;
       align-items: center;
       width: calc(100% - 200px);
+
       .logo-img {
         width: 90px;
         height: fit-content;
         padding-right: 20px;
       }
+
       .el-menu {
         width: 100%;
         height: 56px;
         border: none !important;
+
         :deep(.el-menu-item, .is-active) {
           border: none !important;
         }
       }
     }
+
     .login-info {
       display: flex;
       align-items: center;
+
       .login-info-img {
         margin-left: 10px;
         height: 30px;
@@ -209,10 +207,12 @@ const handleLogout = () => {
       color: #faa600;
     }
   }
+
   .content-wrap {
     position: relative;
     height: calc(100% - 56px);
   }
+
   .list-content {
     position: relative;
     height: 100%;
@@ -227,6 +227,7 @@ const handleLogout = () => {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
+
       .operation {
         flex: 0 1 auto;
         display: flex;
@@ -239,9 +240,11 @@ const handleLogout = () => {
       .create-btn {
         background: #4a4c5b;
       }
+
       .space-btn {
         background: $primary-color;
       }
+
       .btn {
         width: 132px;
         height: 32px;

@@ -77,11 +77,11 @@ import { get, map } from 'lodash-es'
 import { spaceListConfig } from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
-import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
-const teamSpaceStore = useTeamSpaceStore()
+const workSpaceStore = useWorkSpaceStore()
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
@@ -89,17 +89,17 @@ const fieldList = computed(() => {
   })
 })
 const dataList = computed(() => {
-  return teamSpaceStore.teamSpaceList
+  return workSpaceStore.workSpaceList
 })
 const isAdmin = (id: string) => {
   return (
-    teamSpaceStore.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
+    workSpaceStore.workSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
     UserRole.Admin
   )
 }
 
 const handleModify = async (id: string) => {
-  await teamSpaceStore.getSpaceDetail(id)
+  await workSpaceStore.getSpaceDetail(id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -115,15 +115,15 @@ const handleDelete = (id: string) => {
     }
   )
     .then(async () => {
-      await teamSpaceStore.deleteSpace(id)
-      await teamSpaceStore.getSpaceList()
+      await workSpaceStore.deleteSpace(id)
+      await workSpaceStore.getSpaceList()
     })
     .catch(() => {})
 }
 
 const onCloseModify = () => {
   showSpaceModify.value = false
-  teamSpaceStore.getSpaceList()
+  workSpaceStore.getSpaceList()
 }
 
 // const handleCurrentChange = (current) => {

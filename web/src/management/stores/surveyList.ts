@@ -1,73 +1,12 @@
-import { CODE_MAP } from '@/management/api/base'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
 import { defineStore } from 'pinia'
-import { useTeamSpaceStore } from './teamSpace'
+
+import { CODE_MAP } from '@/management/api/base'
+import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
+
+import { useWorkSpaceStore } from './workSpace'
 import { ref, computed } from 'vue'
-
-export const useSurveyListStore = defineStore('surveyList', () => {
-  const surveyList = ref([])
-  const surveyTotal = ref(0)
-
-  const {
-    searchVal,
-    selectValueMap,
-    buttonValueMap,
-    listFilter,
-    listOrder,
-    resetSearch,
-    resetSelectValueMap,
-    resetButtonValueMap,
-    changeSelectValueMap,
-    changeButtonValueMap
-  } = useSearchSurvey()
-
-  const teamSpaceStore = useTeamSpaceStore()
-  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
-    const filterString = JSON.stringify(
-      listFilter.value.filter((item) => {
-        return item.condition[0].value
-      })
-    )
-    const orderString = JSON.stringify(listOrder.value)
-    try {
-      const params = {
-        curPage: payload?.curPage || 1,
-        pageSize: payload?.pageSize || 10, // 默认一页10条
-        filter: filterString,
-        order: orderString,
-        workspaceId: teamSpaceStore.workSpaceId
-      }
-
-      const res: any = await getSurveyListReq(params)
-      if (res.code === CODE_MAP.SUCCESS) {
-        surveyList.value = res.data.data
-        surveyTotal.value = res.data.count
-      } else {
-        ElMessage.error(res.errmsg)
-      }
-    } catch (error) {
-      ElMessage.error('getSurveyList status' + error)
-    }
-  }
-
-  return {
-    surveyList,
-    surveyTotal,
-    searchVal,
-    selectValueMap,
-    buttonValueMap,
-    listFliter: listFilter,
-    listOrder,
-    resetSearch,
-    getSurveyList,
-    resetSelectValueMap,
-    resetButtonValueMap,
-    changeSelectValueMap,
-    changeButtonValueMap
-  }
-})
 
 function useSearchSurvey() {
   const searchVal = ref('')
@@ -117,7 +56,7 @@ function useSearchSurvey() {
   const listOrder = computed(() => {
     return Object.entries(buttonValueMap.value)
       .filter(([, effectValue]) => effectValue)
-      .reduce((prev: { field: string, value: string | number }[], item) => {
+      .reduce((prev: { field: string; value: string | number }[], item) => {
         const [effectKey, effectValue] = item
         prev.push({ field: effectKey, value: effectValue })
         return prev
@@ -165,3 +104,66 @@ function useSearchSurvey() {
     changeButtonValueMap
   }
 }
+
+export const useSurveyListStore = defineStore('surveyList', () => {
+  const surveyList = ref([])
+  const surveyTotal = ref(0)
+
+  const {
+    searchVal,
+    selectValueMap,
+    buttonValueMap,
+    listFilter,
+    listOrder,
+    resetSearch,
+    resetSelectValueMap,
+    resetButtonValueMap,
+    changeSelectValueMap,
+    changeButtonValueMap
+  } = useSearchSurvey()
+
+  const workSpaceStore = useWorkSpaceStore()
+  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
+    const filterString = JSON.stringify(
+      listFilter.value.filter((item) => {
+        return item.condition[0].value
+      })
+    )
+    const orderString = JSON.stringify(listOrder.value)
+    try {
+      const params = {
+        curPage: payload?.curPage || 1,
+        pageSize: payload?.pageSize || 10, // 默认一页10条
+        filter: filterString,
+        order: orderString,
+        workspaceId: workSpaceStore.workSpaceId
+      }
+
+      const res: any = await getSurveyListReq(params)
+      if (res.code === CODE_MAP.SUCCESS) {
+        surveyList.value = res.data.data
+        surveyTotal.value = res.data.count
+      } else {
+        ElMessage.error(res.errmsg)
+      }
+    } catch (error) {
+      ElMessage.error('getSurveyList status' + error)
+    }
+  }
+
+  return {
+    surveyList,
+    surveyTotal,
+    searchVal,
+    selectValueMap,
+    buttonValueMap,
+    listFilter: listFilter,
+    listOrder,
+    resetSearch,
+    getSurveyList,
+    resetSelectValueMap,
+    resetButtonValueMap,
+    changeSelectValueMap,
+    changeButtonValueMap
+  }
+})

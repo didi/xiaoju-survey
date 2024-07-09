@@ -68,15 +68,15 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
 import { useUserStore } from '@/management/stores/user'
-import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 
 const userStore = useUserStore()
-const teamSpaceStore = useTeamSpaceStore()
+const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
-const { spaceMenus, workSpaceId, spaceType } = storeToRefs(teamSpaceStore)
+const { spaceMenus, workSpaceId, spaceType } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const userInfo = computed(() => {
   return userStore.userInfo
@@ -87,25 +87,25 @@ const activeIndex = ref('1')
 const handleSpaceSelect = (id: any) => {
   if (id === SpaceType.Personal) {
     // 点击个人空间菜单
-    if (teamSpaceStore.spaceType === SpaceType.Personal) {
+    if (workSpaceStore.spaceType === SpaceType.Personal) {
       return
     }
-    teamSpaceStore.changeSpaceType(SpaceType.Personal)
-    teamSpaceStore.changeWorkSpace('')
+    workSpaceStore.changeSpaceType(SpaceType.Personal)
+    workSpaceStore.changeWorkSpace('')
   } else if (id === SpaceType.Group) {
     // 点击团队空间组菜单
-    if (teamSpaceStore.spaceType === SpaceType.Group) {
+    if (workSpaceStore.spaceType === SpaceType.Group) {
       return
     }
-    teamSpaceStore.changeSpaceType(SpaceType.Group)
-    teamSpaceStore.changeWorkSpace('')
+    workSpaceStore.changeSpaceType(SpaceType.Group)
+    workSpaceStore.changeWorkSpace('')
   } else if (!Object.values(SpaceType).includes(id)) {
     // 点击具体团队空间
-    if (teamSpaceStore.workSpaceId === id) {
+    if (workSpaceStore.workSpaceId === id) {
       return
     }
-    teamSpaceStore.changeSpaceType(SpaceType.Teamwork)
-    teamSpaceStore.changeWorkSpace(id)
+    workSpaceStore.changeSpaceType(SpaceType.Teamwork)
+    workSpaceStore.changeWorkSpace(id)
   }
 
   fetchSurveyList()
@@ -115,7 +115,7 @@ onMounted(() => {
   fetchSurveyList()
 })
 const fetchSpaceList = () => {
-  teamSpaceStore.getSpaceList()
+  workSpaceStore.getSpaceList()
 }
 const fetchSurveyList = async (params?: any) => {
   if (!params) {

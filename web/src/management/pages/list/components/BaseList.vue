@@ -123,7 +123,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
 import { deleteSurvey } from '@/management/api/survey'
-import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
 import TagModule from './TagModule.vue'
@@ -144,8 +144,8 @@ import {
 } from '@/management/config/listConfig'
 
 const surveyListStore = useSurveyListStore()
-const teamSpaceStore = useTeamSpaceStore()
-const { workSpaceId } = storeToRefs(teamSpaceStore)
+const workSpaceStore = useWorkSpaceStore()
+const { workSpaceId } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const props = defineProps({
   loading: {
@@ -433,7 +433,7 @@ const onSelectChange = (selectKey, selectValue) => {
   onReflush()
 }
 const onButtonChange = (effectKey, effectValue) => {
-  surveyListStore.reserButtonValueMap()
+  surveyListStore.resetButtonValueMap()
   surveyListStore.changeButtonValueMap(effectKey, effectValue)
   onReflush()
 }

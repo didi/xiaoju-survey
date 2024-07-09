@@ -42,7 +42,7 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import { createSurvey } from '@/management/api/survey'
 import { SURVEY_TYPE_LIST } from '../types'
-import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 interface Props {
   selectType?: string
@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectType: 'normal'
 })
 
-const teamSpaceStore = useTeamSpaceStore()
+const workSpaceStore = useWorkSpaceStore()
 const ruleForm = ref<any>(null)
 
 const state = reactive({
@@ -92,8 +92,8 @@ const submit = () => {
       surveyType: selectType,
       ...state.form
     }
-    if (teamSpaceStore.workSpaceId) {
-      payload.workspaceId = teamSpaceStore.workSpaceId
+    if (workSpaceStore.workSpaceId) {
+      payload.workspaceId = workSpaceStore.workSpaceId
     }
     const res: any = await createSurvey(payload)
     if (res?.code === 200 && res?.data?.id) {

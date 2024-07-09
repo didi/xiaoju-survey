@@ -37,7 +37,7 @@ export default {
     spaceType: SpaceType.Personal,
     workSpaceId: '',
     spaceDetail: null,
-    teamSpaceList: [],
+    workSpaceList: [],
     // 列表管理
     surveyList: [],
     surveyTotal: 0,
@@ -52,7 +52,7 @@ export default {
     }
   },
   getters: {
-    listFliter(state) {
+    listFilter(state) {
       return [
         {
           comparator: '',
@@ -96,25 +96,25 @@ export default {
     }
   },
   mutations: {
-    updateSpaceMenus(state, teamSpace) {
+    updateSpaceMenus(state, workSpace) {
       // 更新空间列表下的团队空间
-      set(state, 'spaceMenus[1].children', teamSpace)
+      set(state, 'spaceMenus[1].children', workSpace)
     },
     changeSpaceType(state, spaceType) {
       state.spaceType = spaceType
     },
     changeWorkSpace(state, workSpaceId) {
       // 切换空间清除筛选条件
-      this.commit('list/reserSelectValueMap')
-      this.commit('list/reserButtonValueMap')
+      this.commit('list/resetSelectValueMap')
+      this.commit('list/resetButtonValueMap')
       this.commit('list/setSearchVal', '')
       state.workSpaceId = workSpaceId
     },
     setSpaceDetail(state, data) {
       state.spaceDetail = data
     },
-    setTeamSpaceList(state, data) {
-      state.teamSpaceList = data
+    setWorkSpaceList(state, data) {
+      state.workSpaceList = data
     },
     setSurveyList(state, list) {
       state.surveyList = list
@@ -125,7 +125,7 @@ export default {
     setSearchVal(state, data) {
       state.searchVal = data
     },
-    reserSelectValueMap(state) {
+    resetSelectValueMap(state) {
       state.selectValueMap = {
         surveyType: '',
         'curStatus.status': ''
@@ -134,7 +134,7 @@ export default {
     changeSelectValueMap(state, { key, value }) {
       state.selectValueMap[key] = value
     },
-    reserButtonValueMap(state) {
+    resetButtonValueMap(state) {
       state.buttonValueMap = {
         'curStatus.date': '',
         createDate: -1
@@ -151,14 +151,14 @@ export default {
 
         if (res.code === CODE_MAP.SUCCESS) {
           const { list } = res.data
-          const teamSpace = list.map((item) => {
+          const workSpace = list.map((item) => {
             return {
               id: item._id,
               name: item.name
             }
           })
-          commit('setTeamSpaceList', list)
-          commit('updateSpaceMenus', teamSpace)
+          commit('setWorkSpaceList', list)
+          commit('updateSpaceMenus', workSpace)
         } else {
           ElMessage.error('getSpaceList' + res.errmsg)
         }
@@ -221,7 +221,7 @@ export default {
     },
     async getSurveyList({ state, getters, commit }, payload) {
       const filterString = JSON.stringify(
-        getters.listFliter.filter((item) => {
+        getters.listFilter.filter((item) => {
           return item.condition[0].value
         })
       )

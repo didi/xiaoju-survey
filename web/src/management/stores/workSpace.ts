@@ -1,3 +1,9 @@
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
+
+import { CODE_MAP } from '@/management/api/base'
 import {
   createSpace,
   updateSpace as updateSpaceReq,
@@ -5,16 +11,16 @@ import {
   getSpaceList as getSpaceListReq,
   getSpaceDetail as getSpaceDetailReq
 } from '@/management/api/space'
-import { CODE_MAP } from '@/management/api/base'
 import { SpaceType } from '@/management/utils/types/workSpace'
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import {
+  type SpaceDetail,
+  type SpaceItem,
+  type IWorkspace
+} from '@/management/utils/types/workSpace'
+
 import { useSurveyListStore } from './surveyList'
-import { type SpaceDetail, type SpaceItem, type IWorkspace } from '@/management/utils/types/workSpace'
 
-
-export const useTeamSpaceStore = defineStore('teamSpace', () => {
+export const useWorkSpaceStore = defineStore('workSpace', () => {
   // list空间
   const spaceMenus = ref([
     {
@@ -32,7 +38,7 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
   const spaceType = ref(SpaceType.Personal)
   const workSpaceId = ref('')
   const spaceDetail = ref<SpaceDetail | null>(null)
-  const teamSpaceList = ref<SpaceItem[]>([])
+  const workSpaceList = ref<SpaceItem[]>([])
 
   const surveyListStore = useSurveyListStore()
 
@@ -42,14 +48,14 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
 
       if (res.code === CODE_MAP.SUCCESS) {
         const { list } = res.data
-        const teamSpace = list.map((item: SpaceDetail) => {
+        const workSpace = list.map((item: SpaceDetail) => {
           return {
             id: item._id,
             name: item.name
           }
         })
-        teamSpaceList.value = list
-        spaceMenus.value[1].children = teamSpace
+        workSpaceList.value = list
+        spaceMenus.value[1].children = workSpace
       } else {
         ElMessage.error('getSpaceList' + res.errmsg)
       }
@@ -126,7 +132,7 @@ export const useTeamSpaceStore = defineStore('teamSpace', () => {
     spaceType,
     workSpaceId,
     spaceDetail,
-    teamSpaceList,
+    workSpaceList,
     getSpaceList,
     getSpaceDetail,
     changeSpaceType,

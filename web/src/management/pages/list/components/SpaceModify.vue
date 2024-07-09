@@ -1,7 +1,21 @@
 <template>
-  <el-dialog class="base-dialog-root" :model-value="visible" width="40%" :title="formTitle" @close="onClose">
-    <el-form class="base-form-root" ref="ruleForm" :model="formModel" :rules="rules" label-position="top" size="large"
-      @submit.prevent :disabled="formDisabled">
+  <el-dialog
+    class="base-dialog-root"
+    :model-value="visible"
+    width="40%"
+    :title="formTitle"
+    @close="onClose"
+  >
+    <el-form
+      class="base-form-root"
+      ref="ruleForm"
+      :model="formModel"
+      :rules="rules"
+      label-position="top"
+      size="large"
+      @submit.prevent
+      :disabled="formDisabled"
+    >
       <el-form-item label="团队空间名称" prop="name">
         <el-input v-model="formModel.name" />
       </el-form-item>
@@ -9,7 +23,11 @@
         <el-input v-model="formModel.description" />
       </el-form-item>
       <el-form-item label="添加成员" prop="members">
-        <MemberSelect :members="formModel.members" @select="handleMemberSelect" @change="handleMembersChange" />
+        <MemberSelect
+          :members="formModel.members"
+          @select="handleMemberSelect"
+          @change="handleMembersChange"
+        />
       </el-form-item>
     </el-form>
 
@@ -32,9 +50,9 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { QOP_MAP } from '@/management/utils/constant'
 import MemberSelect from './MemberSelect.vue'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'
-import { useTeamSpaceStore } from '@/management/stores/teamSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
-const teamSpaceStore = useTeamSpaceStore()
+const workSpaceStore = useWorkSpaceStore()
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = defineProps({
   type: String,
@@ -69,11 +87,11 @@ const rules = {
   ]
 }
 const spaceDetail = computed(() => {
-  return teamSpaceStore.spaceDetail
+  return workSpaceStore.spaceDetail
 })
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? teamSpaceStore.teamSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
+    ? workSpaceStore.workSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
         ?.currentUserRole !== UserRole.Admin
     : false
 })
@@ -91,7 +109,7 @@ const onClose = () => {
     members: [] as IMember[]
   }
   // 清空空间详情
-  teamSpaceStore.setSpaceDetail(null)
+  workSpaceStore.setSpaceDetail(null)
   emit('on-close-codify')
 }
 
@@ -126,10 +144,10 @@ const handleMembersChange = (val: IMember[]) => {
   formModel.value.members = val
 }
 const handleUpdate = async () => {
-  await teamSpaceStore.updateSpace(formModel.value)
+  await workSpaceStore.updateSpace(formModel.value)
 }
 const handleAdd = async () => {
-  await teamSpaceStore.addSpace(formModel.value)
+  await workSpaceStore.addSpace(formModel.value)
 }
 </script>
 

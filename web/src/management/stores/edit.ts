@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, reactive, toRef, computed } from 'vue'
+import { type Ref, ref, reactive, toRef, computed } from 'vue'
 import { getSurveyById } from '@/management/api/survey'
 import { merge as _merge, cloneDeep as _cloneDeep, set as _set } from 'lodash-es'
 import { getNewField } from '@/management/utils'
@@ -13,7 +13,7 @@ const innerMetaConfig = {
   }
 }
 
-function useInitializeSchema(surveyId) {
+function useInitializeSchema(surveyId: Ref<string>) {
   const schema = reactive({
     metaData: null,
     bannerConf: {
@@ -69,7 +69,7 @@ function useInitializeSchema(surveyId) {
     }
   })
 
-  function initSchema({ metaData, codeData }) {
+  function initSchema({ metaData, codeData }: { metaData: any; codeData: any }) {
     schema.metaData = metaData
     schema.bannerConf = _merge({}, schema.bannerConf, codeData.bannerConf)
     schema.bottomConf = _merge({}, schema.bottomConf, codeData.bottomConf)
@@ -83,7 +83,7 @@ function useInitializeSchema(surveyId) {
   }
 
   async function getSchemaFromRemote() {
-    const res = await getSurveyById(surveyId.value)
+    const res: any = await getSurveyById(surveyId.value)
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
       document.title = metaData.title
@@ -120,24 +120,24 @@ function useInitializeSchema(surveyId) {
   }
 }
 
-function useQuestionDataListOperations(questionDataList, updateTime) {
-  function copyQuestion({ index }) {
+function useQuestionDataListOperations(questionDataList: Ref<any[]>, updateTime: () => void) {
+  function copyQuestion({ index }: { index: number }) {
     const newQuestion = _cloneDeep(questionDataList.value[index])
     newQuestion.field = getNewField(questionDataList.value.map((item) => item.field))
     addQuestion({ question: newQuestion, index })
   }
 
-  function addQuestion({ question, index }) {
+  function addQuestion({ question, index }: { question: any; index: number }) {
     questionDataList.value.splice(index, 0, question)
     updateTime()
   }
 
-  function deleteQuestion({ index }) {
+  function deleteQuestion({ index }: { index: number }) {
     questionDataList.value.splice(index, 1)
     updateTime()
   }
 
-  function moveQuestion({ index, range }) {
+  function moveQuestion({ index, range }: { index: number; range: number }) {
     console.log('move')
     let start, end
     if (range < 0) {
@@ -169,14 +169,16 @@ function useQuestionDataListOperations(questionDataList, updateTime) {
     copyQuestion,
     addQuestion,
     deleteQuestion,
-    moveQuestion,
+    moveQuestion
   }
 }
 
 function useCurrentEdit({
   schema,
-  questionDataList,
-
+  questionDataList
+}: {
+  schema: any
+  questionDataList: Ref<any[]>
 }) {
   const currentEditOne = ref()
   const currentEditStatus = ref('Success')
@@ -232,19 +234,19 @@ function useCurrentEdit({
   const currentEditMeta = computed(() => {
     if (currentEditOne.value === null) {
       return null
-    } else if (innerMetaConfig[currentEditOne.value]) {
-      return innerMetaConfig[currentEditOne.value]
+    } else if (innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]) {
+      return innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]
     } else {
       const questionType = questionDataList.value?.[currentEditOne.value]?.type
       return questionLoader.getMeta(questionType)
     }
   })
 
-  function setCurrentEditOne(data) {
+  function setCurrentEditOne(data: any) {
     currentEditOne.value = data
   }
 
-  function changeCurrentEditStatus(status) {
+  function changeCurrentEditStatus(status: string) {
     currentEditStatus.value = status
   }
 
@@ -256,34 +258,37 @@ function useCurrentEdit({
     formConfigList,
     currentEditMeta,
     setCurrentEditOne,
-    changeCurrentEditStatus,
+    changeCurrentEditStatus
   }
 }
-
 
 export const useEditStore = defineStore('edit', () => {
   const surveyId = ref('')
   const schemaUpdateTime = ref(Date.now())
   const { schema, initSchema, getSchemaFromRemote } = useInitializeSchema(surveyId)
-  const questionDataList = toRef(schema, 'questionDataList');
-  function setQuestionDataList(data) {
+  const questionDataList = toRef(schema, 'questionDataList')
+  function setQuestionDataList(data: any) {
     schema.questionDataList = data
   }
 
-  function setSurveyId(id) {
+  function setSurveyId(id: string) {
     surveyId.value = id
   }
 
-  const { currentEditOne,
+  const {
+    currentEditOne,
     currentEditKey,
     currentEditStatus,
     moduleConfig,
     formConfigList,
-    currentEditMeta, setCurrentEditOne, changeCurrentEditStatus } = useCurrentEdit({ schema, questionDataList })
+    currentEditMeta,
+    setCurrentEditOne,
+    changeCurrentEditStatus
+  } = useCurrentEdit({ schema, questionDataList })
 
   async function init() {
-    const { metaData } = schema;
-    if (!metaData || metaData?._id !== surveyId.value) {
+    const { metaData } = schema
+    if (!metaData || (metaData as any)?._id !== surveyId.value) {
       getSchemaFromRemote()
     }
     currentEditOne.value = null
@@ -294,23 +299,21 @@ export const useEditStore = defineStore('edit', () => {
     schemaUpdateTime.value = Date.now()
   }
 
+  const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionDataListOperations(
+    questionDataList,
+    updateTime
+  )
 
-  const { copyQuestion,
-    addQuestion,
-    deleteQuestion,
-    moveQuestion, } = useQuestionDataListOperations(questionDataList, updateTime)
-
-  function changeSchema({ key, value }) {
+  function changeSchema({ key, value }: { key: string; value: any }) {
     _set(schema, key, value)
     updateTime()
   }
 
-  function changeThemePreset(presets) {
+  function changeThemePreset(presets: any) {
     Object.keys(presets).forEach((key) => {
       _set(schema, key, presets[key])
     })
   }
-
 
   return {
     surveyId,

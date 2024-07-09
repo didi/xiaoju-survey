@@ -13,12 +13,12 @@
             :readonly="false"
             :is-selected="currentEditOne === 'submit'"
           />
-          <LogoIcon
-            :logo-conf="bottomConf"
-            :readonly="false"
-            :is-selected="currentEditOne === 'logo'"
-          />
         </div>
+        <LogoIcon
+          :logo-conf="bottomConf"
+          :readonly="false"
+          :is-selected="currentEditOne === 'logo'"
+        />
       </div>
     </div>
   </div>

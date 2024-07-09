@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, withDefaults } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 import MemberList from './MemberList.vue'
 import { getUserList } from '@/management/api/space'

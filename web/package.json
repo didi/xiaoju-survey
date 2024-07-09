@@ -14,7 +14,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@types/lodash-es": "^4.17.12",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "async-validator": "^4.2.5",
@@ -39,6 +38,7 @@
     "@iconify-json/ep": "^1.1.15",
     "@rushstack/eslint-patch": "^1.10.2",
     "@tsconfig/node20": "^20.1.2",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.11.19",
     "@types/qrcode": "^1.5.5",
     "@vitejs/plugin-vue": "^5.0.3",

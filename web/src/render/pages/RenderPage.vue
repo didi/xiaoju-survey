@@ -13,8 +13,8 @@
           :renderData="renderData"
           @submit="handleSubmit"
         ></SubmitButton>
-        <LogoIcon :logo-conf="logoConf" :readonly="true" />
       </div>
+      <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
   </div>
 </template>

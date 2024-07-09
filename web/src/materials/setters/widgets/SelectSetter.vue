@@ -61,10 +61,10 @@ const modelValue = ref(
 )
 
 const handleSelectChange = (value: string) => {
-  const { key, valueSetter } = props.formConfig
+  const { key, validate } = props.formConfig
 
-  if (valueSetter && typeof valueSetter == 'function') {
-    let verification: boolean = valueSetter(value, props.moduleConfig)
+  if (validate && typeof validate == 'function') {
+    let verification: boolean = validate(value, props.moduleConfig)
 
     if (!verification) {
       return
@@ -72,7 +72,6 @@ const handleSelectChange = (value: string) => {
 
     modelValue.value = props.moduleConfig[key]
   }
-
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
 

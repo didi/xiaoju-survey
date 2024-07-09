@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="time-hour">
     <el-config-provider :locale="locale">
       <el-time-picker
         is-range
@@ -103,6 +103,13 @@ watch(
 .timeRange {
   .el-time-panel__btn.confirm {
     color: $primary-color;
+  }
+}
+
+.time-hour {
+  width: 100%;
+  :deep(.el-date-editor) {
+    width: 100%;
   }
 }
 </style>

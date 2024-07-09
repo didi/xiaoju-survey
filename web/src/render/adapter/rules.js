@@ -195,17 +195,19 @@ export function generateValidArr(
 
 // 生成选择类或者评分类的题目的更多输入框
 const generateOthersKeyMap = (question) => {
-  const { type, field, options, rangeConfig } = question
+  const { type, field } = question
   let othersKeyMap = undefined
 
   if (RATES.includes(type)) {
+    const { rangeConfig  } = question
     othersKeyMap = {}
     for (const key in rangeConfig) {
       if (rangeConfig[key].isShowInput) {
         othersKeyMap[`${field}_${key}`] = key
       }
     }
-  } else if (type.includes(QUESTION_TYPE.RADIO) || type.includes(QUESTION_TYPE.CHECKBOX)) {
+  } else if (type?.includes(QUESTION_TYPE.RADIO) || type?.includes(QUESTION_TYPE.CHECKBOX)) {
+    const { options } = question 
     othersKeyMap = {}
     options
       .filter((op) => op.others)

@@ -11,13 +11,16 @@
         "field": "data458",
         "title": "姓名",
         "placeholder": "",
-        "randomSort": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
-        "star": 5,
-        "exclude": false,
-        "placeholderDesc": "",
+        "numberRange": {
+          "max": {
+            "placeholder": "1000",
+            "value": 1000
+          },
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          }
+        },
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -40,10 +43,6 @@
         "title": "选择您感兴趣的课程进行报名",
         "placeholder": "",
         "valid": "",
-        "randomSort": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
         "options": [
           {
             "text": "课程1",
@@ -81,27 +80,7 @@
             "othersKey": "",
             "placeholderDesc": ""
           }
-        ],
-        "star": 5,
-        "exclude": false,
-        "urlKey": "",
-        "defaultProps": {
-          "children": "children",
-          "label": "name",
-          "id": "id"
-        },
-        "startDate": "",
-        "endDate": "",
-        "textRange": {
-          "min": {
-            "placeholder": "0",
-            "value": 0
-          },
-          "max": {
-            "placeholder": "500",
-            "value": 500
-          }
-        }
+        ]
       }
     ]
   }

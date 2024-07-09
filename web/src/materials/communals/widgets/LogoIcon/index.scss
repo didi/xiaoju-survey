@@ -1,6 +1,9 @@
 .logo-icon-warp {
   display: flex;
   justify-content: center;
+  background: #fff;
+  margin: 0 0.3rem;
+  padding: 0.1rem 0 0.5rem;
   .logo-wrapper {
     text-align: center;
     font-size: 0;
@@ -9,8 +12,6 @@
   .question-logo {
     max-width: 300px;
     text-align: center;
-    padding: 0 0 0.6rem;
-    margin-top: -0.2rem;
     cursor: pointer;
   }
   .logo-placeholder-wrapper {

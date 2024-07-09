@@ -94,7 +94,7 @@
   }
 
   &.spliter {
-    border-bottom: 0.12rem solid $spliter-color;
+    border-bottom: 0.12rem solid var(--primary-background-color);
   }
 
   .sort-tip {

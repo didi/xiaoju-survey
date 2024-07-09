@@ -38,7 +38,7 @@ const statusList = [
 
 const handleChangePreview = (data: any) => {
   if (currentEditStatus.value !== data.type) {
-    currentEditStatus.value = data.type
+    editStore.changeCurrentEditStatus(data.type)
   }
 }
 </script>

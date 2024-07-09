@@ -12,7 +12,7 @@
           :title="element.title"
           :indexNumber="element.indexNumber"
           :showIndex="element.showIndex"
-          @select="handleSelect(index)"
+          @select="setCurrentEditOne(index)"
         />
       </template>
     </draggable>
@@ -29,24 +29,20 @@ import { filterQuestionPreviewData } from '@/management/utils/index'
 
 const editStore = useEditStore()
 const { questionDataList, currentEditOne } = storeToRefs(editStore)
-const { moveQuestion } = editStore
+const { moveQuestion, setCurrentEditOne } = editStore
 const renderData = computed(() => {
   return filterQuestionPreviewData(questionDataList.value) || []
 })
 
 const handleDragEnd = ({ newIndex, oldIndex }: any) => {
   if (currentEditOne.value === oldIndex) {
-    handleSelect(newIndex)
+    setCurrentEditOne(newIndex)
   }
 
   moveQuestion({
     index: oldIndex,
     range: newIndex - oldIndex
   })
-}
-
-const handleSelect = (idx: number) => {
-  currentEditOne.value = idx
 }
 </script>
 <style lang="scss" scoped>

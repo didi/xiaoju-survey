@@ -15,7 +15,6 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -28,13 +27,12 @@ import Navbar from './components/ModuleNavbar.vue'
 import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
 const editStore = useEditStore()
-const { surveyId } = storeToRefs(editStore)
-const { schema, init } = editStore
+const { schema, init, setSurveyId } = editStore
 const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-  surveyId.value = route.params.id as string
+  setSurveyId(route.params.id as string)
 
   try {
     await init()

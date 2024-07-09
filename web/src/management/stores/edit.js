@@ -240,13 +240,23 @@ function useCurrentEdit({
     }
   })
 
+  function setCurrentEditOne(data) {
+    currentEditOne.value = data
+  }
+
+  function changeCurrentEditStatus(status) {
+    currentEditStatus.value = status
+  }
+
   return {
     currentEditOne,
     currentEditKey,
     currentEditStatus,
     moduleConfig,
     formConfigList,
-    currentEditMeta
+    currentEditMeta,
+    setCurrentEditOne,
+    changeCurrentEditStatus,
   }
 }
 
@@ -256,12 +266,20 @@ export const useEditStore = defineStore('edit', () => {
   const schemaUpdateTime = ref(Date.now())
   const { schema, initSchema, getSchemaFromRemote } = useInitializeSchema(surveyId)
   const questionDataList = toRef(schema, 'questionDataList');
+  function setQuestionDataList(data) {
+    schema.questionDataList = data
+  }
+
+  function setSurveyId(id) {
+    surveyId.value = id
+  }
+
   const { currentEditOne,
     currentEditKey,
     currentEditStatus,
     moduleConfig,
     formConfigList,
-    currentEditMeta } = useCurrentEdit({ schema, questionDataList })
+    currentEditMeta, setCurrentEditOne, changeCurrentEditStatus } = useCurrentEdit({ schema, questionDataList })
 
   async function init() {
     const { metaData } = schema;
@@ -296,15 +314,19 @@ export const useEditStore = defineStore('edit', () => {
 
   return {
     surveyId,
+    setSurveyId,
     currentEditOne,
     moduleConfig,
     formConfigList,
     currentEditKey,
     currentEditStatus,
     currentEditMeta,
+    setCurrentEditOne,
+    changeCurrentEditStatus,
     schemaUpdateTime,
     schema,
     questionDataList,
+    setQuestionDataList,
     init,
     initSchema,
     getSchemaFromRemote,

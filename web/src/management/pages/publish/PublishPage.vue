@@ -26,7 +26,6 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, toRef } from 'vue'
-import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import { useRoute, useRouter } from 'vue-router'
 import { get as _get } from 'lodash-es'
@@ -46,8 +45,7 @@ const defaultConfig = {
 }
 
 const editStore = useEditStore()
-const { surveyId } = storeToRefs(editStore)
-const { schema, init } = editStore
+const { schema, init, setSurveyId } = editStore
 const metaData = toRef(schema, 'metaData')
 const curStatus = computed(() => _get(metaData.value, 'curStatus.status', 'new'))
 const mainChannel = computed(() => {
@@ -63,7 +61,7 @@ const mainChannel = computed(() => {
 const route = useRoute()
 const router = useRouter()
 onMounted(async () => {
-  surveyId.value = route.params.id as string
+  setSurveyId(route.params.id as string)
 
   try {
     await init()

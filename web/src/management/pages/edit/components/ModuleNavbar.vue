@@ -28,8 +28,7 @@ import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 
 const editStore = useEditStore()
-const { schema } = editStore
-const title = computed(() => (schema?.metaData as any)?.title || '')
+const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 </script>
 <style lang="scss" scoped>
 .nav {

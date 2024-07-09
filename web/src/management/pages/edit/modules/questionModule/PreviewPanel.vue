@@ -6,13 +6,13 @@
           :bannerConf="bannerConf"
           :readonly="false"
           :is-selected="currentEditOne === 'mainTitle'"
-          @select="onSelectEditOne('mainTitle')"
+          @select="setCurrentEditOne('mainTitle')"
           @change="handleChange"
         />
         <MaterialGroup
           :current-edit-one="parseInt(currentEditOne)"
           :questionDataList="questionDataList"
-          @select="onSelectEditOne"
+          @select="setCurrentEditOne"
           @change="handleChange"
           @changeSeq="onQuestionOperation"
           ref="materialGroup"
@@ -22,7 +22,7 @@
           :readonly="false"
           :skin-conf="skinConf"
           :is-selected="currentEditOne === 'submit'"
-          @select="onSelectEditOne('submit')"
+          @select="setCurrentEditOne('submit')"
         />
       </div>
     </div>
@@ -41,7 +41,8 @@ const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
 const editStore = useEditStore()
 const { questionDataList, currentEditOne, currentEditKey } = storeToRefs(editStore)
-const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion } = editStore
+const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion, setCurrentEditOne } =
+  editStore
 const mainOperation = ref(null)
 const materialGroup = ref(null)
 
@@ -52,10 +53,6 @@ const autoScrollData = computed(() => {
     len: questionDataList.value.length
   }
 })
-
-const onSelectEditOne = (_currentEditOne) => {
-  currentEditOne.value = _currentEditOne
-}
 
 const handleChange = (data) => {
   if (currentEditOne.value === null) {
@@ -68,7 +65,7 @@ const handleChange = (data) => {
 
 const onMainClick = (e) => {
   if (e.target === mainOperation.value) {
-    currentEditOne.value = null
+    setCurrentEditOne(null)
   }
 }
 

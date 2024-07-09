@@ -73,7 +73,7 @@ const validate = (cbk: (v: boolean) => void) => {
 
 const normalizationRequestBody = () => {
   const enterTime = surveyStore.enterTime
-  const encryptInfo = surveyStore.encryptInfo
+  const encryptInfo = surveyStore.encryptInfo as any;
   const formValues = store.state.formValues
 
   const result: any = {

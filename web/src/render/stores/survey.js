@@ -15,7 +15,7 @@ const CODE_MAP = {
 export const useSurveyStore = defineStore('survey', () => {
   const surveyPath = ref('');
   const isMobile = ref(isInMobile())
-  const enterTime = ref(null)
+  const enterTime = ref(0)
   const encryptInfo = ref(null)
 
   const setSurveyPath = ( data) => {

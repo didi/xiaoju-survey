@@ -43,7 +43,6 @@
 </template>
 <script>
 import { get as _get } from 'lodash-es'
-import { mapGetters } from 'vuex'
 export default {
   props: {
     min: {
@@ -80,9 +79,6 @@ export default {
     this.initRange()
   },
   computed: {
-    ...mapGetters({
-      currentEditKey: 'edit/currentEditKey'
-    }),
     innerVisible: {
       get() {
         return this.visible
@@ -119,9 +115,8 @@ export default {
           explain: item.explain
         }
       }
-      const paramsKey = `rangeConfig`
       const payload = {
-        key: `${this.currentEditKey}.${paramsKey}`,
+        key: `rangeConfig`,
         value: res
       }
       this.$emit('confirm', payload)

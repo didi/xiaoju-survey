@@ -62,6 +62,8 @@ export default {
         return
       }
     }
+    router.push({ name: 'renderPage' })
+
 
     //回填，断点续填
     const localData = JSON.parse(localStorage.getItem(state.surveyPath + "_questionData"))

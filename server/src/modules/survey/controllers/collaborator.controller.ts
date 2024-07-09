@@ -319,6 +319,7 @@ export class CollaboratorController {
     const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
 
     if (!surveyMeta) {
+      this.logger.error(`问卷不存在: ${surveyId}`, { req });
       throw new HttpException('问卷不存在', EXCEPTION_CODE.SURVEY_NOT_FOUND);
     }
 

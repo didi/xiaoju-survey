@@ -20,6 +20,8 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { AggregationStatisDto } from '../dto/aggregationStatis.dto';
+import { handleAggretionData } from '../utils';
 import { SurveyDownloadService } from '../services/surveyDownload.service';
 
 @ApiTags('survey')
@@ -81,6 +83,52 @@ export class DataStatisticController {
         listHead,
         listBody,
       },
+    };
+  }
+
+  @Get('/aggregationStatis')
+  @HttpCode(200)
+  @UseGuards(Authentication)
+  async aggregationStatis(@Query() queryInfo: AggregationStatisDto) {
+    // 聚合统计
+    const { value, error } = AggregationStatisDto.validate(queryInfo);
+    if (error) {
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const responseSchema =
+      await this.responseSchemaService.getResponseSchemaByPageId(
+        value.surveyId,
+      );
+    if (!responseSchema) {
+      return {
+        code: 200,
+        data: [],
+      };
+    }
+    const allowQuestionType = [
+      'radio',
+      'checkbox',
+      'binary-choice',
+      'radio-star',
+      'radio-nps',
+      'vote',
+    ];
+    const fieldList = responseSchema.code.dataConf.dataList
+      .filter((item) => allowQuestionType.includes(item.type))
+      .map((item) => item.field);
+    const dataMap = responseSchema.code.dataConf.dataList.reduce((pre, cur) => {
+      pre[cur.field] = cur;
+      return pre;
+    }, {});
+    const res = await this.dataStatisticService.aggregationStatis({
+      surveyId: value.surveyId,
+      fieldList,
+    });
+    return {
+      code: 200,
+      data: res.map((item) => {
+        return handleAggretionData({ item, dataMap });
+      }),
     };
   }
 }

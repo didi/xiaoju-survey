@@ -33,7 +33,7 @@ export function getListHeadByDataList(dataList) {
     let othersCode;
     const radioType = ['radio-star', 'radio-nps'];
     if (radioType.includes(question.type)) {
-      const rangeConfigKeys = Object.keys(question.rangeConfig);
+      const rangeConfigKeys = question.rangeConfig ? Object.keys(question.rangeConfig) : [];
       if (rangeConfigKeys.length > 0) {
         othersCode = [{ code: `${question.field}_custom`, option: '填写理由' }];
       }
@@ -65,4 +65,178 @@ export function getListHeadByDataList(dataList) {
     type: 'text',
   });
   return listHead;
+}
+
+export function transformAndMergeArrayFields(data) {
+  const transformedData = {};
+
+  for (const key in data) {
+    const valueMap: Record<string, number> = {};
+
+    for (const entry of data[key]) {
+      const nestedDataKey = Object.keys(entry.data)[0];
+      const nestedDataValue = entry.data[nestedDataKey];
+
+      if (Array.isArray(nestedDataValue)) {
+        for (const value of nestedDataValue) {
+          if (!valueMap[value]) {
+            valueMap[value] = 0;
+          }
+          valueMap[value] += entry.count;
+        }
+      } else {
+        if (!valueMap[nestedDataValue]) {
+          valueMap[nestedDataValue] = 0;
+        }
+        valueMap[nestedDataValue] += entry.count;
+      }
+    }
+
+    transformedData[key] = Object.keys(valueMap).map((value) => ({
+      count: valueMap[value],
+      data: {
+        [key]: value,
+      },
+    }));
+  }
+
+  return transformedData;
+}
+
+export function handleAggretionData({ dataMap, item }) {
+  const type = dataMap[item.field].type;
+  const aggregationMap = item.data.aggregation.reduce((pre, cur) => {
+    pre[cur.id] = cur;
+    return pre;
+  }, {});
+  if (['radio', 'checkbox', 'vote', 'binary-choice'].includes(type)) {
+    return {
+      ...item,
+      title: dataMap[item.field].title,
+      type: dataMap[item.field].type,
+      data: {
+        ...item.data,
+        aggregation: dataMap[item.field].options.map((optionItem) => {
+          return {
+            id: optionItem.hash,
+            text: optionItem.text,
+            count: aggregationMap[optionItem.hash]?.count || 0,
+          };
+        }),
+      },
+    };
+  } else if (['radio-star', 'radio-nps'].includes(type)) {
+    const summary: Record<string, any> = {};
+    const average = getAverage({ aggregation: item.data.aggregation });
+    const median = getMedian({ aggregation: item.data.aggregation });
+    const variance = getVariance({
+      aggregation: item.data.aggregation,
+      average,
+    });
+    summary['average'] = average;
+    summary['median'] = median;
+    summary['variance'] = variance;
+    if (type === 'radio-nps') {
+      summary['nps'] = getNps({ aggregation: item.data.aggregation });
+    }
+    const range = type === 'radio-nps' ? [0, 10] : [1, 5];
+    const arr = [];
+    for (let i = range[0]; i <= range[1]; i++) {
+      arr.push(i);
+    }
+    return {
+      ...item,
+      title: dataMap[item.field].title,
+      type: dataMap[item.field].type,
+      data: {
+        aggregation: arr.map((item) => {
+          const num = item.toString();
+          return {
+            text: num,
+            id: num,
+            count: aggregationMap?.[num]?.count || 0,
+          };
+        }),
+        submitionCount: item.data.submitionCount,
+        summary,
+      },
+    };
+  } else {
+    return {
+      ...item,
+      title: dataMap[item.field].title,
+      type: dataMap[item.field].type,
+    };
+  }
+}
+
+function getAverage({ aggregation }) {
+  const { sum, count } = aggregation.reduce(
+    (pre, cur) => {
+      const num = parseInt(cur.id);
+      pre.sum += num * cur.count;
+      pre.count += cur.count;
+      return pre;
+    },
+    { sum: 0, count: 0 },
+  );
+  if (count === 0) {
+    return 0;
+  }
+  return (sum / count).toFixed(2);
+}
+
+function getMedian({ aggregation }) {
+  const sortedArr = aggregation.sort((a, b) => {
+    return parseInt(a.id) - parseInt(b.id);
+  });
+  const resArr = [];
+  for (const item of sortedArr) {
+    const tmp = new Array(item.count).fill(parseInt(item.id));
+    resArr.push(...tmp);
+  }
+  if (resArr.length === 0) {
+    return 0;
+  }
+  if (resArr.length % 2 === 1) {
+    const midIndex = Math.floor(resArr.length / 2);
+    return resArr[midIndex].toFixed(2);
+  }
+  const rightIndex = resArr.length / 2;
+  const leftIndex = rightIndex - 1;
+  return ((resArr[leftIndex] + resArr[rightIndex]) / 2).toFixed(2);
+}
+
+function getVariance({ aggregation, average }) {
+  const { sum, count } = aggregation.reduce(
+    (pre, cur) => {
+      const sub = Number(cur.id) - average;
+      pre.sum += sub * sub;
+      pre.count += cur.count;
+      return pre;
+    },
+    { sum: 0, count: 0 },
+  );
+  if (count === 0 || count === 1) {
+    return '0.00';
+  }
+  return (sum / (count - 1)).toFixed(2);
+}
+
+function getNps({ aggregation }) {
+  // 净推荐值(NPS)=(推荐者数/总样本数)×100%-(贬损者数/总样本数)×100%
+  // 0～10分举例子：推荐者（9-10分）；被动者（7-8分）；贬损者（0-6分）
+  let recommand = 0,
+    derogatory = 0,
+    total = 0;
+  for (const item of aggregation) {
+    const num = parseInt(item.id);
+    if (num >= 9) {
+      recommand += item.count;
+    } else if (num <= 6) {
+      derogatory += item.count;
+    }
+    total += item.count;
+  }
+  return ((recommand / total - derogatory / total) * 100).toFixed(2) + '%';
 }

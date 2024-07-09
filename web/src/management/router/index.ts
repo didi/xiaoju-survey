@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized, type Navi
 import type { RouteRecordRaw } from 'vue-router'
 import { useStore, type Store } from 'vuex'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -100,11 +101,34 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/survey/:id/analysis',
     name: 'analysisPage',
+    redirect: {
+      name: analysisTypeMap.dataTable
+    },
     meta: {
       needLogin: true,
       permissions: [SurveyPermissions.DataManage]
     },
-    component: () => import('../pages/analysis/AnalysisPage.vue')
+    component: () => import('../pages/analysis/AnalysisPage.vue'),
+    children: [
+      {
+        path: analysisTypeMap.dataTable,
+        name: analysisTypeMap.dataTable,
+        meta: {
+          needLogin: true,
+          premissions: [SurveyPermissions.DataManage]
+        },
+        component: () => import('../pages/analysis/pages/DataTablePage.vue')
+      },
+      {
+        path: analysisTypeMap.separateStatistics,
+        name: analysisTypeMap.separateStatistics,
+        meta: {
+          needLogin: true,
+          premissions: [SurveyPermissions.DataManage]
+        },
+        component: () => import('../pages/analysis/pages/SeparateStatisticsPage.vue')
+      }
+    ]
   },
   {
     path: '/survey/:id/publish',

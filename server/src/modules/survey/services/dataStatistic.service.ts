@@ -7,8 +7,7 @@ import moment from 'moment';
 import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
-import { getListHeadByDataList } from '../utils';
-
+import { getListHeadByDataList, transformAndMergeArrayFields } from '../utils';
 @Injectable()
 export class DataStatisticService {
   private radioType = ['radio-star', 'radio-nps'];
@@ -101,5 +100,63 @@ export class DataStatisticService {
       listHead,
       listBody,
     };
+  }
+
+  async aggregationStatis({ surveyId, fieldList }) {
+    const $facet = fieldList.reduce((pre, cur) => {
+      const $match = { $match: { [`data.${cur}`]: { $nin: [[], '', null] } } };
+      const $group = { $group: { _id: `$data.${cur}`, count: { $sum: 1 } } };
+      const $project = {
+        $project: {
+          _id: 0,
+          count: 1,
+          secretKeys: 1,
+          sensitiveKeys: 1,
+          [`data.${cur}`]: '$_id',
+        },
+      };
+      pre[cur] = [$match, $group, $project];
+      return pre;
+    }, {});
+    const aggregation = this.surveyResponseRepository.aggregate(
+      [
+        {
+          $match: {
+            pageId: surveyId,
+            'curStatus.status': {
+              $ne: 'removed',
+            },
+          },
+        },
+        { $facet },
+      ],
+      { maxTimeMS: 30000, allowDiskUse: true },
+    );
+    const res = await aggregation.next();
+    const submitionCountMap: Record<string, number> = {};
+    for (const field in res) {
+      let count = 0;
+      if (Array.isArray(res[field])) {
+        for (const optionItem of res[field]) {
+          count += optionItem.count;
+        }
+      }
+      submitionCountMap[field] = count;
+    }
+    const transformedData = transformAndMergeArrayFields(res);
+    return fieldList.map((field) => {
+      return {
+        field,
+        data: {
+          aggregation: (transformedData?.[field] || []).map((optionItem) => {
+            return {
+              id: optionItem.data[field],
+              count: optionItem.count,
+            };
+          }),
+          submitionCount: submitionCountMap?.[field] || 0,
+        },
+      };
+    });
   }
 }

@@ -2,9 +2,84 @@ import { ElMessage } from 'element-plus'
 import basicConfig from '@materials/questions/common/config/basicConfig'
 
 const meta = {
-  title: '评分',
+  title: 'nps评分',
   type: 'radio-nps',
   componentName: 'NpsModule',
+  attrs: [
+    {
+      name: 'field',
+      propType: 'String',
+      description: '这是用于描述题目id',
+      defaultValue: ''
+    },
+    {
+      name: 'title',
+      propType: 'String',
+      description: '这是用于描述题目标题',
+      defaultValue: '标题一'
+    },
+    {
+      name: 'type',
+      propType: 'String',
+      description: '这是用于描述题目类型',
+      defaultValue: 'radio-nps'
+    },
+    {
+      name: 'isRequired',
+      propType: Boolean,
+      description: '是否必填',
+      defaultValue: true
+    },
+    {
+      name: 'showIndex',
+      propType: Boolean,
+      description: '显示序号',
+      defaultValue: true
+    },
+    {
+      name: 'showType',
+      propType: Boolean,
+      description: '显示类型',
+      defaultValue: true
+    },
+    {
+      name: 'showSpliter',
+      propType: Boolean,
+      description: '显示分割线',
+      defaultValue: true
+    },
+    {
+      name: 'min',
+      propType: Number,
+      description: '这是用于描述NPS量表最小值',
+      defaultValue: 1
+    },
+    {
+      name: 'max',
+      propType: Number,
+      description: '这是用于描述NPS量表最大值',
+      defaultValue: 10
+    },
+
+    {
+      name: 'minMsg',
+      propType: String,
+      description: '这是用于描述最小值文案',
+      defaultValue: '极不满意'
+    },
+    {
+      name: 'maxMsg',
+      propType: String,
+      description: '这是用于描述最大值文案',
+      defaultValue: '十分满意'
+    },
+    {
+      name: 'rangeConfig',
+      propType: Object,
+      description: '这是用于描述评分高级设置',
+      defaultValue: {}
+    }
+  ],
   formConfig: [
     basicConfig,
     {
@@ -17,11 +92,12 @@ const meta = {
         value: v,
         label: v
       })),
-      valueSetter: (val, moduleConfig) => {
+      validate: (val, moduleConfig) => {
         if (moduleConfig['max'] && val >= moduleConfig['max']) {
           ElMessage.info('最小值不可大于最大值')
-          return true
+          return false
         }
+        return true
       }
     },
     {
@@ -34,11 +110,12 @@ const meta = {
         value: v,
         label: v
       })),
-      valueSetter: (val, moduleConfig) => {
+      validate: (val, moduleConfig) => {
         if (moduleConfig['min'] && val <= moduleConfig['min']) {
           ElMessage.info('最大值不可小于最小值')
-          return true
+          return false
         }
+        return true
       }
     },
     {

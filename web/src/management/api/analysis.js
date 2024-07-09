@@ -8,6 +8,14 @@ export const getRecycleList = (data) => {
     }
   })
 }
+
+export const getStatisticList = (data) => {
+  return axios.get('/survey/dataStatistic/aggregationStatis', {
+    params: {
+      ...data
+    }
+  })
+}
 //问卷下载
 export const downloadSurvey = ({ surveyId, isDesensitive }) => {
   return axios.get('/survey/surveyDownload/download', {

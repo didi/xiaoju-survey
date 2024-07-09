@@ -11,13 +11,16 @@
         "field": "data458",
         "title": "标题1",
         "placeholder": "",
-        "randomSort": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
-        "star": 5,
-        "placeholderDesc": "",
-        "urlKey": "",
+        "numberRange": {
+          "max": {
+            "placeholder": "1000",
+            "value": 1000
+          },
+          "min": {
+            "placeholder": "0",
+            "value": 0
+          }
+        },
         "textRange": {
           "min": {
             "placeholder": "0",
@@ -35,14 +38,8 @@
         "showType": true,
         "showSpliter": true,
         "type": "radio",
-        "placeholderDesc": "",
         "field": "data515",
         "title": "标题2",
-        "placeholder": "",
-        "randomSort": false,
-        "checked": false,
-        "minNum": "",
-        "maxNum": "",
         "options": [
           {
             "text": "选项1",
@@ -65,22 +62,6 @@
             "quota": "0"
           }
         ],
-        "importKey": "single",
-        "importData": "",
-        "cOption": "",
-        "cOptions": [],
-        "star": 5,
-        "exclude": false,
-        "textRange": {
-          "min": {
-            "placeholder": "0",
-            "value": 0
-          },
-          "max": {
-            "placeholder": "500",
-            "value": 500
-          }
-        },
         "deleteRecover": false,
         "noDisplay": false
       }

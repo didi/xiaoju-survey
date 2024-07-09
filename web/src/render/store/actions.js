@@ -4,7 +4,7 @@ import 'moment/locale/zh-cn'
 // 设置中文
 moment.locale('zh-cn')
 import adapter from '../adapter'
-import { queryVote, getEncryptInfo } from '@/render/api/survey'
+import { queryVote } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import { useSurveyStore } from '@/render/stores/survey'
 /**

@@ -34,7 +34,7 @@ export interface SpaceDetail {
 
 export type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
   createDate: string
-  curStatus: { date: number, status: string }
+  curStatus: { date: number; status: string }
   memberTotal: number
   currentUserRole: string
   owner: string

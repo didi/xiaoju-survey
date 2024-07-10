@@ -19,12 +19,9 @@ const VOTE_INFO_KEY = 'voteinfo'
 import router from '../router'
 export default {
   // 初始化
-  init(
-    { commit, dispatch },
-    { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }
-  ) {
+  init({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
     const surveyStore = useSurveyStore()
-    surveyStore.setEnterTime();
+    surveyStore.setEnterTime()
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()

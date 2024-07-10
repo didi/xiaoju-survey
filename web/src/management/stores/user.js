@@ -1,7 +1,5 @@
-// Pinia Store
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
-
+import { defineStore } from 'pinia'
 
 const USER_INFO_KEY = 'surveyUserInfo'
 export const useUserStore = defineStore('user', () => {
@@ -41,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
       })
     )
   }
-  const logout = () =>  {
+  const logout = () => {
     userInfo.value = null
     hasLogined.value = false
     localStorage.removeItem(USER_INFO_KEY)

@@ -12,7 +12,7 @@ export default createStore({
   mutations,
   actions,
   modules: {
-    edit,
+    edit
     // user,
     // list
   }

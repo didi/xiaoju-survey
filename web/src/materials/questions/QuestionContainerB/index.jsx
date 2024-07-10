@@ -111,20 +111,10 @@ export default defineComponent({
               editConfigure={questionMeta?.editConfigure}
               onChange={this.onChange}
             >
-              <dynamicComponent
-                readonly
-                {...props}
-                onBlur={this.onBlur}
-                onFocus={this.onFocus}
-              />
+              <dynamicComponent readonly {...props} onBlur={this.onBlur} onFocus={this.onFocus} />
             </EditOptions>
           ) : (
-            <dynamicComponent
-              readonly
-              {...props}
-              onBlur={this.onBlur}
-              onFocus={this.onFocus}
-            />
+            <dynamicComponent readonly {...props} onBlur={this.onBlur} onFocus={this.onFocus} />
           )}
         </div>
       </div>

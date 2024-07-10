@@ -73,7 +73,7 @@ const validate = (cbk: (v: boolean) => void) => {
 
 const normalizationRequestBody = () => {
   const enterTime = surveyStore.enterTime
-  const encryptInfo = surveyStore.encryptInfo as any;
+  const encryptInfo = surveyStore.encryptInfo as any
   const formValues = store.state.formValues
 
   const result: any = {
@@ -82,7 +82,7 @@ const normalizationRequestBody = () => {
     difTime: Date.now() - enterTime,
     clientTime: Date.now()
   }
-  
+
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({

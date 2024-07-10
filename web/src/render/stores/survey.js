@@ -1,8 +1,8 @@
-// 问卷相关的Pinia Store
-import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { defineStore } from 'pinia'
+
 import { isMobile as isInMobile } from '@/render/utils/index'
-import {  getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
+import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
 
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
@@ -13,12 +13,12 @@ const CODE_MAP = {
   NO_AUTH: 403
 }
 export const useSurveyStore = defineStore('survey', () => {
-  const surveyPath = ref('');
+  const surveyPath = ref('')
   const isMobile = ref(isInMobile())
   const enterTime = ref(0)
   const encryptInfo = ref(null)
 
-  const setSurveyPath = ( data) => {
+  const setSurveyPath = (data) => {
     surveyPath.value = data
   }
 
@@ -26,7 +26,7 @@ export const useSurveyStore = defineStore('survey', () => {
     enterTime.value = Date.now()
   }
 
-  const getEncryptInfo =  async() => {
+  const getEncryptInfo = async () => {
     try {
       const res = await getEncryptInfoApi()
       if (res.code === CODE_MAP.SUCCESS) {

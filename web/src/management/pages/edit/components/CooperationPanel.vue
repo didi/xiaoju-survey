@@ -1,8 +1,5 @@
 <template>
-  <div class="btn" @click="onCooper">
-    <i-ep-connection class="view-icon" :size="20" />
-    <span class="btn-txt">协作</span>
-  </div>
+  <slot name="content" :onCooper="onCooper"></slot>
   <CooperModify :modifyId="cooperId" :visible="cooperModify" @on-close-codify="onCooperClose" />
 </template>
 <script setup lang="ts">
@@ -10,6 +7,10 @@ import { ref } from 'vue'
 import 'element-plus/theme-chalk/src/message.scss'
 import CooperModify from '@/management/pages/list/components/CooperModify.vue';
 import { useRoute } from 'vue-router';
+
+defineSlots<{
+  content: (scope: { onCooper: () => void }) => any
+}>();
 
 const route = useRoute()
 const surveyId = route.params?.id as string;
@@ -27,10 +28,5 @@ const onCooperClose = (): void => {
 
 </script>
 <style lang="scss" scoped>
-@import url('@/management/styles/edit-btn.scss');
-.view-icon {
-  font-size: 20px;
-  height: 29px;
-  line-height: 29px;
-}
+
 </style>

@@ -8,6 +8,14 @@
       <NavPanel></NavPanel>
     </div>
     <div class="right-group">
+      <CooperationPanel>
+        <template #content="{ onCooper }">
+          <div class="btn" @click="onCooper">
+            <i-ep-connection class="view-icon" :size="20" />
+            <span class="btn-txt">协作</span>
+          </div>
+        </template>
+      </CooperationPanel>
       <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
       <SavePanel></SavePanel>
@@ -27,11 +35,18 @@ import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
 import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
+import CooperationPanel from './CooperationPanel.vue';
 
 const store = useStore()
 const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
 </script>
 <style lang="scss" scoped>
+@import url('@/management/styles/edit-btn.scss');
+.view-icon {
+  font-size: 20px;
+  height: 29px;
+  line-height: 29px;
+}
 .nav {
   width: 100%;
   height: 56px;

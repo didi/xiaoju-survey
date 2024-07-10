@@ -29,6 +29,7 @@ import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 
+import { useSurveyStore } from '../stores/survey'
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
@@ -57,12 +58,13 @@ const confirm = useCommandComponent(ConfirmDialog)
 
 const store = useStore()
 const router = useRouter()
+const surveyStore = useSurveyStore()
 
 const bannerConf = computed(() => store.state?.bannerConf || {})
 const renderData = computed(() => store.getters.renderData)
 const submitConf = computed(() => store.state?.submitConf || {})
 const logoConf = computed(() => store.state?.bottomConf || {})
-const surveyPath = computed(() => store.state?.surveyPath || '')
+const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -70,8 +72,8 @@ const validate = (cbk: (v: boolean) => void) => {
 }
 
 const normalizationRequestBody = () => {
-  const enterTime = store.state.enterTime
-  const encryptInfo = store.state.encryptInfo
+  const enterTime = surveyStore.enterTime
+  const encryptInfo = surveyStore.encryptInfo as any;
   const formValues = store.state.formValues
 
   const result: any = {
@@ -82,7 +84,7 @@ const normalizationRequestBody = () => {
   }
   
   if (encryptInfo?.encryptType) {
-    result.encryptType = encryptInfo?.encryptType
+    result.encryptType = encryptInfo.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({
       data: result.data,
       secretKey: encryptInfo?.data?.secretKey

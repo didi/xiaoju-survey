@@ -87,12 +87,6 @@ const closedDialog = () => {
     margin-left: 75px;
   }
 
-  .view-icon {
-    font-size: 20px;
-    height: 29px;
-    line-height: 29px;
-  }
-
   .preview-tab {
     display: flex;
     align-items: center;

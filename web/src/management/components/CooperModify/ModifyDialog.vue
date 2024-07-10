@@ -43,10 +43,13 @@
 import { computed, ref, shallowRef, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-import MemberSelect from './MemberSelect.vue'
+
 import { getPermissionList, getCollaborator, saveCollaborator } from '@/management/api/space'
 import { type IMember, SurveyPermissions } from '@/management/utils/types/workSpace'
 import { CODE_MAP } from '@/management/api/base'
+
+import MemberSelect from './MemberSelect.vue'
+
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = withDefaults(
   defineProps<{

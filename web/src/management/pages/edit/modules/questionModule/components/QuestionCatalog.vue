@@ -12,7 +12,7 @@
           :title="element.title"
           :indexNumber="element.indexNumber"
           :showIndex="element.showIndex"
-          @select="handleSelect(index)"
+          @select="setCurrentEditOne(index)"
         />
       </template>
     </draggable>
@@ -20,33 +20,29 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import draggable from 'vuedraggable'
 
 import CatalogItem from './CatalogItem.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
-const store = useStore()
+const editStore = useEditStore()
+const { questionDataList, currentEditOne } = storeToRefs(editStore)
+const { moveQuestion, setCurrentEditOne } = editStore
 const renderData = computed(() => {
-  const questions = store.state.edit.schema.questionDataList
-  return filterQuestionPreviewData(questions) || []
+  return filterQuestionPreviewData(questionDataList.value) || []
 })
 
 const handleDragEnd = ({ newIndex, oldIndex }: any) => {
-  const currentActivityKey = store.state.edit.currentEditOne
-
-  if (currentActivityKey === oldIndex) {
-    handleSelect(newIndex)
+  if (currentEditOne.value === oldIndex) {
+    setCurrentEditOne(newIndex)
   }
 
-  store.dispatch('edit/moveQuestion', {
+  moveQuestion({
     index: oldIndex,
     range: newIndex - oldIndex
   })
-}
-
-const handleSelect = (idx: number) => {
-  store.commit('edit/setCurrentEditOne', idx)
 }
 </script>
 <style lang="scss" scoped>

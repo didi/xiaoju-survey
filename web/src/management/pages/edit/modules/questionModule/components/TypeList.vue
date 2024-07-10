@@ -45,20 +45,24 @@ import { DND_GROUP } from '@/management/config/dnd'
 
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { getQuestionByType } from '@/management/utils/index'
-import { useStore } from 'vuex'
-import { get as _get, isNumber as _isNumber } from 'lodash-es'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
+import { isNumber as _isNumber } from 'lodash-es'
 import { computed, ref } from 'vue'
 import { QUESTION_TYPE } from '@/common/typeEnum.ts'
-const store = useStore()
+
+const editStore = useEditStore()
+const { questionDataList, currentEditOne } = storeToRefs(editStore)
+const { addQuestion, setCurrentEditOne } = editStore
 
 const activeNames = ref([0, 1])
 const previewImg = ref('')
 const isShowPreviewImage = ref(false)
 const previewTop = ref(0)
-const questionDataList = computed(() => _get(store, 'state.edit.schema.questionDataList'))
 const newQuestionIndex = computed(() => {
-  const currentEditOne = _get(store, 'state.edit.currentEditOne')
-  const index = _isNumber(currentEditOne) ? currentEditOne + 1 : questionDataList.value.length
+  const index = _isNumber(currentEditOne.value)
+    ? currentEditOne.value + 1
+    : questionDataList.value.length
   return index
 })
 
@@ -78,8 +82,8 @@ const getNewQuestion = ({ type }) => {
 
 const onQuestionType = ({ type }) => {
   const newQuestion = getNewQuestion({ type })
-  store.dispatch('edit/addQuestion', { question: newQuestion, index: newQuestionIndex.value })
-  store.commit('edit/setCurrentEditOne', newQuestionIndex.value)
+  addQuestion({ question: newQuestion, index: newQuestionIndex.value })
+  setCurrentEditOne(newQuestionIndex.value)
 }
 
 const showPreview = ({ snapshot }, id) => {

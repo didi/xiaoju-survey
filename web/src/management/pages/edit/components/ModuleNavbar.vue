@@ -17,8 +17,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useEditStore } from '@/management/stores/edit'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -28,8 +27,8 @@ import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 
-const store = useStore()
-const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
+const editStore = useEditStore()
+const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 </script>
 <style lang="scss" scoped>
 .nav {

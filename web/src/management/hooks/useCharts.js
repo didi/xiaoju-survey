@@ -1,5 +1,24 @@
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/core'
+import { BarChart, PieChart, GaugeChart } from 'echarts/charts'
+import {
+  TooltipComponent,
+  TitleComponent,
+  GridComponent,
+  LegendComponent
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
 import { getOption } from '@/management/config/chartConfig'
+
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LegendComponent,
+  BarChart,
+  PieChart,
+  GaugeChart,
+  CanvasRenderer
+])
 
 /**
  * 绘制图表

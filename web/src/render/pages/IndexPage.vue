@@ -18,15 +18,8 @@ const surveyStore = useSurveyStore()
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
-    const {
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf,
-      logicConf
-    } = data.code
+    const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } =
+      data.code
     const questionData = {
       bannerConf,
       baseConf,
@@ -62,7 +55,7 @@ const getDetail = async (surveyPath: string) => {
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
       loadData(res, surveyPath)
-      surveyStore.getEncryptInfo();
+      surveyStore.getEncryptInfo()
     }
   } catch (error: any) {
     console.log(error)

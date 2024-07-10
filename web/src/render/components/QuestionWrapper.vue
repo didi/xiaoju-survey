@@ -57,8 +57,10 @@ const questionConfig = computed(() => {
     moduleConfig.othersValue = unref(othersValue)
   }
   if (
-    RATES.includes(type) && rest?.rangeConfig && 
-    Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length > 0
+    RATES.includes(type) &&
+    rest?.rangeConfig &&
+    Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length >
+      0
   ) {
     let { rangeConfig, othersValue } = useShowInput(field)
     moduleConfig.rangeConfig = unref(rangeConfig)

@@ -1,9 +1,11 @@
-import { defineStore } from 'pinia'
 import { type Ref, ref, reactive, toRef, computed } from 'vue'
-import { getSurveyById } from '@/management/api/survey'
+import { defineStore } from 'pinia'
 import { merge as _merge, cloneDeep as _cloneDeep, set as _set } from 'lodash-es'
+
+import { getSurveyById } from '@/management/api/survey'
 import { getNewField } from '@/management/utils'
 import submitFormConfig from '@/management/config/setterConfig/submitConfig'
+
 import questionLoader from '@/materials/questions/questionLoader'
 
 const innerMetaConfig = {
@@ -78,8 +80,6 @@ function useInitializeSchema(surveyId: Ref<string>) {
     schema.submitConf = _merge({}, schema.submitConf, codeData.submitConf)
     schema.questionDataList = codeData.questionDataList || []
     schema.logicConf = codeData.logicConf
-
-    console.log(metaData, codeData)
   }
 
   async function getSchemaFromRemote() {
@@ -205,6 +205,17 @@ function useCurrentEdit({
     return key
   })
 
+  const currentEditMeta = computed(() => {
+    if (currentEditOne.value === null) {
+      return null
+    } else if (innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]) {
+      return innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]
+    } else {
+      const questionType = questionDataList.value?.[currentEditOne.value]?.type
+      return questionLoader.getMeta(questionType)
+    }
+  })
+
   const moduleConfig = computed(() => {
     if (currentEditOne.value === null) {
       return null
@@ -229,17 +240,6 @@ function useCurrentEdit({
     }
 
     return currentEditMeta.value?.formConfig || []
-  })
-
-  const currentEditMeta = computed(() => {
-    if (currentEditOne.value === null) {
-      return null
-    } else if (innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]) {
-      return innerMetaConfig[currentEditOne.value as keyof typeof innerMetaConfig]
-    } else {
-      const questionType = questionDataList.value?.[currentEditOne.value]?.type
-      return questionLoader.getMeta(questionType)
-    }
   })
 
   function setCurrentEditOne(data: any) {
@@ -267,6 +267,7 @@ export const useEditStore = defineStore('edit', () => {
   const schemaUpdateTime = ref(Date.now())
   const { schema, initSchema, getSchemaFromRemote } = useInitializeSchema(surveyId)
   const questionDataList = toRef(schema, 'questionDataList')
+
   function setQuestionDataList(data: any) {
     schema.questionDataList = data
   }

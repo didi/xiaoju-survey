@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, type RouteLocationNormalized, type NavigationGuardNext } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  type RouteLocationNormalized,
+  type NavigationGuardNext
+} from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useStore, type Store } from 'vuex'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'
@@ -161,33 +166,43 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   // 初始化用户信息
   if (!userStore?.initialized) {
-    await userStore.init();
+    await userStore.init()
   }
   // 更新页面标题
   if (to.meta.title) {
-    document.title = to.meta.title as string;
+    document.title = to.meta.title as string
   }
 
   if (to.meta.needLogin) {
-    await handleLoginGuard(to, from, next, store);
+    await handleLoginGuard(to, from, next, store)
   } else {
-    next();
+    next()
   }
-});
+})
 
-async function handleLoginGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, store: Store<any>) {
-  const userStore = useUserStore();
+async function handleLoginGuard(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+  store: Store<any>
+) {
+  const userStore = useUserStore()
   if (userStore?.hasLogined) {
-    await handlePermissionsGuard(to, from, next, store);
+    await handlePermissionsGuard(to, from, next, store)
   } else {
     next({
       name: 'login',
-      query: { redirect: encodeURIComponent(to.path) },
-    });
+      query: { redirect: encodeURIComponent(to.path) }
+    })
   }
 }
 
-async function handlePermissionsGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, store: Store<any>) {
+async function handlePermissionsGuard(
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+  store: Store<any>
+) {
   const currSurveyId = to?.params?.id || ''
   const prevSurveyId = from?.params?.id || ''
   // 如果跳转页面不存在surveyId 或者不需要页面权限，则直接跳转
@@ -198,21 +213,19 @@ async function handlePermissionsGuard(to: RouteLocationNormalized, from: RouteLo
     if (currSurveyId !== prevSurveyId) {
       await store.dispatch('fetchCooperPermissions', currSurveyId)
       if (hasRequiredPermissions(to.meta.permissions as string[], store.state.cooperPermissions)) {
-        next();
+        next()
       } else {
-        ElMessage.warning('您没有该问卷的相关协作权限');
-        next({ name: 'survey' });
+        ElMessage.warning('您没有该问卷的相关协作权限')
+        next({ name: 'survey' })
       }
     } else {
-      next();
+      next()
     }
   }
 }
 
 function hasRequiredPermissions(requiredPermissions: string[], userPermissions: string[]) {
-  return requiredPermissions.some(permission => userPermissions.includes(permission));
+  return requiredPermissions.some((permission) => userPermissions.includes(permission))
 }
-
-
 
 export default router

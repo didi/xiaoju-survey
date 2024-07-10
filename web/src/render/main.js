@@ -5,7 +5,6 @@ import router from './router'
 import store from './store'
 import { createPinia } from 'pinia'
 
-
 const app = createApp(App)
 const pinia = createPinia()
 
@@ -16,6 +15,5 @@ app.config.globalProperties.$bus = $bus
 app.use(store)
 app.use(pinia)
 app.use(router)
-
 
 app.mount('#app')

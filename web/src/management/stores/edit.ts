@@ -5,6 +5,10 @@ import { merge as _merge, cloneDeep as _cloneDeep, set as _set } from 'lodash-es
 import { getNewField } from '@/management/utils'
 import submitFormConfig from '@/management/config/setterConfig/submitConfig'
 import questionLoader from '@/materials/questions/questionLoader'
+import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { getBannerData } from '@/management/api/skin.js'
+import { getCollaboratorPermissions } from '@/management/api/space'
+import { CODE_MAP } from '../api/base'
 
 const innerMetaConfig = {
   submit: {
@@ -262,8 +266,16 @@ function useCurrentEdit({
   }
 }
 
+type IBannerItem = {
+  name: string
+  key: string
+  list: Array<Object>
+}
+type IBannerList = Record<string, IBannerItem>
 export const useEditStore = defineStore('edit', () => {
   const surveyId = ref('')
+  const bannerList: Ref<IBannerList> = ref({})
+  const cooperPermissions = ref(Object.values(SurveyPermissions))
   const schemaUpdateTime = ref(Date.now())
   const { schema, initSchema, getSchemaFromRemote } = useInitializeSchema(surveyId)
   const questionDataList = toRef(schema, 'questionDataList')
@@ -274,7 +286,19 @@ export const useEditStore = defineStore('edit', () => {
   function setSurveyId(id: string) {
     surveyId.value = id
   }
-
+  
+  const fetchBannerData = async () => {
+    const res: any = await getBannerData()
+    if (res.code === CODE_MAP.SUCCESS) {
+      bannerList.value = res.data
+    }
+  }
+  const  fetchCooperPermissions = async (id: string) => {
+    const res: any = await getCollaboratorPermissions(id)
+    if (res.code === CODE_MAP.SUCCESS) {
+      cooperPermissions.value = res.data.permissions
+    }
+  }
   const {
     currentEditOne,
     currentEditKey,
@@ -318,6 +342,10 @@ export const useEditStore = defineStore('edit', () => {
   return {
     surveyId,
     setSurveyId,
+    bannerList,
+    fetchBannerData,
+    cooperPermissions,
+    fetchCooperPermissions,
     currentEditOne,
     moduleConfig,
     formConfigList,

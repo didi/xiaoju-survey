@@ -6,6 +6,7 @@ import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import { useUserStore } from '@/management/stores/user'
+import { useEditStore } from '@/management/stores/edit'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -157,7 +158,6 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const store = useStore()
   const userStore = useUserStore()
   // 初始化用户信息
   if (!userStore?.initialized) {
@@ -169,16 +169,16 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.needLogin) {
-    await handleLoginGuard(to, from, next, store);
+    await handleLoginGuard(to, from, next);
   } else {
     next();
   }
 });
 
-async function handleLoginGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, store: Store<any>) {
+async function handleLoginGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
   const userStore = useUserStore();
   if (userStore?.hasLogined) {
-    await handlePermissionsGuard(to, from, next, store);
+    await handlePermissionsGuard(to, from, next);
   } else {
     next({
       name: 'login',
@@ -187,7 +187,8 @@ async function handleLoginGuard(to: RouteLocationNormalized, from: RouteLocation
   }
 }
 
-async function handlePermissionsGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext, store: Store<any>) {
+async function handlePermissionsGuard(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
+  const editStore = useEditStore();
   const currSurveyId = to?.params?.id || ''
   const prevSurveyId = from?.params?.id || ''
   // 如果跳转页面不存在surveyId 或者不需要页面权限，则直接跳转
@@ -196,8 +197,8 @@ async function handlePermissionsGuard(to: RouteLocationNormalized, from: RouteLo
   } else {
     // 如果跳转编辑页面，且跳转页面和上一页的surveyId不同，判断是否有对应页面权限
     if (currSurveyId !== prevSurveyId) {
-      await store.dispatch('fetchCooperPermissions', currSurveyId)
-      if (hasRequiredPermissions(to.meta.permissions as string[], store.state.cooperPermissions)) {
+      await editStore.fetchCooperPermissions(currSurveyId as string)
+      if (hasRequiredPermissions(to.meta.permissions as string[], editStore.cooperPermissions)) {
         next();
       } else {
         ElMessage.warning('您没有该问卷的相关协作权限');

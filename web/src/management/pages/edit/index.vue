@@ -18,6 +18,7 @@ import { onMounted, ref, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import LeftMenu from '@/management/components/LeftMenu.vue'
@@ -31,44 +32,40 @@ const router = useRouter()
 const route = useRoute()
 const authCheckInterval = ref<any>(null)
 const showConfirmBox = () => {
-  const token = store.state.user.userInfo.token
-  ElMessageBox.alert('登录状态已失效，请刷新同步。页面将展示最新保存的内容。', '提示', {
+  ElMessageBox.alert('登录状态已失效，请重新登陆。', '提示', {
     confirmButtonText: '确认',
-    callback: () => {
-      axios.get('/auth/statuscheck', {
-        headers: {
-        'Authorization': `Bearer ${token}`
-        }
-      })
-      .then((response) => {
-        if (response.data.expired) {
-          store.dispatch('user/logout').then(() => {
-            router.replace({name: 'login'});  // 仍然失效，登出，跳转到登录界面
+    showClose: false,
+    callback: (action: Action) => {
+      if (action === 'confirm') {
+        axios.get('/auth/statuscheck')
+          .then((response) => {
+            if (response.data.expired) {
+              store.dispatch('user/logout').then(() => {
+                router.replace({name: 'login'});  // 仍然失效，登出，跳转到登录界面
+              })
+            } else {
+              location.reload(); // 已登录，刷新页面
+            }
           })
-        } else {
-          location.reload(); // 已登录，刷新页面
+          .catch((error) => {
+            console.log("error: " + error);
+            store.dispatch('user/logout').then(() => {
+              router.replace({name: 'login'});
+            })
+          });
         }
-      })
-      .catch((error) => {
-        console.log("error: " + error);
-        ElMessage.error(error.message || '请求失败');
-      });
     }
   });
 }
 const checkAuth = () => {
-  const token = store.state.user.userInfo.token
-  axios.get('/auth/statuscheck', {
-    headers: {
-    'Authorization': `Bearer ${token}`
-    }
-  }).then((response) => {
+  axios.get('/auth/statuscheck').then((response) => {
     if (response.data.expired) {
+      clearInterval(authCheckInterval.value);
+      authCheckInterval.value = null
       showConfirmBox();
     }
   }).catch((error) => {
     console.log("erro:" + error)
-    ElMessage.error(err)
   });
 }
 onMounted(async () => {
@@ -77,6 +74,9 @@ onMounted(async () => {
   try {
     await store.dispatch('edit/init')
     await initShowLogicEngine(store.state.edit.schema.logicConf.showLogicConf || {})
+
+    // 启动定时器，每30分钟调用一次
+    authCheckInterval.value = setInterval(() => checkAuth(), 1000);
   } catch (err: any) {
     ElMessage.error(err.message)
 
@@ -84,13 +84,10 @@ onMounted(async () => {
       router.replace({ name: 'survey' })
     }, 1000)
   }
-  // 启动定时器，每30分钟调用一次
-  authCheckInterval.value = setInterval(() => {
-    checkAuth()
-  }, 30 * 60 * 1000);
 })
 onUnmounted(() => {
   clearInterval(authCheckInterval.value);
+  authCheckInterval.value = null
 })
 </script>
 <style lang="scss" scoped>

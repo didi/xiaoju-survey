@@ -92,6 +92,10 @@ const changePreset = (banner: any) => {
   border: none;
   overflow-y: auto;
   background-color: #fff;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   .title {
     height: 40px;
     line-height: 40px;

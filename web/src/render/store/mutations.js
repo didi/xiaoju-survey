@@ -6,9 +6,6 @@ export default {
       state[key] = value
     })
   },
-  setQuestionData(state, data) {
-    state.questionData = data
-  },
   setErrorInfo(state, { errorType, errorMsg }) {
     state.errorInfo = {
       errorType,
@@ -20,30 +17,30 @@ export default {
     // console.log('formValues', key, value)
     set(state, `formValues.${key}`, value)
   },
-  changeSelectMoreData(state, data) {
-    const { key, value, field } = data
-    set(state, `questionData.${field}.othersValue.${key}`, value)
-  },
+  // changeSelectMoreData(state, data) {
+  //   const { key, value, field } = data
+  //   set(state, `questionData.${field}.othersValue.${key}`, value)
+  // },
   // setEnterTime(state) {
   //   state.enterTime = Date.now()
   // },
   // setSurveyPath(state, data) {
   //   state.surveyPath = data
   // },
-  setVoteMap(state, data) {
-    state.voteMap = data
-  },
-  updateVoteMapByKey(state, data) {
-    const { questionKey, voteKey, voteValue } = data
-    // 兼容为空的情况
-    if (!state.voteMap[questionKey]) {
-      state.voteMap[questionKey] = {}
-    }
-    state.voteMap[questionKey][voteKey] = voteValue
-  },
-  setQuestionSeq(state, data) {
-    state.questionSeq = data
-  },
+  // setVoteMap(state, data) {
+  //   state.voteMap = data
+  // },
+  // updateVoteMapByKey(state, data) {
+  //   const { questionKey, voteKey, voteValue } = data
+  //   // 兼容为空的情况
+  //   if (!state.voteMap[questionKey]) {
+  //     state.voteMap[questionKey] = {}
+  //   }
+  //   state.voteMap[questionKey][voteKey] = voteValue
+  // },
+  // setQuestionSeq(state, data) {
+  //   state.questionSeq = data
+  // },
   // setEncryptInfo(state, data) {
   //   state.encryptInfo = data
   // },

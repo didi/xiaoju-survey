@@ -1,9 +1,12 @@
 import store from '../store/index'
+import { useQuestionStore } from '../stores/question'
+
 export const useShowOthers = (questionKey) => {
+  const questionStore = useQuestionStore()
   const formValues = store.state.formValues
   const questionVal = formValues[questionKey]
   let othersValue = {}
-  let options = store.state.questionData[questionKey].options.map((optionItem) => {
+  let options = questionStore.questionData[questionKey].options.map((optionItem) => {
     if (optionItem.others) {
       const opKey = `${questionKey}_${optionItem.hash}`
       othersValue[opKey] = formValues[opKey]

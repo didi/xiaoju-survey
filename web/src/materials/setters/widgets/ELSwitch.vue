@@ -2,7 +2,6 @@
   <el-switch
     v-model="modelValue"
     class="ml-2"
-    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
     active-text="是"
     inactive-text="否"
     @change="handleInputChange"

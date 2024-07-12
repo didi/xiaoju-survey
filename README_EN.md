@@ -228,6 +228,6 @@ Follow major changes: [MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/is
 
 ## Article Sharing
 
-1、[JueJin](https://juejin.cn/user/3705833332160473/posts)、2、[InfoQ](https://www.infoq.cn/profile/7E08AC616A07B2/publish)
+1、[x.com](https://x.com/t_sudoooooo)
 
 [Welcome to contribute.](https://xiaojusurvey.didi.cn/docs/next/article/%E7%AE%80%E4%BB%8B)

@@ -5,6 +5,7 @@ import normalCode from '../template/surveyTemplate/survey/normal.json';
 import npsCode from '../template/surveyTemplate/survey/nps.json';
 import registerCode from '../template/surveyTemplate/survey/register.json';
 import voteCode from '../template/surveyTemplate/survey/vote.json';
+import { QUESTION_TYPE } from 'src/enums/question';
 
 const schemaDataMap = {
   normal: normalCode,
@@ -31,9 +32,11 @@ export async function getSchemaBySurveyType(surveyType: string) {
 export function getListHeadByDataList(dataList) {
   const listHead = dataList.map((question) => {
     let othersCode;
-    const radioType = ['radio-star', 'radio-nps'];
+    const radioType = [QUESTION_TYPE.RADIO_STAR, QUESTION_TYPE.RADIO_NPS];
     if (radioType.includes(question.type)) {
-      const rangeConfigKeys = question.rangeConfig ? Object.keys(question.rangeConfig) : [];
+      const rangeConfigKeys = question.rangeConfig
+        ? Object.keys(question.rangeConfig)
+        : [];
       if (rangeConfigKeys.length > 0) {
         othersCode = [{ code: `${question.field}_custom`, option: '填写理由' }];
       }
@@ -57,12 +60,12 @@ export function getListHeadByDataList(dataList) {
   listHead.push({
     field: 'difTime',
     title: '答题耗时（秒）',
-    type: 'text',
+    type: QUESTION_TYPE.TEXT,
   });
   listHead.push({
     field: 'createDate',
     title: '提交时间',
-    type: 'text',
+    type: QUESTION_TYPE.TEXT,
   });
   return listHead;
 }
@@ -109,7 +112,14 @@ export function handleAggretionData({ dataMap, item }) {
     pre[cur.id] = cur;
     return pre;
   }, {});
-  if (['radio', 'checkbox', 'vote', 'binary-choice'].includes(type)) {
+  if (
+    [
+      QUESTION_TYPE.RADIO,
+      QUESTION_TYPE.CHECKBOX,
+      QUESTION_TYPE.VOTE,
+      QUESTION_TYPE.BINARY_CHOICE,
+    ].includes(type)
+  ) {
     return {
       ...item,
       title: dataMap[item.field].title,
@@ -125,7 +135,9 @@ export function handleAggretionData({ dataMap, item }) {
         }),
       },
     };
-  } else if (['radio-star', 'radio-nps'].includes(type)) {
+  } else if (
+    [QUESTION_TYPE.RADIO_STAR, QUESTION_TYPE.RADIO_NPS].includes(type)
+  ) {
     const summary: Record<string, any> = {};
     const average = getAverage({ aggregation: item.data.aggregation });
     const median = getMedian({ aggregation: item.data.aggregation });
@@ -136,10 +148,10 @@ export function handleAggretionData({ dataMap, item }) {
     summary['average'] = average;
     summary['median'] = median;
     summary['variance'] = variance;
-    if (type === 'radio-nps') {
+    if (type === QUESTION_TYPE.RADIO_NPS) {
       summary['nps'] = getNps({ aggregation: item.data.aggregation });
     }
-    const range = type === 'radio-nps' ? [0, 10] : [1, 5];
+    const range = type === QUESTION_TYPE.RADIO_NPS ? [0, 10] : [1, 5];
     const arr = [];
     for (let i = range[0]; i <= range[1]; i++) {
       arr.push(i);

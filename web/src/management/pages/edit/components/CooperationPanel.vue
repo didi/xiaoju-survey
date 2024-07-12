@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import 'element-plus/theme-chalk/src/message.scss'
-import CooperModify from '@/management/pages/list/components/CooperModify.vue';
+import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { useRoute } from 'vue-router';
 
 defineSlots<{

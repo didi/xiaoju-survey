@@ -39,6 +39,8 @@ export default {
   }
 
   &:not(.show) {
+    transition: all 0.3s ease-in-out;
+
     display: block;
     opacity: 0;
     height: 0;
@@ -48,8 +50,6 @@ export default {
       color: transparent;
       padding-right: 0.1rem;
     }
-
-    transition: all 0.3s ease-in-out;
   }
 
   &.show {

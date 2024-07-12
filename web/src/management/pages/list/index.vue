@@ -17,7 +17,9 @@
       <SliderBar :menus="spaceMenus" @select="handleSpaceSelect" />
       <div class="list-content">
         <div class="top">
-          <h2>{{ spaceType === SpaceType.Group ? '团队空间' : '问卷' }}列表</h2>
+          <h2>
+            {{ spaceType === SpaceType.Group ? '团队空间' : currentTeamSpace?.name || '问卷列表' }}
+          </h2>
           <div class="operation">
             <el-button
               class="btn space-btn"
@@ -27,6 +29,10 @@
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建团队空间</span>
+            </el-button>
+            <el-button type="default" @click="onSetGroup" v-if="workSpaceId">
+              <i class="iconfont icon-shujuliebiao"></i>
+              <span>团队管理</span>
             </el-button>
             <el-button
               class="btn create-btn"
@@ -160,6 +166,17 @@ const fetchSurveyList = async (params?: any) => {
 }
 const modifyType = ref('add')
 const showSpaceModify = ref(false)
+
+// 当前团队信息
+const currentTeamSpace = computed(() => {
+  return store.state.list.teamSpaceList.find((item: any) => item._id === workSpaceId.value)
+})
+
+const onSetGroup = async () => {
+  await store.dispatch('list/getSpaceDetail', workSpaceId.value)
+  modifyType.value = 'edit'
+  showSpaceModify.value = true
+}
 
 const onCloseModify = (type: string) => {
   showSpaceModify.value = false

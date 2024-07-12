@@ -120,6 +120,7 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
+import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
 import { deleteSurvey } from '@/management/api/survey'
@@ -130,7 +131,6 @@ import ToolBar from './ToolBar.vue'
 import TextSearch from './TextSearch.vue'
 import TextSelect from './TextSelect.vue'
 import TextButton from './TextButton.vue'
-import CooperModify from './CooperModify.vue'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'
 
 import {

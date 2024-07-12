@@ -46,6 +46,7 @@ declare module 'vue' {
     IEpCheck: typeof import('~icons/ep/check')['default']
     IEpCirclePlus: typeof import('~icons/ep/circle-plus')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
+    IEpConnection: typeof import('~icons/ep/connection')['default']
     IEpCopyDocument: typeof import('~icons/ep/copy-document')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpIphone: typeof import('~icons/ep/iphone')['default']

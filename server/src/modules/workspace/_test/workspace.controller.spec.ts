@@ -32,6 +32,7 @@ describe('WorkspaceController', () => {
           useValue: {
             create: jest.fn(),
             findAllById: jest.fn(),
+            findAllByIdWithPagination: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
           },
@@ -164,8 +165,9 @@ describe('WorkspaceController', () => {
       });
       expect(workspaceService.findAllByIdWithPagination).toHaveBeenCalledWith({
         workspaceIdList: memberList.map((item) => item.workspaceId),
-        curPage: 1,
-        pageSize: 10,
+        page: 1,
+        limit: 10,
+        name: undefined
       });
     });
   });

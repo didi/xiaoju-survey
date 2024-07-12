@@ -35,7 +35,7 @@ import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
 import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
-import CooperationPanel from './CooperationPanel.vue';
+import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
 const store = useStore()
 const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))

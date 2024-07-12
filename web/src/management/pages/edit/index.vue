@@ -68,7 +68,7 @@ const checkAuth = () => {
     }
   }).catch((error) => {
     console.log("erro:" + error)
-    ElMessage.error(err)
+    ElMessage.error(error)
   });
 }
 onMounted(async () => {

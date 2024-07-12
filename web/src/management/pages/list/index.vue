@@ -46,7 +46,14 @@
           @reflush="fetchSurveyList"
           v-if="spaceType !== SpaceType.Group"
         ></BaseList>
-        <SpaceList v-if="spaceType === SpaceType.Group"></SpaceList>
+        <SpaceList
+          ref="spaceListRef"
+          @reflush="fetchSpaceList"
+          :loading="loading2"
+          :data="spaceList"
+          :total="spaceTotal"
+          v-if="spaceType === SpaceType.Group"
+        ></SpaceList>
       </div>
     </div>
     <SpaceModify
@@ -80,6 +87,21 @@ const surveyList = computed(() => {
 const surveyTotal = computed(() => {
   return store.state.list.surveyTotal
 })
+let spaceListRef = ref<InstanceType<typeof SpaceList> | null>(null)
+const loading2 = ref(false)
+const spaceList = computed(() => {
+  return store.state.list.teamSpaceList
+})
+const spaceTotal = computed(() => {
+  return store.state.list.teamSpaceListTotal
+})
+const fetchSpaceList = async (params?: any) => {
+  loading2.value = true
+  store.commit('list/changeWorkSpace', '')
+  await store.dispatch('list/getSpaceList', params)
+  loading2.value = false
+}
+
 const activeIndex = ref('1')
 
 const spaceMenus = computed(() => {
@@ -91,39 +113,37 @@ const workSpaceId = computed(() => {
 const spaceType = computed(() => {
   return store.state.list.spaceType
 })
-const handleSpaceSelect = (id: any) => {
-  if (id === SpaceType.Personal) {
-    // 点击个人空间菜单
-    if (store.state.list.spaceType === SpaceType.Personal) {
-      return
-    }
-    store.commit('list/changeSpaceType', SpaceType.Personal)
-    store.commit('list/changeWorkSpace', '')
-  } else if (id === SpaceType.Group) {
-    // 点击团队空间组菜单
-    if (store.state.list.spaceType === SpaceType.Group) {
-      return
-    }
-    store.commit('list/changeSpaceType', SpaceType.Group)
-    store.commit('list/changeWorkSpace', '')
-  } else if (!Object.values(SpaceType).includes(id)) {
-    // 点击具体团队空间
-    if (store.state.list.workSpaceId === id) {
-      return
-    }
-    store.commit('list/changeSpaceType', SpaceType.Teamwork)
+const handleSpaceSelect = (id: SpaceType | string) => {
+  if (id === store.state.list.spaceType || id === store.state.list.workSpaceId) {
+    return void 0
+  }
+  const changeSpaceType = (type: SpaceType) => {
+    store.commit('list/changeSpaceType', type)
+  }
+  const changeWorkSpace = (id: string) => {
     store.commit('list/changeWorkSpace', id)
   }
-
+  switch (id) {
+    case SpaceType.Personal:
+      changeSpaceType(SpaceType.Personal)
+      changeWorkSpace('')
+      break
+    case SpaceType.Group:
+      changeSpaceType(SpaceType.Group)
+      changeWorkSpace('')
+      fetchSpaceList()
+      break
+    default:
+      changeSpaceType(SpaceType.Teamwork)
+      changeWorkSpace(id)
+      break
+  }
   fetchSurveyList()
 }
 onMounted(() => {
   fetchSpaceList()
   fetchSurveyList()
 })
-const fetchSpaceList = () => {
-  store.dispatch('list/getSpaceList')
-}
 const fetchSurveyList = async (params?: any) => {
   if (!params) {
     params = {
@@ -143,7 +163,10 @@ const showSpaceModify = ref(false)
 
 const onCloseModify = (type: string) => {
   showSpaceModify.value = false
-  if (type === 'update') fetchSpaceList()
+  if (type === 'update' && spaceListRef.value) {
+    fetchSpaceList()
+    spaceListRef.value.onCloseModify()
+  }
 }
 const onSpaceCreate = () => {
   showSpaceModify.value = true

@@ -8,6 +8,13 @@ import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { ObjectId } from 'mongodb';
 import { RECORD_STATUS } from 'src/enums';
 
+interface FindAllByIdWithPaginationParams {
+  workspaceIdList: string[];
+  page: number;
+  limit: number;
+  name?: string;
+}
+
 @Injectable()
 export class WorkspaceService {
   constructor(
@@ -41,15 +48,17 @@ export class WorkspaceService {
   }: {
     workspaceIdList: string[];
   }): Promise<Workspace[]> {
-    return this.workspaceRepository.find({
-      where: {
-        _id: {
-          $in: workspaceIdList.map((item) => new ObjectId(item)),
-        },
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
+    const query = {
+      _id: {
+        $in: workspaceIdList.map((item) => new ObjectId(item)),
       },
+      'curStatus.status': {
+        $ne: RECORD_STATUS.REMOVED,
+      },
+    };
+
+    return this.workspaceRepository.find({
+      where: query,
       order: {
         _id: -1,
       },
@@ -62,6 +71,37 @@ export class WorkspaceService {
         'createDate',
       ],
     });
+  }
+
+  async findAllByIdWithPagination({
+    workspaceIdList,
+    page,
+    limit,
+    name,
+  }: FindAllByIdWithPaginationParams): Promise<any> {
+    const skip = (page - 1) * limit;
+
+    if (!Array.isArray(workspaceIdList) || workspaceIdList.length === 0) {
+      return { list: [], count: [] };
+    }
+    // 构建查询条件
+    const query = {
+      _id: {
+        $in: workspaceIdList.map((m) => new ObjectId(m)),
+      },
+      'curStatus.status': {
+        $ne: RECORD_STATUS.REMOVED,
+      },
+    };
+    if (name) {
+      query['name'] = { $regex: name, $options: 'i' };
+    }
+    const [data, count] = await this.workspaceRepository.findAndCount({
+      where: query,
+      skip,
+      take: limit,
+    });
+    return { list: data, count };
   }
 
   update(id: string, workspace: Partial<Workspace>) {

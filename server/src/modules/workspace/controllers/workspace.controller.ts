@@ -9,6 +9,7 @@ import {
   Request,
   SetMetadata,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import moment from 'moment';
@@ -31,6 +32,7 @@ import { splitMembers } from '../utils/splitMember';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 import { Logger } from 'src/logger';
+import { GetWorkspaceListDto } from '../dto/getWorkspaceList.dto';
 
 @ApiTags('workspace')
 @ApiBearerAuth()
@@ -128,8 +130,21 @@ export class WorkspaceController {
 
   @Get()
   @HttpCode(200)
-  async findAll(@Request() req) {
+  async findAll(@Request() req, @Query() queryInfo: GetWorkspaceListDto) {
+    const { value, error } = GetWorkspaceListDto.validate(queryInfo);
+    if (error) {
+      this.logger.error(
+        `GetWorkspaceListDto validate failed: ${error.message}`,
+        { req },
+      );
+      throw new HttpException(
+        `参数错误: 请联系管理员`,
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
+    }
     const userId = req.user._id.toString();
+    const curPage = Number(value.curPage);
+    const pageSize = Number(value.pageSize);
     // 查询当前用户参与的空间
     const workspaceInfoList = await this.workspaceMemberService.findAllByUserId(
       { userId },
@@ -139,9 +154,16 @@ export class WorkspaceController {
       pre[cur.workspaceId] = cur;
       return pre;
     }, {});
+
     // 查询当前用户的空间列表
-    const list = await this.workspaceService.findAllById({ workspaceIdList });
-    const ownerIdList = list.map((item) => item.ownerId);
+    const { list, count } =
+      await this.workspaceService.findAllByIdWithPagination({
+        workspaceIdList,
+        page: curPage,
+        limit: pageSize,
+        name: queryInfo.name,
+      });
+    const ownerIdList = list.map((item: { ownerId: any }) => item.ownerId);
     const userList = await this.userService.getUserListByIds({
       idList: ownerIdList,
     });
@@ -150,6 +172,7 @@ export class WorkspaceController {
       pre[id] = cur;
       return pre;
     }, {});
+
     const surveyTotalList = await Promise.all(
       workspaceIdList.map((item) => {
         return this.surveyMetaService.countSurveyMetaByWorkspaceId({
@@ -193,6 +216,7 @@ export class WorkspaceController {
             memberTotal: memberTotalMap[workspaceId] || 0,
           };
         }),
+        count,
       },
     };
   }

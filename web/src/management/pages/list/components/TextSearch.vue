@@ -7,7 +7,7 @@
       :placeholder="placeholder"
     >
       <template #suffix>
-        <i-ep-search class="el-input__icon" />
+        <i-ep-search @click="onSearch" class="el-input__icon" />
       </template>
     </el-input>
   </div>

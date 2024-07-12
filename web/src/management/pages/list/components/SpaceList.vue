@@ -1,14 +1,19 @@
 <template>
-  <div class="list-wrap">
+  <div class="search">
+    <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
+  </div>
+  <div class="list-wrap" v-if="props.total > 0">
     <el-table
       ref="multipleListTable"
       class="list-table"
-      :data="dataList"
+      :data="data"
       empty-text="暂无数据"
       row-key="_id"
       header-row-class-name="tableview-header"
       row-class-name="tableview-row"
       cell-class-name="tableview-cell"
+      v-loading="loading"
+      :height="550"
       style="width: 100%"
     >
       <el-table-column column-key="space" width="20" />
@@ -30,7 +35,6 @@
           </template>
         </template>
       </el-table-column>
-
       <el-table-column
         label="操作"
         :width="200"
@@ -39,7 +43,7 @@
       >
         <template #default="scope">
           <div class="tool-root">
-            <!-- <el-button text type="primary" class="tool-root-btn-text" :style="{ width: 50 + 'px' }" @click.stop="handleEnter(scope.row)">进入</el-button> -->
+            <!--            <el-button text type="primary" class="tool-root-btn-text" :style="{ width: 50 + 'px' }" @click.stop="handleEnter(scope.row)">进入</el-button>-->
             <el-button
               text
               type="primary"
@@ -62,6 +66,19 @@
       </el-table-column>
     </el-table>
   </div>
+  <div v-else>
+    <EmptyIndex :data="!searchVal ? noSpaceDataConfig : noSpaceSearchDataConfig" />
+  </div>
+  <div class="list-pagination">
+    <el-pagination
+      v-model:current-page="curPage"
+      background
+      @current-change="handleCurrentChange"
+      layout="prev, pager, next"
+      :total="props.total"
+    >
+    </el-pagination>
+  </div>
   <SpaceModify
     v-if="showSpaceModify"
     :type="modifyType"
@@ -70,26 +87,44 @@
   />
 </template>
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
-import { spaceListConfig } from '@/management/config/listConfig'
+import {
+  noSpaceDataConfig,
+  noSpaceSearchDataConfig,
+  spaceListConfig
+} from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
-import { UserRole } from '@/management/utils/types/workSpace'
+import { SpaceType, UserRole } from '@/management/utils/types/workSpace'
+import TextSearch from '@/management/pages/list/components/TextSearch.vue'
+import EmptyIndex from '@/management/components/EmptyIndex.vue'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
 const store = useStore()
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  data: {
+    type: Array,
+    default: () => []
+  },
+  total: {
+    type: Number,
+    default: 0
+  }
+})
+const emit = defineEmits(['reflush'])
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
     return get(spaceListConfig, f, null)
   })
-})
-const dataList = computed(() => {
-  return store.state.list.teamSpaceList
 })
 const isAdmin = (id: string) => {
   return (
@@ -97,13 +132,30 @@ const isAdmin = (id: string) => {
     UserRole.Admin
   )
 }
-
+const data = computed(() => {
+  return props.data
+})
+let searchVal = ref('')
+let curPage = ref(1)
+const emitReflush = (page: number, name: string) => {
+  curPage.value = page
+  emit('reflush', {
+    curPage: page,
+    name
+  })
+}
+const handleCurrentChange = async (val: number) => {
+  emitReflush(val, searchVal.value)
+}
+const onSearchText = async (e: string) => {
+  searchVal.value = e
+  emitReflush(1, e)
+}
 const handleModify = async (id: string) => {
   await store.dispatch('list/getSpaceDetail', id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
-
 const handleDelete = (id: string) => {
   ElMessageBox.confirm(
     '删除团队后，团队内的问卷将同步被删除，请谨慎考虑！是否确认本次删除？',
@@ -117,22 +169,36 @@ const handleDelete = (id: string) => {
     .then(async () => {
       await store.dispatch('list/deleteSpace', id)
       await store.dispatch('list/getSpaceList')
+      curPage.value = 1
     })
     .catch(() => {})
 }
 const onCloseModify = () => {
   showSpaceModify.value = false
   store.dispatch('list/getSpaceList')
+  curPage.value = 1
 }
-// const handleCurrentChange = (current) => {
-//   this.currentPage = current
-//   this.init()
-// }
+defineExpose({ onCloseModify })
 </script>
 <style lang="scss" scoped>
+.search {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+.list-pagination {
+  margin-top: 20px;
+  :deep(.el-pagination) {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
 .list-wrap {
   padding: 20px;
   background: #fff;
+  .search {
+    display: flex;
+  }
   .list-table {
     :deep(.el-table__header) {
       .tableview-header .el-table__cell {

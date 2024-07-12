@@ -145,20 +145,27 @@ describe('WorkspaceController', () => {
       jest
         .spyOn(workspaceMemberService, 'findAllByUserId')
         .mockResolvedValue(memberList as unknown as Array<WorkspaceMember>);
+
       jest
-        .spyOn(workspaceService, 'findAllById')
-        .mockResolvedValue(workspaces as Array<Workspace>);
+        .spyOn(workspaceService, 'findAllByIdWithPagination')
+        .mockResolvedValue({
+          list: workspaces as Array<Workspace>,
+          count: workspaces.length,
+        });
+
 
       jest.spyOn(userService, 'getUserListByIds').mockResolvedValue([]);
 
-      const result = await controller.findAll(req);
+      const result = await controller.findAll(req, {curPage:1,pageSize:10});
 
       expect(result.code).toEqual(200);
       expect(workspaceMemberService.findAllByUserId).toHaveBeenCalledWith({
         userId: req.user._id.toString(),
       });
-      expect(workspaceService.findAllById).toHaveBeenCalledWith({
+      expect(workspaceService.findAllByIdWithPagination).toHaveBeenCalledWith({
         workspaceIdList: memberList.map((item) => item.workspaceId),
+        curPage: 1,
+        pageSize: 10,
       });
     });
   });

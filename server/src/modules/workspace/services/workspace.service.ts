@@ -14,6 +14,10 @@ interface FindAllByIdWithPaginationParams {
   limit: number;
   name?: string;
 }
+interface FindAllByIdWithPaginationResult {
+  list: Workspace[];
+  count: number;
+}
 
 @Injectable()
 export class WorkspaceService {
@@ -78,13 +82,11 @@ export class WorkspaceService {
     page,
     limit,
     name,
-  }: FindAllByIdWithPaginationParams): Promise<any> {
+  }: FindAllByIdWithPaginationParams): Promise<FindAllByIdWithPaginationResult> {
     const skip = (page - 1) * limit;
-
     if (!Array.isArray(workspaceIdList) || workspaceIdList.length === 0) {
-      return { list: [], count: [] };
+      return { list: [], count: 0 };
     }
-    // 构建查询条件
     const query = {
       _id: {
         $in: workspaceIdList.map((m) => new ObjectId(m)),

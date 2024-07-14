@@ -41,7 +41,6 @@ import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
 import { XiaojuSurveyPluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
-import { WhitelistVerify } from './models/whitelistVerify.entity';
 
 @Module({
   imports: [
@@ -82,7 +81,6 @@ import { WhitelistVerify } from './models/whitelistVerify.entity';
             Workspace,
             WorkspaceMember,
             Collaborator,
-            WhitelistVerify,
           ],
         };
       },

@@ -18,7 +18,6 @@ import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException'
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
-import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
 
 @ApiTags('surveyResponse')
 @Controller('/api/responseSchema')
@@ -28,7 +27,6 @@ export class ResponseSchemaController {
     private readonly logger: Logger,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
-    private readonly whitelistService: WhitelistService,
   ) {}
 
   @Get('/getSchema')
@@ -73,7 +71,7 @@ export class ResponseSchemaController {
   async whitelistValidate(@Param('surveyPath') surveyPath, @Body() body) {
     const { value, error } = Joi.object({
       password: Joi.string().allow(null, ''),
-      value: Joi.string().allow(null, ''),
+      whitelist: Joi.string().allow(null, ''),
     }).validate(body, { allowUnknown: true });
 
     if (error) {
@@ -88,7 +86,7 @@ export class ResponseSchemaController {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
 
-    const { password, value: val } = value;
+    const { password, whitelist: whitelistValue } = value;
     const {
       passwordSwitch,
       password: settingPassword,
@@ -105,14 +103,14 @@ export class ResponseSchemaController {
 
     // 名单校验（手机号/邮箱）
     if (whitelistType === WhitelistType.CUSTOM) {
-      if (!whitelist.includes(val)) {
+      if (!whitelist.includes(whitelistValue)) {
         throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
     }
 
     // 团队成员昵称校验
     if (whitelistType === WhitelistType.MEMBER) {
-      const user = await this.userService.getUserByUsername(val);
+      const user = await this.userService.getUserByUsername(whitelistValue);
       if (!user) {
         throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
@@ -125,13 +123,9 @@ export class ResponseSchemaController {
       }
     }
 
-    // 返回verifyId
-    const res = await this.whitelistService.create(surveyPath);
     return {
       code: 200,
-      data: {
-        verifyId: res._id.toString(),
-      },
+      data: null,
     };
   }
 }

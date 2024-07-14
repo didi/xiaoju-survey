@@ -18,7 +18,8 @@ import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
 import { Logger } from 'src/logger';
 import { WhitelistType } from 'src/interfaces/survey';
-import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
+import { UserService } from 'src/modules/auth/services/user.service';
+import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
@@ -30,7 +31,8 @@ export class SurveyResponseController {
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
     private readonly logger: Logger,
-    private readonly whitelistService: WhitelistService,
+    private readonly userService: UserService,
+    private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
 
   @Post('/createResponse')
@@ -46,7 +48,8 @@ export class SurveyResponseController {
       sessionId: Joi.string(),
       clientTime: Joi.number().required(),
       difTime: Joi.number(),
-      verifyId: Joi.string().allow(null, ''),
+      password: Joi.string().allow(null, ''),
+      whitelist: Joi.string().allow(null, ''),
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
@@ -63,7 +66,8 @@ export class SurveyResponseController {
       sessionId,
       clientTime,
       difTime,
-      verifyId,
+      password,
+      whitelist: whitelistValue,
     } = value;
 
     // 查询schema
@@ -75,21 +79,41 @@ export class SurveyResponseController {
 
     // 白名单的verifyId校验
     const baseConf = responseSchema.code.baseConf;
-    const shouldValidateVerifyId =
-      (baseConf?.passwordSwitch && baseConf.password) ||
-      (baseConf?.whitelistType && baseConf.whitelistType !== WhitelistType.ALL);
-    if (shouldValidateVerifyId) {
-      // 无verifyId
-      if (!verifyId) {
+
+    // 密码校验
+    if (baseConf?.passwordSwitch && baseConf.password) {
+      if (baseConf.password !== password) {
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
+      }
+    }
+
+    // 名单校验（手机号/邮箱）
+    if (baseConf?.whitelistType === WhitelistType.CUSTOM) {
+      if (!baseConf.whitelist.includes(whitelistValue)) {
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
+      }
+    }
+
+    // 团队成员昵称校验
+    if (baseConf?.whitelistType === WhitelistType.MEMBER) {
+      const user = await this.userService.getUserByUsername(whitelistValue);
+      if (!user) {
         throw new HttpException(
           '白名单验证失败',
           EXCEPTION_CODE.WHITELIST_ERROR,
         );
       }
 
-      // 从数据库中查询是否存在对应的verifyId
-      const record = await this.whitelistService.match(surveyPath, verifyId);
-      if (!record) {
+      const workspaceMember = await this.workspaceMemberService.findAllByUserId(
+        { userId: user._id.toString() },
+      );
+      if (!workspaceMember.length) {
         throw new HttpException(
           '白名单验证失败',
           EXCEPTION_CODE.WHITELIST_ERROR,

@@ -9,18 +9,14 @@ import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Logger } from 'src/logger';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
-import { WhitelistService } from 'src/modules/auth/services/whitelist.service';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
-import { ObjectId } from 'mongodb';
-import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
 
 jest.mock('../services/responseScheme.service');
 
 describe('ResponseSchemaController', () => {
   let controller: ResponseSchemaController;
   let responseSchemaService: ResponseSchemaService;
-  let whitelistService: WhitelistService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,12 +43,6 @@ describe('ResponseSchemaController', () => {
           },
         },
         {
-          provide: WhitelistService,
-          useValue: {
-            create: jest.fn(),
-          },
-        },
-        {
           provide: AuthService,
           useValue: {
             create: jest.fn(),
@@ -71,7 +61,6 @@ describe('ResponseSchemaController', () => {
     responseSchemaService = module.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
-    whitelistService = module.get<WhitelistService>(WhitelistService);
   });
 
   describe('getSchema', () => {
@@ -152,7 +141,7 @@ describe('ResponseSchemaController', () => {
       );
     });
 
-    it('whitelistValidate should return verifyId successfully', async () => {
+    it('whitelistValidate should be successfully', async () => {
       const surveyPath = 'test';
       jest
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
@@ -168,16 +157,11 @@ describe('ResponseSchemaController', () => {
           },
         } as ResponseSchema);
 
-      const id = 'c79c6fee22cbed6f0b087a27';
-      jest.spyOn(whitelistService, 'create').mockResolvedValue({
-        _id: new ObjectId(id),
-        surveyPath,
-      } as WhitelistVerify);
       await expect(
         controller.whitelistValidate(surveyPath, {
           password: '123456',
         }),
-      ).resolves.toEqual({ code: 200, data: { verifyId: id } });
+      ).resolves.toEqual({ code: 200, data: null });
     });
 
     it('whitelistValidate should throw WHITELIST_ERROR code when mobile or email is incorrect', async () => {
@@ -201,7 +185,7 @@ describe('ResponseSchemaController', () => {
       await expect(
         controller.whitelistValidate(surveyPath, {
           password: '123456',
-          value: '13500000001',
+          whitelist: '13500000001',
         }),
       ).rejects.toThrow(
         new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
@@ -228,7 +212,7 @@ describe('ResponseSchemaController', () => {
       await expect(
         controller.whitelistValidate(surveyPath, {
           password: '123456',
-          value: 'James',
+          whitelist: 'James',
         }),
       ).rejects.toThrow(
         new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
@@ -255,17 +239,11 @@ describe('ResponseSchemaController', () => {
         },
       } as ResponseSchema);
 
-    const id = 'c79c6fee22cbed6f0b087a27';
-    jest.spyOn(whitelistService, 'create').mockResolvedValue({
-      _id: new ObjectId(id),
-      surveyPath,
-    } as WhitelistVerify);
-
     await expect(
       controller.whitelistValidate(surveyPath, {
         password: '123456',
-        value: '13500000000',
+        whitelist: '13500000000',
       }),
-    ).resolves.toEqual({ code: 200, data: { verifyId: id } });
+    ).resolves.toEqual({ code: 200, data: null });
   });
 });

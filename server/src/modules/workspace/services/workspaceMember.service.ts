@@ -140,4 +140,20 @@ export class WorkspaceMemberService {
       },
     });
   }
+
+  // 根据空间id批量查询成员
+  async batchSearchByWorkspace(workspaceList: string[]) {
+    console.log(workspaceList);
+    return await this.workspaceMemberRepository.find({
+      where: {
+        workspaceId: {
+          $in: workspaceList,
+        },
+      },
+      order: {
+        _id: -1,
+      },
+      select: ['_id', 'userId', 'username', 'role', 'workspaceId'],
+    });
+  }
 }

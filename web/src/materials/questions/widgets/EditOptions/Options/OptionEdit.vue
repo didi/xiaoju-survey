@@ -14,7 +14,6 @@
             <RichEditor
               :modelValue="element.text"
               @change="(value) => handleChange(index, value)"
-              @created="handleCreated"
             />
           </div>
 
@@ -42,7 +41,6 @@
 import draggable from 'vuedraggable'
 import { cloneDeep as _cloneDeep } from 'lodash-es'
 import RichEditor from '@/common/Editor/RichEditor.vue'
-import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'OptionEdit',
@@ -59,14 +57,6 @@ export default {
   components: {
     draggable,
     RichEditor
-  },
-  data() {
-    return {
-      // 编辑器创建完成数量
-      createdEditorCount: 0,
-      // 编辑器实例列表
-      editorList: []
-    }
   },
   mounted() {
     // 选项hash兜底
@@ -111,29 +101,6 @@ export default {
     optionSortChange() {
       const optionList = _cloneDeep(this.optionList)
       this.$emit('optionChange', optionList)
-    },
-    // 监听 editor 创建完成
-    handleCreated(editor) {
-      this.createdEditorCount++
-      this.editorList.push(editor)
-    }
-  },
-  computed: {
-    ...mapGetters({
-      moduleConfig: 'edit/moduleConfig'
-    }),
-    // 当前题目所有编辑器是否创建完成
-    createdAllCurrentEditQuestionEditor() {
-      return this.createdEditorCount === this.moduleConfig?.options?.length
-    }
-  },
-  watch: {
-    // 监听当前编辑选项所有编辑器创建完成
-    // 如果所有选项创建完成，则聚焦第一个选项
-    createdAllCurrentEditQuestionEditor(bool) {
-      if (bool) {
-        this.editorList[0]?.focus()
-      }
     }
   }
 }

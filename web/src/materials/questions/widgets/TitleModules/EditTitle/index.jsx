@@ -70,6 +70,11 @@ export default defineComponent({
                 class="rich-editor"
                 modelValue={filterXSS(this.title)}
                 onChange={this.handleChange}
+                onCreated={
+                  (editor) => {
+                    editor?.focus()
+                  }
+                }
               />
             )
           }

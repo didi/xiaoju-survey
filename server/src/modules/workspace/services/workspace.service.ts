@@ -102,6 +102,9 @@ export class WorkspaceService {
       where: query,
       skip,
       take: limit,
+      order: {
+        createDate: -1,
+      },
     });
     return { list: data, count };
   }

@@ -30,7 +30,7 @@
               <i class="iconfont icon-chuangjian"></i>
               <span>创建团队空间</span>
             </el-button>
-            <el-button type="default" @click="onSetGroup" v-if="workSpaceId">
+            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId">
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
@@ -49,13 +49,13 @@
           :loading="loading"
           :data="surveyList"
           :total="surveyTotal"
-          @reflush="fetchSurveyList"
+          @refresh="fetchSurveyList"
           v-if="spaceType !== SpaceType.Group"
         ></BaseList>
         <SpaceList
           ref="spaceListRef"
-          @reflush="fetchSpaceList"
-          :loading="loading2"
+          @refresh="fetchSpaceList"
+          :loading="spaceLoading"
           :data="spaceList"
           :total="spaceTotal"
           v-if="spaceType === SpaceType.Group"
@@ -93,8 +93,8 @@ const surveyList = computed(() => {
 const surveyTotal = computed(() => {
   return store.state.list.surveyTotal
 })
-let spaceListRef = ref<InstanceType<typeof SpaceList> | null>(null)
-const loading2 = ref(false)
+const spaceListRef = ref<InstanceType | null>(null)
+const spaceLoading = ref(false)
 const spaceList = computed(() => {
   return store.state.list.teamSpaceList
 })
@@ -102,10 +102,10 @@ const spaceTotal = computed(() => {
   return store.state.list.teamSpaceListTotal
 })
 const fetchSpaceList = async (params?: any) => {
-  loading2.value = true
+  spaceLoading.value = true
   store.commit('list/changeWorkSpace', '')
   await store.dispatch('list/getSpaceList', params)
-  loading2.value = false
+  spaceLoading.value = false
 }
 
 const activeIndex = ref('1')
@@ -277,8 +277,9 @@ const handleLogout = () => {
 
       .create-btn {
         background: #4a4c5b;
+        color: #fff;
       }
-      
+
       .btn {
         width: 132px;
         height: 32px;
@@ -286,10 +287,9 @@ const handleLogout = () => {
         justify-content: center;
         align-items: center;
 
-        color: #fff;
-
+        .icon-shujuliebiao,
         .icon-chuangjian {
-          padding-right: 8px;
+          padding-right: 5px;
           font-size: 14px;
         }
 

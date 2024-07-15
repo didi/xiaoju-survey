@@ -18,10 +18,7 @@ const VOTE_INFO_KEY = 'voteinfo'
 import router from '../router'
 export default {
   // 初始化
-  init(
-    { commit, dispatch },
-    { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }
-  ) {
+  init({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
     commit('setEnterTime')
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
@@ -57,7 +54,6 @@ export default {
       }
     }
     router.push({ name: 'renderPage' })
-
 
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({

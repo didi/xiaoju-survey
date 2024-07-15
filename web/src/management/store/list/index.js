@@ -107,8 +107,8 @@ export default {
     },
     changeWorkSpace(state, workSpaceId) {
       // 切换空间清除筛选条件
-      this.commit('list/reserSelectValueMap')
-      this.commit('list/reserButtonValueMap')
+      this.commit('list/resetSelectValueMap')
+      this.commit('list/resetButtonValueMap')
       this.commit('list/setSearchVal', '')
       state.workSpaceId = workSpaceId
     },
@@ -130,7 +130,7 @@ export default {
     setSearchVal(state, data) {
       state.searchVal = data
     },
-    reserSelectValueMap(state) {
+    resetSelectValueMap(state) {
       state.selectValueMap = {
         surveyType: '',
         'curStatus.status': ''
@@ -139,7 +139,7 @@ export default {
     changeSelectValueMap(state, { key, value }) {
       state.selectValueMap[key] = value
     },
-    reserButtonValueMap(state) {
+    resetButtonValueMap(state) {
       state.buttonValueMap = {
         'curStatus.date': '',
         createDate: -1

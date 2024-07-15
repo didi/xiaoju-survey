@@ -125,7 +125,7 @@ const closedDialog = () => {
     &.pc {
       display: flex;
       justify-content: center;
-      background: #ffffff;
+      background: #f7f7f7;
       box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
       height: 726px;
       .wrapper {

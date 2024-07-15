@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
+    <TextSearch placeholder="请输入空间名称" :value="searchVal" @search="onSearchText" />
   </div>
   <div class="list-wrap" v-if="props.total > 0">
     <el-table
@@ -75,7 +75,7 @@
   />
 </template>
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
@@ -90,7 +90,6 @@ import TextSearch from '@/management/pages/list/components/TextSearch.vue'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import ToolBar from './ToolBar.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
-
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
@@ -109,7 +108,7 @@ const props = defineProps({
     default: 0
   }
 })
-const emit = defineEmits(['reflush'])
+const emit = defineEmits(['refresh'])
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
@@ -128,19 +127,19 @@ const data = computed(() => {
 })
 let searchVal = ref('')
 let curPage = ref(1)
-const emitReflush = (page: number, name: string) => {
+const emitRefresh = (page: number, name: string) => {
   curPage.value = page
-  emit('reflush', {
+  emit('refresh', {
     curPage: page,
     name
   })
 }
 const handleCurrentChange = async (val: number) => {
-  emitReflush(val, searchVal.value)
+  emitRefresh(val, searchVal.value)
 }
-const onSearchText = async (e: string) => {
-  searchVal.value = e
-  emitReflush(1, e)
+const onSearchText = async (value: string) => {
+  searchVal.value = value
+  emitRefresh(1, value)
 }
 
 const getTools = (data: any) => {

@@ -157,7 +157,7 @@ const props = defineProps({
     default: 0
   }
 })
-const emit = defineEmits(['reflush'])
+const emit = defineEmits(['refresh'])
 const fields = ['type', 'title', 'remark', 'owner', 'state', 'createDate', 'updateDate']
 const showModify = ref(false)
 const modifyType = ref('')
@@ -251,7 +251,7 @@ const workSpaceId = computed(() => {
   return store.state.list.workSpaceId
 })
 
-const onReflush = async () => {
+const onRefresh = async () => {
   const filterString = JSON.stringify(
     filter.value.filter((item) => {
       return item.condition[0].value
@@ -265,7 +265,7 @@ const onReflush = async () => {
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }
-  emit('reflush', params)
+  emit('refresh', params)
 }
 
 const getToolConfig = (row) => {
@@ -400,14 +400,14 @@ const onDelete = async (row) => {
   const res = await deleteSurvey(row._id)
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('删除成功')
-    onReflush()
+    onRefresh()
   } else {
     ElMessage.error(res.errmsg || '删除失败')
   }
 }
 const handleCurrentChange = (current) => {
   currentPage.value = current
-  onReflush()
+  onRefresh()
 }
 const onModify = (data, type = QOP_MAP.EDIT) => {
   showModify.value = true
@@ -418,7 +418,7 @@ const onCloseModify = (type) => {
   showModify.value = false
   questionInfo.value = {}
   if (type === 'update') {
-    onReflush()
+    onRefresh()
   }
 }
 const onRowClick = (row) => {
@@ -432,18 +432,18 @@ const onRowClick = (row) => {
 const onSearchText = (e) => {
   store.commit('list/setSearchVal', e)
   currentPage.value = 1
-  onReflush()
+  onRefresh()
 }
 const onSelectChange = (selectKey, selectValue) => {
   store.commit('list/changeSelectValueMap', { key: selectKey, value: selectValue })
   // selectValueMap.value[selectKey] = selectValue
   currentPage.value = 1
-  onReflush()
+  onRefresh()
 }
 const onButtonChange = (effectKey, effectValue) => {
-  store.commit('list/reserButtonValueMap')
+  store.commit('list/resetButtonValueMap')
   store.commit('list/changeButtonValueMap', { key: effectKey, value: effectValue })
-  onReflush()
+  onRefresh()
 }
 
 const cooperModify = ref(false)

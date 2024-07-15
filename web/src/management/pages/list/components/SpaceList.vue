@@ -42,25 +42,13 @@
         class-name="table-options"
       >
         <template #default="scope">
-          <div class="tool-root">
-            <!--            <el-button text type="primary" class="tool-root-btn-text" :style="{ width: 50 + 'px' }" @click.stop="handleEnter(scope.row)">进入</el-button>-->
-            <el-button
-              text
-              type="primary"
-              class="tool-root-btn-text"
-              :style="{ width: 50 + 'px' }"
-              @click.stop="handleModify(scope.row._id)"
-              >{{ isAdmin(scope.row._id) ? '管理' : '查看' }}</el-button
-            >
-            <el-button
-              text
-              type="primary"
-              class="tool-root-btn-text"
-              :style="{ width: 50 + 'px' }"
-              @click.stop="handleDelete(scope.row._id)"
-              v-if="isAdmin(scope.row._id)"
-              >删除</el-button
-            >
+          <div class="space-tool-bar">
+            <ToolBar
+              :data="scope.row"
+              :tool-width="50"
+              :tools="getTools(scope.row)"
+              @click="handleClick"
+            />
           </div>
         </template>
       </el-table-column>
@@ -98,9 +86,11 @@ import {
   spaceListConfig
 } from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
-import { SpaceType, UserRole } from '@/management/utils/types/workSpace'
 import TextSearch from '@/management/pages/list/components/TextSearch.vue'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
+import ToolBar from './ToolBar.vue'
+import { UserRole } from '@/management/utils/types/workSpace'
+
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
@@ -132,6 +122,7 @@ const isAdmin = (id: string) => {
     UserRole.Admin
   )
 }
+
 const data = computed(() => {
   return props.data
 })
@@ -151,6 +142,16 @@ const onSearchText = async (e: string) => {
   searchVal.value = e
   emitReflush(1, e)
 }
+
+const getTools = (data: any) => {
+  const flag = isAdmin(data._id)
+  const tools = [{ key: 'modify', label: flag ? '管理' : '查看' }]
+  if (flag) {
+    tools.push({ key: 'delete', label: '删除' })
+  }
+  return tools
+}
+
 const handleModify = async (id: string) => {
   await store.dispatch('list/getSpaceDetail', id)
   modifyType.value = 'edit'
@@ -173,6 +174,15 @@ const handleDelete = (id: string) => {
     })
     .catch(() => {})
 }
+
+const handleClick = (key: string, data: any) => {
+  if (key === 'modify') {
+    handleModify(data._id)
+  } else if (key === 'delete') {
+    handleDelete(data._id)
+  }
+}
+
 const onCloseModify = () => {
   showSpaceModify.value = false
   store.dispatch('list/getSpaceList')
@@ -196,9 +206,11 @@ defineExpose({ onCloseModify })
 .list-wrap {
   padding: 20px;
   background: #fff;
+
   .search {
     display: flex;
   }
+
   .list-table {
     :deep(.el-table__header) {
       .tableview-header .el-table__cell {
@@ -209,24 +221,18 @@ defineExpose({ onCloseModify })
         }
       }
     }
+
     :deep(.tableview-row) {
       .tableview-cell {
-        padding: 5px 0;
+        height: 42px;
+
         &.link {
           cursor: pointer;
         }
+
         .cell .cell-span {
           font-size: 14px;
         }
-      }
-    }
-    .tool-root {
-      display: flex;
-      &:first-child {
-        margin-left: -10px;
-      }
-      .tool-root-btn-text {
-        font-weight: normal !important;
       }
     }
   }

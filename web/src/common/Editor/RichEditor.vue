@@ -28,7 +28,7 @@ import './styles/reset-wangeditor.scss'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { ref, shallowRef, onBeforeMount, watch } from 'vue'
 
-const emit = defineEmits(['input', 'onFocus', 'change', 'blur'])
+const emit = defineEmits(['input', 'onFocus', 'change', 'blur', 'created'])
 const model = defineModel()
 const props = defineProps(['staticToolBar'])
 
@@ -60,6 +60,7 @@ const onCreated = (editor) => {
   if (model.value) {
     setHtml(model.value)
   }
+  emit('created', editor)
 }
 const onChange = (editor) => {
   const editorHtml = editor.getHtml()

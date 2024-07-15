@@ -17,15 +17,8 @@ const route = useRoute()
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
-    const {
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf,
-      logicConf
-    } = data.code
+    const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf } =
+      data.code
     const questionData = {
       bannerConf,
       baseConf,

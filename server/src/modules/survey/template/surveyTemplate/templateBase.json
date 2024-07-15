@@ -1,55 +1,55 @@
 {
-    "bannerConf": {
-      "titleConfig": {
-        "mainTitle": "<h3 style=\"text-align: center\">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与！</span></p>",
-        "subTitle": ""
-      },
-      "bannerConfig": {
-        "bgImage": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp",
-        "videoLink": "",
-        "postImg": ""
-      }
+  "bannerConf": {
+    "titleConfig": {
+      "mainTitle": "<h3 style=\"text-align: center\">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与！</span></p>",
+      "subTitle": ""
     },
-    "submitConf": {
-      "submitTitle": "提交",
-      "confirmAgain": {
-        "is_again": true,
-        "again_text": "确认要提交吗？"
-      },
-      "msgContent": {
-        "msg_200": "提交成功",
-        "msg_9001": "您来晚了，感谢支持问卷~",
-        "msg_9002": "请勿多次提交！",
-        "msg_9003": "您来晚了，已经满额！",
-        "msg_9004": "提交失败！"
-      }
-    },
-    "bottomConf": {
-      "logoImage": "/imgs/Logo.webp",
-      "logoImageWidth": "60%"
-    },
-    "baseConf": {
-      "begTime": "2024-01-01 00:00:00",
-      "endTime": "2034-01-01 00:00:00",
-      "tLimit": 0,
-      "language": "chinese",
-      "answerBegTime": "00:00:00",
-      "answerEndTime": "23:59:59"
-    },
-    "skinConf": {
-      "skinColor": "#4a4c5b",
-      "inputBgColor": "#ffffff",
-      "backgroundConf": {
-        "color": "#fff"
-      },
-      "themeConf": {
-        "color": "#ffa600"
-      },
-      "contentConf": {
-        "opacity": 100
-      }
-    },
-    "logicConf": {
-      "showLogicConf": []
+    "bannerConfig": {
+      "bgImage": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp",
+      "videoLink": "",
+      "postImg": ""
     }
+  },
+  "submitConf": {
+    "submitTitle": "提交",
+    "confirmAgain": {
+      "is_again": true,
+      "again_text": "确认要提交吗？"
+    },
+    "msgContent": {
+      "msg_200": "提交成功",
+      "msg_9001": "您来晚了，感谢支持问卷~",
+      "msg_9002": "请勿多次提交！",
+      "msg_9003": "您来晚了，已经满额！",
+      "msg_9004": "提交失败！"
+    }
+  },
+  "bottomConf": {
+    "logoImage": "/imgs/Logo.webp",
+    "logoImageWidth": "60%"
+  },
+  "baseConf": {
+    "begTime": "2024-01-01 00:00:00",
+    "endTime": "2034-01-01 00:00:00",
+    "tLimit": 0,
+    "language": "chinese",
+    "answerBegTime": "00:00:00",
+    "answerEndTime": "23:59:59"
+  },
+  "skinConf": {
+    "skinColor": "#4a4c5b",
+    "inputBgColor": "#ffffff",
+    "backgroundConf": {
+      "color": "#ffffff"
+    },
+    "themeConf": {
+      "color": "#ffa600"
+    },
+    "contentConf": {
+      "opacity": 100
+    }
+  },
+  "logicConf": {
+    "showLogicConf": []
   }
+}

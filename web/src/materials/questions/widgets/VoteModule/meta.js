@@ -53,22 +53,22 @@ const meta = {
       description: '这是用于描述选项',
       defaultValue: [
         {
-          "text": "选项1",
-          "imageUrl": "",
-          "others": false,
-          "mustOthers": false,
-          "othersKey": "",
-          "placeholderDesc": "",
-          "hash": "115019"
+          text: '选项1',
+          imageUrl: '',
+          others: false,
+          mustOthers: false,
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115019'
         },
         {
-          "text": "选项2",
-          "imageUrl": "",
-          "others": false,
-          "mustOthers": false,
-          "othersKey": "",
-          "placeholderDesc": "",
-          "hash": "115020"
+          text: '选项2',
+          imageUrl: '',
+          others: false,
+          mustOthers: false,
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115020'
         }
       ]
     },

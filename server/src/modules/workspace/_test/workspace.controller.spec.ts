@@ -154,10 +154,12 @@ describe('WorkspaceController', () => {
           count: workspaces.length,
         });
 
-
       jest.spyOn(userService, 'getUserListByIds').mockResolvedValue([]);
 
-      const result = await controller.findAll(req, {curPage:1,pageSize:10});
+      const result = await controller.findAll(req, {
+        curPage: 1,
+        pageSize: 10,
+      });
 
       expect(result.code).toEqual(200);
       expect(workspaceMemberService.findAllByUserId).toHaveBeenCalledWith({
@@ -167,7 +169,7 @@ describe('WorkspaceController', () => {
         workspaceIdList: memberList.map((item) => item.workspaceId),
         page: 1,
         limit: 10,
-        name: undefined
+        name: undefined,
       });
     });
   });

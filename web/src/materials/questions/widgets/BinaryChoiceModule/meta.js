@@ -53,25 +53,25 @@ const meta = {
       description: '这是用于描述选项',
       defaultValue: [
         {
-          "text": "对",
-          "imageUrl": "",
-          "others": false,
-          "mustOthers": false,
-          "othersKey": "",
-          "placeholderDesc": "",
-          "hash": "115019"
+          text: '对',
+          imageUrl: '',
+          others: false,
+          mustOthers: false,
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115019'
         },
         {
-          "text": "错",
-          "imageUrl": "",
-          "others": false,
-          "mustOthers": false,
-          "othersKey": "",
-          "placeholderDesc": "",
-          "hash": "115020"
+          text: '错',
+          imageUrl: '',
+          others: false,
+          mustOthers: false,
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115020'
         }
       ]
-    },
+    }
   ],
   formConfig: [basicConfig],
   editConfigure: {

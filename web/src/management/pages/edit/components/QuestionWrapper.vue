@@ -163,7 +163,7 @@ const onMove = () => {}
   padding: 0.36rem 0 0.36rem;
   border: 1px solid transparent;
   &.spliter {
-    border-bottom: 0.12rem solid var(--primary-background-color);
+    border-bottom: 0.1rem solid $spliter-color;
   }
 
   &.mouse-hover {

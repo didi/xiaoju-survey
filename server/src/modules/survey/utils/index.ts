@@ -33,7 +33,9 @@ export function getListHeadByDataList(dataList) {
     let othersCode;
     const radioType = ['radio-star', 'radio-nps'];
     if (radioType.includes(question.type)) {
-      const rangeConfigKeys = question.rangeConfig ? Object.keys(question.rangeConfig) : [];
+      const rangeConfigKeys = question.rangeConfig
+        ? Object.keys(question.rangeConfig)
+        : [];
       if (rangeConfigKeys.length > 0) {
         othersCode = [{ code: `${question.field}_custom`, option: '填写理由' }];
       }

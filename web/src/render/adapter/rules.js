@@ -199,7 +199,7 @@ const generateOthersKeyMap = (question) => {
   let othersKeyMap = undefined
 
   if (RATES.includes(type)) {
-    const { rangeConfig  } = question
+    const { rangeConfig } = question
     othersKeyMap = {}
     for (const key in rangeConfig) {
       if (rangeConfig[key].isShowInput) {
@@ -207,7 +207,7 @@ const generateOthersKeyMap = (question) => {
       }
     }
   } else if (type?.includes(QUESTION_TYPE.RADIO) || type?.includes(QUESTION_TYPE.CHECKBOX)) {
-    const { options } = question 
+    const { options } = question
     othersKeyMap = {}
     options
       .filter((op) => op.others)

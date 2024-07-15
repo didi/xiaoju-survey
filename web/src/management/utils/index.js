@@ -39,19 +39,20 @@ export const getQuestionByType = (type, fields) => {
   const questionMeta = questionLoader.getMeta(type)
   const { attrs } = questionMeta
   let newQuestion = defaultQuestionConfig
-  if( attrs ) {
+  if (attrs) {
     let questionSchema = {}
-    attrs.forEach(element => {
+    attrs.forEach((element) => {
       questionSchema[element.name] = element.defaultValue
-    });
+    })
     newQuestion = questionSchema
   } else {
     newQuestion = defaultQuestionConfig
     newQuestion.type = type
   }
-  
+
   newQuestion.field = getNewField(fields) // 动态生成题目id
-  if('options ' in newQuestion) {  // 动态更新选项的hash-id
+  if ('options ' in newQuestion) {
+    // 动态更新选项的hash-id
     const hashList = []
     for (const option of newQuestion.options) {
       const hash = generateHash(hashList)
@@ -59,7 +60,7 @@ export const getQuestionByType = (type, fields) => {
       option.hash = hash
     }
   }
-  
+
   return newQuestion
 }
 

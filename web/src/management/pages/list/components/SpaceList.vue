@@ -38,25 +38,13 @@
         class-name="table-options"
       >
         <template #default="scope">
-          <div class="tool-root">
-            <!-- <el-button text type="primary" class="tool-root-btn-text" :style="{ width: 50 + 'px' }" @click.stop="handleEnter(scope.row)">进入</el-button> -->
-            <el-button
-              text
-              type="primary"
-              class="tool-root-btn-text"
-              :style="{ width: 50 + 'px' }"
-              @click.stop="handleModify(scope.row._id)"
-              >{{ isAdmin(scope.row._id) ? '管理' : '查看' }}</el-button
-            >
-            <el-button
-              text
-              type="primary"
-              class="tool-root-btn-text"
-              :style="{ width: 50 + 'px' }"
-              @click.stop="handleDelete(scope.row._id)"
-              v-if="isAdmin(scope.row._id)"
-              >删除</el-button
-            >
+          <div class="space-tool-bar">
+            <ToolBar
+              :data="scope.row"
+              :tool-width="50"
+              :tools="getTools(scope.row)"
+              @click="handleClick"
+            />
           </div>
         </template>
       </el-table-column>
@@ -77,6 +65,7 @@ import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
 import { spaceListConfig } from '@/management/config/listConfig'
 import SpaceModify from './SpaceModify.vue'
+import ToolBar from './ToolBar.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
 
 const showSpaceModify = ref(false)
@@ -96,6 +85,15 @@ const isAdmin = (id: string) => {
     store.state.list.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
     UserRole.Admin
   )
+}
+
+const getTools = (data: any) => {
+  const flag = isAdmin(data._id)
+  const tools = [{ key: 'modify', label: flag ? '管理' : '查看' }]
+  if (flag) {
+    tools.push({ key: 'delete', label: '删除' })
+  }
+  return tools
 }
 
 const handleModify = async (id: string) => {
@@ -120,6 +118,15 @@ const handleDelete = (id: string) => {
     })
     .catch(() => {})
 }
+
+const handleClick = (key: string, data: any) => {
+  if (key === 'modify') {
+    handleModify(data._id)
+  } else if (key === 'delete') {
+    handleDelete(data._id)
+  }
+}
+
 const onCloseModify = () => {
   showSpaceModify.value = false
   store.dispatch('list/getSpaceList')
@@ -133,6 +140,7 @@ const onCloseModify = () => {
 .list-wrap {
   padding: 20px;
   background: #fff;
+
   .list-table {
     :deep(.el-table__header) {
       .tableview-header .el-table__cell {
@@ -143,12 +151,15 @@ const onCloseModify = () => {
         }
       }
     }
+
     :deep(.tableview-row) {
       .tableview-cell {
         padding: 5px 0;
+
         &.link {
           cursor: pointer;
         }
+
         .cell .cell-span {
           font-size: 14px;
         }
@@ -156,9 +167,7 @@ const onCloseModify = () => {
     }
     .tool-root {
       display: flex;
-      &:first-child {
-        margin-left: -10px;
-      }
+
       .tool-root-btn-text {
         font-weight: normal !important;
       }

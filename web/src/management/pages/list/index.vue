@@ -22,7 +22,7 @@
           </h2>
           <div class="operation">
             <el-button
-              class="btn space-btn"
+              class="btn create-btn"
               type="default"
               @click="onSpaceCreate"
               v-if="spaceType == SpaceType.Group"
@@ -255,9 +255,7 @@ const handleLogout = () => {
       .create-btn {
         background: #4a4c5b;
       }
-      .space-btn {
-        background: $primary-color;
-      }
+      
       .btn {
         width: 132px;
         height: 32px;

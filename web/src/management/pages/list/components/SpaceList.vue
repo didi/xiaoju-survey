@@ -154,7 +154,7 @@ const onCloseModify = () => {
 
     :deep(.tableview-row) {
       .tableview-cell {
-        padding: 5px 0;
+        height: 42px;
 
         &.link {
           cursor: pointer;
@@ -163,13 +163,6 @@ const onCloseModify = () => {
         .cell .cell-span {
           font-size: 14px;
         }
-      }
-    }
-    .tool-root {
-      display: flex;
-
-      .tool-root-btn-text {
-        font-weight: normal !important;
       }
     }
   }

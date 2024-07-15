@@ -37,7 +37,9 @@ export default {
     spaceType: SpaceType.Personal,
     workSpaceId: '',
     spaceDetail: null,
+    // 团队空间
     teamSpaceList: [],
+    teamSpaceListTotal: 0,
     // 列表管理
     surveyList: [],
     surveyTotal: 0,
@@ -116,6 +118,9 @@ export default {
     setTeamSpaceList(state, data) {
       state.teamSpaceList = data
     },
+    setTeamSpaceListTotal(state, teamSpaceListTotal) {
+      state.teamSpaceListTotal = teamSpaceListTotal
+    },
     setSurveyList(state, list) {
       state.surveyList = list
     },
@@ -145,18 +150,18 @@ export default {
     }
   },
   actions: {
-    async getSpaceList({ commit }) {
+    async getSpaceList({ commit }, p = { curPage: 1 }) {
       try {
-        const res = await getSpaceList()
-
+        const res = await getSpaceList(p)
         if (res.code === CODE_MAP.SUCCESS) {
-          const { list } = res.data
+          const { list, count } = res.data
           const teamSpace = list.map((item) => {
             return {
               id: item._id,
               name: item.name
             }
           })
+          commit('setTeamSpaceListTotal', count)
           commit('setTeamSpaceList', list)
           commit('updateSpaceMenus', teamSpace)
         } else {

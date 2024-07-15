@@ -42,7 +42,7 @@
     </el-table>
     <el-popover
       ref="popover"
-      popper-style="text-align: center;"
+      popper-style="text-align: center;font-size: 13px;"
       :virtual-ref="popoverVirtualRef"
       placement="top"
       width="400"
@@ -83,11 +83,11 @@ const setPopoverContent = (content) => {
 }
 const onPopoverRefOver = (scope, type) => {
   let popoverContent
-  if (type == 'head') {
+  if (type === 'head') {
     popoverVirtualRef.value = popoverRefMap.value[scope.column.id]
     popoverContent = scope.column.label.replace(/&nbsp;/g, '')
   }
-  if (type == 'content') {
+  if (type === 'content') {
     popoverVirtualRef.value = popoverRefMap.value[scope.$index + scope.column.property]
     popoverContent = getContent(scope.row[scope.column.property])
   }
@@ -99,7 +99,6 @@ const onPopoverRefOver = (scope, type) => {
 .data-table-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 20px;
   min-height: v-bind('tableMinHeight');
   background: #fff;
   padding: 10px 20px;
@@ -131,5 +130,8 @@ const onPopoverRefOver = (scope, type) => {
     text-overflow: ellipsis;
     /* 显示省略号 */
   }
+}
+:deep(.el-table td.el-table__cell div) {
+  font-size: 13px;
 }
 </style>

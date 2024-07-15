@@ -8,8 +8,10 @@ export const updateSpace = ({ workspaceId, name, description, members }: any) =>
   return axios.post(`/workspace/${workspaceId}`, { name, description, members })
 }
 
-export const getSpaceList = () => {
-  return axios.get('/workspace')
+export const getSpaceList = (params: any) => {
+  return axios.get('/workspace', {
+    params
+  })
 }
 
 export const getSpaceDetail = (workspaceId: string) => {

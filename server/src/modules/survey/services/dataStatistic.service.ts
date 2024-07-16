@@ -8,9 +8,10 @@ import { keyBy } from 'lodash';
 import { DataItem } from 'src/interfaces/survey';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { getListHeadByDataList, transformAndMergeArrayFields } from '../utils';
+import { QUESTION_TYPE } from 'src/enums/question';
 @Injectable()
 export class DataStatisticService {
-  private radioType = ['radio-star', 'radio-nps'];
+  private radioType = [QUESTION_TYPE.RADIO_STAR, QUESTION_TYPE.RADIO_NPS];
 
   constructor(
     @InjectRepository(SurveyResponse)
@@ -68,7 +69,7 @@ export class DataStatisticService {
         }
         // 处理选项的更多输入框
         if (
-          this.radioType.includes(itemConfig.type) &&
+          this.radioType.includes(itemConfig.type as QUESTION_TYPE) &&
           !data[`${itemConfigKey}_custom`]
         ) {
           data[`${itemConfigKey}_custom`] =

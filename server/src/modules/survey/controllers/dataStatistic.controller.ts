@@ -22,6 +22,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { AggregationStatisDto } from '../dto/aggregationStatis.dto';
 import { handleAggretionData } from '../utils';
+import { QUESTION_TYPE } from 'src/enums/question';
 
 @ApiTags('survey')
 @ApiBearerAuth()
@@ -103,15 +104,15 @@ export class DataStatisticController {
       };
     }
     const allowQuestionType = [
-      'radio',
-      'checkbox',
-      'binary-choice',
-      'radio-star',
-      'radio-nps',
-      'vote',
+      QUESTION_TYPE.RADIO,
+      QUESTION_TYPE.CHECKBOX,
+      QUESTION_TYPE.BINARY_CHOICE,
+      QUESTION_TYPE.RADIO_STAR,
+      QUESTION_TYPE.RADIO_NPS,
+      QUESTION_TYPE.VOTE,
     ];
     const fieldList = responseSchema.code.dataConf.dataList
-      .filter((item) => allowQuestionType.includes(item.type))
+      .filter((item) => allowQuestionType.includes(item.type as QUESTION_TYPE))
       .map((item) => item.field);
     const dataMap = responseSchema.code.dataConf.dataList.reduce((pre, cur) => {
       pre[cur.field] = cur;

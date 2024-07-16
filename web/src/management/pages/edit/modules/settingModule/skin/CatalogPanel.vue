@@ -27,7 +27,6 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
 import { useEditStore } from '@/management/stores/edit'
 
 import skinPresets from '@/management/config/skinPresets.js'

@@ -65,7 +65,7 @@ const remoteMethod = async (query: string) => {
     if (res.code === CODE_MAP.SUCCESS) {
       selectOptions.value = res.data.map((item: any) => {
         // 不可以选中自己
-        const currentUser = item.username === userStore.userInfo.username
+        const currentUser = item.username === userStore.userInfo?.username
         return {
           value: item.userId,
           label: item.username,

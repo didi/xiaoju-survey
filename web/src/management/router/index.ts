@@ -5,7 +5,6 @@ import {
   type NavigationGuardNext
 } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import { useStore, type Store } from 'vuex'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'
 import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'

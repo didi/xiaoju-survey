@@ -93,7 +93,7 @@ const surveyList = computed(() => {
 const surveyTotal = computed(() => {
   return store.state.list.surveyTotal
 })
-const spaceListRef = ref<InstanceType | null>(null)
+const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const spaceList = computed(() => {
   return store.state.list.teamSpaceList

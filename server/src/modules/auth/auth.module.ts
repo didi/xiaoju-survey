@@ -11,16 +11,11 @@ import { Captcha } from 'src/models/captcha.entity';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { WhitelistService } from './services/whitelist.service';
-import { WhitelistVerify } from 'src/models/whitelistVerify.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, Captcha, WhitelistVerify]),
-    ConfigModule,
-  ],
+  imports: [TypeOrmModule.forFeature([User, Captcha]), ConfigModule],
   controllers: [AuthController, UserController],
-  providers: [UserService, AuthService, CaptchaService, WhitelistService],
-  exports: [UserService, AuthService, WhitelistService],
+  providers: [UserService, AuthService, CaptchaService],
+  exports: [UserService, AuthService],
 })
 export class AuthModule {}

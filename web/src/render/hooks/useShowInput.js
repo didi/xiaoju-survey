@@ -1,8 +1,11 @@
 import store from '../store/index'
+import { useQuestionStore } from '../stores/question'
+
 export const useShowInput = (questionKey) => {
+  const questionStore = useQuestionStore()
   const formValues = store.state.formValues
   const questionVal = formValues[questionKey]
-  let rangeConfig = store.state.questionData[questionKey].rangeConfig
+  let rangeConfig = questionStore.questionData[questionKey].rangeConfig
   let othersValue = {}
   if (rangeConfig && Object.keys(rangeConfig).length > 0) {
     for (let key in rangeConfig) {

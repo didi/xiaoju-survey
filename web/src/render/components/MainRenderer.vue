@@ -16,10 +16,12 @@ import { computed } from 'vue'
 import { useStore } from 'vuex'
 
 import MaterialGroup from './MaterialGroup.vue'
+import { useQuestionStore } from '../stores/question'
 
 const store = useStore()
+const questionStore = useQuestionStore()
 
-const renderData = computed(() => store.getters?.renderData)
+const renderData = computed(() => questionStore.renderData)
 const rules = computed(() => store.state.rules)
 const formValues = computed(() => store.state.formValues)
 

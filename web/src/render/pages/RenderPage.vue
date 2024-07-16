@@ -30,6 +30,7 @@ import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 
 import { useSurveyStore } from '../stores/survey'
+import { useQuestionStore } from '../stores/question'
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
@@ -59,9 +60,10 @@ const confirm = useCommandComponent(ConfirmDialog)
 const store = useStore()
 const router = useRouter()
 const surveyStore = useSurveyStore()
+const questionStore = useQuestionStore()
 
 const bannerConf = computed(() => store.state?.bannerConf || {})
-const renderData = computed(() => store.getters.renderData)
+const renderData = computed(() => questionStore.renderData)
 const submitConf = computed(() => store.state?.submitConf || {})
 const logoConf = computed(() => store.state?.bottomConf || {})
 const surveyPath = computed(() => surveyStore.surveyPath || '')

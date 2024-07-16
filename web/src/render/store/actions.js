@@ -4,9 +4,10 @@ import 'moment/locale/zh-cn'
 // 设置中文
 moment.locale('zh-cn')
 import adapter from '../adapter'
-import { queryVote } from '@/render/api/survey'
+// import { queryVote } from '@/render/api/survey'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import { useSurveyStore } from '@/render/stores/survey'
+import { useQuestionStore } from '@/render/stores/question'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -15,12 +16,13 @@ import { useSurveyStore } from '@/render/stores/survey'
 //   ERROR: 500,
 //   NO_AUTH: 403
 // }
-const VOTE_INFO_KEY = 'voteinfo'
+// const VOTE_INFO_KEY = 'voteinfo'
 import router from '../router'
 export default {
   // 初始化
-  init({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
+  init({ commit }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
     const surveyStore = useSurveyStore()
+    const questionStore = useQuestionStore()
     surveyStore.setEnterTime()
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
@@ -67,10 +69,11 @@ export default {
       submitConf
     })
 
+    questionStore.questionData = questionData
+    questionStore.questionSeq = questionSeq
+
     // 将数据设置到state上
     commit('assignState', {
-      questionData,
-      questionSeq,
       rules,
       bannerConf,
       baseConf,
@@ -81,88 +84,90 @@ export default {
       formValues
     })
     // 获取已投票数据
-    dispatch('initVoteData')
+    questionStore.initVoteData()
   },
   // 用户输入或者选择后，更新表单数据
   changeData({ commit }, data) {
     commit('changeFormData', data)
   },
   // 初始化投票题的数据
-  async initVoteData({ state, commit }) {
-    const surveyStore = useSurveyStore()
-    const questionData = state.questionData
-    const surveyPath = surveyStore.surveyPath
+  // async initVoteData({ state, commit }) {
+  //   const surveyStore = useSurveyStore()
+  //   const questionStore = useQuestionStore()
+  //   const questionData = questionStore.questionData
+  //   const surveyPath = surveyStore.surveyPath
 
-    const fieldList = []
+  //   const fieldList = []
 
-    for (const field in questionData) {
-      const { type } = questionData[field]
-      if (/vote/.test(type)) {
-        fieldList.push(field)
-      }
-    }
+  //   for (const field in questionData) {
+  //     const { type } = questionData[field]
+  //     if (/vote/.test(type)) {
+  //       fieldList.push(field)
+  //     }
+  //   }
 
-    if (fieldList.length <= 0) {
-      return
-    }
-    try {
-      localStorage.removeItem(VOTE_INFO_KEY)
-      const voteRes = await queryVote({
-        surveyPath,
-        fieldList: fieldList.join(',')
-      })
+  //   if (fieldList.length <= 0) {
+  //     return
+  //   }
+  //   try {
+  //     localStorage.removeItem(VOTE_INFO_KEY)
+  //     const voteRes = await queryVote({
+  //       surveyPath,
+  //       fieldList: fieldList.join(',')
+  //     })
 
-      if (voteRes.code === 200) {
-        localStorage.setItem(
-          VOTE_INFO_KEY,
-          JSON.stringify({
-            ...voteRes.data
-          })
-        )
-        commit('setVoteMap', voteRes.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  },
-  updateVoteData({ state, commit }, data) {
-    const { key: questionKey, value: questionVal } = data
-    // 更新前获取接口缓存在localStorage中的数据
-    const localData = localStorage.getItem(VOTE_INFO_KEY)
-    const voteinfo = JSON.parse(localData)
-    const currentQuestion = state.questionData[questionKey]
-    const options = currentQuestion.options
-    const voteTotal = voteinfo?.[questionKey]?.total || 0
-    let totalPayload = {
-      questionKey,
-      voteKey: 'total',
-      voteValue: voteTotal
-    }
-    options.forEach((option) => {
-      const optionhash = option.hash
-      const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
-      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
-      if (
-        Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
-      ) {
-        const countPayload = {
-          questionKey,
-          voteKey: optionhash,
-          voteValue: voteCount + 1
-        }
-        totalPayload.voteValue += 1
-        commit('updateVoteMapByKey', countPayload)
-      } else {
-        const countPayload = {
-          questionKey,
-          voteKey: optionhash,
-          voteValue: voteCount
-        }
-        commit('updateVoteMapByKey', countPayload)
-      }
-      commit('updateVoteMapByKey', totalPayload)
-    })
-  },
+  //     if (voteRes.code === 200) {
+  //       localStorage.setItem(
+  //         VOTE_INFO_KEY,
+  //         JSON.stringify({
+  //           ...voteRes.data
+  //         })
+  //       )
+  //       questionStore.setVoteMap(voteRes.data)
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // },
+  // updateVoteData({ state, commit }, data) {
+  //   const questionStore = useQuestionStore()
+  //   const { key: questionKey, value: questionVal } = data
+  //   // 更新前获取接口缓存在localStorage中的数据
+  //   const localData = localStorage.getItem(VOTE_INFO_KEY)
+  //   const voteinfo = JSON.parse(localData)
+  //   const currentQuestion = questionStore.questionData[questionKey]
+  //   const options = currentQuestion.options
+  //   const voteTotal = voteinfo?.[questionKey]?.total || 0
+  //   let totalPayload = {
+  //     questionKey,
+  //     voteKey: 'total',
+  //     voteValue: voteTotal
+  //   }
+  //   options.forEach((option) => {
+  //     const optionhash = option.hash
+  //     const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
+  //     // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
+  //     if (
+  //       Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
+  //     ) {
+  //       const countPayload = {
+  //         questionKey,
+  //         voteKey: optionhash,
+  //         voteValue: voteCount + 1
+  //       }
+  //       totalPayload.voteValue += 1
+  //       questionStore.updateVoteMapByKey(countPayload)
+  //     } else {
+  //       const countPayload = {
+  //         questionKey,
+  //         voteKey: optionhash,
+  //         voteValue: voteCount
+  //       }
+  //       questionStore.updateVoteMapByKey(countPayload)
+  //     }
+  //     questionStore.updateVoteMapByKey(totalPayload)
+  //   })
+  // },
   // async getEncryptInfo({ commit }) {
   //   try {
   //     const res = await getEncryptInfo()

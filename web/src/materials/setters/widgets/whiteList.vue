@@ -45,6 +45,8 @@
 
 import { ref,nextTick } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+import { ElMessage } from 'element-plus'
+import { regexpMap } from '@/common/regexpMap.ts'
 
 const props = defineProps({
   formConfig: Object,
@@ -56,12 +58,36 @@ const memberType = ref(props.formConfig.value[1] || 'MOBILE')
 const whiteVisible = ref(false)
 const whiteTextarea = ref(whitelist.value.join(','))
 
+const regularMap = {
+  MOBILE:regexpMap.m,
+  EMAIL:regexpMap.e
+}
+
+
+const checkValRule = (list) => {
+  let status = false;
+  if (list.length > 100) { 
+    ElMessage.error('最多添加100个')
+    return true;
+  };
+  const pattern = regularMap[memberType.value];
+  if(!pattern) return false;
+  for (let i = 0; i < list.length; i++) {
+    if (!pattern.test(list[i])) {
+      status = true;
+      ElMessage.error('数据格式错误，请检查后重新输入~')
+      break;
+    }
+  }
+  return status;
+}
 
 
 
 const handleChange = () => {
   const keys = props.formConfig.keys;
   const list = whiteTextarea.value ? whiteTextarea.value.split(',') : []
+  if(checkValRule(list)) return
   emit(FORM_CHANGE_EVENT_KEY, { key:keys[0], value: list });
   emit(FORM_CHANGE_EVENT_KEY, { key: keys[1], value: memberType.value })
   whiteVisible.value = false

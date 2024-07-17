@@ -71,19 +71,18 @@ const handleSubmit = async() => {
     surveyPath:surveyPath.value
   }
   if (isValue.value) {
-    params.value = state.value
+    params.whitelist = state.value
   }
   if(isPwd.value){
     params.password = state.password
   }
-
   const res = await validate(params)
   if (res.code != 200) { 
     ElMessage.error(res.errmsg || '验证失败')
     return
   }
   whiteVisible.value = false
-  store.commit('setVerifyId', res.data.verifyId)
+  store.commit('setWhiteData',params)
 }
 
 watch(()=>baseConf.value, () => {

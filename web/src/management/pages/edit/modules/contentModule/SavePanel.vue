@@ -17,9 +17,9 @@
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
-import { v4 as uuidv4 } from 'uuid'
+import { nanoid } from 'nanoid'
 
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, type Action } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { saveSurvey } from '@/management/api/survey'
@@ -43,20 +43,19 @@ const store = useStore()
 
 onMounted(() => {
   if (!sessionStorage.getItem('sessionUUID')) {
-    sessionStorage.setItem('sessionUUID', uuidv4());
+    sessionStorage.setItem('sessionUUID', nanoid());
   }
 })
 const checkConflict = async (surveyid: string) => {
   try {
+    
     const dailyHis = await getConflictHistory({surveyId: surveyid, historyType: 'dailyHis', sessionId: sessionStorage.getItem('sessionUUID')})
-    //sconsole.log(dailyHis)
     if (dailyHis.data.length > 0) {
       const lastHis = dailyHis.data.at(0)
       if (Date.now() - lastHis.createDate > 2 * 60 * 1000) {
         return [false, '']
-      } else {
-        return [true, lastHis.operator.username]
       }
+      return [true, lastHis.operator.username]
     }
   }catch (error) {
     console.log(error)
@@ -79,15 +78,19 @@ const onSave = async () => {
     if (conflictName == store.state.user.userInfo.username) {
       ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
         confirmButtonText: '确认',
-        callback: () => {
-          location.reload(); 
+        callback: (action: Action) => {
+          if (action === 'confirm') {
+            store.dispatch('edit/getSchemaFromRemote')
+          }
         }
       });
     } else {
       ElMessageBox.alert(`当前问卷2分钟内由${conflictName}编辑，刷新以获取最新内容。`, '提示', {
         confirmButtonText: '确认',
-        callback: () => {
-          location.reload(); 
+        callback: (action: Action) => {
+          if (action === 'confirm') {
+            store.dispatch('edit/getSchemaFromRemote')
+          }
         }
       });
     }

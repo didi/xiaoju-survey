@@ -70,7 +70,7 @@ export class SurveyHistoryService {
         'operator.sessionId': { $ne: sessionId },
       },
       order: { createDate: 'DESC' },
-      take: 100,
+      take: 1,
       select: ['createDate', 'operator', 'type', '_id'],
     });
 

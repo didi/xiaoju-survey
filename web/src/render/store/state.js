@@ -13,5 +13,7 @@ export default {
   voteMap: {},
   encryptInfo: null,
   ruleEngine: null,
-  verifyId:''
+  whiteData: {
+    
+  }
 }

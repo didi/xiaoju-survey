@@ -12,6 +12,10 @@
 import { ref, computed, defineProps, defineEmits, onMounted, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
+import {
+  getMemberList
+} from '@/management/api/space'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   formConfig: Object,
@@ -33,54 +37,30 @@ const handleChange = () => {
   emit(FORM_CHANGE_EVENT_KEY, { key: key, value: userKeys });
 }
 
-const spaceDetail = computed(() => {
-  return store.state.list.spaceDetail
-})
-
-
 
 const selectCount = computed(() => {
   return treeRef.value?.getCheckedKeys(true).length || 0
 })
 
-const spaceMenus = computed(() => {
-  return store.state.list.spaceMenus
-})
 
 const getSpaceMenus = async () => {
-  await store.dispatch('list/getSpaceList')
-  spaceMenus.value.map((v) => {
-    if (v.id == "group") {
-      const promiseList = []
-      v.children?.map((item) => {
-        promiseList.push(store.dispatch('list/getSpaceDetail', item.id).then(() => {
-          treeData.value.push({
-            id: item.id,
-            label: item.name,
-            children: getChildren()
-          })
-        }))
-      })
-      Promise.all(promiseList).then(() => {
-        nextTick(() => {
-          defaultCheckedKeys.value = props.formConfig.value;
-        })
-      })
-    }
-  })
-}
-
-const getChildren = () => {
-  const members = [];
-  if (spaceDetail.value?.members?.length > 0) {
-    spaceDetail.value.members.map(v => {
-      members.push({
-        id: v.userId,
-        label: v.username,
-      })
-    })
+  const res = await getMemberList();
+  if (res.code != 200) {
+    ElMessage.error('获取空间成员列表失败');
   }
-  return members
+  const data = res.data;
+  data.map((v) => {
+    const members = v.members || [];
+    treeData.value.push({
+      id: v.ownerId,
+      label: v.name,
+      children: members?.map(v => ({
+        id: v.userId,
+        label: v.role,
+      }))
+    })
+  })
+  defaultCheckedKeys.value = props.formConfig.value;
 }
 
 

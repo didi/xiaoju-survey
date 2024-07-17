@@ -16,6 +16,10 @@ export const getSpaceDetail = (workspaceId: string) => {
   return axios.get(`/workspace/${workspaceId}`)
 }
 
+export const getMemberList = () => {
+  return axios.get('/workspace/member/list')
+}
+
 export const deleteSpace = (workspaceId: string) => {
   return axios.delete(`/workspace/${workspaceId}`)
 }

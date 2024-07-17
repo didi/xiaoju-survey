@@ -9,8 +9,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, defineProps, defineEmits, onMounted, nextTick } from 'vue'
-import { useStore } from 'vuex'
+import { ref, computed, defineProps, defineEmits, onMounted } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 import {
   getMemberList
@@ -22,7 +21,6 @@ const props = defineProps({
 })
 const emit = defineEmits([FORM_CHANGE_EVENT_KEY])
 
-const store = useStore();
 const treeRef = ref(null)
 const treeData = ref([])
 const defaultCheckedKeys = ref([])
@@ -34,6 +32,10 @@ const defaultProps = {
 const handleChange = () => {
   const key = props.formConfig.key;
   const userKeys = treeRef.value?.getCheckedKeys(true);
+  if (userKeys.length > 100) {
+    ElMessage.error('最多添加100个')
+    return;
+  }
   emit(FORM_CHANGE_EVENT_KEY, { key: key, value: userKeys });
 }
 

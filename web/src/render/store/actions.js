@@ -8,6 +8,7 @@ import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import { useSurveyStore } from '@/render/stores/survey'
 import { useQuestionStore } from '@/render/stores/question'
+import { useErrorInfo } from '@/render/stores/errorInfo'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -23,13 +24,20 @@ export default {
   init({ commit }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
     const surveyStore = useSurveyStore()
     const questionStore = useQuestionStore()
+    const { setErrorInfo } = useErrorInfo()
+
     surveyStore.setEnterTime()
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
     if (now < new Date(begTime).getTime()) {
       router.push({ name: 'errorPage' })
-      commit('setErrorInfo', {
+      // commit('setErrorInfo', {
+      //   errorType: 'overTime',
+      //   errorMsg: `<p>问卷未到开始填写时间，暂时无法进行填写<p/>
+      //              <p>开始时间为: ${begTime}</p>`
+      // })
+      setErrorInfo({
         errorType: 'overTime',
         errorMsg: `<p>问卷未到开始填写时间，暂时无法进行填写<p/>
                    <p>开始时间为: ${begTime}</p>`
@@ -37,7 +45,11 @@ export default {
       return
     } else if (now > new Date(endTime).getTime()) {
       router.push({ name: 'errorPage' })
-      commit('setErrorInfo', {
+      // commit('setErrorInfo', {
+      //   errorType: 'overTime',
+      //   errorMsg: msgContent.msg_9001 || '您来晚了，感谢支持问卷~'
+      // })
+      setErrorInfo({
         errorType: 'overTime',
         errorMsg: msgContent.msg_9001 || '您来晚了，感谢支持问卷~'
       })
@@ -49,7 +61,12 @@ export default {
       const momentEndTime = moment(`${todayStr} ${answerEndTime}`)
       if (momentNow.isBefore(momentStartTime) || momentNow.isAfter(momentEndTime)) {
         router.push({ name: 'errorPage' })
-        commit('setErrorInfo', {
+        // commit('setErrorInfo', {
+        //   errorType: 'overTime',
+        //   errorMsg: `<p>不在答题时间范围内，暂时无法进行填写<p/>
+        //             <p>答题时间为: ${answerBegTime} ~ ${answerEndTime}</p>`
+        // })
+        setErrorInfo({
           errorType: 'overTime',
           errorMsg: `<p>不在答题时间范围内，暂时无法进行填写<p/>
                     <p>答题时间为: ${answerBegTime} ~ ${answerEndTime}</p>`

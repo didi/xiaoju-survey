@@ -13,6 +13,7 @@ import QuestionRuleContainer from '../../materials/questions/QuestionRuleContain
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
+import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
 import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
@@ -41,16 +42,26 @@ const questionConfig = computed(() => {
   const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
   // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
-  if (type === QUESTION_TYPE.VOTE || NORMAL_CHOICES.includes(type)) {
+  if (type === QUESTION_TYPE.VOTE) {
+    // 处理投票进度
     const { options, voteTotal } = useVoteMap(field)
     const voteOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
+  if(NORMAL_CHOICES.includes(type) &&
+    options.some(option => option.quota > 0)) {
+    // 处理普通选择题的选项配额
+    let { options: optionWithQuota } = useOptionsQuota(field)
+    
+    alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
+    console.log({alloptions})
+  }
   if (
     NORMAL_CHOICES.includes(type) &&
-    options.filter((optionItem) => optionItem.others).length > 0
+    options.some(option => option.others)
   ) {
+    // 处理普通选择题的填写更多
     let { options, othersValue } = useShowOthers(field)
     const othersOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
@@ -60,6 +71,7 @@ const questionConfig = computed(() => {
     RATES.includes(type) && rest?.rangeConfig && 
     Object.keys(rest?.rangeConfig).filter((index) => rest?.rangeConfig[index].isShowInput).length > 0
   ) {
+    // 处理评分题的的选项后输入框
     let { rangeConfig, othersValue } = useShowInput(field)
     moduleConfig.rangeConfig = unref(rangeConfig)
     moduleConfig.othersValue = unref(othersValue)
@@ -105,5 +117,10 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     store.dispatch('updateVoteData', data)
   }
+  // 处理普通选择题
+  if (props.moduleConfig.type === NORMAL_CHOICES) {
+    store.dispatch('changeQuota', data)
+  }
+  
 }
 </script>

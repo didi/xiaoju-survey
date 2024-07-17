@@ -58,7 +58,11 @@ export default {
   setEncryptInfo(state, data) {
     state.encryptInfo = data
   },
-  setRuleEgine(state, ruleEngine) {
-    state.ruleEngine = ruleEngine
+  updateQuotaMapByKey(state, { questionKey, optionKey, data }) {
+    // 兼容为空的情况
+    if (!state.quotaMap[questionKey]) {
+      state.quotaMap[questionKey] = {}
+    }
+    state.quotaMap[questionKey][optionKey] = data
   }
 }

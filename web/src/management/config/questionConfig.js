@@ -77,5 +77,5 @@ export const defaultQuestionConfig = {
     }
   },
   deleteRecover: false,
-  noDisplay: false
+  quotaNoDisplay: false
 }

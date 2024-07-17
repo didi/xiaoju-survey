@@ -25,7 +25,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { saveSurvey } from '@/management/api/survey'
 import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import buildData from './buildData'
-import { getSurveyHistory, getConflictHistory } from '@/management/api/survey'
+import { getConflictHistory } from '@/management/api/survey'
 
 const isSaving = ref<boolean>(false)
 const isShowAutoSave = ref<boolean>(false)

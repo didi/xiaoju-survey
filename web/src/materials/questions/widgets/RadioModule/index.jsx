@@ -32,7 +32,7 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    noDisplay:{
+    quotaNoDisplay:{
       type: Boolean,
       default: false
     }
@@ -85,7 +85,7 @@ export default defineComponent({
           field={this.field}
           layout={this.layout}
           onChange={this.onChange}
-          noDisplay={this.noDisplay}
+          quotaNoDisplay={this.quotaNoDisplay}
         >
           {{
             selectMore: (scoped) => {

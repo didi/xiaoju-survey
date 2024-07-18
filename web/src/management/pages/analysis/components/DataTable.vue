@@ -16,11 +16,11 @@
         :label="item.title"
         minWidth="200"
       >
-
         <template #header="scope">
           <div class="table-row-cell">
             <span
               class="table-row-head"
+              @click="onPreviewImage"
               @mouseover="onPopoverRefOver(scope, 'head')"
               :ref="(el) => (popoverRefMap[scope.column.id] = el)"
               v-html="item.title"
@@ -46,21 +46,19 @@
       ref="popover"
       popper-style="text-align: center;font-size: 13px;"
       :virtual-ref="popoverVirtualRef"
-      placement="top"
-      width="400"
+      placement="bottom"
       trigger="hover"
       virtual-triggering
     >
       <div v-html="popoverContent"></div>
     </el-popover>
 
-    <ImagePreview :url="previewImageUrl" v-model:visible="showPreviewImage"/>
+    <ImagePreview :url="previewImageUrl" v-model:visible="showPreviewImage" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { cleanRichText } from '@/common/xss'
 import ImagePreview from './ImagePreview.vue'
 
 const props = defineProps({
@@ -106,7 +104,6 @@ const onPreviewImage = (e) => {
     previewImageUrl.value = e.target.src
     showPreviewImage.value = true
   }
-  console.log(e.target.src)
 }
 </script>
 
@@ -140,21 +137,18 @@ const onPreviewImage = (e) => {
     overflow: hidden; /* 超出部分隐藏 */
     text-overflow: ellipsis; /* 显示省略号 */
     :deep(img) {
-      height: 23px;
-      width: auto;
+      height: 23px !important;
+      width: auto !important;
+      object-fit: cover;
+      margin-left: 5px;
     }
     :deep(p) {
-        display: flex;
-        align-items: center;
+      display: flex;
+      align-items: center;
     }
   }
 }
 :deep(.el-table td.el-table__cell div) {
   font-size: 13px;
-}
-</style>
-<style>
-.el-popover p image {
-  max-width: 100%;
 }
 </style>

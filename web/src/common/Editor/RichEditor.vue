@@ -1,24 +1,9 @@
 <template>
   <div class="editor-wrapper border">
-    <Toolbar
-      :class="['toolbar', props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']"
-      ref="toolbar"
-      v-show="showToolbar"
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      :mode="mode"
-    />
-    <Editor
-      class="editor"
-      ref="editor"
-      :modelValue="curValue"
-      :defaultConfig="editorConfig"
-      @onCreated="onCreated"
-      @onChange="onChange"
-      @onBlur="onBlur"
-      @onFocus="onFocus"
-      :mode="mode"
-    />
+    <Toolbar :class="['toolbar', props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']" ref="toolbar"
+      v-show="showToolbar" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+    <Editor class="editor" ref="editor" :modelValue="curValue" :defaultConfig="editorConfig" @onCreated="onCreated"
+      @onChange="onChange" @onBlur="onBlur" @onFocus="onFocus" :mode="mode" />
   </div>
 </template>
 
@@ -26,28 +11,62 @@
 import '@wangeditor/editor/dist/css/style.css'
 import './styles/reset-wangeditor.scss'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { ref, shallowRef, onBeforeMount, watch } from 'vue'
+import { ref, shallowRef, onBeforeMount, watch, computed } from 'vue'
+import { useStore } from 'vuex'
+import { get as _get } from 'lodash-es'
 
 const emit = defineEmits(['input', 'onFocus', 'change', 'blur', 'created'])
 const model = defineModel()
-const props = defineProps(['staticToolBar'])
+const props = defineProps({
+  staticToolBar: { default: false, required: false },
+  needUploadImage: { default: false, required: false }
+})
 
 const curValue = ref('')
 const editorRef = shallowRef()
-const showToolbar = ref(props.staticToolBar || false)
+const showToolbar = ref(props.staticToolBar)
 
 const mode = 'simple'
 
-const toolbarConfig = {
-  toolbarKeys: [
-    'color', // 字体色
-    'bgColor', // 背景色
-    'bold',
-    'insertLink' // 链接
-  ]
+const toolbarConfig = computed(() => {
+  const config = {
+    toolbarKeys: [
+      'color', // 字体色
+      'bgColor', // 背景色
+      'bold',
+      'insertLink', // 链接
+    ]
+  }
+  if (props.needUploadImage) {
+    config.toolbarKeys.push('uploadImage')
+  }
+
+  return config
+})
+
+const editorConfig = {
+  MENU_CONF: {}
 }
 
-const editorConfig = {}
+const store = useStore()
+const token = _get(store, 'state.user.userInfo.token')
+
+editorConfig.MENU_CONF['uploadImage'] = {
+  allowedFileTypes: ['image/jpeg', 'image/png'],
+  server: '/api/file/upload',
+  fieldName: 'file',
+  meta: {
+    //! 此处的channel需要跟上传接口内配置的channel一致
+    channel: 'upload' 
+  },
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+  customInsert(res, insertFn) {
+    const url = res.data.url
+    insertFn(url, '', '')
+  },
+}
 
 const setHtml = (newHtml) => {
   const editor = editorRef.value
@@ -114,6 +133,7 @@ onBeforeMount(() => {
 .static-toolbar {
   border-bottom: 1px solid #dedede;
 }
+
 .dynamic-toolbar {
   position: absolute;
   left: 0;

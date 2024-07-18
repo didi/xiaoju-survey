@@ -3,6 +3,7 @@
     v-model="renderData"
     handle=".question-wrapper.isSelected"
     filter=".question-wrapper.isSelected .question.isSelected"
+    :preventOnFilter="false"
     :group="DND_GROUP"
     :onEnd="checkEnd"
     :move="checkMove"

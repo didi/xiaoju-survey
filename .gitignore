@@ -25,3 +25,6 @@ pnpm-debug.log*
 *.sw?
 
 .history
+
+# 默认的上传文件夹
+userUpload

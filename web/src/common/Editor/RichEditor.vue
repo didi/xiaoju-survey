@@ -1,19 +1,37 @@
 <template>
   <div class="editor-wrapper border">
-    <Toolbar :class="['toolbar', props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']" ref="toolbar"
-      v-show="showToolbar" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
-    <Editor class="editor" ref="editor" :modelValue="curValue" :defaultConfig="editorConfig" @onCreated="onCreated"
-      @onChange="onChange" @onBlur="onBlur" @onFocus="onFocus" :mode="mode" />
+    <Toolbar
+      :class="['toolbar', props.staticToolBar ? 'static-toolbar' : 'dynamic-toolbar']"
+      ref="toolbar"
+      v-show="showToolbar"
+      :editor="editorRef"
+      :defaultConfig="toolbarConfig"
+      :mode="mode"
+    />
+    <Editor
+      class="editor"
+      ref="editor"
+      :modelValue="curValue"
+      :defaultConfig="editorConfig"
+      @onCreated="onCreated"
+      @onChange="onChange"
+      @onBlur="onBlur"
+      @onFocus="onFocus"
+      :mode="mode"
+    />
   </div>
 </template>
 
 <script setup>
-import '@wangeditor/editor/dist/css/style.css'
-import './styles/reset-wangeditor.scss'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { ref, shallowRef, onBeforeMount, watch, computed } from 'vue'
 import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
+
+import '@wangeditor/editor/dist/css/style.css'
+import './styles/reset-wangeditor.scss'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+
+import { replacePxWithRem } from './utils'
 
 const emit = defineEmits(['input', 'onFocus', 'change', 'blur', 'created'])
 const model = defineModel()
@@ -34,7 +52,7 @@ const toolbarConfig = computed(() => {
       'color', // 字体色
       'bgColor', // 背景色
       'bold',
-      'insertLink', // 链接
+      'insertLink' // 链接
     ]
   }
   if (props.needUploadImage) {
@@ -51,13 +69,14 @@ const editorConfig = {
 const store = useStore()
 const token = _get(store, 'state.user.userInfo.token')
 
+// 图片
 editorConfig.MENU_CONF['uploadImage'] = {
   allowedFileTypes: ['image/jpeg', 'image/png'],
   server: '/api/file/upload',
   fieldName: 'file',
   meta: {
     //! 此处的channel需要跟上传接口内配置的channel一致
-    channel: 'upload' 
+    channel: 'upload'
   },
   headers: {
     Authorization: `Bearer ${token}`
@@ -65,7 +84,7 @@ editorConfig.MENU_CONF['uploadImage'] = {
   customInsert(res, insertFn) {
     const url = res.data.url
     insertFn(url, '', '')
-  },
+  }
 }
 
 const setHtml = (newHtml) => {
@@ -82,7 +101,8 @@ const onCreated = (editor) => {
   emit('created', editor)
 }
 const onChange = (editor) => {
-  const editorHtml = editor.getHtml()
+  const editorHtml = replacePxWithRem(editor.getHtml())
+
   curValue.value = editorHtml // 记录当前 html 内容
   emit('input', editorHtml) // 用于自定义 v-model
 }

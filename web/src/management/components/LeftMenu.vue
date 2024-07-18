@@ -6,9 +6,12 @@
         <div
           :class="[
             'tab-btn',
-            (['QuestionEditIndex', 'QuestionEditSetting', 'QuestionSkinSetting'].includes(
-              route.name
-            ) &&
+            ([
+              'QuestionEditIndex',
+              'QuestionEditSetting',
+              'QuestionSkinSetting',
+              'QuestionEditResultConfig'
+            ].includes(route.name) &&
               tab.to.name === 'QuestionEditIndex') ||
             isActive
               ? 'router-link-active'

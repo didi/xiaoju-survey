@@ -55,6 +55,8 @@ watch(
   .navbar-tab {
     position: absolute;
     top: 10px;
+    left: 50%;
+    transform: translate(-50%);
     cursor: pointer;
     :deep(.el-radio-button__original-radio + .el-radio-button__inner) {
       font-size: 12px;

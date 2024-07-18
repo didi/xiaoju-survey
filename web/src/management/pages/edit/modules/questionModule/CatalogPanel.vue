@@ -22,9 +22,14 @@ const tabSelected = ref<string>('0')
   height: 100%;
   box-shadow: none;
   border: none;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   :deep(.el-tabs__nav) {
     width: 100%;
+  }
+  :deep(.el-tabs__content) {
+    flex: 1;
+    overflow-y: auto;
   }
   :deep(.el-tabs__item) {
     text-align: center;

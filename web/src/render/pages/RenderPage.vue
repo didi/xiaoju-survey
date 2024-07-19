@@ -63,6 +63,7 @@ const renderData = computed(() => store.getters.renderData)
 const submitConf = computed(() => store.state?.submitConf || {})
 const logoConf = computed(() => store.state?.bottomConf || {})
 const surveyPath = computed(() => store.state?.surveyPath || '')
+const whiteData = computed(() => store.state?.whiteData || {})
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -78,7 +79,8 @@ const normalizationRequestBody = () => {
     surveyPath: surveyPath.value,
     data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
-    clientTime: Date.now()
+    clientTime: Date.now(),
+    ...whiteData.value
   }
 
   if (encryptInfo?.encryptType) {

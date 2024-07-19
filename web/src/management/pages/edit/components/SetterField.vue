@@ -113,7 +113,7 @@ const normalizationValues = (configList: Array<any> = []) => {
       if (item.hidden) {
         return false
       }
-
+      
       // 动态显隐设置器
       if (_isFunction(item.relyFunc)) {
         return item.relyFunc(props.moduleConfig)

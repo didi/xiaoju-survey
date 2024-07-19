@@ -49,5 +49,8 @@ export default {
   },
   setRuleEgine(state, ruleEngine) {
     state.ruleEngine = ruleEngine
+  },
+  setWhiteData(state, data) {
+    state.whiteData = data
   }
 }

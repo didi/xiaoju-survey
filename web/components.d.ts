@@ -41,6 +41,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElTree: typeof import('element-plus/es')['ElTree']
     IEpBottom: typeof import('~icons/ep/bottom')['default']
     IEpCheck: typeof import('~icons/ep/check')['default']
     IEpCirclePlus: typeof import('~icons/ep/circle-plus')['default']

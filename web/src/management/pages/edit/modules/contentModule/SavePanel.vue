@@ -63,6 +63,17 @@ const updateLogicConf = () => {
   }
 }
 
+const updateWhiteConf = () => {
+  const baseConf = store.state.edit.schema.baseConf || {};
+  if (baseConf.passwordSwitch && !baseConf.password) {
+    return true;
+  }
+  if (baseConf.whitelistType!='ALL' && !baseConf.whitelist?.length) {
+    return true;
+  }
+  return false
+}
+
 const timerHandle = ref<NodeJS.Timeout | number | null>(null)
 const triggerAutoSave = () => {
   if (autoSaveStatus.value === 'saving') {
@@ -111,6 +122,12 @@ const handleSave = async () => {
   } catch (error) {
     isSaving.value = false
     ElMessage.error('请检查逻辑配置是否有误')
+    return
+  }
+
+  if(updateWhiteConf()){
+    isSaving.value = false
+    ElMessage.error('请检查问卷设置是否有误')
     return
   }
 

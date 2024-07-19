@@ -1,18 +1,18 @@
 <template>
   <div class="main">
-    <div class="nav" v-if="slots.hasOwnProperty('nav')">
+    <div class="nav" v-if="slots.nav">
       <slot name="nav"></slot>
     </div>
     <div class="body">
-      <slot v-if="slots.hasOwnProperty('body')" name="body"></slot>
+      <slot v-if="slots.body" name="body"></slot>
       <template v-else>
-        <div class="left" v-if="slots.hasOwnProperty('left')">
+        <div class="left" v-if="slots.left">
           <slot name="left"></slot>
         </div>
-        <div class="center" v-if="slots.hasOwnProperty('center')">
+        <div class="center" v-if="slots.center">
           <slot name="center"></slot>
         </div>
-        <div class="right" v-if="slots.hasOwnProperty('right')">
+        <div class="right" v-if="slots.right">
           <slot name="right"></slot>
         </div>
       </template>

@@ -1,9 +1,10 @@
-import store from '../store/index'
 import { useQuestionStore } from '../stores/question'
+import { useSurveyStore } from '../stores/survey'
 
 export const useShowInput = (questionKey) => {
   const questionStore = useQuestionStore()
-  const formValues = store.state.formValues
+  const surveyStore = useSurveyStore()
+  const formValues = surveyStore.formValues
   const questionVal = formValues[questionKey]
   let rangeConfig = questionStore.questionData[questionKey].rangeConfig
   let othersValue = {}
@@ -21,7 +22,8 @@ export const useShowInput = (questionKey) => {
             key: rangeKey,
             value: ''
           }
-          store.commit('changeFormData', data)
+
+          surveyStore.changeData(data)
         }
       }
     }

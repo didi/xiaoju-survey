@@ -3,7 +3,6 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
@@ -12,7 +11,6 @@ import { useSurveyStore } from '../stores/survey'
 
 import AlertDialog from '../components/AlertDialog.vue'
 import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
-const store = useStore()
 const route = useRoute()
 const surveyStore = useSurveyStore()
 const loadData = (res: any, surveyPath: string) => {
@@ -32,7 +30,7 @@ const loadData = (res: any, surveyPath: string) => {
     document.title = data.title
 
     surveyStore.setSurveyPath(surveyPath)
-    store.dispatch('init', questionData)
+    surveyStore.initSurvey(questionData)
     initRuleEngine(logicConf?.showLogicConf)
   } else {
     throw new Error(res.errmsg)

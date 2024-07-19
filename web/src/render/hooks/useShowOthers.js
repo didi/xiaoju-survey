@@ -1,9 +1,10 @@
-import store from '../store/index'
 import { useQuestionStore } from '../stores/question'
+import { useSurveyStore } from '../stores/survey'
 
 export const useShowOthers = (questionKey) => {
   const questionStore = useQuestionStore()
-  const formValues = store.state.formValues
+  const surveyStore = useSurveyStore()
+  const formValues = surveyStore.formValues
   const questionVal = formValues[questionKey]
   let othersValue = {}
   let options = questionStore.questionData[questionKey].options.map((optionItem) => {
@@ -16,7 +17,7 @@ export const useShowOthers = (questionKey) => {
           key: opKey,
           value: ''
         }
-        store.commit('changeFormData', data)
+        surveyStore.changeData(data)
       }
       return {
         ...optionItem,

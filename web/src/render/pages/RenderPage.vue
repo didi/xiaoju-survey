@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -57,15 +57,12 @@ const boxRef = ref<HTMLElement>()
 const alert = useCommandComponent(AlertDialog)
 const confirm = useCommandComponent(ConfirmDialog)
 
-const store = useStore()
 const router = useRouter()
 const surveyStore = useSurveyStore()
 const questionStore = useQuestionStore()
 
-const bannerConf = computed(() => store.state?.bannerConf || {})
 const renderData = computed(() => questionStore.renderData)
-const submitConf = computed(() => store.state?.submitConf || {})
-const logoConf = computed(() => store.state?.bottomConf || {})
+const { bannerConf, submitConf, bottomConf: logoConf } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {
@@ -76,7 +73,7 @@ const validate = (cbk: (v: boolean) => void) => {
 const normalizationRequestBody = () => {
   const enterTime = surveyStore.enterTime
   const encryptInfo = surveyStore.encryptInfo as any
-  const formValues = store.state.formValues
+  const formValues = surveyStore.formValues
 
   const result: any = {
     surveyPath: surveyPath.value,
@@ -123,7 +120,7 @@ const submitSurver = async () => {
 }
 
 const handleSubmit = () => {
-  const confirmAgain = store.state.submitConf.confirmAgain
+  const confirmAgain = (surveyStore.submitConf as any).confirmAgain
   const { again_text, is_again } = confirmAgain
 
   if (is_again) {

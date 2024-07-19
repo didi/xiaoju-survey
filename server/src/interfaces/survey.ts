@@ -94,6 +94,23 @@ export interface SubmitConf {
   msgContent: MsgContent;
 }
 
+// 白名单类型
+export enum WhitelistType {
+  ALL = 'ALL',
+  // 空间成员
+  MEMBER = 'MEMBER',
+  // 自定义
+  CUSTOM = 'CUSTOM',
+}
+
+// 白名单用户类型
+export enum MemberType {
+  // 手机号
+  MOBILE = 'MOBILE',
+  // 邮箱
+  EMAIL = 'EMAIL',
+}
+
 export interface BaseConf {
   begTime: string;
   endTime: string;
@@ -101,6 +118,18 @@ export interface BaseConf {
   answerEndTime: string;
   tLimit: number;
   language: string;
+  // 访问密码开关
+  passwordSwitch?: boolean;
+  // 密码
+  password?: string | null;
+  // 白名单类型
+  whitelistType?: WhitelistType;
+  // 白名单用户类型
+  memberType?: MemberType;
+  // 白名单列表
+  whitelist?: string[];
+  // 提示语
+  whitelistTip?: string;
 }
 
 export interface SkinConf {

@@ -33,6 +33,8 @@ import { UserService } from 'src/modules/auth/services/user.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 import { Logger } from 'src/logger';
 import { GetWorkspaceListDto } from '../dto/getWorkspaceList.dto';
+import { WorkspaceMember } from 'src/models/workspaceMember.entity';
+import { Workspace } from 'src/models/workspace.entity';
 
 @ApiTags('workspace')
 @ApiBearerAuth()
@@ -348,6 +350,44 @@ export class WorkspaceController {
     this.logger.info(`res: ${JSON.stringify(res)}`);
     return {
       code: 200,
+    };
+  }
+
+  @Get('/member/list')
+  @HttpCode(200)
+  async getWorkspaceAndMember(@Request() req) {
+    const userId = req.user._id.toString();
+
+    // 所在所有空间
+    const workspaceList = await this.workspaceService.findAllByUserId(userId);
+    if (!workspaceList.length) {
+      return {
+        code: 200,
+        data: [],
+      };
+    }
+
+    // 所有空间下的所有成员
+    const workspaceMemberList =
+      await this.workspaceMemberService.batchSearchByWorkspace(
+        workspaceList.map((item) => item._id.toString()),
+      );
+
+    const temp: Record<string, WorkspaceMember[]> = {};
+    const list = workspaceList.map(
+      (item: Workspace & { members: WorkspaceMember[] }) => {
+        temp[item._id.toString()] = item.members = [];
+        return item;
+      },
+    );
+
+    workspaceMemberList.forEach((member) => {
+      temp[member.workspaceId.toString()].push(member);
+    });
+
+    return {
+      code: 200,
+      data: list,
     };
   }
 }

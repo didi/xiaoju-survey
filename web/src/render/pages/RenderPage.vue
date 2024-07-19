@@ -79,7 +79,8 @@ const normalizationRequestBody = () => {
     surveyPath: surveyPath.value,
     data: JSON.stringify(formValues),
     difTime: Date.now() - enterTime,
-    clientTime: Date.now()
+    clientTime: Date.now(),
+    ...whiteData.value
   }
 
   if (encryptInfo?.encryptType) {

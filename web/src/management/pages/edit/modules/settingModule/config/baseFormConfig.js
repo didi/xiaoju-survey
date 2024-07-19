@@ -21,5 +21,44 @@ export default {
     tip: '问卷仅在指定时间段内可填写',
     type: 'QuestionTimeHour',
     placement: 'top'
+  },
+  interview_pwd: {
+    keys: ['baseConf.passwordSwitch', 'baseConf.password'],
+    label: '访问密码',
+    type: 'SwitchInput',
+    placeholder: '请输入6位字符串类型访问密码 ',
+    maxLength: 6,
+  },
+  answer_type: {
+    key: 'baseConf.whitelistType',
+    label: '答题名单',
+    type: 'AnswerRadio',
+  },
+  white_placeholder:{
+    key: 'baseConf.whitelistTip',
+    label: '名单登录提示语',
+    placeholder:'请输入名单提示语',
+    type: 'InputWordLimit',
+    maxLength: 40,
+    relyFunc: (data) => {
+      return  ['CUSTOM','MEMBER'].includes(data.whitelistType)
+    }
+  },
+  white_list:{
+    keys: ['baseConf.whitelist','baseConf.memberType'],
+    label: '白名单列表',
+    type: 'whiteList',
+    relyFunc: (data) => {
+      
+      return data.whitelistType == 'CUSTOM'
+    }
+  },
+  team_list:{
+    key: 'baseConf.whitelist',
+    label: '团队空间成员选择',
+    type: 'teamMemberList',
+    relyFunc: (data) => {
+      return data.whitelistType == 'MEMBER'
+    }
   }
 }

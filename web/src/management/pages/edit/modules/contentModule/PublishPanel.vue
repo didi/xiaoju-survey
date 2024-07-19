@@ -32,6 +32,17 @@ const updateLogicConf = () => {
   }
 }
 
+const updateWhiteConf = () => {
+  const baseConf = store.state.edit.schema.baseConf || {};
+  if (baseConf.passwordSwitch && !baseConf.password) {
+    return true;
+  }
+  if (baseConf.whitelistType!='ALL' && !baseConf.whitelist?.length) {
+    return true;
+  }
+  return false
+}
+
 const handlePublish = async () => {
   if (isPublishing.value) {
     return
@@ -51,6 +62,12 @@ const handlePublish = async () => {
   if (!saveData.surveyId) {
     isPublishing.value = false
     ElMessage.error('未获取到问卷id')
+    return
+  }
+
+  if(updateWhiteConf()){
+    isPublishing.value = false
+    ElMessage.error('请检查问卷设置是否有误')
     return
   }
 

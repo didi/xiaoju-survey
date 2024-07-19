@@ -39,7 +39,13 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, shallowRef } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
-import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get } from 'lodash-es'
+import { useStore } from 'vuex'
+import {
+  cloneDeep as _cloneDeep,
+  isArray as _isArray,
+  get as _get,
+  isFunction as _isFunction
+} from 'lodash-es'
 
 import baseConfig from './config/baseConfig'
 import baseFormConfig from './config/baseFormConfig'
@@ -51,6 +57,8 @@ const components = shallowRef<any>({})
 const registerTypes = ref<any>({})
 const editStore = useEditStore()
 const { schema, changeSchema } = editStore
+const store = useStore()
+const schemaBaseConf = computed(() => store.state.edit?.schema?.baseConf || {})
 
 const setterList = computed(() => {
   const list = _cloneDeep(formConfigList.value)
@@ -74,6 +82,13 @@ const setterList = computed(() => {
       }
       formItem.value = formValue
     }
+    // 动态显隐设置器
+    form.formList = form.formList.filter((item: any) => {
+      if (_isFunction(item.relyFunc)) {
+        return item.relyFunc(schemaBaseConf.value)
+      }
+      return true
+    })
 
     form.dataConfig = dataConfig
 

@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import EventBus from './utils/eventbus'
 import router from './router'
-import store from './store'
 import { createPinia } from 'pinia'
 
 const app = createApp(App)
@@ -12,7 +11,6 @@ const $bus = new EventBus()
 app.provide('$bus', $bus)
 // 挂载到this上
 app.config.globalProperties.$bus = $bus
-app.use(store)
 app.use(pinia)
 app.use(router)
 

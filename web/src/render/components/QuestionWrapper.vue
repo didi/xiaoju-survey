@@ -13,10 +13,10 @@ import QuestionRuleContainer from '../../materials/questions/QuestionRuleContain
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
-import store from '@/render/store'
 import { cloneDeep } from 'lodash-es'
 import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
 import { useQuestionStore } from '../stores/question'
+import { useSurveyStore } from '../stores/survey'
 
 import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 
@@ -34,9 +34,10 @@ const props = defineProps({
 })
 const emit = defineEmits(['change'])
 const questionStore = useQuestionStore()
+const surveyStore = useSurveyStore()
 
 const formValues = computed(() => {
-  return store.state.formValues
+  return surveyStore.formValues
 })
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
@@ -98,7 +99,8 @@ watch(
         key: field,
         value: value
       }
-      store.commit('changeFormData', data)
+      // store.commit('changeFormData', data)
+      surveyStore.changeData(data)
     }
   }
 )

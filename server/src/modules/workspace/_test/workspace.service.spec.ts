@@ -123,4 +123,25 @@ describe('WorkspaceService', () => {
       expect(surveyMetaRepository.updateMany).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('findAllByUserId', () => {
+    it('should return all workspaces under a user', async () => {
+      const workspaceIdList = [
+        new ObjectId().toString(),
+        new ObjectId().toString(),
+      ];
+      const workspaces = [
+        { _id: workspaceIdList[0], name: 'Workspace 1' },
+        { _id: workspaceIdList[1], name: 'Workspace 2' },
+      ];
+
+      jest
+        .spyOn(workspaceRepository, 'find')
+        .mockResolvedValue(workspaces as any);
+
+      const result = await service.findAllByUserId('');
+      expect(result).toEqual(workspaces);
+      expect(workspaceRepository.find).toHaveBeenCalledTimes(1);
+    });
+  });
 });

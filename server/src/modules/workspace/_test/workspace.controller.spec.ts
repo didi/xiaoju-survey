@@ -35,6 +35,7 @@ describe('WorkspaceController', () => {
             findAllByIdWithPagination: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
+            findAllByUserId: jest.fn(),
           },
         },
         {
@@ -46,6 +47,7 @@ describe('WorkspaceController', () => {
             batchUpdate: jest.fn(),
             batchDelete: jest.fn(),
             countByWorkspaceId: jest.fn(),
+            batchSearchByWorkspace: jest.fn(),
           },
         },
         {
@@ -235,6 +237,33 @@ describe('WorkspaceController', () => {
 
       expect(result).toEqual({ code: 200 });
       expect(workspaceService.delete).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('getWorkspaceAndMember', () => {
+    it('should return a list of workspaces and members for the user', async () => {
+      const req = { user: { _id: new ObjectId() } };
+
+      const workspaceId = new ObjectId();
+      const memberList = [{ workspaceId, userId: new ObjectId() }];
+      const workspaces = [{ _id: workspaceId, name: 'Test Workspace' }];
+
+      jest
+        .spyOn(workspaceService, 'findAllByUserId')
+        .mockResolvedValue(workspaces as Array<Workspace>);
+      jest
+        .spyOn(workspaceMemberService, 'batchSearchByWorkspace')
+        .mockResolvedValue(memberList as unknown as Array<WorkspaceMember>);
+
+      const result = await controller.getWorkspaceAndMember(req);
+
+      expect(result.code).toEqual(200);
+      expect(workspaceService.findAllByUserId).toHaveBeenCalledWith(
+        req.user._id.toString(),
+      );
+      expect(
+        workspaceMemberService.batchSearchByWorkspace,
+      ).toHaveBeenCalledWith(workspaces.map((item) => item._id.toString()));
     });
   });
 });

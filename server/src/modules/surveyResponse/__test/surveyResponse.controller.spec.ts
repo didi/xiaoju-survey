@@ -21,6 +21,10 @@ import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugi
 import { RECORD_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Logger } from 'src/logger';
+import { ResponseSchema } from 'src/models/responseSchema.entity';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
+import { UserService } from 'src/modules/auth/services/user.service';
+import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 
 const mockDecryptErrorBody = {
   surveyPath: 'EBzdmnSp',
@@ -122,6 +126,18 @@ describe('SurveyResponseController', () => {
           useValue: {
             error: jest.fn(),
             info: jest.fn(),
+          },
+        },
+        {
+          provide: UserService,
+          useValue: {
+            getUserByUsername: jest.fn(),
+          },
+        },
+        {
+          provide: WorkspaceMemberService,
+          useValue: {
+            findAllByUserId: jest.fn(),
           },
         },
       ],
@@ -304,6 +320,32 @@ describe('SurveyResponseController', () => {
 
       await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
         HttpException,
+      );
+    });
+
+    it('should throw HttpException if password does not match', async () => {
+      const reqBody = {
+        ...mockSubmitData,
+        password: '123457',
+        sign: '4ff02062141d92d80629eae4797ba68056f29a9709cdf59bf206776fc0971c1a.1710400229589',
+      };
+
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce({
+          curStatus: {
+            status: RECORD_STATUS.PUBLISHED,
+          },
+          code: {
+            baseConf: {
+              passwordSwitch: true,
+              password: '123456',
+            },
+          },
+        } as ResponseSchema);
+
+      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+        new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
       );
     });
   });

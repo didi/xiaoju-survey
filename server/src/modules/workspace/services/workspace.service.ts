@@ -149,4 +149,27 @@ export class WorkspaceService {
       surveyRes,
     };
   }
+
+  // 用户下的所有空间
+  async findAllByUserId(userId: string) {
+    return await this.workspaceRepository.find({
+      where: {
+        ownerId: userId,
+        'curStatus.status': {
+          $ne: RECORD_STATUS.REMOVED,
+        },
+      },
+      order: {
+        _id: -1,
+      },
+      select: [
+        '_id',
+        'curStatus',
+        'name',
+        'description',
+        'ownerId',
+        'createDate',
+      ],
+    });
+  }
 }

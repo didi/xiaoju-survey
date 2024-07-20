@@ -193,4 +193,21 @@ describe('WorkspaceMemberService', () => {
       });
     });
   });
+
+  describe('batchSearchByWorkspace', () => {
+    it('should return all workspace members by workspace id list', async () => {
+      const workspaceList = ['workspaceId1', 'workspaceId2'];
+      const members = [
+        { userId: 'userId1', workspaceId: workspaceList[0] },
+        { userId: 'userId2', workspaceId: workspaceList[1] },
+      ];
+
+      jest.spyOn(repository, 'find').mockResolvedValue(members as any);
+
+      const result = await service.batchSearchByWorkspace(workspaceList);
+
+      expect(result).toEqual(members);
+      expect(repository.find).toHaveBeenCalledTimes(1);
+    });
+  });
 });

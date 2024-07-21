@@ -1,5 +1,5 @@
 import { defaultQuestionConfig } from '../config/questionConfig'
-import { map as _map } from 'lodash-es'
+import { map as _map, cloneDeep } from 'lodash-es'
 import questionLoader from '@/materials/questions/questionLoader'
 
 const generateQuestionField = () => {
@@ -61,7 +61,7 @@ export const getQuestionByType = (type, fields) => {
     }
   }
 
-  return newQuestion
+  return cloneDeep(newQuestion)
 }
 
 export function filterQuestionPreviewData(data, currentEditOne = '') {

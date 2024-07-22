@@ -24,7 +24,5 @@ export const replacePxWithRem = (html) => {
     })
   })
 
-  console.log('生成的结果', res)
-
   return res
 }

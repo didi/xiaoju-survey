@@ -25,8 +25,7 @@
   </el-popover>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { get as _get } from 'lodash-es'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import moment from 'moment'

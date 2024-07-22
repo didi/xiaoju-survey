@@ -41,12 +41,13 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   const workSpaceId = ref('')
   const spaceDetail = ref<SpaceDetail | null>(null)
   const workSpaceList = ref<SpaceItem[]>([])
+  const workSpaceListTotal = ref(0)
 
   const surveyListStore = useSurveyListStore()
 
-  async function getSpaceList() {
+  async function getSpaceList(params = { curPage: 1 }) {
     try {
-      const res: any = await getSpaceListReq()
+      const res: any = await getSpaceListReq(params)
 
       if (res.code === CODE_MAP.SUCCESS) {
         const { list } = res.data
@@ -135,6 +136,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     workSpaceId,
     spaceDetail,
     workSpaceList,
+    workSpaceListTotal,
     getSpaceList,
     getSpaceDetail,
     changeSpaceType,

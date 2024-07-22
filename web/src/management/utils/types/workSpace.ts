@@ -16,6 +16,7 @@ export type IWorkspace = {
   description: string
   members: IMember[]
 }
+
 export type IMember = {
   userId: string
   username: string

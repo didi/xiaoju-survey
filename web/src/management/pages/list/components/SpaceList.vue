@@ -170,7 +170,6 @@ const handleDelete = (id: string) => {
     .then(async () => {
       await workSpaceStore.deleteSpace(id)
       await workSpaceStore.getSpaceList()
-      curPage.value = 1
     })
     .catch(() => {})
 }
@@ -186,7 +185,6 @@ const handleClick = (key: string, data: any) => {
 const onCloseModify = () => {
   showSpaceModify.value = false
   workSpaceStore.getSpaceList()
-  curPage.value = 1
 }
 
 defineExpose({ onCloseModify })

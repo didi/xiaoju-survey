@@ -30,7 +30,7 @@ import { get as _get } from 'lodash-es'
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
-import statusConfig from '../config/statusConfig'
+import statusConfig from '@/management/pages/edit/setterConfig/statusConfig'
 
 const textMap = {
   Success: '提交成功页面配置',

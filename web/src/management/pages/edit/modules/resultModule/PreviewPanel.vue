@@ -16,9 +16,9 @@ import { toRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 
-import SuccessContent from '../components/SuccessContent.vue'
-import OverTime from '../components/OverTime.vue'
-import { EDIT_STATUS_MAP } from '../enum'
+import SuccessContent from './components/SuccessContent.vue'
+import OverTime from './components/OverTime.vue'
+import { EDIT_STATUS_MAP } from './components/enum'
 
 const components = {
   [EDIT_STATUS_MAP.SUCCESS]: SuccessContent,

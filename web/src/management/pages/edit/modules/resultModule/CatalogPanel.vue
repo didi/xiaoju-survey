@@ -17,9 +17,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useEditStore } from '@/management/stores/edit'
-import { EDIT_STATUS_MAP } from '../enum'
 import { storeToRefs } from 'pinia'
+
+import { EDIT_STATUS_MAP } from './components/enum'
+import { useEditStore } from '@/management/stores/edit'
 
 const editStore = useEditStore()
 const { currentEditStatus } = storeToRefs(editStore)

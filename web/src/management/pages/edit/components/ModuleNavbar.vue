@@ -42,6 +42,7 @@ import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
 const editStore = useEditStore()
+const { schema, changeSchema } = editStore
 const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 // 校验 - 逻辑
 const updateLogicConf = () => {
@@ -67,10 +68,12 @@ const updateLogicConf = () => {
 
     const showLogicConf = showLogicEngine.value.toJson()
     // 更新逻辑配置
-    store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+    changeSchema({ key: 'logicConf', value: { showLogicConf } })
 
     return res
   }
+
+  return res
 }
 
 // 校验 - 白名单
@@ -79,7 +82,7 @@ const updateWhiteConf = () => {
     validated: true,
     message: ''
   }
-  const baseConf = store.state.edit.schema.baseConf || {}
+  const baseConf = (schema?.baseConf as any) || {}
   if (baseConf.passwordSwitch && !baseConf.password) {
     res = {
       validated: false,
@@ -99,6 +102,11 @@ const updateWhiteConf = () => {
 </script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
+.view-icon {
+  font-size: 20px;
+  height: 29px;
+  line-height: 29px;
+}
 .nav {
   width: 100%;
   height: 56px;

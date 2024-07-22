@@ -28,7 +28,7 @@ import { ref } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { get as _get } from 'lodash-es'
 
-import skinConfig from '@/management/config/setterConfig/skinConfig'
+import skinConfig from '@/management/pages/edit/setterConfig/skinConfig'
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
 
 const editStore = useEditStore()

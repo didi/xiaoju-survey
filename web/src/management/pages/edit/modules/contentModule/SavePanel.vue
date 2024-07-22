@@ -15,11 +15,9 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
-import { useRoute } from 'vue-router'
-
-import { get as _get } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -33,7 +31,6 @@ interface Props {
 
 const route = useRoute()
 const props = defineProps<Props>()
-
 const isSaving = ref<boolean>(false)
 const isShowAutoSave = ref<boolean>(false)
 const autoSaveStatus = ref<'succeed' | 'saving' | 'failed'>('succeed')
@@ -48,7 +45,7 @@ const saveText = computed(
 
 const editStore = useEditStore()
 const { schemaUpdateTime } = storeToRefs(editStore)
-const { schema, changeSchema } = editStore
+const { schema } = editStore
 
 const validate = () => {
   let checked = true
@@ -130,7 +127,6 @@ const handleSave = async () => {
   const { checked, msg } = validate()
   if (!checked) {
     isSaving.value = false
-    ElMessage.error('请检查问卷设置是否有误')
     ElMessage.error(msg)
     return
   }

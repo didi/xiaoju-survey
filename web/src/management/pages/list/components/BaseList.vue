@@ -244,7 +244,7 @@ const order = computed(() => {
   return JSON.stringify(formatOrder)
 })
 
-const onReflush = async () => {
+const onRefresh = async () => {
   const filterString = JSON.stringify(
     filter.value.filter((item) => {
       return item.condition[0].value
@@ -456,16 +456,20 @@ const onCooperClose = () => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
     .select {
       display: flex;
     }
+
     .search {
       display: flex;
     }
   }
+
   .list-wrapper {
     padding: 10px 20px;
     background: #fff;
+
     .list-table {
       min-height: 620px;
     }
@@ -473,11 +477,13 @@ const onCooperClose = () => {
 
   .list-pagination {
     margin-top: 20px;
+
     :deep(.el-pagination) {
       display: flex;
       justify-content: flex-end;
     }
   }
+
   :deep(.el-table__header) {
     .tableview-header .el-table__cell {
       .cell {
@@ -487,21 +493,26 @@ const onCooperClose = () => {
       }
     }
   }
+
   :deep(.tableview-row) {
     .tableview-cell {
       padding: 5px 0;
+
       &.link {
         cursor: pointer;
       }
+
       .cell .cell-span {
         font-size: 14px;
       }
     }
   }
 }
+
 .el-select-dropdown__wrap {
   background: #eee;
 }
+
 .el-select-dropdown__item.hover {
   background: #fff;
 }

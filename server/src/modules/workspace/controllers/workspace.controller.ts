@@ -174,6 +174,7 @@ export class WorkspaceController {
       pre[id] = cur;
       return pre;
     }, {});
+
     const surveyTotalList = await Promise.all(
       workspaceIdList.map((item) => {
         return this.surveyMetaService.countSurveyMetaByWorkspaceId({

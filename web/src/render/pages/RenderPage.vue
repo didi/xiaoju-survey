@@ -62,7 +62,7 @@ const surveyStore = useSurveyStore()
 const questionStore = useQuestionStore()
 
 const renderData = computed(() => questionStore.renderData)
-const { bannerConf, submitConf, bottomConf: logoConf } = storeToRefs(surveyStore)
+const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {

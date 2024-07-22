@@ -4,7 +4,8 @@ import { merge as _merge, cloneDeep as _cloneDeep, set as _set } from 'lodash-es
 
 import { getSurveyById } from '@/management/api/survey'
 import { getNewField } from '@/management/utils'
-import submitFormConfig from '@/management/config/setterConfig/submitConfig'
+
+import submitFormConfig from '@/management/pages/edit/setterConfig/statusConfig'
 
 import questionLoader from '@/materials/questions/questionLoader'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'

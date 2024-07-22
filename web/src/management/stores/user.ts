@@ -52,4 +52,3 @@ export const useUserStore = defineStore('user', () => {
 
   return { userInfo, hasLogined, loginTime, initialized, init, login, logout }
 })
-

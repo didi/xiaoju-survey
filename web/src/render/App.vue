@@ -2,12 +2,12 @@
   <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { watch } from 'vue'
+import { storeToRefs } from 'pinia'
 
-const store = useStore()
-const skinConf = computed(() => _get(store, 'state.skinConf', {}))
+import { useSurveyStore } from './stores/survey'
+
+const { skinConf } = storeToRefs(useSurveyStore())
 
 const updateSkinConfig = (value: any) => {
   const root = document.documentElement

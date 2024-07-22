@@ -99,7 +99,6 @@ watch(
         key: field,
         value: value
       }
-      // store.commit('changeFormData', data)
       surveyStore.changeData(data)
     }
   }

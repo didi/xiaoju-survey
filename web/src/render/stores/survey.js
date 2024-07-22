@@ -37,10 +37,15 @@ export const useSurveyStore = defineStore('survey', () => {
   const skinConf = ref({})
   const submitConf = ref({})
   const formValues = ref({})
+  const whiteData = ref({})
 
   const router = useRouter()
   const questionStore = useQuestionStore()
   const { setErrorInfo } = useErrorInfo()
+
+  const setWhiteData = (data) => {
+    whiteData.value = data
+  }
 
   const setSurveyPath = (data) => {
     surveyPath.value = data
@@ -115,7 +120,15 @@ export const useSurveyStore = defineStore('survey', () => {
       rules: _rules,
       formValues: _formValues
     } = adapter.generateData(
-      pick(option, ['bannerConf', 'baseConf', 'bottomConf', 'dataConf', 'skinConf', 'submitConf'])
+      pick(option, [
+        'bannerConf',
+        'baseConf',
+        'bottomConf',
+        'dataConf',
+        'skinConf',
+        'submitConf',
+        'whiteData'
+      ])
     )
 
     questionStore.questionData = questionData
@@ -130,6 +143,7 @@ export const useSurveyStore = defineStore('survey', () => {
     skinConf.value = option.skinConf
     submitConf.value = option.submitConf
     formValues.value = _formValues
+    whiteData.value = option.whiteData
 
     // 获取已投票数据
     questionStore.initVoteData()
@@ -156,9 +170,11 @@ export const useSurveyStore = defineStore('survey', () => {
     skinConf,
     submitConf,
     formValues,
+    whiteData,
 
     initSurvey,
     changeData,
+    setWhiteData,
     setSurveyPath,
     setEnterTime,
     getEncryptInfo

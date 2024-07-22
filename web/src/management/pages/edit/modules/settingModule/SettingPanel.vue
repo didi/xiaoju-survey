@@ -38,14 +38,13 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted, shallowRef } from 'vue'
-import { useEditStore } from '@/management/stores/edit'
-import { useStore } from 'vuex'
 import {
   cloneDeep as _cloneDeep,
   isArray as _isArray,
   get as _get,
   isFunction as _isFunction
 } from 'lodash-es'
+import { useEditStore } from '@/management/stores/edit'
 
 import baseConfig from '@/management/pages/edit/setterConfig/baseConfig'
 import baseFormConfig from '@/management/pages/edit/setterConfig/baseFormConfig'
@@ -54,6 +53,9 @@ import setterLoader from '@/materials/setters/setterLoader'
 
 import WhiteList from './components/WhiteList.vue'
 import TeamMemberList from './components/TeamMemberList.vue'
+
+const editStore = useEditStore()
+const { schema, changeSchema } = editStore
 
 const formConfigList = ref<Array<any>>([])
 const components = shallowRef<any>({
@@ -65,8 +67,8 @@ const registerTypes = ref<any>({
   WhiteList: 'WhiteList',
   TeamMemberList: 'TeamMemberList'
 })
-const store = useStore()
-const schemaBaseConf = computed(() => store.state.edit?.schema?.baseConf || {})
+
+const schemaBaseConf = computed(() => schema?.baseConf || {})
 
 const setterList = computed(() => {
   const list = _cloneDeep(formConfigList.value)
@@ -173,7 +175,6 @@ onMounted(async () => {
           padding-bottom: 19px;
           margin-bottom: 10px;
           border-bottom: 1px solid $border-color;
-          padding-left: 30px;
 
           span {
             position: relative;

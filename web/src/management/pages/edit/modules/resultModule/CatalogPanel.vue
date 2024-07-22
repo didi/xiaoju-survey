@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import { useStore } from 'vuex'
-import { EDIT_STATUS_MAP } from './enum'
+import { EDIT_STATUS_MAP } from './components/enum'
 
 const store = useStore()
 const statusList = [

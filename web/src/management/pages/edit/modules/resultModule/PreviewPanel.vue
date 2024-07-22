@@ -18,7 +18,7 @@ import { get as _get } from 'lodash-es'
 
 import SuccessContent from './components/SuccessContent.vue'
 import OverTime from './components/OverTime.vue'
-import { EDIT_STATUS_MAP } from './enum'
+import { EDIT_STATUS_MAP } from './components/enum'
 
 const components = {
   [EDIT_STATUS_MAP.SUCCESS]: SuccessContent,

@@ -2,16 +2,17 @@
   <div class="result-page-wrap">
     <div class="result-page">
       <div class="page-content">
-        <img class="img" :src="errorImageUrl" />
+        <img class="img" :src="errorImage" />
         <div class="msg" v-html="errorMsg"></div>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
-// @ts-ignore
+import { storeToRefs } from 'pinia'
+
 import communalLoader from '@materials/communals/communalLoader.js'
 import { useErrorInfo } from '../stores/errorInfo'
 import { useSurveyStore } from '../stores/survey'
@@ -19,20 +20,21 @@ import { useSurveyStore } from '../stores/survey'
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
 const surveyStore = useSurveyStore()
-const { errorInfo } = useErrorInfo()
+const errorStore = useErrorInfo()
+const { errorInfo } = storeToRefs(errorStore)
+const imageMap = {
+  overTime: '/imgs/icons/overtime.webp',
+  default: '/imgs/icons/error.webp'
+}
 
-const errorImageUrl = computed(() => {
-  const errorType = errorInfo?.errorType
-  const imageMap = {
-    overTime: '/imgs/icons/overtime.webp',
-    default: '/imgs/icons/error.webp'
-  }
+const errorImage = computed(() => {
+  const errorType = errorInfo.value.errorType
 
-  return imageMap[errorType as 'overTime'] || imageMap.default
+  return imageMap[errorType] || imageMap.default
 })
 
 const errorMsg = computed(() => {
-  return errorInfo?.errorMsg || '提交失败'
+  return errorInfo.value.errorMsg || '提交失败'
 })
 const logoConf = computed(() => surveyStore.bottomConf || {})
 </script>

@@ -61,7 +61,7 @@ export const useSurveyStore = defineStore('survey', () => {
     }
   }
 
-  const canFillQuestionnaire = (baseConf) => {
+  const canFillQuestionnaire = (baseConf, submitConf) => {
     const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
@@ -104,7 +104,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const initSurvey = (option) => {
     setEnterTime()
 
-    if (!canFillQuestionnaire(option.baseConf)) {
+    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
       return
     }
 
@@ -121,6 +121,7 @@ export const useSurveyStore = defineStore('survey', () => {
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
+    // 将数据设置到state上
     rules.value = _rules
     bannerConf.value = option.bannerConf
     baseConf.value = option.baseConf
@@ -134,6 +135,7 @@ export const useSurveyStore = defineStore('survey', () => {
     questionStore.initVoteData()
   }
 
+  // 用户输入或者选择后，更新表单数据
   const changeData = (data) => {
     let { key, value } = data
     if (key in formValues.value) {

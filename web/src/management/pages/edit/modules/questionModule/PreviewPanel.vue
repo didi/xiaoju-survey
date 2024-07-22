@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, toRefs } from 'vue'
+import { ref, watch, toRefs } from 'vue'
 import communalLoader from '@materials/communals/communalLoader.js'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { storeToRefs } from 'pinia'
@@ -47,12 +47,12 @@ const mainOperation = ref(null)
 const materialGroup = ref(null)
 
 const { bannerConf, submitConf, skinConf } = toRefs(schema)
-const autoScrollData = computed(() => {
-  return {
-    currentEditOne: currentEditOne.value,
-    len: questionDataList.value.length
-  }
-})
+// const autoScrollData = computed(() => {
+//   return {
+//     currentEditOne: currentEditOne.value,
+//     len: questionDataList.value.length
+//   }
+// })
 
 const handleChange = (data) => {
   if (currentEditOne.value === null) {
@@ -108,22 +108,24 @@ watch(
   }
 )
 
-watch(autoScrollData, (newVal) => {
-  const { currentEditOne } = newVal
-  if (typeof currentEditOne === 'number') {
-    setTimeout(() => {
-      const field = questionDataList.value?.[currentEditOne]?.field
-      if (field) {
-        const questionModule = materialGroup.value?.getQuestionRefByField(field)
-        if (questionModule && questionModule.$el) {
-          questionModule.$el.scrollIntoView({
-            behavior: 'smooth'
-          })
-        }
-      }
-    }, 0)
-  }
-})
+// 实际编辑题目不会只是从上到下而需要上下题目对比。
+// 一直跳动到顶部影响编辑操作，若有场景需要可自行放开
+// watch(autoScrollData, (newVal) => {
+//   const { currentEditOne } = newVal
+//   if (typeof currentEditOne === 'number') {
+//     setTimeout(() => {
+//       const field = questionDataList.value?.[currentEditOne]?.field
+//       if (field) {
+//         const questionModule = materialGroup.value?.getQuestionRefByField(field)
+//         if (questionModule && questionModule.$el) {
+//           questionModule.$el.scrollIntoView({
+//             behavior: 'smooth'
+//           })
+//         }
+//       }
+//     }, 0)
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>

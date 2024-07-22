@@ -11,36 +11,38 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { publishSurvey, saveSurvey } from '@/management/api/survey'
-import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 import buildData from './buildData'
+
+interface Props {
+  updateLogicConf: any
+  updateWhiteConf: any
+}
+
+const props = defineProps<Props>()
 
 const isPublishing = ref<boolean>(false)
 const editStore = useEditStore()
-const { schema, changeSchema, getSchemaFromRemote } = editStore
+const { schema, getSchemaFromRemote } = editStore
 const router = useRouter()
 
-const updateLogicConf = () => {
-  if (
-    showLogicEngine.value &&
-    showLogicEngine.value.rules &&
-    showLogicEngine.value.rules.length !== 0
-  ) {
-    showLogicEngine.value.validateSchema()
-    const showLogicConf = showLogicEngine.value.toJson()
-    // 更新逻辑配置
-    changeSchema({ key: 'logicConf', value: { showLogicConf } })
+const validate = () => {
+  let checked = true
+  let msg = ''
+  const { validated, message } = props.updateLogicConf()
+  if (!validated) {
+    checked = validated
+    msg = `检查页面"问卷编辑>显示逻辑"：${message}`
   }
-}
+  const { validated: whiteValidated, message: whiteMsg } = props.updateWhiteConf()
+  if (!whiteValidated) {
+    checked = whiteValidated
+    msg = `检查页面"问卷设置>作答限制"：${whiteMsg}`
+  }
 
-const updateWhiteConf = () => {
-  const baseConf = store.state.edit.schema.baseConf || {};
-  if (baseConf.passwordSwitch && !baseConf.password) {
-    return true;
+  return {
+    checked,
+    msg
   }
-  if (baseConf.whitelistType!='ALL' && !baseConf.whitelist?.length) {
-    return true;
-  }
-  return false
 }
 
 const handlePublish = async () => {
@@ -50,11 +52,11 @@ const handlePublish = async () => {
 
   isPublishing.value = true
 
-  try {
-    updateLogicConf()
-  } catch (err) {
+  // 发布检测
+  const { checked, msg } = validate()
+  if (!checked) {
     isPublishing.value = false
-    ElMessage.error('请检查逻辑配置是否有误')
+    ElMessage.error(msg)
     return
   }
 
@@ -65,7 +67,7 @@ const handlePublish = async () => {
     return
   }
 
-  if(updateWhiteConf()){
+  if (updateWhiteConf()) {
     isPublishing.value = false
     ElMessage.error('请检查问卷设置是否有误')
     return

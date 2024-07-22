@@ -47,16 +47,24 @@ import {
   isFunction as _isFunction
 } from 'lodash-es'
 
-import baseConfig from './config/baseConfig'
-import baseFormConfig from './config/baseFormConfig'
+import baseConfig from '@/management/pages/edit/setterConfig/baseConfig'
+import baseFormConfig from '@/management/pages/edit/setterConfig/baseFormConfig'
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
 
+import WhiteList from './components/WhiteList.vue'
+import TeamMemberList from './components/TeamMemberList.vue'
+
 const formConfigList = ref<Array<any>>([])
-const components = shallowRef<any>({})
-const registerTypes = ref<any>({})
-const editStore = useEditStore()
-const { schema, changeSchema } = editStore
+const components = shallowRef<any>({
+  ['WhiteList']: WhiteList,
+  ['TeamMemberList']: TeamMemberList
+})
+// 登记默认注册的高级设置器组件
+const registerTypes = ref<any>({
+  WhiteList: 'WhiteList',
+  TeamMemberList: 'TeamMemberList'
+})
 const store = useStore()
 const schemaBaseConf = computed(() => store.state.edit?.schema?.baseConf || {})
 
@@ -110,10 +118,12 @@ onMounted(async () => {
   }))
 
   const formList = formConfigList.value.map((item) => item.formList).flat()
-  const typeList = formList.map((item) => ({
-    type: item.type,
-    path: item.path || item.type
-  }))
+  const typeList = formList
+    .filter((item) => !item.custom)
+    .map((item) => ({
+      type: item.type,
+      path: item.path || item.type
+    }))
 
   const comps = await setterLoader.loadComponents(typeList)
   for (const comp of comps) {

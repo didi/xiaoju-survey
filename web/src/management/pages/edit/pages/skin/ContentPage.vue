@@ -16,9 +16,9 @@ import { onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 import CommonTemplate from '../../components/CommonTemplate.vue'
-import CatalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
-import PreviewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
-import SetterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
+import CatalogPanel from '../../modules/skinModule/CatalogPanel.vue'
+import PreviewPanel from '../../modules/skinModule/PreviewPanel.vue'
+import SetterPanel from '../../modules/skinModule/SetterPanel.vue'
 
 const store = useStore()
 

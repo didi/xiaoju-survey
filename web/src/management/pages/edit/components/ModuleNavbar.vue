@@ -18,8 +18,11 @@
       </CooperationPanel>
       <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
-      <SavePanel></SavePanel>
-      <PublishPanel></PublishPanel>
+      <SavePanel :updateLogicConf="updateLogicConf" :updateWhiteConf="updateWhiteConf"></SavePanel>
+      <PublishPanel
+        :updateLogicConf="updateLogicConf"
+        :updateWhiteConf="updateWhiteConf"
+      ></PublishPanel>
     </div>
   </div>
 </template>
@@ -27,6 +30,8 @@
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
+
+import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -39,6 +44,59 @@ import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
 const store = useStore()
 const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
+// 校验 - 逻辑
+const updateLogicConf = () => {
+  let res = {
+    validated: true,
+    message: ''
+  }
+  if (
+    showLogicEngine.value &&
+    showLogicEngine.value.rules &&
+    showLogicEngine.value.rules.length !== 0
+  ) {
+    try {
+      showLogicEngine.value.validateSchema()
+    } catch (error) {
+      res = {
+        validated: false,
+        message: '逻辑配置不能为空'
+      }
+
+      return res
+    }
+
+    const showLogicConf = showLogicEngine.value.toJson()
+    // 更新逻辑配置
+    store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+
+    return res
+  }
+}
+
+// 校验 - 白名单
+const updateWhiteConf = () => {
+  let res = {
+    validated: true,
+    message: ''
+  }
+  const baseConf = store.state.edit.schema.baseConf || {}
+  if (baseConf.passwordSwitch && !baseConf.password) {
+    res = {
+      validated: false,
+      message: '访问密码不能为空'
+    }
+    return res
+  }
+  if (baseConf.whitelistType != 'ALL' && !baseConf.whitelist?.length) {
+    res = {
+      validated: false,
+      message: '白名单不能为空'
+    }
+    return res
+  }
+  return res
+}
 </script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');

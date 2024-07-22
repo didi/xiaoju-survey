@@ -27,36 +27,51 @@ export default {
     label: '访问密码',
     type: 'SwitchInput',
     placeholder: '请输入6位字符串类型访问密码 ',
-    maxLength: 6,
+    maxLength: 6
   },
   answer_type: {
     key: 'baseConf.whitelistType',
     label: '答题名单',
-    type: 'AnswerRadio',
+    type: 'RadioGroup',
+    options: [
+      {
+        label: '所有人',
+        value: 'ALL'
+      },
+      {
+        label: '空间成员',
+        value: 'MEMBER'
+      },
+      {
+        label: '白名单',
+        value: 'CUSTOM'
+      }
+    ]
   },
-  white_placeholder:{
+  white_placeholder: {
     key: 'baseConf.whitelistTip',
     label: '名单登录提示语',
-    placeholder:'请输入名单提示语',
+    placeholder: '请输入名单提示语',
     type: 'InputWordLimit',
     maxLength: 40,
     relyFunc: (data) => {
-      return  ['CUSTOM','MEMBER'].includes(data.whitelistType)
+      return ['CUSTOM', 'MEMBER'].includes(data.whitelistType)
     }
   },
-  white_list:{
-    keys: ['baseConf.whitelist','baseConf.memberType'],
+  white_list: {
+    keys: ['baseConf.whitelist', 'baseConf.memberType'],
     label: '白名单列表',
-    type: 'whiteList',
+    type: 'WhiteList',
+    custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
-      
       return data.whitelistType == 'CUSTOM'
     }
   },
-  team_list:{
+  team_list: {
     key: 'baseConf.whitelist',
     label: '团队空间成员选择',
-    type: 'teamMemberList',
+    type: 'TeamMemberList',
+    custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
       return data.whitelistType == 'MEMBER'
     }

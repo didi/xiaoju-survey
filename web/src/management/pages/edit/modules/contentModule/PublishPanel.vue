@@ -66,12 +66,6 @@ const handlePublish = async () => {
     return
   }
 
-  if(updateWhiteConf()){
-    isPublishing.value = false
-    ElMessage.error('请检查问卷设置是否有误')
-    return
-  }
-
   try {
     const saveRes: any = await saveSurvey(saveData)
     if (saveRes.code !== 200) {

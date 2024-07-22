@@ -32,7 +32,6 @@ interface Props {
 
 const route = useRoute()
 const props = defineProps<Props>()
-
 const isSaving = ref<boolean>(false)
 const isShowAutoSave = ref<boolean>(false)
 const autoSaveStatus = ref<'succeed' | 'saving' | 'failed'>('succeed')
@@ -127,7 +126,6 @@ const handleSave = async () => {
   const { checked, msg } = validate()
   if (!checked) {
     isSaving.value = false
-    ElMessage.error('请检查问卷设置是否有误')
     ElMessage.error(msg)
     return
   }

@@ -92,10 +92,6 @@ const changePreset = (banner: any) => {
   border: none;
   overflow-y: auto;
   background-color: #fff;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
   .title {
     height: 40px;
     line-height: 40px;
@@ -112,9 +108,8 @@ const changePreset = (banner: any) => {
     display: flex;
     flex-wrap: wrap;
     .tag {
+      margin: 5px 8px;
       cursor: pointer;
-      width: 51px;
-      margin: 5px 2px;
       &.current {
         color: $primary-color;
         background-color: $primary-bg-color;

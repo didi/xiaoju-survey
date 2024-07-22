@@ -1,4 +1,4 @@
-import submitFormConfig from '@/management/config/setterConfig/submitConfig'
+import submitFormConfig from '@/management/pages/edit/setterConfig/submitConfig'
 import questionLoader from '@/materials/questions/questionLoader'
 
 const innerMetaConfig = {

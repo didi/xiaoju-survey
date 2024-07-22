@@ -72,6 +72,8 @@ const updateLogicConf = () => {
 
     return res
   }
+
+  return res
 }
 
 // 校验 - 白名单

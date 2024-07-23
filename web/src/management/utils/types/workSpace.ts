@@ -11,7 +11,7 @@ export interface MenuItem {
 }
 
 export type IWorkspace = {
-  id?: string
+  _id?: string
   name: string
   description: string
   members: IMember[]
@@ -21,6 +21,24 @@ export type IMember = {
   username: string
   role: any
   _id?: string
+}
+
+export interface SpaceDetail {
+  _id?: string
+  name: string
+  currentUserId?: string
+  description: string
+  members: IMember[]
+}
+
+export type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
+  createDate: string
+  curStatus: { date: number; status: string }
+  memberTotal: number
+  currentUserRole: string
+  owner: string
+  ownerId: string
+  surveyTotal: number
 }
 
 export enum SpaceType {

@@ -13,17 +13,20 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
 
 import MaterialGroup from './MaterialGroup.vue'
+import { useQuestionStore } from '../stores/question'
+import { useSurveyStore } from '../stores/survey'
 
-const store = useStore()
+const surveyStore = useSurveyStore()
+const questionStore = useQuestionStore()
 
-const renderData = computed(() => store.getters?.renderData)
-const rules = computed(() => store.state.rules)
-const formValues = computed(() => store.state.formValues)
+const renderData = computed(() => questionStore.renderData)
+
+const { rules, formValues } = storeToRefs(surveyStore)
 
 const handleChangeData = (data: any) => {
-  store.dispatch('changeData', data)
+  surveyStore.changeData(data)
 }
 </script>

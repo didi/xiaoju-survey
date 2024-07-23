@@ -13,20 +13,21 @@
             :readonly="false"
             :is-selected="currentEditOne === 'submit'"
           />
+          <LogoIcon
+            :logo-conf="bottomConf"
+            :readonly="false"
+            :is-selected="currentEditOne === 'logo'"
+          />
         </div>
-        <LogoIcon
-          :logo-conf="bottomConf"
-          :readonly="false"
-          :is-selected="currentEditOne === 'logo'"
-        />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { computed, defineComponent } from 'vue'
+import { defineComponent, toRefs } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import communalLoader from '@materials/communals/communalLoader.js'
 
 const HeaderContent = () => communalLoader.loadComponent('HeaderContent')
@@ -43,15 +44,10 @@ export default defineComponent({
     LogoIcon: LogoIcon()
   },
   setup() {
-    const store = useStore()
-
-    const bannerConf = computed(() => store.state.edit.schema.bannerConf)
-    const submitConf = computed(() => store.state.edit.schema.submitConf)
-    const bottomConf = computed(() => store.state.edit.schema.bottomConf)
-    const skinConf = computed(() => store.state.edit.schema.skinConf)
-    const questionDataList = computed(() => store.state.edit.schema.questionDataList)
-    const currentEditOne = computed(() => store.state.edit.currentEditOne)
-    const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
+    const editStore = useEditStore()
+    const { questionDataList, currentEditOne, currentEditKey } = storeToRefs(editStore)
+    const { schema } = editStore
+    const { bannerConf, submitConf, skinConf, bottomConf } = toRefs(schema)
 
     return {
       bannerConf,

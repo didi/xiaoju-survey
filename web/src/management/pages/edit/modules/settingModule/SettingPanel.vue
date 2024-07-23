@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted, shallowRef } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { cloneDeep as _cloneDeep, isArray as _isArray, get as _get } from 'lodash-es'
 
 import baseConfig from './config/baseConfig'
@@ -49,6 +49,9 @@ import setterLoader from '@/materials/setters/setterLoader'
 const formConfigList = ref<Array<any>>([])
 const components = shallowRef<any>({})
 const registerTypes = ref<any>({})
+const editStore = useEditStore()
+const { schema, changeSchema } = editStore
+
 const setterList = computed(() => {
   const list = _cloneDeep(formConfigList.value)
 
@@ -61,12 +64,12 @@ const setterList = computed(() => {
       if (_isArray(formKey)) {
         formValue = []
         for (const key of formKey) {
-          const val = _get(store.state.edit.schema, key, formItem.value)
+          const val = _get(schema, key, formItem.value)
           formValue.push(val)
           dataConfig[key] = val
         }
       } else {
-        formValue = _get(store.state.edit.schema, formKey, formItem.value)
+        formValue = _get(schema, formKey, formItem.value)
         dataConfig[formKey] = formValue
       }
       formItem.value = formValue
@@ -78,9 +81,8 @@ const setterList = computed(() => {
   })
 })
 
-const store = useStore()
 const handleFormChange = (data: any) => {
-  store.dispatch('edit/changeSchema', {
+  changeSchema({
     key: data.key,
     value: data.value
   })

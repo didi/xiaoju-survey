@@ -17,10 +17,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { EDIT_STATUS_MAP } from '../enum'
+import { storeToRefs } from 'pinia'
 
-const store = useStore()
+const editStore = useEditStore()
+const { currentEditStatus } = storeToRefs(editStore)
 const statusList = [
   {
     type: EDIT_STATUS_MAP.SUCCESS,
@@ -35,10 +37,8 @@ const statusList = [
 ]
 
 const handleChangePreview = (data: any) => {
-  const currentStatus = store.state?.edit?.currentEditStatus
-
-  if (currentStatus && currentStatus !== data.type) {
-    store.commit('edit/changeStatusPreview', data)
+  if (currentEditStatus.value !== data.type) {
+    editStore.changeCurrentEditStatus(data.type)
   }
 }
 </script>

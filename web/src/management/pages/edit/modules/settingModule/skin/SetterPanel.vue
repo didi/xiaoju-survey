@@ -24,23 +24,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
+import { useEditStore } from '@/management/stores/edit'
 import { get as _get } from 'lodash-es'
 
 import skinConfig from '@/management/config/setterConfig/skinConfig'
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
 
-const store = useStore()
+const editStore = useEditStore()
+const { schema, changeSchema } = editStore
 const collapse = ref<string>('')
-const schema = computed(() => _get(store.state, 'edit.schema'))
 
 const handleFormChange = (data: any, collapse: string) => {
   const { key, value } = data
   const currentEditKey = `${collapse}`
   const resultKey = `${currentEditKey}.${key}`
 
-  store.dispatch('edit/changeSchema', { key: resultKey, value })
+  changeSchema({ key: resultKey, value })
 }
 </script>
 <style lang="scss" scoped>

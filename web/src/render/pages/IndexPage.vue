@@ -3,17 +3,16 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
 import useCommandComponent from '../hooks/useCommandComponent'
+import { useSurveyStore } from '../stores/survey'
 
 import AlertDialog from '../components/AlertDialog.vue'
 import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
-
-const store = useStore()
 const route = useRoute()
+const surveyStore = useSurveyStore()
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
@@ -30,8 +29,8 @@ const loadData = (res: any, surveyPath: string) => {
 
     document.title = data.title
 
-    store.commit('setSurveyPath', surveyPath)
-    store.dispatch('init', questionData)
+    surveyStore.setSurveyPath(surveyPath)
+    surveyStore.initSurvey(questionData)
     initRuleEngine(logicConf?.showLogicConf)
   } else {
     throw new Error(res.errmsg)
@@ -40,7 +39,7 @@ const loadData = (res: any, surveyPath: string) => {
 onMounted(() => {
   const surveyId = route.params.surveyId
   console.log({ surveyId })
-  store.commit('setSurveyPath', surveyId)
+  surveyStore.setSurveyPath(surveyId)
   getDetail(surveyId as string)
 })
 
@@ -54,7 +53,7 @@ const getDetail = async (surveyPath: string) => {
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
       loadData(res, surveyPath)
-      store.dispatch('getEncryptInfo')
+      surveyStore.getEncryptInfo()
     }
   } catch (error: any) {
     console.log(error)

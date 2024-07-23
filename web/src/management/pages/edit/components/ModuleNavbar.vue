@@ -25,8 +25,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useEditStore } from '@/management/stores/edit'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -37,16 +36,11 @@ import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
-const store = useStore()
-const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
+const editStore = useEditStore()
+const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 </script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
-.view-icon {
-  font-size: 20px;
-  height: 29px;
-  line-height: 29px;
-}
 .nav {
   width: 100%;
   height: 56px;

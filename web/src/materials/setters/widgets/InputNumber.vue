@@ -8,7 +8,7 @@
   />
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
@@ -65,6 +65,17 @@ const handleInputChange = (value: number) => {
 
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
+watch(
+  () => props.formConfig.value,
+  (newVal) => {
+    if (newVal !== modelValue.value) {
+      modelValue.value = newVal
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .star-form.star-form_horizon {

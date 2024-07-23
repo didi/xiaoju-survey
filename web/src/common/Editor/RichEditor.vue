@@ -24,13 +24,13 @@
 
 <script setup>
 import { ref, shallowRef, onBeforeMount, watch, computed } from 'vue'
-import { useStore } from 'vuex'
 import { get as _get } from 'lodash-es'
 
 import '@wangeditor/editor/dist/css/style.css'
 import './styles/reset-wangeditor.scss'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
+import { useUserStore } from '@/management/stores/user'
 import { replacePxWithRem } from './utils'
 
 const emit = defineEmits(['input', 'onFocus', 'change', 'blur', 'created'])
@@ -66,8 +66,8 @@ const editorConfig = {
   MENU_CONF: {}
 }
 
-const store = useStore()
-const token = _get(store, 'state.user.userInfo.token')
+const userStore = useUserStore()
+const token = _get(userStore, 'userInfo.token')
 
 // 图片
 editorConfig.MENU_CONF['uploadImage'] = {

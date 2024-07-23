@@ -105,9 +105,9 @@
 
 <script setup>
 import { ref, computed, unref } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { get, map } from 'lodash-es'
+import { storeToRefs } from 'pinia'
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -124,6 +124,8 @@ import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
 import { deleteSurvey } from '@/management/api/survey'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
+import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
 import TagModule from './TagModule.vue'
 import StateModule from './StateModule.vue'
@@ -141,7 +143,9 @@ import {
   buttonOptionsDict
 } from '@/management/config/listConfig'
 
-const store = useStore()
+const surveyListStore = useSurveyListStore()
+const workSpaceStore = useWorkSpaceStore()
+const { workSpaceId } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const props = defineProps({
   loading: {
@@ -162,17 +166,9 @@ const fields = ['type', 'title', 'remark', 'owner', 'state', 'createDate', 'upda
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
-
 const currentPage = ref(1)
-const searchVal = computed(() => {
-  return store.state.list.searchVal
-})
-const selectValueMap = computed(() => {
-  return store.state.list.selectValueMap
-})
-const buttonValueMap = computed(() => {
-  return store.state.list.buttonValueMap
-})
+const { searchVal, selectValueMap, buttonValueMap } = storeToRefs(surveyListStore)
+
 const currentComponent = computed(() => {
   return (componentName) => {
     switch (componentName) {
@@ -247,9 +243,6 @@ const order = computed(() => {
     }, [])
   return JSON.stringify(formatOrder)
 })
-const workSpaceId = computed(() => {
-  return store.state.list.workSpaceId
-})
 
 const onRefresh = async () => {
   const filterString = JSON.stringify(
@@ -298,7 +291,7 @@ const getToolConfig = (row) => {
       label: '协作'
     }
   ]
-  if (!store.state.list.workSpaceId) {
+  if (!workSpaceId.value) {
     if (!row.isCollaborated) {
       // 创建人显示协作按钮
       funcList = funcList.concat(permissionsBtn)
@@ -430,19 +423,18 @@ const onRowClick = (row) => {
   })
 }
 const onSearchText = (e) => {
-  store.commit('list/setSearchVal', e)
+  searchVal.value = e
   currentPage.value = 1
   onRefresh()
 }
 const onSelectChange = (selectKey, selectValue) => {
-  store.commit('list/changeSelectValueMap', { key: selectKey, value: selectValue })
-  // selectValueMap.value[selectKey] = selectValue
+  surveyListStore.changeSelectValueMap(selectKey, selectValue)
   currentPage.value = 1
   onRefresh()
 }
 const onButtonChange = (effectKey, effectValue) => {
-  store.commit('list/resetButtonValueMap')
-  store.commit('list/changeButtonValueMap', { key: effectKey, value: effectValue })
+  surveyListStore.resetButtonValueMap()
+  surveyListStore.changeButtonValueMap(effectKey, effectValue)
   onRefresh()
 }
 
@@ -464,16 +456,20 @@ const onCooperClose = () => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
     .select {
       display: flex;
     }
+
     .search {
       display: flex;
     }
   }
+
   .list-wrapper {
     padding: 10px 20px;
     background: #fff;
+
     .list-table {
       min-height: 620px;
     }
@@ -481,11 +477,13 @@ const onCooperClose = () => {
 
   .list-pagination {
     margin-top: 20px;
+
     :deep(.el-pagination) {
       display: flex;
       justify-content: flex-end;
     }
   }
+
   :deep(.el-table__header) {
     .tableview-header .el-table__cell {
       .cell {
@@ -495,21 +493,26 @@ const onCooperClose = () => {
       }
     }
   }
+
   :deep(.tableview-row) {
     .tableview-cell {
       padding: 5px 0;
+
       &.link {
         cursor: pointer;
       }
+
       .cell .cell-span {
         font-size: 14px;
       }
     }
   }
 }
+
 .el-select-dropdown__wrap {
   background: #eee;
 }
+
 .el-select-dropdown__item.hover {
   background: #fff;
 }

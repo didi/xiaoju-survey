@@ -56,8 +56,8 @@
           ref="spaceListRef"
           @refresh="fetchSpaceList"
           :loading="spaceLoading"
-          :data="spaceList"
-          :total="spaceTotal"
+          :data="workSpaceList"
+          :total="workSpaceListTotal"
           v-if="spaceType === SpaceType.Group"
         ></SpaceList>
       </div>
@@ -73,83 +73,66 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
+import { useUserStore } from '@/management/stores/user'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
+import { useSurveyListStore } from '@/management/stores/surveyList'
 
-const store = useStore()
+const userStore = useUserStore()
+const workSpaceStore = useWorkSpaceStore()
+const surveyListStore = useSurveyListStore()
+
+const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
+const { spaceMenus, workSpaceId, spaceType, workSpaceList, workSpaceListTotal } =
+  storeToRefs(workSpaceStore)
 const router = useRouter()
 const userInfo = computed(() => {
-  return store.state.user.userInfo
+  return userStore.userInfo
 })
+
 const loading = ref(false)
-const surveyList = computed(() => {
-  return store.state.list.surveyList
-})
-const surveyTotal = computed(() => {
-  return store.state.list.surveyTotal
-})
+
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
-const spaceList = computed(() => {
-  return store.state.list.teamSpaceList
-})
-const spaceTotal = computed(() => {
-  return store.state.list.teamSpaceListTotal
-})
-const fetchSpaceList = async (params?: any) => {
-  spaceLoading.value = true
-  store.commit('list/changeWorkSpace', '')
-  await store.dispatch('list/getSpaceList', params)
-  spaceLoading.value = false
-}
 
 const activeIndex = ref('1')
 
-const spaceMenus = computed(() => {
-  return store.state.list.spaceMenus
-})
-const workSpaceId = computed(() => {
-  return store.state.list.workSpaceId
-})
-const spaceType = computed(() => {
-  return store.state.list.spaceType
-})
+const fetchSpaceList = async (params?: any) => {
+  spaceLoading.value = true
+  workSpaceStore.changeWorkSpace('')
+  workSpaceStore.getSpaceList(params)
+  spaceLoading.value = false
+}
+
 const handleSpaceSelect = (id: SpaceType | string) => {
-  if (id === store.state.list.spaceType || id === store.state.list.workSpaceId) {
+  if (id === spaceType.value || id === workSpaceId.value) {
     return void 0
   }
-  const changeSpaceType = (type: SpaceType) => {
-    store.commit('list/changeSpaceType', type)
-  }
-  const changeWorkSpace = (id: string) => {
-    store.commit('list/changeWorkSpace', id)
-  }
+
   switch (id) {
     case SpaceType.Personal:
-      changeSpaceType(SpaceType.Personal)
-      changeWorkSpace('')
+      workSpaceStore.changeSpaceType(SpaceType.Personal)
+      workSpaceStore.changeWorkSpace('')
       break
     case SpaceType.Group:
-      changeSpaceType(SpaceType.Group)
-      changeWorkSpace('')
+      workSpaceStore.changeSpaceType(SpaceType.Group)
+      workSpaceStore.changeWorkSpace('')
       fetchSpaceList()
       break
     default:
-      changeSpaceType(SpaceType.Teamwork)
-      changeWorkSpace(id)
+      workSpaceStore.changeSpaceType(SpaceType.Teamwork)
+      workSpaceStore.changeWorkSpace(id)
       break
   }
   fetchSurveyList()
 }
-onMounted(() => {
-  fetchSpaceList()
-  fetchSurveyList()
-})
+
 const fetchSurveyList = async (params?: any) => {
   if (!params) {
     params = {
@@ -161,19 +144,25 @@ const fetchSurveyList = async (params?: any) => {
     params.workspaceId = workSpaceId.value
   }
   loading.value = true
-  await store.dispatch('list/getSurveyList', params)
+  await surveyListStore.getSurveyList(params)
   loading.value = false
 }
+
+onMounted(() => {
+  fetchSpaceList()
+  fetchSurveyList()
+})
+
 const modifyType = ref('add')
 const showSpaceModify = ref(false)
 
 // 当前团队信息
 const currentTeamSpace = computed(() => {
-  return store.state.list.teamSpaceList.find((item: any) => item._id === workSpaceId.value)
+  return workSpaceList.value.find((item: any) => item._id === workSpaceId.value)
 })
 
 const onSetGroup = async () => {
-  await store.dispatch('list/getSpaceDetail', workSpaceId.value)
+  await workSpaceStore.getSpaceDetail(workSpaceId.value)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -192,7 +181,7 @@ const onCreate = () => {
   router.push('/create')
 }
 const handleLogout = () => {
-  store.dispatch('user/logout')
+  userStore.logout()
   router.replace({ name: 'login' })
 }
 </script>

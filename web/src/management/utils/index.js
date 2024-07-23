@@ -51,7 +51,7 @@ export const getQuestionByType = (type, fields) => {
   }
 
   newQuestion.field = getNewField(fields) // 动态生成题目id
-  if ('options ' in newQuestion) {
+  if ('options' in newQuestion) {
     // 动态更新选项的hash-id
     const hashList = []
     for (const option of newQuestion.options) {

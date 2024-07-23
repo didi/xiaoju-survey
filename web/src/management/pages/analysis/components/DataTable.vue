@@ -133,9 +133,6 @@ const onPreviewImage = (e) => {
   }
 
   .table-row-cell {
-    white-space: nowrap; /* 禁止自动换行 */
-    overflow: hidden; /* 超出部分隐藏 */
-    text-overflow: ellipsis; /* 显示省略号 */
     :deep(img) {
       height: 23px !important;
       width: auto !important;

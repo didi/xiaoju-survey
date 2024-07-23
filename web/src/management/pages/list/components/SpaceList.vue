@@ -76,7 +76,6 @@
 </template>
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useStore } from 'vuex'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { get, map } from 'lodash-es'
@@ -90,10 +89,10 @@ import TextSearch from '@/management/pages/list/components/TextSearch.vue'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import ToolBar from './ToolBar.vue'
 import { UserRole } from '@/management/utils/types/workSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 const showSpaceModify = ref(false)
 const modifyType = ref('edit')
-const store = useStore()
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -109,15 +108,17 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
+const workSpaceStore = useWorkSpaceStore()
 const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
 const fieldList = computed(() => {
   return map(fields, (f) => {
     return get(spaceListConfig, f, null)
   })
 })
+
 const isAdmin = (id: string) => {
   return (
-    store.state.list.teamSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
+    workSpaceStore.workSpaceList.find((item: any) => item._id === id)?.currentUserRole ===
     UserRole.Admin
   )
 }
@@ -152,7 +153,7 @@ const getTools = (data: any) => {
 }
 
 const handleModify = async (id: string) => {
-  await store.dispatch('list/getSpaceDetail', id)
+  await workSpaceStore.getSpaceDetail(id)
   modifyType.value = 'edit'
   showSpaceModify.value = true
 }
@@ -167,9 +168,8 @@ const handleDelete = (id: string) => {
     }
   )
     .then(async () => {
-      await store.dispatch('list/deleteSpace', id)
-      await store.dispatch('list/getSpaceList')
-      curPage.value = 1
+      await workSpaceStore.deleteSpace(id)
+      await workSpaceStore.getSpaceList()
     })
     .catch(() => {})
 }
@@ -184,9 +184,9 @@ const handleClick = (key: string, data: any) => {
 
 const onCloseModify = () => {
   showSpaceModify.value = false
-  store.dispatch('list/getSpaceList')
-  curPage.value = 1
+  workSpaceStore.getSpaceList()
 }
+
 defineExpose({ onCloseModify })
 </script>
 <style lang="scss" scoped>

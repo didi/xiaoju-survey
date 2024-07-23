@@ -5,7 +5,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -21,7 +21,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const isPublishing = ref<boolean>(false)
-const store = useStore()
+const editStore = useEditStore()
+const { schema, getSchemaFromRemote } = editStore
 const router = useRouter()
 
 const validate = () => {
@@ -59,7 +60,7 @@ const handlePublish = async () => {
     return
   }
 
-  const saveData = buildData(store.state.edit.schema)
+  const saveData = buildData(schema)
   if (!saveData.surveyId) {
     isPublishing.value = false
     ElMessage.error('未获取到问卷id')
@@ -77,7 +78,7 @@ const handlePublish = async () => {
     const publishRes: any = await publishSurvey({ surveyId: saveData.surveyId })
     if (publishRes.code === 200) {
       ElMessage.success('发布成功')
-      store.dispatch('edit/getSchemaFromRemote')
+      getSchemaFromRemote()
       router.push({ name: 'publish' })
     } else {
       ElMessage.error(`发布失败 ${publishRes.errmsg}`)

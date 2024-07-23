@@ -28,8 +28,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useEditStore } from '@/management/stores/edit'
 
 import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
@@ -42,8 +41,9 @@ import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
-const store = useStore()
-const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
+const editStore = useEditStore()
+const { schema, changeSchema } = editStore
+const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 // 校验 - 逻辑
 const updateLogicConf = () => {
   let res = {
@@ -68,7 +68,7 @@ const updateLogicConf = () => {
 
     const showLogicConf = showLogicEngine.value.toJson()
     // 更新逻辑配置
-    store.dispatch('edit/changeSchema', { key: 'logicConf', value: { showLogicConf } })
+    changeSchema({ key: 'logicConf', value: { showLogicConf } })
 
     return res
   }
@@ -82,7 +82,7 @@ const updateWhiteConf = () => {
     validated: true,
     message: ''
   }
-  const baseConf = store.state.edit.schema.baseConf || {}
+  const baseConf = (schema?.baseConf as any) || {}
   if (baseConf.passwordSwitch && !baseConf.password) {
     res = {
       validated: false,

@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -29,6 +29,8 @@ import AlertDialog from '../components/AlertDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 
+import { useSurveyStore } from '../stores/survey'
+import { useQuestionStore } from '../stores/question'
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
@@ -55,15 +57,13 @@ const boxRef = ref<HTMLElement>()
 const alert = useCommandComponent(AlertDialog)
 const confirm = useCommandComponent(ConfirmDialog)
 
-const store = useStore()
 const router = useRouter()
+const surveyStore = useSurveyStore()
+const questionStore = useQuestionStore()
 
-const bannerConf = computed(() => store.state?.bannerConf || {})
-const renderData = computed(() => store.getters.renderData)
-const submitConf = computed(() => store.state?.submitConf || {})
-const logoConf = computed(() => store.state?.bottomConf || {})
-const surveyPath = computed(() => store.state?.surveyPath || '')
-const whiteData = computed(() => store.state?.whiteData || {})
+const renderData = computed(() => questionStore.renderData)
+const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
+const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
@@ -71,9 +71,9 @@ const validate = (cbk: (v: boolean) => void) => {
 }
 
 const normalizationRequestBody = () => {
-  const enterTime = store.state.enterTime
-  const encryptInfo = store.state.encryptInfo
-  const formValues = store.state.formValues
+  const enterTime = surveyStore.enterTime
+  const encryptInfo = surveyStore.encryptInfo as any
+  const formValues = surveyStore.formValues
 
   const result: any = {
     surveyPath: surveyPath.value,
@@ -84,7 +84,7 @@ const normalizationRequestBody = () => {
   }
 
   if (encryptInfo?.encryptType) {
-    result.encryptType = encryptInfo?.encryptType
+    result.encryptType = encryptInfo.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({
       data: result.data,
       secretKey: encryptInfo?.data?.secretKey
@@ -121,7 +121,7 @@ const submitSurver = async () => {
 }
 
 const handleSubmit = () => {
-  const confirmAgain = store.state.submitConf.confirmAgain
+  const confirmAgain = (surveyStore.submitConf as any).confirmAgain
   const { again_text, is_again } = confirmAgain
 
   if (is_again) {

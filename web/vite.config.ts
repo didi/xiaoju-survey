@@ -61,7 +61,13 @@ export default defineConfig({
       'clipboard',
       'qrcode',
       'moment',
-      'moment/locale/zh-cn'
+      'moment/locale/zh-cn',
+      'echarts',
+      'nanoid',
+      'yup',
+      'crypto-js/sha256',
+      'element-plus/es/locale/lang/zh-cn',
+      'node-forge'
     ]
   },
   plugins: [

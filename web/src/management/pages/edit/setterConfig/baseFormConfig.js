@@ -22,12 +22,18 @@ export default {
     type: 'QuestionTimeHour',
     placement: 'top'
   },
-  interview_pwd: {
-    keys: ['baseConf.passwordSwitch', 'baseConf.password'],
+  interview_pwd_switch: {
+    key: 'baseConf.passwordSwitch',
     label: '访问密码',
-    type: 'SwitchInput',
+    type: 'CustomedSwitch'
+  },
+  interview_pwd: {
+    type: 'InputSetter',
     placeholder: '请输入6位字符串类型访问密码 ',
-    maxLength: 6
+    maxLength: 6,
+    relyFunc: (data) => {
+      return !!data?.passwordSwitch
+    }
   },
   answer_type: {
     key: 'baseConf.whitelistType',
@@ -52,7 +58,7 @@ export default {
     key: 'baseConf.whitelistTip',
     label: '名单登录提示语',
     placeholder: '请输入名单提示语',
-    type: 'InputWordLimit',
+    type: 'InputSetter',
     maxLength: 40,
     relyFunc: (data) => {
       return ['CUSTOM', 'MEMBER'].includes(data.whitelistType)

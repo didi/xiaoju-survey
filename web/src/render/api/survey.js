@@ -33,7 +33,7 @@ export const getEncryptInfo = () => {
   return axios.get('/clientEncrypt/getEncryptInfo')
 }
 
-export const validate = ({ surveyPath,password, whitelist }) => {
+export const validate = ({ surveyPath, password, whitelist }) => {
   return axios.post(`/responseSchema/${surveyPath}/validate`, {
     password,
     whitelist

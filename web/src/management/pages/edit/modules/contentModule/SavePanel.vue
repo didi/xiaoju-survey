@@ -15,10 +15,9 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
-import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-
-import { get as _get } from 'lodash-es'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -44,7 +43,9 @@ const saveText = computed(
     })[autoSaveStatus.value]
 )
 
-const store = useStore()
+const editStore = useEditStore()
+const { schemaUpdateTime } = storeToRefs(editStore)
+const { schema } = editStore
 
 const validate = () => {
   let checked = true
@@ -68,7 +69,7 @@ const validate = () => {
 }
 
 const saveData = async () => {
-  const saveData = buildData(store.state.edit.schema)
+  const saveData = buildData(schema)
 
   if (!saveData.surveyId) {
     ElMessage.error('未获取到问卷id')
@@ -144,7 +145,6 @@ const handleSave = async () => {
   }
 }
 
-const schemaUpdateTime = computed(() => _get(store.state, 'edit.schemaUpdateTime'))
 watch(schemaUpdateTime, () => {
   triggerAutoSave()
 })

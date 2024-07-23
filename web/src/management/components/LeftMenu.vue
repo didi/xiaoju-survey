@@ -30,12 +30,12 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 import LogoIcon from './LogoIcon.vue'
 import { SurveyPermissions } from '@/management/utils/types/workSpace.ts'
-const store = useStore()
+const editStore = useEditStore()
 
 const tabArr = [
   {
@@ -62,7 +62,7 @@ const tabArr = [
 ]
 const tabs = ref([])
 watch(
-  () => store.state.cooperPermissions,
+  () => editStore.cooperPermissions,
   (newVal) => {
     tabs.value = []
     // 如果有问卷管理权限，则加入问卷编辑和投放菜单

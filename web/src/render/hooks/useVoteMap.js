@@ -1,10 +1,12 @@
-import store from '../store/index'
-export const useVoteMap = (questionKey) => {
-  let voteTotal = store.state.voteMap?.[questionKey]?.total || 0
+import { useQuestionStore } from '../stores/question'
 
-  const options = store.state.questionData[questionKey].options.map((option) => {
+export const useVoteMap = (questionKey) => {
+  const questionStore = useQuestionStore()
+  let voteTotal = questionStore.voteMap?.[questionKey]?.total || 0
+
+  const options = questionStore.questionData[questionKey].options.map((option) => {
     const optionHash = option.hash
-    const voteCount = store.state.voteMap?.[questionKey]?.[optionHash] || 0
+    const voteCount = questionStore.voteMap?.[questionKey]?.[optionHash] || 0
 
     return {
       ...option,

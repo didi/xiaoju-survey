@@ -44,17 +44,17 @@
 
 <script lang="ts" setup>
 import { computed, ref, shallowRef, onMounted } from 'vue'
-import { useStore } from 'vuex'
 import { pick as _pick } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { QOP_MAP } from '@/management/utils/constant'
 import { type IMember, type IWorkspace, UserRole } from '@/management/utils/types/workSpace'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 import MemberSelect from '@/management/components/CooperModify/MemberSelect.vue'
 
-const store = useStore()
+const workSpaceStore = useWorkSpaceStore()
 const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
 const props = defineProps({
   type: String,
@@ -66,7 +66,8 @@ const ruleForm = shallowRef<any>(null)
 const formTitle = computed(() => {
   return props.type === QOP_MAP.ADD ? '创建团队空间' : '管理团队空间'
 })
-const formModel = ref<IWorkspace>({
+const formModel = ref<Required<IWorkspace>>({
+  _id: '',
   name: '',
   description: '',
   members: [] as IMember[]
@@ -88,28 +89,29 @@ const rules = {
   ]
 }
 const spaceDetail = computed(() => {
-  return store.state.list.spaceDetail
+  return workSpaceStore.spaceDetail
 })
 const formDisabled = computed(() => {
   return spaceDetail.value?._id
-    ? store.state.list.teamSpaceList.find((item: any) => item._id === spaceDetail.value._id)
-        .currentUserRole !== UserRole.Admin
+    ? workSpaceStore.workSpaceList.find((item: any) => item._id === spaceDetail.value?._id)
+        ?.currentUserRole !== UserRole.Admin
     : false
 })
 
 onMounted(() => {
   if (props.type === QOP_MAP.EDIT) {
-    formModel.value = _pick(spaceDetail.value, ['_id', 'name', 'description', 'members'])
+    formModel.value = _pick(spaceDetail.value as any, ['_id', 'name', 'description', 'members'])
   }
 })
 const onClose = () => {
   formModel.value = {
+    _id: '',
     name: '',
     description: '',
     members: [] as IMember[]
   }
   // 清空空间详情
-  store.commit('list/setSpaceDetail', null)
+  workSpaceStore.setSpaceDetail(null)
   emit('on-close-codify')
 }
 
@@ -144,10 +146,10 @@ const handleMembersChange = (val: IMember[]) => {
   formModel.value.members = val
 }
 const handleUpdate = async () => {
-  await store.dispatch('list/updateSpace', formModel.value)
+  await workSpaceStore.updateSpace(formModel.value)
 }
 const handleAdd = async () => {
-  await store.dispatch('list/addSpace', formModel.value)
+  await workSpaceStore.addSpace(formModel.value)
 }
 </script>
 

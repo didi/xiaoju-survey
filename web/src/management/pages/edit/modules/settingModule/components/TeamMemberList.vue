@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, defineEmits, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 import { getMemberList } from '@/management/api/space'
 import { ElMessage } from 'element-plus'

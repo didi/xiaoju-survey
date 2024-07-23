@@ -27,13 +27,14 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 
 import skinPresets from '@/management/config/skinPresets.js'
 
-const store = useStore()
+const editStore = useEditStore()
+const { changeThemePreset } = editStore
 const groupName = ref<string>('temp')
-const bannerList = computed(() => store?.state?.bannerList || [])
+const bannerList = computed(() => editStore.bannerList || [])
 const groupList = computed(() =>
   Object.keys(bannerList.value).map((key) => ({
     label: bannerList.value[key].name,
@@ -81,7 +82,7 @@ const changePreset = (banner: any) => {
     presets = Object.assign(presets, (skinPresets as any)[name])
   }
 
-  store.dispatch('edit/changeThemePreset', presets)
+  changeThemePreset(presets)
 }
 </script>
 <style lang="scss" scoped>
@@ -108,7 +109,10 @@ const changePreset = (banner: any) => {
     display: flex;
     flex-wrap: wrap;
     .tag {
-      margin: 5px 8px;
+      width: 55px;
+      margin: 5px 2px;
+      cursor: pointer;
+      flex: auto;
       cursor: pointer;
       &.current {
         color: $primary-color;

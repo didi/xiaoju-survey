@@ -5,17 +5,15 @@
 </template>
 <script setup lang="ts">
 import { computed, provide } from 'vue'
-import { useStore } from 'vuex'
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
 import { cloneDeep } from 'lodash-es'
 
 import RulePanel from '../../modules/logicModule/RulePanel.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
-const store = useStore()
-
-const questionDataList = computed(() => {
-  return store.state.edit.schema.questionDataList
-})
+const editStore = useEditStore()
+const { questionDataList } = storeToRefs(editStore)
 
 const renderData = computed(() => {
   return filterQuestionPreviewData(cloneDeep(questionDataList.value))

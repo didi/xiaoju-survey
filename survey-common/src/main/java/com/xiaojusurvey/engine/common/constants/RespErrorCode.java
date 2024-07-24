@@ -21,7 +21,10 @@ public enum RespErrorCode {
     RESPONSE_OVER_LIMIT(9003, "超出限制"),
     RESPONSE_SCHEMA_REMOVED(9004, "问卷已删除"),
     RESPONSE_DATA_DECRYPT_ERROR(9005, "问卷已删除"),
+    UPDATE_SURVEY_META_ERROR(9006,"修改问卷失败"),
     UPLOAD_FILE_ERROR(5001, "上传文件错误");
+
+
 
     private final int code;
     private final String message;

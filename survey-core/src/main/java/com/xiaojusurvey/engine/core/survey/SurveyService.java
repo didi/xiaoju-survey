@@ -2,6 +2,7 @@ package com.xiaojusurvey.engine.core.survey;
 
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import com.xiaojusurvey.engine.core.reslut.IdResult;
+import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 
 /**
  * @Author: LYF
@@ -12,4 +13,6 @@ public interface SurveyService {
     IdResult createSurvey(SurveyMeta surveyMeta);
 
     SurveyMeta getSurveyMeta(String surveyId);
+
+    boolean updateMeta(SurveyMetaUpdateParam param);
 }

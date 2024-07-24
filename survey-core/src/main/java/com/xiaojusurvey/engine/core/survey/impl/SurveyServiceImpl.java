@@ -3,9 +3,11 @@ package com.xiaojusurvey.engine.core.survey.impl;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import com.xiaojusurvey.engine.core.reslut.IdResult;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +22,14 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Resource
     private MongoRepository mongoRepository;
+
+    public MongoRepository getMongoRepository() {
+        return mongoRepository;
+    }
+
+    public void setMongoRepository(MongoRepository mongoRepository) {
+        this.mongoRepository = mongoRepository;
+    }
 
     /**
      * 创建问卷
@@ -37,4 +47,16 @@ public class SurveyServiceImpl implements SurveyService {
         query.addCriteria(Criteria.where("_id").is(surveyId));
         return mongoRepository.findOne(query, SurveyMeta.class);
     }
+
+    @Override
+    public boolean updateMeta(SurveyMetaUpdateParam param){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(param.getSurveyId()));
+        Update update = new Update();
+        update.set("title", param.getTitle()).set("remark",param.getRemark());
+        mongoRepository.updateFirst(query,update,SurveyMeta.class);
+        return true;
+    }
+
+
 }

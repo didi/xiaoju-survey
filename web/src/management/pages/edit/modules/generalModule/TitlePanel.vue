@@ -49,14 +49,13 @@ const hideFullTitle = () => {
 <style lang="scss" scoped>
 .title-container {
   position: relative;
-  width: 280px;
+  max-width: 280px;
 }
 
 .title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
   cursor: pointer;
 }
 

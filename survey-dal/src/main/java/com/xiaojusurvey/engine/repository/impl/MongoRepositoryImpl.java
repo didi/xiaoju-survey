@@ -113,4 +113,9 @@ public class MongoRepositoryImpl implements MongoRepository {
         return mongoTemplate.find(query, entityClass);
     }
 
+    @Override
+    public <T extends BaseEntity> List<T> findList(Query query, Class<T> entityClass) {
+        return mongoTemplate.find(query, entityClass);
+    }
+
 }

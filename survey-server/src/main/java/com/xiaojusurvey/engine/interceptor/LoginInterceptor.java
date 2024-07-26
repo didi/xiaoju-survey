@@ -39,8 +39,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         //查询用户信息
         Map<String, Claim> claims = jwt.getClaims();
         //获取用户名,密码
-        String username = String.valueOf(claims.get("username"));
-        String userId = String.valueOf(claims.get("_id"));
+        String username = claims.get("username").asString();
+        String userId = claims.get("_id").asString();
         //判空
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(userId)) {
             //token超时

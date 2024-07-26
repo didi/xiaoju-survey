@@ -90,4 +90,13 @@ public interface MongoRepository {
      * 多条件分页查询
      */
     <T extends BaseEntity> List<T> page(Query query, int pageIndex, int pageSize, Class<T> entityClass);
+
+    /**
+     * 多条件查询
+     * @param query
+     * @param entityClass
+     * @param <T>
+     * @return
+     */
+    <T extends BaseEntity> List<T> findList(Query query, Class<T> entityClass);
 }

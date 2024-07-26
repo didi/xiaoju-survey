@@ -17,8 +17,12 @@ import java.util.Map;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
+    public static final String USERNAME = "username";
+    public static final String _ID = "_id";
+
     @Resource
     private JwtTokenUtil jwtTokenUtil;
+
     @Resource
     private UserService userService;
 
@@ -39,8 +43,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         //查询用户信息
         Map<String, Claim> claims = jwt.getClaims();
         //获取用户名,密码
-        String username = String.valueOf(claims.get("username"));
-        String userId = String.valueOf(claims.get("_id"));
+        String username = null, userId = null;
+        if (!ObjectUtils.isEmpty(claims.get(USERNAME))) {
+            username = claims.get(USERNAME).asString();
+        }
+        if (!ObjectUtils.isEmpty(claims.get(_ID))) {
+            userId = claims.get(_ID).asString();
+        }
         //判空
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(userId)) {
             //token超时

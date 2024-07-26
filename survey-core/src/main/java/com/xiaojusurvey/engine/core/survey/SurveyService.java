@@ -15,4 +15,6 @@ public interface SurveyService {
     SurveyMeta getSurveyMeta(String surveyId);
 
     boolean updateMeta(SurveyMetaUpdateParam param);
+
+    boolean deleteSurvey(String surveyId);
 }

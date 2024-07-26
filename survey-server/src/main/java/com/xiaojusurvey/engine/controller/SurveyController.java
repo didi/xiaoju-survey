@@ -103,12 +103,26 @@ public class SurveyController {
     /**
      * 修改问卷
      */
-    @GetMapping("/updateMeta")
-    public RpcResult updateMeta(@RequestBody @Validated SurveyMetaUpdateParam param) {
+    @PostMapping("/updateMeta")
+    public RpcResult updateMeta(@RequestBody @Validated(SurveyMetaUpdateParam.Update.class) SurveyMetaUpdateParam param) {
         boolean flag  = surveyService.updateMeta(param);
         if (flag) {
             return RpcResultUtil.createSuccessResult(null);
         }
         return RpcResultUtil.createFailedResult(RespErrorCode.UPDATE_SURVEY_META_ERROR.getCode(),RespErrorCode.UPDATE_SURVEY_META_ERROR.getMessage());
+    }
+
+    /**
+     * 删除问卷
+     * @param param
+     * @return
+     */
+    @PostMapping("/deleteSurvey")
+    public RpcResult deleteSurvey(@RequestBody @Validated(SurveyMetaUpdateParam.Delete.class) SurveyMetaUpdateParam param) {
+        boolean flag  = surveyService.deleteSurvey(param.getSurveyId());
+        if (flag) {
+            return RpcResultUtil.createSuccessResult(null);
+        }
+        return RpcResultUtil.createFailedResult(RespErrorCode.DELETE_SURVEY_ERROR.getCode(),RespErrorCode.DELETE_SURVEY_ERROR.getMessage());
     }
 }

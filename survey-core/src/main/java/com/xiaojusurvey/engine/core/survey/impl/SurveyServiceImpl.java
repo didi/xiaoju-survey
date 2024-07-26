@@ -58,5 +58,13 @@ public class SurveyServiceImpl implements SurveyService {
         return true;
     }
 
+    @Override
+    public boolean deleteSurvey(String surveyId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(surveyId));
+        mongoRepository.delete(query, SurveyMeta.class);
+        return true;
+    }
+
 
 }

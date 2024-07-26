@@ -13,10 +13,15 @@ import java.io.Serializable;
  */
 @Data
 public class SurveyMetaUpdateParam implements Serializable {
-    @NotBlank(message = "问卷id不能为空")
+    @NotBlank(message = "问卷id不能为空",groups = {Update.class,Delete.class})
     private String surveyId;
-    @NotBlank(message = "问卷标题不能为空")
+    @NotBlank(message = "问卷标题不能为空",groups = {Update.class})
     private String title;
-    @NotBlank(message = "问卷描述不能为空")
+    @NotBlank(message = "问卷描述不能为空",groups = {Update.class})
     private String remark;
+
+    public interface Update {
+    }
+    public interface Delete {
+    }
 }

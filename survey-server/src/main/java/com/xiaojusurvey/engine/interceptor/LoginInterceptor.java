@@ -39,14 +39,14 @@ public class LoginInterceptor implements HandlerInterceptor {
         //查询用户信息
         Map<String, Claim> claims = jwt.getClaims();
         //获取用户名,密码
-        String username = claims.get("username").asString();
-        String password = claims.get("password").asString();
+        String username = String.valueOf(claims.get("username"));
+        String userId = String.valueOf(claims.get("_id"));
         //判空
-        if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(password)) {
+        if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(userId)) {
             //token超时
             throw new ServiceException(RespErrorCode.USER_CREDENTIALS_ERROR.getMessage(), RespErrorCode.USER_CREDENTIALS_ERROR.getCode());
         }
-        User user = userService.loadUserByUsernameAndPassword(username, password);
+        User user = userService.getUserById(userId);
         request.setAttribute("user", user);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

@@ -18,7 +18,7 @@ public enum SurveyStatusEnum {
 
     private String status;
 
-    private SurveyStatusEnum(String status){
+    private SurveyStatusEnum(String status) {
         this.status = status;
     }
 
@@ -27,7 +27,7 @@ public enum SurveyStatusEnum {
     }
 
 
-    public static Status getSpecStatus(SurveyStatusEnum statusEnum){
+    public static Status getSpecStatus(SurveyStatusEnum statusEnum) {
         Status newStatus = new Status();
         newStatus.setStatus(statusEnum.getStatus());
         newStatus.setDate(System.currentTimeMillis());

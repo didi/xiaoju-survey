@@ -1,6 +1,9 @@
 package com.xiaojusurvey.engine.core.auth.util;
 
 
+import com.xiaojusurvey.engine.common.constants.RespErrorCode;
+import com.xiaojusurvey.engine.common.exception.ServiceException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -51,8 +54,7 @@ public class AuthUtil {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
+            throw new ServiceException(RespErrorCode.ENCRYPTION_ERROR.getMessage(), RespErrorCode.ENCRYPTION_ERROR.getCode());
         }
     }
 

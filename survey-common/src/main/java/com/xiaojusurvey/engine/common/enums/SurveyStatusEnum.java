@@ -18,7 +18,7 @@ public enum SurveyStatusEnum {
 
     private String status;
 
-    private SurveyStatusEnum(String status) {
+    SurveyStatusEnum(String status) {
         this.status = status;
     }
 

@@ -65,10 +65,10 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public boolean updateMeta(SurveyMetaUpdateParam param){
+    public boolean updateMeta(SurveyMetaUpdateParam param) {
         SurveyMeta temp = getSurveyMeta(param.getSurveyId());
         Status st = temp.getCurStatus();
-        if(!st.getStatus().equals(SurveyStatusEnum.NEW.getStatus()) && !st.getStatus().equals(SurveyStatusEnum.EDITING.getStatus())){
+        if (!st.getStatus().equals(SurveyStatusEnum.NEW.getStatus()) && !st.getStatus().equals(SurveyStatusEnum.EDITING.getStatus())) {
             Status newStatus = SurveyStatusEnum.getSpecStatus(SurveyStatusEnum.EDITING);
             temp.setCurStatus(newStatus);
             temp.setTitle(param.getTitle());
@@ -78,10 +78,10 @@ public class SurveyServiceImpl implements SurveyService {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(param.getSurveyId()));
         Update update = new Update();
-        update.set("title", param.getTitle()).set("remark",param.getRemark());
-        update.set("curStatus",temp.getCurStatus());
-        update.set("statusList",temp.getStatusList());
-        mongoRepository.updateFirst(query,update,SurveyMeta.class);
+        update.set("title", param.getTitle()).set("remark", param.getRemark());
+        update.set("curStatus", temp.getCurStatus());
+        update.set("statusList", temp.getStatusList());
+        mongoRepository.updateFirst(query, update, SurveyMeta.class);
         return true;
     }
 
@@ -89,10 +89,10 @@ public class SurveyServiceImpl implements SurveyService {
     public boolean deleteSurvey(String surveyId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(surveyId));
-        SurveyMeta meta =  mongoRepository.findOne(query, SurveyMeta.class);
-        if(meta.getCurStatus().getStatus().equals(SurveyStatusEnum.REMOVED.getStatus())){
-            log.error("[deleteSurvey] 问卷已删除，不能重复删除,surveyId={}",surveyId);
-            throw new ServiceException(RespErrorCode.SURVEY_STATUS_TRANSFORM_ERROR.getMessage(),RespErrorCode.SURVEY_STATUS_TRANSFORM_ERROR.getCode()); // 问卷状态转换报错
+        SurveyMeta meta = mongoRepository.findOne(query, SurveyMeta.class);
+        if (meta.getCurStatus().getStatus().equals(SurveyStatusEnum.REMOVED.getStatus())) {
+            log.error("[deleteSurvey] 问卷已删除，不能重复删除,surveyId={}", surveyId);
+            throw new ServiceException(RespErrorCode.SURVEY_STATUS_TRANSFORM_ERROR.getMessage(), RespErrorCode.SURVEY_STATUS_TRANSFORM_ERROR.getCode()); // 问卷状态转换报错
         }
         Status newStatus = SurveyStatusEnum.getSpecStatus(SurveyStatusEnum.REMOVED);
         meta.setCurStatus(newStatus);

@@ -26,6 +26,11 @@ public class SurveyMeta extends BaseEntity {
     @NotBlank(message = "问卷类型不能为空")
     @NotNull(message = "问卷类型不能为空")
     private String surveyType;
+
+    /**
+     * 问卷短链
+     */
+    private String surveyPath;
     /**
      * 问卷标题
      */
@@ -42,6 +47,15 @@ public class SurveyMeta extends BaseEntity {
      * 创建来源
      */
     private String createFrom;
+
+    /**
+     * 创建人
+     */
+    private String creator;
+    /**
+     * 所有者
+     */
+    private String owner;
 
 
 }

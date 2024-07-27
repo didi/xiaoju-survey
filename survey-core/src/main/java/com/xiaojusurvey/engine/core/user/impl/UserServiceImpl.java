@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loadUserByUsernameAndPassword(String username, String password) {
         Query query = new Query();
-        String encryptPassword = AuthUtil.encryptPassword(password, username);
+        String encryptPassword = AuthUtil.hash256(password);
         query.addCriteria(Criteria.where("username").is(username).and("password").is(encryptPassword));
         //查询用户并返回
         User user = mongoRepository.findOne(query, User.class);
@@ -43,5 +43,10 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(RespErrorCode.USER_PASSWORD_ERROR.getMessage(), RespErrorCode.USER_PASSWORD_ERROR.getCode());
         }
         return user;
+    }
+
+    @Override
+    public User getUserById(String userId) {
+        return mongoRepository.findOne(new Query(Criteria.where("_id").is(userId)), User.class);
     }
 }

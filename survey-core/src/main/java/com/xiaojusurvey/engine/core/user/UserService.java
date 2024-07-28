@@ -9,4 +9,6 @@ public interface UserService {
     List<User> findAllUser();
 
     User loadUserByUsernameAndPassword(String username, String password);
+
+    User getUserById(String userId);
 }

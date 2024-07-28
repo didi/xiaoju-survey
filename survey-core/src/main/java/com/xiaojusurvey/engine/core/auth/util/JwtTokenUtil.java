@@ -59,7 +59,7 @@ public class JwtTokenUtil {
         Date expiryDate = new Date(now.getTime() + expirationTime * HOUR_MILLISECOND);
         String token = JWT.create()
                 .withClaim("username", user.getUsername())
-                .withClaim("password", user.getPassword())
+                .withClaim("_id", user.getId())
                 .withExpiresAt(expiryDate)
                 .withJWTId(UUID.randomUUID().toString())
                 .sign(Algorithm.HMAC256(secret));

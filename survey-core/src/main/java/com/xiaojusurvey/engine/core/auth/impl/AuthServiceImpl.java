@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         //保存
         User user = new User();
         user.setUsername(userParam.getUsername());
-        user.setPassword(AuthUtil.encryptPassword(userParam.getPassword(), userParam.getUsername()));
+        user.setPassword(AuthUtil.hash256(userParam.getPassword()));
         mongoRepository.save(user);
         return createTokenAndDeleteCaptcha(userParam);
     }

@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum RespErrorCode {
     AUTHENTICATION_FAILED(1001, "没有权限"),
     PARAMETER_ERROR(1002, "参数有误"),
+    ENCRYPTION_ERROR(1003, "加密异常"),
     USER_EXISTS(2001, "用户已存在"),
     USER_NOT_EXISTS(2002, "用户不存在"),
     USER_PASSWORD_ERROR(2003, "用户名或密码错误"),

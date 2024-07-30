@@ -1,14 +1,24 @@
 package com.xiaojusurvey.engine.core.survey.impl;
 
+import java.util.ArrayList;
+
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.entity.Status;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyConf;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyHistory;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyPublish;
+import com.xiaojusurvey.engine.common.entity.user.User;
+import com.xiaojusurvey.engine.common.enums.HistoryTypeEnum;
 import com.xiaojusurvey.engine.common.enums.SurveyStatusEnum;
 import com.xiaojusurvey.engine.common.exception.ServiceException;
 import com.xiaojusurvey.engine.core.reslut.IdResult;
+import com.xiaojusurvey.engine.core.survey.SurveyConfService;
+import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyPublishService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
+import com.xiaojusurvey.engine.core.util.WebUtils;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,7 +28,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: LYF
@@ -34,6 +46,12 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Resource
     private SurveyPublishService surveyPublishService;
+
+    @Resource
+    private SurveyConfService surveyConfService;
+
+    @Resource
+    private SurveyHistoryService surveyHistoryService;
 
     public MongoRepository getMongoRepository() {
         return mongoRepository;
@@ -54,6 +72,17 @@ public class SurveyServiceImpl implements SurveyService {
         List<Status> statusList = Arrays.asList(newStatus);
         surveyMeta.setStatusList(statusList);
         idResult.setId(mongoRepository.save(surveyMeta).getId());
+        //保存survyConf
+        SurveyConf conf = new SurveyConf();
+        conf.setPageId(idResult.getId());
+        Map map = new HashMap<>(4);
+        conf.setCode(map);
+//        conf.setId("");
+//        conf.setCreateDate(0L);
+//        conf.setUpdateDate(0L);
+        conf.setCurStatus(new Status());
+        conf.setStatusList(new ArrayList<Status>());
+        surveyConfService.createSurveyConf(conf);
         return idResult;
     }
 
@@ -101,6 +130,48 @@ public class SurveyServiceImpl implements SurveyService {
 
         //删除问卷回收表
         surveyPublishService.delete(meta);
+        return true;
+    }
+
+    @Override
+    public boolean publishSurvey(String surveyId) {
+        //1,查询问卷配置
+        SurveyConf conf = surveyConfService.getSurveyConfBySurveyId(surveyId);
+        SurveyMeta meta = getSurveyMeta(surveyId);
+        //2，surveyMeta保存
+        Status pub = SurveyStatusEnum.getSpecStatus(SurveyStatusEnum.PUBLISHED);
+        meta.setCurStatus(pub);
+        meta.getStatusList().add(pub);
+        mongoRepository.save(meta);
+
+        //3，保存问卷配置到publish表
+        SurveyPublish publish = new SurveyPublish();
+        publish.setPageId(surveyId);
+        publish.setTitle(meta.getTitle());
+        publish.setSurveyPath(meta.getSurveyPath());
+        publish.setCode(conf.getCode());
+//        publish.setId("");
+//        publish.setCreateDate(0L);
+//        publish.setUpdateDate(0L);
+//        Status pub = SurveyStatusEnum.getSpecStatus(SurveyStatusEnum.PUBLISHED);
+        publish.setCurStatus(pub);
+        publish.setStatusList(Arrays.asList(pub));
+        surveyPublishService.save(publish);
+
+        //4，保存history
+        SurveyHistory his = new SurveyHistory();
+        his.setPageId(conf.getId());
+        his.setSchema(conf.getCode());
+        his.setType(HistoryTypeEnum.PUBLISH_HIS.getHistoryType());
+        User user = (User) WebUtils.getHttpServletRequest().getAttribute("user");
+        Map<String, Object> opt = new HashMap<>(4);
+        opt.put("_id", user.getId());
+        opt.put("username", user.getUsername());
+        his.setOperator(opt);
+        Status st = SurveyStatusEnum.getSpecStatus(SurveyStatusEnum.NEW);
+        his.setCurStatus(st);
+        his.setStatusList(Arrays.asList(st));
+        surveyHistoryService.addHistory(his);
         return true;
     }
 

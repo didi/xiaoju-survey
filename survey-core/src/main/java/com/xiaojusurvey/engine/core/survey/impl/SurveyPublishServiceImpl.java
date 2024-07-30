@@ -34,6 +34,12 @@ public class SurveyPublishServiceImpl implements SurveyPublishService {
 
 
     @Override
+    public boolean save(SurveyPublish surveyPublish) {
+        SurveyPublish ret = mongoRepository.save(surveyPublish);
+        return true;
+    }
+
+    @Override
     public boolean delete(SurveyMeta param) {
         if (StringUtils.hasLength(param.getSurveyPath())) {
             SurveyPublish surveyPublish = getBysurveyPath(param.getSurveyPath());
@@ -45,6 +51,14 @@ public class SurveyPublishServiceImpl implements SurveyPublishService {
             }
         }
         return true;
+    }
+
+    @Override
+    public SurveyPublish getByPageId(String surveyId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("pageId").is(surveyId));
+        SurveyPublish surveyPublish = mongoRepository.findOne(query, SurveyPublish.class);
+        return surveyPublish;
     }
 
     public SurveyPublish getBysurveyPath(String surveyPath) {

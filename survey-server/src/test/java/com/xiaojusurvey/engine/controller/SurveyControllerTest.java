@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.ui.ModelExtensionsKt;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,4 +91,12 @@ public class SurveyControllerTest {
         Assert.assertEquals(new Integer(200), surveyResult2.getCode());
     }
 
+
+    @Test
+    public void publishSurveyTest() {
+
+        Mockito.when(surveyService.publishSurvey(Mockito.any())).thenReturn(true);
+        surveyController.publishSurvey("11111");
+
+    }
 }

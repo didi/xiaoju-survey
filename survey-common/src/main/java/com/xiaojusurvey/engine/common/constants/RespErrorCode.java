@@ -18,6 +18,7 @@ public enum RespErrorCode {
     SURVEY_CONTENT_NOT_ALLOW(3005, "存在禁用内容"),
     UPDATE_SURVEY_META_ERROR(3006, "修改问卷失败"),
     DELETE_SURVEY_ERROR(3007, "删除问卷失败"),
+    PUBLISH_SURVEY_ERROR(3008, "发布问卷失败"),
     CAPTCHA_INCORRECT(4001, "验证码不正确"),
     RESPONSE_SIGN_ERROR(9001, "签名不正确"),
     RESPONSE_CURRENT_TIME_NOT_ALLOW(9002, "当前时间不允许提交"),
@@ -25,8 +26,6 @@ public enum RespErrorCode {
     RESPONSE_SCHEMA_REMOVED(9004, "问卷已删除"),
     RESPONSE_DATA_DECRYPT_ERROR(9005, "问卷已删除"),
     UPLOAD_FILE_ERROR(5001, "上传文件错误");
-
-
 
 
     private final int code;

@@ -16,6 +16,7 @@ import com.xiaojusurvey.engine.core.survey.SurveyService;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoOutVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 @RequestMapping("/api/survey")
 @RestController
+@Slf4j
 public class SurveyController {
     @Resource
     private SurveyService surveyService;
@@ -126,4 +128,22 @@ public class SurveyController {
         }
         return RpcResultUtil.createFailedResult(RespErrorCode.DELETE_SURVEY_ERROR.getCode(), RespErrorCode.DELETE_SURVEY_ERROR.getMessage());
     }
+
+    /**
+     * 发布问卷
+     *
+     * @param surveyId
+     * @return
+     */
+    @PostMapping("/publishSurvey")
+    public RpcResult publishSurvey(@RequestParam @NotBlank(message = "问卷ID不能为空") String surveyId) {
+        log.info("[publishSurvey] 发布问卷,surveyId={}", surveyId);
+        boolean flag = surveyService.publishSurvey(surveyId);
+        if (flag) {
+            return RpcResultUtil.createSuccessResult(null);
+        }
+        return RpcResultUtil.createFailedResult(RespErrorCode.PUBLISH_SURVEY_ERROR.getCode(), RespErrorCode.PUBLISH_SURVEY_ERROR.getMessage());
+    }
+
+
 }

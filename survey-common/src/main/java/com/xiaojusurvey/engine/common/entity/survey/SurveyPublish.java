@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * 问卷发布后的配置表
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @author likui63@163.com
  * @date: 2024/7/27 13:59
  */
-@Document("surveySubmit")
+@Document("surveyPublish")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
@@ -45,7 +46,7 @@ public class SurveyPublish extends BaseEntity {
      */
     @NotBlank(message = "问卷schema不能为空")
     @NotNull(message = "问卷schema不能为空")
-    private String code;
+    private Map<String, Object> code;
 
 
 }

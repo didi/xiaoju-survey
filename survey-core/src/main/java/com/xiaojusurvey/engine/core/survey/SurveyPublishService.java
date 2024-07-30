@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.core.survey;
 
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
+import com.xiaojusurvey.engine.common.entity.survey.SurveyPublish;
 
 /**
  * 问卷发布配置服务
@@ -10,6 +11,9 @@ import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
  */
 public interface SurveyPublishService {
 
+    boolean save(SurveyPublish surveyPublish);
 
     boolean delete(SurveyMeta param);
+
+    SurveyPublish getByPageId(String surveyId);
 }

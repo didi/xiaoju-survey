@@ -17,4 +17,15 @@ public interface SurveyService {
     boolean updateMeta(SurveyMetaUpdateParam param);
 
     boolean deleteSurvey(String surveyId);
+
+    /**
+     * 发布问卷
+     *
+     * @param surveyId
+     * @return
+     */
+    boolean publishSurvey(String surveyId);
+
+
+    
 }

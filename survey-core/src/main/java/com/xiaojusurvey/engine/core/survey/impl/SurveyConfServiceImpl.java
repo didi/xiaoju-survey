@@ -23,6 +23,11 @@ public class SurveyConfServiceImpl implements SurveyConfService {
     private MongoRepository mongoRepository;
 
     @Override
+    public void createSurveyConf(SurveyConf surveyConf) {
+        mongoRepository.save(surveyConf);
+    }
+
+    @Override
     public void saveSurveyConfig(SurveyConf surveyConf) {
         SurveyConf codeInfo = this.getSurveyConfBySurveyId(surveyConf.getPageId());
         if (null == codeInfo) {

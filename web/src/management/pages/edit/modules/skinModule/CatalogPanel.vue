@@ -87,7 +87,7 @@ const changePreset = (banner: any) => {
 </script>
 <style lang="scss" scoped>
 .tab-box {
-  width: 300px;
+  width: 360px;
   height: 100%;
   box-shadow: none;
   border: none;

@@ -13,8 +13,10 @@ import com.xiaojusurvey.engine.core.reslut.IdResult;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoOutVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,7 @@ import java.util.Map;
  */
 @RequestMapping("/api/survey")
 @RestController
+@Slf4j
 public class SurveyController {
     @Resource
     private SurveyService surveyService;
@@ -66,7 +69,7 @@ public class SurveyController {
     @PostMapping("/updateConf")
     public RpcResult<Boolean> updateConf(HttpServletRequest request,
                                          @RequestBody @Validated(SurveyInfoInVO.UpdateConf.class) SurveyInfoInVO infoInVO) {
-        SurveyConf surveyConf  = new SurveyConf();
+        SurveyConf surveyConf = new SurveyConf();
         surveyConf.setCode(infoInVO.getConfigData());
         surveyConf.setPageId(infoInVO.getSurveyId());
         surveyConfService.saveSurveyConfig(surveyConf);
@@ -98,4 +101,49 @@ public class SurveyController {
         SurveyConf surveyConf = surveyConfService.getSurveyConfBySurveyId(surveyId);
         return RpcResultUtil.createSuccessResult(new SurveyInfoOutVO(surveyMeta, surveyConf));
     }
+
+    /**
+     * 修改问卷
+     */
+    @PostMapping("/updateMeta")
+    public RpcResult updateMeta(@RequestBody @Validated(SurveyMetaUpdateParam.Update.class) SurveyMetaUpdateParam param) {
+        boolean flag = surveyService.updateMeta(param);
+        if (flag) {
+            return RpcResultUtil.createSuccessResult(null);
+        }
+        return RpcResultUtil.createFailedResult(RespErrorCode.UPDATE_SURVEY_META_ERROR.getCode(), RespErrorCode.UPDATE_SURVEY_META_ERROR.getMessage());
+    }
+
+    /**
+     * 删除问卷
+     *
+     * @param param
+     * @return
+     */
+    @PostMapping("/deleteSurvey")
+    public RpcResult deleteSurvey(@RequestBody @Validated(SurveyMetaUpdateParam.Delete.class) SurveyMetaUpdateParam param) {
+        boolean flag = surveyService.deleteSurvey(param.getSurveyId());
+        if (flag) {
+            return RpcResultUtil.createSuccessResult(null);
+        }
+        return RpcResultUtil.createFailedResult(RespErrorCode.DELETE_SURVEY_ERROR.getCode(), RespErrorCode.DELETE_SURVEY_ERROR.getMessage());
+    }
+
+    /**
+     * 发布问卷
+     *
+     * @param surveyId
+     * @return
+     */
+    @PostMapping("/publishSurvey")
+    public RpcResult publishSurvey(@RequestParam @NotBlank(message = "问卷ID不能为空") String surveyId) {
+        log.info("[publishSurvey] 发布问卷,surveyId={}", surveyId);
+        boolean flag = surveyService.publishSurvey(surveyId);
+        if (flag) {
+            return RpcResultUtil.createSuccessResult(null);
+        }
+        return RpcResultUtil.createFailedResult(RespErrorCode.PUBLISH_SURVEY_ERROR.getCode(), RespErrorCode.PUBLISH_SURVEY_ERROR.getMessage());
+    }
+
+
 }

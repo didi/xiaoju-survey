@@ -24,7 +24,7 @@ public enum RoleEmum {
         return this.state;
     }
 
-    public String getValue(){
+    public String getValue() {
         return this.value;
     }
 

@@ -1,5 +1,6 @@
 package com.xiaojusurvey.engine.core.workspace.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -14,17 +15,18 @@ public class WorkspaceMemberVO {
     private String name;
     private String description;
     private String currentUserId;
-    private String _id;
+    @JsonProperty("_id")
+    private String id;
     private List<MembersVO> members;
 
 
     @Data
     public static class MembersVO {
-        private String _id;
+        @JsonProperty("_id")
+        private String id;
         private String userId;
         private String username;
         private String role;
-//        private String currentUserId;
-//        private String currentUserRole;
+        private String workspaceId;
     }
 }

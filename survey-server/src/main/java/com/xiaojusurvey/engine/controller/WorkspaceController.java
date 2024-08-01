@@ -4,7 +4,7 @@ import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.workspace.WorkspaceService;
 import com.xiaojusurvey.engine.core.workspace.param.WorkspaceParam;
-import com.xiaojusurvey.engine.core.workspace.vo.WorkspaceInfoVO;
+import com.xiaojusurvey.engine.core.workspace.vo.WorkspaceListVO;
 import com.xiaojusurvey.engine.core.workspace.vo.WorkspaceMemberVO;
 import com.xiaojusurvey.engine.core.workspace.vo.WorkspaceVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * @description: 空间、空间成员
+ * @description: 空间
  * @author: wangchenglong
  * @time: 2024/7/24 14:33
  */
@@ -45,8 +45,8 @@ public class WorkspaceController {
      * @return
      */
     @GetMapping
-    public RpcResult<List<WorkspaceInfoVO>> findAll(HttpServletRequest request, @RequestParam(defaultValue = "10") Integer pageSize,
-                                                    @RequestParam(defaultValue = "0") Integer curPage, String name) {
+    public RpcResult<WorkspaceListVO> findAll(HttpServletRequest request, @RequestParam(defaultValue = "10") Integer pageSize,
+                                        @RequestParam(defaultValue = "1") Integer curPage, String name) {
         return RpcResultUtil.createSuccessResult(workspaceService.findAll(request, pageSize, curPage, name));
     }
 
@@ -61,8 +61,39 @@ public class WorkspaceController {
         return RpcResultUtil.createSuccessResult(workspaceService.getWorkspaceInfo(request, workspaceId));
     }
 
+    /**
+     * 更新空间详情
+     * @param request
+     * @param workspaceId
+     * @param workspaceParam
+     * @return
+     */
     @PostMapping("/{workspaceId}")
-    public RpcResult<WorkspaceMemberVO> update(HttpServletRequest request, @PathVariable String workspaceId, @RequestBody WorkspaceParam workspaceParam) {
-        return RpcResultUtil.createSuccessResult(workspaceService.getWorkspaceInfo(request, workspaceId));
+    public RpcResult<?> update(HttpServletRequest request, @PathVariable String workspaceId, @RequestBody WorkspaceParam workspaceParam) {
+        workspaceService.update(request, workspaceParam, workspaceId);
+        return RpcResultUtil.createSuccessResult(true);
     }
+
+    /**
+     * 删除空间
+     * @param request
+     * @param workspaceId
+     * @return
+     */
+    @DeleteMapping("/{workspaceId}")
+    public RpcResult<?> delete(HttpServletRequest request, @PathVariable String workspaceId) {
+        workspaceService.delete(request, workspaceId);
+        return RpcResultUtil.createSuccessResult(true);
+    }
+
+    /**
+     * 获取空间成员列表
+     * @param request
+     * @return
+     */
+    @GetMapping("/member/list")
+    public RpcResult<List<WorkspaceMemberVO>> getWorkspaceAndMember(HttpServletRequest request) {
+        return RpcResultUtil.createSuccessResult(workspaceService.findAllByUserId(request));
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.xiaojusurvey.engine.core.workspace.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -12,7 +13,8 @@ public class WorkspaceInfoVO {
     /**
      * 空间 id
      */
-    private String _id;
+    @JsonProperty("_id")
+    private String id;
 
     /**
      * 所有者id

@@ -1,10 +1,7 @@
 package com.xiaojusurvey.engine.bean;
 
 
-import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
-import org.dozer.loader.api.BeanMappingBuilder;
-import org.dozer.loader.api.FieldsMappingOptions;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -33,8 +30,10 @@ public class GeneralConvertor {
      * @param <S>
      * @return
      */
-    public <T,S> List<T> convertor(List<S> source, Class<T> clz){
-        if (source == null) return null;
+    public <T, S> List<T> convertor(List<S> source, Class<T> clz) {
+        if (source == null) {
+            return null;
+        }
         List<T> map = new ArrayList<>();
         for (S s : source) {
             map.add(mapper.map(s, clz));
@@ -53,7 +52,9 @@ public class GeneralConvertor {
      * @return
      */
     public <T, S> Set<T> convertor(Set<S> source, Class<T> clz) {
-        if (source == null) return null;
+        if (source == null) {
+            return null;
+        }
         Set<T> set = new TreeSet<>();
         for (S s : source) {
             set.add(mapper.map(s, clz));
@@ -71,37 +72,11 @@ public class GeneralConvertor {
      * @return
      */
     public <T, S> T convertor(S source, Class<T> clz) {
-        if (source == null) return null;
+        if (source == null) {
+            return null;
+        }
         return mapper.map(source, clz);
     }
-
-    /**
-     * 针对mongodb中的_id及id字段的转换
-     * @param source
-     * @param destinationClass
-     * @param <T>
-     * @return
-     */
-    public <T> T convertor_id(Object source, Class<T> destinationClass) {
-        Mapper mapper = new DozerBeanMapper();
-        ((DozerBeanMapper) mapper).addMapping(new BeanMappingBuilder() {
-            @Override
-            protected void configure() {
-                mapping(source.getClass(), destinationClass)
-                        .fields("id", "_id", FieldsMappingOptions.copyByReference());
-            }
-        });
-        return mapper.map(source, destinationClass);
-    }
-
-    public <S, T> List<T> convertor_ids(List<S> sourceList, Class<T> destinationClass) {
-        List<T> destinationList = new ArrayList<>();
-        for (S source : sourceList) {
-            destinationList.add(convertor_id(source, destinationClass));
-        }
-        return destinationList;
-    }
-
 
     public void convertor(Object source, Object object) {
         mapper.map(source, object);

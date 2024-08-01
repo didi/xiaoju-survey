@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @description: 空间VO
+ * @description: 空间Dto
  * @author: wangchenglong
  * @time: 2024/7/24 14:37
  */

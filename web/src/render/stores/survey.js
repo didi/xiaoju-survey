@@ -15,6 +15,8 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 import adapter from '../adapter'
+import { RuleMatch } from '@/common/logicEngine/RulesMatch'
+// import { jumpLogicRule } from '@/common/logicEngine/jumpLogicRule'
 
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
@@ -38,6 +40,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const submitConf = ref({})
   const formValues = ref({})
   const whiteData = ref({})
+  const changeField = ref(null)
 
   const router = useRouter()
   const questionStore = useQuestionStore()
@@ -152,9 +155,19 @@ export const useSurveyStore = defineStore('survey', () => {
   // 用户输入或者选择后，更新表单数据
   const changeData = (data) => {
     let { key, value } = data
+    changeField.value = key
     if (key in formValues.value) {
       formValues.value[key] = value
     }
+  }
+
+  const showLogicEngine = ref()
+  const initShowLogicEngine = (showLogicConf) => {
+    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
+  }
+  const  jumpLogicEngine = ref()
+  const initJumpLogicEngine = (jumpLogicConf) => {
+    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
   }
 
   return {
@@ -171,12 +184,16 @@ export const useSurveyStore = defineStore('survey', () => {
     submitConf,
     formValues,
     whiteData,
-
+    changeField,
     initSurvey,
     changeData,
     setWhiteData,
     setSurveyPath,
     setEnterTime,
-    getEncryptInfo
+    getEncryptInfo,
+    showLogicEngine,
+    initShowLogicEngine,
+    jumpLogicEngine,
+    initJumpLogicEngine,
   }
 })

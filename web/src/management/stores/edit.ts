@@ -12,6 +12,7 @@ import { SurveyPermissions } from '@/management/utils/types/workSpace'
 import { getBannerData } from '@/management/api/skin.js'
 import { getCollaboratorPermissions } from '@/management/api/space'
 import { CODE_MAP } from '../api/base'
+import { RuleBuild } from '@/common/logicEngine/RuleBuild'
 
 const innerMetaConfig = {
   submit: {
@@ -72,10 +73,11 @@ function useInitializeSchema(surveyId: Ref<string>) {
     },
     questionDataList: [],
     logicConf: {
-      showLogicConf: []
+      showLogicConf: [],
+      jumpLogicConf: []
     }
   })
-
+  const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine} = useLogicEngine(schema)
   function initSchema({ metaData, codeData }: { metaData: any; codeData: any }) {
     schema.metaData = metaData
     schema.bannerConf = _merge({}, schema.bannerConf, codeData.bannerConf)
@@ -86,8 +88,11 @@ function useInitializeSchema(surveyId: Ref<string>) {
     schema.questionDataList = codeData.questionDataList || []
     schema.logicConf = codeData.logicConf
   }
+  
+  
 
   async function getSchemaFromRemote() {
+    
     const res: any = await getSurveyById(surveyId.value)
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
@@ -113,6 +118,9 @@ function useInitializeSchema(surveyId: Ref<string>) {
           logicConf
         }
       })
+      
+      initShowLogicEngine()
+      initJumpLogicEngine()
     } else {
       throw new Error(res.errmsg || '问卷不存在')
     }
@@ -121,7 +129,9 @@ function useInitializeSchema(surveyId: Ref<string>) {
   return {
     schema,
     initSchema,
-    getSchemaFromRemote
+    getSchemaFromRemote,
+    showLogicEngine,
+    jumpLogicEngine,
   }
 }
 
@@ -267,6 +277,23 @@ function useCurrentEdit({
   }
 }
 
+function useLogicEngine(schema: any) {
+  const logicConf = toRef(schema, 'logicConf')
+  const showLogicEngine = ref()
+  const jumpLogicEngine = ref()
+  function initShowLogicEngine() {
+    showLogicEngine.value = new RuleBuild().fromJson(logicConf.value?.showLogicConf)
+  }
+  function initJumpLogicEngine() {
+    jumpLogicEngine.value = new RuleBuild().fromJson(logicConf.value?.jumpLogicConf)
+  }
+  return {
+    showLogicEngine,
+    jumpLogicEngine,
+    initShowLogicEngine,
+    initJumpLogicEngine
+  }
+}
 type IBannerItem = {
   name: string
   key: string
@@ -278,9 +305,8 @@ export const useEditStore = defineStore('edit', () => {
   const bannerList: Ref<IBannerList> = ref({})
   const cooperPermissions = ref(Object.values(SurveyPermissions))
   const schemaUpdateTime = ref(Date.now())
-  const { schema, initSchema, getSchemaFromRemote } = useInitializeSchema(surveyId)
+  const { schema, initSchema, getSchemaFromRemote, showLogicEngine, jumpLogicEngine } = useInitializeSchema(surveyId)
   const questionDataList = toRef(schema, 'questionDataList')
-
   function setQuestionDataList(data: any) {
     schema.questionDataList = data
   }
@@ -301,6 +327,7 @@ export const useEditStore = defineStore('edit', () => {
       cooperPermissions.value = res.data.permissions
     }
   }
+  // const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } = useLogicEngine(schema)
   const {
     currentEditOne,
     currentEditKey,
@@ -315,7 +342,7 @@ export const useEditStore = defineStore('edit', () => {
   async function init() {
     const { metaData } = schema
     if (!metaData || (metaData as any)?._id !== surveyId.value) {
-      getSchemaFromRemote()
+      await getSchemaFromRemote()
     }
     currentEditOne.value = null
     currentEditStatus.value = 'Success'
@@ -368,6 +395,10 @@ export const useEditStore = defineStore('edit', () => {
     deleteQuestion,
     moveQuestion,
     changeSchema,
-    changeThemePreset
+    changeThemePreset,
+    showLogicEngine,
+    // initShowLogicEngine,
+    jumpLogicEngine,
+    // initJumpLogicEngine
   }
 })

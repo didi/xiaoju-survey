@@ -24,7 +24,8 @@
         <i-ep-close />
       </div>
     </div>
-    <div class="logic-text" v-html="getShowLogicText"></div>
+    <div class="logic-text showText" v-html="getShowLogicText"></div>
+    <div class="logic-text jumpText" v-html="getJumpLogicText"></div>
   </div>
 </template>
 <script setup lang="ts">
@@ -32,6 +33,7 @@ import { ref, computed, unref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo'
+import { useJumpLogicInfo } from '@/management/hooks/useJumpLogicInfo'
 
 const props = defineProps({
   qIndex: {
@@ -60,6 +62,7 @@ const props = defineProps({
 const emit = defineEmits(['changeSeq', 'select'])
 
 const { getShowLogicText, hasShowLogic } = useShowLogicInfo(props.moduleConfig.field)
+const { getJumpLogicText, hasJumpLogic } = useJumpLogicInfo(props.moduleConfig.field)
 
 const isHover = ref(false)
 
@@ -129,7 +132,14 @@ const onMoveDown = () => {
 }
 const onDelete = async () => {
   if (unref(hasShowLogic)) {
-    ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
+    ElMessageBox.alert('该题目被显示逻辑关联，请先清除逻辑依赖', '提示', {
+      confirmButtonText: '确定',
+      type: 'warning'
+    })
+    return
+  }
+  if(unref(hasJumpLogic)) {
+    ElMessageBox.alert('该题目被跳转逻辑关联，请先清除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'
     })

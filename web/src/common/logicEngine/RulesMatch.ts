@@ -3,7 +3,7 @@ import { Operator, type FieldTypes, type Fact } from './BasicType'
 // 定义条件规则类
 export class ConditionNode<F extends string, O extends Operator> {
   // 默认显示
-  public result: boolean = false
+  public result: boolean | undefined = undefined
   constructor(
     public field: F,
     public operator: O,
@@ -19,6 +19,7 @@ export class ConditionNode<F extends string, O extends Operator> {
   match(facts: Fact): boolean {
     // console.log(this.calculateHash())
     // 如果该特征在事实对象中不存在，则直接返回false
+    // facts = facts.value ?  facts.value : facts
     if (!facts[this.field]) {
       this.result = false
       return this.result
@@ -45,7 +46,7 @@ export class ConditionNode<F extends string, O extends Operator> {
           this.result = this.value.some((v) => !facts[this.field].includes(v))
           return this.result
         } else {
-          this.result = facts[this.field].includes(this.value)
+          this.result = !facts[this.field].includes(this.value)
           return this.result
         }
       case Operator.NotEqual:
@@ -53,7 +54,7 @@ export class ConditionNode<F extends string, O extends Operator> {
           this.result = this.value.every((v) => !facts[this.field].includes(v))
           return this.result
         } else {
-          this.result = facts[this.field].includes(this.value)
+          this.result = facts[this.field].toString() !== this.value
           return this.result
         }
       // 其他比较操作符的判断逻辑
@@ -69,7 +70,7 @@ export class ConditionNode<F extends string, O extends Operator> {
 
 export class RuleNode {
   conditions: Map<string, ConditionNode<string, Operator>> // 使用哈希表存储条件规则对象
-  public result: boolean = false
+  public result: boolean | undefined
   constructor(
     public target: string,
     public scope: string
@@ -83,15 +84,29 @@ export class RuleNode {
   }
 
   // 匹配条件规则
-  match(fact: Fact) {
-    const res = Array.from(this.conditions.entries()).every(([, value]) => {
-      const res = value.match(fact)
-      if (res) {
-        return true
-      } else {
-        return false
-      }
-    })
+  match(fact: Fact, comparor?: any) {
+    // console.log(this.conditions)
+    let res: boolean | undefined = undefined
+    if(comparor === 'or') {
+      res = Array.from(this.conditions.entries()).some(([, value]) => {
+        const res = value.match(fact)
+        if (res) {
+          return true
+        } else {
+          return false
+        }
+      })
+    } else {
+      res = Array.from(this.conditions.entries()).every(([, value]) => {
+        const res = value.match(fact)
+        if (res) {
+          return true
+        } else {
+          return false
+        }
+      })
+    }
+    
     this.result = res
     return res
   }
@@ -121,14 +136,14 @@ export class RuleNode {
 
 export class RuleMatch {
   rules: Map<string, RuleNode>
-  static instance: any
+  // static instance: any
   constructor() {
     this.rules = new Map()
-    if (!RuleMatch.instance) {
-      RuleMatch.instance = this
-    }
+    // if (!RuleMatch.instance) {
+    //   RuleMatch.instance = this
+    // }
 
-    return RuleMatch.instance
+    // return RuleMatch.instance
   }
   fromJson(ruleConf: any) {
     if (ruleConf instanceof Array) {
@@ -145,6 +160,7 @@ export class RuleMatch {
         this.addRule(ruleNode)
       })
     }
+    return this
   }
 
   // 添加条件规则到规则引擎中
@@ -161,12 +177,12 @@ export class RuleMatch {
   }
 
   // 匹配条件规则
-  match(target: string, scope: string, fact: Fact) {
+  match(target: string, scope: string, fact: Fact,  comparor?: any) {
     const hash = this.calculateHash(target, scope)
 
     const rule = this.rules.get(hash)
     if (rule) {
-      const result = rule.match(fact)
+      const result = rule.match(fact, comparor)
       // this.matchCache.set(hash, result);
       return result
     } else {
@@ -196,10 +212,43 @@ export class RuleMatch {
       [...this.rules.entries()].filter(([, value]) => {
         return [...value.conditions.entries()].filter(([, value]) => {
           return value.field === field
-        })
+        }).length
       })
     )
     return [...rules.values()].map((obj) => obj.target)
+  }
+  findRulesByField(field: string) {
+    const list = [...this.rules.entries()]
+    const match = list.filter(([, ruleValue]) => {
+      const valuetemp = ruleValue
+      const list = [...ruleValue.conditions.entries()]
+      const res = list.filter(([, conditionValue]) => {
+        const hit = (conditionValue.field === field )
+        return hit
+      })
+      return res.length
+    })
+    console.log({match})
+    return match
+    // const rules = new Map(
+    //   [...this.rules.entries()].filter(([, value]) => {
+    //     return [...value.conditions.entries()].filter(([, value]) => {
+    //       return value.field === field
+    //     })
+    //   })
+    // )
+    // return [...rules.values()]
+  }
+  findFieldsByTarget(target: string) {
+    const rules = new Map(
+      [...this.rules.entries()].filter(([, value]) => {
+        return value.target === target
+      })
+    )
+    
+    // return [...rules.values()].map((obj) => obj.conditions)
+    return [...rules.values()].map((obj) => [...obj.conditions.entries()].map(([, value]) => value.field))
+    // return [...rules.values()].map((obj) => obj.target)
   }
   toJson() {
     return Array.from(this.rules.entries()).map(([, value]) => {

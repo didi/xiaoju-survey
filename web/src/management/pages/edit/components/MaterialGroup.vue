@@ -1,8 +1,8 @@
 <template>
   <draggable
     v-model="renderData"
-    handle=".question-wrapper.isSelected"
-    filter=".question-wrapper.isSelected .question.isSelected"
+    handle=".question-wrapper.is-move"
+    filter=".question-wrapper.is-move .question.isSelected"
     :preventOnFilter="false"
     :group="DND_GROUP"
     :onEnd="checkEnd"

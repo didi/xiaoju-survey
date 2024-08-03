@@ -63,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(userParam.getUsername());
         user.setPassword(AuthUtil.hash256(userParam.getPassword()));
         mongoRepository.save(user);
+        userParam.setId(user.getId());
         return createTokenAndDeleteCaptcha(userParam);
     }
 
@@ -88,7 +89,8 @@ public class AuthServiceImpl implements AuthService {
         //验证码
         checkCaptchaIsCorrect(userParam.getCaptchaId(), userParam.getCaptcha());
         //用户验证
-        userService.loadUserByUsernameAndPassword(userParam.getUsername(), userParam.getPassword());
+        User user = userService.loadUserByUsernameAndPassword(userParam.getUsername(), userParam.getPassword());
+        userParam.setId(user.getId());
         //生成token
         return createTokenAndDeleteCaptcha(userParam);
     }

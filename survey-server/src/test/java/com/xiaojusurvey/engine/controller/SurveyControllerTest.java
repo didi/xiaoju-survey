@@ -9,8 +9,10 @@ import com.xiaojusurvey.engine.config.BannerDataConfig;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoOutVO;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyListVO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -97,6 +99,16 @@ public class SurveyControllerTest {
 
         Mockito.when(surveyService.publishSurvey(Mockito.any())).thenReturn(true);
         surveyController.publishSurvey("11111");
+    }
 
+
+    @Test
+    public void getListTest() {
+        SurveyListVO vo = new SurveyListVO();
+        Mockito.when(surveyService.getSurveyList(Mockito.any())).thenReturn(vo);
+
+        RpcResult rs =  surveyController.getList(new SurveyListParam());
+
+        Assert.assertEquals(vo,rs.getData());
     }
 }

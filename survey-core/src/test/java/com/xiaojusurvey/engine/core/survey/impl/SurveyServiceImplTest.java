@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.core.survey.impl;
 
 
+import com.xiaojusurvey.engine.common.entity.BaseEntity;
 import com.xiaojusurvey.engine.common.entity.Status;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyConf;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
@@ -9,7 +10,10 @@ import com.xiaojusurvey.engine.common.enums.SurveyStatusEnum;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyPublishService;
+import com.xiaojusurvey.engine.core.survey.dto.FilterItem;
+import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyListVO;
 import com.xiaojusurvey.engine.core.util.WebUtils;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.junit.Assert;
@@ -21,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,10 +60,10 @@ public class SurveyServiceImplTest {
     SurveyMetaUpdateParam updateParam;
 
     SurveyMeta surveyMeta;
-    String surveyid  =  "111111111111111111";
+    String surveyid = "111111111111111111";
 
     @Before
-    public void before(){
+    public void before() {
         surveyMeta = new SurveyMeta();
         surveyMeta.setId(surveyid);
         surveyMeta.setTitle("title");
@@ -80,29 +85,29 @@ public class SurveyServiceImplTest {
         updateParam.setTitle("新时代");
         updateParam.setRemark("这是一个测试");
 
-        Mockito.when(mongoRepository.findOne(Mockito.any(),Mockito.any())).thenReturn(surveyMeta);
+        Mockito.when(mongoRepository.findOne(Mockito.any(), Mockito.any())).thenReturn(surveyMeta);
 
-        boolean flag  = surveyService.updateMeta(updateParam);
-        Assert.assertEquals(true,flag);
+        boolean flag = surveyService.updateMeta(updateParam);
+        Assert.assertEquals(true, flag);
 
     }
 
 
     @Test
     public void deleteSurveyTest() {
-        Mockito.when(mongoRepository.findOne(Mockito.any(),Mockito.any())).thenReturn(surveyMeta);
+        Mockito.when(mongoRepository.findOne(Mockito.any(), Mockito.any())).thenReturn(surveyMeta);
         Mockito.when(surveyPublishService.delete(Mockito.any())).thenReturn(true);
-        boolean flag  = surveyService.deleteSurvey(surveyid);
-        Assert.assertEquals(true,flag);
+        boolean flag = surveyService.deleteSurvey(surveyid);
+        Assert.assertEquals(true, flag);
     }
 
 
     @Test
-    public void publishSurveyTest(){
+    public void publishSurveyTest() {
         SurveyConf conf = new SurveyConf();
 
         Mockito.when(surveyConfService.getSurveyConfBySurveyId(Mockito.any())).thenReturn(conf);
-        Mockito.when(mongoRepository.findOne(Mockito.any(),Mockito.eq(SurveyMeta.class))).thenReturn(surveyMeta);
+        Mockito.when(mongoRepository.findOne(Mockito.any(), Mockito.eq(SurveyMeta.class))).thenReturn(surveyMeta);
         Mockito.when(mongoRepository.save(Mockito.any())).thenReturn(null);
         Mockito.when(surveyPublishService.save(Mockito.any())).thenReturn(true);
         Mockito.when(surveyHistoryService.addHistory(Mockito.any())).thenReturn(null);
@@ -114,7 +119,29 @@ public class SurveyServiceImplTest {
         user.setUsername("ttt");
         Mockito.when(req.getAttribute("user")).thenReturn(user);
         boolean falg = surveyService.publishSurvey(surveyid);
-        Assert.assertTrue("成功",falg == true);
+        Assert.assertTrue("成功", falg == true);
+    }
+
+
+    @Test
+    public void getListTest() {
+        SurveyListParam param = new SurveyListParam();
+        param.setWorkspaceId("1");
+        FilterItem item = new FilterItem();
+//        item.setComparator("$regex");
+        FilterItem.FilterCondition condition = new FilterItem.FilterCondition();
+        condition.setComparator("$regex");
+        condition.setField("title");
+        condition.setValue("newTime3");
+        item.setCondition(condition);
+        param.setFilter(new FilterItem[]{item});
+        List<BaseEntity> list = new ArrayList<>();
+
+        Mockito.when(mongoRepository.page(Mockito.any(), Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).thenReturn(list);
+        Mockito.when(mongoRepository.count(Mockito.any(), Mockito.any())).thenReturn(1L);
+
+        SurveyListVO vo = surveyService.getSurveyList(param);
+        Assert.assertTrue("成功", vo.getCount() == 1);
     }
 
 

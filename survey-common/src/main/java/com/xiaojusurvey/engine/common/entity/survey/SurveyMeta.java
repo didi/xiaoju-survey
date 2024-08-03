@@ -57,5 +57,14 @@ public class SurveyMeta extends BaseEntity {
      */
     private String owner;
 
+    /**
+     * 所有者ID
+     */
+    private String ownerId;
+
+    /**
+     * 空间
+     */
+    private String workspaceId;
 
 }

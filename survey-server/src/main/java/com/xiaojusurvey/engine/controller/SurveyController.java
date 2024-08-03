@@ -13,9 +13,11 @@ import com.xiaojusurvey.engine.core.reslut.IdResult;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoOutVO;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyListVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -145,5 +147,12 @@ public class SurveyController {
         return RpcResultUtil.createFailedResult(RespErrorCode.PUBLISH_SURVEY_ERROR.getCode(), RespErrorCode.PUBLISH_SURVEY_ERROR.getMessage());
     }
 
+
+    @PostMapping("/getList")
+    public RpcResult getList(@RequestBody @Validated SurveyListParam param) {
+        log.info("[publishSurvey] 发布问卷,param={}", param);
+        SurveyListVO surveyListVO = surveyService.getSurveyList(param);
+        return RpcResultUtil.createSuccessResult(surveyListVO);
+    }
 
 }

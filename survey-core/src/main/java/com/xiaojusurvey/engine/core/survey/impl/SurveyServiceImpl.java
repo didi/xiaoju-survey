@@ -220,16 +220,16 @@ public class SurveyServiceImpl implements SurveyService {
             query.with(Sort.by(orders));
         }
         Criteria criteria = new Criteria();
-        List<Criteria> list = new ArrayList();
-        List<Criteria> list2 = new ArrayList();
+        List<Criteria> listAnd = new ArrayList();
+        List<Criteria> listOr = new ArrayList();
         if (StringUtils.hasLength(param.getWorkspaceId())) {
-            list.add(Criteria.where("workspaceId").is(param.getWorkspaceId()));
+            listAnd.add(Criteria.where("workspaceId").is(param.getWorkspaceId()));
         }
         if (StringUtils.hasLength(param.getUsername())) {
-            list.add(Criteria.where("owner").is(param.getUsername()));
+            listAnd.add(Criteria.where("owner").is(param.getUsername()));
         }
         if (StringUtils.hasLength(param.getUserId())) {
-            list.add(Criteria.where("ownerId").is(param.getUserId()));
+            listAnd.add(Criteria.where("ownerId").is(param.getUserId()));
         }
         if (param.getFilter() != null) {
             Arrays.stream(param.getFilter()).forEach(r -> {
@@ -241,17 +241,17 @@ public class SurveyServiceImpl implements SurveyService {
                     crt = Criteria.where(ff.getField()).regex(ff.getValue());
                 }
                 if (StringUtils.hasLength(r.getComparator()) && SurveyConstant.OPT_OR.equals(r.getComparator())) {
-                    list2.add(crt);
+                    listOr.add(crt);
                 } else {
-                    list2.add(crt);
+                    listOr.add(crt);
                 }
             });
         }
-        if (!list.isEmpty()) {
-            criteria.andOperator(list);
+        if (!listAnd.isEmpty()) {
+            criteria.andOperator(listAnd);
         }
-        if (!list2.isEmpty()) {
-            criteria = criteria.orOperator(list2);
+        if (!listOr.isEmpty()) {
+            criteria = criteria.orOperator(listOr);
         }
         query.addCriteria(criteria);
         return query;

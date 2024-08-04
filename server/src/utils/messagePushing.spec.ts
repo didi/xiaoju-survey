@@ -12,7 +12,7 @@ describe('getPushingData', () => {
         status: RECORD_STATUS.NEW,
         date: 1711025113146,
       },
-      difTime: 30518,
+      diffTime: 30518,
       data: {
         data458: '15000000000',
         data515: '115019',

@@ -47,7 +47,7 @@ export class SurveyResponseController {
       encryptType: Joi.string(),
       sessionId: Joi.string(),
       clientTime: Joi.number().required(),
-      difTime: Joi.number(),
+      diffTime: Joi.number(),
       password: Joi.string().allow(null, ''),
       whitelist: Joi.string().allow(null, ''),
     }).validate(reqBody, { allowUnknown: true });
@@ -65,7 +65,7 @@ export class SurveyResponseController {
       data,
       sessionId,
       clientTime,
-      difTime,
+      diffTime,
       password,
       whitelist: whitelistValue,
     } = value;
@@ -254,7 +254,7 @@ export class SurveyResponseController {
         surveyPath: value.surveyPath,
         data: decryptedData,
         clientTime,
-        difTime,
+        diffTime,
         surveyId: responseSchema.pageId,
         optionTextAndId,
       });

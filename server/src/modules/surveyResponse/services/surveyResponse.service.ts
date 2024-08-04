@@ -12,7 +12,7 @@ export class SurveyResponseService {
   async createSurveyResponse({
     data,
     clientTime,
-    difTime,
+    diffTime,
     surveyId,
     surveyPath,
     optionTextAndId,
@@ -22,7 +22,7 @@ export class SurveyResponseService {
       data,
       secretKeys: [],
       clientTime,
-      difTime,
+      diffTime,
       pageId: surveyId,
       optionTextAndId,
     });

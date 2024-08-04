@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="itemClass"
+    :class="[itemClass, { 'is-move': isSelected || isMove }]"
     @mouseenter="onMouseenter"
     @mouseleave="onMouseleave"
     @click="clickFormItem"
@@ -8,7 +8,12 @@
     <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
 
     <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
-      <div class="item el-icon-rank" @click.stop.prevent="onMove">
+      <div
+        class="item el-icon-rank"
+        @click.stop.prevent
+        @mouseenter="setMoveState(true)"
+        @mouseleave="setMoveState(false)"
+      >
         <i-ep-rank />
       </div>
       <div v-if="showUp" class="item" @click.stop.prevent="onMoveUp">
@@ -62,6 +67,7 @@ const emit = defineEmits(['changeSeq', 'select'])
 const { getShowLogicText, hasShowLogic } = useShowLogicInfo(props.moduleConfig.field)
 
 const isHover = ref(false)
+const isMove = ref(false)
 
 const itemClass = computed(() => {
   return {
@@ -154,7 +160,9 @@ const onDelete = async () => {
   }
 }
 
-const onMove = () => {}
+const setMoveState = (state: boolean) => {
+  isMove.value = state
+}
 </script>
 
 <style lang="scss" scoped>

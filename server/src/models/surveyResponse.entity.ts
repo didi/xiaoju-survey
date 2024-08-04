@@ -14,7 +14,7 @@ export class SurveyResponse extends BaseEntity {
   data: Record<string, any>;
 
   @Column()
-  difTime: number;
+  diffTime: number;
 
   @Column()
   clientTime: number;

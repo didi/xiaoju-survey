@@ -28,6 +28,16 @@ export class AuthController {
       captcha: string;
     },
   ) {
+    if (!userInfo.password || userInfo.password.length < 6) {
+      throw new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID);
+    }
+
+    if (
+      !/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/.test(userInfo.password)
+    ) {
+      throw new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID);
+    }
+
     const isCorrect = await this.captchaService.checkCaptchaIsCorrect({
       captcha: userInfo.captcha,
       id: userInfo.captchaId,

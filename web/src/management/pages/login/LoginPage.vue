@@ -27,6 +27,10 @@
           <el-input type="password" v-model="formData.password" size="large"></el-input>
         </el-form-item>
 
+        <el-form-item label="" v-if="passwordStrength">
+          <span class="strength" v-for="item in 3" :key="item" :style="{ backgroundColor: strengthColor[item - 1][passwordStrength] }"></span>
+        </el-form-item>
+
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
             <el-input style="width: 150px" v-model="formData.captcha" size="large"></el-input>
@@ -89,6 +93,53 @@ const formData = reactive<FormData>({
   captchaId: ''
 })
 
+// 每个滑块不同强度的颜色，索引0对应第一个滑块
+const strengthColor = reactive([{
+  Strong: "#67C23A",
+  Medium: "#ebb563",
+  Weak: "#f78989"
+}, {
+  Strong: "#67C23A",
+  Medium: "#ebb563",
+  Weak: "#2a598a"
+}, {
+  Strong: "#67C23A",
+  Medium: "#2a598a",
+  Weak: "#2a598a"
+}])
+
+// 密码内容校验
+const passwordValidator = (_: any, value: any, callback: any) => {
+  if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/.test(value)) {
+    callback(new Error('只能输入数字、字母、特殊字符'))
+    return
+  }
+  passwordStrengthHandle(value)
+  callback()
+}
+
+const passwordStrengthHandle = (value: string) => {
+  if (value.length < 6) {
+    return
+  }
+
+  const numberReg = /[0-9]/.test(value)
+  const letterReg = /[a-zA-Z]/.test(value)
+  const symbolReg = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value)
+  // 包含三种、且长度大于8
+  if (numberReg && letterReg && symbolReg && value.length >= 8) {
+    passwordStrength.value = 'Strong'
+    return
+  }
+
+  if ([numberReg, letterReg, symbolReg].filter(Boolean).length >= 2) {
+    passwordStrength.value = 'Medium'
+    return
+  }
+
+  passwordStrength.value = 'Weak'
+}
+
 const rules = {
   name: [
     { required: true, message: '请输入账号', trigger: 'blur' },
@@ -102,9 +153,13 @@ const rules = {
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
     {
-      min: 8,
+      min: 6,
       max: 16,
-      message: '长度在 8 到 16 个字符',
+      message: '长度在 6 到 16 个字符',
+      trigger: 'blur'
+    },
+    {
+      validator: passwordValidator,
       trigger: 'blur'
     }
   ],
@@ -128,6 +183,7 @@ const pending = reactive<Pending>({
 
 const captchaImgData = ref<string>('')
 const formDataRef = ref<any>(null)
+const passwordStrength = ref<'Strong' | 'Medium' | 'Weak'>()
 
 const submitForm = (type: 'login' | 'register') => {
   formDataRef.value.validate(async (valid: boolean) => {
@@ -256,6 +312,17 @@ const refreshCaptcha = async () => {
       :deep(> svg) {
         max-height: 40px;
       }
+    }
+  }
+
+  .strength {
+    display: inline-block;
+    width: 20%;
+    height: 6px;
+    border-radius: 8px;
+    background: red;
+    &:not(:first-child) {
+      margin-left: 10px;
     }
   }
 }

@@ -218,7 +218,6 @@ export class RuleMatch {
   findRulesByField(field: string) {
     const list = [...this.rules.entries()]
     const match = list.filter(([, ruleValue]) => {
-      const valuetemp = ruleValue
       const list = [...ruleValue.conditions.entries()]
       const res = list.filter(([, conditionValue]) => {
         const hit = (conditionValue.field === field )

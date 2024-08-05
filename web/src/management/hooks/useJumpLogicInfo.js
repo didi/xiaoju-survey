@@ -1,7 +1,5 @@
 import { computed, unref } from 'vue'
 import { useQuestionInfo } from './useQuestionInfo'
-import { flatten } from 'lodash-es'
-import { cleanRichText } from '@/common/xss'
 import { useEditStore } from '../stores/edit'
 import { storeToRefs} from 'pinia'
 const editStore = useEditStore()

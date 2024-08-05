@@ -25,7 +25,7 @@ import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
 const editStore = useEditStore()
-const { schema, init, setSurveyId, initShowLogicEngine, initJumpLogicEngine } = editStore
+const { init, setSurveyId } = editStore
 const router = useRouter()
 const route = useRoute()
 

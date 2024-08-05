@@ -9,8 +9,8 @@
   </el-tabs>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue';
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import ShowLogic from '../../modules/logicModule/ShowLogic.vue'
 import JumpLogic from '../../modules/logicModule/JumpLogic.vue'

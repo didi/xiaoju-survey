@@ -119,10 +119,9 @@ const initGraph = (questionDataList: any) => {
 
 const registerEvents = (lf: LogicFlow) => {
   // 更新从选项拉出的逻辑
-  lf.on('anchor:drop', ({ data, e, nodeModel, edgeModel }) => {
-    console.log('anchor:drop', {e, nodeModel, edgeModel})
+  lf.on('anchor:drop', ({ edgeModel }) => {
     /*  添加规则 **/
-    const { sourceNodeId, sourceAnchorId, targetNodeId, id } = edgeModel
+    const { sourceNodeId, sourceAnchorId, targetNodeId } = edgeModel
     const target = targetNodeId
     const {
       field,

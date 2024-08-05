@@ -5,7 +5,8 @@ import { CHOICES } from '@/common/typeEnum'
 
 
 export const generateNodes =  (questionDataList: [any]) =>{
-  let x = 50, y = 300
+  let x = 50
+  const y = 300
   const startNode = [{
     id: 'start',
     type: 'start-node',
@@ -13,7 +14,7 @@ export const generateNodes =  (questionDataList: [any]) =>{
     y,
     text: '开始'
   }]
-  const nodes: any[] = questionDataList.map((item, index)=> {
+  const nodes: any[] = questionDataList.map((item)=> {
     x = x + 300 
     let options = []
     if(CHOICES.includes(item.type)){
@@ -49,7 +50,7 @@ export const generateNodes =  (questionDataList: [any]) =>{
 
 /* 跳转逻辑的初始化 */
 export const generateLine = (models: Array<any>) => {
-  let acc: Array<any> = []
+  const acc: Array<any> = []
   const editStore = useEditStore()
   const jumpLogicRule = editStore.jumpLogicEngine?.toJson()
 

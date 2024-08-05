@@ -8,7 +8,7 @@
   ></QuestionRuleContainer>
 </template>
 <script setup>
-import { unref, ref, computed, watch, nextTick } from 'vue'
+import { unref, ref, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
@@ -119,7 +119,7 @@ const visibily = computed(() => {
 
 // 监听formValues变化，判断当前题目是否需要跳过
 watch(()=> formValues,
- (newVal, oldVal) => {
+ (newVal) => {
   const currentIndex = props.qIndex
   const changeIndex = getQuestionIndexByField(dataConf.value.dataList, changeField.value)
   // 前面的题目不受跳题影响

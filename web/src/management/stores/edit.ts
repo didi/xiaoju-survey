@@ -397,8 +397,6 @@ export const useEditStore = defineStore('edit', () => {
     changeSchema,
     changeThemePreset,
     showLogicEngine,
-    // initShowLogicEngine,
     jumpLogicEngine,
-    // initJumpLogicEngine
   }
 })

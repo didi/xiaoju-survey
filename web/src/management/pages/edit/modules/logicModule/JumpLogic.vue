@@ -290,14 +290,14 @@ onMounted(() => {
     
     lf.setTheme(customTheme)
     registerEvents(lf)
-    const contorl: Control =lf.extension.control
-    contorl.removeItem('zoom-out')
-    lf.extension.control.removeItem('zoom-in')
-    lf.extension.control.removeItem('reset')
-    lf.extension.control.removeItem('reset')
-    lf.extension.control.removeItem('undo')
-    lf.extension.control.removeItem('redo')
-    lf.extension.control.addItem({
+    const control = lf.extension.control as Control
+    control.removeItem('zoom-out')
+    control.removeItem('zoom-in')
+    control.removeItem('reset')
+    control.removeItem('reset')
+    control.removeItem('undo')
+    control.removeItem('redo')
+    control.addItem({
       key: 'zoom-out',
       iconClass: 'iconfont icon-suoxiao',
       title: '缩小流程图',
@@ -306,7 +306,7 @@ onMounted(() => {
         lf.zoom(false)
       },
     });
-    lf.extension.control.addItem({
+    control.addItem({
       key: 'zoom-in',
       iconClass: 'iconfont icon-fangda',
       title: '放大流程图',
@@ -315,7 +315,7 @@ onMounted(() => {
         lf.zoom(true)
       },
     })
-    lf.extension.control.addItem({
+    control.addItem({
       key: 'reset',
       iconClass: 'iconfont icon-shiying',
       title: '恢复流程原有尺寸',
@@ -347,7 +347,8 @@ onMounted(() => {
 
 
     lf.render(data)
-    lf.extension.miniMap.show()
+    const miniMap  = lf.extension.miniMap as MiniMap
+    miniMap?.show()
 
 
     lfRef.value = lf

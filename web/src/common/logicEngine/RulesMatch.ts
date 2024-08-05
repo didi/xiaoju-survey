@@ -16,7 +16,7 @@ export class ConditionNode<F extends string, O extends Operator> {
     return this.field + this.operator + this.value
   }
 
-  match(facts: Fact): boolean {
+  match(facts: Fact): boolean|undefined {
     // console.log(this.calculateHash())
     // 如果该特征在事实对象中不存在，则直接返回false
     if (!facts[this.field]) {

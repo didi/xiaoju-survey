@@ -3,6 +3,7 @@
     <template v-for="(item, index) in renderData" :key="index">
       <MaterialGroup
         ref="formGroup"
+        :qIndex="index"
         :render-data="item"
         :rules="rules"
         :formValues="formValues"

@@ -37,7 +37,9 @@ const activeRouter = ref(route.name)
 watch(
   activeRouter,
   (val: any) => {
-    router.push({ name: val })
+    // 避免编辑页刷新丢失query
+    const query = route.query
+    router.push({ name: val, query })
   },
   {
     immediate: true

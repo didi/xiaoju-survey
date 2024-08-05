@@ -14,8 +14,9 @@
         :ref="`questionWrapper-${element.field}`"
         :moduleConfig="element"
         :qIndex="element.qIndex"
+        :isFirst="index==0"
         :indexNumber="element.indexNumber"
-        :isSelected="currentEditOne === index"
+        :isSelected="currentEditOne === element.qIndex"
         :isLast="index + 1 === questionDataList.length"
         @select="handleSelect"
         @changeSeq="handleChangeSeq"
@@ -24,7 +25,7 @@
           :type="element.type"
           :moduleConfig="element"
           :indexNumber="element.indexNumber"
-          :isSelected="currentEditOne === index"
+          :isSelected="currentEditOne === element.qIndex"
           :readonly="true"
           @change="handleChange"
         ></QuestionContainerB>
@@ -39,7 +40,6 @@ import { useEditStore } from '@/management/stores/edit'
 import QuestionContainerB from '@/materials/questions/QuestionContainerB'
 import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
-import { filterQuestionPreviewData } from '@/management/utils/index'
 import { DND_GROUP } from '@/management/config/dnd'
 
 export default defineComponent({
@@ -60,15 +60,15 @@ export default defineComponent({
       }
     }
   },
-  emits: ['change', 'select', 'changeSeq'],
+  emits: ['change', 'select', 'changeSeq','change'],
   setup(props, { emit }) {
     const editStore = useEditStore()
     const renderData = computed({
       get() {
-        return filterQuestionPreviewData(props.questionDataList)
+        return props.questionDataList; //filterQuestionPreviewData(props.questionDataList)
       },
       set(value) {
-        editStore.setQuestionDataList(value)
+        editStore.moveQuestionDataList(value)
       }
     })
     const handleSelect = (index) => {

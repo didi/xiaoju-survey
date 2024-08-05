@@ -1,68 +1,95 @@
 <template>
   <div class="question-catalog-wrapper">
-    <draggable
-      :list="renderData"
-      @end="handleDragEnd"
-      itemKey="field"
-      handle=".draggHandle"
-      host-class="catalog-item-ghost"
-    >
-      <template #item="{ element, index }">
-        <CatalogItem
-          :title="element.title"
-          :indexNumber="element.indexNumber"
-          :showIndex="element.showIndex"
-          @select="setCurrentEditOne(index)"
-        />
-      </template>
-    </draggable>
+    <el-collapse>
+      <el-collapse-item v-for="(v, i) in renderData" :key="v" :title="`第${i + 1}页`" :name="i + 1">
+        <draggable v-model="renderData[i]"  itemKey="field" :group="QUESTION_CATALOG" handle=".draggHandle"
+          host-class="catalog-item-ghost">
+          <template #item="{ element }">
+            <CatalogItem :title="element.title" :indexNumber="element.qIndex" :showIndex="element.showIndex"
+              @select="setPagingOneEdit(element.qIndex, i + 1)" />
+          </template>
+        </draggable>
+      </el-collapse-item>
+    </el-collapse>
+
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import {  watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import draggable from 'vuedraggable'
 
 import CatalogItem from './CatalogItem.vue'
-import { filterQuestionPreviewData } from '@/management/utils/index'
+import { QUESTION_CATALOG } from '@/management/config/dnd'
 
 const editStore = useEditStore()
-const { questionDataList, currentEditOne } = storeToRefs(editStore)
-const { moveQuestion, setCurrentEditOne } = editStore
-const renderData = computed(() => {
-  return filterQuestionPreviewData(questionDataList.value) || []
+const { questionDataList, pagingConf } = storeToRefs(editStore)
+const { setCurrentEditOne, getPagingQuestionData, updatePagingEditOne,setPaging,compareQuestionSeq } = editStore
+
+const renderData: any = ref([])
+
+const setPagingOneEdit = (qIndex: number, pagingIndex: number) => {
+  updatePagingEditOne(pagingIndex)
+  setCurrentEditOne(qIndex)
+}
+
+
+watch(() => [pagingConf.value,questionDataList.value], () => {
+  renderData.value = [];
+  for (let index = 0; index < pagingConf.value.length; index++) {
+    renderData.value.push(getPagingQuestionData(index + 1))
+  }
+},{
+  deep: true,
+  immediate: true
 })
 
-const handleDragEnd = ({ newIndex, oldIndex }: any) => {
-  if (currentEditOne.value === oldIndex) {
-    setCurrentEditOne(newIndex)
-  }
-
-  moveQuestion({
-    index: oldIndex,
-    range: newIndex - oldIndex
+watch(() => renderData.value, (newVal) => {
+  if (newVal.length == 0) return;
+  let pagingData: Array<number> = [];
+  let questionList: Array<any> = [];
+  newVal.map(v => {
+    pagingData.push(v.length)
+    questionList.push(...v)
   })
-}
+  setPaging(pagingData)
+  compareQuestionSeq(questionList)
+
+}, {
+  deep: true
+})
+
+
 </script>
 <style lang="scss" scoped>
 .question-catalog-wrapper {
   padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的
+
   .catelog-first-page {
     font-size: 12px;
     color: #999999;
     padding-bottom: 8px;
   }
+
   .catalog-item-ghost {
     &.question-catalog-item {
       .catalog-item {
         color: $normal-color-light;
+
         .draggHandle {
           color: $normal-color-light;
         }
       }
     }
   }
+
+  :deep(.el-collapse-item__header) {
+    font-size: 14px;
+    color: #6E707C;
+    font-weight: 500;
+  }
+
   .catalog-item-dragging {
     opacity: 1;
     background: #ffffff;

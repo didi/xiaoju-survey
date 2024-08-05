@@ -46,6 +46,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  isFirst: {
+    type: Boolean,
+    default: false
+  },
   isLast: {
     type: Boolean,
     default: false
@@ -75,7 +79,7 @@ const showHover = computed(() => {
   return isHover.value || props.isSelected
 })
 const showUp = computed(() => {
-  return props.qIndex !== 0
+  return !props.isFirst
 })
 const showDown = computed(() => {
   return !props.isLast

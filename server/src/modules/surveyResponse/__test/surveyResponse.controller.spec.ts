@@ -36,7 +36,7 @@ const mockDecryptErrorBody = {
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f2664c92862d6a9067ad18',
-  sign: '8c9ca8804c9d94de6055d68a1f3c423fe50c95b4bd69f809ee2da8fcd82fd960.1710400229589',
+  sign: '95d6ff5dd3d9ddc205cbab88defe40ebe889952961f1d60e760fa411e2cb39fe.1710400229589',
 };
 
 const mockSubmitData = {
@@ -49,7 +49,7 @@ const mockSubmitData = {
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f29fc192862d6a9067ad28',
-  sign: '8c9ca8804c9d94de6055d68a1f3c423fe50c95b4bd69f809ee2da8fcd82fd960.1710400229589',
+  sign: '95d6ff5dd3d9ddc205cbab88defe40ebe889952961f1d60e760fa411e2cb39fe.1710400229589',
 };
 
 const mockClientEncryptInfo = {
@@ -220,7 +220,6 @@ describe('SurveyResponseController', () => {
       jest
         .spyOn(clientEncryptService, 'deleteEncryptInfo')
         .mockResolvedValueOnce(undefined);
-
       const result = await controller.createResponse(reqBody, {});
 
       expect(result).toEqual({ code: 200, msg: '提交成功' });
@@ -327,7 +326,7 @@ describe('SurveyResponseController', () => {
       const reqBody = {
         ...mockSubmitData,
         password: '123457',
-        sign: '4ff02062141d92d80629eae4797ba68056f29a9709cdf59bf206776fc0971c1a.1710400229589',
+        sign: '145595d85079af3b1fb30784177c348555f442837c051d90f57a01ce1ff53c32.1710400229589',
       };
 
       jest

@@ -32,7 +32,7 @@ const mockDecryptErrorBody = {
     'SkyfsbS6MDvFrrxFJQDMxsvm53G3PTURktfZikJP2fKilC8wPW5ZdfX29Fixor5ldHBBNyILsDtxhbNahEbNCDw8n1wS8IIckFuQcaJtn6MLOD+h+Iuywka3ig4ecTN87RpdcfEQe7f38rSSx0zoFU8j37eojjSF7eETBSrz5m9WaNesQo4hhC6p7wmAo1jggkdbG8PVrFqrZPbkHN5jOBrzQEqdqYu9A5wHMM7nUteqlPpkiogEDYmBIccqmPdtO54y7LoPslXgXj6jNja8oVNaYlnp7UsisT+i5cuQ7lbDukEhrfpAIFRsT2IUwVlLjWHtFQm4/4I5HyvVBirTng==',
     'IMn0E7R6cYCQPI497mz3x99CPA4cImAFEfIv8Q98Gm5bFcgKJX6KFYS7PF/VtIuI1leKwwNYexQy7+2HnF40by/huVugoPYnPd4pTpUdG6f1kh8EpzIir2+8P98Dcz2+NZ/khP2RIAM8nOr+KSC99TNGhuKaKQCItyLFDkr80s3zv+INieGc8wULIrGoWDJGN2KdU/jSq+hkV0QXypd81N5IyAoNhZLkZeM/FU6grGFPnGRtcDDc5W8YWVHO87VymlxPCTRawXRTDcvGIUqb3GuZfxvA7AULqbspmN9kzt3rktuZLNb2TFQDsJfqUuCmi+b28qP/G4OrT9/VAHhYKw==',
   ],
-  difTime: 806707,
+  diffTime: 806707,
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f2664c92862d6a9067ad18',
@@ -45,7 +45,7 @@ const mockSubmitData = {
     'SkyfsbS6MDvFrrxFJQDMxsvm53G3PTURktfZikJP2fKilC8wPW5ZdfX29Fixor5ldHBBNyILsDtxhbNahEbNCDw8n1wS8IIckFuQcaJtn6MLOD+h+Iuywka3ig4ecTN87RpdcfEQe7f38rSSx0zoFU8j37eojjSF7eETBSrz5m9WaNesQo4hhC6p7wmAo1jggkdbG8PVrFqrZPbkHN5jOBrzQEqdqYu9A5wHMM7nUteqlPpkiogEDYmBIccqmPdtO54y7LoPslXgXj6jNja8oVNaYlnp7UsisT+i5cuQ7lbDukEhrfpAIFRsT2IUwVlLjWHtFQm4/4I5HyvVBirTng==',
     'IMn0E7R6cYCQPI497mz3x99CPA4cImAFEfIv8Q98Gm5bFcgKJX6KFYS7PF/VtIuI1leKwwNYexQy7+2HnF40by/huVugoPYnPd4pTpUdG6f1kh8EpzIir2+8P98Dcz2+NZ/khP2RIAM8nOr+KSC99TNGhuKaKQCItyLFDkr80s3zv+INieGc8wULIrGoWDJGN2KdU/jSq+hkV0QXypd81N5IyAoNhZLkZeM/FU6grGFPnGRtcDDc5W8YWVHO87VymlxPCTRawXRTDcvGIUqb3GuZfxvA7AULqbspmN9kzt3rktuZLNb2TFQDsJfqUuCmi+b28qP/G4OrT9/VAHhYKw==',
   ],
-  difTime: 806707,
+  diffTime: 806707,
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f29fc192862d6a9067ad28',
@@ -185,7 +185,7 @@ describe('SurveyResponseController', () => {
             status: RECORD_STATUS.NEW,
             date: 1711025113146,
           },
-          difTime: 30518,
+          diffTime: 30518,
           data: {
             data458: '15000000000',
             data515: '115019',
@@ -240,7 +240,7 @@ describe('SurveyResponseController', () => {
           data770: '123456@qq.com',
         },
         clientTime: reqBody.clientTime,
-        difTime: reqBody.difTime,
+        diffTime: reqBody.diffTime,
         surveyId: mockResponseSchema.pageId,
         optionTextAndId: {
           data515: [

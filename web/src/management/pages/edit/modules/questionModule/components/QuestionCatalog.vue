@@ -49,7 +49,7 @@ watch(() => renderData.value, (newVal) => {
   if (newVal.length == 0) return;
   let pagingData: Array<number> = [];
   let questionList: Array<any> = [];
-  newVal.map(v => {
+  newVal.map((v:any) => {
     pagingData.push(v.length)
     questionList.push(...v)
   })

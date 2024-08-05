@@ -484,9 +484,9 @@ export const useEditStore = defineStore('edit', () => {
   function moveQuestionDataList(data: any) {
     const { startIndex, endIndex } = getSorter()
     const newData = [...questionDataList.value.slice(0, startIndex), ...data, ...questionDataList.value.slice(endIndex)];
-    const countTotal = schema.pagingConf.reduce((v, i) => v + i)
+    const countTotal:number = (schema.pagingConf as Array<number>).reduce((v:number, i:number) => v + i)
     if (countTotal != newData.length) {
-      schema.pagingConf[pagingEditOne.value - 1] = schema.pagingConf[pagingEditOne.value - 1] + 1;
+      schema.pagingConf[pagingEditOne.value - 1] = schema.pagingConf[pagingEditOne.value - 1] + 1 as never;
     }
     setQuestionDataList(newData)
   }

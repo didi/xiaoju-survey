@@ -2,7 +2,9 @@ package com.xiaojusurvey.engine.core.survey;
 
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import com.xiaojusurvey.engine.core.reslut.IdResult;
+import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyListVO;
 
 /**
  * @Author: LYF
@@ -26,6 +28,12 @@ public interface SurveyService {
      */
     boolean publishSurvey(String surveyId);
 
+    /**
+     * 获取问卷列表
+     * @param param
+     * @return
+     */
+    SurveyListVO getSurveyList(SurveyListParam param);
 
-    
+
 }

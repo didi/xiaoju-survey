@@ -3,6 +3,7 @@ package com.xiaojusurvey.engine.core.survey.impl;
 import java.util.ArrayList;
 
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
+import com.xiaojusurvey.engine.common.constants.SurveyConstant;
 import com.xiaojusurvey.engine.common.entity.Status;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyConf;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyHistory;
@@ -17,20 +18,29 @@ import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyPublishService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.dto.FilterItem;
+import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyListVO;
+import com.xiaojusurvey.engine.core.survey.vo.SurveyVO;
 import com.xiaojusurvey.engine.core.util.WebUtils;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author: LYF
@@ -175,5 +185,75 @@ public class SurveyServiceImpl implements SurveyService {
         return true;
     }
 
+    @Override
+    public SurveyListVO getSurveyList(SurveyListParam param) {
+        log.info("[getSurveyList]获取问卷列表 param={}", param);
+        Query query = buildQuery(param);
+        List<SurveyMeta> list = mongoRepository.page(query, param.getCurPage() - 1, param.getPageSize(), SurveyMeta.class);
+        Long count = mongoRepository.count(query, SurveyMeta.class);
+        SurveyListVO vo = new SurveyListVO();
+        vo.setCount(count);
+        List<SurveyVO> data = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(list)) {
+            data = list.stream().map(r -> {
+                SurveyVO surveyVO = new SurveyVO();
+                BeanUtils.copyProperties(r, surveyVO);
+                return surveyVO;
+            }).collect(Collectors.toList());
+        }
+        vo.setData(data);
+        return vo;
+    }
 
+
+    private Query buildQuery(SurveyListParam param) {
+        Query query = new Query();
+        if (param.getOrder() != null) {
+            List<Sort.Order> orders = new ArrayList<>();
+            Arrays.stream(param.getOrder()).forEach(r -> {
+                if (r.getValue() == 1) {
+                    orders.add(new Sort.Order(Sort.Direction.ASC, r.getField()));
+                } else {
+                    orders.add(new Sort.Order(Sort.Direction.DESC, r.getField()));
+                }
+            });
+            query.with(Sort.by(orders));
+        }
+        Criteria criteria = new Criteria();
+        List<Criteria> listAnd = new ArrayList();
+        List<Criteria> listOr = new ArrayList();
+        if (StringUtils.hasLength(param.getWorkspaceId())) {
+            listAnd.add(Criteria.where("workspaceId").is(param.getWorkspaceId()));
+        }
+        if (StringUtils.hasLength(param.getUsername())) {
+            listAnd.add(Criteria.where("owner").is(param.getUsername()));
+        }
+        if (StringUtils.hasLength(param.getUserId())) {
+            listAnd.add(Criteria.where("ownerId").is(param.getUserId()));
+        }
+        if (param.getFilter() != null) {
+            Arrays.stream(param.getFilter()).forEach(r -> {
+                FilterItem.FilterCondition ff = r.getCondition();
+                Criteria crt = null;
+                if (SurveyConstant.OPT_NE.equals(ff.getComparator())) {
+                    crt = Criteria.where(ff.getField()).ne(ff.getValue());
+                } else if (SurveyConstant.OPT_REGEX.equals(ff.getComparator())) {
+                    crt = Criteria.where(ff.getField()).regex(ff.getValue());
+                }
+                if (StringUtils.hasLength(r.getComparator()) && SurveyConstant.OPT_OR.equals(r.getComparator())) {
+                    listOr.add(crt);
+                } else {
+                    listOr.add(crt);
+                }
+            });
+        }
+        if (!listAnd.isEmpty()) {
+            criteria.andOperator(listAnd);
+        }
+        if (!listOr.isEmpty()) {
+            criteria = criteria.orOperator(listOr);
+        }
+        query.addCriteria(criteria);
+        return query;
+    }
 }

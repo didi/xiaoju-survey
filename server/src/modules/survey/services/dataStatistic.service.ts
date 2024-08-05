@@ -90,7 +90,7 @@ export class DataStatisticService {
       }
       return {
         ...data,
-        difTime: (submitedData.difTime / 1000).toFixed(2),
+        diffTime: (submitedData.diffTime / 1000).toFixed(2),
         createDate: moment(submitedData.createDate).format(
           'YYYY-MM-DD HH:mm:ss',
         ),

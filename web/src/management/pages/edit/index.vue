@@ -60,7 +60,7 @@ onMounted(async () => {
   }
 
   .right {
-    min-width: 1160px;
+    min-width: 1300px;
     height: 100%;
     padding-left: 80px;
     overflow: hidden;

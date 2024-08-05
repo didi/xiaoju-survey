@@ -46,11 +46,10 @@ import { DND_GROUP } from '@/management/config/dnd'
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
-import { isNumber as _isNumber } from 'lodash-es'
 import {  ref } from 'vue'
 
 const editStore = useEditStore()
-const { newQuestionIndex,currentEditOne } = storeToRefs(editStore)
+const { newQuestionIndex } = storeToRefs(editStore)
 const { addQuestion, setCurrentEditOne,createNewQuestion } = editStore
 
 const activeNames = ref([0, 1])

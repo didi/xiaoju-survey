@@ -1,7 +1,7 @@
 <template>
   <div class="main-operation">
     <div class="pagination-wrapper">
-      <Paging />
+      <PagingWrapper />
     </div>
     <div class="operation-wrapper">
       <div class="box" ref="box">
@@ -21,7 +21,7 @@
 <script>
 import { defineComponent, toRefs } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import Paging from '@/management/pages/edit/components/Paging.vue'
+import PagingWrapper from '@/management/pages/edit/components/PagingWrapper.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -34,7 +34,7 @@ const LogoIcon = () => communalLoader.loadComponent('LogoIcon')
 export default defineComponent({
   components: {
     MaterialGroup,
-    Paging,
+    PagingWrapper,
     HeaderContent: HeaderContent(),
     MainTitle: MainTitle(),
     SubmitButton: SubmitButton(),

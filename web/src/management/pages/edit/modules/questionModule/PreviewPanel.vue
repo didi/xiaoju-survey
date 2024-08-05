@@ -1,7 +1,7 @@
 <template>
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
     <div class="pagination-wrapper">
-      <Paging/>
+      <PagingWrapper/>
     </div>
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, watch, toRefs } from 'vue'
 import communalLoader from '@materials/communals/communalLoader.js'
-import Paging from '@/management/pages/edit/components/Paging.vue'
+import PagingWrapper from '@/management/pages/edit/components/PagingWrapper.vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'

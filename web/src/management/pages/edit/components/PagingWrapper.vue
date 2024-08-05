@@ -1,6 +1,6 @@
 <template>
   <div class="pagination-wrap">
-    <Pagination v-model="pagingEditOne" :totalPage="pagingCount" @changePage="updatePageEditOne" :intervalCount="10">
+    <PaginationPanel v-model="pagingEditOne" :totalPage="pagingCount" @changePage="updatePageEditOne" :intervalCount="10">
       <template #tooltip="{index}">
         <div>
           <div v-if="index != 1" class="controls-wrap-item" @click="movePaging(index, 'up')">前移一页</div>
@@ -9,12 +9,12 @@
           <div class="mt8 controls-wrap-item" @click="deletePaging(index)">删除</div>
         </div>
       </template>
-    </Pagination>
+    </PaginationPanel>
     <i-ep-plus style="font-size: 12px;" @click="addPagingControls" class="plus-add" />
   </div>
 </template>
 <script setup>
-import Pagination from '../modules/pagingModule/Pagination.vue'
+import PaginationPanel from '../modules/pagingModule/PaginationPanel.vue'
 import { useEditStore } from '@/management/stores/edit'
 import { storeToRefs } from 'pinia'
 import { QUESTION_TYPE } from '@/common/typeEnum.ts'

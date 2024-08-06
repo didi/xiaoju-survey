@@ -7,7 +7,7 @@
       <div v-for="i in firstPagination" :key="i" :class="['com-pagination-item', `page-${i}`, (now_page == i ? 'current' : '')]"
         @click="changePage(i)">
         <span>{{ i }}</span>
-        <div :class="['moreControls']" @click.stop="showTooltipVisible(i)">
+        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
           <i-ep-MoreFilled />
         </div>
       </div>
@@ -16,7 +16,7 @@
       <div v-for="i in more_filled_arr.startArr" @click="changePage(i)" :key="i"
         :class="['com-pagination-item', ` page-${i}`, (now_page == i ? 'current' : '')]">
         <span>{{ i }}</span>
-        <div :class="['moreControls']" @click.stop="showTooltipVisible(i)">
+        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
           <i-ep-MoreFilled />
         </div>
       </div>
@@ -35,7 +35,7 @@
       <div v-for="i in more_filled_arr.endArr" :key="i"
         :class="['com-pagination-item', `page-${i}`, (now_page == i ? 'current' : '')]" @click="changePage(i)">
         <span>{{ i }}</span>
-        <div :class="['moreControls']" @click.stop="showTooltipVisible(i)">
+        <div v-if="!props.readonly" :class="['moreControls']" @click.stop="showTooltipVisible(i)">
           <i-ep-MoreFilled />
         </div>
       </div>
@@ -43,7 +43,7 @@
     <span :class="['com-pagination-item', next_class]" @click="changePage(next_page)">
       <i-ep-ArrowRight />
     </span>
-    <el-tooltip v-if="slot.tooltip" :visible="tooltipVisible" :popper-options="{
+    <el-tooltip v-if="slot.tooltip && props.readonly==false" :visible="tooltipVisible" :popper-options="{
       modifiers: [
         {
           name: 'computeStyles',
@@ -68,12 +68,14 @@ import { withDefaults, reactive, computed, watch, ref, onMounted, onUnmounted, n
 interface Props {
   modelValue: number // 页码
   totalPage?: number
-  intervalCount?: number
+  intervalCount?: number,
+  readonly?: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 1,
   totalPage: 1,
-  intervalCount:8
+  intervalCount: 8,
+  readonly:false
 });
 const emit = defineEmits(['change-page', 'update:modelValue']);
 
@@ -276,30 +278,5 @@ watch(() => props.modelValue, () => {
     color: $primary-color;
   }
 
-  .all-item {
-    display: inline-block;
-    height: 26px;
-    margin-right: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    vertical-align: top;
-  }
-
-  .jump-to {
-    display: inline-block;
-    height: 26px;
-    font-size: 12px;
-    line-height: 26px;
-    vertical-align: top;
-
-    .com-button {
-      width: 48px;
-      min-width: auto;
-      height: 24px;
-      padding: 0;
-      margin-left: 5px;
-      line-height: 24px;
-    }
-  }
 }
 </style>

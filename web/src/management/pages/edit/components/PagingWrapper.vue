@@ -1,6 +1,6 @@
 <template>
   <div class="pagination-wrap">
-    <PaginationPanel v-model="pagingEditOne" :totalPage="pagingCount" @changePage="updatePageEditOne" :intervalCount="10">
+    <PaginationPanel v-model="schema.pagingEditOne" :readonly="props.readonly" :totalPage="pagingCount" @changePage="updatePageEditOne" :intervalCount="10">
       <template #tooltip="{index}">
         <div>
           <div v-if="index != 1" class="controls-wrap-item" @click="movePaging(index, 'up')">前移一页</div>
@@ -10,7 +10,7 @@
         </div>
       </template>
     </PaginationPanel>
-    <i-ep-plus style="font-size: 12px;" @click="addPagingControls" class="plus-add" />
+    <i-ep-plus v-if="!props.readonly" style="font-size: 12px;" @click="addPagingControls" class="plus-add"  />
   </div>
 </template>
 <script setup>
@@ -19,8 +19,15 @@ import { useEditStore } from '@/management/stores/edit'
 import { storeToRefs } from 'pinia'
 import { QUESTION_TYPE } from '@/common/typeEnum.ts'
 
+const props = defineProps({
+  readonly: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const editStore = useEditStore();
-const { pagingCount, pagingEditOne, newQuestionIndex } = storeToRefs(editStore)
+const { pagingCount, schema, newQuestionIndex } = storeToRefs(editStore)
 
 const { updatePagingEditOne, addPaging, createNewQuestion, addQuestion, setCurrentEditOne, deletePaging, swapArrayRanges, copyPaging } = editStore;
 
@@ -56,7 +63,7 @@ const addPagingControls = () => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mt8 {
   margin-top: 8px
 }

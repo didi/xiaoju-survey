@@ -5,7 +5,7 @@
         <draggable v-model="renderData[i]"  itemKey="field" :group="QUESTION_CATALOG" handle=".draggHandle"
           host-class="catalog-item-ghost">
           <template #item="{ element }">
-            <CatalogItem :title="element.title" :indexNumber="element.qIndex" :showIndex="element.showIndex"
+            <CatalogItem :title="element.title" :indexNumber="element.indexNumber" :showIndex="element.showIndex"
               @select="setPagingOneEdit(element.qIndex, i + 1)" />
           </template>
         </draggable>

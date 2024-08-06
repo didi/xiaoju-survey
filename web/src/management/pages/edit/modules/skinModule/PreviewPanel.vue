@@ -1,7 +1,7 @@
 <template>
   <div class="main-operation">
     <div class="pagination-wrapper">
-      <PagingWrapper />
+      <PagingWrapper :readonly="true" />
     </div>
     <div class="operation-wrapper">
       <div class="box" ref="box">

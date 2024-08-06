@@ -41,7 +41,7 @@ public class MongoEntityInterceptor<T> extends AbstractMongoEventListener<T> {
      * @param statusList
      * @return
      */
-    public static InitBaseEntity updateDocument(List<Status> statusList) {
+    public InitBaseEntity updateDocument(List<Status> statusList) {
         long time = System.currentTimeMillis();
         Status status = new Status().setStatus(RecordStatusEnum.REMOVED.getStatusType()).setDate(time);
         statusList.add(status);

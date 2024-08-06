@@ -53,6 +53,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Autowired
     private WorkspaceMemberService memberService;
 
+    @Autowired
+    private MongoEntityInterceptor mongoEntityInterceptor;
+
     /**
      * 创建空间
      * @param request
@@ -180,7 +183,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public void delete(HttpServletRequest request, String workspaceId) {
         Workspace workspace = mongoRepository.findOne(new Query().addCriteria(Criteria.where("_id").is(workspaceId)), Workspace.class);
         // 更新空间状态
-        InitBaseEntity initBaseEntity = MongoEntityInterceptor.updateDocument(workspace.getStatusList());
+        InitBaseEntity initBaseEntity = mongoEntityInterceptor.updateDocument(workspace.getStatusList());
         mongoRepository.updateMulti(new Query().addCriteria(Criteria.where("_id").is(workspaceId)),
                 new Update().set("curStatus", initBaseEntity.getCurStatus())
                         .set("statusList", initBaseEntity.getStatusList()), Workspace.class);

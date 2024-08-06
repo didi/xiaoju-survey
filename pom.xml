@@ -34,6 +34,7 @@
         <lang3.version>3.14.0</lang3.version>
         <fastjson.version>1.2.83</fastjson.version>
         <jwt.version>4.4.0</jwt.version>
+        <dozer.version>5.5.1</dozer.version>
     </properties>
 
     <dependencyManagement>
@@ -82,6 +83,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.dozer</groupId>
+                <artifactId>dozer</artifactId>
+                <version>${dozer.version}</version>
             </dependency>
         </dependencies>
 

@@ -2,14 +2,15 @@
   <div class="index">
     <ProgressBar />
     <div class="wrapper" ref="boxRef">
-      <HeaderContent :bannerConf="bannerConf" :readonly="true" />
+      <HeaderContent v-if="pagingIndex==1" :bannerConf="bannerConf" :readonly="true" />
       <div class="content">
-        <MainTitle :bannerConf="bannerConf" :readonly="true"></MainTitle>
+        <MainTitle v-if="pagingIndex==1"  :bannerConf="bannerConf" :readonly="true"></MainTitle>
         <MainRenderer ref="mainRef"></MainRenderer>
         <SubmitButton
           :validate="validate"
           :submitConf="submitConf"
           :readonly="true"
+          :isFinallyPage="isFinallyPage"
           :renderData="renderData"
           @submit="handleSubmit"
         ></SubmitButton>
@@ -61,14 +62,11 @@ const router = useRouter();
 const surveyStore = useSurveyStore();
 const questionStore = useQuestionStore();
 
-const renderData = computed(() => questionStore.renderData);
-const {
-  bannerConf,
-  submitConf,
-  bottomConf: logoConf,
-  whiteData,
-} = storeToRefs(surveyStore);
-const surveyPath = computed(() => surveyStore.surveyPath || "");
+const renderData = computed(() => questionStore.renderData)
+const isFinallyPage = computed(() => questionStore.isFinallyPage)
+const pagingIndex = computed(() => questionStore.pagingIndex)
+const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
+const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0;
@@ -126,9 +124,12 @@ const submitSurver = async () => {
 };
 
 const handleSubmit = () => {
-  const confirmAgain = (surveyStore.submitConf as any).confirmAgain;
-  const { again_text, is_again } = confirmAgain;
-
+  const confirmAgain = (surveyStore.submitConf as any).confirmAgain
+  const { again_text, is_again } = confirmAgain
+  if (!isFinallyPage.value) {
+    questionStore.addPagingIndex();
+    return
+  }
   if (is_again) {
     confirm({
       title: again_text,

@@ -10,9 +10,10 @@ export const useQuestionStore = defineStore('question', () => {
   const voteMap = ref({})
   const questionData = ref(null)
   const questionSeq = ref([]) // 题目的顺序，因为可能会有分页的情况，所以是一个二维数组[[qid1, qid2], [qid3,qid4]]
+  const pagingIndex = ref(1) // 当前分页的索引
 
   // 题目列表
-  const renderData = computed(() => {
+  const questionList = computed(() => {
     let index = 1
     return (
       questionSeq.value &&
@@ -37,6 +38,41 @@ export const useQuestionStore = defineStore('question', () => {
       }, [])
     )
   })
+
+  const renderData = computed(() => {
+    const { startIndex, endIndex } = getSorter()
+    const data = questionList.value[0];
+    if(!data || !Array.isArray(data) ||data.length === 0) return []
+    return [data.slice(startIndex,endIndex)]
+  })
+
+  const isFinallyPage = computed(() => { 
+    const surveyStore = useSurveyStore()
+    return pagingIndex.value === surveyStore.pagingConf.length;
+  })
+
+  const addPagingIndex = () => { 
+    pagingIndex.value++
+  }
+
+  const getSorter = () => {
+    let startIndex = 0;
+    const surveyStore = useSurveyStore()
+    const newPagingEditOne =  pagingIndex.value;
+    const endIndex = surveyStore.pagingConf[newPagingEditOne - 1];
+
+    for (let index = 0; index < surveyStore.pagingConf.length; index++) {
+      const item = surveyStore.pagingConf[index];
+      if ((newPagingEditOne - 1) == index) {
+        break;
+      }
+      startIndex+=item
+    }
+    return {
+      startIndex,
+      endIndex:startIndex + endIndex
+    }
+  }
 
   const setQuestionData = (data) => {
     questionData.value = data
@@ -146,6 +182,9 @@ export const useQuestionStore = defineStore('question', () => {
     questionData,
     questionSeq,
     renderData,
+    isFinallyPage,
+    pagingIndex,
+    addPagingIndex,
     setQuestionData,
     changeSelectMoreData,
     setQuestionSeq,

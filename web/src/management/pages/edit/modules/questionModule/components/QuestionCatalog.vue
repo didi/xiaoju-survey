@@ -2,20 +2,28 @@
   <div class="question-catalog-wrapper">
     <el-collapse>
       <el-collapse-item v-for="(v, i) in renderData" :key="v" :title="`第${i + 1}页`" :name="i + 1">
-        <draggable v-model="renderData[i]"  itemKey="field" :group="QUESTION_CATALOG" handle=".draggHandle"
-          host-class="catalog-item-ghost">
+        <draggable
+          v-model="renderData[i]"
+          itemKey="field"
+          :group="QUESTION_CATALOG"
+          handle=".draggHandle"
+          host-class="catalog-item-ghost"
+        >
           <template #item="{ element }">
-            <CatalogItem :title="element.title" :indexNumber="element.indexNumber" :showIndex="element.showIndex"
-              @select="setPagingOneEdit(element.qIndex, i + 1)" />
+            <CatalogItem
+              :title="element.title"
+              :indexNumber="element.indexNumber"
+              :showIndex="element.showIndex"
+              @select="setPageOneEdit(element.qIndex, i + 1)"
+            />
           </template>
         </draggable>
       </el-collapse-item>
     </el-collapse>
-
   </div>
 </template>
 <script setup lang="ts">
-import {  watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import draggable from 'vuedraggable'
@@ -24,43 +32,48 @@ import CatalogItem from './CatalogItem.vue'
 import { QUESTION_CATALOG } from '@/management/config/dnd'
 
 const editStore = useEditStore()
-const { questionDataList, pagingConf } = storeToRefs(editStore)
-const { setCurrentEditOne, getPagingQuestionData, updatePagingEditOne,setPaging,compareQuestionSeq } = editStore
+const { questionDataList, pageConf } = storeToRefs(editStore)
+const { setCurrentEditOne, getPageQuestionData, updatePageEditOne, setPage, compareQuestionSeq } =
+  editStore
 
 const renderData: any = ref([])
 
-const setPagingOneEdit = (qIndex: number, pagingIndex: number) => {
-  updatePagingEditOne(pagingIndex)
+const setPageOneEdit = (qIndex: number, pageIndex: number) => {
+  updatePageEditOne(pageIndex)
   setCurrentEditOne(qIndex)
 }
 
-
-watch(() => [pagingConf.value,questionDataList.value], () => {
-  renderData.value = [];
-  for (let index = 0; index < pagingConf.value.length; index++) {
-    renderData.value.push(getPagingQuestionData(index + 1))
+watch(
+  () => [pageConf.value, questionDataList.value],
+  () => {
+    renderData.value = []
+    for (let index = 0; index < pageConf.value.length; index++) {
+      renderData.value.push(getPageQuestionData(index + 1))
+    }
+  },
+  {
+    deep: true,
+    immediate: true
   }
-},{
-  deep: true,
-  immediate: true
-})
+)
 
-watch(() => renderData.value, (newVal) => {
-  if (newVal.length == 0) return;
-  let pagingData: Array<number> = [];
-  let questionList: Array<any> = [];
-  newVal.map((v:any) => {
-    pagingData.push(v.length)
-    questionList.push(...v)
-  })
-  setPaging(pagingData)
-  compareQuestionSeq(questionList)
-
-}, {
-  deep: true
-})
-
-
+watch(
+  () => renderData.value,
+  (newVal) => {
+    if (newVal.length == 0) return
+    let pageData: Array<number> = []
+    let questionList: Array<any> = []
+    newVal.map((v: any) => {
+      pageData.push(v.length)
+      questionList.push(...v)
+    })
+    setPage(pageData)
+    compareQuestionSeq(questionList)
+  },
+  {
+    deep: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .question-catalog-wrapper {
@@ -86,7 +99,7 @@ watch(() => renderData.value, (newVal) => {
 
   :deep(.el-collapse-item__header) {
     font-size: 14px;
-    color: #6E707C;
+    color: #6e707c;
     font-weight: 500;
   }
 

@@ -1,18 +1,32 @@
 <template>
   <div class="main-operation">
     <div class="pagination-wrapper">
-      <PagingWrapper :readonly="true" />
+      <PageWrapper :readonly="true" />
     </div>
     <div class="operation-wrapper">
       <div class="box" ref="box">
         <div class="mask"></div>
-        <HeaderContent v-if="pagingEditOne==1" :bannerConf="bannerConf" :readonly="false" />
+        <HeaderContent v-if="pageEditOne == 1" :bannerConf="bannerConf" :readonly="false" />
         <div class="content">
-          <MainTitle v-if="pagingEditOne==1"  :isSelected="false" :bannerConf="bannerConf" :readonly="false" />
-          <MaterialGroup :questionDataList="pagingQuestionData" ref="MaterialGroup" />
-          <SubmitButton :submit-conf="submitConf" :skin-conf="skinConf" :readonly="false"
-            :is-selected="currentEditOne === 'submit'" :is-finally-page="isFinallyPage" />
-          <LogoIcon :logo-conf="bottomConf" :readonly="false" :is-selected="currentEditOne === 'logo'" />
+          <MainTitle
+            v-if="pageEditOne == 1"
+            :isSelected="false"
+            :bannerConf="bannerConf"
+            :readonly="false"
+          />
+          <MaterialGroup :questionDataList="pageQuestionData" ref="MaterialGroup" />
+          <SubmitButton
+            :submit-conf="submitConf"
+            :skin-conf="skinConf"
+            :readonly="false"
+            :is-selected="currentEditOne === 'submit'"
+            :is-finally-page="isFinallyPage"
+          />
+          <LogoIcon
+            :logo-conf="bottomConf"
+            :readonly="false"
+            :is-selected="currentEditOne === 'logo'"
+          />
         </div>
       </div>
     </div>
@@ -21,7 +35,7 @@
 <script>
 import { defineComponent, toRefs } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import PagingWrapper from '@/management/pages/edit/components/PagingWrapper.vue'
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -34,7 +48,7 @@ const LogoIcon = () => communalLoader.loadComponent('LogoIcon')
 export default defineComponent({
   components: {
     MaterialGroup,
-    PagingWrapper,
+    PageWrapper,
     HeaderContent: HeaderContent(),
     MainTitle: MainTitle(),
     SubmitButton: SubmitButton(),
@@ -42,7 +56,8 @@ export default defineComponent({
   },
   setup() {
     const editStore = useEditStore()
-    const { pagingQuestionData, currentEditOne, currentEditKey,isFinallyPage,pagingEditOne } = storeToRefs(editStore)
+    const { pageQuestionData, currentEditOne, currentEditKey, isFinallyPage, pageEditOne } =
+      storeToRefs(editStore)
     const { schema } = editStore
     const { bannerConf, submitConf, skinConf, bottomConf } = toRefs(schema)
 
@@ -51,11 +66,11 @@ export default defineComponent({
       submitConf,
       bottomConf,
       skinConf,
-      pagingQuestionData,
+      pageQuestionData,
       currentEditOne,
       currentEditKey,
       isFinallyPage,
-      pagingEditOne
+      pageEditOne
     }
   },
   watch: {

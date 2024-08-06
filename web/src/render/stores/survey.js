@@ -38,7 +38,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const submitConf = ref({})
   const formValues = ref({})
   const whiteData = ref({})
-  const pagingConf = ref([])
+  const pageConf = ref([])
 
   const router = useRouter()
   const questionStore = useQuestionStore()
@@ -129,7 +129,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'skinConf',
         'submitConf',
         'whiteData',
-        "pagingConf"
+        'pageConf'
       ])
     )
     questionStore.questionData = questionData
@@ -145,7 +145,7 @@ export const useSurveyStore = defineStore('survey', () => {
     submitConf.value = option.submitConf
     formValues.value = _formValues
     whiteData.value = option.whiteData
-    pagingConf.value = option.pagingConf
+    pageConf.value = option.pageConf
     // 获取已投票数据
     questionStore.initVoteData()
   }
@@ -172,7 +172,7 @@ export const useSurveyStore = defineStore('survey', () => {
     submitConf,
     formValues,
     whiteData,
-    pagingConf,
+    pageConf,
 
     initSurvey,
     changeData,

@@ -16,8 +16,16 @@ const surveyStore = useSurveyStore()
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
-    const { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf, logicConf,pagingConf } =
-      data.code
+    const {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      logicConf,
+      pageConf
+    } = data.code
     const questionData = {
       bannerConf,
       baseConf,
@@ -25,11 +33,11 @@ const loadData = (res: any, surveyPath: string) => {
       dataConf,
       skinConf,
       submitConf,
-      pagingConf
+      pageConf
     }
 
-    if(!pagingConf || pagingConf?.length == 0){
-      questionData.pagingConf = [dataConf.dataList.length]
+    if (!pageConf || pageConf?.length == 0) {
+      questionData.pageConf = [dataConf.dataList.length]
     }
 
     document.title = data.title

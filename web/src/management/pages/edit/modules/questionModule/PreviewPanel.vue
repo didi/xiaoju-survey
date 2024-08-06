@@ -1,12 +1,12 @@
 <template>
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
     <div class="pagination-wrapper">
-      <PagingWrapper :readonly="false"/>
+      <PageWrapper :readonly="false" />
     </div>
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
         <MainTitle
-          v-if="pagingEditOne==1"
+          v-if="pageEditOne == 1"
           :bannerConf="bannerConf"
           :readonly="false"
           :is-selected="currentEditOne === 'mainTitle'"
@@ -15,7 +15,7 @@
         />
         <MaterialGroup
           :current-edit-one="parseInt(currentEditOne)"
-          :questionDataList="pagingQuestionData"
+          :questionDataList="pageQuestionData"
           @select="setCurrentEditOne"
           @change="handleChange"
           @changeSeq="onQuestionOperation"
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, watch, toRefs } from 'vue'
 import communalLoader from '@materials/communals/communalLoader.js'
-import PagingWrapper from '@/management/pages/edit/components/PagingWrapper.vue'
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
@@ -46,14 +46,14 @@ const MainTitle = communalLoader.loadComponent('MainTitle')
 const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
 const editStore = useEditStore()
-const { currentEditOne, currentEditKey,pagingQuestionData,isFinallyPage,pagingEditOne } = storeToRefs(editStore)
+const { currentEditOne, currentEditKey, pageQuestionData, isFinallyPage, pageEditOne } =
+  storeToRefs(editStore)
 const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion, setCurrentEditOne } =
   editStore
 const mainOperation = ref(null)
 const materialGroup = ref(null)
 
 const { bannerConf, submitConf, skinConf } = toRefs(schema)
-
 
 // const autoScrollData = computed(() => {
 //   return {
@@ -146,13 +146,13 @@ watch(
   align-items: center;
   background-color: #f6f7f9;
 }
-.pagination-wrapper{
-    width: 90%;
-    padding-right: 30px;
-    margin-right: -30px;
-    position: relative;
-    top: 50px;
-  }
+.pagination-wrapper {
+  width: 90%;
+  padding-right: 30px;
+  margin-right: -30px;
+  position: relative;
+  top: 50px;
+}
 
 .toolbar {
   width: 100%;

@@ -217,9 +217,10 @@ If you use this project, please leave feedback:[I'm using](https://github.com/di
 
 If you want to become a contributor or expand your technical stack, please check: [Contributor Guide](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE). Your participation is our greatest honor.
 
-## Feature
+## Future Tasks
 
-Pay attention to weekly construction updates: [Official Feature](https://github.com/didi/xiaoju-survey/issues/45)
+1. [Official Feature](https://github.com/didi/xiaoju-survey/issues/45)
+2. [WIP](https://github.com/didi/xiaoju-survey/labels/WIP)
 
 ## CHANGELOG
 
@@ -229,4 +230,4 @@ Follow major changes: [MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/is
 
 1、[x.com](https://x.com/t_sudoooooo)
 
-[Welcome to contribute.](https://xiaojusurvey.didi.cn/docs/next/article/%E7%AE%80%E4%BB%8B)
+[Welcome to contribute.](https://github.com/didi/xiaoju-survey/issues/85)

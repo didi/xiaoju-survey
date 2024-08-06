@@ -10,7 +10,7 @@ export default function (schema) {
     'skinConf',
     'submitConf',
     'questionDataList',
-    "pagingConf",
+    'pageConf',
     'logicConf'
   ])
   configData.dataConf = {

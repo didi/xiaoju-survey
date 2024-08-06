@@ -32,11 +32,11 @@ const mockDecryptErrorBody = {
     'SkyfsbS6MDvFrrxFJQDMxsvm53G3PTURktfZikJP2fKilC8wPW5ZdfX29Fixor5ldHBBNyILsDtxhbNahEbNCDw8n1wS8IIckFuQcaJtn6MLOD+h+Iuywka3ig4ecTN87RpdcfEQe7f38rSSx0zoFU8j37eojjSF7eETBSrz5m9WaNesQo4hhC6p7wmAo1jggkdbG8PVrFqrZPbkHN5jOBrzQEqdqYu9A5wHMM7nUteqlPpkiogEDYmBIccqmPdtO54y7LoPslXgXj6jNja8oVNaYlnp7UsisT+i5cuQ7lbDukEhrfpAIFRsT2IUwVlLjWHtFQm4/4I5HyvVBirTng==',
     'IMn0E7R6cYCQPI497mz3x99CPA4cImAFEfIv8Q98Gm5bFcgKJX6KFYS7PF/VtIuI1leKwwNYexQy7+2HnF40by/huVugoPYnPd4pTpUdG6f1kh8EpzIir2+8P98Dcz2+NZ/khP2RIAM8nOr+KSC99TNGhuKaKQCItyLFDkr80s3zv+INieGc8wULIrGoWDJGN2KdU/jSq+hkV0QXypd81N5IyAoNhZLkZeM/FU6grGFPnGRtcDDc5W8YWVHO87VymlxPCTRawXRTDcvGIUqb3GuZfxvA7AULqbspmN9kzt3rktuZLNb2TFQDsJfqUuCmi+b28qP/G4OrT9/VAHhYKw==',
   ],
-  difTime: 806707,
+  diffTime: 806707,
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f2664c92862d6a9067ad18',
-  sign: '8c9ca8804c9d94de6055d68a1f3c423fe50c95b4bd69f809ee2da8fcd82fd960.1710400229589',
+  sign: '95d6ff5dd3d9ddc205cbab88defe40ebe889952961f1d60e760fa411e2cb39fe.1710400229589',
 };
 
 const mockSubmitData = {
@@ -45,11 +45,11 @@ const mockSubmitData = {
     'SkyfsbS6MDvFrrxFJQDMxsvm53G3PTURktfZikJP2fKilC8wPW5ZdfX29Fixor5ldHBBNyILsDtxhbNahEbNCDw8n1wS8IIckFuQcaJtn6MLOD+h+Iuywka3ig4ecTN87RpdcfEQe7f38rSSx0zoFU8j37eojjSF7eETBSrz5m9WaNesQo4hhC6p7wmAo1jggkdbG8PVrFqrZPbkHN5jOBrzQEqdqYu9A5wHMM7nUteqlPpkiogEDYmBIccqmPdtO54y7LoPslXgXj6jNja8oVNaYlnp7UsisT+i5cuQ7lbDukEhrfpAIFRsT2IUwVlLjWHtFQm4/4I5HyvVBirTng==',
     'IMn0E7R6cYCQPI497mz3x99CPA4cImAFEfIv8Q98Gm5bFcgKJX6KFYS7PF/VtIuI1leKwwNYexQy7+2HnF40by/huVugoPYnPd4pTpUdG6f1kh8EpzIir2+8P98Dcz2+NZ/khP2RIAM8nOr+KSC99TNGhuKaKQCItyLFDkr80s3zv+INieGc8wULIrGoWDJGN2KdU/jSq+hkV0QXypd81N5IyAoNhZLkZeM/FU6grGFPnGRtcDDc5W8YWVHO87VymlxPCTRawXRTDcvGIUqb3GuZfxvA7AULqbspmN9kzt3rktuZLNb2TFQDsJfqUuCmi+b28qP/G4OrT9/VAHhYKw==',
   ],
-  difTime: 806707,
+  diffTime: 806707,
   clientTime: 1710400229573,
   encryptType: 'rsa',
   sessionId: '65f29fc192862d6a9067ad28',
-  sign: '8c9ca8804c9d94de6055d68a1f3c423fe50c95b4bd69f809ee2da8fcd82fd960.1710400229589',
+  sign: '95d6ff5dd3d9ddc205cbab88defe40ebe889952961f1d60e760fa411e2cb39fe.1710400229589',
 };
 
 const mockClientEncryptInfo = {
@@ -185,7 +185,7 @@ describe('SurveyResponseController', () => {
             status: RECORD_STATUS.NEW,
             date: 1711025113146,
           },
-          difTime: 30518,
+          diffTime: 30518,
           data: {
             data458: '15000000000',
             data515: '115019',
@@ -220,7 +220,6 @@ describe('SurveyResponseController', () => {
       jest
         .spyOn(clientEncryptService, 'deleteEncryptInfo')
         .mockResolvedValueOnce(undefined);
-
       const result = await controller.createResponse(reqBody, {});
 
       expect(result).toEqual({ code: 200, msg: '提交成功' });
@@ -240,7 +239,7 @@ describe('SurveyResponseController', () => {
           data770: '123456@qq.com',
         },
         clientTime: reqBody.clientTime,
-        difTime: reqBody.difTime,
+        diffTime: reqBody.diffTime,
         surveyId: mockResponseSchema.pageId,
         optionTextAndId: {
           data515: [
@@ -327,7 +326,7 @@ describe('SurveyResponseController', () => {
       const reqBody = {
         ...mockSubmitData,
         password: '123457',
-        sign: '4ff02062141d92d80629eae4797ba68056f29a9709cdf59bf206776fc0971c1a.1710400229589',
+        sign: '145595d85079af3b1fb30784177c348555f442837c051d90f57a01ce1ff53c32.1710400229589',
       };
 
       jest

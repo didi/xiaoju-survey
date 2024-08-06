@@ -49,6 +49,7 @@
       "opacity": 100
     }
   },
+  "pagingConf":[],
   "logicConf": {
     "showLogicConf": []
   }

@@ -16,7 +16,7 @@ export class ConditionNode<F extends string, O extends Operator> {
     return this.field + this.operator + this.value
   }
 
-  match(facts: Fact): boolean|undefined {
+  match(facts: Fact): boolean | undefined {
     // console.log(this.calculateHash())
     // 如果该特征在事实对象中不存在，则直接返回false
     if (!facts[this.field]) {
@@ -85,7 +85,7 @@ export class RuleNode {
   // 匹配条件规则
   match(fact: Fact, comparor?: any) {
     let res: boolean | undefined = undefined
-    if(comparor === 'or') {
+    if (comparor === 'or') {
       res = Array.from(this.conditions.entries()).some(([, value]) => {
         const res = value.match(fact)
         if (res) {
@@ -104,7 +104,7 @@ export class RuleNode {
         }
       })
     }
-    
+
     this.result = res
     return res
   }
@@ -175,7 +175,7 @@ export class RuleMatch {
   }
 
   // 匹配条件规则
-  match(target: string, scope: string, fact: Fact,  comparor?: any) {
+  match(target: string, scope: string, fact: Fact, comparor?: any) {
     const hash = this.calculateHash(target, scope)
 
     const rule = this.rules.get(hash)
@@ -220,12 +220,12 @@ export class RuleMatch {
     const match = list.filter(([, ruleValue]) => {
       const list = [...ruleValue.conditions.entries()]
       const res = list.filter(([, conditionValue]) => {
-        const hit = (conditionValue.field === field )
+        const hit = conditionValue.field === field
         return hit
       })
       return res.length
     })
-    console.log({match})
+    console.log({ match })
     return match
   }
   findFieldsByTarget(target: string) {
@@ -234,7 +234,9 @@ export class RuleMatch {
         return value.target === target
       })
     )
-    return [...rules.values()].map((obj) => [...obj.conditions.entries()].map(([, value]) => value.field))
+    return [...rules.values()].map((obj) =>
+      [...obj.conditions.entries()].map(([, value]) => value.field)
+    )
   }
   toJson() {
     return Array.from(this.rules.entries()).map(([, value]) => {

@@ -165,7 +165,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const initShowLogicEngine = (showLogicConf) => {
     showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
   }
-  const  jumpLogicEngine = ref()
+  const jumpLogicEngine = ref()
   const initJumpLogicEngine = (jumpLogicConf) => {
     jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
   }
@@ -194,6 +194,6 @@ export const useSurveyStore = defineStore('survey', () => {
     showLogicEngine,
     initShowLogicEngine,
     jumpLogicEngine,
-    initJumpLogicEngine,
+    initJumpLogicEngine
   }
 })

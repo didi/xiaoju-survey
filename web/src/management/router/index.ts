@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
               needLogin: true
             },
             component: () => import('../pages/edit/pages/edit/LogicIndex.vue'),
-            props: route => ({ active: route.query.active })
+            props: (route) => ({ active: route.query.active })
           }
         ]
       },

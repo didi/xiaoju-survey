@@ -96,7 +96,7 @@ watch(
     // 题目从显示到隐藏，需要清空值
     const { field, type, innerType } = props.moduleConfig
     if (!newVal && oldVal) {
-      console.log(field,'题目隐藏了')
+      console.log(field, '题目隐藏了')
       let value = ''
       // 题型是多选，或者子题型是多选（innerType是用于投票）
       if (type === QUESTION_TYPE.CHECKBOX || innerType === QUESTION_TYPE.CHECKBOX) {
@@ -111,71 +111,89 @@ watch(
   }
 )
 
-
 const jumpSkip = ref(false)
 const visibily = computed(() => {
   return showMatch.value && !jumpSkip.value
 })
 
 // 监听formValues变化，判断当前题目是否需要跳过
-watch(()=> formValues,
- (newVal) => {
-  const currentIndex = props.qIndex
-  const changeIndex = getQuestionIndexByField(dataConf.value.dataList, changeField.value)
-  // 前面的题目不受跳题影响
-  if(currentIndex < changeIndex) {
-    return
-  }
-  // 找到当前题关联的目标题规则
-  const rules = jumpLogicEngine.value.findRulesByField(changeField.value)
-  // change没有跳题关联的题直接返回
-  if(!rules.length) {
-    return 
-  }
-  // 计算目标题的命中情况
-  const targetsResult = new Map()
-  // 处理只有一条规则的情况
-  if(rules.length === 1) {
-    rules.forEach(([, rule]) => {
-      const index = getQuestionIndexByField(dataConf.value.dataList, rule.target)
-      targetsResult.set(index, jumpLogicEngine.value.match(rule.target, 'question', newVal.value, 'or'))
-    })
-  } else {
-    // 如果存在多条规则，能命中选项跳转则精确命中选项跳转,否则命中答题跳转
-    const optionJump = rules.filter(([, rule]) => {
-      // 过滤掉答题跳转，剩下的就是选项跳转
-      const conditionhash = `${changeField.value}neq`
-      return !rule.conditions.get(conditionhash)
-    })
-    if(optionJump.length) {
-      optionJump.forEach(([, rule]) => {
+watch(
+  () => formValues,
+  (newVal) => {
+    const currentIndex = props.qIndex
+    const changeIndex = getQuestionIndexByField(dataConf.value.dataList, changeField.value)
+    // 前面的题目不受跳题影响
+    if (currentIndex < changeIndex) {
+      return
+    }
+    // 找到当前题关联的目标题规则
+    const rules = jumpLogicEngine.value.findRulesByField(changeField.value)
+    // change没有跳题关联的题直接返回
+    if (!rules.length) {
+      return
+    }
+    // 计算目标题的命中情况
+    const targetsResult = new Map()
+    // 处理只有一条规则的情况
+    if (rules.length === 1) {
+      rules.forEach(([, rule]) => {
         const index = getQuestionIndexByField(dataConf.value.dataList, rule.target)
-        targetsResult.set(index, jumpLogicEngine.value.match(rule.target, 'question', newVal.value, 'or'))
+        targetsResult.set(
+          index,
+          jumpLogicEngine.value.match(rule.target, 'question', newVal.value, 'or')
+        )
       })
     } else {
-      const answerJump = rules.find(([, rule]) => {
+      // 如果存在多条规则，能命中选项跳转则精确命中选项跳转,否则命中答题跳转
+      const optionJump = rules.filter(([, rule]) => {
+        // 过滤掉答题跳转，剩下的就是选项跳转
         const conditionhash = `${changeField.value}neq`
-        return rule.conditions.get(conditionhash)
+        return !rule.conditions.get(conditionhash)
       })
-      const index = getQuestionIndexByField(dataConf.value.dataList, answerJump[1].target)
-      targetsResult.set(index, jumpLogicEngine.value.match(answerJump[1].target, 'question', newVal.value, 'or'))
+      if (optionJump.length) {
+        optionJump.forEach(([, rule]) => {
+          const index = getQuestionIndexByField(dataConf.value.dataList, rule.target)
+          targetsResult.set(
+            index,
+            jumpLogicEngine.value.match(rule.target, 'question', newVal.value, 'or')
+          )
+        })
+      } else {
+        const answerJump = rules.find(([, rule]) => {
+          const conditionhash = `${changeField.value}neq`
+          return rule.conditions.get(conditionhash)
+        })
+        const index = getQuestionIndexByField(dataConf.value.dataList, answerJump[1].target)
+        targetsResult.set(
+          index,
+          jumpLogicEngine.value.match(answerJump[1].target, 'question', newVal.value, 'or')
+        )
+      }
     }
-  }
-  
-  const jumpFitMinIndex = findMinKeyInMap(targetsResult, true)
 
-  const jumpQuestion = (currentIndex < jumpFitMinIndex)
-  const jumpEnd = (jumpFitMinIndex === -1 && rules.map(([, rule]) => rule.target).includes('end'))
-  
-  if(changeIndex <  currentIndex &&  (jumpQuestion || jumpEnd)) {
-    jumpSkip.value = true
-    console.log(`题目${currentIndex + 1}被跳过了`)
-  } else {
-    jumpSkip.value = false
-  }
-  
-  console.log({rules, targetsResult, jumpFitMinIndex, changeIndex: changeIndex, currentIndex, jumpSkip: jumpSkip.value})
-}, {deep: true})
+    const jumpFitMinIndex = findMinKeyInMap(targetsResult, true)
+
+    const jumpQuestion = currentIndex < jumpFitMinIndex
+    const jumpEnd = jumpFitMinIndex === -1 && rules.map(([, rule]) => rule.target).includes('end')
+
+    if (changeIndex < currentIndex && (jumpQuestion || jumpEnd)) {
+      jumpSkip.value = true
+      console.log(`题目${currentIndex + 1}被跳过了`)
+    } else {
+      jumpSkip.value = false
+    }
+
+    console.log({
+      rules,
+      targetsResult,
+      jumpFitMinIndex,
+      changeIndex: changeIndex,
+      currentIndex,
+      jumpSkip: jumpSkip.value
+    })
+  },
+  { deep: true }
+)
 
 const handleChange = (data) => {
   emit('change', data)

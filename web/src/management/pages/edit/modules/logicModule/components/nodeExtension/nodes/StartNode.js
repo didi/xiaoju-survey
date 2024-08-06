@@ -5,34 +5,33 @@ class StartNodeModel extends CircleNodeModel {
     data.text = {
       value: data.text,
       x: data.x,
-      y: data.y,
-    };
-    super(data, graphModel);
+      y: data.y
+    }
+    super(data, graphModel)
 
-    this.r = 30;
+    this.r = 30
   }
-
 
   /**
    * 重写定义锚点
    */
   getDefaultAnchor() {
-    const { x, y, id, width } = this;
+    const { x, y, id, width } = this
     const anchors = [
       {
         x: x + width / 2,
         y: y,
         id: `${id}_right`,
-        type: "right"
+        type: 'right'
       }
-    ];
-    return anchors;
+    ]
+    return anchors
   }
-  setIsShowAnchor () {
+  setIsShowAnchor() {
     return false
-  };
+  }
   isAllowConnectedAsTarget() {
-    return false;
+    return false
   }
 }
 

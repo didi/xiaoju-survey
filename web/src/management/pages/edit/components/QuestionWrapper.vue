@@ -138,7 +138,7 @@ const onDelete = async () => {
     })
     return
   }
-  if(unref(hasJumpLogic)) {
+  if (unref(hasJumpLogic)) {
     ElMessageBox.alert('该题目被跳转逻辑关联，请先清除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'

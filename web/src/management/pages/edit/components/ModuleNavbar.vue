@@ -66,12 +66,11 @@ const updateLogicConf = () => {
 
       return res
     }
-    
+
     const showLogicConf = showLogicEngine.value.toJson()
-    
+
     // 更新逻辑配置
     changeSchema({ key: 'logicConf', value: { showLogicConf } })
-    
 
     return res
   }

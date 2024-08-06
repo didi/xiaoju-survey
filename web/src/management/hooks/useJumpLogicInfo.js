@@ -1,7 +1,7 @@
 import { computed, unref } from 'vue'
 import { useQuestionInfo } from './useQuestionInfo'
 import { useEditStore } from '../stores/edit'
-import { storeToRefs} from 'pinia'
+import { storeToRefs } from 'pinia'
 const editStore = useEditStore()
 const { jumpLogicEngine } = storeToRefs(editStore)
 
@@ -17,22 +17,24 @@ export const useJumpLogicInfo = (field) => {
   })
   const getJumpLogicText = computed(() => {
     const logicEngine = jumpLogicEngine.value
-    if(!logicEngine) return 
+    if (!logicEngine) return
     // 获取跳转
     const rules = logicEngine?.findRulesByField(field) || []
-    if(!rules) return 
+    if (!rules) return
     const ruleText = rules.map((rule) => {
-        const conditions = rule.conditions.map(condition => {
-            const { getOptionTitle } = useQuestionInfo(condition.field)
-            if(condition.operator === 'in') {
-                return `<span> 选择了 【${getOptionTitle.value(unref(condition.value)).join('')}】</span>`
-            } else if(condition.operator === 'neq'){
-                return `<span> 答完题目 </span>`
-            }
-            return ''
-        })
-        const { getQuestionTitle } = useQuestionInfo(rule.target)
-        return conditions.join('') + `<span> &nbsp;则跳转到 【${getQuestionTitle.value()}】</span> </br>`
+      const conditions = rule.conditions.map((condition) => {
+        const { getOptionTitle } = useQuestionInfo(condition.field)
+        if (condition.operator === 'in') {
+          return `<span> 选择了 【${getOptionTitle.value(unref(condition.value)).join('')}】</span>`
+        } else if (condition.operator === 'neq') {
+          return `<span> 答完题目 </span>`
+        }
+        return ''
+      })
+      const { getQuestionTitle } = useQuestionInfo(rule.target)
+      return (
+        conditions.join('') + `<span> &nbsp;则跳转到 【${getQuestionTitle.value()}】</span> </br>`
+      )
     })
     return ruleText.join('')
   })

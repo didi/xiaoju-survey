@@ -32,21 +32,21 @@ export const formatLink = (url) => {
 }
 
 export const getQuestionIndexByField = (questionList, field) => {
-  const arr = questionList.map(item => item.field)
-  const index = arr.findIndex(item => item === field)
+  const arr = questionList.map((item) => item.field)
+  const index = arr.findIndex((item) => item === field)
   return index
 }
 
 export function findMinKeyInMap(map, hit) {
-  let minKey = null;
+  let minKey = null
 
   for (const [key, value] of map) {
     if (value === hit) {
       if (minKey === null || key < minKey) {
-        minKey = key;
+        minKey = key
       }
     }
   }
 
-  return minKey;
+  return minKey
 }

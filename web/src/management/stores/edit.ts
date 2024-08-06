@@ -77,7 +77,8 @@ function useInitializeSchema(surveyId: Ref<string>) {
       jumpLogicConf: []
     }
   })
-  const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine} = useLogicEngine(schema)
+  const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } =
+    useLogicEngine(schema)
   function initSchema({ metaData, codeData }: { metaData: any; codeData: any }) {
     schema.metaData = metaData
     schema.bannerConf = _merge({}, schema.bannerConf, codeData.bannerConf)
@@ -88,11 +89,8 @@ function useInitializeSchema(surveyId: Ref<string>) {
     schema.questionDataList = codeData.questionDataList || []
     schema.logicConf = codeData.logicConf
   }
-  
-  
 
   async function getSchemaFromRemote() {
-    
     const res: any = await getSurveyById(surveyId.value)
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
@@ -118,7 +116,7 @@ function useInitializeSchema(surveyId: Ref<string>) {
           logicConf
         }
       })
-      
+
       initShowLogicEngine()
       initJumpLogicEngine()
     } else {
@@ -131,7 +129,7 @@ function useInitializeSchema(surveyId: Ref<string>) {
     initSchema,
     getSchemaFromRemote,
     showLogicEngine,
-    jumpLogicEngine,
+    jumpLogicEngine
   }
 }
 
@@ -305,7 +303,8 @@ export const useEditStore = defineStore('edit', () => {
   const bannerList: Ref<IBannerList> = ref({})
   const cooperPermissions = ref(Object.values(SurveyPermissions))
   const schemaUpdateTime = ref(Date.now())
-  const { schema, initSchema, getSchemaFromRemote, showLogicEngine, jumpLogicEngine } = useInitializeSchema(surveyId)
+  const { schema, initSchema, getSchemaFromRemote, showLogicEngine, jumpLogicEngine } =
+    useInitializeSchema(surveyId)
   const questionDataList = toRef(schema, 'questionDataList')
   function setQuestionDataList(data: any) {
     schema.questionDataList = data
@@ -397,6 +396,6 @@ export const useEditStore = defineStore('edit', () => {
     changeSchema,
     changeThemePreset,
     showLogicEngine,
-    jumpLogicEngine,
+    jumpLogicEngine
   }
 })

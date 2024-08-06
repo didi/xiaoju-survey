@@ -8,7 +8,7 @@ export const useQuestionInfo = (field) => {
 
   const getQuestionTitle = computed(() => {
     return () => {
-      if(field === 'end') return '问卷末尾'
+      if (field === 'end') return '问卷末尾'
       return cleanRichText(questionDataList.value.find((item) => item.field === field)?.title)
     }
   })

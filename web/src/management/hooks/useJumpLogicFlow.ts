@@ -3,25 +3,26 @@ import { Operator } from '@/common/logicEngine/BasicType'
 import { cleanRichText } from '@/common/xss'
 import { CHOICES } from '@/common/typeEnum'
 
-
-export const generateNodes =  (questionDataList: [any]) =>{
+export const generateNodes = (questionDataList: [any]) => {
   let x = 50
   const y = 300
-  const startNode = [{
-    id: 'start',
-    type: 'start-node',
-    x: 50,
-    y,
-    text: '开始'
-  }]
-  const nodes: any[] = questionDataList.map((item)=> {
-    x = x + 300 
+  const startNode = [
+    {
+      id: 'start',
+      type: 'start-node',
+      x: 50,
+      y,
+      text: '开始'
+    }
+  ]
+  const nodes: any[] = questionDataList.map((item) => {
+    x = x + 300
     let options = []
-    if(CHOICES.includes(item.type)){
+    if (CHOICES.includes(item.type)) {
       options = item?.options.map((option: any) => {
         return {
           key: option?.hash,
-          type: cleanRichText(option?.text),
+          type: cleanRichText(option?.text)
         }
       })
     }
@@ -34,17 +35,19 @@ export const generateNodes =  (questionDataList: [any]) =>{
         questionType: item?.type,
         field: item.field,
         title: cleanRichText(item?.title),
-        options,
+        options
       }
     }
   })
-  const endNode = [{
-    id: 'end',
-    type: 'end-node',
-    x: x+200,
-    y,
-    text: '结束'
-  }]
+  const endNode = [
+    {
+      id: 'end',
+      type: 'end-node',
+      x: x + 200,
+      y,
+      text: '结束'
+    }
+  ]
   return startNode.concat(nodes).concat(endNode)
 }
 
@@ -57,59 +60,59 @@ export const generateLine = (models: Array<any>) => {
   // @ts-ignore
   const edges = models.reduce((prev: any, point: any, index: number, array: []) => {
     if (index === 0) {
-        return acc;
+      return acc
     }
-    const previousPoint: any = array[index - 1];
-    if(!previousPoint ) {
-      return acc;
+    const previousPoint: any = array[index - 1]
+    if (!previousPoint) {
+      return acc
     }
     let edge
-    if(previousPoint?.type === 'start-node') {
+    if (previousPoint?.type === 'start-node') {
       // 开始节点连接线
       edge = {
         type: 'q-edge',
         sourceNodeId: previousPoint?.id,
         targetNodeId: point?.id,
-        sourceAnchorId: `${previousPoint.anchors[0].id}`, 
+        sourceAnchorId: `${previousPoint.anchors[0].id}`,
         targetAnchorId: `${point?.anchors[0].id}`,
         // properties: {
-          draggable: false
+        draggable: false
         // }
       }
-      acc.push(edge);
-    } else if(previousPoint?.type === 'q-node') {
+      acc.push(edge)
+    } else if (previousPoint?.type === 'q-node') {
       // 生成题目节点连接线
       // 方案1：以条件节点为主体
       const editStore = useEditStore()
       const rules = editStore.jumpLogicEngine.findRulesByField(previousPoint.id)
-      if(!jumpLogicRule.length || !rules.length){
+      if (!jumpLogicRule.length || !rules.length) {
         edge = {
           type: 'q-edge',
           sourceNodeId: previousPoint?.id,
           targetNodeId: point?.id,
-          sourceAnchorId: `${previousPoint.anchors[1].id}`, 
-          targetAnchorId: `${point?.anchors[0].id}`,
+          sourceAnchorId: `${previousPoint.anchors[1].id}`,
+          targetAnchorId: `${point?.anchors[0].id}`
         }
-        acc.push(edge);
+        acc.push(edge)
       } else {
-        const hasDefault = rules.filter((i:any) => {
+        const hasDefault = rules.filter((i: any) => {
           return i.conditions.filter((item: any) => item.operator === Operator.NotEqual).length
         })
-        if(!hasDefault.length) {
+        if (!hasDefault.length) {
           // 如果规则中没有默认答题跳转则生成一条默认的题目答完链接线
           edge = {
             type: 'q-edge',
             sourceNodeId: previousPoint?.id,
             targetNodeId: point?.id,
-            sourceAnchorId: `${previousPoint.anchors[1].id}`, 
-            targetAnchorId: `${point?.anchors[0].id}`,
+            sourceAnchorId: `${previousPoint.anchors[1].id}`,
+            targetAnchorId: `${point?.anchors[0].id}`
           }
-          acc.push(edge);
+          acc.push(edge)
         }
         rules.forEach((rule: any) => {
           const condition = rule.conditions[0]
           let sourceAnchorId = `${condition.field}_right`
-          if(condition.operator === 'in') {
+          if (condition.operator === 'in') {
             sourceAnchorId = `${condition.value}_right`
           }
           const targetAnchorId = `${rule.target}_left`
@@ -117,14 +120,13 @@ export const generateLine = (models: Array<any>) => {
             type: 'q-edge',
             sourceNodeId: previousPoint?.id,
             targetNodeId: rule.target,
-            sourceAnchorId: `${sourceAnchorId}`, 
+            sourceAnchorId: `${sourceAnchorId}`,
             targetAnchorId: `${targetAnchorId}`,
             properties: {
               ruleId: rule.id
             }
           }
-          acc.push(edge);
-        
+          acc.push(edge)
         })
       }
     } else {
@@ -132,15 +134,14 @@ export const generateLine = (models: Array<any>) => {
         type: 'q-edge',
         sourceNodeId: previousPoint?.id,
         targetNodeId: point?.id,
-        sourceAnchorId: `${previousPoint.anchors[1].id}`, 
+        sourceAnchorId: `${previousPoint.anchors[1].id}`,
         targetAnchorId: `${point?.anchors[0].id}`,
         draggable: false
       }
-      acc.push(edge);
+      acc.push(edge)
     }
-    
-    return acc;
 
+    return acc
   })
   return edges
 }
@@ -153,7 +154,7 @@ export const getNodesStep = (source: string, target: string, questionDataList: a
 export const getCondition = (sourceInfo: any): any => {
   const { nodeId, anchorId } = sourceInfo
   const anchorKey = anchorId.split('_right')[0]
-  if(nodeId === anchorKey) {
+  if (nodeId === anchorKey) {
     // 答完跳转
     return {
       field: nodeId,

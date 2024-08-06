@@ -109,7 +109,7 @@ export class RuleBuild {
   findTargetsByScope(scope: string) {
     return this.rules.filter((rule) => rule.scope === scope).map((rule) => rule.target)
   }
-  findRulesByField(field: string){
+  findRulesByField(field: string) {
     return this.rules.filter((rule) => {
       return rule.conditions.filter((condition) => condition.field === field).length
     })

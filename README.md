@@ -218,9 +218,11 @@ npm run serve
 
 如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE)，你的加入使我们最大的荣幸。
 
-## Feature
+## Future Tasks
 
-关注每周推出的建设：[官方 Feature](https://github.com/didi/xiaoju-survey/issues/45)
+1、[官方 Feature](https://github.com/didi/xiaoju-survey/issues/45)
+
+2、[WIP](https://github.com/didi/xiaoju-survey/labels/WIP)
 
 ## CHANGELOG
 
@@ -228,6 +230,6 @@ npm run serve
 
 ## 文章分享
 
-1、[掘金](https://juejin.cn/user/3705833332160473/posts)、2、[CSDN](https://blog.csdn.net/XIAOJUSURVEY)、3、[InfoQ](https://www.infoq.cn/profile/7E08AC616A07B2/publish)
+1、[掘金](https://juejin.cn/user/3705833332160473/posts)、2、[CSDN](https://blog.csdn.net/XIAOJUSURVEY)、3、[InfoQ](https://www.infoq.cn/profile/7E08AC616A07B2/publish)、4、[知乎](https://www.zhihu.com/people/xiaojusurvey)
 
-[欢迎投稿](https://xiaojusurvey.didi.cn/docs/next/article/%E7%AE%80%E4%BB%8B)
+[欢迎共建](https://github.com/didi/xiaoju-survey/issues/85)

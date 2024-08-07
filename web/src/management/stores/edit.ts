@@ -1,6 +1,14 @@
 import { type Ref, ref, reactive, toRef, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { merge as _merge, cloneDeep as _cloneDeep, set as _set } from 'lodash-es'
+import {
+  merge as _merge,
+  cloneDeep as _cloneDeep,
+  set as _set,
+  isNumber as _isNumber
+} from 'lodash-es'
+import { QUESTION_TYPE } from '@/common/typeEnum'
+import { getQuestionByType } from '@/management/utils/index'
+import { filterQuestionPreviewData } from '@/management/utils/index'
 
 import { getSurveyById } from '@/management/api/survey'
 import { getNewField } from '@/management/utils'
@@ -71,6 +79,8 @@ function useInitializeSchema(surveyId: Ref<string>) {
       link: ''
     },
     questionDataList: [],
+    pageEditOne: 1,
+    pageConf: [], // 分页逻辑
     logicConf: {
       showLogicConf: []
     }
@@ -85,6 +95,8 @@ function useInitializeSchema(surveyId: Ref<string>) {
     schema.submitConf = _merge({}, schema.submitConf, codeData.submitConf)
     schema.questionDataList = codeData.questionDataList || []
     schema.logicConf = codeData.logicConf
+    schema.pageEditOne = 1
+    schema.pageConf = codeData.pageConf
   }
 
   async function getSchemaFromRemote() {
@@ -92,6 +104,7 @@ function useInitializeSchema(surveyId: Ref<string>) {
     if (res.code === 200) {
       const metaData = res.data.surveyMetaRes
       document.title = metaData.title
+      const data = res.data.surveyConfRes.code
       const {
         bannerConf,
         bottomConf,
@@ -100,7 +113,10 @@ function useInitializeSchema(surveyId: Ref<string>) {
         submitConf,
         dataConf,
         logicConf = {}
-      } = res.data.surveyConfRes.code
+      } = data
+      if (!data.pageConf || data.pageConf.length === 0) {
+        data.pageConf = [dataConf.dataList.length]
+      }
       initSchema({
         metaData,
         codeData: {
@@ -110,6 +126,7 @@ function useInitializeSchema(surveyId: Ref<string>) {
           baseConf,
           submitConf,
           questionDataList: dataConf.dataList,
+          pageConf: data.pageConf,
           logicConf
         }
       })
@@ -125,7 +142,11 @@ function useInitializeSchema(surveyId: Ref<string>) {
   }
 }
 
-function useQuestionDataListOperations(questionDataList: Ref<any[]>, updateTime: () => void) {
+function useQuestionDataListOperations(
+  questionDataList: Ref<any[]>,
+  updateTime: () => void,
+  pageOperations: (type: string) => void
+) {
   function copyQuestion({ index }: { index: number }) {
     const newQuestion = _cloneDeep(questionDataList.value[index])
     newQuestion.field = getNewField(questionDataList.value.map((item) => item.field))
@@ -134,10 +155,12 @@ function useQuestionDataListOperations(questionDataList: Ref<any[]>, updateTime:
 
   function addQuestion({ question, index }: { question: any; index: number }) {
     questionDataList.value.splice(index, 0, question)
+    pageOperations('add')
     updateTime()
   }
 
   function deleteQuestion({ index }: { index: number }) {
+    pageOperations('remove')
     questionDataList.value.splice(index, 1)
     updateTime()
   }
@@ -266,6 +289,137 @@ function useCurrentEdit({
     changeCurrentEditStatus
   }
 }
+function usePageEdit(
+  {
+    schema,
+    questionDataList
+  }: {
+    schema: any
+    questionDataList: Ref<any[]>
+  },
+  updateTime: () => void
+) {
+  const pageConf = computed(() => schema.pageConf)
+  const pageEditOne = computed(() => schema.pageEditOne)
+  const isFinallyPage = computed(() => {
+    return pageEditOne.value === pageConf.value.length
+  })
+  const pageCount = computed(() => pageConf.value.length || 0)
+
+  const pageQuestionData = computed(() => {
+    return getPageQuestionData(pageEditOne.value)
+  })
+
+  const getPageQuestionData = (index: number) => {
+    const { startIndex, endIndex } = getSorter(index)
+    return filterQuestionPreviewData(questionDataList.value).slice(startIndex, endIndex)
+  }
+
+  const getSorter = (index?: number) => {
+    let startIndex = 0
+    const newPageEditOne = index || pageEditOne.value
+    const endIndex = pageConf.value[newPageEditOne - 1]
+
+    for (let index = 0; index < pageConf.value.length; index++) {
+      const item = pageConf.value[index]
+      if (newPageEditOne - 1 == index) {
+        break
+      }
+      startIndex += item
+    }
+    return {
+      startIndex,
+      endIndex: startIndex + endIndex
+    }
+  }
+
+  const addPage = () => {
+    schema.pageConf.push(1)
+  }
+
+  const updatePageEditOne = (index: number) => {
+    schema.pageEditOne = index
+  }
+
+  const deletePage = (index: number) => {
+    if (pageConf.value.length <= 1) return
+    const { startIndex, endIndex } = getSorter(index)
+    const newQuestion = _cloneDeep(questionDataList.value)
+    newQuestion.splice(startIndex, endIndex - startIndex)
+    updatePageEditOne(1)
+    schema.pageConf.splice(index - 1, 1)
+    questionDataList.value = newQuestion
+    updateTime()
+  }
+
+  const swapArrayRanges = (index: number, range: number) => {
+    const { startIndex: start1, endIndex: end1 } = getSorter(index)
+    const { startIndex: start2, endIndex: end2 } = getSorter(range)
+    const newQuestion = _cloneDeep(questionDataList.value)
+    const range1 = newQuestion.slice(start1, end1)
+    const range2 = newQuestion.slice(start2, end2)
+    newQuestion.splice(start1, range1.length, ...range2)
+    newQuestion.splice(start2, range2.length, ...range1)
+    questionDataList.value = newQuestion
+    const rangeCount = schema.pageConf[range - 1]
+    schema.pageConf[range - 1] = schema.pageConf[index - 1]
+    schema.pageConf[index - 1] = rangeCount
+    updateTime()
+  }
+
+  const copyPage = (index: number) => {
+    const newQuestionList = _cloneDeep(getPageQuestionData(index))
+    newQuestionList.forEach((item) => {
+      item.field = getNewField(questionDataList.value.map((item) => item.field))
+    })
+    schema.pageConf.splice(index, 0, newQuestionList.length)
+    const { endIndex } = getSorter(index)
+    questionDataList.value.splice(endIndex, 0, ...newQuestionList)
+    updateTime()
+  }
+
+  const pageOperations = (type: string) => {
+    const count = pageConf.value[pageEditOne.value - 1]
+    if (type == 'add') {
+      if (count != undefined) {
+        schema.pageConf[pageEditOne.value - 1] = count + 1
+      }
+      return
+    }
+    if (type == 'remove') {
+      if (count) {
+        schema.pageConf[pageEditOne.value - 1] = count - 1
+      }
+    }
+  }
+
+  const setPage = (data: Array<number>) => {
+    for (let index = 0; index < pageConf.value.length; index++) {
+      const newIndex = data[index]
+      const oldIndex = pageConf.value[index]
+      if (newIndex != oldIndex) {
+        schema.pageConf[index] = newIndex
+      }
+    }
+  }
+
+  return {
+    pageEditOne,
+    pageConf,
+    isFinallyPage,
+    pageCount,
+    pageQuestionData,
+    getSorter,
+    updatePageEditOne,
+    deletePage,
+    addPage,
+    copyPage,
+    getPageQuestionData,
+    pageOperations,
+    swapArrayRanges,
+    setPage
+  }
+}
 
 type IBannerItem = {
   name: string
@@ -325,10 +479,89 @@ export const useEditStore = defineStore('edit', () => {
     schemaUpdateTime.value = Date.now()
   }
 
+  const {
+    pageEditOne,
+    pageConf,
+    isFinallyPage,
+    pageCount,
+    pageQuestionData,
+    getSorter,
+    updatePageEditOne,
+    deletePage,
+    pageOperations,
+    addPage,
+    getPageQuestionData,
+    copyPage,
+    swapArrayRanges,
+    setPage
+  } = usePageEdit({ schema, questionDataList }, updateTime)
+
   const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionDataListOperations(
     questionDataList,
-    updateTime
+    updateTime,
+    pageOperations
   )
+
+  function moveQuestionDataList(data: any) {
+    const { startIndex, endIndex } = getSorter()
+    const newData = [
+      ...questionDataList.value.slice(0, startIndex),
+      ...data,
+      ...questionDataList.value.slice(endIndex)
+    ]
+    const countTotal: number = (schema.pageConf as Array<number>).reduce(
+      (v: number, i: number) => v + i
+    )
+    if (countTotal != newData.length) {
+      schema.pageConf[pageEditOne.value - 1] = (schema.pageConf[pageEditOne.value - 1] + 1) as never
+    }
+    setQuestionDataList(newData)
+  }
+
+  const compareQuestionSeq = (val: Array<any>) => {
+    const newSeq: Array<string> = []
+    const oldSeq: Array<string> = []
+    let status = false
+    val.map((v) => {
+      newSeq.push(v.field)
+    })
+    ;(questionDataList.value as Array<any>).map((v) => {
+      oldSeq.push(v.field)
+    })
+    for (let index = 0; index < newSeq.length; index++) {
+      if (newSeq[index] !== oldSeq[index]) {
+        status = true
+        break
+      }
+    }
+    if (status) {
+      setQuestionDataList(val)
+    }
+  }
+
+  const newQuestionIndex = computed(() => {
+    if (_isNumber(currentEditOne.value)) {
+      return currentEditOne.value + 1
+    } else {
+      const pageConf = schema.pageConf
+      const questCount = pageConf[schema.pageEditOne - 1]
+      const { startIndex, endIndex } = getSorter()
+      if (!questCount) {
+        return startIndex
+      }
+      return endIndex
+    }
+  })
+
+  const createNewQuestion = ({ type }: { type: QUESTION_TYPE }) => {
+    const fields = questionDataList.value.map((item: any) => item.field)
+    const newQuestion = getQuestionByType(type, fields)
+    newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
+    if (type === QUESTION_TYPE.VOTE) {
+      newQuestion.innerType = QUESTION_TYPE.RADIO
+    }
+    return newQuestion
+  }
 
   function changeSchema({ key, value }: { key: string; value: any }) {
     _set(schema, key, value)
@@ -354,12 +587,27 @@ export const useEditStore = defineStore('edit', () => {
     currentEditKey,
     currentEditStatus,
     currentEditMeta,
+    newQuestionIndex,
     setCurrentEditOne,
     changeCurrentEditStatus,
+    pageEditOne,
+    pageConf,
+    isFinallyPage,
+    pageCount,
+    pageQuestionData,
+    getSorter,
+    updatePageEditOne,
+    deletePage,
+    addPage,
+    getPageQuestionData,
+    copyPage,
+    swapArrayRanges,
+    setPage,
     schemaUpdateTime,
     schema,
     questionDataList,
     setQuestionDataList,
+    moveQuestionDataList,
     init,
     initSchema,
     getSchemaFromRemote,
@@ -367,7 +615,9 @@ export const useEditStore = defineStore('edit', () => {
     addQuestion,
     deleteQuestion,
     moveQuestion,
+    createNewQuestion,
     changeSchema,
-    changeThemePreset
+    changeThemePreset,
+    compareQuestionSeq
   }
 })

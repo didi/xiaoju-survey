@@ -33,7 +33,7 @@ describe('SurveyResponseService', () => {
     const surveyData = {
       data: {},
       clientTime: new Date(),
-      difTime: 0,
+      diffTime: 0,
       surveyId: 'testId',
       surveyPath: 'testPath',
       optionTextAndId: {},
@@ -59,7 +59,7 @@ describe('SurveyResponseService', () => {
       surveyPath: surveyData.surveyPath,
       data: surveyData.data,
       clientTime: surveyData.clientTime,
-      difTime: surveyData.difTime,
+      diffTime: surveyData.diffTime,
       pageId: surveyData.surveyId,
       secretKeys: [],
       optionTextAndId: surveyData.optionTextAndId,

@@ -70,7 +70,7 @@ describe('DataStatisticService', () => {
             data413: 3,
             data863: '109239',
           },
-          difTime: 21278,
+          diffTime: 21278,
           clientTime: 1710340862733.0,
           secretKeys: [],
           optionTextAndId: {
@@ -197,7 +197,7 @@ describe('DataStatisticService', () => {
             data413_3: expect.any(String),
             data413: expect.any(Number),
             data863: expect.any(String),
-            difTime: expect.any(String),
+            diffTime: expect.any(String),
             createDate: expect.any(String),
           }),
         ]),
@@ -220,7 +220,7 @@ describe('DataStatisticService', () => {
               'U2FsdGVkX19bRmf3uEmXAJ/6zXd1Znr3cZsD5v4Nocr2v5XG1taXluz8cohFkDyH',
             data770: 'U2FsdGVkX18ldQMhJjFXO8aerjftZLpFnRQ4/FVcCLI=',
           },
-          difTime: 806707,
+          diffTime: 806707,
           clientTime: 1710400229573.0,
           secretKeys: ['data458', 'data450', 'data405', 'data770'],
           optionTextAndId: {
@@ -303,7 +303,7 @@ describe('DataStatisticService', () => {
             data458: expect.any(String),
             data515: expect.any(String),
             data770: expect.any(String),
-            difTime: expect.any(String),
+            diffTime: expect.any(String),
           }),
         ]),
       );

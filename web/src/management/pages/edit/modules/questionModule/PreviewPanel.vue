@@ -1,8 +1,12 @@
 <template>
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
+    <div class="pagination-wrapper">
+      <PageWrapper :readonly="false" />
+    </div>
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
         <MainTitle
+          v-if="pageEditOne == 1"
           :bannerConf="bannerConf"
           :readonly="false"
           :is-selected="currentEditOne === 'mainTitle'"
@@ -11,7 +15,7 @@
         />
         <MaterialGroup
           :current-edit-one="parseInt(currentEditOne)"
-          :questionDataList="questionDataList"
+          :questionDataList="pageQuestionData"
           @select="setCurrentEditOne"
           @change="handleChange"
           @changeSeq="onQuestionOperation"
@@ -21,6 +25,7 @@
           :submit-conf="submitConf"
           :readonly="false"
           :skin-conf="skinConf"
+          :is-finally-page="isFinallyPage"
           :is-selected="currentEditOne === 'submit'"
           @select="setCurrentEditOne('submit')"
         />
@@ -32,6 +37,7 @@
 <script setup>
 import { ref, watch, toRefs } from 'vue'
 import communalLoader from '@materials/communals/communalLoader.js'
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
@@ -40,13 +46,15 @@ const MainTitle = communalLoader.loadComponent('MainTitle')
 const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
 const editStore = useEditStore()
-const { questionDataList, currentEditOne, currentEditKey } = storeToRefs(editStore)
+const { currentEditOne, currentEditKey, pageQuestionData, isFinallyPage, pageEditOne } =
+  storeToRefs(editStore)
 const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion, setCurrentEditOne } =
   editStore
 const mainOperation = ref(null)
 const materialGroup = ref(null)
 
 const { bannerConf, submitConf, skinConf } = toRefs(schema)
+
 // const autoScrollData = computed(() => {
 //   return {
 //     currentEditOne: currentEditOne.value,
@@ -137,6 +145,13 @@ watch(
   flex-direction: column;
   align-items: center;
   background-color: #f6f7f9;
+}
+.pagination-wrapper {
+  width: 90%;
+  padding-right: 30px;
+  margin-right: -30px;
+  position: relative;
+  top: 50px;
 }
 
 .toolbar {

@@ -46,11 +46,11 @@ import { DND_GROUP } from '@/management/config/dnd'
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
-import {  ref } from 'vue'
+import { ref } from 'vue'
 
 const editStore = useEditStore()
 const { newQuestionIndex } = storeToRefs(editStore)
-const { addQuestion, setCurrentEditOne,createNewQuestion } = editStore
+const { addQuestion, setCurrentEditOne, createNewQuestion } = editStore
 
 const activeNames = ref([0, 1])
 const previewImg = ref('')
@@ -60,7 +60,6 @@ const previewTop = ref(0)
 questionLoader.init({
   typeList: questionTypeList.map((item) => item.type)
 })
-
 
 const onQuestionType = ({ type }) => {
   const newQuestion = createNewQuestion({ type })

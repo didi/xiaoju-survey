@@ -46,8 +46,8 @@ import setterLoader from '@/materials/setters/setterLoader'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {
-  formConfigList: Array<any>
-  moduleConfig: any
+  formConfigList: Array<any> // 设置器的配置
+  moduleConfig: any // 当前问卷schema
   customComponents?: Record<string, Component>
 }
 
@@ -83,9 +83,11 @@ const init = ref<boolean>(true)
 const components = shallowRef<any>(props.customComponents || {})
 
 const handleFormChange = (data: any, formConfig: any) => {
+  // 处理用户操作的设置器的值
   if (_isFunction(formConfig?.valueSetter)) {
     const resultData = formConfig.valueSetter(data)
 
+    // 批量触发设置值的变化
     if (Array.isArray(resultData)) {
       resultData.forEach((item) => {
         emit(FORM_CHANGE_EVENT_KEY, item)
@@ -125,7 +127,7 @@ const normalizationValues = (configList: Array<any> = []) => {
     .map((item: any) => {
       return {
         ...item,
-        value: formatValue({ item, moduleConfig: props.moduleConfig }) // 动态复值
+        value: formatValue({ item, moduleConfig: props.moduleConfig }) // 动态赋值
       }
     })
 }
@@ -170,14 +172,13 @@ const registerComponents = async (formFieldData: any) => {
 }
 
 watch(
-  () => props.formConfigList,
+  () => props.formConfigList, // 设置器的配置
   async (newVal: Array<any>) => {
     init.value = true
 
     if (!newVal || !newVal.length) {
       return
     }
-
     await registerComponents(newVal)
     init.value = false
     formFieldData.value = normalizationValues(newVal)
@@ -189,7 +190,7 @@ watch(
 )
 
 watch(
-  () => props.moduleConfig,
+  () => props.moduleConfig, // 当前问卷schema
   () => {
     // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
     if (init.value) {

@@ -66,7 +66,7 @@ const getSpaceMenus = async () => {
       label: v.name,
       children: members?.map((v) => ({
         id: v.userId,
-        label: v.role
+        label: v.username
       }))
     })
   })

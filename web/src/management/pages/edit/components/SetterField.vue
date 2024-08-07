@@ -37,8 +37,8 @@
   </el-form>
 </template>
 <script setup lang="ts">
-import { watch, ref, shallowRef } from 'vue'
-import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash-es'
+import { watch, ref, shallowRef, type Component } from 'vue'
+import { get as _get, pick as _pick, isFunction as _isFunction, values as _values } from 'lodash-es'
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
@@ -48,6 +48,7 @@ import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 interface Props {
   formConfigList: Array<any>
   moduleConfig: any
+  customComponents?: Record<string, Component>
 }
 
 interface Emit {
@@ -70,7 +71,7 @@ const formatValue = ({ item, moduleConfig }: any) => {
       result = _get(moduleConfig, key, item.value)
     }
     if (keys) {
-      result = _pick(moduleConfig, keys)
+      result = _values(_pick(moduleConfig, keys))
     }
 
     return result
@@ -79,7 +80,7 @@ const formatValue = ({ item, moduleConfig }: any) => {
 
 const formFieldData = ref<Array<any>>([])
 const init = ref<boolean>(true)
-const components = shallowRef<any>({})
+const components = shallowRef<any>(props.customComponents || {})
 
 const handleFormChange = (data: any, formConfig: any) => {
   if (_isFunction(formConfig?.valueSetter)) {
@@ -132,13 +133,15 @@ const normalizationValues = (configList: Array<any> = []) => {
 const registerComponents = async (formFieldData: any) => {
   let innerSetters: Array<any> = []
 
-  const setters = formFieldData.map((item: any) => {
-    if (item.type === 'Customed') {
-      innerSetters.push(...(item.content || []).map((content: any) => content.type))
-    }
+  const setters = formFieldData
+    .filter((item: any) => !item.custom)
+    .map((item: any) => {
+      if (item.type === 'Customed') {
+        innerSetters.push(...(item.content || []).map((content: any) => content.type))
+      }
 
-    return item.type
-  })
+      return item.type
+    })
 
   const settersSet = new Set([...setters, ...innerSetters])
   const settersArr = Array.from(settersSet)

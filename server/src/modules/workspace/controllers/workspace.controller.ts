@@ -373,6 +373,16 @@ export class WorkspaceController {
         workspaceList.map((item) => item._id.toString()),
       );
 
+    // 查询成员姓名
+    const userList = await this.userService.getUserListByIds({
+      idList: workspaceMemberList.map((member) => member.userId),
+    });
+    const userInfoMap = userList.reduce((pre, cur) => {
+      const id = cur._id.toString();
+      pre[id] = cur;
+      return pre;
+    }, {});
+
     const temp: Record<string, WorkspaceMember[]> = {};
     const list = workspaceList.map(
       (item: Workspace & { members: WorkspaceMember[] }) => {
@@ -381,7 +391,8 @@ export class WorkspaceController {
       },
     );
 
-    workspaceMemberList.forEach((member) => {
+    workspaceMemberList.forEach((member: WorkspaceMember) => {
+      (member as any).username = userInfoMap[member.userId.toString()].username;
       temp[member.workspaceId.toString()].push(member);
     });
 

@@ -53,7 +53,21 @@ export default {
         label: '白名单',
         value: 'CUSTOM'
       }
-    ]
+    ],
+    // 批量修改value
+    valueSetter(data) {
+      return [
+        data,
+        {
+          key: 'whitelistTip', // 切换tab清空名单登录提示语
+          value: ''
+        },
+        {
+          key: 'whitelist', // 切换tab清空名单列表
+          value: []
+        }
+      ]
+    }
   },
   white_placeholder: {
     key: 'whitelistTip',

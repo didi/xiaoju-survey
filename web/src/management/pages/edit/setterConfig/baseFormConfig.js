@@ -39,7 +39,7 @@ export default {
   answer_type: {
     key: 'whitelistType',
     label: '答题名单',
-    type: 'RadioGroup',
+    type: 'AnswerRadio',
     options: [
       {
         label: '所有人',
@@ -53,7 +53,7 @@ export default {
         label: '白名单',
         value: 'CUSTOM'
       }
-    ]
+    ],
   },
   white_placeholder: {
     key: 'whitelistTip',

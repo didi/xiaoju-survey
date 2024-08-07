@@ -49,12 +49,12 @@ const state = reactive({
   is_submit: false
 })
 
-const baseConf = computed(() => store.state.baseConf || {})
+const baseConf = computed(() => surveyStore?.baseConf || {})
 const isPwd = computed(() => baseConf.value.passwordSwitch)
 const whitelistType = computed(() => baseConf.value.whitelistType)
 const memberType = computed(() => baseConf.value.memberType)
 const whitelistTip = computed(() => baseConf.value.whitelistTip)
-const surveyPath = computed(() => store.state?.surveyPath || '')
+const surveyPath = computed(() => surveyStore?.surveyPath || '')
 
 const isValue = computed(() => {
   if (!whitelistType.value) return false

@@ -48,7 +48,7 @@ export default defineComponent({
       type: Number,
       default: 10
     },
-    noDisplay:{
+    quotaNoDisplay:{
       type: Boolean,
       default: true
     }
@@ -103,7 +103,6 @@ export default defineComponent({
       <div class="choice-wrapper">
         <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>
           {getOptions.map((item, index) => {
-            item.disabled = !this.readonly && item.quota !== "0" && (item.quota - item.voteCount) === 0
             return (
               !item.hide && (
                 <div
@@ -152,16 +151,16 @@ export default defineComponent({
                           )}
                           {
                           // 如果设置了配额并且展示配额
-                          !this.readonly && item.quota !== "0" && !this.noDisplay && (
+                          !this.readonly && (item.quota && item.quota !== "0") && !this.quotaNoDisplay && (
                             <span
                               class="remaining-text"
                               style={{
                                 display: 'block',
                                 fontSize: 'smaller',
-                                color: item.quota - item.voteCount === 0 ? '#EB505C' : '#92949D'
+                                color: item.release === 0 ? '#EB505C' : '#92949D'
                               }}
                             >
-                              剩余{item.quota - item.voteCount}
+                              剩余{item.release}
                             </span>
                           )}
                           {slots.vote?.({

@@ -1,9 +1,7 @@
 <template>
   <div class="quota-wrapper">
-    <span class="quota-title">选项配额</span>
     <span class="quota-config" @click="openQuotaConfig"> 设置> </span>
-
-    <el-dialog v-model="dialogTableVisible" @closed="cleanTempQuota" class="dialog">
+    <el-dialog v-model="dialogVisible" @closed="cleanTempQuota" class="dialog">
       <template #header>
         <div class="dialog-title">选项配额</div>
       </template>
@@ -58,7 +56,7 @@
         </el-tooltip>
       </div>
       <div>
-        <el-checkbox v-model="noDisplayValue" label="不展示配额剩余数量"> </el-checkbox>
+        <el-checkbox v-model="quotaNoDisplayValue" label="不展示配额剩余数量"> </el-checkbox>
         <el-tooltip
           class="tooltip"
           effect="dark"
@@ -88,26 +86,30 @@ import { ElMessageBox } from 'element-plus'
 const props = defineProps(['formConfig', 'moduleConfig'])
 const emit = defineEmits(['form-change'])
 
-const dialogTableVisible = ref(false)
+const dialogVisible = ref(false)
 const moduleConfig = ref(props.moduleConfig)
 const optionData = ref(props.moduleConfig.options)
 const deleteRecoverValue = ref(moduleConfig.value.deleteRecover)
-const noDisplayValue = ref(moduleConfig.value.noDisplay)
+const quotaNoDisplayValue = ref(moduleConfig.value.quotaNoDisplay)
 
 const openQuotaConfig = () => {
   optionData.value.forEach((item) => {
     item.tempQuota = item.quota
   })
-  dialogTableVisible.value = true
+  dialogVisible.value = true
 }
 const cancel = () => {
-  dialogTableVisible.value = false
+  dialogVisible.value = false
 }
 const confirm = () => {
-  handleDeleteRecoverChange()
-  handleNoDisplayChange()
+  dialogVisible.value = false
+  // 更新选项 
   handleQuotaChange()
-  dialogTableVisible.value = false
+  emit(FORM_CHANGE_EVENT_KEY, {
+    options: optionData.value,
+    deleteRecover: deleteRecoverValue.value,
+    quotaNoDisplay: quotaNoDisplayValue.value
+  })
 }
 const handleCellClick = (row, column) => {
   if (column.property === 'quota') {
@@ -127,18 +129,6 @@ const handleInput = (row) => {
   }
   row.isEditing = false
 }
-
-const handleDeleteRecoverChange = () => {
-  const key = 'deleteRecover'
-  const value = deleteRecoverValue.value
-  emit(FORM_CHANGE_EVENT_KEY, { key, value })
-}
-
-const handleNoDisplayChange = () => {
-  const key = 'noDisplay'
-  const value = noDisplayValue.value
-  emit(FORM_CHANGE_EVENT_KEY, { key, value })
-}
 const handleQuotaChange = () => {
   optionData.value.forEach((item) => {
     item.quota = item.tempQuota
@@ -156,7 +146,7 @@ watch(
     moduleConfig.value = val
     optionData.value = val.options
     deleteRecoverValue.value = val.deleteRecover
-    noDisplayValue.value = val.noDisplay
+    quotaNoDisplayValue.value = val.quotaNoDisplay
   },
   { immediate: true, deep: true }
 )
@@ -164,9 +154,9 @@ watch(
 
 <style lang="scss" scoped>
 .quota-wrapper {
-  width: 100%;
+  width: 90%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .quota-title {
   font-size: 14px;

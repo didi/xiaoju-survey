@@ -61,7 +61,7 @@ export interface DataItem {
   starStyle?: string;
   innerType?: string;
   deleteRecover?: boolean;
-  noDisplay?: boolean;
+  quotaNoDisplay?: boolean;
 }
 
 export interface Option {

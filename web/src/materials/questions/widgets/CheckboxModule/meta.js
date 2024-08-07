@@ -112,9 +112,27 @@ const meta = {
       ]
     },
     {
-      key: "quotaConfig",
-      name: "quotaConfig",
-      type: "QuotaConfig",
+      name: 'optionQuota',
+      label: '选项配额',
+      labelStyle: {
+        'font-weight': 'bold'
+      },
+      type: 'QuotaConfig',
+      // 输出转换
+      valueSetter({ options, deleteRecover, quotaNoDisplay}) {
+        return [{
+          key: 'options',
+          value: options
+        },
+        {
+          key: 'deleteRecover',
+          value: deleteRecover
+        },
+        {
+          key: 'quotaNoDisplay',
+          value: quotaNoDisplay
+        }]
+      }
     }
   ],
   editConfigure: {

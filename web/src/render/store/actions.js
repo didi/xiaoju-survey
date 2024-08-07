@@ -5,10 +5,11 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 import adapter from '../adapter'
 import { queryVote, getEncryptInfo } from '@/render/api/survey'
-import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import state from './state'
 import useCommandComponent from '../hooks/useCommandComponent'
 import BackAnswerDialog from '../components/BackAnswerDialog.vue'
+
+import { NORMAL_CHOICES } from '@/common/typeEnum.ts'
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -18,6 +19,7 @@ const CODE_MAP = {
   NO_AUTH: 403
 }
 const VOTE_INFO_KEY = 'voteinfo'
+const QUOTA_INFO_KEY = 'limitinfo'
 import router from '../router'
 
 const confirm = useCommandComponent(BackAnswerDialog)
@@ -145,7 +147,7 @@ export default {
 
     for (const field in questionData) {
       const { type } = questionData[field]
-      if (/vote/.test(type) || /radio/.test(type) || /checkbox/.test(type)) {
+      if (/vote/.test(type)) {
         fieldList.push(field)
       }
     }
@@ -221,16 +223,80 @@ export default {
       console.log(error)
     }
   },
-  async initRuleEngine({ commit }, ruleConf) {
-    const ruleEngine = new RuleMatch(ruleConf)
-    commit('setRuleEgine', ruleEngine)
+  async initQuotaMap({ state, commit }) {
+    const questionData = state.questionData
+    const surveyPath = state.surveyPath
+    const fieldList = Object.keys(questionData).filter(field => {
+      if (NORMAL_CHOICES.includes(questionData[field].type)) {
+        return questionData[field].options.some(option => option.quota > 0)
+      }
+    })
+    
+    // 如果不存在则不请求选项上限接口
+    if (fieldList.length <= 0) {
+      return
+    }
+
+    try {
+      localStorage.removeItem(QUOTA_INFO_KEY)
+      const quotaRes = await queryVote({
+        surveyPath,
+        fieldList: fieldList.join(',')
+      })
+
+      if (quotaRes.code === 200) {
+        localStorage.setItem(
+          QUOTA_INFO_KEY,
+          JSON.stringify({
+            ...quotaRes.data
+          })
+        )
+        Object.keys(quotaRes.data).forEach(field => {
+          Object.keys(quotaRes.data[field]).forEach((optionHash) => {
+            commit('updateQuotaMapByKey', { questionKey: field, optionKey: optionHash, data: quotaRes.data[field][optionHash] })
+          })
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  // 题目选中时更新选项配额
+  changeQuota({ state, commit }, data) {
+    const { key: questionKey, value: questionVal } = data
+    // 更新前获取接口缓存在localStorage中的数据
+    const localData = localStorage.getItem(QUOTA_INFO_KEY)
+    const quotaMap = JSON.parse(localData)
+    // const quotaMap = state.quotaMap
+    const currentQuestion = state.questionData[questionKey]
+    const options = currentQuestion.options
+    options.forEach((option) => {
+      const optionhash = option.hash
+      const selectCount = quotaMap?.[questionKey]?.[optionhash].selectCount || 0
+      // 如果选中值包含该选项，对应 voteCount 和 voteTotal  + 1
+      if (
+        Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
+      ) {
+        const countPayload = {
+          questionKey,
+          optionKey: optionhash,
+          selectCount: selectCount + 1
+        }
+        commit('updateQuotaMapByKey', countPayload)
+      } else {
+        const countPayload = {
+          questionKey,
+          optionKey: optionhash,
+          selectCount: selectCount
+        }
+        commit('updateQuotaMapByKey', countPayload)
+      }
+    })
   }
 }
 
   // 加载上次填写过的数据到问卷页
   function loadFormData({ commit, dispatch }, {bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, formData) {
-    commit('setRouter', 'indexPage')
-
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({
       bannerConf,
@@ -262,11 +328,12 @@ export default {
     })
     // 获取已投票数据
     dispatch('initVoteData')
+    // 获取选项上线选中数据
+    dispatch('initQuotaMap')
   }
 
   // 加载空白页面
   function clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }) {
-    commit('setRouter', 'indexPage')
 
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({
@@ -293,4 +360,5 @@ export default {
     })
     // 获取已投票数据
     dispatch('initVoteData')
+    dispatch('initQuotaMap')
   }

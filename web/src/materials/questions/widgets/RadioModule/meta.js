@@ -72,6 +72,19 @@ const meta = {
         }
       ]
     },
+    // deleteRecover
+    {
+      name: 'deleteRecover',
+      propType: Boolean,
+      description: '删除后恢复选项配额',
+      defaultValue: false
+    },
+    {
+      name: 'quotaNoDisplay',
+      propType: Boolean,
+      description: '不展示配额剩余数量',
+      defaultValue: false
+    }
   ],
   formConfig: [
     basicConfig,
@@ -87,9 +100,27 @@ const meta = {
       hidden: true
     },
     {
-      key: "quotaConfig",
-      name: "quotaConfig",
-      type: "QuotaConfig",
+      name: 'optionQuota',
+      label: '选项配额',
+      labelStyle: {
+        'font-weight': 'bold'
+      },
+      type: 'QuotaConfig',
+      // 输出转换
+      valueSetter({ options, deleteRecover, quotaNoDisplay}) {
+        return [{
+          key: 'options',
+          value: options
+        },
+        {
+          key: 'deleteRecover',
+          value: deleteRecover
+        },
+        {
+          key: 'quotaNoDisplay',
+          value: quotaNoDisplay
+        }]
+      }
     }
   ],
   editConfigure: {

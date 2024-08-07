@@ -63,7 +63,7 @@
           }
         ],
         "deleteRecover": false,
-        "noDisplay": false
+        "quotaNoDisplay": false
       }
     ]
   }

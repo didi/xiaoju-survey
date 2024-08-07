@@ -109,11 +109,10 @@ const changePreset = (banner: any) => {
     display: flex;
     flex-wrap: wrap;
     .tag {
-      width: 55px;
+      width: 65px;
       margin: 5px 2px;
       cursor: pointer;
       flex: auto;
-      cursor: pointer;
       &.current {
         color: $primary-color;
         background-color: $primary-bg-color;

@@ -82,6 +82,19 @@ describe('AuthController', () => {
         new HttpException('验证码不正确', EXCEPTION_CODE.CAPTCHA_INCORRECT),
       );
     });
+
+    it('should throw HttpException with PASSWORD_INVALID code when password is invalid', async () => {
+      const mockUserInfo = {
+        username: 'testUser',
+        password: '无效的密码abc123',
+        captchaId: 'testCaptchaId',
+        captcha: 'testCaptcha',
+      };
+
+      await expect(controller.register(mockUserInfo)).rejects.toThrow(
+        new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID),
+      );
+    });
   });
 
   describe('login', () => {

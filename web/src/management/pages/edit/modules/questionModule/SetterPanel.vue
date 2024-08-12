@@ -1,14 +1,22 @@
 <template>
   <div class="setter-wrapper">
-    <div class="no-select-question" v-if="editStore.currentEditOne === null">
-      <img src="/imgs/icons/unselected.webp" />
-      <h4 class="tipFont">选中题型可以编辑</h4>
-      <span class="tip">来！试试看～</span>
-    </div>
-    <el-tabs v-else v-model="confType" type="border-card" stretch>
+    <el-tabs v-model="confType" type="border-card" stretch>
       <el-tab-pane name="baseConf" label="单题设置">
-        <div class="setter-title">{{ currentEditMeta?.title || '' }}</div>
+        <div v-if="currentEditMeta?.title" class="setter-title">
+          {{ currentEditMeta?.title || '' }}
+        </div>
+
+        <div
+          class="no-select-question"
+          v-if="editStore.currentEditOne === 'mainTitle' || editStore.currentEditOne === null"
+        >
+          <img src="/imgs/icons/unselected.webp" />
+          <h4 class="tipFont">选中题型可以编辑</h4>
+          <span class="tip">来！试试看～</span>
+        </div>
+
         <SetterField
+          v-else
           :form-config-list="formConfigList"
           :module-config="moduleConfig"
           @form-change="handleFormChange"
@@ -26,8 +34,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+
 import { useEditStore } from '@/management/stores/edit'
 import basicConfig from '@/materials/questions/common/config/basicConfig'
 import SetterField from '@/management/pages/edit/components/SetterField.vue'
@@ -44,6 +53,15 @@ const handleFormChange = (data: any) => {
   if (key in editStore.editGlobalBaseConf.globalBaseConfig)
     editStore.editGlobalBaseConf.updateCounts('MODIFY', { key, value })
 }
+
+watch(
+  () => editStore.currentEditOne,
+  (newVal) => {
+    if (newVal === 0 || (!!newVal && newVal !== 'mainTitle')) {
+      confType.value = 'baseConf'
+    }
+  }
+)
 </script>
 
 <style lang="scss" scoped>

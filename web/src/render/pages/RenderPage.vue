@@ -16,6 +16,7 @@
         ></SubmitButton>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
+      <VerifyWhiteDialog />
     </div>
   </div>
 </template>
@@ -112,7 +113,7 @@ const submitSurver = async () => {
     console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
-      router.push({ name: 'successPage' })
+      router.replace({ name: 'successPage' })
     } else {
       alert({
         title: res.errmsg || '提交失败'

@@ -22,8 +22,16 @@ export default function useEditGlobalBaseConf(
     showSpliterCount: 0
   }
 
+  const resetCount = () => {
+    optionCheckedCounts.isRequiredCount = 0
+    optionCheckedCounts.showIndexCount = 0
+    optionCheckedCounts.showTypeCount = 0
+    optionCheckedCounts.showSpliterCount = 0
+  }
+
   // 初始化统计
   function initCounts() {
+    resetCount()
     questionDetailList.value.forEach((question: any) => {
       calculateCountsForQuestion('INIT', { question })
     })

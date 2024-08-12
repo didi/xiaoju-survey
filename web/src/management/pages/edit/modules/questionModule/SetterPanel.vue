@@ -41,7 +41,8 @@ const handleFormChange = (data: any) => {
   const { key, value } = data
   const resultKey = `${currentEditKey.value}.${key}`
   changeSchema({ key: resultKey, value })
-  editStore.editGlobalBaseConf.updateCounts('MODIFY', { key, value })
+  if (key in editStore.editGlobalBaseConf.globalBaseConfig)
+    editStore.editGlobalBaseConf.updateCounts('MODIFY', { key, value })
 }
 </script>
 

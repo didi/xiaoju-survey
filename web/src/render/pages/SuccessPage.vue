@@ -4,6 +4,18 @@
       <div class="result-content">
         <img src="/imgs/icons/success.webp" />
         <div class="msg" v-html="successMsg"></div>
+        <router-link
+          :to="{
+            name: 'renderPage',
+            query: {
+              t: new Date().getTime()
+            }
+          }"
+          replace
+          class="reset-link"
+        >
+          重新填写
+        </router-link>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
@@ -64,6 +76,14 @@ const successMsg = computed(() => {
     text-align: center;
     font-weight: 500;
     margin-top: 0.15rem;
+  }
+
+  .reset-link {
+    margin-top: 0.24rem;
+    font-size: 0.27rem;
+    color: #5094f0;
+    text-decoration: underline;
+    display: block;
   }
 }
 </style>

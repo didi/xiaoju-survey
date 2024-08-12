@@ -138,7 +138,7 @@ const onMoveDown = () => {
   }
 }
 const onDelete = async () => {
-  if (unref(hasShowLogic)) {
+  if (unref(hasShowLogic) || getShowLogicText.value) {
     ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'

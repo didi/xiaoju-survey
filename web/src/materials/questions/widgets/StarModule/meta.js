@@ -107,7 +107,7 @@ const meta = {
       show: true,
       configure: {
         showOthers: false,
-        showAdvancedRateConfig: true
+        showAdvancedConfig: true
       }
     }
   }

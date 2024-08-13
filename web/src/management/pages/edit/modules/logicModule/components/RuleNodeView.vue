@@ -52,7 +52,10 @@ import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message-box.scss'
 import { RuleNode } from '@/common/logicEngine/RuleBuild'
 import { cleanRichText } from '@/common/xss'
-import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
+import { useEditStore } from '@/management/stores/edit'
+import { storeToRefs } from 'pinia'
+const editStore = useEditStore()
+const { showLogicEngine } = storeToRefs(editStore)
 import ConditionView from './ConditionView.vue'
 
 const renderData = inject<ComputedRef<Array<any>>>('renderData') || ref([])

@@ -1,6 +1,6 @@
 <template>
   <QuestionRuleContainer
-    v-if="visible"
+    v-if="visibily"
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"
@@ -9,12 +9,12 @@
 </template>
 <script setup>
 import { unref, computed, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
 import { cloneDeep } from 'lodash-es'
-import { ruleEngine } from '@/render/hooks/useRuleEngine.js'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
 
@@ -30,7 +30,7 @@ const props = defineProps({
     default: () => {
       return {}
     }
-  }
+  },
 })
 const emit = defineEmits(['change'])
 const questionStore = useQuestionStore()
@@ -39,17 +39,24 @@ const surveyStore = useSurveyStore()
 const formValues = computed(() => {
   return surveyStore.formValues
 })
+const { showLogicEngine } = storeToRefs(surveyStore)
+const {
+  needHideFields,
+} = storeToRefs(questionStore)
+// 题型配置转换
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
   const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
   // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
   let alloptions = options
+
   if (type === QUESTION_TYPE.VOTE) {
     const { options, voteTotal } = useVoteMap(field)
     const voteOptions = unref(options)
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
+
   if (
     NORMAL_CHOICES.includes(type) &&
     options.filter((optionItem) => optionItem.others).length > 0
@@ -59,6 +66,7 @@ const questionConfig = computed(() => {
     alloptions = alloptions.map((obj, index) => Object.assign(obj, othersOptions[index]))
     moduleConfig.othersValue = unref(othersValue)
   }
+
   if (
     RATES.includes(type) &&
     rest?.rangeConfig &&
@@ -77,19 +85,29 @@ const questionConfig = computed(() => {
   }
 })
 
-const { field } = props.moduleConfig
-
-const visible = computed(() => {
+const logicshow = computed(() => {
   // computed有计算缓存，当match有变化的时候触发重新计算
-  return ruleEngine.match(field, 'question', formValues.value)
+  const result = showLogicEngine.value.match(props.moduleConfig.field, 'question', formValues.value)
+  return result === undefined ? true : result
 })
 
+
+const logicskip = computed(() => {
+  return needHideFields.value.includes(props.moduleConfig.field)
+})
+const visibily = computed(() => {
+  return logicshow.value && !logicskip.value
+})
+
+
+// 当题目被隐藏时，清空题目的选中项，实现a显示关联b，b显示关联c场景下，b隐藏不影响题目c的展示
 watch(
-  () => visible.value,
+  () => visibily.value,
   (newVal, oldVal) => {
     // 题目从显示到隐藏，需要清空值
     const { field, type, innerType } = props.moduleConfig
     if (!newVal && oldVal) {
+      console.log(field, '题目隐藏了')
       let value = ''
       // 题型是多选，或者子题型是多选（innerType是用于投票）
       if (type === QUESTION_TYPE.CHECKBOX || innerType === QUESTION_TYPE.CHECKBOX) {
@@ -111,4 +129,5 @@ const handleChange = (data) => {
     questionStore.updateVoteData(data)
   }
 }
+
 </script>

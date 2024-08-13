@@ -1,6 +1,5 @@
 @font-face {
-  font-family: 'iconfont';
-  /* Project id 4263849 */
+  font-family: 'iconfont'; /* Project id 4263849 */
   src:
     url('//at.alicdn.com/t/c/font_4263849_wh46krnnsv.woff2?t=1722515679936') format('woff2'),
     url('//at.alicdn.com/t/c/font_4263849_wh46krnnsv.woff?t=1722515679936') format('woff'),
@@ -161,4 +160,14 @@
 
 .icon-gauge:before {
   content: '\e6db';
+}
+
+.icon-suoxiao:before {
+  content: '\e6f4';
+}
+.icon-fangda:before {
+  content: '\e6f5';
+}
+.icon-shiying:before {
+  content: '\e6f6';
 }

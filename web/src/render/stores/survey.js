@@ -41,7 +41,7 @@ export const useSurveyStore = defineStore('survey', () => {
   const formValues = ref({})
   const whiteData = ref({})
   const pageConf = ref([])
-  const changeField = ref(null)
+  
 
   const router = useRouter()
   const questionStore = useQuestionStore()
@@ -156,10 +156,11 @@ export const useSurveyStore = defineStore('survey', () => {
   // 用户输入或者选择后，更新表单数据
   const changeData = (data) => {
     let { key, value } = data
-    changeField.value = key
     if (key in formValues.value) {
       formValues.value[key] = value
     }
+    questionStore.setChangeField(key)
+    questionStore.processJumpSkip()
   }
 
   const showLogicEngine = ref()
@@ -186,7 +187,6 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues,
     whiteData,
     pageConf,
-    changeField,
     initSurvey,
     changeData,
     setWhiteData,

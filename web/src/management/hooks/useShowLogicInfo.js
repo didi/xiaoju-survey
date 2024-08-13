@@ -12,7 +12,7 @@ export const useShowLogicInfo = (field) => {
   const hasShowLogic = computed(() => {
     const logicEngine = showLogicEngine.value
     // 判断该题是否作为了显示逻辑前置题
-    const isField = logicEngine?.findTargetsByFields(field)?.length > 0
+    const isField = logicEngine?.findTargetsByField(field)?.length > 0
     // 判断该题是否作为了显示逻辑目标题
     const isTarget = logicEngine?.findConditionByTarget(field)?.length > 0
     return isField || isTarget

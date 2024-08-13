@@ -69,36 +69,6 @@ onBeforeMount(() => {
     }
   })
 })
-// const visible = computed(() => {
-//   return (index) => {
-//     const field = props.renderData[index].field
-//     const jumpRely = flatten(ruleEngine.findFieldsByTarget(field))
-//     const jumpRelyIndexs = jumpRely.map(item => props.renderData.map(i => i.field).findIndex(i=> i === item))
-//     const jumpRelyIndex = Math.max(...jumpRelyIndexs)
-//     const jumpTargetIndex = 5
-//     // props.renderData.map(i => i.field).findIndex(i=> i === item)
-//     const jumpTargetMatch = ruleEngine.getResult(field, 'question')
-//     console.log({index, field, jumpRely, jumpRelyIndexs, jumpRelyIndex, jumpTargetMatch})
-//     if(jumpTargetMatch) {
-//       return  !(jumpRelyIndex < index  && index < jumpTargetIndex)
-//     } else {
-//       return true
-//     }
-//   }
-
-// const jumpMatch = computed(() => {
-//   return (field) => {
-//     return ruleEngine.match(field, 'question', formValues.value)
-//   }
-// })
-
-// watch(()=> jumpMatch,
-//  (newVal, oldVal) => {
-//   if(newVal) {
-//     // 去改renderData，split中间的题目
-//     handleJump(field, formValues.value)
-//   }
-// })
 
 const validate = (callback) => {
   const length = fields.length

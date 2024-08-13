@@ -11,6 +11,12 @@ export const useQuestionStore = defineStore('question', () => {
   const questionData = ref(null)
   const questionSeq = ref([]) // 题目的顺序，因为可能会有分页的情况，所以是一个二维数组[[qid1, qid2], [qid3,qid4]]
   const pageIndex = ref(1) // 当前分页的索引
+  const surveyStore = useSurveyStore()
+  const changeField = ref(null)
+  const changeIndex = computed(() => {
+    return surveyStore.dataConf.dataList.findIndex((item) => item.field === changeField.value)
+  })
+  const needHideFields = ref([])
 
   // 题目列表
   const questionList = computed(() => {
@@ -177,6 +183,63 @@ export const useQuestionStore = defineStore('question', () => {
     })
   }
 
+  const setChangeField = (field) => {
+    changeField.value = field
+  }
+  const getQuestionIndexByField = (field) => {
+    return questionData.value[field].index
+  }
+  const addNeedHideFields = (fields) => {
+    // skipItems.forEach(item => {
+    //   // 已经被隐藏的题目不需要再push
+    //   if(!needHideFields.value.map(i=> i.targetField).includes(item.targetField)) {
+    //     needHideFields.value.push(item)
+    //   }
+    // })
+    fields.forEach(field => {
+      if(!needHideFields.value.includes(field)) {
+        needHideFields.value.push(field)
+      }
+    })
+  }
+  const removeNeedHideFields = (fields) => {
+    needHideFields.value = needHideFields.value.filter(field => !fields.includes(field))
+  }
+  const processJumpSkip = () => {
+    const targetResult = surveyStore.jumpLogicEngine
+      .getResultsByField(changeField.value, surveyStore.formValues)
+      .map(item => {
+        // 获取目标题的序号，处理跳转问卷末尾为最大题的序号
+        const index = item.target === 'end' ? surveyStore.dataConf.dataList.length : getQuestionIndexByField(item.target)
+        return {
+          index,
+          ...item
+        }
+      })
+    const notMatchedFields = targetResult.filter(item => !item.result)
+    const matchedFields = targetResult.filter(item => item.result)
+    // 目标题均未匹配，需要展示出来条件题和目标题之间的题目
+    if (notMatchedFields.length) {
+      console.log({notMatchedFields})
+      console.log({needHideFields: needHideFields.value})
+      notMatchedFields.forEach(element => {
+        const endIndex = element.index
+        const fields = surveyStore.dataConf.dataList.slice(changeIndex.value + 1, endIndex).map(item => item.field)
+        // hideMap中remove被跳过的题
+        removeNeedHideFields(fields)
+      });
+    }
+  
+    if (!matchedFields.length) return
+    // 匹配到多个目标题时，取最大序号的题目
+    const maxIndexQuestion =
+      matchedFields.filter(item => item.result).sort((a, b) => b.index - a.index)[0].index
+  
+    // 条件题和目标题之间的题目隐藏
+    const skipKey = surveyStore.dataConf.dataList
+      .slice(changeIndex.value + 1, maxIndexQuestion).map(item => item.field)
+    addNeedHideFields(skipKey)
+  }
   return {
     voteMap,
     questionData,
@@ -191,6 +254,14 @@ export const useQuestionStore = defineStore('question', () => {
     setVoteMap,
     updateVoteMapByKey,
     initVoteData,
-    updateVoteData
+    updateVoteData,
+    changeField,
+    changeIndex,
+    setChangeField,
+    needHideFields,
+    addNeedHideFields,
+    removeNeedHideFields,
+    processJumpSkip,
+    getQuestionIndexByField
   }
 })

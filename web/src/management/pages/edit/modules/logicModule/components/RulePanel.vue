@@ -21,8 +21,12 @@
 <script setup lang="ts">
 import { shallowRef, computed } from 'vue'
 import { RuleNode, ConditionNode } from '@/common/logicEngine/RuleBuild'
-import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
-import RuleNodeView from './components/RuleNodeView.vue'
+import { useEditStore } from '@/management/stores/edit'
+import { storeToRefs } from 'pinia'
+const editStore = useEditStore()
+const { showLogicEngine } = storeToRefs(editStore)
+
+import RuleNodeView from './RuleNodeView.vue'
 
 const list = computed(() => {
   return showLogicEngine.value?.rules || []

@@ -29,8 +29,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
-
-import { showLogicEngine } from '@/management/hooks/useShowLogicEngine'
+import { storeToRefs } from 'pinia'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -44,6 +43,8 @@ import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 const editStore = useEditStore()
 const { schema, changeSchema } = editStore
 const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
+
+const { showLogicEngine, jumpLogicEngine } = storeToRefs(editStore)
 // 校验 - 逻辑
 const updateLogicConf = () => {
   let res = {
@@ -67,11 +68,15 @@ const updateLogicConf = () => {
     }
 
     const showLogicConf = showLogicEngine.value.toJson()
+
     // 更新逻辑配置
     changeSchema({ key: 'logicConf', value: { showLogicConf } })
 
     return res
   }
+
+  const jumpLogicConf = jumpLogicEngine.value.toJson()
+  changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
 
   return res
 }

@@ -53,7 +53,7 @@ export const defaultQuestionConfig = {
   star: 5,
   optionOrigin: '',
   originType: 'selected',
-  innerType:'',
+  innerType: '',
   matrixOptionsRely: '',
   numberRange: {
     min: {

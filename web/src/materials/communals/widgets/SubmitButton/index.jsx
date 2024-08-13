@@ -42,11 +42,11 @@ export default defineComponent({
     }
   },
   render() {
-    const { submitConf,isFinallyPage } = this.props
+    const { submitConf, isFinallyPage } = this.props
     return (
       <div class={['submit-warp', 'preview-submit_wrapper']} onClick={this.handleClick}>
         <button class="submit-btn" type="primary" onClick={this.submit}>
-          {isFinallyPage ?  submitConf.submitTitle : '下一页'}
+          {isFinallyPage ? submitConf.submitTitle : '下一页'}
         </button>
       </div>
     )

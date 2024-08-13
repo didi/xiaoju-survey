@@ -14,7 +14,7 @@
         :ref="`questionWrapper-${element.field}`"
         :moduleConfig="element"
         :qIndex="element.qIndex"
-        :isFirst="index==0"
+        :isFirst="index == 0"
         :indexNumber="element.indexNumber"
         :isSelected="currentEditOne === element.qIndex"
         :isLast="index + 1 === questionDataList.length"
@@ -28,7 +28,11 @@
           :isSelected="currentEditOne === element.qIndex"
           :readonly="true"
           @change="handleChange"
-        ></QuestionContainerB>
+        >
+          <template #advancedEdit>
+            <slot name="advancedEdit" :moduleConfig="element"></slot>
+          </template>
+        </QuestionContainerB>
       </QuestionWrapper>
     </template>
   </draggable>
@@ -60,12 +64,12 @@ export default defineComponent({
       }
     }
   },
-  emits: ['change', 'select', 'changeSeq','change'],
+  emits: ['change', 'select', 'changeSeq', 'change'],
   setup(props, { emit }) {
     const editStore = useEditStore()
     const renderData = computed({
       get() {
-        return props.questionDataList; //filterQuestionPreviewData(props.questionDataList)
+        return props.questionDataList //filterQuestionPreviewData(props.questionDataList)
       },
       set(value) {
         editStore.moveQuestionDataList(value)

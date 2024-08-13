@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, shallowRef, ref } from 'vue'
+import { computed, defineComponent, onMounted, shallowRef, ref, provide } from 'vue'
 
 import questionLoader from '@/materials/questions/questionLoader.js'
 
@@ -46,7 +46,7 @@ export default defineComponent({
     }
   },
   emits: ['blur', 'focus', 'change', 'select'],
-  setup(props, { emit }) {
+  setup(props, { slots, emit }) {
     const BlockComponent = shallowRef(null)
 
     const questionMeta = ref({})
@@ -75,6 +75,11 @@ export default defineComponent({
     const onChange = (data) => {
       emit('change', data)
     }
+
+    // 透传高级组件
+    provide('slots', {
+      advancedEdit: slots.advancedEdit
+    })
 
     return {
       props,

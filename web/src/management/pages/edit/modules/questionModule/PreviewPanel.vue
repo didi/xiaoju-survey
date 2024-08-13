@@ -20,7 +20,11 @@
           @change="handleChange"
           @changeSeq="onQuestionOperation"
           ref="materialGroup"
-        />
+        >
+          <template #advancedEdit="{ moduleConfig }">
+            <AdvancedComponent :moduleConfig="moduleConfig" @handleChange="handleChange" />
+          </template>
+        </MaterialGroup>
         <SubmitButton
           :submit-conf="submitConf"
           :readonly="false"
@@ -36,10 +40,14 @@
 
 <script setup>
 import { ref, watch, toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+
 import communalLoader from '@materials/communals/communalLoader.js'
+
 import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import { storeToRefs } from 'pinia'
+import AdvancedComponent from './components/AdvancedConfig/index.vue'
+
 import { useEditStore } from '@/management/stores/edit'
 
 const MainTitle = communalLoader.loadComponent('MainTitle')
@@ -95,6 +103,7 @@ const onQuestionOperation = (data) => {
       break
   }
 }
+
 watch(
   skinConf,
   (newVal) => {

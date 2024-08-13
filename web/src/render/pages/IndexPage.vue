@@ -2,7 +2,7 @@
   <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
@@ -56,6 +56,13 @@ onMounted(() => {
   surveyStore.setSurveyPath(surveyId)
   getDetail(surveyId as string)
 })
+
+watch(
+  () => route.query.t,
+  () => {
+    location.reload()
+  }
+)
 
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)

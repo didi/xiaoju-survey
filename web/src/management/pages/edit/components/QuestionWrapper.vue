@@ -141,15 +141,8 @@ const onMoveDown = () => {
   }
 }
 const onDelete = async () => {
-  if (unref(hasShowLogic)) {
-    ElMessageBox.alert('该题目被显示逻辑关联，请先清除逻辑依赖', '提示', {
-      confirmButtonText: '确定',
-      type: 'warning'
-    })
-    return
-  }
-  if (unref(hasJumpLogic)) {
-    ElMessageBox.alert('该题目被跳转逻辑关联，请先清除逻辑依赖', '提示', {
+  if (unref(hasShowLogic) || getShowLogicText.value) {
+    ElMessageBox.alert('该问题被逻辑依赖，请先删除逻辑依赖', '提示', {
       confirmButtonText: '确定',
       type: 'warning'
     })

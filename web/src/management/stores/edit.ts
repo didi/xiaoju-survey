@@ -19,6 +19,7 @@ import questionLoader from '@/materials/questions/questionLoader'
 import { SurveyPermissions } from '@/management/utils/types/workSpace'
 import { getBannerData } from '@/management/api/skin.js'
 import { getCollaboratorPermissions } from '@/management/api/space'
+import useEditGlobalBaseConf, { type TypeMethod } from './composables/useEditGlobalBaseConf'
 import { CODE_MAP } from '../api/base'
 import { RuleBuild } from '@/common/logicEngine/RuleBuild'
 
@@ -29,7 +30,7 @@ const innerMetaConfig = {
   }
 }
 
-function useInitializeSchema(surveyId: Ref<string>) {
+function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: () => void) {
   const schema = reactive({
     metaData: null,
     bannerConf: {
@@ -133,6 +134,7 @@ function useInitializeSchema(surveyId: Ref<string>) {
           logicConf
         }
       })
+      initializeSchemaCallBack()
 
       initShowLogicEngine()
       initJumpLogicEngine()
@@ -150,11 +152,17 @@ function useInitializeSchema(surveyId: Ref<string>) {
   }
 }
 
-function useQuestionDataListOperations(
-  questionDataList: Ref<any[]>,
-  updateTime: () => void,
+function useQuestionDataListOperations({
+  questionDataList,
+  updateTime,
+  pageOperations,
+  updateCounts
+}: {
+  questionDataList: Ref<any[]>
+  updateTime: () => void
   pageOperations: (type: string) => void
-) {
+  updateCounts: (type: TypeMethod, data: any) => void
+}) {
   function copyQuestion({ index }: { index: number }) {
     const newQuestion = _cloneDeep(questionDataList.value[index])
     newQuestion.field = getNewField(questionDataList.value.map((item) => item.field))
@@ -165,12 +173,14 @@ function useQuestionDataListOperations(
     questionDataList.value.splice(index, 0, question)
     pageOperations('add')
     updateTime()
+    updateCounts('ADD', { question })
   }
 
   function deleteQuestion({ index }: { index: number }) {
     pageOperations('remove')
-    questionDataList.value.splice(index, 1)
+    const [question] = questionDataList.value.splice(index, 1)
     updateTime()
+    updateCounts('REMOVE', { question })
   }
 
   function moveQuestion({ index, range }: { index: number; range: number }) {
@@ -459,8 +469,13 @@ export const useEditStore = defineStore('edit', () => {
   const cooperPermissions = ref(Object.values(SurveyPermissions))
   const schemaUpdateTime = ref(Date.now())
   const { schema, initSchema, getSchemaFromRemote, showLogicEngine, jumpLogicEngine } =
-    useInitializeSchema(surveyId)
+    useInitializeSchema(surveyId, () => {
+    editGlobalBaseConf.initCounts()
+  })
   const questionDataList = toRef(schema, 'questionDataList')
+
+  const editGlobalBaseConf = useEditGlobalBaseConf(questionDataList, updateTime)
+
   function setQuestionDataList(data: any) {
     schema.questionDataList = data
   }
@@ -524,9 +539,12 @@ export const useEditStore = defineStore('edit', () => {
   } = usePageEdit({ schema, questionDataList }, updateTime)
 
   const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionDataListOperations(
-    questionDataList,
-    updateTime,
-    pageOperations
+    {
+      questionDataList,
+      updateTime,
+      pageOperations,
+      updateCounts: editGlobalBaseConf.updateCounts
+    }
   )
 
   function moveQuestionDataList(data: any) {
@@ -602,6 +620,7 @@ export const useEditStore = defineStore('edit', () => {
   }
 
   return {
+    editGlobalBaseConf,
     surveyId,
     setSurveyId,
     bannerList,

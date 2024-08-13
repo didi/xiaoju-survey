@@ -19,11 +19,14 @@
             class="qtopic-item"
             :id="'qtopic' + element.type"
             @click="onQuestionType({ type: element.type })"
-            @mouseenter="showPreview(element, 'qtopic' + element.type)"
-            @mouseleave="isShowPreviewImage = false"
-            @mousedown="isShowPreviewImage = false"
           >
-            <i class="iconfont" :class="['icon-' + element.icon]"></i>
+            <i
+              class="iconfont"
+              :class="['icon-' + element.icon]"
+              @mouseenter="showPreview(element, 'qtopic' + element.type)"
+              @mouseleave="isShowPreviewImage = false"
+              @mousedown="isShowPreviewImage = false"
+            ></i>
             <p class="text">{{ element.title }}</p>
           </div>
         </template>

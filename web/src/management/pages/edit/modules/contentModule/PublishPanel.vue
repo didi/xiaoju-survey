@@ -12,6 +12,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { publishSurvey, saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
+import { surveySchema } from '@/management/utils/schema'
 
 interface Props {
   updateLogicConf: any
@@ -33,6 +34,7 @@ const validate = () => {
     checked = validated
     msg = `检查页面"问卷编辑>显示逻辑"：${message}`
   }
+  
   const { validated: whiteValidated, message: whiteMsg } = props.updateWhiteConf()
   if (!whiteValidated) {
     checked = whiteValidated
@@ -68,6 +70,7 @@ const handlePublish = async () => {
   }
 
   try {
+    await surveySchema.validate(saveData.configData)
     const saveRes: any = await saveSurvey(saveData)
     if (saveRes.code !== 200) {
       isPublishing.value = false
@@ -84,7 +87,7 @@ const handlePublish = async () => {
       ElMessage.error(`发布失败 ${publishRes.errmsg}`)
     }
   } catch (err) {
-    ElMessage.error(`发布失败`)
+    ElMessage.error(err || `发布失败`)
   } finally {
     isPublishing.value = false
   }

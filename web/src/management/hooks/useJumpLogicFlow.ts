@@ -52,7 +52,7 @@ export const generateNodes = (questionDataList: [any]) => {
 }
 
 /* 跳转逻辑的初始化 */
-export const generateLine = (models: Array<any>) => {
+export const generateLine = (models: Array<any>, lf: any) => {
   const acc: Array<any> = []
   const editStore = useEditStore()
   const jumpLogicRule = editStore.jumpLogicEngine?.toJson()
@@ -114,18 +114,32 @@ export const generateLine = (models: Array<any>) => {
           if (condition.operator === 'in') {
             sourceAnchorId = `${condition.value}_right`
           }
+          const sourceNode = lf.getNodeDataById(previousPoint?.id)
+          const targetNode = lf.getNodeDataById(rule.target)
           const targetAnchorId = `${rule.target}_left`
-          edge = {
-            type: 'q-edge',
-            sourceNodeId: previousPoint?.id,
-            targetNodeId: rule.target,
-            sourceAnchorId: `${sourceAnchorId}`,
-            targetAnchorId: `${targetAnchorId}`,
-            properties: {
-              ruleId: rule.id
+          if(sourceNode && targetNode) {
+            edge = {
+              type: 'q-edge',
+              sourceNodeId: previousPoint?.id,
+              targetNodeId: rule.target,
+              sourceAnchorId: `${sourceAnchorId}`,
+              targetAnchorId: `${targetAnchorId}`,
+              properties: {
+                ruleId: rule.id
+              }
             }
+            acc.push(edge)
+          } else {
+            let msg
+            if(!sourceNode) {
+              msg = `跳转逻辑关联的题目${previousPoint?.id}节点不存在`
+            }
+            if(!targetNode) {
+              msg = `跳转逻辑关联的题目${rule.target}节点不存在`
+            }
+            console.error(msg)
           }
-          acc.push(edge)
+          
         })
       }
     } else {

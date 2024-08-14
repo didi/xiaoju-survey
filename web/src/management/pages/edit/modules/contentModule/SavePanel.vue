@@ -23,6 +23,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
+import { surveySchema } from '@/management/utils/schema'
 
 interface Props {
   updateLogicConf: any
@@ -75,9 +76,14 @@ const saveData = async () => {
     ElMessage.error('未获取到问卷id')
     return null
   }
-
-  const res = await saveSurvey(saveData)
-  return res
+  try {
+    await surveySchema.validate(saveData.configData)
+    const res = await saveSurvey(saveData)
+    return res
+  } catch (err) {
+    console.error(err.message)
+    throw err.message;
+  }
 }
 
 const timerHandle = ref<NodeJS.Timeout | number | null>(null)
@@ -139,7 +145,7 @@ const handleSave = async () => {
       ElMessage.error(res.errmsg)
     }
   } catch (error) {
-    ElMessage.error('保存问卷失败')
+    ElMessage.error(error || '保存问卷失败')
   } finally {
     isSaving.value = false
   }

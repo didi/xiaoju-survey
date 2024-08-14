@@ -22,6 +22,9 @@ import { getCollaboratorPermissions } from '@/management/api/space'
 import useEditGlobalBaseConf, { type TypeMethod } from './composables/useEditGlobalBaseConf'
 import { CODE_MAP } from '../api/base'
 import { RuleBuild } from '@/common/logicEngine/RuleBuild'
+import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo'
+import { useJumpLogicInfo } from '@/management/hooks/useJumpLogicInfo'
+import { ElMessageBox } from 'element-plus'
 
 const innerMetaConfig = {
   submit: {
@@ -363,11 +366,26 @@ function usePageEdit(
   const deletePage = (index: number) => {
     if (pageConf.value.length <= 1) return
     const { startIndex, endIndex } = getSorter(index)
-    const newQuestion = _cloneDeep(questionDataList.value)
-    newQuestion.splice(startIndex, endIndex - startIndex)
+    const newQuestionList = _cloneDeep(questionDataList.value)
+    const deleteFields = newQuestionList.slice(startIndex, endIndex - startIndex).map(i => i.field)
+    
+    // 删除分页判断题目是否存在逻辑关联
+    const hasLogic = deleteFields.filter((field) => {
+      const { hasShowLogic } = useShowLogicInfo(field)
+      const { hasJumpLogic } = useJumpLogicInfo(field)
+      return hasShowLogic || hasJumpLogic
+    })
+    if(hasLogic.length) {
+      ElMessageBox.alert('该分页下有题目被显示或跳转逻辑关联，请先清除逻辑依赖', '提示', {
+        confirmButtonText: '确定',
+        type: 'warning'
+      })
+      return
+    }
     updatePageEditOne(1)
+    newQuestionList.splice(startIndex, endIndex - startIndex)
     schema.pageConf.splice(index - 1, 1)
-    questionDataList.value = newQuestion
+    questionDataList.value = newQuestionList
     updateTime()
   }
 

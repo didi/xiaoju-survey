@@ -41,6 +41,8 @@ const formValues = computed(() => {
 })
 const { showLogicEngine } = storeToRefs(surveyStore)
 const {
+  changeField,
+  changeIndex,
   needHideFields,
 } = storeToRefs(questionStore)
 // 题型配置转换
@@ -118,6 +120,7 @@ watch(
           value: value
         }
         surveyStore.changeData(data)
+        processJumpSkip()
       }
     }
   }
@@ -129,6 +132,41 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     questionStore.updateVoteData(data)
   }
+  processJumpSkip()
 }
+
+const processJumpSkip = () => {
+    const targetResult = surveyStore.jumpLogicEngine
+      .getResultsByField(changeField.value, surveyStore.formValues)
+      .map(item => {
+        // 获取目标题的序号，处理跳转问卷末尾为最大题的序号
+        const index = item.target === 'end' ? surveyStore.dataConf.dataList.length : questionStore.getQuestionIndexByField(item.target)
+        return {
+          index,
+          ...item
+        }
+      })
+    const notMatchedFields = targetResult.filter(item => !item.result)
+    const matchedFields = targetResult.filter(item => item.result)
+    // 目标题均未匹配，需要展示出来条件题和目标题之间的题目
+    if (notMatchedFields.length) {
+      notMatchedFields.forEach(element => {
+        const endIndex = element.index
+        const fields = surveyStore.dataConf.dataList.slice(changeIndex.value + 1, endIndex).map(item => item.field)
+        // hideMap中remove被跳过的题
+        questionStore.removeNeedHideFields(fields)
+      });
+    }
+  
+    if (!matchedFields.length) return
+    // 匹配到多个目标题时，取最大序号的题目
+    const maxIndexQuestion =
+      matchedFields.filter(item => item.result).sort((a, b) => b.index - a.index)[0].index
+  
+    // 条件题和目标题之间的题目隐藏
+    const skipKey = surveyStore.dataConf.dataList
+      .slice(changeIndex.value + 1, maxIndexQuestion).map(item => item.field)
+    questionStore.addNeedHideFields(skipKey)
+  }
 
 </script>

@@ -160,7 +160,6 @@ export const useSurveyStore = defineStore('survey', () => {
       formValues.value[key] = value
     }
     questionStore.setChangeField(key)
-    questionStore.processJumpSkip()
   }
 
   const showLogicEngine = ref()

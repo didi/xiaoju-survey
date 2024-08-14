@@ -11,6 +11,11 @@ export const useQuestionStore = defineStore('question', () => {
   const questionData = ref(null)
   const questionSeq = ref([]) // 题目的顺序，因为可能会有分页的情况，所以是一个二维数组[[qid1, qid2], [qid3,qid4]]
   const pageIndex = ref(1) // 当前分页的索引
+  const changeField = ref(null)
+  const changeIndex = computed(() => {
+    return questionData.value[changeField.value].index
+  })
+  const needHideFields = ref([])
 
   // 题目列表
   const questionList = computed(() => {
@@ -177,6 +182,22 @@ export const useQuestionStore = defineStore('question', () => {
     })
   }
 
+  const setChangeField = (field) => {
+    changeField.value = field
+  }
+  const getQuestionIndexByField = (field) => {
+    return questionData.value[field].index
+  }
+  const addNeedHideFields = (fields) => {
+    fields.forEach(field => {
+      if(!needHideFields.value.includes(field)) {
+        needHideFields.value.push(field)
+      }
+    })
+  }
+  const removeNeedHideFields = (fields) => {
+    needHideFields.value = needHideFields.value.filter(field => !fields.includes(field))
+  }
   return {
     voteMap,
     questionData,
@@ -191,6 +212,13 @@ export const useQuestionStore = defineStore('question', () => {
     setVoteMap,
     updateVoteMapByKey,
     initVoteData,
-    updateVoteData
+    updateVoteData,
+    changeField,
+    changeIndex,
+    setChangeField,
+    needHideFields,
+    addNeedHideFields,
+    removeNeedHideFields,
+    getQuestionIndexByField
   }
 })

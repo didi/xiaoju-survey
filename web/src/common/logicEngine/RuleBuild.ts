@@ -115,7 +115,7 @@ export class RuleBuild {
     })
   }
   // 实现前置题删除校验
-  findTargetsByFields(field: string) {
+  findTargetsByField(field: string) {
     const nodes = this.findRulesByField(field)
     return nodes.map((item: any) => {
       return item.target

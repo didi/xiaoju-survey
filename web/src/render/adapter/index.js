@@ -7,7 +7,7 @@ const adapter = (() => {
   const list = []
 
   const exec = (questionData) => {
-    return list.reduce((pre, next) => ({ ...pre, ...next(questionData, pre) }), {})
+    return list.reduce((pre, next, index) => ({ ...pre, index, ...next(questionData, pre) }), {})
   }
 
   return {

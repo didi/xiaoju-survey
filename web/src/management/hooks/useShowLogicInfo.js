@@ -4,11 +4,12 @@ import { flatten } from 'lodash-es'
 import { cleanRichText } from '@/common/xss'
 import { useEditStore } from '../stores/edit'
 import { storeToRefs } from 'pinia'
-const editStore = useEditStore()
-const { showLogicEngine } = storeToRefs(editStore)
 
 // 目标题的显示逻辑提示文案
 export const useShowLogicInfo = (field) => {
+  const editStore = useEditStore()
+  const { showLogicEngine } = storeToRefs(editStore)
+
   const hasShowLogic = computed(() => {
     const logicEngine = showLogicEngine.value
     // 判断该题是否作为了显示逻辑前置题

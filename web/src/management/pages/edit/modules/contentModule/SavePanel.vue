@@ -80,9 +80,9 @@ const saveData = async () => {
     await surveySchema.validate(saveData.configData)
     const res = await saveSurvey(saveData)
     return res
-  } catch (err) {
-    console.error(err.message)
-    throw err.message;
+  } catch (err: any) {
+    console.error(err?.message)
+    throw err?.message;
   }
 }
 

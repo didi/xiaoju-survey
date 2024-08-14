@@ -36,8 +36,6 @@ const emit = defineEmits(['addOther', 'optionChange', 'change'])
 
 const slots = inject('slots')
 
-const optionConfigVisible = ref(false)
-
 const addOther = () => {
   emit('addOther')
 }

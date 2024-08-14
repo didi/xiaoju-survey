@@ -10,6 +10,7 @@ const questionSchema = Yup.object().shape({
 // 自定义方法来校验字段是否存在于 dataList 中
 Yup.addMethod(Yup.mixed, 'isFieldInDataList', function () {
   return this.test('is-field-in-dataList', '逻辑配置关联的题目不存在', function (value, context) {
+    if(value === 'end') return true
     const from = context.options.from;
     const { dataConf } = from[from.length-1].value
     
@@ -38,7 +39,7 @@ export const surveySchema = Yup.object().shape({
           Yup.object().shape({
             field: Yup.mixed().required('Condition field is required').isFieldInDataList(),  // 使用抽离的校验方法,
             operator: Yup.string().required('Operator is required'),
-            value: Yup.string().required('Condition value is required'),
+            value: Yup.string(),
           })
         ).required('Conditions are required'),
       })

@@ -109,7 +109,7 @@ const initGraph = (questionDataList: any) => {
       const nodeModel = lfRef.value?.addNode(item)
       models.push(nodeModel)
     })
-    const edges = generateLine(models)
+    const edges = generateLine(models, lfRef.value)
     edges.forEach((item: any) => {
       const edgeModel = lfRef.value?.addEdge(item)
       if (edgeModel && ('start_node' === item.sourceNodeId || 'end_node' === item.targetNodeId)) {

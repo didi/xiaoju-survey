@@ -101,7 +101,6 @@ export default {
       const res = []
       const rangeConfig = editStore.moduleConfig.rangeConfig
 
-      console.log(234234, editStore.moduleConfig.rangeConfig)
       for (let i = this.min; i <= this.max; i++) {
         res.push({
           index: i,

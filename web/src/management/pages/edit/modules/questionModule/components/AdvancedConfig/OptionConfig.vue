@@ -91,13 +91,14 @@ export default {
   },
   data() {
     return {
-      configVisible: false
+      configVisible: false,
+      curOptions: []
     }
   },
   computed: {
-    curOptions() {
+    options() {
       const editStore = useEditStore()
-      return _cloneDeep(editStore.moduleConfig.options)
+      return editStore.moduleConfig.options
     },
     hashMap() {
       const mapData = {}
@@ -115,17 +116,28 @@ export default {
   components: {
     draggable
   },
+  mounted() {
+    this.initCurOption()
+  },
   watch: {
-    options(val) {
-      this.curOptions = _cloneDeep(val)
+    options: {
+      handler(val) {
+        this.curOptions = _cloneDeep(val)
+      },
+      deep: true
     }
   },
   methods: {
+    initCurOption() {
+      const editStore = useEditStore()
+      this.curOptions = _cloneDeep(editStore.moduleConfig.options)
+    },
     addOtherOption() {
       this.addOption('其他', true, -1, this.fieldId)
     },
     openOptionConfig() {
       this.configVisible = true
+      this.initCurOption()
     },
     addOption(text = '选项', others = false, index = -1, fieldId) {
       let addOne
@@ -164,7 +176,7 @@ export default {
 
       return addOne
     },
-    async deleteOption(index) {
+    deleteOption(index) {
       this.curOptions.splice(index, 1)
     },
     parseImport(newOptions) {

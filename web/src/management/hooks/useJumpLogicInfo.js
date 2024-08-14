@@ -2,11 +2,12 @@ import { computed, unref } from 'vue'
 import { useQuestionInfo } from './useQuestionInfo'
 import { useEditStore } from '../stores/edit'
 import { storeToRefs } from 'pinia'
-const editStore = useEditStore()
-const { jumpLogicEngine } = storeToRefs(editStore)
+
 
 // 目标题的显示逻辑提示文案
 export const useJumpLogicInfo = (field) => {
+  const editStore = useEditStore()
+  const { jumpLogicEngine } = storeToRefs(editStore)
   const hasJumpLogic = computed(() => {
     const logicEngine = jumpLogicEngine.value
     // 判断该题是否作为了跳转逻辑条件

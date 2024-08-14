@@ -10,7 +10,7 @@ export const useJumpLogicInfo = (field) => {
   const hasJumpLogic = computed(() => {
     const logicEngine = jumpLogicEngine.value
     // 判断该题是否作为了跳转逻辑条件
-    const isField = logicEngine?.findTargetsByFields(field)?.length > 0
+    const isField = logicEngine?.findTargetsByField(field)?.length > 0
     // 判断该题是否作为了跳转目标
     const isTarget = logicEngine?.findConditionByTarget(field)?.length > 0
     return isField || isTarget

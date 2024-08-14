@@ -174,22 +174,31 @@ export class RuleMatch {
     this.rules.set(hash, rule)
   }
 
-  // 匹配条件规则
+  // 特定目标题规则匹配
   match(target: string, scope: string, fact: Fact, comparor?: any) {
     const hash = this.calculateHash(target, scope)
 
     const rule = this.rules.get(hash)
     if (rule) {
       const result = rule.match(fact, comparor)
-      // this.matchCache.set(hash, result);
       return result
     } else {
       // 默认显示
       return true
     }
   }
-
-  getResult(target: string, scope: string) {
+  /* 获取条件题关联的多个目标题匹配情况 */
+  getResultsByField(field: string, fact: Fact) {
+    const rules = this.findRulesByField(field)
+    return rules.map(([, rule]) => {
+      return {
+        target: rule.target,
+        result: this.match(rule.target, 'question', fact, 'or')
+      }
+    })
+  }
+  /* 获取目标题的规则是否匹配 */
+  getResultByTarget(target: string, scope: string) {
     const hash = this.calculateHash(target, scope)
     const rule = this.rules.get(hash)
     if (rule) {
@@ -205,16 +214,7 @@ export class RuleMatch {
     // 假设哈希值计算方法为简单的字符串拼接或其他哈希算法
     return target + scope
   }
-  findTargetsByField(field: string) {
-    const rules = new Map(
-      [...this.rules.entries()].filter(([, value]) => {
-        return [...value.conditions.entries()].filter(([, value]) => {
-          return value.field === field
-        }).length
-      })
-    )
-    return [...rules.values()].map((obj) => obj.target)
-  }
+  // 查找条件题的规则
   findRulesByField(field: string) {
     const list = [...this.rules.entries()]
     const match = list.filter(([, ruleValue]) => {
@@ -225,18 +225,7 @@ export class RuleMatch {
       })
       return res.length
     })
-    console.log({ match })
     return match
-  }
-  findFieldsByTarget(target: string) {
-    const rules = new Map(
-      [...this.rules.entries()].filter(([, value]) => {
-        return value.target === target
-      })
-    )
-    return [...rules.values()].map((obj) =>
-      [...obj.conditions.entries()].map(([, value]) => value.field)
-    )
   }
   toJson() {
     return Array.from(this.rules.entries()).map(([, value]) => {

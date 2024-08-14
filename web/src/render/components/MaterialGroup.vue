@@ -13,6 +13,7 @@
 <script setup>
 import { inject, provide, computed, onBeforeMount } from 'vue'
 import QuestionWrapper from './QuestionWrapper.vue'
+// import { flatten } from 'lodash-es'
 
 const $bus = inject('$bus')
 const props = defineProps({
@@ -68,13 +69,6 @@ onBeforeMount(() => {
     }
   })
 })
-// const visible = computed(() => {
-//   return (field) => {
-//     console.log(field + '重新计算visible：'+store.state.ruleEngine.getResult(field, 'question'))
-//   // 显示逻辑-处理视图
-//     return store.state.ruleEngine.getResult(field, 'question')
-//   }
-// })
 
 const validate = (callback) => {
   const length = fields.length

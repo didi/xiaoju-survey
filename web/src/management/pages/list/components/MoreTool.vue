@@ -1,6 +1,6 @@
 <template>
   <el-button text type="primary" ref="buttonRef" v-click-outside="onClickOutside">
-    <i-ep-more />
+    <i class="iconfont icon-gengduo"></i>
   </el-button>
 
   <el-popover
@@ -83,5 +83,8 @@ const call = (t) => {
       font-weight: 500;
     }
   }
+}
+.iconfont {
+  font-size: 20px;
 }
 </style>

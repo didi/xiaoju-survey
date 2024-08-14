@@ -34,13 +34,9 @@ defineProps({
 })
 const emit = defineEmits(['addOther', 'optionChange', 'change'])
 
-const moduleConfig = inject('moduleConfig')
 const slots = inject('slots')
 
 const optionConfigVisible = ref(false)
-const openOptionConfig = () => {
-  optionConfigVisible.value = true
-}
 
 const addOther = () => {
   emit('addOther')

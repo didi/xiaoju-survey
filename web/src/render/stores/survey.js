@@ -254,7 +254,7 @@ export const useSurveyStore = defineStore('survey', () => {
           })
         }
       } else {
-        if(!breakAnswer) {
+        if(!option.baseConf.breakAnswer) {
           clearFormData(option)
         } else {
           confirm({

@@ -18,8 +18,6 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { val } from 'cheerio/lib/api/attributes';
-
 @ApiTags('survey')
 @Controller('/api/surveyHisotry')
 export class SurveyHistoryController {

@@ -26,6 +26,8 @@ const CODE_MAP = {
   ERROR: 500,
   NO_AUTH: 403
 }
+
+
 export const useSurveyStore = defineStore('survey', () => {
   const surveyPath = ref('')
   const isMobile = ref(isInMobile())
@@ -110,15 +112,11 @@ export const useSurveyStore = defineStore('survey', () => {
 
     return isSuccess
   }
-  const initSurvey = (option) => {
-    setEnterTime()
 
-    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
-      return
-    }
 
-    
 
+  // 加载空白页面
+  function clearFormData(option) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const {
       questionData,
@@ -137,6 +135,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
+    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -151,8 +150,139 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues.value = _formValues
     whiteData.value = option.whiteData
     pageConf.value = option.pageConf
+    
     // 获取已投票数据
     questionStore.initVoteData()
+    questionStore.initQuotaMap()
+
+  }
+
+  // 加载上次填写过的数据到问卷页
+  function loadFormData({bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, formData) {
+    // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
+    const { questionData, questionSeq, rules, formValues } = adapter.generateData({
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf
+    })
+
+    for(const key in formData){
+      formValues[key] = formData[key]
+    }
+
+    // 将数据设置到state上
+    commit('assignState', {
+      questionData,
+      questionSeq,
+      rules,
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      formValues
+    })
+    // 获取已投票数据
+    dispatch('initVoteData')
+    // 获取选项上线选中数据
+    dispatch('initQuotaMap')
+
+    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
+    questionStore.questionData = questionData
+    questionStore.questionSeq = questionSeq
+
+    // 将数据设置到state上
+    rules.value = rules
+    bannerConf.value = option.bannerConf
+    baseConf.value = option.baseConf
+    bottomConf.value = option.bottomConf
+    dataConf.value = option.dataConf
+    skinConf.value = option.skinConf
+    submitConf.value = option.submitConf
+    formValues.value = _formValues
+
+    whiteData.value = option.whiteData
+    pageConf.value = option.pageConf
+    
+    // 获取已投票数据
+    questionStore.initVoteData()
+    questionStore.initQuotaMap()
+
+  }
+  const initSurvey = (option) => {
+    setEnterTime()
+
+    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
+      return
+    }
+
+    const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
+    for(const key in localData){
+      localData[key] = decodeURIComponent(localData[key])
+    }
+
+    const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
+    if(localData) {
+      if(isSubmit){
+        if(!option.baseConf.backAnswer) {
+          clearFormData(option)
+        } else {
+          confirm({
+            title: "您之前已提交过问卷，是否要回填？",
+            onConfirm: async () => {
+              try {
+                loadFormData(option, localData)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            },
+            onCancel: async() => {
+              try {
+                clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            }
+          })
+        }
+      } else {
+        if(!option.baseConf.breakAnswer) {
+          clearFormData(option)
+        } else {
+          confirm({
+            title: "您之前已填写部分内容, 是否要继续填写?",
+            onConfirm: async () => {
+              try {
+                loadFormData(option, localData)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            },
+            onCancel: async() => {
+              try {
+                clearFormData(option)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            }
+          })
+        }
+      }
+    } else {
+      clearFormData(option)
+    }
   }
 
   // 用户输入或者选择后，更新表单数据

@@ -200,7 +200,7 @@ const handleSave = async () => {
     isSaving.value = false
   }
 }
-const schemaUpdateTime = computed(() => _get(store.state, 'edit.schemaUpdateTime'))
+
 watch(schemaUpdateTime, () => {
   triggerAutoSave()
 })

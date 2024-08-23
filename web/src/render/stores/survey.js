@@ -137,6 +137,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
+    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -153,6 +154,7 @@ export const useSurveyStore = defineStore('survey', () => {
     pageConf.value = option.pageConf
     // 获取已投票数据
     questionStore.initVoteData()
+    questionStore.initQuotaMap()
   }
 
   // 用户输入或者选择后，更新表单数据

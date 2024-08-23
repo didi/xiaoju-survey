@@ -1,9 +1,10 @@
-import store from '../store/index'
+import { useQuestionStore } from '../stores/question'
 export const useOptionsQuota = (questionKey) => {
-  const options = store.state.questionData[questionKey].options.map((option) => {
+  const questionStore = useQuestionStore()
+  const options = questionStore.questionData[questionKey].options.map((option) => {
     if(option.quota){
       const optionHash = option.hash
-      const selectCount = store.state.quotaMap?.[questionKey]?.[optionHash] || 0
+      const selectCount = questionStore.quotaMap?.[questionKey]?.[optionHash] || 0
       const release = Number(option.quota) - Number(selectCount)
       return {
         ...option,

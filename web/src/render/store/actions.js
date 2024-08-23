@@ -360,5 +360,5 @@ export default {
     })
     // 获取已投票数据
     dispatch('initVoteData')
-    dispatch('initQuotaMap')
+    // dispatch('initQuotaMap')
   }

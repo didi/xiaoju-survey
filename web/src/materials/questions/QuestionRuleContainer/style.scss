@@ -81,12 +81,12 @@
   }
 
   &.hasError {
+    /*由于错误提示可能多行，因此有错误时取消margin，让错误提示撑开边距*/
+    margin-bottom: 0;
+
     .item-border {
       border-color: $error-color;
     }
-
-    /*由于错误提示可能多行，因此有错误时取消margin，让错误提示撑开边距*/
-    margin-bottom: 0;
   }
 
   &.special .module-err-tip {
@@ -94,7 +94,7 @@
   }
 
   &.spliter {
-    border-bottom: 0.12rem solid $spliter-color;
+    border-bottom: 0.1rem solid $spliter-color;
   }
 
   .sort-tip {

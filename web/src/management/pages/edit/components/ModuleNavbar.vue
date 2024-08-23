@@ -8,17 +8,28 @@
       <NavPanel></NavPanel>
     </div>
     <div class="right-group">
+      <CooperationPanel>
+        <template #content="{ onCooper }">
+          <div class="btn" @click="onCooper">
+            <i-ep-connection class="view-icon" :size="20" />
+            <span class="btn-txt">协作</span>
+          </div>
+        </template>
+      </CooperationPanel>
       <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
-      <SavePanel></SavePanel>
-      <PublishPanel></PublishPanel>
+      <SavePanel :updateLogicConf="updateLogicConf" :updateWhiteConf="updateWhiteConf"></SavePanel>
+      <PublishPanel
+        :updateLogicConf="updateLogicConf"
+        :updateWhiteConf="updateWhiteConf"
+      ></PublishPanel>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
-import { get as _get } from 'lodash-es'
+import { useEditStore } from '@/management/stores/edit'
+import { storeToRefs } from 'pinia'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -27,11 +38,80 @@ import HistoryPanel from '../modules/contentModule/HistoryPanel.vue'
 import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
+import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 
-const store = useStore()
-const title = computed(() => _get(store.state, 'edit.schema.metaData.title'))
+const editStore = useEditStore()
+const { schema, changeSchema } = editStore
+const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
+
+const { showLogicEngine, jumpLogicEngine } = storeToRefs(editStore)
+// 校验 - 逻辑
+const updateLogicConf = () => {
+  let res = {
+    validated: true,
+    message: ''
+  }
+  if (
+    showLogicEngine.value &&
+    showLogicEngine.value.rules &&
+    showLogicEngine.value.rules.length !== 0
+  ) {
+    try {
+      showLogicEngine.value.validateSchema()
+    } catch (error) {
+      res = {
+        validated: false,
+        message: '逻辑配置不能为空'
+      }
+
+      return res
+    }
+
+    const showLogicConf = showLogicEngine.value.toJson()
+
+    // 更新逻辑配置
+    changeSchema({ key: 'logicConf', value: { showLogicConf } })
+
+    return res
+  }
+
+  const jumpLogicConf = jumpLogicEngine.value.toJson()
+  changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
+
+  return res
+}
+
+// 校验 - 白名单
+const updateWhiteConf = () => {
+  let res = {
+    validated: true,
+    message: ''
+  }
+  const baseConf = (schema?.baseConf as any) || {}
+  if (baseConf.passwordSwitch && !baseConf.password) {
+    res = {
+      validated: false,
+      message: '访问密码不能为空'
+    }
+    return res
+  }
+  if (baseConf.whitelistType != 'ALL' && !baseConf.whitelist?.length) {
+    res = {
+      validated: false,
+      message: '白名单不能为空'
+    }
+    return res
+  }
+  return res
+}
 </script>
 <style lang="scss" scoped>
+@import url('@/management/styles/edit-btn.scss');
+.view-icon {
+  font-size: 20px;
+  height: 29px;
+  line-height: 29px;
+}
 .nav {
   width: 100%;
   height: 56px;

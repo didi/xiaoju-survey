@@ -63,14 +63,14 @@ const meta = {
       name: 'starStyle',
       propType: String,
       description: '',
-      defaultValue: 'star',
+      defaultValue: 'star'
     },
     {
       name: 'rangeConfig',
       propType: Object,
       description: '这是用于描述评分高级设置',
       defaultValue: {}
-    },
+    }
   ],
   formConfig: [
     basicConfig,
@@ -107,7 +107,7 @@ const meta = {
       show: true,
       configure: {
         showOthers: false,
-        showAdvancedRateConfig: true
+        showAdvancedConfig: true
       }
     }
   }

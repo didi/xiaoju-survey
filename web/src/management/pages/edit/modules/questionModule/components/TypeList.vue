@@ -10,7 +10,7 @@
         class="questiontype-list"
         :list="item.questionList"
         :group="{ name: DND_GROUP, pull: 'clone', put: false }"
-        :clone="getNewQuestion"
+        :clone="createNewQuestion"
         item-key="path"
       >
         <template #item="{ element }">
@@ -19,11 +19,14 @@
             class="qtopic-item"
             :id="'qtopic' + element.type"
             @click="onQuestionType({ type: element.type })"
-            @mouseenter="showPreview(element, 'qtopic' + element.type)"
-            @mouseleave="isShowPreviewImage = false"
-            @mousedown="isShowPreviewImage = false"
           >
-            <i class="iconfont" :class="['icon-' + element.icon]"></i>
+            <i
+              class="iconfont"
+              :class="['icon-' + element.icon]"
+              @mouseenter="showPreview(element, 'qtopic' + element.type)"
+              @mouseleave="isShowPreviewImage = false"
+              @mousedown="isShowPreviewImage = false"
+            ></i>
             <p class="text">{{ element.title }}</p>
           </div>
         </template>
@@ -44,42 +47,27 @@ import draggable from 'vuedraggable'
 import { DND_GROUP } from '@/management/config/dnd'
 
 import questionMenuConfig, { questionTypeList } from '@/management/config/questionMenuConfig'
-import { getQuestionByType } from '@/management/utils/index'
-import { useStore } from 'vuex'
-import { get as _get, isNumber as _isNumber } from 'lodash-es'
-import { computed, ref } from 'vue'
-import { QUESTION_TYPE } from '@/common/typeEnum.ts'
-const store = useStore()
+import { storeToRefs } from 'pinia'
+import { useEditStore } from '@/management/stores/edit'
+import { ref } from 'vue'
+
+const editStore = useEditStore()
+const { newQuestionIndex } = storeToRefs(editStore)
+const { addQuestion, setCurrentEditOne, createNewQuestion } = editStore
 
 const activeNames = ref([0, 1])
 const previewImg = ref('')
 const isShowPreviewImage = ref(false)
 const previewTop = ref(0)
-const questionDataList = computed(() => _get(store, 'state.edit.schema.questionDataList'))
-const newQuestionIndex = computed(() => {
-  const currentEditOne = _get(store, 'state.edit.currentEditOne')
-  const index = _isNumber(currentEditOne) ? currentEditOne + 1 : questionDataList.value.length
-  return index
-})
 
 questionLoader.init({
   typeList: questionTypeList.map((item) => item.type)
 })
 
-const getNewQuestion = ({ type }) => {
-  const fields = questionDataList.value.map((item) => item.field)
-  const newQuestion = getQuestionByType(type, fields)
-  newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
-  if (type === QUESTION_TYPE.VOTE) {
-    newQuestion.innerType = QUESTION_TYPE.RADIO
-  }
-  return newQuestion
-}
-
 const onQuestionType = ({ type }) => {
-  const newQuestion = getNewQuestion({ type })
-  store.dispatch('edit/addQuestion', { question: newQuestion, index: newQuestionIndex.value })
-  store.commit('edit/setCurrentEditOne', newQuestionIndex.value)
+  const newQuestion = createNewQuestion({ type })
+  addQuestion({ question: newQuestion, index: newQuestionIndex.value })
+  setCurrentEditOne(newQuestionIndex.value)
 }
 
 const showPreview = ({ snapshot }, id) => {

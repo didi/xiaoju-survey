@@ -68,7 +68,7 @@ watch(
   () => props.formConfig.value,
   (newVal: boolean) => {
     if (newVal !== modelValue.value) {
-      modelValue.value == !!newVal
+      modelValue.value = !!newVal
     }
   },
   {

@@ -1,8 +1,9 @@
 <template>
   <draggable
     v-model="renderData"
-    handle=".question-wrapper.isSelected"
-    filter=".question-wrapper.isSelected .question.isSelected"
+    handle=".question-wrapper.is-move"
+    filter=".question-wrapper.is-move .question.isSelected"
+    :preventOnFilter="false"
     :group="DND_GROUP"
     :onEnd="checkEnd"
     :move="checkMove"
@@ -13,8 +14,9 @@
         :ref="`questionWrapper-${element.field}`"
         :moduleConfig="element"
         :qIndex="element.qIndex"
+        :isFirst="index == 0"
         :indexNumber="element.indexNumber"
-        :isSelected="currentEditOne === index"
+        :isSelected="currentEditOne === element.qIndex"
         :isLast="index + 1 === questionDataList.length"
         @select="handleSelect"
         @changeSeq="handleChangeSeq"
@@ -23,10 +25,14 @@
           :type="element.type"
           :moduleConfig="element"
           :indexNumber="element.indexNumber"
-          :isSelected="currentEditOne === index"
+          :isSelected="currentEditOne === element.qIndex"
           :readonly="true"
           @change="handleChange"
-        ></QuestionContainerB>
+        >
+          <template #advancedEdit>
+            <slot name="advancedEdit" :moduleConfig="element"></slot>
+          </template>
+        </QuestionContainerB>
       </QuestionWrapper>
     </template>
   </draggable>
@@ -34,11 +40,10 @@
 
 <script>
 import { computed, defineComponent, ref, getCurrentInstance } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import QuestionContainerB from '@/materials/questions/QuestionContainerB'
 import QuestionWrapper from '@/management/pages/edit/components/QuestionWrapper.vue'
 import draggable from 'vuedraggable'
-import { filterQuestionPreviewData } from '@/management/utils/index'
 import { DND_GROUP } from '@/management/config/dnd'
 
 export default defineComponent({
@@ -59,15 +64,15 @@ export default defineComponent({
       }
     }
   },
-  emits: ['change', 'select', 'changeSeq'],
+  emits: ['change', 'select', 'changeSeq', 'change'],
   setup(props, { emit }) {
-    const store = useStore()
+    const editStore = useEditStore()
     const renderData = computed({
       get() {
-        return filterQuestionPreviewData(props.questionDataList)
+        return props.questionDataList //filterQuestionPreviewData(props.questionDataList)
       },
-      set(questionDataList) {
-        store.commit('edit/setQuestionDataList', questionDataList)
+      set(value) {
+        editStore.moveQuestionDataList(value)
       }
     })
     const handleSelect = (index) => {

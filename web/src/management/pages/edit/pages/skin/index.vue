@@ -58,7 +58,7 @@ watch(
     position: absolute;
     top: 10px;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 999;
     :deep(.el-radio-button__original-radio + .el-radio-button__inner) {
       font-size: 12px;
       height: 28px;

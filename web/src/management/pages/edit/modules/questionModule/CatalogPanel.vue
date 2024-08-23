@@ -1,5 +1,5 @@
 <template>
-  <el-tabs type="border-card" v-model="tabSelected" class="tab-box">
+  <el-tabs type="border-card" v-model="tabSelected" stretch class="tab-box">
     <el-tab-pane label="题型选择">
       <TypeList />
     </el-tab-pane>
@@ -18,17 +18,25 @@ const tabSelected = ref<string>('0')
 </script>
 <style lang="scss" scoped>
 .tab-box {
-  width: 300px;
+  width: 360px;
   height: 100%;
   box-shadow: none;
   border: none;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   :deep(.el-tabs__nav) {
     width: 100%;
   }
+  :deep(.el-tabs__content) {
+    flex: 1;
+    overflow-y: auto;
+  }
   :deep(.el-tabs__item) {
-    width: 50%;
     text-align: center;
+  }
+
+  &.el-tabs--border-card :deep(.el-tabs__item:last-child.is-active) {
+    border-right-color: transparent;
   }
 }
 </style>

@@ -4,6 +4,18 @@
       <div class="result-content">
         <img src="/imgs/icons/success.webp" />
         <div class="msg" v-html="successMsg"></div>
+        <router-link
+          :to="{
+            name: 'renderPage',
+            query: {
+              t: new Date().getTime()
+            }
+          }"
+          replace
+          class="reset-link"
+        >
+          重新填写
+        </router-link>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
@@ -11,16 +23,16 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+import { useSurveyStore } from '../stores/survey'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
 
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
-const store = useStore()
+const surveyStore = useSurveyStore()
 
-const logoConf = computed(() => store.state?.bottomConf || {})
+const logoConf = computed(() => surveyStore?.bottomConf || {})
 const successMsg = computed(() => {
-  const msgContent = store.state?.submitConf?.msgContent || {}
+  const msgContent = (surveyStore?.submitConf as any)?.msgContent || {}
   return msgContent?.msg_200 || '提交成功'
 })
 </script>
@@ -64,6 +76,14 @@ const successMsg = computed(() => {
     text-align: center;
     font-weight: 500;
     margin-top: 0.15rem;
+  }
+
+  .reset-link {
+    margin-top: 0.24rem;
+    font-size: 0.27rem;
+    color: #5094f0;
+    text-decoration: underline;
+    display: block;
   }
 }
 </style>

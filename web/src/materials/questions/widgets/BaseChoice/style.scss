@@ -89,6 +89,8 @@
       }
 
       &.is-checked {
+        transition: all 0.3s ease-in-out;
+
         .item-title {
           color: $primary-color;
         }
@@ -102,18 +104,15 @@
           color: #fff;
           border: none;
         }
-
-        transition: all 0.3s ease-in-out;
       }
 
       &:not(.is-checked) {
+        transition: all 0.3s ease-in-out;
         background-color: transparent;
 
         .item-title {
           color: $font-color;
         }
-
-        transition: all 0.3s ease-in-out;
       }
 
       &.lastchild,

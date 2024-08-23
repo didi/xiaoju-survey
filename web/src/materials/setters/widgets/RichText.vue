@@ -15,12 +15,7 @@ interface Props {
   formConfig: any
 }
 
-interface Emit {
-  (ev: typeof FORM_CHANGE_EVENT_KEY, arg: { key: string; value: string }): void
-  (ev: 'change' | 'input', value: string): void
-}
-
-const emit = defineEmits<Emit>()
+const emit = defineEmits([FORM_CHANGE_EVENT_KEY, 'change', 'input'])
 const props = withDefaults(defineProps<Props>(), { formConfig: {} })
 
 const handleEditorValueChange = (eventType: 'change' | 'input', value: string) => {

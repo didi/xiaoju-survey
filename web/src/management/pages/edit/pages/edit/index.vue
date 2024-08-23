@@ -37,7 +37,9 @@ const activeRouter = ref(route.name)
 watch(
   activeRouter,
   (val: any) => {
-    router.push({ name: val })
+    // 避免编辑页刷新丢失query
+    const query = route.query
+    router.push({ name: val, query })
   },
   {
     immediate: true
@@ -55,6 +57,8 @@ watch(
   .navbar-tab {
     position: absolute;
     top: 10px;
+    left: 50%;
+    transform: translate(-50%);
     cursor: pointer;
     :deep(.el-radio-button__original-radio + .el-radio-button__inner) {
       font-size: 12px;

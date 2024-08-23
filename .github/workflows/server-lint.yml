@@ -37,6 +37,3 @@ jobs:
 
       - name: Lint
         run: cd server && npm run lint
-
-      - name: Format
-        run: cd server && npm run format

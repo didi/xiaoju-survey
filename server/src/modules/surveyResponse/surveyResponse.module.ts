@@ -17,6 +17,8 @@ import { CounterController } from './controllers/counter.controller';
 import { ResponseSchemaController } from './controllers/responseSchema.controller';
 import { SurveyResponseController } from './controllers/surveyResponse.controller';
 import { SurveyResponseUIController } from './controllers/surveyResponseUI.controller';
+import { AuthModule } from '../auth/auth.module';
+import { WorkspaceModule } from '../workspace/workspace.module';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -32,6 +34,8 @@ import { MutexModule } from '../mutex/mutex.module';
     ]),
     ConfigModule,
     MessageModule,
+    AuthModule,
+    WorkspaceModule,
     MutexModule,
   ],
   controllers: [

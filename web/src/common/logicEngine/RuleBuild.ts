@@ -33,8 +33,8 @@ export class RuleNode {
   conditions: ConditionNode[] = []
   scope: string = Scope.Question
   target: string = ''
-  constructor(scope: string = Scope.Question, target: string = '') {
-    this.id = generateID(PrefixID.Rule)
+  constructor(target: string = '', scope: string = Scope.Question, id?: string) {
+    this.id = id || generateID(PrefixID.Rule)
     this.scope = scope
     this.target = target
   }
@@ -54,14 +54,8 @@ export class RuleNode {
 
 export class RuleBuild {
   rules: RuleNode[] = []
-  static instance: RuleBuild
   constructor() {
     this.rules = []
-    if (!RuleBuild.instance) {
-      RuleBuild.instance = this
-    }
-
-    return RuleBuild.instance
   }
 
   // 添加条件规则到规则引擎中
@@ -70,6 +64,9 @@ export class RuleBuild {
   }
   removeRule(ruleId: string) {
     this.rules = this.rules.filter((rule) => rule.id !== ruleId)
+  }
+  clear() {
+    this.rules = []
   }
   findRule(ruleId: string) {
     return this.rules.find((rule) => rule.id === ruleId)
@@ -94,7 +91,7 @@ export class RuleBuild {
     if (ruleConf instanceof Array) {
       ruleConf.forEach((rule: any) => {
         const { scope, target } = rule
-        const ruleNode = new RuleNode(scope, target)
+        const ruleNode = new RuleNode(target, scope)
         rule.conditions.forEach((condition: any) => {
           const { field, operator, value } = condition
           const conditionNode = new ConditionNode(field, operator, value)
@@ -112,19 +109,19 @@ export class RuleBuild {
   findTargetsByScope(scope: string) {
     return this.rules.filter((rule) => rule.scope === scope).map((rule) => rule.target)
   }
-  // 实现前置题删除校验
-  findTargetsByFields(field: string) {
-    const nodes = this.rules.filter((rule: RuleNode) => {
-      const conditions = rule.conditions.filter((item: any) => {
-        return item.field === field
-      })
-      return conditions.length > 0
+  findRulesByField(field: string) {
+    return this.rules.filter((rule) => {
+      return rule.conditions.filter((condition) => condition.field === field).length
     })
+  }
+  // 实现前置题删除校验
+  findTargetsByField(field: string) {
+    const nodes = this.findRulesByField(field)
     return nodes.map((item: any) => {
       return item.target
     })
   }
-  // 根据目标题获取显示逻辑
+  // 根据目标题获取关联的逻辑条件
   findConditionByTarget(target: string) {
     return this.rules.filter((rule) => rule.target === target).map((item) => item.conditions)
   }

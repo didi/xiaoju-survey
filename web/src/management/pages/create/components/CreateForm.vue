@@ -38,13 +38,11 @@
 <script setup lang="ts">
 import { ref, reactive, computed, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
 import { createSurvey } from '@/management/api/survey'
-
 import { SURVEY_TYPE_LIST } from '../types'
+import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 interface Props {
   selectType?: string
@@ -54,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectType: 'normal'
 })
 
+const workSpaceStore = useWorkSpaceStore()
 const ruleForm = ref<any>(null)
 
 const state = reactive({
@@ -79,7 +78,6 @@ const checkForm = (fn: Function) => {
 }
 
 const router = useRouter()
-const store = useStore()
 const submit = () => {
   if (!state.canSubmit) {
     return
@@ -94,8 +92,8 @@ const submit = () => {
       surveyType: selectType,
       ...state.form
     }
-    if (store.state.list.workSpaceId) {
-      payload.workspaceId = store.state.list.workSpaceId
+    if (workSpaceStore.workSpaceId) {
+      payload.workspaceId = workSpaceStore.workSpaceId
     }
     const res: any = await createSurvey(payload)
     if (res?.code === 200 && res?.data?.id) {

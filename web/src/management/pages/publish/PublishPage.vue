@@ -25,8 +25,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { computed, onMounted, toRef } from 'vue'
+import { useEditStore } from '@/management/stores/edit'
 import { useRoute, useRouter } from 'vue-router'
 import { get as _get } from 'lodash-es'
 
@@ -44,14 +44,15 @@ const defaultConfig = {
   img: '/imgs/icons/unpublished.webp'
 }
 
-const store = useStore()
-const metaData = computed(() => _get(store.state, 'edit.schema.metaData'))
+const editStore = useEditStore()
+const { schema, init, setSurveyId } = editStore
+const metaData = toRef(schema, 'metaData')
 const curStatus = computed(() => _get(metaData.value, 'curStatus.status', 'new'))
 const mainChannel = computed(() => {
   let fullUrl = ''
 
   if (metaData.value) {
-    fullUrl = `${location.origin}/render/${metaData.value.surveyPath}?t=${Date.now()}`
+    fullUrl = `${location.origin}/render/${(metaData.value as any).surveyPath}?t=${Date.now()}`
   }
 
   return { fullUrl }
@@ -60,10 +61,10 @@ const mainChannel = computed(() => {
 const route = useRoute()
 const router = useRouter()
 onMounted(async () => {
-  store.commit('edit/setSurveyId', route.params.id)
+  setSurveyId(route.params.id as string)
 
   try {
-    await store.dispatch('edit/init')
+    await init()
   } catch (err: any) {
     ElMessage.error(err.message)
     setTimeout(() => {

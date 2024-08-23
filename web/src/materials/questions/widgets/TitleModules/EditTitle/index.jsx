@@ -69,7 +69,11 @@ export default defineComponent({
               <RichEditor
                 class="rich-editor"
                 modelValue={filterXSS(this.title)}
+                needUploadImage={true}
                 onChange={this.handleChange}
+                onCreated={(editor) => {
+                  editor?.focus()
+                }}
               />
             )
           }

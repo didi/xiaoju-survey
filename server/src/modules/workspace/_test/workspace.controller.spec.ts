@@ -32,8 +32,10 @@ describe('WorkspaceController', () => {
           useValue: {
             create: jest.fn(),
             findAllById: jest.fn(),
+            findAllByIdWithPagination: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
+            findAllByUserId: jest.fn(),
           },
         },
         {
@@ -45,6 +47,7 @@ describe('WorkspaceController', () => {
             batchUpdate: jest.fn(),
             batchDelete: jest.fn(),
             countByWorkspaceId: jest.fn(),
+            batchSearchByWorkspace: jest.fn(),
           },
         },
         {
@@ -145,20 +148,30 @@ describe('WorkspaceController', () => {
       jest
         .spyOn(workspaceMemberService, 'findAllByUserId')
         .mockResolvedValue(memberList as unknown as Array<WorkspaceMember>);
+
       jest
-        .spyOn(workspaceService, 'findAllById')
-        .mockResolvedValue(workspaces as Array<Workspace>);
+        .spyOn(workspaceService, 'findAllByIdWithPagination')
+        .mockResolvedValue({
+          list: workspaces as Array<Workspace>,
+          count: workspaces.length,
+        });
 
       jest.spyOn(userService, 'getUserListByIds').mockResolvedValue([]);
 
-      const result = await controller.findAll(req);
+      const result = await controller.findAll(req, {
+        curPage: 1,
+        pageSize: 10,
+      });
 
       expect(result.code).toEqual(200);
       expect(workspaceMemberService.findAllByUserId).toHaveBeenCalledWith({
         userId: req.user._id.toString(),
       });
-      expect(workspaceService.findAllById).toHaveBeenCalledWith({
+      expect(workspaceService.findAllByIdWithPagination).toHaveBeenCalledWith({
         workspaceIdList: memberList.map((item) => item.workspaceId),
+        page: 1,
+        limit: 10,
+        name: undefined,
       });
     });
   });
@@ -224,6 +237,33 @@ describe('WorkspaceController', () => {
 
       expect(result).toEqual({ code: 200 });
       expect(workspaceService.delete).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('getWorkspaceAndMember', () => {
+    it('should return a list of workspaces and members for the user', async () => {
+      const req = { user: { _id: new ObjectId() } };
+
+      const workspaceId = new ObjectId();
+      const memberList = [{ workspaceId, userId: new ObjectId() }];
+      const workspaces = [{ _id: workspaceId, name: 'Test Workspace' }];
+
+      jest
+        .spyOn(workspaceService, 'findAllByUserId')
+        .mockResolvedValue(workspaces as Array<Workspace>);
+      jest
+        .spyOn(workspaceMemberService, 'batchSearchByWorkspace')
+        .mockResolvedValue(memberList as unknown as Array<WorkspaceMember>);
+
+      const result = await controller.getWorkspaceAndMember(req);
+
+      expect(result.code).toEqual(200);
+      expect(workspaceService.findAllByUserId).toHaveBeenCalledWith(
+        req.user._id.toString(),
+      );
+      expect(
+        workspaceMemberService.batchSearchByWorkspace,
+      ).toHaveBeenCalledWith(workspaces.map((item) => item._id.toString()));
     });
   });
 });

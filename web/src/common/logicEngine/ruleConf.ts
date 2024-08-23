@@ -1,4 +1,4 @@
-// 静态数据
+// test：静态数据，实际业务里无用
 export const ruleConf = [
   {
     conditions: [

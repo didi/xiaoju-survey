@@ -15,7 +15,7 @@ services:
       - xiaoju-survey
 
   xiaoju-survey:
-    image: "xiaojusurvey/xiaoju-survey:1.1.2-slim"
+    image: "xiaojusurvey/xiaoju-survey:1.1.6-slim" # 最新版本：https://hub.docker.com/r/xiaojusurvey/xiaoju-survey/tags
     container_name: xiaoju-survey
     restart: always
     ports:

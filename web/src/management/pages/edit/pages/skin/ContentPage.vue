@@ -13,17 +13,17 @@
 </template>
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 
 import CommonTemplate from '../../components/CommonTemplate.vue'
-import CatalogPanel from '../../modules/settingModule/skin/CatalogPanel.vue'
-import PreviewPanel from '../../modules/settingModule/skin/PreviewPanel.vue'
-import SetterPanel from '../../modules/settingModule/skin/SetterPanel.vue'
+import CatalogPanel from '../../modules/skinModule/CatalogPanel.vue'
+import PreviewPanel from '../../modules/skinModule/PreviewPanel.vue'
+import SetterPanel from '../../modules/skinModule/SetterPanel.vue'
 
-const store = useStore()
+const editStore = useEditStore()
 
 onMounted(() => {
-  store.dispatch('getBannerData')
+  editStore.fetchBannerData()
 })
 </script>
 <style lang="scss" scoped>

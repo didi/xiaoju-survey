@@ -27,6 +27,18 @@ const isVideo = (html) => {
   return html.indexOf('<video') > -1
 }
 
+export const cleanRichTextWithMediaTag = (text) => {
+  if (!text) {
+    return text === 0 ? 0 : ''
+  }
+  const html = transformHtmlTag(text)
+    .replace(/<img([\w\W]+?)\/>/g, '[图片]')
+    .replace(/<video.*\/video>/g, '[视频]')
+  const content = html.replace(/<[^<>]+>/g, '').replace(/&nbsp;/g, '')
+
+  return content
+}
+
 export const cleanRichText = (text) => {
   if (!text) {
     return text === 0 ? 0 : ''

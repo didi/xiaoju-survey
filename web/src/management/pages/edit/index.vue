@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
+import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { Action } from 'element-plus'
@@ -27,7 +27,10 @@ import Navbar from './components/ModuleNavbar.vue'
 import axios from '../../api/base'
 import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
 
-const store = useStore()
+
+const editStore = useEditStore()
+const { init, setSurveyId } = editStore
+
 const router = useRouter()
 const route = useRoute()
 const authCheckInterval = ref<any>(null)
@@ -69,12 +72,10 @@ const checkAuth = () => {
   });
 }
 onMounted(async () => {
-  store.commit('edit/setSurveyId', route.params.id)
+  setSurveyId(route.params.id as string)
 
   try {
-    await store.dispatch('edit/init')
-    await initShowLogicEngine(store.state.edit.schema.logicConf.showLogicConf || {})
-
+    await init()
     // 启动定时器，每30分钟调用一次
     authCheckInterval.value = setInterval(() => checkAuth(), 1000);
   } catch (err: any) {
@@ -104,7 +105,7 @@ onUnmounted(() => {
   }
 
   .right {
-    min-width: 1160px;
+    min-width: 1300px;
     height: 100%;
     padding-left: 80px;
     overflow: hidden;

@@ -9,7 +9,7 @@ export const spaceListConfig = {
   name: {
     title: '空间名称',
     key: 'name',
-    width: 300
+    width: 200
   },
   surveyTotal: {
     title: '问卷数',
@@ -82,6 +82,16 @@ export const noListDataConfig = {
   img: '/imgs/icons/list-empty.webp'
 }
 
+export const noSpaceDataConfig = {
+  title: '您还没有创建团队空间',
+  desc: '赶快点击右上角立即创建团队空间吧！',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noSpaceSearchDataConfig = {
+  title: '没有满足该查询条件的团队空间哦',
+  desc: '可以更换条件查询试试',
+  img: '/imgs/icons/list-empty.webp'
+}
 export const noSearchDataConfig = {
   title: '没有满足该查询条件的问卷哦',
   desc: '可以更换条件查询试试',

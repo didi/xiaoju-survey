@@ -1,28 +1,37 @@
 <template>
   <div class="main-operation" @click="onMainClick" ref="mainOperation">
+    <div class="pagination-wrapper">
+      <PageWrapper :readonly="false" />
+    </div>
     <div class="operation-wrapper" ref="operationWrapper">
       <div class="box content" ref="box">
         <MainTitle
+          v-if="pageEditOne == 1"
           :bannerConf="bannerConf"
           :readonly="false"
           :is-selected="currentEditOne === 'mainTitle'"
-          @select="onSelectEditOne('mainTitle')"
+          @select="setCurrentEditOne('mainTitle')"
           @change="handleChange"
         />
         <MaterialGroup
           :current-edit-one="parseInt(currentEditOne)"
-          :questionDataList="questionDataList"
-          @select="onSelectEditOne"
+          :questionDataList="pageQuestionData"
+          @select="setCurrentEditOne"
           @change="handleChange"
           @changeSeq="onQuestionOperation"
           ref="materialGroup"
-        />
+        >
+          <template #advancedEdit="{ moduleConfig }">
+            <AdvancedComponent :moduleConfig="moduleConfig" @handleChange="handleChange" />
+          </template>
+        </MaterialGroup>
         <SubmitButton
           :submit-conf="submitConf"
           :readonly="false"
           :skin-conf="skinConf"
+          :is-finally-page="isFinallyPage"
           :is-selected="currentEditOne === 'submit'"
-          @select="onSelectEditOne('submit')"
+          @select="setCurrentEditOne('submit')"
         />
       </div>
     </div>
@@ -30,34 +39,36 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { ref, watch, toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+
 import communalLoader from '@materials/communals/communalLoader.js'
+
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
-import { useStore } from 'vuex'
+import AdvancedComponent from './components/AdvancedConfig/index.vue'
+
+import { useEditStore } from '@/management/stores/edit'
 
 const MainTitle = communalLoader.loadComponent('MainTitle')
 const SubmitButton = communalLoader.loadComponent('SubmitButton')
 
-const store = useStore()
+const editStore = useEditStore()
+const { currentEditOne, currentEditKey, pageQuestionData, isFinallyPage, pageEditOne } =
+  storeToRefs(editStore)
+const { schema, changeSchema, moveQuestion, copyQuestion, deleteQuestion, setCurrentEditOne } =
+  editStore
 const mainOperation = ref(null)
 const materialGroup = ref(null)
 
-const bannerConf = computed(() => store.state.edit.schema.bannerConf)
-const submitConf = computed(() => store.state.edit.schema.submitConf)
-const skinConf = computed(() => store.state.edit.schema.skinConf)
-const questionDataList = computed(() => store.state.edit.schema.questionDataList)
-const currentEditOne = computed(() => store.state.edit.currentEditOne)
-const currentEditKey = computed(() => store.getters['edit/currentEditKey'])
-const autoScrollData = computed(() => {
-  return {
-    currentEditOne: currentEditOne.value,
-    len: questionDataList.value.length
-  }
-})
+const { bannerConf, submitConf, skinConf } = toRefs(schema)
 
-const onSelectEditOne = async (currentEditOne) => {
-  store.commit('edit/setCurrentEditOne', currentEditOne)
-}
+// const autoScrollData = computed(() => {
+//   return {
+//     currentEditOne: currentEditOne.value,
+//     len: questionDataList.value.length
+//   }
+// })
 
 const handleChange = (data) => {
   if (currentEditOne.value === null) {
@@ -65,28 +76,28 @@ const handleChange = (data) => {
   }
   const { key, value } = data
   const resultKey = `${currentEditKey.value}.${key}`
-  store.dispatch('edit/changeSchema', { key: resultKey, value })
+  changeSchema({ key: resultKey, value })
 }
 
 const onMainClick = (e) => {
   if (e.target === mainOperation.value) {
-    store.commit('edit/setCurrentEditOne', null)
+    setCurrentEditOne(null)
   }
 }
 
 const onQuestionOperation = (data) => {
   switch (data.type) {
     case 'move':
-      store.dispatch('edit/moveQuestion', {
+      moveQuestion({
         index: data.index,
         range: data.range
       })
       break
     case 'delete':
-      store.dispatch('edit/deleteQuestion', { index: data.index })
+      deleteQuestion({ index: data.index })
       break
     case 'copy':
-      store.dispatch('edit/copyQuestion', { index: data.index })
+      copyQuestion({ index: data.index })
       break
     default:
       break
@@ -114,22 +125,24 @@ watch(
   }
 )
 
-watch(autoScrollData, (newVal) => {
-  const { currentEditOne } = newVal
-  if (typeof currentEditOne === 'number') {
-    setTimeout(() => {
-      const field = questionDataList.value?.[currentEditOne]?.field
-      if (field) {
-        const questionModule = materialGroup.value?.getQuestionRefByField(field)
-        if (questionModule && questionModule.$el) {
-          questionModule.$el.scrollIntoView({
-            behavior: 'smooth'
-          })
-        }
-      }
-    }, 0)
-  }
-})
+// 实际编辑题目不会只是从上到下而需要上下题目对比。
+// 一直跳动到顶部影响编辑操作，若有场景需要可自行放开
+// watch(autoScrollData, (newVal) => {
+//   const { currentEditOne } = newVal
+//   if (typeof currentEditOne === 'number') {
+//     setTimeout(() => {
+//       const field = questionDataList.value?.[currentEditOne]?.field
+//       if (field) {
+//         const questionModule = materialGroup.value?.getQuestionRefByField(field)
+//         if (questionModule && questionModule.$el) {
+//           questionModule.$el.scrollIntoView({
+//             behavior: 'smooth'
+//           })
+//         }
+//       }
+//     }, 0)
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>
@@ -141,6 +154,13 @@ watch(autoScrollData, (newVal) => {
   flex-direction: column;
   align-items: center;
   background-color: #f6f7f9;
+}
+.pagination-wrapper {
+  width: 90%;
+  padding-right: 30px;
+  margin-right: -30px;
+  position: relative;
+  top: 50px;
 }
 
 .toolbar {

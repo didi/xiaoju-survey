@@ -2,6 +2,7 @@
   <el-input
     :placeholder="formConfig.placeholder"
     v-model="modelValue"
+    :maxlength="formConfig.maxLength"
     @blur="handleInputBlur"
   ></el-input>
 </template>

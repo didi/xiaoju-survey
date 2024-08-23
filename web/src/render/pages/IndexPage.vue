@@ -2,18 +2,17 @@
   <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
 import useCommandComponent from '../hooks/useCommandComponent'
+import { useSurveyStore } from '../stores/survey'
 
 import AlertDialog from '../components/AlertDialog.vue'
-import { initRuleEngine } from '@/render/hooks/useRuleEngine.js'
 
-const store = useStore()
 const route = useRoute()
+const surveyStore = useSurveyStore()
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
@@ -24,7 +23,8 @@ const loadData = (res: any, surveyPath: string) => {
       dataConf,
       skinConf,
       submitConf,
-      logicConf
+      logicConf,
+      pageConf
     } = data.code
     const questionData = {
       bannerConf,
@@ -32,14 +32,20 @@ const loadData = (res: any, surveyPath: string) => {
       bottomConf,
       dataConf,
       skinConf,
-      submitConf
+      submitConf,
+      pageConf
+    }
+
+    if (!pageConf || pageConf?.length == 0) {
+      questionData.pageConf = [dataConf.dataList.length]
     }
 
     document.title = data.title
 
-    store.commit('setSurveyPath', surveyPath)
-    store.dispatch('init', questionData)
-    initRuleEngine(logicConf?.showLogicConf)
+    surveyStore.setSurveyPath(surveyPath)
+    surveyStore.initSurvey(questionData)
+    surveyStore.initShowLogicEngine(logicConf?.showLogicConf)
+    surveyStore.initJumpLogicEngine(logicConf.jumpLogicConf)
   } else {
     throw new Error(res.errmsg)
   }
@@ -47,9 +53,16 @@ const loadData = (res: any, surveyPath: string) => {
 onMounted(() => {
   const surveyId = route.params.surveyId
   console.log({ surveyId })
-  store.commit('setSurveyPath', surveyId)
+  surveyStore.setSurveyPath(surveyId)
   getDetail(surveyId as string)
 })
+
+watch(
+  () => route.query.t,
+  () => {
+    location.reload()
+  }
+)
 
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
@@ -61,7 +74,7 @@ const getDetail = async (surveyPath: string) => {
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
       loadData(res, surveyPath)
-      store.dispatch('getEncryptInfo')
+      surveyStore.getEncryptInfo()
     }
   } catch (error: any) {
     console.log(error)

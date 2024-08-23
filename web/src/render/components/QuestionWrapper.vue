@@ -147,6 +147,8 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === NORMAL_CHOICES) {
     store.dispatch('changeQuota', data)
   }
+  // 断点续答的的数据缓存
+  localStorageBack()
   processJumpSkip()
 }
 
@@ -184,4 +186,15 @@ const processJumpSkip = () => {
     questionStore.addNeedHideFields(skipKey)
   }
 
+const localStorageBack = () => {
+  var formData = Object.assign({}, surveyStore.formValues);
+  for(const key in formData){
+    formData[key] = encodeURIComponent(formData[key])
+  }
+
+  //浏览器存储
+  localStorage.removeItem(surveyStore.surveyPath + "_questionData")
+  localStorage.setItem(surveyStore.surveyPath + "_questionData", JSON.stringify(formData))
+  localStorage.setItem('isSubmit', JSON.stringify(false))
+}
 </script>

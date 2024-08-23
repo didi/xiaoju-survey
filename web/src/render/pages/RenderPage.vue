@@ -92,7 +92,7 @@ const normalizationRequestBody = () => {
   localStorage.removeItem(surveyPath.value + "_questionData")
   localStorage.removeItem("isSubmit")
   //数据加密
-  var formData  = Object.assign({}, store.state.formValues)
+  var formData  = Object.assign({}, surveyStore.formValues)
     for(const key in formData){
       formData[key] = encodeURIComponent(formData[key])
     }

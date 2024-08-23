@@ -1,5 +1,5 @@
 import basicConfig from '@materials/questions/common/config/basicConfig'
-
+import * as optionConfig from '@materials/questions/common/config/optionsConfig';
 const meta = {
   title: '多选',
   type: 'checkbox',
@@ -92,6 +92,7 @@ const meta = {
       title: '选项配置',
       type: 'Customed',
       content: [
+        optionConfig.layout,
         {
           label: '至少选择数',
           type: 'InputNumber',

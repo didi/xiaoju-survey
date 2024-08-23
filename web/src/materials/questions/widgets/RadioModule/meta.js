@@ -1,4 +1,5 @@
 import basicConfig from '@materials/questions/common/config/basicConfig'
+import * as optionConfig from '@materials/questions/common/config/optionsConfig';
 
 const meta = {
   title: '单选',
@@ -73,7 +74,14 @@ const meta = {
       ]
     }
   ],
-  formConfig: [basicConfig],
+  formConfig: [basicConfig, {
+    name: 'optionConfig',
+    title: '选项配置',
+    type: 'Customed',
+    content: [
+      optionConfig.layout
+    ]
+  }],
   editConfigure: {
     optionEdit: {
       show: true

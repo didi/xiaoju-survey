@@ -107,6 +107,7 @@ export default defineComponent({
         options={myOptions}
         onChange={onChange}
         value={value}
+        layout={this.layout}
       >
         {{
           selectMore: (scoped) => {

@@ -143,6 +143,10 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     questionStore.updateVoteData(data)
   }
+  // 处理选项配额
+  if (props.moduleConfig.type === NORMAL_CHOICES) {
+    store.dispatch('changeQuota', data)
+  }
   processJumpSkip()
 }
 

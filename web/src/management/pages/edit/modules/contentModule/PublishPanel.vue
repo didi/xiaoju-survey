@@ -6,6 +6,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
+import { useUserStore } from '@/management/stores/user'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox, type Action } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -24,9 +25,10 @@ const props = defineProps<Props>()
 const isPublishing = ref<boolean>(false)
 const editStore = useEditStore()
 const { schema, getSchemaFromRemote } = editStore
+const userStore = useUserStore()
 const router = useRouter()
 const saveData = computed(() => {
-  return buildData(store.state.edit.schema, sessionStorage.getItem('sessionUUID'))
+  return buildData(schema, sessionStorage.getItem('sessionUUID'))
 })
 
 const validate = () => {
@@ -74,12 +76,12 @@ const onSave = async () => {
   // 增加冲突检测
   const [isconflict, conflictName] = await checkConflict(saveData.value.surveyId)
   if(isconflict) {
-    if (conflictName == store.state.user.userInfo.username) {
+    if (conflictName == userStore.userInfo.username) {
       ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
         confirmButtonText: '确认',
         callback: (action: Action) => {
           if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
+            getSchemaFromRemote()
           }
         }
       });
@@ -88,58 +90,7 @@ const onSave = async () => {
         confirmButtonText: '确认',
         callback: (action: Action) => {
           if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
-          }
-        }
-      });
-    }
-    return null
-  } else {
-    // 保存数据
-    res = await saveSurvey(saveData.value)
-  }
-  return res
-}
-const checkConflict = async (surveyid:string) => {
-  try {
-    const dailyHis = await getConflictHistory({surveyId: surveyid, historyType: 'dailyHis', sessionId: sessionStorage.getItem('sessionUUID')})
-    if (dailyHis.data.length > 0) {
-      const lastHis = dailyHis.data.at(0)
-      if (Date.now() - lastHis.createDate > 2 * 60 * 1000) {
-        return [false, '']
-      }
-      return [true, lastHis.operator.username]
-    }
-  } catch (error) {
-    console.log(error)
-  }
-  return [false, '']
-}
-const onSave = async () => {
-  let res
-  
-  if (!saveData.value.surveyId) {
-    ElMessage.error('未获取到问卷id')
-    return null
-  }
-  // 增加冲突检测
-  const [isconflict, conflictName] = await checkConflict(saveData.value.surveyId)
-  if(isconflict) {
-    if (conflictName == store.state.user.userInfo.username) {
-      ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
-          }
-        }
-      });
-    } else {
-      ElMessageBox.alert(`当前问卷2分钟内由${conflictName}编辑，刷新以获取最新内容。`, '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
+            getSchemaFromRemote()
           }
         }
       });

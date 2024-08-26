@@ -3,6 +3,7 @@ node_modules
 dist
 
 package-lock.json
+yarn.lock
 
 # local env files
 .env.local
@@ -25,6 +26,8 @@ pnpm-debug.log*
 *.sw?
 
 .history
+
+exportfile
 components.d.ts
 
 # 默认的上传文件夹

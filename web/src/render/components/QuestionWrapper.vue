@@ -145,7 +145,7 @@ const handleChange = (data) => {
   }
   // 处理选项配额
   if (props.moduleConfig.type === NORMAL_CHOICES) {
-    store.dispatch('changeQuota', data)
+    questionStore.updateQuotaData(data)
   }
   // 断点续答的的数据缓存
   localStorageBack()

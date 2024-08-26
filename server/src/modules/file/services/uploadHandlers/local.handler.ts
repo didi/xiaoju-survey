@@ -12,9 +12,14 @@ export class LocalHandler implements FileUploadHandler {
 
   async upload(
     file: Express.Multer.File,
-    options?: { pathPrefix?: string },
+    options?: { pathPrefix?: string; keepOriginFilename?: boolean },
   ): Promise<{ key: string }> {
-    const filename = await generateUniqueFilename(file.originalname);
+    let filename;
+    if (options?.keepOriginFilename) {
+      filename = file.originalname;
+    } else {
+      filename = await generateUniqueFilename(file.originalname);
+    }
     const filePath = join(
       options?.pathPrefix ? options?.pathPrefix : '',
       filename,
@@ -35,6 +40,10 @@ export class LocalHandler implements FileUploadHandler {
   }
 
   getUrl(key: string): string {
+    if (process.env.SERVER_ENV === 'local') {
+      const port = process.env.PORT || 3000;
+      return `http://localhost:${port}/${key}`;
+    }
     return `/${key}`;
   }
 }

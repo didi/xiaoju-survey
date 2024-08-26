@@ -26,12 +26,13 @@ import { Authentication } from 'src/guards/authentication.guard';
 import { HISTORY_TYPE } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
+import { SessionService } from '../services/session.service';
 import { MemberType, WhitelistType } from 'src/interfaces/survey';
 
 @ApiTags('survey')
@@ -43,8 +44,9 @@ export class SurveyController {
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly contentSecurityService: ContentSecurityService,
     private readonly surveyHistoryService: SurveyHistoryService,
-    private readonly logger: Logger,
+    private readonly logger: XiaojuSurveyLogger,
     private readonly counterService: CounterService,
+    private readonly sessionService: SessionService,
   ) {}
 
   @Get('/getBannerData')
@@ -73,9 +75,7 @@ export class SurveyController {
   ) {
     const { error, value } = CreateSurveyDto.validate(reqBody);
     if (error) {
-      this.logger.error(`createSurvey_parameter error: ${error.message}`, {
-        req,
-      });
+      this.logger.error(`createSurvey_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -134,12 +134,29 @@ export class SurveyController {
       sessionId: Joi.string().required(),
     }).validate(surveyInfo);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const username = req.user.username;
-    const surveyId = value.surveyId;
     const sessionId = value.sessionId;
+    const surveyId = value.surveyId;
+    const latestEditingOne = await this.sessionService.findLatestEditingOne({
+      surveyId,
+    });
+
+    if (latestEditingOne && latestEditingOne._id.toString() !== sessionId) {
+      const curSession = await this.sessionService.findOne(sessionId);
+      if (curSession.createDate <= latestEditingOne.updateDate) {
+        // 在当前用户打开之后，有人保存过了
+        throw new HttpException(
+          '当前问卷已在其它页面开启编辑',
+          EXCEPTION_CODE.SURVEY_SAVE_CONFLICT,
+        );
+      }
+    }
+    await this.sessionService.updateSessionToEditing({ sessionId, surveyId });
+
+    const username = req.user.username;
+
     const configData = value.configData;
     await this.surveyConfService.saveSurveyConf({
       surveyId,
@@ -153,7 +170,6 @@ export class SurveyController {
         _id: req.user._id.toString(),
         username,
       },
-      sessionId: sessionId,
     });
     return {
       code: 200,
@@ -202,7 +218,7 @@ export class SurveyController {
     }).validate(queryInfo);
 
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -245,15 +261,13 @@ export class SurveyController {
     queryInfo: {
       surveyPath: string;
     },
-    @Request()
-    req,
   ) {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
     }).validate({ surveyId: queryInfo.surveyPath });
 
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const surveyId = value.surveyId;
@@ -284,15 +298,13 @@ export class SurveyController {
   ) {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
-      sessionId: Joi.string().required(),
     }).validate(surveyInfo);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const username = req.user.username;
     const surveyId = value.surveyId;
-    const sessionId = value.sessionId;
     const surveyMeta = req.surveyMeta;
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
@@ -332,7 +344,6 @@ export class SurveyController {
         _id: req.user._id.toString(),
         username,
       },
-      sessionId: sessionId,
     });
     return {
       code: 200,

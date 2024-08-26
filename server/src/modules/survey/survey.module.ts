@@ -7,6 +7,7 @@ import { LoggerProvider } from 'src/logger/logger.provider';
 import { SurveyResponseModule } from '../surveyResponse/surveyResponse.module';
 import { AuthModule } from '../auth/auth.module';
 import { WorkspaceModule } from '../workspace/workspace.module';
+import { FileModule } from '../file/file.module';
 
 import { DataStatisticController } from './controllers/dataStatistic.controller';
 import { SurveyController } from './controllers/survey.controller';
@@ -14,6 +15,8 @@ import { SurveyHistoryController } from './controllers/surveyHistory.controller'
 import { SurveyMetaController } from './controllers/surveyMeta.controller';
 import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
+import { DownloadTaskController } from './controllers/downloadTask.controller';
+import { SessionController } from './controllers/session.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -21,6 +24,8 @@ import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
+import { DownloadTask } from 'src/models/downloadTask.entity';
+
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { DataStatisticService } from './services/dataStatistic.service';
 import { SurveyConfService } from './services/surveyConf.service';
@@ -30,11 +35,10 @@ import { ContentSecurityService } from './services/contentSecurity.service';
 import { CollaboratorService } from './services/collaborator.service';
 import { Counter } from 'src/models/counter.entity';
 import { CounterService } from '../surveyResponse/services/counter.service';
-//后添加
-import { SurveyDownload } from 'src/models/surveyDownload.entity';
-import { SurveyDownloadService } from './services/surveyDownload.service';
-import { SurveyDownloadController } from './controllers/surveyDownload.controller';
-import { MessageService } from './services/message.service';
+import { FileService } from '../file/services/file.service';
+import { DownloadTaskService } from './services/downloadTask.service';
+import { SessionService } from './services/session.service';
+import { Session } from 'src/models/session.entity';
 
 @Module({
   imports: [
@@ -46,13 +50,14 @@ import { MessageService } from './services/message.service';
       Word,
       Collaborator,
       Counter,
-      //后添加
-      SurveyDownload,
+      DownloadTask,
+      Session,
     ]),
     ConfigModule,
     SurveyResponseModule,
     AuthModule,
     WorkspaceModule,
+    FileModule,
   ],
   controllers: [
     DataStatisticController,
@@ -61,8 +66,8 @@ import { MessageService } from './services/message.service';
     SurveyMetaController,
     SurveyUIController,
     CollaboratorController,
-    //后添加
-    SurveyDownloadController,
+    DownloadTaskController,
+    SessionController,
   ],
   providers: [
     DataStatisticService,
@@ -74,13 +79,9 @@ import { MessageService } from './services/message.service';
     CollaboratorService,
     LoggerProvider,
     CounterService,
-    //后添加
-    SurveyDownloadService,
-    MessageService,
-    {
-      provide: 'NumberToken', // 使用一个唯一的标识符
-      useValue: 10, // 假设这是你想提供的值
-    },
+    DownloadTaskService,
+    FileService,
+    SessionService,
   ],
 })
 export class SurveyModule {}

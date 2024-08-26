@@ -62,7 +62,6 @@
             "quota": "0"
           }
         ],
-        "deleteRecover": false,
         "quotaNoDisplay": false
       }
     ]

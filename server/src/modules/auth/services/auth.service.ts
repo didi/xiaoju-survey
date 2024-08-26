@@ -37,12 +37,8 @@ export class AuthService {
   }
 
   async expiredCheck(token: string) {
-    let decoded;
     try {
-      decoded = verify(
-        token,
-        this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET'),
-      );
+      verify(token, this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET'));
     } catch (err) {
       return true;
     }

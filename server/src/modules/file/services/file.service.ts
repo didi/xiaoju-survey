@@ -14,13 +14,18 @@ export class FileService {
     configKey,
     file,
     pathPrefix,
+    keepOriginFilename,
   }: {
     configKey: string;
     file: Express.Multer.File;
     pathPrefix: string;
+    keepOriginFilename?: boolean;
   }) {
     const handler = this.getHandler(configKey);
-    const { key } = await handler.upload(file, { pathPrefix });
+    const { key } = await handler.upload(file, {
+      pathPrefix,
+      keepOriginFilename,
+    });
     const url = await handler.getUrl(key);
     return {
       key,

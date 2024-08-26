@@ -60,7 +60,6 @@ export interface DataItem {
   rangeConfig?: any;
   starStyle?: string;
   innerType?: string;
-  deleteRecover?: boolean;
   quotaNoDisplay?: boolean;
 }
 

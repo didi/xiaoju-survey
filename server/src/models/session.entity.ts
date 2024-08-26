@@ -2,8 +2,8 @@ import { Entity, Column, Index, ObjectIdColumn } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { BaseEntity } from './base.entity';
 
-@Entity({ name: 'captcha' })
-export class Captcha extends BaseEntity {
+@Entity({ name: 'session' })
+export class Session extends BaseEntity {
   @Index({
     expireAfterSeconds: 3600,
   })
@@ -11,5 +11,5 @@ export class Captcha extends BaseEntity {
   _id: ObjectId;
 
   @Column()
-  text: string;
+  surveyId: string;
 }

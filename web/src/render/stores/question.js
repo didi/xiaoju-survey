@@ -8,12 +8,6 @@ import { QUESTION_TYPE, NORMAL_CHOICES } from '@/common/typeEnum'
 const VOTE_INFO_KEY = 'voteinfo'
 const QUOTA_INFO_KEY = 'limitinfo'
 
-
-import useCommandComponent from '../hooks/useCommandComponent'
-import BackAnswerDialog from '../components/BackAnswerDialog.vue'
-
-const confirm = useCommandComponent(BackAnswerDialog)
-
 // 投票进度逻辑聚合
 const usevVoteMap = (questionData) => {
   const voteMap = ref({})

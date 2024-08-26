@@ -24,9 +24,9 @@ export const saveSurvey = ({ surveyId, configData, sessionId }) => {
   return axios.post('/survey/updateConf', { surveyId, configData, sessionId })
 }
 
-export const publishSurvey = ({ surveyId, sessionId }) => {
+export const publishSurvey = ({ surveyId }) => {
   return axios.post('/survey/publishSurvey', {
-    surveyId, sessionId
+    surveyId
   })
 }
 
@@ -43,16 +43,6 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
   })
 }
 
-export const getConflictHistory = ({ surveyId, historyType, sessionId }) => {
-  return axios.get('/surveyHisotry/getConflictList', {
-    params: {
-      surveyId,
-      historyType,
-      sessionId
-    }
-  })
-}
-
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
     surveyId
@@ -61,4 +51,12 @@ export const deleteSurvey = (surveyId) => {
 
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
+}
+
+export const getSessionId = ({ surveyId }) => {
+  return axios.post('/session/create', { surveyId })
+}
+
+export const seizeSession = ({ sessionId }) => {
+  return axios.post('/session/seize', { sessionId })
 }

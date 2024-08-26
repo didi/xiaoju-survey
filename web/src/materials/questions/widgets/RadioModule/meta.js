@@ -72,13 +72,6 @@ const meta = {
         }
       ]
     },
-    // deleteRecover
-    {
-      name: 'deleteRecover',
-      propType: Boolean,
-      description: '删除后恢复选项配额',
-      defaultValue: false
-    },
     {
       name: 'quotaNoDisplay',
       propType: Boolean,
@@ -107,14 +100,10 @@ const meta = {
       },
       type: 'QuotaConfig',
       // 输出转换
-      valueSetter({ options, deleteRecover, quotaNoDisplay}) {
+      valueSetter({ options, quotaNoDisplay}) {
         return [{
           key: 'options',
           value: options
-        },
-        {
-          key: 'deleteRecover',
-          value: deleteRecover
         },
         {
           key: 'quotaNoDisplay',

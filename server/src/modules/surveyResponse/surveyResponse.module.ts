@@ -1,16 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MessageModule } from '../message/message.module';
+import { RedisModule } from '../redis/redis.module';
 
 import { ResponseSchemaService } from './services/responseScheme.service';
 import { SurveyResponseService } from './services/surveyResponse.service';
 import { CounterService } from './services/counter.service';
 import { ClientEncryptService } from './services/clientEncrypt.service';
+import { RedisService } from '../redis/redis.service';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
-import { Logger } from 'src/logger';
+import { LoggerProvider } from 'src/logger/logger.provider';
 
 import { ClientEncryptController } from './controllers/clientEncrpt.controller';
 import { CounterController } from './controllers/counter.controller';
@@ -22,7 +24,6 @@ import { WorkspaceModule } from '../workspace/workspace.module';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { MutexModule } from '../mutex/mutex.module';
 
 @Module({
   imports: [
@@ -34,9 +35,9 @@ import { MutexModule } from '../mutex/mutex.module';
     ]),
     ConfigModule,
     MessageModule,
+    RedisModule,
     AuthModule,
     WorkspaceModule,
-    MutexModule,
   ],
   controllers: [
     ClientEncryptController,
@@ -50,7 +51,8 @@ import { MutexModule } from '../mutex/mutex.module';
     SurveyResponseService,
     CounterService,
     ClientEncryptService,
-    Logger,
+    LoggerProvider,
+    RedisService,
   ],
   exports: [
     ResponseSchemaService,

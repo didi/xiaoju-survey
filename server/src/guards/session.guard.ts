@@ -1,35 +1,42 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { get } from 'lodash';
-
+import { NoPermissionException } from 'src/exceptions/noPermissionException';
+import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
+import { SessionService } from 'src/modules/survey/services/session.service';
+import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 import { CollaboratorService } from 'src/modules/survey/services/collaborator.service';
-import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
-import { NoPermissionException } from 'src/exceptions/noPermissionException';
 
 @Injectable()
-export class SurveyGuard implements CanActivate {
+export class SessionGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private readonly collaboratorService: CollaboratorService,
+    private readonly sessionService: SessionService,
     private readonly surveyMetaService: SurveyMetaService,
     private readonly workspaceMemberService: WorkspaceMemberService,
+    private readonly collaboratorService: CollaboratorService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    const surveyIdKey = this.reflector.get<string>(
-      'surveyId',
+    const sessionIdKey = this.reflector.get<string>(
+      'sessionId',
       context.getHandler(),
     );
 
-    const surveyId = get(request, surveyIdKey);
+    const sessionId = get(request, sessionIdKey);
 
-    if (!surveyId) {
-      return true;
+    if (!sessionId) {
+      throw new NoPermissionException('没有权限');
     }
+
+    const saveSession = await this.sessionService.findOne(sessionId);
+
+    request.saveSession = saveSession;
+
+    const surveyId = saveSession.surveyId;
 
     const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
 

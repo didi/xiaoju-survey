@@ -3,14 +3,14 @@ import { Collaborator } from 'src/models/collaborator.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { ObjectId } from 'mongodb';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 
 @Injectable()
 export class CollaboratorService {
   constructor(
     @InjectRepository(Collaborator)
     private readonly collaboratorRepository: MongoRepository<Collaborator>,
-    private readonly logger: Logger,
+    private readonly logger: XiaojuSurveyLogger,
   ) {}
 
   async create({ surveyId, userId, permissions }) {

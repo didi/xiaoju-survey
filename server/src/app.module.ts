@@ -40,8 +40,9 @@ import { LoggerProvider } from './logger/logger.provider';
 import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
 import { XiaojuSurveyPluginManager } from './securityPlugin/pluginManager';
-import { Logger } from './logger';
-import { SurveyDownload } from './models/surveyDownload.entity';
+import { XiaojuSurveyLogger } from './logger';
+import { DownloadTask } from './models/downloadTask.entity';
+import { Session } from './models/session.entity';
 
 @Module({
   imports: [
@@ -82,7 +83,8 @@ import { SurveyDownload } from './models/surveyDownload.entity';
             Workspace,
             WorkspaceMember,
             Collaborator,
-            SurveyDownload,
+            DownloadTask,
+            Session,
           ],
         };
       },
@@ -130,7 +132,7 @@ export class AppModule {
       ),
       new SurveyUtilPlugin(),
     );
-    Logger.init({
+    XiaojuSurveyLogger.init({
       filename: this.configService.get<string>('XIAOJU_SURVEY_LOGGER_FILENAME'),
     });
   }

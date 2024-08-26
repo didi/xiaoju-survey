@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, Request } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
@@ -10,15 +10,15 @@ import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
+import { RedisService } from 'src/modules/redis/redis.service';
 
 import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
 
-import { MutexService } from 'src/modules/mutex/services/mutexService.service';
 import { CounterService } from '../services/counter.service';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
@@ -31,16 +31,16 @@ export class SurveyResponseController {
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
-    private readonly mutexService: MutexService,
     private readonly counterService: CounterService,
-    private readonly logger: Logger,
+    private readonly logger: XiaojuSurveyLogger,
+    private readonly redisService: RedisService,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
 
   @Post('/createResponse')
   @HttpCode(200)
-  async createResponse(@Body() reqBody, @Request() req) {
+  async createResponse(@Body() reqBody) {
     // 检查签名
     checkSign(reqBody);
     // 校验参数
@@ -56,9 +56,7 @@ export class SurveyResponseController {
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
-      this.logger.error(`updateMeta_parameter error: ${error.message}`, {
-        req,
-      });
+      this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -223,8 +221,11 @@ export class SurveyResponseController {
         return pre;
       }, {});
 
-    //选项配额校验
-    await this.mutexService.runLocked(async () => {
+    const surveyId = responseSchema.pageId;
+    const lockKey = `locks:optionSelectedCount:${surveyId}`;
+    const lock = await this.redisService.lockResource(lockKey, 1000);
+    this.logger.info(`lockKey: ${lockKey}`);
+    try {
       for (const field in decryptedData) {
         const value = decryptedData[field];
         const values = Array.isArray(value) ? value : [value];
@@ -240,13 +241,11 @@ export class SurveyResponseController {
             const option = optionTextAndId[field].find(
               (opt) => opt['hash'] === val,
             );
-            if (
-              option['quota'] != 0 &&
-              option['quota'] <= optionCountData[val]
-            ) {
+            const quota = parseInt(option['quota']);
+            if (quota !== 0 && quota <= optionCountData[val]) {
               const item = dataList.find((item) => item['field'] === field);
               throw new HttpException(
-                `${item['title']}中的${option['text']}所选人数已达到上限，请重新选择`,
+                `【${item['title']}】中的【${option['text']}】所选人数已达到上限，请重新选择`,
                 EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
               );
             }
@@ -275,7 +274,13 @@ export class SurveyResponseController {
           optionCountData['total']++;
         }
       }
-    });
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
+    } finally {
+      await this.redisService.unlockResource(lock);
+      this.logger.info(`unlockResource: ${lockKey}`);
+    }
 
     // 入库
     const surveyResponse =
@@ -288,7 +293,6 @@ export class SurveyResponseController {
         optionTextAndId,
       });
 
-    const surveyId = responseSchema.pageId;
     const sendData = getPushingData({
       surveyResponse,
       questionList: responseSchema?.code?.dataConf?.dataList || [],

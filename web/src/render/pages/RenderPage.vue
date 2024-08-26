@@ -92,10 +92,10 @@ const normalizationRequestBody = () => {
   localStorage.removeItem(surveyPath.value + "_questionData")
   localStorage.removeItem("isSubmit")
   //数据加密
-  var formData  = Object.assign({}, surveyStore.formValues)
-    for(const key in formData){
-      formData[key] = encodeURIComponent(formData[key])
-    }
+  var formData : Record<string, any> = Object.assign({}, surveyStore.formValues)
+  for(const key in formData){
+    formData[key] = encodeURIComponent(formData[key])
+  }
   localStorage.setItem(surveyPath.value + "_questionData", JSON.stringify(formData))
   localStorage.setItem('isSubmit', JSON.stringify(true))
   
@@ -122,7 +122,6 @@ const submitSurver = async () => {
   }
   try {
     const params = normalizationRequestBody()
-    console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
       router.replace({ name: 'successPage' })
@@ -130,6 +129,9 @@ const submitSurver = async () => {
       alert({
         title: res.errmsg || '提交失败'
       })
+      if (res.code === 9003) {
+        questionStore.initQuotaMap()
+      }
     }
   } catch (error) {
     console.log(error)

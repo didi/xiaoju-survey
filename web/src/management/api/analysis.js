@@ -16,12 +16,4 @@ export const getStatisticList = (data) => {
     }
   })
 }
-//问卷下载
-export const downloadSurvey = ({ surveyId, isDesensitive }) => {
-  return axios.get('/survey/surveyDownload/download', {
-    params: {
-      surveyId,
-      isDesensitive
-    }
-  })
-}
+

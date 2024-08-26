@@ -13,7 +13,7 @@ import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { RECORD_STATUS } from 'src/enums';
 import { ApiTags } from '@nestjs/swagger';
 import Joi from 'joi';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
@@ -24,7 +24,7 @@ import { WorkspaceMemberService } from 'src/modules/workspace/services/workspace
 export class ResponseSchemaController {
   constructor(
     private readonly responseSchemaService: ResponseSchemaService,
-    private readonly logger: Logger,
+    private readonly logger: XiaojuSurveyLogger,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}

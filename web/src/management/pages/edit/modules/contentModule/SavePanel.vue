@@ -14,18 +14,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, nextTick, watch, onMounted } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
-import { nanoid } from 'nanoid'
-import { get as _get } from 'lodash-es'
-import { ElMessage, ElMessageBox, type Action } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import { saveSurvey } from '@/management/api/survey'
+import { saveSurvey, seizeSession } from '@/management/api/survey'
 import buildData from './buildData'
-import { getConflictHistory } from '@/management/api/survey'
 
 interface Props {
   updateLogicConf: any
@@ -47,8 +44,8 @@ const saveText = computed(
 )
 
 const editStore = useEditStore()
-const { schemaUpdateTime } = storeToRefs(editStore)
-const { schema } = editStore
+const { schemaUpdateTime, schema, sessionId } = storeToRefs(editStore)
+
 
 const validate = () => {
   let checked = true
@@ -70,65 +67,31 @@ const validate = () => {
     msg
   }
 }
-onMounted(() => {
-  if (!sessionStorage.getItem('sessionUUID')) {
-    sessionStorage.setItem('sessionUUID', nanoid());
-  }
-})
-const checkConflict = async (surveyid: string) => {
-  try {
-    
-    const dailyHis = await getConflictHistory({surveyId: surveyid, historyType: 'dailyHis', sessionId: sessionStorage.getItem('sessionUUID')})
-    if (dailyHis.data.length > 0) {
-      const lastHis = dailyHis.data.at(0)
-      if (Date.now() - lastHis.createDate > 2 * 60 * 1000) {
-        return [false, '']
-      }
-      return [true, lastHis.operator.username]
-    }
-  }catch (error) {
-    console.log(error)
-  }
-  return [false, '']
-}
 
 const onSave = async () => {
-  let res
-  const saveData = buildData(store.state.edit.schema, sessionStorage.getItem('sessionUUID'))
+  const saveData = buildData(schema.value, sessionId.value);
+  if (!saveData.sessionId) {
+    ElMessage.error('sessionId有误')
+    return null
+  }
 
   if (!saveData.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null
   }
 
-  // 增加冲突检测
-  const [isconflict, conflictName] = await checkConflict(saveData.surveyId)
-  if(isconflict) {
-    if (conflictName == store.state.user.userInfo.username) {
-      ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
-          }
-        }
-      });
-    } else {
-      ElMessageBox.alert(`当前问卷2分钟内由${conflictName}编辑，刷新以获取最新内容。`, '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            store.dispatch('edit/getSchemaFromRemote')
-          }
-        }
-      });
-    }
-    return null
-  } else {
-    // 保存数据
-    res = await saveSurvey(saveData)
-  }
+  const res: Record<string, any> = await saveSurvey(saveData)
+  
   return res
+}
+
+const seize = async () => {
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId })
+  if (seizeRes.code === 200) {
+    location.reload();
+  } else {
+    ElMessage.error('获取权限失败，请重试')
+  }
 }
 
 const timerHandle = ref<NodeJS.Timeout | number | null>(null)
@@ -171,16 +134,16 @@ const handleSave = async () => {
     return
   }
 
-  isSaving.value = true
   isShowAutoSave.value = false
 
   // 保存检测
   const { checked, msg } = validate()
   if (!checked) {
-    isSaving.value = false
     ElMessage.error(msg)
     return
   }
+
+  isSaving.value = true
 
   try {
     const res: any = await onSave()
@@ -189,11 +152,16 @@ const handleSave = async () => {
     }
     if (res.code === 200) {
       ElMessage.success('保存成功')
-    } 
-    if(res.code !== 200) {
+    } else if (res.code === 3006) {
+      ElMessageBox.alert('当前问卷已在其它页面开启编辑，点击“抢占”以获取保存权限。', '提示', {
+        confirmButtonText: '抢占',
+        callback: () => {
+          seize();
+        }
+      });
+    } else {
       ElMessage.error(res.errmsg)
     }
-    
   } catch (error) {
     ElMessage.error('保存问卷失败')
   } finally {

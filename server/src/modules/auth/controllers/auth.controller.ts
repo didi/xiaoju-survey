@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, HttpCode, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../services/user.service';
 import { CaptchaService } from '../services/captcha.service';
@@ -7,7 +7,6 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { create } from 'svg-captcha';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 @ApiTags('auth')
 @Controller('/api/auth')
 export class AuthController {
@@ -163,25 +162,4 @@ export class AuthController {
       },
     };
   }
-
-  @Get('/statuscheck')
-  @HttpCode(200)
-  async checkStatus(@Req() request: Request) {
-    const token = request.headers.authorization?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException('请登录');
-    }
-    try {
-      const expired = await this.authService.expiredCheck(token);
-      return {
-            code: 200,
-            data: {
-              expired: expired
-            },
-          };
-    } catch (error) {
-      throw new UnauthorizedException(error?.message || '用户凭证检测失败');
-    }
-  }
-
 }

@@ -17,9 +17,8 @@ export class SurveyHistoryService {
     schema: SurveySchemaInterface;
     type: HISTORY_TYPE;
     user: any;
-    sessionId: string;
   }) {
-    const { surveyId, schema, type, user, sessionId } = params;
+    const { surveyId, schema, type, user } = params;
     const newHistory = this.surveyHistory.create({
       pageId: surveyId,
       type,
@@ -27,7 +26,6 @@ export class SurveyHistoryService {
       operator: {
         _id: user._id.toString(),
         username: user.username,
-        sessionId: sessionId,
       },
     });
     return this.surveyHistory.save(newHistory);
@@ -52,29 +50,4 @@ export class SurveyHistoryService {
       select: ['createDate', 'operator', 'type', '_id'],
     });
   }
-
-  async getConflictList({
-    surveyId,
-    historyType,
-    sessionId,
-  }: {
-    surveyId: string;
-    historyType: HISTORY_TYPE;
-    sessionId: string;
-  }) {
-    const result = await this.surveyHistory.find({
-      where: {
-        pageId: surveyId,
-        type: historyType,
-        // 排除掉sessionid相同的历史，这些保存不构成冲突
-        'operator.sessionId': { $ne: sessionId },
-      },
-      order: { createDate: 'DESC' },
-      take: 1,
-      select: ['createDate', 'operator', 'type', '_id'],
-    });
-
-    return result;
-  }
-
 }

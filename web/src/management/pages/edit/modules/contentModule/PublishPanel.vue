@@ -6,14 +6,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
-import { useUserStore } from '@/management/stores/user'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox, type Action } from 'element-plus'
+import { ElMessage, } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
-import { publishSurvey, saveSurvey, getConflictHistory } from '@/management/api/survey'
-
+import { publishSurvey, saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
+import { storeToRefs } from 'pinia'
 
 interface Props {
   updateLogicConf: any
@@ -24,12 +22,12 @@ const props = defineProps<Props>()
 
 const isPublishing = ref<boolean>(false)
 const editStore = useEditStore()
-const { schema, getSchemaFromRemote } = editStore
-const userStore = useUserStore()
-const router = useRouter()
+const { getSchemaFromRemote } = editStore
+const { schema, sessionId } = storeToRefs(editStore)
 const saveData = computed(() => {
-  return buildData(schema, sessionStorage.getItem('sessionUUID'))
+  return buildData(schema.value, sessionId.value)
 })
+const router = useRouter()
 
 const validate = () => {
   let checked = true
@@ -51,55 +49,19 @@ const validate = () => {
   }
 }
 
-const checkConflict = async (surveyid:string) => {
-  try {
-    const dailyHis = await getConflictHistory({surveyId: surveyid, historyType: 'dailyHis', sessionId: sessionStorage.getItem('sessionUUID')})
-    if (dailyHis.data.length > 0) {
-      const lastHis = dailyHis.data.at(0)
-      if (Date.now() - lastHis.createDate > 2 * 60 * 1000) {
-        return [false, '']
-      }
-      return [true, lastHis.operator.username]
-    }
-  } catch (error) {
-    console.log(error)
-  }
-  return [false, '']
-}
 const onSave = async () => {
-  let res
+  
+  if (!saveData.value.sessionId) {
+    ElMessage.error('未获取到sessionId')
+    return null
+  }
   
   if (!saveData.value.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null
   }
-  // 增加冲突检测
-  const [isconflict, conflictName] = await checkConflict(saveData.value.surveyId)
-  if(isconflict) {
-    if (conflictName == userStore.userInfo.username) {
-      ElMessageBox.alert('当前问卷已在其它页面开启编辑，刷新以获取最新内容。', '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            getSchemaFromRemote()
-          }
-        }
-      });
-    } else {
-      ElMessageBox.alert(`当前问卷2分钟内由${conflictName}编辑，刷新以获取最新内容。`, '提示', {
-        confirmButtonText: '确认',
-        callback: (action: Action) => {
-          if (action === 'confirm') {
-            getSchemaFromRemote()
-          }
-        }
-      });
-    }
-    return null
-  } else {
-    // 保存数据
-    res = await saveSurvey(saveData.value)
-  }
+
+  const res: Record<string, any> = await saveSurvey(saveData.value)
   return res
 }
 const handlePublish = async () => {
@@ -124,8 +86,9 @@ const handlePublish = async () => {
     }
     if(saveRes && saveRes?.code !== 200) {
       ElMessage.error(`保存失败 ${saveRes.errmsg}`)
+      return
     }
-    const publishRes: any = await publishSurvey({ surveyId: saveData.value.surveyId, sessionId: sessionStorage.getItem('sessionUUID') })
+    const publishRes: any = await publishSurvey({ surveyId: saveData.value.surveyId })
     if (publishRes.code === 200) {
       ElMessage.success('发布成功')
       getSchemaFromRemote()

@@ -5,7 +5,6 @@ import {
   HttpCode,
   UseGuards,
   SetMetadata,
-  Request,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -17,13 +16,12 @@ import { Authentication } from 'src/guards/authentication.guard';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { AggregationStatisDto } from '../dto/aggregationStatis.dto';
 import { handleAggretionData } from '../utils';
 import { QUESTION_TYPE } from 'src/enums/question';
-import { SurveyDownloadService } from '../services/surveyDownload.service';
 
 @ApiTags('survey')
 @ApiBearerAuth()
@@ -33,9 +31,7 @@ export class DataStatisticController {
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly dataStatisticService: DataStatisticService,
     private readonly pluginManager: XiaojuSurveyPluginManager,
-    private readonly logger: Logger,
-    //
-    private readonly surveyDownloadService: SurveyDownloadService,
+    private readonly logger: XiaojuSurveyLogger,
   ) {}
 
   @Get('/dataTable')
@@ -47,7 +43,6 @@ export class DataStatisticController {
   async data(
     @Query()
     queryInfo,
-    @Request() req,
   ) {
     const { value, error } = await Joi.object({
       surveyId: Joi.string().required(),
@@ -56,7 +51,7 @@ export class DataStatisticController {
       pageSize: Joi.number().default(10),
     }).validate(queryInfo);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const { surveyId, isDesensitive, page, pageSize } = value;

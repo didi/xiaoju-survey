@@ -119,14 +119,10 @@ const meta = {
       },
       type: 'QuotaConfig',
       // 输出转换
-      valueSetter({ options, deleteRecover, quotaNoDisplay}) {
+      valueSetter({ options, quotaNoDisplay}) {
         return [{
           key: 'options',
           value: options
-        },
-        {
-          key: 'deleteRecover',
-          value: deleteRecover
         },
         {
           key: 'quotaNoDisplay',

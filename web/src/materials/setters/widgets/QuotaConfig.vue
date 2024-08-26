@@ -45,17 +45,6 @@
       </el-table>
       <div></div>
       <div>
-        <el-checkbox v-model="deleteRecoverValue" label="删除后恢复选项配额"> </el-checkbox>
-        <el-tooltip
-          class="tooltip"
-          effect="dark"
-          placement="right"
-          content="勾选后，把收集到的数据项删除或者设置为无效回收即可恢复选项配额。"
-        >
-          <i-ep-questionFilled class="icon-tip" />
-        </el-tooltip>
-      </div>
-      <div>
         <el-checkbox v-model="quotaNoDisplayValue" label="不展示配额剩余数量"> </el-checkbox>
         <el-tooltip
           class="tooltip"
@@ -89,7 +78,6 @@ const emit = defineEmits(['form-change'])
 const dialogVisible = ref(false)
 const moduleConfig = ref(props.moduleConfig)
 const optionData = ref(props.moduleConfig.options)
-const deleteRecoverValue = ref(moduleConfig.value.deleteRecover)
 const quotaNoDisplayValue = ref(moduleConfig.value.quotaNoDisplay)
 
 const openQuotaConfig = () => {
@@ -107,7 +95,6 @@ const confirm = () => {
   handleQuotaChange()
   emit(FORM_CHANGE_EVENT_KEY, {
     options: optionData.value,
-    deleteRecover: deleteRecoverValue.value,
     quotaNoDisplay: quotaNoDisplayValue.value
   })
 }
@@ -145,7 +132,6 @@ watch(
   (val) => {
     moduleConfig.value = val
     optionData.value = val.options
-    deleteRecoverValue.value = val.deleteRecover
     quotaNoDisplayValue.value = val.quotaNoDisplay
   },
   { immediate: true, deep: true }

@@ -12,12 +12,16 @@ import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'
 // 设置中文
-moment.locale('zh-cn')
+
 
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
-// import { jumpLogicRule } from '@/common/logicEngine/jumpLogicRule'
+import useCommandComponent from '../hooks/useCommandComponent'
+import BackAnswerDialog from '../components/BackAnswerDialog.vue'
 
+const confirm = useCommandComponent(BackAnswerDialog)
+
+moment.locale('zh-cn')
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -158,38 +162,20 @@ export const useSurveyStore = defineStore('survey', () => {
   }
 
   // 加载上次填写过的数据到问卷页
-  function loadFormData({bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf }, formData) {
+  function loadFormData(params, formData) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const { questionData, questionSeq, rules, formValues } = adapter.generateData({
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf
+      bannerConf: params.bannerConf,
+      baseConf: params.baseConf,
+      bottomConf: params.bottomConf,
+      dataConf: params.dataConf,
+      skinConf: params.skinConf,
+      submitConf: params.submitConf,
     })
 
     for(const key in formData){
       formValues[key] = formData[key]
     }
-
-    // 将数据设置到state上
-    commit('assignState', {
-      questionData,
-      questionSeq,
-      rules,
-      bannerConf,
-      baseConf,
-      bottomConf,
-      dataConf,
-      skinConf,
-      submitConf,
-      formValues
-    })
-    // 获取已投票数据
-    dispatch('initVoteData')
-    // 获取选项上线选中数据
-    dispatch('initQuotaMap')
 
     // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
     questionStore.questionData = questionData
@@ -197,16 +183,16 @@ export const useSurveyStore = defineStore('survey', () => {
 
     // 将数据设置到state上
     rules.value = rules
-    bannerConf.value = option.bannerConf
-    baseConf.value = option.baseConf
-    bottomConf.value = option.bottomConf
-    dataConf.value = option.dataConf
-    skinConf.value = option.skinConf
-    submitConf.value = option.submitConf
-    formValues.value = _formValues
+    bannerConf.value = params.bannerConf
+    baseConf.value = params.baseConf
+    bottomConf.value = params.bottomConf
+    dataConf.value = params.dataConf
+    skinConf.value = params.skinConf
+    submitConf.value = params.submitConf
+    formValues.value = formValues
 
-    whiteData.value = option.whiteData
-    pageConf.value = option.pageConf
+    whiteData.value = params.whiteData
+    pageConf.value = params.pageConf
     
     // 获取已投票数据
     questionStore.initVoteData()
@@ -214,11 +200,14 @@ export const useSurveyStore = defineStore('survey', () => {
 
   }
   const initSurvey = (option) => {
+
     setEnterTime()
 
     if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
       return
     }
+
+    const { breakAnswer } = option.baseConf
 
     const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
     for(const key in localData){
@@ -244,7 +233,7 @@ export const useSurveyStore = defineStore('survey', () => {
             },
             onCancel: async() => {
               try {
-                clearFormData({ commit, dispatch }, { bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
+                clearFormData({ bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
               } catch (error) {
                 console.log(error)
               } finally {
@@ -254,7 +243,7 @@ export const useSurveyStore = defineStore('survey', () => {
           })
         }
       } else {
-        if(!option.baseConf.breakAnswer) {
+        if(!breakAnswer) {
           clearFormData(option)
         } else {
           confirm({

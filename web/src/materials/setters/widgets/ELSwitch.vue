@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {
@@ -32,6 +32,17 @@ const handleInputChange = (value: boolean) => {
 
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
+watch(
+  () => props.formConfig.value,
+  (newVal) => {
+    if (newVal !== modelValue.value) {
+      modelValue.value = newVal
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
   

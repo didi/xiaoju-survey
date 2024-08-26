@@ -21,9 +21,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
@@ -38,6 +38,7 @@ import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
 
 import useCommandComponent from '../hooks/useCommandComponent'
+import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
 
 interface Props {
   questionInfo?: any
@@ -70,6 +71,68 @@ const pageIndex = computed(() => questionStore.pageIndex)
 const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
+
+const route = useRoute()
+onMounted(() => {
+  const surveyId = route.params.surveyId
+  console.log({ surveyId })
+  surveyStore.setSurveyPath(surveyId)
+  getDetail(surveyId as string)
+})
+const loadData = (res: any, surveyPath: string) => {
+  if (res.code === 200) {
+    const data = res.data
+    const {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      logicConf,
+      pageConf
+    } = data.code
+    const questionData = {
+      bannerConf,
+      baseConf,
+      bottomConf,
+      dataConf,
+      skinConf,
+      submitConf,
+      pageConf
+    }
+
+    if (!pageConf || pageConf?.length == 0) {
+      questionData.pageConf = [dataConf.dataList.length]
+    }
+
+    document.title = data.title
+
+    surveyStore.setSurveyPath(surveyPath)
+    surveyStore.initSurvey(questionData)
+    surveyStore.initShowLogicEngine(logicConf?.showLogicConf)
+    surveyStore.initJumpLogicEngine(logicConf?.jumpLogicConf)
+  } else {
+    throw new Error(res.errmsg)
+  }
+}
+const getDetail = async (surveyPath: string) => {
+  const alert = useCommandComponent(AlertDialog)
+
+  try {
+    if (surveyPath.length > 8) {
+      const res: any = await getPreviewSchema({ surveyPath })
+      loadData(res, surveyPath)
+    } else {
+      const res: any = await getPublishedSurveyInfo({ surveyPath })
+      loadData(res, surveyPath)
+      surveyStore.getEncryptInfo()
+    }
+  } catch (error: any) {
+    console.log(error)
+    alert({ title: error.message || '获取问卷失败' })
+  }
+}
 const validate = (cbk: (v: boolean) => void) => {
   const index = 0
   mainRef.value.$refs.formGroup[index].validate(cbk)
@@ -93,9 +156,7 @@ const normalizationRequestBody = () => {
   localStorage.removeItem("isSubmit")
   //数据加密
   var formData : Record<string, any> = Object.assign({}, surveyStore.formValues)
-  for(const key in formData){
-    formData[key] = encodeURIComponent(formData[key])
-  }
+  
   localStorage.setItem(surveyPath.value + "_questionData", JSON.stringify(formData))
   localStorage.setItem('isSubmit', JSON.stringify(true))
   

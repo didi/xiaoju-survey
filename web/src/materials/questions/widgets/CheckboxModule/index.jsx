@@ -57,7 +57,7 @@ export default defineComponent({
     })
     const isDisabled = (item) => {
       const { value } = props
-      return disableState.value && !includes(value, item.value)
+      return disableState.value && !includes(value, item.hash)
     }
     const myOptions = computed(() => {
       const { options } = props
@@ -96,6 +96,7 @@ export default defineComponent({
     return {
       onChange,
       handleSelectMoreChange,
+      disableState,
       myOptions,
       selectMoreView
     }

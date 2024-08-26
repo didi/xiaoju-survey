@@ -68,15 +68,17 @@ const updateLogicConf = () => {
     }
 
     const showLogicConf = showLogicEngine.value.toJson()
-
-    // 更新逻辑配置
-    changeSchema({ key: 'logicConf', value: { showLogicConf } })
-
+    if(JSON.stringify(schema.logicConf.showLogicConf) !== JSON.stringify(showLogicConf)) {
+      // 更新逻辑配置
+      changeSchema({ key: 'logicConf', value: { showLogicConf } })
+    }
+    
     return res
   }
-
   const jumpLogicConf = jumpLogicEngine.value.toJson()
-  changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
+  if(JSON.stringify(schema.logicConf.jumpLogicConf) !== JSON.stringify(jumpLogicConf)){
+    changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
+  }
 
   return res
 }

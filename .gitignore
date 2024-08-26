@@ -32,3 +32,5 @@ components.d.ts
 
 # 默认的上传文件夹
 userUpload
+exportfile
+yarn.lock

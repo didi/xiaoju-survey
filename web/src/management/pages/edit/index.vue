@@ -26,7 +26,7 @@ import Navbar from './components/ModuleNavbar.vue'
 
 
 const editStore = useEditStore()
-const { init, setSurveyId, initSessionId } = editStore
+const { init, setSurveyId } = editStore
 
 const router = useRouter()
 const route = useRoute()

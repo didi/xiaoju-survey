@@ -12,8 +12,12 @@
         style="width: 100%"
         @cell-click="handleCellClick"
       >
-        <el-table-column property="text" label="选项" style="width: 50%"></el-table-column>
-        <el-table-column property="quota" style="width: 50%">
+        <el-table-column property="text" label="选项" style="width: 50%">
+          <template v-slot="scope">
+            <div v-html="cleanRichTextWithMediaTag(scope.row.text)"></div>
+          </template>
+        </el-table-column>
+        <el-table-column property="quota" style="width: 50%;">
           <template #header>
             <div style="display: flex; align-items: center">
               <span>配额设置</span>
@@ -30,6 +34,7 @@
           <template v-slot="scope">
             <el-input
               v-if="scope.row.isEditing"
+              :id="`${scope.row.hash}editInput`"
               v-model="scope.row.tempQuota"
               type="number"
               @blur="handleInput(scope.row)"
@@ -43,8 +48,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div></div>
-      <div>
+      <div class="quota-no-display">
         <el-checkbox v-model="quotaNoDisplayValue" label="不展示配额剩余数量"> </el-checkbox>
         <el-tooltip
           class="tooltip"
@@ -56,7 +60,6 @@
         </el-tooltip>
       </div>
 
-      <el-divider />
       <template #footer>
         <div class="diaglog-footer">
           <el-button @click="cancel">取消</el-button>
@@ -68,9 +71,10 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 import { ElMessageBox } from 'element-plus'
+import { cleanRichTextWithMediaTag } from '@/common/xss'
 
 const props = defineProps(['formConfig', 'moduleConfig'])
 const emit = defineEmits(['form-change'])
@@ -105,6 +109,10 @@ const handleCellClick = (row, column) => {
     })
     row.tempQuota = row.tempQuota === '0' ? row.quota : row.tempQuota
     row.isEditing = true
+    nextTick(() => {
+      const input = document.getElementById(`${row.hash}editInput`)
+      input.focus()
+    })
   }
 }
 const handleInput = (row) => {
@@ -143,6 +151,12 @@ watch(
   width: 90%;
   display: flex;
   justify-content: flex-end;
+  :deep(.cell){
+    line-height: 35px;
+  }
+  .quota-no-display{
+    padding-top: 8px
+  }
 }
 .quota-title {
   font-size: 14px;
@@ -155,6 +169,7 @@ watch(
   color: #ffa600;
   cursor: pointer;
   font-size: 14px;
+  
 }
 .dialog {
   width: 41vw;

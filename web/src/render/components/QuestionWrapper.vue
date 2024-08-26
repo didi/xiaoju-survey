@@ -4,6 +4,7 @@
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"
+    @input="handleInput"
     @change="handleChange"
   ></QuestionRuleContainer>
 </template>
@@ -66,7 +67,6 @@ const questionConfig = computed(() => {
     let { options: optionWithQuota } = useOptionsQuota(field)
     
     alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
-    console.log({alloptions})
   }
   if (
     NORMAL_CHOICES.includes(type) &&
@@ -152,6 +152,10 @@ const handleChange = (data) => {
   processJumpSkip()
 }
 
+const handleInput = () => {
+  localStorageBack()
+}
+
 const processJumpSkip = () => {
     const targetResult = surveyStore.jumpLogicEngine
       .getResultsByField(changeField.value, surveyStore.formValues)
@@ -188,9 +192,6 @@ const processJumpSkip = () => {
 
 const localStorageBack = () => {
   var formData = Object.assign({}, surveyStore.formValues);
-  for(const key in formData){
-    formData[key] = encodeURIComponent(formData[key])
-  }
 
   //浏览器存储
   localStorage.removeItem(surveyStore.surveyPath + "_questionData")

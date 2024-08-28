@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
+import { inject } from 'vue'
 import ExtraIcon from '../ExtraIcon/index.vue'
 
 defineProps({
@@ -34,13 +34,7 @@ defineProps({
 })
 const emit = defineEmits(['addOther', 'optionChange', 'change'])
 
-const moduleConfig = inject('moduleConfig')
 const slots = inject('slots')
-
-const optionConfigVisible = ref(false)
-const openOptionConfig = () => {
-  optionConfigVisible.value = true
-}
 
 const addOther = () => {
   emit('addOther')

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Get, Query } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../services/user.service';
 import { CaptchaService } from '../services/captcha.service';
@@ -7,6 +7,9 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { create } from 'svg-captcha';
 import { ApiTags } from '@nestjs/swagger';
+
+const passwordReg = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
+
 @ApiTags('auth')
 @Controller('/api/auth')
 export class AuthController {
@@ -28,14 +31,22 @@ export class AuthController {
       captcha: string;
     },
   ) {
-    if (!userInfo.password || userInfo.password.length < 6) {
+    if (!userInfo.password) {
       throw new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID);
     }
 
-    if (
-      !/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/.test(userInfo.password)
-    ) {
-      throw new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID);
+    if (userInfo.password.length < 6 || userInfo.password.length > 16) {
+      throw new HttpException(
+        '密码长度在 6 到 16 个字符',
+        EXCEPTION_CODE.PASSWORD_INVALID,
+      );
+    }
+
+    if (!passwordReg.test(userInfo.password)) {
+      throw new HttpException(
+        '密码只能输入数字、字母、特殊字符',
+        EXCEPTION_CODE.PASSWORD_INVALID,
+      );
     }
 
     const isCorrect = await this.captchaService.checkCaptchaIsCorrect({
@@ -170,6 +181,37 @@ export class AuthController {
         id: res._id.toString(),
         img: captchaData.data,
       },
+    };
+  }
+
+  /**
+   * 密码强度
+   */
+  @Get('register/password/strength')
+  @HttpCode(200)
+  async getPasswordStrength(@Query('password') password: string) {
+    const numberReg = /[0-9]/.test(password);
+    const letterReg = /[a-zA-Z]/.test(password);
+    const symbolReg = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+    // 包含三种、且长度大于8
+    if (numberReg && letterReg && symbolReg && password.length >= 8) {
+      return {
+        code: 200,
+        data: 'Strong',
+      };
+    }
+
+    // 满足任意两种
+    if ([numberReg, letterReg, symbolReg].filter(Boolean).length >= 2) {
+      return {
+        code: 200,
+        data: 'Medium',
+      };
+    }
+
+    return {
+      code: 200,
+      data: 'Weak',
     };
   }
 }

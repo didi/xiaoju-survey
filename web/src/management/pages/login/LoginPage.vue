@@ -28,7 +28,12 @@
         </el-form-item>
 
         <el-form-item label="" v-if="passwordStrength">
-          <span class="strength" v-for="item in 3" :key="item" :style="{ backgroundColor: strengthColor[item - 1][passwordStrength] }"></span>
+          <span
+            class="strength"
+            v-for="item in 3"
+            :key="item"
+            :style="{ backgroundColor: strengthColor[item - 1][passwordStrength] }"
+          ></span>
         </el-form-item>
 
         <el-form-item label="验证码" prop="captcha">
@@ -66,7 +71,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import { login, register } from '@/management/api/auth'
+import { getPasswordStrength, login, register } from '@/management/api/auth'
 import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
 import { useUserStore } from '@/management/stores/user'
@@ -94,50 +99,52 @@ const formData = reactive<FormData>({
 })
 
 // 每个滑块不同强度的颜色，索引0对应第一个滑块
-const strengthColor = reactive([{
-  Strong: "#67C23A",
-  Medium: "#ebb563",
-  Weak: "#f78989"
-}, {
-  Strong: "#67C23A",
-  Medium: "#ebb563",
-  Weak: "#2a598a"
-}, {
-  Strong: "#67C23A",
-  Medium: "#2a598a",
-  Weak: "#2a598a"
-}])
+const strengthColor = reactive([
+  {
+    Strong: '#67C23A',
+    Medium: '#ebb563',
+    Weak: '#f78989'
+  },
+  {
+    Strong: '#67C23A',
+    Medium: '#ebb563',
+    Weak: '#2a598a'
+  },
+  {
+    Strong: '#67C23A',
+    Medium: '#2a598a',
+    Weak: '#2a598a'
+  }
+])
 
 // 密码内容校验
 const passwordValidator = (_: any, value: any, callback: any) => {
+  if (!value) {
+    callback(new Error('请输入密码'))
+    passwordStrength.value = undefined
+    return
+  }
+
+  if (value.length < 6 || value.length > 16) {
+    callback(new Error('长度在 6 到 16 个字符'))
+    passwordStrength.value = undefined
+    return
+  }
+
   if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/.test(value)) {
     callback(new Error('只能输入数字、字母、特殊字符'))
+    passwordStrength.value = undefined
     return
   }
   passwordStrengthHandle(value)
   callback()
 }
 
-const passwordStrengthHandle = (value: string) => {
-  if (value.length < 6) {
-    return
+const passwordStrengthHandle = async (value: string) => {
+  const res: any = await getPasswordStrength(value)
+  if (res.code === CODE_MAP.SUCCESS) {
+    passwordStrength.value = res.data
   }
-
-  const numberReg = /[0-9]/.test(value)
-  const letterReg = /[a-zA-Z]/.test(value)
-  const symbolReg = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(value)
-  // 包含三种、且长度大于8
-  if (numberReg && letterReg && symbolReg && value.length >= 8) {
-    passwordStrength.value = 'Strong'
-    return
-  }
-
-  if ([numberReg, letterReg, symbolReg].filter(Boolean).length >= 2) {
-    passwordStrength.value = 'Medium'
-    return
-  }
-
-  passwordStrength.value = 'Weak'
 }
 
 const rules = {
@@ -151,13 +158,6 @@ const rules = {
     }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    {
-      min: 6,
-      max: 16,
-      message: '长度在 6 到 16 个字符',
-      trigger: 'blur'
-    },
     {
       validator: passwordValidator,
       trigger: 'blur'

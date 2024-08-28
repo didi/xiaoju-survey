@@ -50,7 +50,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       const res: any = await getSpaceListReq(params)
 
       if (res.code === CODE_MAP.SUCCESS) {
-        const { list } = res.data
+        const { list, count } = res.data
         const workSpace = list.map((item: SpaceDetail) => {
           return {
             id: item._id,
@@ -58,6 +58,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
           }
         })
         workSpaceList.value = list
+        workSpaceListTotal.value = count
         spaceMenus.value[1].children = workSpace
       } else {
         ElMessage.error('getSpaceList' + res.errmsg)

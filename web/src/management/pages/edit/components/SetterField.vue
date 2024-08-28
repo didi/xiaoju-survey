@@ -37,8 +37,8 @@
   </el-form>
 </template>
 <script setup lang="ts">
-import { watch, ref, shallowRef } from 'vue'
-import { get as _get, pick as _pick, isFunction as _isFunction } from 'lodash-es'
+import { watch, ref, shallowRef, type Component } from 'vue'
+import { get as _get, pick as _pick, isFunction as _isFunction, values as _values } from 'lodash-es'
 
 import FormItem from '@/materials/setters/widgets/FormItem.vue'
 import setterLoader from '@/materials/setters/setterLoader'
@@ -46,8 +46,9 @@ import setterLoader from '@/materials/setters/setterLoader'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {
-  formConfigList: Array<any>
-  moduleConfig: any
+  formConfigList: Array<any> // 设置器的配置
+  moduleConfig: any // 当前问卷schema
+  customComponents?: Record<string, Component>
 }
 
 interface Emit {
@@ -70,7 +71,7 @@ const formatValue = ({ item, moduleConfig }: any) => {
       result = _get(moduleConfig, key, item.value)
     }
     if (keys) {
-      result = _pick(moduleConfig, keys)
+      result = _values(_pick(moduleConfig, keys))
     }
 
     return result
@@ -79,12 +80,14 @@ const formatValue = ({ item, moduleConfig }: any) => {
 
 const formFieldData = ref<Array<any>>([])
 const init = ref<boolean>(true)
-const components = shallowRef<any>({})
+const components = shallowRef<any>(props.customComponents || {})
 
 const handleFormChange = (data: any, formConfig: any) => {
+  // 处理用户操作的设置器的值
   if (_isFunction(formConfig?.valueSetter)) {
     const resultData = formConfig.valueSetter(data)
 
+    // 批量触发设置值的变化
     if (Array.isArray(resultData)) {
       resultData.forEach((item) => {
         emit(FORM_CHANGE_EVENT_KEY, item)
@@ -124,7 +127,7 @@ const normalizationValues = (configList: Array<any> = []) => {
     .map((item: any) => {
       return {
         ...item,
-        value: formatValue({ item, moduleConfig: props.moduleConfig }) // 动态复值
+        value: formatValue({ item, moduleConfig: props.moduleConfig }) // 动态赋值
       }
     })
 }
@@ -132,13 +135,15 @@ const normalizationValues = (configList: Array<any> = []) => {
 const registerComponents = async (formFieldData: any) => {
   let innerSetters: Array<any> = []
 
-  const setters = formFieldData.map((item: any) => {
-    if (item.type === 'Customed') {
-      innerSetters.push(...(item.content || []).map((content: any) => content.type))
-    }
+  const setters = formFieldData
+    .filter((item: any) => !item.custom)
+    .map((item: any) => {
+      if (item.type === 'Customed') {
+        innerSetters.push(...(item.content || []).map((content: any) => content.type))
+      }
 
-    return item.type
-  })
+      return item.type
+    })
 
   const settersSet = new Set([...setters, ...innerSetters])
   const settersArr = Array.from(settersSet)
@@ -167,14 +172,13 @@ const registerComponents = async (formFieldData: any) => {
 }
 
 watch(
-  () => props.formConfigList,
+  () => props.formConfigList, // 设置器的配置
   async (newVal: Array<any>) => {
     init.value = true
 
     if (!newVal || !newVal.length) {
       return
     }
-
     await registerComponents(newVal)
     init.value = false
     formFieldData.value = normalizationValues(newVal)
@@ -186,7 +190,7 @@ watch(
 )
 
 watch(
-  () => props.moduleConfig,
+  () => props.moduleConfig, // 当前问卷schema
   () => {
     // 配置变化后初次不监听value变化（如题型切换场景避免多次计算）
     if (init.value) {

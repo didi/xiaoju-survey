@@ -29,11 +29,9 @@
 
 <br />
 
-&ensp;&ensp;**XIAOJUSURVEY**是一套轻量、安全的**问卷系统基座**，提供面向个人和企业的一站式产品级解决方案，快速满足各类线上调研场景。
+&ensp;&ensp;**XIAOJUSURVEY**是一套轻量、安全的问卷系统，提供面向个人和企业的一站式产品级解决方案，用于构建各类问卷、考试、测评和复杂表单，快速满足各类线上调研场景。
 
 &ensp;&ensp;内部系统已沉淀 40+种题型，累积精选模板 100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
-
-&ensp;&ensp;开源项目以打造**调研基座**为核心，围绕**平台能力**、**工程架构**、**研发体系**进行建设，大家可以「快速」打造「专属」问卷系统：[快速了解生态发展理念](https://xiaojusurvey.didi.cn/docs/next/community/%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)
 
 # 功能简介
 
@@ -45,7 +43,7 @@
 
 - 数据安全：传输加密、脱敏等
 
-> 更全的建设请查阅 [官方 Feature](https://github.com/didi/xiaoju-survey/issues/45)
+> 更全的建设请查阅 [功能介绍](https://xiaojusurvey.didi.cn/docs/next/document/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B)
 
 <img src="https://github.com/didi/xiaoju-survey/assets/16012672/dd427471-368d-49d9-bc44-13c34d84e3be"  width="700" />
 
@@ -218,16 +216,10 @@ npm run serve
 
 如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE)，你的加入使我们最大的荣幸。
 
-## Feature
+## Future Tasks
 
-关注每周推出的建设：[官方 Feature](https://github.com/didi/xiaoju-survey/issues/45)
+[欢迎共建](https://github.com/didi/xiaoju-survey/issues/85)
 
 ## CHANGELOG
 
 关注重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
-
-## 文章分享
-
-1、[掘金](https://juejin.cn/user/3705833332160473/posts)、2、[CSDN](https://blog.csdn.net/XIAOJUSURVEY)、3、[InfoQ](https://www.infoq.cn/profile/7E08AC616A07B2/publish)
-
-[欢迎投稿](https://xiaojusurvey.didi.cn/docs/next/article/%E7%AE%80%E4%BB%8B)

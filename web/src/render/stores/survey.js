@@ -15,6 +15,8 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 import adapter from '../adapter'
+import { RuleMatch } from '@/common/logicEngine/RulesMatch'
+// import { jumpLogicRule } from '@/common/logicEngine/jumpLogicRule'
 
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
@@ -38,6 +40,8 @@ export const useSurveyStore = defineStore('survey', () => {
   const submitConf = ref({})
   const formValues = ref({})
   const whiteData = ref({})
+  const pageConf = ref([])
+  
 
   const router = useRouter()
   const questionStore = useQuestionStore()
@@ -127,10 +131,10 @@ export const useSurveyStore = defineStore('survey', () => {
         'dataConf',
         'skinConf',
         'submitConf',
-        'whiteData'
+        'whiteData',
+        'pageConf'
       ])
     )
-
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -144,7 +148,7 @@ export const useSurveyStore = defineStore('survey', () => {
     submitConf.value = option.submitConf
     formValues.value = _formValues
     whiteData.value = option.whiteData
-
+    pageConf.value = option.pageConf
     // 获取已投票数据
     questionStore.initVoteData()
   }
@@ -155,6 +159,16 @@ export const useSurveyStore = defineStore('survey', () => {
     if (key in formValues.value) {
       formValues.value[key] = value
     }
+    questionStore.setChangeField(key)
+  }
+
+  const showLogicEngine = ref()
+  const initShowLogicEngine = (showLogicConf) => {
+    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
+  }
+  const jumpLogicEngine = ref()
+  const initJumpLogicEngine = (jumpLogicConf) => {
+    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
   }
 
   return {
@@ -171,12 +185,16 @@ export const useSurveyStore = defineStore('survey', () => {
     submitConf,
     formValues,
     whiteData,
-
+    pageConf,
     initSurvey,
     changeData,
     setWhiteData,
     setSurveyPath,
     setEnterTime,
-    getEncryptInfo
+    getEncryptInfo,
+    showLogicEngine,
+    initShowLogicEngine,
+    jumpLogicEngine,
+    initJumpLogicEngine
   }
 })

@@ -1,10 +1,8 @@
 @font-face {
-  font-family: 'iconfont';
-  /* Project id 4263849 */
-  src:
-    url('//at.alicdn.com/t/c/font_4263849_tj4thybmhq.woff2?t=1717580126029') format('woff2'),
-    url('//at.alicdn.com/t/c/font_4263849_tj4thybmhq.woff?t=1717580126029') format('woff'),
-    url('//at.alicdn.com/t/c/font_4263849_tj4thybmhq.ttf?t=1717580126029') format('truetype');
+  font-family: 'iconfont';  /* Project id 4263849 */
+  src: url('//at.alicdn.com/t/c/font_4263849_2re4gm4ryc3.woff2?t=1723600417360') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4263849_2re4gm4ryc3.woff?t=1723600417360') format('woff'),
+       url('//at.alicdn.com/t/c/font_4263849_2re4gm4ryc3.ttf?t=1723600417360') format('truetype');
 }
 
 .iconfont {
@@ -161,4 +159,20 @@
 
 .icon-gauge:before {
   content: '\e6db';
+}
+
+.icon-gengduo:before {
+  content: '\e6f7';
+}
+
+.icon-suoxiao:before {
+  content: '\e6f4';
+}
+
+.icon-fangda:before {
+  content: '\e6f5';
+}
+
+.icon-shiying:before {
+  content: '\e6f6';
 }

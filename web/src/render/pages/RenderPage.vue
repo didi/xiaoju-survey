@@ -2,19 +2,21 @@
   <div class="index">
     <ProgressBar />
     <div class="wrapper" ref="boxRef">
-      <HeaderContent :bannerConf="bannerConf" :readonly="true" />
+      <HeaderContent v-if="pageIndex == 1" :bannerConf="bannerConf" :readonly="true" />
       <div class="content">
-        <MainTitle :bannerConf="bannerConf" :readonly="true"></MainTitle>
+        <MainTitle v-if="pageIndex == 1" :bannerConf="bannerConf" :readonly="true"></MainTitle>
         <MainRenderer ref="mainRef"></MainRenderer>
         <SubmitButton
           :validate="validate"
           :submitConf="submitConf"
           :readonly="true"
+          :isFinallyPage="isFinallyPage"
           :renderData="renderData"
           @submit="handleSubmit"
         ></SubmitButton>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
+      <VerifyWhiteDialog />
     </div>
   </div>
 </template>
@@ -26,6 +28,7 @@ import { useRouter } from 'vue-router'
 import communalLoader from '@materials/communals/communalLoader.js'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
+import VerifyWhiteDialog from '../components/VerifyWhiteDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 
@@ -62,6 +65,8 @@ const surveyStore = useSurveyStore()
 const questionStore = useQuestionStore()
 
 const renderData = computed(() => questionStore.renderData)
+const isFinallyPage = computed(() => questionStore.isFinallyPage)
+const pageIndex = computed(() => questionStore.pageIndex)
 const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
@@ -78,7 +83,7 @@ const normalizationRequestBody = () => {
   const result: any = {
     surveyPath: surveyPath.value,
     data: JSON.stringify(formValues),
-    difTime: Date.now() - enterTime,
+    diffTime: Date.now() - enterTime,
     clientTime: Date.now(),
     ...whiteData.value
   }
@@ -109,7 +114,7 @@ const submitSurver = async () => {
     console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
-      router.push({ name: 'successPage' })
+      router.replace({ name: 'successPage' })
     } else {
       alert({
         title: res.errmsg || '提交失败'
@@ -123,7 +128,10 @@ const submitSurver = async () => {
 const handleSubmit = () => {
   const confirmAgain = (surveyStore.submitConf as any).confirmAgain
   const { again_text, is_again } = confirmAgain
-
+  if (!isFinallyPage.value) {
+    questionStore.addPageIndex()
+    return
+  }
   if (is_again) {
     confirm({
       title: again_text,

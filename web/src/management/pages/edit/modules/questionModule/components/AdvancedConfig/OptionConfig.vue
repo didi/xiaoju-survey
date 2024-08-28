@@ -1,77 +1,74 @@
 <template>
-  <el-dialog
-    title="选项高级设置"
-    class="option-config-wrapper"
-    v-model="configVisible"
-    :append-to-body="true"
-    :width="dialogWidth"
-    size="large"
-  >
-    <div class="option-handwrite">
-      <div class="option-header">
-        <div class="header-item flex-1" v-if="showText">选项内容</div>
-        <div class="header-item w285" v-if="showOthers">选项后增添输入框</div>
-      </div>
-      <div>
-        <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
-          <template #item="{ element, index }">
-            <div class="option-item">
-              <span class="drag-handle qicon qicon-tuodong"></span>
-              <div class="flex-1 oitem" v-if="showText">
-                <div
-                  contenteditable="true"
-                  class="render-html"
-                  v-html="textOptions[index]"
-                  @blur="onBlur($event, index)"
-                ></div>
-              </div>
-              <div class="oitem moreInfo lh36" v-if="showOthers">
-                <el-switch
-                  :modelValue="element.others"
-                  @change="(val) => changeOptionOthers(val, element)"
-                ></el-switch>
-                <div class="more-info-content" v-if="element.others">
-                  <el-input v-model="element.placeholderDesc" placeholder="提示文案"></el-input>
-                  <el-checkbox v-model="element.mustOthers">必填</el-checkbox>
+  <div>
+    <span class="primary-color" @click="openOptionConfig"> 高级设置 > </span>
+
+    <el-dialog
+      title="选项高级设置"
+      class="option-config-wrapper"
+      v-model="configVisible"
+      :append-to-body="true"
+      width="60%"
+      size="large"
+    >
+      <div class="option-handwrite">
+        <div class="option-header">
+          <div class="header-item flex-1">选项内容</div>
+          <div class="header-item w285">选项后增添输入框</div>
+        </div>
+        <div>
+          <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
+            <template #item="{ element, index }">
+              <div class="option-item">
+                <span class="drag-handle qicon qicon-tuodong"></span>
+                <div class="flex-1 oitem">
+                  <div
+                    contenteditable="true"
+                    class="render-html"
+                    v-html="textOptions[index]"
+                    @blur="onBlur($event, index)"
+                  ></div>
+                </div>
+                <div class="oitem moreInfo lh36">
+                  <el-switch
+                    :modelValue="element.others"
+                    @change="(val) => changeOptionOthers(val, element)"
+                  ></el-switch>
+                  <div class="more-info-content" v-if="element.others">
+                    <el-input v-model="element.placeholderDesc" placeholder="提示文案"></el-input>
+                    <el-checkbox v-model="element.mustOthers">必填</el-checkbox>
+                  </div>
+                </div>
+
+                <div class="operate-area">
+                  <i-ep-circlePlus class="area-btn-icon" @click="addOption('选项', false, index)" />
+                  <i-ep-remove
+                    v-show="curOptions.length"
+                    class="area-btn-icon"
+                    @click="deleteOption(index)"
+                  />
                 </div>
               </div>
-
-              <div class="operate-area" v-if="showOperateOption">
-                <i-ep-circlePlus
-                  v-if="showOperateOption"
-                  class="area-btn-icon"
-                  @click="addOption('选项', false, index)"
-                />
-                <i-ep-remove
-                  v-show="curOptions.length"
-                  class="area-btn-icon"
-                  @click="deleteOption(index)"
-                />
-              </div>
-            </div>
-          </template>
-        </draggable>
-      </div>
-      <div class="add-btn-row">
-        <div class="add-option" v-if="showOperateOption" @click="addOption()">
-          <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 添加新选项 </span>
+            </template>
+          </draggable>
         </div>
+        <div class="add-btn-row">
+          <div class="add-option" @click="addOption()">
+            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 添加新选项 </span>
+          </div>
 
-        <div v-if="showOperateOption && showOthers" class="add-option" @click="addOtherOption">
-          <span>
-            <extra-icon type="add-square"></extra-icon>
-            其他____
-          </span>
+          <div class="add-option" @click="addOtherOption">
+            <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 其他____ </span>
+          </div>
         </div>
       </div>
-    </div>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="configVisible = false">取消</el-button>
-        <el-button type="primary" @click="optionConfigChange">确认</el-button>
-      </span>
-    </template>
-  </el-dialog>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="configVisible = false">取消</el-button>
+          <el-button type="primary" @click="optionConfigChange">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -81,54 +78,27 @@ import { forEach as _forEach, cloneDeep as _cloneDeep } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
+import { useEditStore } from '@/management/stores/edit'
 import { cleanRichText } from '@/common/xss'
-import ExtraIcon from '../ExtraIcon/index.vue'
 
 export default {
   name: 'OptionConfig',
-  inject: ['moduleConfig'],
-  data() {
-    return {
-      curOptions: _cloneDeep(this.options),
-      popoverVisible: false
+  props: {
+    fieldId: {
+      type: String,
+      default: ''
     }
   },
-  props: {
-    options: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    showOptionDialog: {
-      type: Boolean,
-      default: false
-    },
-    dialogWidth: {
-      type: String,
-      default: '60%'
-    },
-    showOperateOption: {
-      type: Boolean,
-      default: true
-    },
-    showText: {
-      type: Boolean,
-      default: true
-    },
-    showOthers: {
-      type: Boolean,
-      default: true
+  data() {
+    return {
+      configVisible: false,
+      curOptions: []
     }
   },
   computed: {
-    configVisible: {
-      get() {
-        return this.showOptionDialog
-      },
-      set(newVal) {
-        this.$emit('update:modelValue', newVal)
-      }
+    options() {
+      const editStore = useEditStore()
+      return editStore.moduleConfig.options
     },
     hashMap() {
       const mapData = {}
@@ -144,20 +114,32 @@ export default {
     }
   },
   components: {
-    draggable,
-    ExtraIcon
+    draggable
+  },
+  mounted() {
+    this.initCurOption()
   },
   watch: {
-    options(val) {
-      this.curOptions = _cloneDeep(val)
+    options: {
+      handler(val) {
+        this.curOptions = _cloneDeep(val)
+      },
+      deep: true
     }
   },
   methods: {
-    addOtherOption() {
-      const { field } = this.moduleConfig
-      this.addOption('其他', true, -1, field)
+    initCurOption() {
+      const editStore = useEditStore()
+      this.curOptions = _cloneDeep(editStore.moduleConfig.options)
     },
-    addOption(text = '选项', others = false, index = -1, field) {
+    addOtherOption() {
+      this.addOption('其他', true, -1, this.fieldId)
+    },
+    openOptionConfig() {
+      this.configVisible = true
+      this.initCurOption()
+    },
+    addOption(text = '选项', others = false, index = -1, fieldId) {
       let addOne
       if (this.curOptions[0]) {
         addOne = _cloneDeep(this.curOptions[0])
@@ -176,7 +158,7 @@ export default {
       for (const i in addOne) {
         if (i === 'others') {
           addOne[i] = others
-          if (others) addOne.othersKey = `${field}_${addOne.hash}`
+          if (others) addOne.othersKey = `${fieldId}_${addOne.hash}`
         } else if (i === 'mustOthers') {
           addOne[i] = false
         } else if (i === 'text') {
@@ -194,14 +176,13 @@ export default {
 
       return addOne
     },
-    async deleteOption(index) {
+    deleteOption(index) {
       this.curOptions.splice(index, 1)
     },
     parseImport(newOptions) {
       if (typeof newOptions !== 'undefined' && newOptions.length > 0) {
         this.curOptions = newOptions
         this.importKey = 'single'
-        this.popoverVisible = false
       } else {
         ElMessage.warning('最少保留一项')
       }
@@ -217,10 +198,9 @@ export default {
       return Math.random().toString().slice(-6)
     },
     changeOptionOthers(val, option) {
-      const { field } = this.moduleConfig
       option.others = val
       if (val) {
-        option.othersKey = `${field}_${option.hash}`
+        option.othersKey = `${this.fieldId}_${option.hash}`
       } else {
         option.othersKey = ''
       }
@@ -238,7 +218,7 @@ export default {
         ElMessage.warning('已存在相同的标签内容，请重新输入')
         return
       }
-      this.$emit('optionChange', this.curOptions)
+      this.$emit('handleChange', { key: 'options', value: this.curOptions })
       this.configVisible = false
     },
     onBlur(e, index) {
@@ -250,6 +230,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.primary-color {
+  color: $primary-color;
+}
+
 .option-config-wrapper {
   .option-handwrite {
     .option-header {

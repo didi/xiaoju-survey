@@ -106,12 +106,13 @@ describe('DataStatisticController', () => {
             field: 'xxx',
             title: 'xxx',
             type: 'xxx',
+            diffTime: 'xxx',
             othersCode: 'xxx',
           },
         ],
         listBody: [
-          { difTime: '0.5', createDate: '2024-02-11' },
-          { difTime: '0.5', createDate: '2024-02-11' },
+          { diffTime: '0.5', createDate: '2024-02-11' },
+          { diffTime: '0.5', createDate: '2024-02-11' },
         ],
       };
 
@@ -151,12 +152,13 @@ describe('DataStatisticController', () => {
             field: 'xxx',
             title: 'xxx',
             type: 'xxx',
+            diffTime: 'xxx',
             othersCode: 'xxx',
           },
         ],
         listBody: [
-          { difTime: '0.5', createDate: '2024-02-11', data123: '15200000000' },
-          { difTime: '0.5', createDate: '2024-02-11', data123: '13800000000' },
+          { diffTime: '0.5', createDate: '2024-02-11', data123: '15200000000' },
+          { diffTime: '0.5', createDate: '2024-02-11', data123: '13800000000' },
         ],
       };
 

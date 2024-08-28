@@ -24,10 +24,8 @@ import LeftMenu from '@/management/components/LeftMenu.vue'
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
-import { initShowLogicEngine } from '@/management/hooks/useShowLogicEngine'
-
 const editStore = useEditStore()
-const { schema, init, setSurveyId } = editStore
+const { init, setSurveyId } = editStore
 const router = useRouter()
 const route = useRoute()
 
@@ -36,7 +34,6 @@ onMounted(async () => {
 
   try {
     await init()
-    await initShowLogicEngine(schema.logicConf.showLogicConf || {})
   } catch (err: any) {
     ElMessage.error(err.message)
 
@@ -60,7 +57,7 @@ onMounted(async () => {
   }
 
   .right {
-    min-width: 1160px;
+    min-width: 1300px;
     height: 100%;
     padding-left: 80px;
     overflow: hidden;

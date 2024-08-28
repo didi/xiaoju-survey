@@ -1,17 +1,26 @@
 <template>
   <div class="main-operation">
+    <div class="pagination-wrapper">
+      <PageWrapper :readonly="true" />
+    </div>
     <div class="operation-wrapper">
       <div class="box" ref="box">
         <div class="mask"></div>
-        <HeaderContent :bannerConf="bannerConf" :readonly="false" />
+        <HeaderContent v-if="pageEditOne == 1" :bannerConf="bannerConf" :readonly="false" />
         <div class="content">
-          <MainTitle :isSelected="false" :bannerConf="bannerConf" :readonly="false" />
-          <MaterialGroup :questionDataList="questionDataList" ref="MaterialGroup" />
+          <MainTitle
+            v-if="pageEditOne == 1"
+            :isSelected="false"
+            :bannerConf="bannerConf"
+            :readonly="false"
+          />
+          <MaterialGroup :questionDataList="pageQuestionData" ref="MaterialGroup" />
           <SubmitButton
             :submit-conf="submitConf"
             :skin-conf="skinConf"
             :readonly="false"
             :is-selected="currentEditOne === 'submit'"
+            :is-finally-page="isFinallyPage"
           />
           <LogoIcon
             :logo-conf="bottomConf"
@@ -26,6 +35,7 @@
 <script>
 import { defineComponent, toRefs } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
+import PageWrapper from '@/management/pages/edit/components/Pagination/PaginationWrapper.vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -38,6 +48,7 @@ const LogoIcon = () => communalLoader.loadComponent('LogoIcon')
 export default defineComponent({
   components: {
     MaterialGroup,
+    PageWrapper,
     HeaderContent: HeaderContent(),
     MainTitle: MainTitle(),
     SubmitButton: SubmitButton(),
@@ -45,7 +56,8 @@ export default defineComponent({
   },
   setup() {
     const editStore = useEditStore()
-    const { questionDataList, currentEditOne, currentEditKey } = storeToRefs(editStore)
+    const { pageQuestionData, currentEditOne, currentEditKey, isFinallyPage, pageEditOne } =
+      storeToRefs(editStore)
     const { schema } = editStore
     const { bannerConf, submitConf, skinConf, bottomConf } = toRefs(schema)
 
@@ -54,9 +66,11 @@ export default defineComponent({
       submitConf,
       bottomConf,
       skinConf,
-      questionDataList,
+      pageQuestionData,
       currentEditOne,
-      currentEditKey
+      currentEditKey,
+      isFinallyPage,
+      pageEditOne
     }
   },
   watch: {
@@ -90,6 +104,12 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   background-color: #f6f7f9;
+}
+
+.pagination-wrapper {
+  position: relative;
+  top: 50px;
+  width: 90%;
 }
 
 .toolbar {

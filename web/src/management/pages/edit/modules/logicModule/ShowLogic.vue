@@ -9,7 +9,7 @@ import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import { cloneDeep } from 'lodash-es'
 
-import RulePanel from '../../modules/logicModule/RulePanel.vue'
+import RulePanel from './components/RulePanel.vue'
 import { filterQuestionPreviewData } from '@/management/utils/index'
 
 const editStore = useEditStore()
@@ -23,11 +23,11 @@ provide('renderData', renderData)
 </script>
 <style lang="scss" scoped>
 .logic-wrapper {
-  height: calc(100% - 120px);
+  height: 100%;
   width: 100%;
-  margin: 12px;
   background: #fff;
   text-align: center;
   overflow: auto;
+  // position: fixed;
 }
 </style>

@@ -152,7 +152,7 @@ export class WorkspaceMemberService {
       order: {
         _id: -1,
       },
-      select: ['_id', 'userId', 'username', 'role', 'workspaceId'],
+      select: ['_id', 'userId', 'role', 'workspaceId'],
     });
   }
 }

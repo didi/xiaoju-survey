@@ -98,13 +98,37 @@ export const noSearchDataConfig = {
   img: '/imgs/icons/list-empty.webp'
 }
 
-export const statusMaps = {
-  new: '未发布',
-  editing: '修改中',
-  published: '已发布',
-  removed: '',
-  pausing: ''
+export const curStatus = {
+  new: {
+    value: 'new',
+    label: '未发布'
+  },
+  published: {
+    value: 'published',
+    label: '已发布'
+  }
 }
+
+// 子状态
+export const subCurStatus = {
+  editing: {
+    label: '修改中',
+    value: 'editing'
+  },
+  pausing: {
+    label: '暂停中',
+    value: 'pausing'
+  }
+}
+
+
+export const statusMaps = {
+  ...Object.fromEntries(Object.keys(curStatus).map(key => ([key, curStatus[key].label]))),
+  ...Object.fromEntries(Object.keys(subCurStatus).map(key => ([key, subCurStatus[key].label])))
+}
+export const curStatusKey = 'curStatus.status';
+export const subCurStatusKey = 'subCurStatus.status';
+
 
 // 问卷类型
 export const surveyTypeSelect = {
@@ -146,25 +170,18 @@ export const curStatusSelect = {
       value: '',
       label: '全部状态'
     },
-    {
-      value: 'new',
-      label: '未发布'
-    },
-    {
-      value: 'published',
-      label: '已发布'
-    },
-    {
-      value: 'editing',
-      label: '修改中'
-    }
+    curStatus.new,
+    curStatus.published,
+    subCurStatus.editing,
+    subCurStatus.pausing
   ],
   default: ''
 }
 
+
 export const selectOptionsDict = Object.freeze({
   surveyType: surveyTypeSelect,
-  'curStatus.status': curStatusSelect
+  status: curStatusSelect,
 })
 
 export const buttonOptionsDict = Object.freeze({

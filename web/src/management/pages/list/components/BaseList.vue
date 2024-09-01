@@ -123,7 +123,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
-import { deleteSurvey } from '@/management/api/survey'
+import { deleteSurvey,pausingSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
@@ -140,7 +140,9 @@ import {
   noListDataConfig,
   noSearchDataConfig,
   selectOptionsDict,
-  buttonOptionsDict
+  buttonOptionsDict,
+  curStatus,
+  subCurStatus
 } from '@/management/config/listConfig'
 
 const surveyListStore = useSurveyListStore()
@@ -201,38 +203,6 @@ const dataList = computed(() => {
     }
   })
 })
-const filter = computed(() => {
-  return [
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'title',
-          value: searchVal.value,
-          comparator: '$regex'
-        }
-      ]
-    },
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'curStatus.status',
-          value: selectValueMap.value['curStatus.status']
-        }
-      ]
-    },
-    {
-      comparator: '',
-      condition: [
-        {
-          field: 'surveyType',
-          value: selectValueMap.value.surveyType
-        }
-      ]
-    }
-  ]
-})
 const order = computed(() => {
   const formatOrder = Object.entries(buttonValueMap.value)
     .filter(([, effectValue]) => effectValue)
@@ -245,14 +215,8 @@ const order = computed(() => {
 })
 
 const onRefresh = async () => {
-  const filterString = JSON.stringify(
-    filter.value.filter((item) => {
-      return item.condition[0].value
-    })
-  )
   let params = {
     curPage: currentPage.value,
-    filter: filterString,
     order: order.value
   }
   if (workSpaceId.value) {
@@ -260,6 +224,7 @@ const onRefresh = async () => {
   }
   emit('refresh', params)
 }
+
 
 const getToolConfig = (row) => {
   let funcList = []
@@ -287,6 +252,10 @@ const getToolConfig = (row) => {
       label: '投放'
     },
     {
+      key: subCurStatus.pausing.value,
+      label: '暂停'
+    },
+    {
       key: 'cooper',
       label: '协作'
     }
@@ -306,6 +275,10 @@ const getToolConfig = (row) => {
       if (row.currentPermissions.includes(SurveyPermissions.SurveyManage)) {
         // 协作人判断权限显示投放按钮
         funcList.push(
+          {
+            key: subCurStatus.pausing.value,
+            label: '暂停'
+          },
           {
             key: QOP_MAP.EDIT,
             label: '修改'
@@ -339,9 +312,13 @@ const getToolConfig = (row) => {
     permissionsBtn.splice(-1)
     funcList = permissionsBtn
   }
-  const order = ['edit', 'analysis', 'release', 'delete', 'copy', 'cooper']
+  const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
+  if((row.curStatus.status !== curStatus.published.value && row.curStatus.status !== subCurStatus.editing.value) || (row.subCurStatus.status &&
+    row.subCurStatus.status != subCurStatus.editing.value)){
+    order.splice(3, 1) 
+    funcList = funcList.filter(item => item.key !== subCurStatus.pausing.value)
+  }
   const result = funcList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
-
   return result
 }
 const handleClick = (key, data) => {
@@ -374,6 +351,9 @@ const handleClick = (key, data) => {
     case 'cooper':
       onCooper(data)
       return
+    case 'pausing':
+    onPausing(data)
+      return
     default:
       return
   }
@@ -398,6 +378,28 @@ const onDelete = async (row) => {
     ElMessage.error(res.errmsg || '删除失败')
   }
 }
+
+const onPausing = async (row) => {
+  try {
+    await ElMessageBox.confirm('“暂停回收”后问卷将不能填写，是否继续？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (error) {
+    console.log('取消暂停')
+    return
+  }
+
+  const res = await pausingSurvey(row._id)
+  if (res.code === CODE_MAP.SUCCESS) {
+    ElMessage.success('暂停成功')
+    onRefresh()
+  } else {
+    ElMessage.error(res.errmsg || '暂停失败')
+  }
+}
+
 const handleCurrentChange = (current) => {
   currentPage.value = current
   onRefresh()
@@ -427,6 +429,7 @@ const onSearchText = (e) => {
   currentPage.value = 1
   onRefresh()
 }
+
 const onSelectChange = (selectKey, selectValue) => {
   surveyListStore.changeSelectValueMap(selectKey, selectValue)
   currentPage.value = 1

@@ -1,23 +1,27 @@
 <template>
-  <div :class="['list-state', 'list-state-' + value.curStatus?.status]">
+  <div :class="['list-state', 'list-state-' + status]">
     <span class="list-state-badge" />
-    <span>{{ statusMaps[value.curStatus?.status] }}</span>
+    <span>{{ statusMaps[status] }}</span>
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
 import { statusMaps } from '@/management/config/listConfig'
-export default {
-  name: 'StateModule',
-  props: {
-    value: Object
-  },
-  data() {
-    return {
-      statusMaps
-    }
+
+const props = defineProps({
+  value: {
+    type: Object,
+    default: () => ({})
   }
-}
+})
+
+const status = computed(() => {
+  const {curStatus,subCurStatus } = props.value;
+  return subCurStatus?.status || curStatus?.status;
+})
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -40,6 +44,12 @@ export default {
     color: $primary-color;
     .list-state-badge {
       background: $primary-color;
+    }
+  }
+  &-pausing{
+    color:  #EB505C;
+    .list-state-badge {
+      background: #EB505C;
     }
   }
   &-badge {

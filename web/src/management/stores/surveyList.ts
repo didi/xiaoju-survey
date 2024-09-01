@@ -9,11 +9,26 @@ import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
 
 import { useWorkSpaceStore } from './workSpace'
 
+import {
+  curStatus,
+  subCurStatus,
+  curStatusKey,
+  subCurStatusKey
+} from '@/management/config/listConfig'
+
+const verdictStatus = (status:never) => {
+  if(curStatus[status]) return curStatusKey
+  if (subCurStatus[status]) return subCurStatusKey
+  return curStatusKey
+}
+
+
 function useSearchSurvey() {
   const searchVal = ref('')
   const selectValueMap = ref<Record<string, any>>({
     surveyType: '',
-    'curStatus.status': ''
+    'status': '',
+    // 'subCurStatus.status': ''
   })
 
   const buttonValueMap = ref<Record<string, any>>({
@@ -37,8 +52,8 @@ function useSearchSurvey() {
         comparator: '',
         condition: [
           {
-            field: 'curStatus.status',
-            value: selectValueMap.value['curStatus.status']
+            field: verdictStatus( selectValueMap.value['status']),
+            value: selectValueMap.value['status']
           }
         ]
       },
@@ -67,7 +82,7 @@ function useSearchSurvey() {
   function resetSelectValueMap() {
     selectValueMap.value = {
       surveyType: '',
-      'curStatus.status': ''
+      'status': ''
     }
   }
 

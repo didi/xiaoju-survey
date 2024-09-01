@@ -5,7 +5,7 @@ import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { hash256 } from 'src/utils/hash256';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
@@ -50,11 +50,15 @@ export class UserService {
   }
 
   async getUserByUsername(username) {
+    //添加字状态后兼容之前的数据
     const user = await this.userRepository.findOne({
       where: {
         username: username,
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });
@@ -63,11 +67,15 @@ export class UserService {
   }
 
   async getUserById(id: string) {
+    //添加字状态后兼容之前的数据
     const user = await this.userRepository.findOne({
       where: {
         _id: new ObjectId(id),
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });
@@ -76,11 +84,15 @@ export class UserService {
   }
 
   async getUserListByUsername({ username, skip, take }) {
+    //添加字状态后兼容之前的数据
     const list = await this.userRepository.find({
       where: {
         username: new RegExp(username),
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
       skip,
@@ -91,13 +103,17 @@ export class UserService {
   }
 
   async getUserListByIds({ idList }) {
+    //添加字状态后兼容之前的数据
     const list = await this.userRepository.find({
       where: {
         _id: {
           $in: idList.map((item) => new ObjectId(item)),
         },
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
       select: ['_id', 'username', 'createDate'],

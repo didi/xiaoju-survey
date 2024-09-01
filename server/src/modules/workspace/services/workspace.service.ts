@@ -6,7 +6,7 @@ import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 interface FindAllByIdWithPaginationParams {
   workspaceIdList: string[];
@@ -57,7 +57,10 @@ export class WorkspaceService {
         $in: workspaceIdList.map((item) => new ObjectId(item)),
       },
       'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      }, //添加字状态后兼容之前的数据
+      'subCurStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
 
@@ -92,7 +95,10 @@ export class WorkspaceService {
         $in: workspaceIdList.map((m) => new ObjectId(m)),
       },
       'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      }, //添加字状态后兼容之前的数据
+      'subCurStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     if (name) {
@@ -114,8 +120,8 @@ export class WorkspaceService {
   }
 
   async delete(id: string) {
-    const newStatus = {
-      status: RECORD_STATUS.REMOVED,
+    const newSubStatus = {
+      status: RECORD_SUB_STATUS.REMOVED,
       date: Date.now(),
     };
     const workspaceRes = await this.workspaceRepository.updateOne(
@@ -124,10 +130,10 @@ export class WorkspaceService {
       },
       {
         $set: {
-          curStatus: newStatus,
+          subCurStatus: newSubStatus,
         },
         $push: {
-          statusList: newStatus as never,
+          statusList: newSubStatus as never,
         },
       },
     );
@@ -137,10 +143,10 @@ export class WorkspaceService {
       },
       {
         $set: {
-          curStatus: newStatus,
+          curStatus: newSubStatus,
         },
         $push: {
-          statusList: newStatus as never,
+          statusList: newSubStatus as never,
         },
       },
     );
@@ -156,7 +162,10 @@ export class WorkspaceService {
       where: {
         ownerId: userId,
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        }, //添加字状态后兼容之前的数据
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
       order: {

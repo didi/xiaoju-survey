@@ -20,6 +20,7 @@ export function getFilter(filterList: Array<FilterItem>) {
     'remark',
     'surveyType',
     'curStatus.status',
+    'subCurStatus.status',
   ];
   return filterList.reduce(
     (preItem, curItem) => {

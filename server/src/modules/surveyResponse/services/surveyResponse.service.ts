@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { RECORD_SUB_STATUS } from 'src/enums';
 @Injectable()
 export class SurveyResponseService {
   constructor(
@@ -39,7 +40,10 @@ export class SurveyResponseService {
       where: {
         surveyPath,
         'curStatus.status': {
-          $ne: 'removed',
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        }, //添加字状态后兼容之前的数据
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });

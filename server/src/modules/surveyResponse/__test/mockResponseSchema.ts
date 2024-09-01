@@ -1,11 +1,15 @@
 import { ResponseSchema } from 'src/models/responseSchema.entity';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 export const mockResponseSchema: ResponseSchema = {
   _id: new ObjectId('65f29f8892862d6a9067ad25'),
   curStatus: {
     status: RECORD_STATUS.PUBLISHED,
+    date: 1710399368439,
+  },
+  subCurStatus: {
+    status: RECORD_SUB_STATUS.DEFAULT,
     date: 1710399368439,
   },
   statusList: [

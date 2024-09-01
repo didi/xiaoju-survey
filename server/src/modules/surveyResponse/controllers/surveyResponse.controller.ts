@@ -5,6 +5,7 @@ import { checkSign } from 'src/utils/checkSign';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { CounterService } from '../services/counter.service';
@@ -73,8 +74,19 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!responseSchema || responseSchema.curStatus.status === 'removed') {
+    if (
+      !responseSchema ||
+      responseSchema.subCurStatus.status === RECORD_SUB_STATUS.REMOVED
+    ) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
+    }
+
+    // 问卷暂停回收校验
+    if (responseSchema.subCurStatus.status === RECORD_SUB_STATUS.PAUSING) {
+      throw new HttpException(
+        '问卷已暂停回收',
+        EXCEPTION_CODE.RESPONSE_PAUSING,
+      );
     }
 
     // 白名单的verifyId校验

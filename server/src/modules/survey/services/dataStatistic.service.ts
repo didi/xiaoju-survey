@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 import moment from 'moment';
 import { keyBy } from 'lodash';
@@ -32,10 +33,14 @@ export class DataStatisticService {
     const dataList = responseSchema?.code?.dataConf?.dataList || [];
     const listHead = getListHeadByDataList(dataList);
     const dataListMap = keyBy(dataList, 'field');
+    //添加字状态后之前的数据
     const where = {
       pageId: surveyId,
       'curStatus.status': {
-        $ne: 'removed',
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      },
+      'subCurStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     const [surveyResponseList, total] =

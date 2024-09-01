@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 @Injectable()
 export class WorkspaceMemberService {
@@ -95,8 +95,9 @@ export class WorkspaceMemberService {
       where: {
         workspaceId,
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        }, //添加字状态后兼容之前的数据
+        'subCurStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
       select: ['_id', 'createDate', 'curStatus', 'role', 'userId'],
     });
@@ -136,8 +137,9 @@ export class WorkspaceMemberService {
     return this.workspaceMemberRepository.count({
       workspaceId,
       'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
-      },
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      }, //添加字状态后兼容之前的数据
+      'subCurStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
     });
   }
 

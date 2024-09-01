@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository, FindOptionsOrder } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
@@ -78,34 +78,66 @@ export class SurveyMetaService {
   async editSurveyMeta(survey: SurveyMeta) {
     if (
       survey.curStatus.status !== RECORD_STATUS.NEW &&
-      survey.curStatus.status !== RECORD_STATUS.EDITING
+      (survey.curStatus.status !== RECORD_SUB_STATUS.EDITING ||
+        survey.subCurStatus.status !== RECORD_SUB_STATUS.EDITING) //添加字状态后兼容之前的数据
     ) {
-      const newStatus = {
-        status: RECORD_STATUS.EDITING,
+      const newSubStatus = {
+        status: RECORD_SUB_STATUS.EDITING,
         date: Date.now(),
       };
-      survey.curStatus = newStatus;
-      survey.statusList.push(newStatus);
+      survey.curStatus.status = RECORD_STATUS.PUBLISHED;
+      survey.subCurStatus = newSubStatus;
+      survey.statusList.push(newSubStatus);
     }
     return this.surveyRepository.save(survey);
   }
 
   async deleteSurveyMeta(survey: SurveyMeta) {
-    if (survey.curStatus.status === RECORD_STATUS.REMOVED) {
+    //添加字状态后兼容之前的数据
+    if (
+      survey.curStatus.status === RECORD_SUB_STATUS.REMOVED ||
+      survey.subCurStatus.status === RECORD_SUB_STATUS.REMOVED
+    ) {
       throw new HttpException(
         '问卷已删除，不能重复删除',
         EXCEPTION_CODE.SURVEY_STATUS_TRANSFORM_ERROR,
       );
     }
     const newStatusInfo = {
-      status: RECORD_STATUS.REMOVED,
+      status: RECORD_SUB_STATUS.REMOVED,
       date: Date.now(),
     };
-    survey.curStatus = newStatusInfo;
+    survey.subCurStatus = newStatusInfo;
     if (Array.isArray(survey.statusList)) {
       survey.statusList.push(newStatusInfo);
     } else {
       survey.statusList = [newStatusInfo];
+    }
+    return this.surveyRepository.save(survey);
+  }
+
+  async pausingSurveyMeta(survey: SurveyMeta) {
+    if (
+      (survey.curStatus.status !== RECORD_STATUS.PUBLISHED &&
+        survey.curStatus.status !== RECORD_SUB_STATUS.EDITING) ||
+      (survey.subCurStatus.status &&
+        survey.subCurStatus.status != RECORD_SUB_STATUS.EDITING)
+    ) {
+      throw new HttpException(
+        '问卷不能暂停',
+        EXCEPTION_CODE.SURVEY_STATUS_TRANSFORM_ERROR,
+      );
+    }
+    const subCurStatus = {
+      status: RECORD_SUB_STATUS.PAUSING,
+      date: Date.now(),
+    };
+    survey.subCurStatus = subCurStatus;
+    survey.curStatus.status = RECORD_STATUS.PUBLISHED;
+    if (Array.isArray(survey.statusList)) {
+      survey.statusList.push(subCurStatus);
+    } else {
+      survey.statusList = [subCurStatus];
     }
     return this.surveyRepository.save(survey);
   }
@@ -130,9 +162,25 @@ export class SurveyMetaService {
           'curStatus.status': {
             $ne: 'removed',
           },
+          'subCurStatus.status': {
+            $ne: 'removed',
+          },
         },
         condition.filter,
       );
+      // 添加字状态后兼容之前的数据
+      const status =
+        condition.filter['curStatus.status'] ||
+        condition.filter['subCurStatus.status'];
+      if (status) {
+        query['curStatus.status'] = {
+          $ne: 'removed',
+        };
+        query['subCurStatus.status'] = {
+          $ne: 'removed',
+        };
+      }
+
       if (workspaceId) {
         query.workspaceId = workspaceId;
       } else {
@@ -163,13 +211,30 @@ export class SurveyMetaService {
               createDate: -1,
             } as FindOptionsOrder<SurveyMeta>);
 
-      const [data, count] = await this.surveyRepository.findAndCount({
+      let [data, count] = await this.surveyRepository.findAndCount({
         where: query,
-        skip,
-        take: pageSize,
+        // skip,
+        // take: pageSize,
         order,
       });
-      return { data, count };
+      // 添加字子状态后兼容之前的数据
+      if (status) {
+        if (condition.filter['curStatus.status']) {
+          data = data.filter(
+            (v) => v.curStatus.status === status && !v.subCurStatus.status,
+          );
+          count = data.length;
+        }
+        if (condition.filter['subCurStatus.status']) {
+          data = data.filter(
+            (v) =>
+              v.subCurStatus.status == status || v.curStatus.status == status,
+          );
+          count = data.length;
+        }
+      }
+
+      return { data: data.slice(skip, pageSize * pageNum), count };
     } catch (error) {
       return { data: [], count: 0 };
     }
@@ -180,7 +245,12 @@ export class SurveyMetaService {
       status: RECORD_STATUS.PUBLISHED,
       date: Date.now(),
     };
+    const subCurStatus = {
+      status: RECORD_SUB_STATUS.DEFAULT,
+      date: Date.now(),
+    };
     surveyMeta.curStatus = curStatus;
+    surveyMeta.subCurStatus = subCurStatus;
     if (Array.isArray(surveyMeta.statusList)) {
       surveyMeta.statusList.push(curStatus);
     } else {
@@ -190,10 +260,14 @@ export class SurveyMetaService {
   }
 
   async countSurveyMetaByWorkspaceId({ workspaceId }) {
+    //添加字状态后兼容之前的数据
     const total = await this.surveyRepository.count({
       workspaceId,
       'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      },
+      'subCurStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     });
     return total;

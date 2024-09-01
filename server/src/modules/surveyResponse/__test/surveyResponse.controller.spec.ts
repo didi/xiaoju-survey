@@ -18,7 +18,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Logger } from 'src/logger';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
@@ -63,6 +63,10 @@ const mockClientEncryptInfo = {
   type: 'rsa',
   curStatus: {
     status: 'new',
+    date: 1710399425273.0,
+  },
+  subCurStatus: {
+    status: RECORD_SUB_STATUS.DEFAULT,
     date: 1710399425273.0,
   },
   statusList: [
@@ -183,6 +187,10 @@ describe('SurveyResponseController', () => {
           createDate: 1711025113146,
           curStatus: {
             status: RECORD_STATUS.NEW,
+            date: 1711025113146,
+          },
+          subCurStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
             date: 1711025113146,
           },
           diffTime: 30518,
@@ -334,6 +342,9 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce({
           curStatus: {
             status: RECORD_STATUS.PUBLISHED,
+          },
+          subCurStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
           },
           code: {
             baseConf: {

@@ -366,13 +366,11 @@ export class WorkspaceController {
         data: [],
       };
     }
-
     // 所有空间下的所有成员
     const workspaceMemberList =
       await this.workspaceMemberService.batchSearchByWorkspace(
         workspaceList.map((item) => item._id.toString()),
       );
-
     // 查询成员姓名
     const userList = await this.userService.getUserListByIds({
       idList: workspaceMemberList.map((member) => member.userId),

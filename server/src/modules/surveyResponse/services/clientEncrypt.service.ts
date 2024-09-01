@@ -4,7 +4,7 @@ import { MongoRepository } from 'typeorm';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 @Injectable()
 export class ClientEncryptService {
@@ -39,7 +39,10 @@ export class ClientEncryptService {
       where: {
         _id: new ObjectId(id),
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        }, //添加字状态后兼容之前的数据
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });
@@ -52,8 +55,8 @@ export class ClientEncryptService {
       },
       {
         $set: {
-          curStatus: {
-            status: RECORD_STATUS.REMOVED,
+          subCurStatus: {
+            status: RECORD_SUB_STATUS.REMOVED,
             date: Date.now(),
           },
         },

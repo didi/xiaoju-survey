@@ -10,7 +10,7 @@ import {
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { ApiTags } from '@nestjs/swagger';
 import Joi from 'joi';
 import { Logger } from 'src/logger';
@@ -46,7 +46,9 @@ export class ResponseSchemaController {
       );
     if (
       !responseSchema ||
-      responseSchema.curStatus.status === RECORD_STATUS.REMOVED
+      //添加字状态后兼容之前的数据
+      responseSchema.curStatus.status === RECORD_SUB_STATUS.REMOVED ||
+      responseSchema.subCurStatus.status === RECORD_SUB_STATUS.REMOVED
     ) {
       throw new HttpException(
         '问卷已删除',
@@ -82,8 +84,20 @@ export class ResponseSchemaController {
     // 问卷信息
     const schema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!schema || schema.curStatus.status === 'removed') {
+    if (
+      !schema ||
+      schema.subCurStatus.status === RECORD_SUB_STATUS.REMOVED ||
+      schema.curStatus.status === RECORD_SUB_STATUS.REMOVED
+    ) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
+    }
+
+    // 问卷暂停回收校验
+    if (schema.subCurStatus.status === RECORD_SUB_STATUS.PAUSING) {
+      throw new HttpException(
+        '问卷已暂停回收',
+        EXCEPTION_CODE.RESPONSE_PAUSING,
+      );
     }
 
     const { password, whitelist: whitelistValue } = value;

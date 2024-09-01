@@ -3,6 +3,7 @@ import { SurveyResponseService } from '../services/surveyResponse.service';
 import { MongoRepository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 describe('SurveyResponseService', () => {
   let service: SurveyResponseService;
@@ -77,7 +78,12 @@ describe('SurveyResponseService', () => {
     expect(surveyResponseRepository.count).toHaveBeenCalledWith({
       where: {
         surveyPath,
-        'curStatus.status': { $ne: 'removed' },
+        'curStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        }, //添加字状态后兼容之前的数据
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
       },
     });
   });

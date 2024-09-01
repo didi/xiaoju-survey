@@ -1,6 +1,6 @@
 import { Column, ObjectIdColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from '../enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from '../enums';
 
 export class BaseEntity {
   @ObjectIdColumn()
@@ -8,13 +8,20 @@ export class BaseEntity {
 
   @Column()
   curStatus: {
-    status: RECORD_STATUS;
+    // 兼容子状态
+    status: RECORD_STATUS | RECORD_SUB_STATUS;
+    date: number;
+  };
+
+  @Column()
+  subCurStatus: {
+    status: RECORD_SUB_STATUS;
     date: number;
   };
 
   @Column()
   statusList: Array<{
-    status: RECORD_STATUS;
+    status: RECORD_STATUS | RECORD_SUB_STATUS;
     date: number;
   }>;
 
@@ -31,6 +38,10 @@ export class BaseEntity {
       const curStatus = { status: RECORD_STATUS.NEW, date: now };
       this.curStatus = curStatus;
       this.statusList = [curStatus];
+    }
+    if (!this.subCurStatus) {
+      const subCurStatus = { status: RECORD_SUB_STATUS.DEFAULT, date: now };
+      this.subCurStatus = subCurStatus;
     }
     this.createDate = now;
     this.updateDate = now;

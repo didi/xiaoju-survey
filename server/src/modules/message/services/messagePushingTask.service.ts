@@ -6,7 +6,7 @@ import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MessagePushingLogService } from './messagePushingLog.service';
 import { httpPost } from 'src/utils/request';
@@ -43,9 +43,13 @@ export class MessagePushingTaskService {
     hook?: MESSAGE_PUSHING_HOOK;
     ownerId?: string;
   }): Promise<MessagePushingTask[]> {
+    //添加字状态后兼容之前的数据
     const where: Record<string, any> = {
       'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+        $ne: RECORD_SUB_STATUS.REMOVED,
+      },
+      'subCurStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     if (surveyId) {
@@ -71,12 +75,16 @@ export class MessagePushingTaskService {
     id: string;
     ownerId: string;
   }): Promise<MessagePushingTask> {
+    //添加字状态后兼容之前的数据
     return await this.messagePushingTaskRepository.findOne({
       where: {
         ownerId,
         _id: new ObjectId(id),
         'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+          $ne: RECORD_SUB_STATUS.REMOVED,
+        },
+        'subCurStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });
@@ -105,24 +113,23 @@ export class MessagePushingTaskService {
   }
 
   async remove({ id, ownerId }: { id: string; ownerId: string }) {
-    const curStatus = {
-      status: RECORD_STATUS.REMOVED,
+    const subCurStatus = {
+      status: RECORD_SUB_STATUS.REMOVED,
       date: Date.now(),
     };
     return this.messagePushingTaskRepository.updateOne(
       {
         ownerId,
         _id: new ObjectId(id),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
+        'curStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
+        'subCurStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
       {
         $set: {
-          curStatus,
+          subCurStatus,
         },
         $push: {
-          statusList: curStatus as never,
+          statusList: subCurStatus as never,
         },
       },
     );

@@ -41,7 +41,6 @@ export const useSurveyStore = defineStore('survey', () => {
   const formValues = ref({})
   const whiteData = ref({})
   const pageConf = ref([])
-  
 
   const router = useRouter()
   const questionStore = useQuestionStore()

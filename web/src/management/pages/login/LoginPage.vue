@@ -38,7 +38,7 @@
 
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
-            <el-input style="width: 150px" v-model="formData.captcha" size="large"></el-input>
+            <el-input style="width: 200px" v-model="formData.captcha" size="large"></el-input>
             <div class="captcha-img" @click="refreshCaptcha" v-html="captchaImgData"></div>
           </div>
         </el-form-item>
@@ -70,6 +70,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+
+import { debounce as _debounce } from 'lodash-es'
 
 import { getPasswordStrength, login, register } from '@/management/api/auth'
 import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
@@ -159,8 +161,8 @@ const rules = {
   ],
   password: [
     {
-      validator: passwordValidator,
-      trigger: 'blur'
+      validator: _debounce(passwordValidator, 500),
+      trigger: 'change'
     }
   ],
   captcha: [
@@ -311,18 +313,20 @@ const refreshCaptcha = async () => {
       cursor: pointer;
       :deep(> svg) {
         max-height: 40px;
+        width: 120px;
+        margin-left: 20px;
       }
     }
   }
 
   .strength {
     display: inline-block;
-    width: 20%;
+    width: 30%;
     height: 6px;
     border-radius: 8px;
     background: red;
     &:not(:first-child) {
-      margin-left: 10px;
+      margin-left: 8px;
     }
   }
 }

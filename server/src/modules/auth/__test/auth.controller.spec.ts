@@ -220,4 +220,29 @@ describe('AuthController', () => {
       expect(typeof result.data.img).toBe('string');
     });
   });
+
+  describe('password strength', () => {
+    it('it should return strong', async () => {
+      await expect(
+        controller.getPasswordStrength('abcd&1234'),
+      ).resolves.toEqual({
+        code: 200,
+        data: 'Strong',
+      });
+    });
+
+    it('it should return medium', async () => {
+      await expect(controller.getPasswordStrength('abc123')).resolves.toEqual({
+        code: 200,
+        data: 'Medium',
+      });
+    });
+
+    it('it should return weak', async () => {
+      await expect(controller.getPasswordStrength('123456')).resolves.toEqual({
+        code: 200,
+        data: 'Weak',
+      });
+    });
+  });
 });

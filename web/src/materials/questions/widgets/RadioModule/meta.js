@@ -1,5 +1,4 @@
 import basicConfig from '@materials/questions/common/config/basicConfig'
-import * as optionConfig from '@materials/questions/common/config/optionsConfig';
 
 const meta = {
   title: '单选',
@@ -72,6 +71,12 @@ const meta = {
           hash: '115020'
         }
       ]
+    },
+    {
+      name: 'layout',
+      propType: String,
+      description: '排列方式',
+      defaultValue: 'vertical'
     }
   ],
   formConfig: [basicConfig, {
@@ -79,7 +84,22 @@ const meta = {
     title: '选项配置',
     type: 'Customed',
     content: [
-      optionConfig.layout
+      {
+        label: '排列方式',
+        type: 'RadioGroup',
+        key: 'layout',
+        value: 'vertical',
+        options: [
+          {
+            label: '竖排',
+            value: 'vertical'
+          },
+          {
+            label: '横排',
+            value: 'horizontal'
+          },
+        ]
+      },
     ]
   }],
   editConfigure: {

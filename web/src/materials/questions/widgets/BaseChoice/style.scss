@@ -43,11 +43,15 @@
     &.horizontal {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
 
       .choice-outer {
         width: 50%;
+
+        .question {
+          padding-top: 0;
+        }
       }
     }
 

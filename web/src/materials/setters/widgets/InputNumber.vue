@@ -27,7 +27,7 @@ const props = defineProps<Props>()
 const modelValue = ref(Number(props.formConfig.value) || 0)
 const minModelValue = computed(() => {
   const { min } = props.formConfig
-  if (min) {
+  if (min !== undefined) {
     if (typeof min === 'function') {
       return min(props.moduleConfig)
     } else {

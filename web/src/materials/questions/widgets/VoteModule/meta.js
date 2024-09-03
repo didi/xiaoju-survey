@@ -1,5 +1,4 @@
 import basicConfig from '@materials/questions/common/config/basicConfig'
-import * as optionConfig from '@materials/questions/common/config/optionsConfig';
 
 const meta = {
   title: '投票',
@@ -94,7 +93,6 @@ const meta = {
       type: 'Customed',
       key: 'optionConfig',
       content: [
-        optionConfig.layout,
         {
           label: '设置为多选题',
           type: 'CheckBox',

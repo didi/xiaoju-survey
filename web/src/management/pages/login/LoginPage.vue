@@ -38,8 +38,8 @@
 
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
-            <el-input style="width: 200px" v-model="formData.captcha" size="large"></el-input>
-            <div class="captcha-img" @click="refreshCaptcha" v-html="captchaImgData"></div>
+            <el-input style="width: 280px" v-model="formData.captcha" size="large"></el-input>
+            <div class="captcha-img" click="refreshCaptcha" v-html="captchaImgData"></div>
           </div>
         </el-form-item>
 
@@ -278,13 +278,14 @@ const refreshCaptcha = async () => {
     background: #fff;
     box-shadow: 4px 0 20px 0 rgba(82, 82, 102, 0.15);
     margin-top: -150px;
+    width: 580px;
 
     .button-group {
       margin-top: 40px;
     }
 
     .button {
-      width: 160px;
+      width: 200px;
       height: 40px;
       font-size: 14px;
     }

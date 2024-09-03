@@ -313,8 +313,8 @@ const getToolConfig = (row) => {
     funcList = permissionsBtn
   }
   const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if((row.curStatus.status !== curStatus.published.value && row.curStatus.status !== subCurStatus.editing.value) || (row.subCurStatus.status &&
-    row.subCurStatus.status != subCurStatus.editing.value)){
+  if((row.curStatus.status !== curStatus.published.value && row.curStatus.status !== subCurStatus.editing.value) || (row?.subCurStatus?.status &&
+    row?.subCurStatus?.status != subCurStatus.editing.value)){
     order.splice(3, 1) 
     funcList = funcList.filter(item => item.key !== subCurStatus.pausing.value)
   }

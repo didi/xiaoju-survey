@@ -105,7 +105,7 @@ describe('SurveyMetaService', () => {
 
       const result = await service.editSurveyMeta(survey);
 
-      expect(survey.subCurStatus.status).toEqual(RECORD_SUB_STATUS.EDITING);
+      expect(survey?.subCurStatus?.status).toEqual(RECORD_SUB_STATUS.EDITING);
       expect(survey.statusList.length).toBe(1);
       expect(survey.statusList[0].status).toEqual(RECORD_SUB_STATUS.EDITING);
       expect(surveyRepository.save).toHaveBeenCalledWith(survey);
@@ -131,7 +131,7 @@ describe('SurveyMetaService', () => {
       const result = await service.deleteSurveyMeta(survey);
       // 验证结果
       expect(result).toBe(survey);
-      expect(survey.subCurStatus.status).toBe(RECORD_SUB_STATUS.REMOVED);
+      expect(survey?.subCurStatus?.status).toBe(RECORD_SUB_STATUS.REMOVED);
       expect(survey.statusList.length).toBe(1);
       expect(survey.statusList[0].status).toBe(RECORD_SUB_STATUS.REMOVED);
       expect(surveyRepository.save).toHaveBeenCalledTimes(1);

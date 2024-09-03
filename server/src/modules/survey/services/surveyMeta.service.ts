@@ -79,7 +79,7 @@ export class SurveyMetaService {
     if (
       survey.curStatus.status !== RECORD_STATUS.NEW &&
       (survey.curStatus.status !== RECORD_SUB_STATUS.EDITING ||
-        survey.subCurStatus.status !== RECORD_SUB_STATUS.EDITING) //添加字状态后兼容之前的数据
+        survey?.subCurStatus?.status !== RECORD_SUB_STATUS.EDITING) //添加字状态后兼容之前的数据
     ) {
       const newSubStatus = {
         status: RECORD_SUB_STATUS.EDITING,
@@ -96,7 +96,7 @@ export class SurveyMetaService {
     //添加字状态后兼容之前的数据
     if (
       survey.curStatus.status === RECORD_SUB_STATUS.REMOVED ||
-      survey.subCurStatus.status === RECORD_SUB_STATUS.REMOVED
+      survey?.subCurStatus?.status === RECORD_SUB_STATUS.REMOVED
     ) {
       throw new HttpException(
         '问卷已删除，不能重复删除',
@@ -120,8 +120,8 @@ export class SurveyMetaService {
     if (
       (survey.curStatus.status !== RECORD_STATUS.PUBLISHED &&
         survey.curStatus.status !== RECORD_SUB_STATUS.EDITING) ||
-      (survey.subCurStatus.status &&
-        survey.subCurStatus.status != RECORD_SUB_STATUS.EDITING)
+      (survey?.subCurStatus?.status &&
+        survey?.subCurStatus?.status != RECORD_SUB_STATUS.EDITING)
     ) {
       throw new HttpException(
         '问卷不能暂停',
@@ -221,14 +221,14 @@ export class SurveyMetaService {
       if (status) {
         if (condition.filter['curStatus.status']) {
           data = data.filter(
-            (v) => v.curStatus.status === status && !v.subCurStatus.status,
+            (v) => v.curStatus.status === status && !v.subCurStatus?.status,
           );
           count = data.length;
         }
         if (condition.filter['subCurStatus.status']) {
           data = data.filter(
             (v) =>
-              v.subCurStatus.status == status || v.curStatus.status == status,
+              v.subCurStatus?.status == status || v.curStatus?.status == status,
           );
           count = data.length;
         }

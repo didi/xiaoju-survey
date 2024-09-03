@@ -48,7 +48,7 @@ export class ResponseSchemaController {
       !responseSchema ||
       //添加字状态后兼容之前的数据
       responseSchema.curStatus.status === RECORD_SUB_STATUS.REMOVED ||
-      responseSchema.subCurStatus.status === RECORD_SUB_STATUS.REMOVED
+      responseSchema?.subCurStatus?.status === RECORD_SUB_STATUS.REMOVED
     ) {
       throw new HttpException(
         '问卷已删除',
@@ -86,14 +86,14 @@ export class ResponseSchemaController {
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
     if (
       !schema ||
-      schema.subCurStatus.status === RECORD_SUB_STATUS.REMOVED ||
+      schema?.subCurStatus?.status === RECORD_SUB_STATUS.REMOVED ||
       schema.curStatus.status === RECORD_SUB_STATUS.REMOVED
     ) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
 
     // 问卷暂停回收校验
-    if (schema.subCurStatus.status === RECORD_SUB_STATUS.PAUSING) {
+    if (schema?.subCurStatus?.status === RECORD_SUB_STATUS.PAUSING) {
       throw new HttpException(
         '问卷已暂停回收',
         EXCEPTION_CODE.RESPONSE_PAUSING,

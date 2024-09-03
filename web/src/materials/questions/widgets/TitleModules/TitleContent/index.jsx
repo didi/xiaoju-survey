@@ -96,7 +96,8 @@ export default defineComponent({
 
     function handleDocumentClick(e) {
       const richEditorDOM = moduleTitleRef.value.querySelector('.rich-editor')
-      const isClickRichEditor = richEditorDOM?.contains(e.target)
+      const isUploadImage = e.target.type === 'file' && e.target.tagName.toLowerCase() === 'input' // 富文本上传图片点击事件触发到input file 元素上了, 该元素插入到body了
+      const isClickRichEditor = richEditorDOM?.contains(e.target) || isUploadImage
 
       if (status.value === 'edit' && richEditorDOM && !isClickRichEditor) {
         // 监听编辑状态时点击非编辑区域

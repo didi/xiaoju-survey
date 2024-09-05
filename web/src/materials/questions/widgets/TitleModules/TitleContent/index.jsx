@@ -48,9 +48,9 @@ export default defineComponent({
 
     watch(status, (v) => {
       if (v === 'edit') {
-        document.addEventListener('click', handleDocumentClick)
+        document.addEventListener('click', handleDocumentClick, {capture: true})
       } else {
-        document.removeEventListener('click', handleDocumentClick)
+        document.removeEventListener('click', handleDocumentClick, {capture: true})
       }
     })
 

@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, onMounted, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 

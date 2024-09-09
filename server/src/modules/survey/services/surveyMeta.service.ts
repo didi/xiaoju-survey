@@ -203,7 +203,6 @@ export class SurveyMetaService {
           'curStatus',
           'subStatus',
           'createDate',
-          'updateDate',
           'owner',
           'ownerId',
           'workspaceId',

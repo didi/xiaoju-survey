@@ -50,7 +50,7 @@ function useSearchSurvey() {
         comparator: '',
         condition: [
           {
-            field: verdictStatus( selectValueMap.value['status']),
+            field: verdictStatus( selectValueMap.value['status'] as never),
             value: selectValueMap.value['status']
           }
         ]

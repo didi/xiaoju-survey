@@ -52,3 +52,9 @@ export const deleteSurvey = (surveyId) => {
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
 }
+
+export const pausingSurvey= (surveyId) => {
+  return axios.post('/survey/pausingSurvey', {
+    surveyId
+  })
+}

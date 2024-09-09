@@ -10,7 +10,7 @@ import {
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { ApiTags } from '@nestjs/swagger';
 import Joi from 'joi';
 import { Logger } from 'src/logger';
@@ -46,7 +46,7 @@ export class ResponseSchemaController {
       );
     if (
       !responseSchema ||
-      responseSchema.curStatus.status === RECORD_STATUS.REMOVED
+      responseSchema.subStatus.status === RECORD_SUB_STATUS.REMOVED
     ) {
       throw new HttpException(
         '问卷已删除',
@@ -82,7 +82,7 @@ export class ResponseSchemaController {
     // 问卷信息
     const schema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!schema || schema.curStatus.status === 'removed') {
+    if (!schema || schema.subStatus.status === RECORD_SUB_STATUS.REMOVED) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
 

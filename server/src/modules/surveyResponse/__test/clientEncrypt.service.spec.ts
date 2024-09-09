@@ -3,7 +3,7 @@ import { MongoRepository } from 'typeorm';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
@@ -88,8 +88,8 @@ describe('ClientEncryptService', () => {
       expect(repository.findOne).toHaveBeenCalledWith({
         where: {
           _id: new ObjectId(id),
-          'curStatus.status': {
-            $ne: RECORD_STATUS.REMOVED,
+          'subStatus.status': {
+            $ne: RECORD_SUB_STATUS.REMOVED,
           },
         },
       });

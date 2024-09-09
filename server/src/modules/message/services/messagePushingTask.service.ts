@@ -6,7 +6,7 @@ import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MessagePushingLogService } from './messagePushingLog.service';
 import { httpPost } from 'src/utils/request';
@@ -44,8 +44,8 @@ export class MessagePushingTaskService {
     ownerId?: string;
   }): Promise<MessagePushingTask[]> {
     const where: Record<string, any> = {
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      'subStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     if (surveyId) {
@@ -75,8 +75,8 @@ export class MessagePushingTaskService {
       where: {
         ownerId,
         _id: new ObjectId(id),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+        'subStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
     });
@@ -103,26 +103,25 @@ export class MessagePushingTaskService {
     const updatedTask = Object.assign(existingTask, updateData);
     return await this.messagePushingTaskRepository.save(updatedTask);
   }
-
   async remove({ id, ownerId }: { id: string; ownerId: string }) {
-    const curStatus = {
-      status: RECORD_STATUS.REMOVED,
+    const subStatus = {
+      status: RECORD_SUB_STATUS.REMOVED,
       date: Date.now(),
     };
     return this.messagePushingTaskRepository.updateOne(
       {
         ownerId,
         _id: new ObjectId(id),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+        'subStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
       {
         $set: {
-          curStatus,
+          subStatus,
         },
         $push: {
-          statusList: curStatus as never,
+          statusList: subStatus as never,
         },
       },
     );

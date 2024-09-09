@@ -10,7 +10,7 @@ import { MessagePushingLogService } from '../services/messagePushingLog.service'
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
 import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
@@ -121,7 +121,7 @@ describe('MessagePushingTaskService', () => {
           ownerId: mockOwnerId,
           surveys: { $all: [surveyId] },
           triggerHook: hook,
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+          'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
         },
       });
     });
@@ -146,7 +146,7 @@ describe('MessagePushingTaskService', () => {
         where: {
           ownerId: mockOwnerId,
           _id: new ObjectId(taskId),
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+          'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
         },
       });
     });
@@ -161,8 +161,8 @@ describe('MessagePushingTaskService', () => {
         pushAddress: 'http://update.example.com',
         triggerHook: MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED,
         surveys: ['new survey id'],
-        curStatus: {
-          status: RECORD_STATUS.EDITING,
+        subStatus: {
+          status: RECORD_SUB_STATUS.EDITING,
           date: Date.now(),
         },
       };
@@ -211,18 +211,18 @@ describe('MessagePushingTaskService', () => {
         {
           ownerId: mockOwnerId,
           _id: new ObjectId(taskId),
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+          'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
         },
         {
           $set: {
-            curStatus: {
-              status: RECORD_STATUS.REMOVED,
+            subStatus: {
+              status: RECORD_SUB_STATUS.REMOVED,
               date: expect.any(Number),
             },
           },
           $push: {
             statusList: {
-              status: RECORD_STATUS.REMOVED,
+              status: RECORD_SUB_STATUS.REMOVED,
               date: expect.any(Number),
             },
           },

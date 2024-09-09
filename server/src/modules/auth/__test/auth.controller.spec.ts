@@ -92,7 +92,10 @@ describe('AuthController', () => {
       };
 
       await expect(controller.register(mockUserInfo)).rejects.toThrow(
-        new HttpException('密码无效', EXCEPTION_CODE.PASSWORD_INVALID),
+        new HttpException(
+          '密码只能输入数字、字母、特殊字符',
+          EXCEPTION_CODE.PASSWORD_INVALID,
+        ),
       );
     });
   });

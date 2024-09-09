@@ -116,6 +116,9 @@ describe('SurveyMetaController', () => {
               curStatus: {
                 date: date,
               },
+              subStatus: {
+                date: date,
+              },
             },
           ],
         });
@@ -132,10 +135,12 @@ describe('SurveyMetaController', () => {
             createDate: expect.stringMatching(
               /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
             ),
-            updateDate: expect.stringMatching(
-              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-            ),
             curStatus: expect.objectContaining({
+              date: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+              ),
+            }),
+            subStatus: expect.objectContaining({
               date: expect.stringMatching(
                 /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
               ),

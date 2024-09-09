@@ -64,6 +64,13 @@ watch(
   }
 )
 
+const checkStatus = (data: any) => {
+  const alert = useCommandComponent(AlertDialog)
+  if (data?.subStatus?.status == 'pausing') {
+    alert({ title:'问卷已暂停回收' })
+  }
+}
+
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
 
@@ -73,6 +80,7 @@ const getDetail = async (surveyPath: string) => {
       loadData(res, surveyPath)
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
+      checkStatus(res.data)
       loadData(res, surveyPath)
       surveyStore.getEncryptInfo()
     }

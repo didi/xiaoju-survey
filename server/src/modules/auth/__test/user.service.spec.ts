@@ -5,7 +5,7 @@ import { UserService } from '../services/user.service';
 import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { hash256 } from 'src/utils/hash256';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 describe('UserService', () => {
@@ -145,7 +145,7 @@ describe('UserService', () => {
     expect(userRepository.findOne).toHaveBeenCalledWith({
       where: {
         username: username,
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
     });
     expect(user).toEqual(userInfo);
@@ -163,7 +163,7 @@ describe('UserService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: {
         username: username,
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
     });
     expect(user).toBe(null);
@@ -184,7 +184,7 @@ describe('UserService', () => {
     expect(userRepository.findOne).toHaveBeenCalledWith({
       where: {
         _id: new ObjectId(id),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
     });
     expect(user).toEqual(userInfo);
@@ -202,7 +202,7 @@ describe('UserService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: {
         _id: new ObjectId(id),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
     });
     expect(user).toBe(null);
@@ -228,7 +228,7 @@ describe('UserService', () => {
     expect(userRepository.find).toHaveBeenCalledWith({
       where: {
         username: new RegExp(username),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
       skip: 0,
       take: 10,
@@ -263,7 +263,7 @@ describe('UserService', () => {
         _id: {
           $in: idList.map((id) => new ObjectId(id)),
         },
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
+        'subStatus.status': { $ne: RECORD_SUB_STATUS.REMOVED },
       },
       select: ['_id', 'username', 'createDate'],
     });

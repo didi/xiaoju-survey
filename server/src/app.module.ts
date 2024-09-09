@@ -14,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
 import { FileModule } from './modules/file/file.module';
 import { WorkspaceModule } from './modules/workspace/workspace.module';
+import { UpgradeModule } from './modules/upgrade/upgrade.module';
 
 import { join } from 'path';
 
@@ -100,6 +101,7 @@ import { Logger } from './logger';
     MessageModule,
     FileModule,
     WorkspaceModule,
+    UpgradeModule,
   ],
   controllers: [AppController],
   providers: [

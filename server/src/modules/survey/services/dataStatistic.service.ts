@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 import moment from 'moment';
 import { keyBy } from 'lodash';
@@ -34,8 +35,8 @@ export class DataStatisticService {
     const dataListMap = keyBy(dataList, 'field');
     const where = {
       pageId: surveyId,
-      'curStatus.status': {
-        $ne: 'removed',
+      'subStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     const [surveyResponseList, total] =
@@ -124,8 +125,8 @@ export class DataStatisticService {
         {
           $match: {
             pageId: surveyId,
-            'curStatus.status': {
-              $ne: 'removed',
+            'subStatus.status': {
+              $ne: RECORD_SUB_STATUS.REMOVED,
             },
           },
         },

@@ -6,6 +6,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
           <el-menu-item index="1">问卷列表</el-menu-item>
         </el-menu>
+        <span @click="upgradeSubStatus">更新数据</span>
       </div>
       <div class="login-info">
         您好，{{ userInfo?.username }}
@@ -83,6 +84,7 @@ import { SpaceType } from '@/management/utils/types/workSpace'
 import { useUserStore } from '@/management/stores/user'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
+import { upgradeSubStatus } from '@/management/api/survey'
 
 const userStore = useUserStore()
 const workSpaceStore = useWorkSpaceStore()

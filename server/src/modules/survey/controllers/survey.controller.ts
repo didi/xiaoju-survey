@@ -175,6 +175,25 @@ export class SurveyController {
     };
   }
 
+  @HttpCode(200)
+  @Post('/pausingSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async pausingSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    await this.surveyMetaService.pausingSurveyMeta(surveyMeta);
+    await this.responseSchemaService.pausingResponseSchema({
+      surveyPath: surveyMeta.surveyPath,
+    });
+
+    return {
+      code: 200,
+    };
+  }
+
   @Get('/getSurvey')
   @HttpCode(200)
   @UseGuards(SurveyGuard)

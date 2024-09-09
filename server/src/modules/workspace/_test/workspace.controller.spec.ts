@@ -242,11 +242,15 @@ describe('WorkspaceController', () => {
 
   describe('getWorkspaceAndMember', () => {
     it('should return a list of workspaces and members for the user', async () => {
-      const req = { user: { _id: new ObjectId() } };
-
-      const workspaceId = new ObjectId();
       const userId = new ObjectId();
-      const memberList = [{ workspaceId, userId: userId }];
+      jest.spyOn(userService, 'getUserListByIds').mockResolvedValue([
+        {
+          _id: userId,
+        },
+      ] as Array<User>);
+      const req = { user: { _id: userId } };
+      const workspaceId = new ObjectId();
+      const memberList = [{ workspaceId, userId }];
       const workspaces = [{ _id: workspaceId, name: 'Test Workspace' }];
       const userList = [{ _id: userId, username: 'Test User' }];
 

@@ -1,9 +1,14 @@
 // 状态类型
 export enum RECORD_STATUS {
-  NEW = 'new', // 新建
+  NEW = 'new', // 新建 | 未发布
+  PUBLISHED = 'published', // 发布
+  CLOSE = 'close', // 关闭
+}
+
+export const enum RECORD_SUB_STATUS {
+  DEFAULT = '', // 默认
   EDITING = 'editing', // 编辑
   PAUSING = 'pausing', // 暂停
-  PUBLISHED = 'published', // 发布
   REMOVED = 'removed', // 删除
   FORCE_REMOVED = 'forceRemoved', // 从回收站删除
 }

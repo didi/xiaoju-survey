@@ -6,7 +6,7 @@ import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 interface FindAllByIdWithPaginationParams {
   workspaceIdList: string[];
@@ -56,8 +56,8 @@ export class WorkspaceService {
       _id: {
         $in: workspaceIdList.map((item) => new ObjectId(item)),
       },
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      'subStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
 
@@ -91,8 +91,8 @@ export class WorkspaceService {
       _id: {
         $in: workspaceIdList.map((m) => new ObjectId(m)),
       },
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      'subStatus.status': {
+        $ne: RECORD_SUB_STATUS.REMOVED,
       },
     };
     if (name) {
@@ -115,7 +115,7 @@ export class WorkspaceService {
 
   async delete(id: string) {
     const newStatus = {
-      status: RECORD_STATUS.REMOVED,
+      status: RECORD_SUB_STATUS.REMOVED,
       date: Date.now(),
     };
     const workspaceRes = await this.workspaceRepository.updateOne(
@@ -124,7 +124,7 @@ export class WorkspaceService {
       },
       {
         $set: {
-          curStatus: newStatus,
+          subStatus: newStatus,
         },
         $push: {
           statusList: newStatus as never,
@@ -137,7 +137,7 @@ export class WorkspaceService {
       },
       {
         $set: {
-          curStatus: newStatus,
+          subStatus: newStatus,
         },
         $push: {
           statusList: newStatus as never,
@@ -155,8 +155,8 @@ export class WorkspaceService {
     return await this.workspaceRepository.find({
       where: {
         ownerId: userId,
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+        'subStatus.status': {
+          $ne: RECORD_SUB_STATUS.REMOVED,
         },
       },
       order: {

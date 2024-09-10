@@ -80,6 +80,12 @@ export class SurveyResponseController {
     ) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
+    if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {
+      throw new HttpException(
+        '该问卷已暂停，无法提交',
+        EXCEPTION_CODE.RESPONSE_PAUSING,
+      );
+    }
 
     // 白名单的verifyId校验
     const baseConf = responseSchema.code.baseConf;

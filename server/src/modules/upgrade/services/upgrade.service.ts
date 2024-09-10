@@ -57,8 +57,8 @@ export class UpgradeService {
           date: v.statusList[0].date,
         };
         v.subStatus = subStatus;
-        return v;
       }
+      return v;
     };
 
     surveyMetaList.map(async (v) => {

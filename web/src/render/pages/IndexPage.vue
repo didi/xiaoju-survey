@@ -59,8 +59,8 @@ onMounted(() => {
 
 watch(
   () => route.query.t,
-  () => {
-    location.reload()
+  (t) => {
+    if (t) location.reload()
   }
 )
 

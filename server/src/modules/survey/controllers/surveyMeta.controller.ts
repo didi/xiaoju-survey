@@ -130,8 +130,8 @@ export class SurveyMetaController {
             item.surveyType = item.questionType || 'normal';
           }
           item.createDate = moment(item.createDate).format(fmt);
-          item.updateDate = moment(item.updateDate).format(fmt);
           item.curStatus.date = moment(item.curStatus.date).format(fmt);
+          item.subStatus.date = moment(item.subStatus.date).format(fmt);
           const surveyId = item._id.toString();
           if (cooperSurveyIdMap[surveyId]) {
             item.isCollaborated = true;

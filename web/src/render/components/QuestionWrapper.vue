@@ -33,6 +33,7 @@ const props = defineProps({
       return {}
     }
   }
+  }
 })
 const emit = defineEmits(['change'])
 const questionStore = useQuestionStore()

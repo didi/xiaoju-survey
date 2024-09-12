@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CollaboratorController } from '../controllers/collaborator.controller';
 import { CollaboratorService } from '../services/collaborator.service';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { CreateCollaboratorDto } from '../dto/createCollaborator.dto';
 import { Collaborator } from 'src/models/collaborator.entity';
@@ -25,7 +25,7 @@ jest.mock('src/guards/workspace.guard');
 describe('CollaboratorController', () => {
   let controller: CollaboratorController;
   let collaboratorService: CollaboratorService;
-  let logger: Logger;
+  let logger: XiaojuSurveyLogger;
   let userService: UserService;
   let surveyMetaService: SurveyMetaService;
   let workspaceMemberServie: WorkspaceMemberService;
@@ -50,7 +50,7 @@ describe('CollaboratorController', () => {
           },
         },
         {
-          provide: Logger,
+          provide: XiaojuSurveyLogger,
           useValue: {
             error: jest.fn(),
             info: jest.fn(),
@@ -84,7 +84,7 @@ describe('CollaboratorController', () => {
 
     controller = module.get<CollaboratorController>(CollaboratorController);
     collaboratorService = module.get<CollaboratorService>(CollaboratorService);
-    logger = module.get<Logger>(Logger);
+    logger = module.get<XiaojuSurveyLogger>(XiaojuSurveyLogger);
     userService = module.get<UserService>(UserService);
     surveyMetaService = module.get<SurveyMetaService>(SurveyMetaService);
     workspaceMemberServie = module.get<WorkspaceMemberService>(
@@ -191,7 +191,6 @@ describe('CollaboratorController', () => {
   describe('getSurveyCollaboratorList', () => {
     it('should return collaborator list', async () => {
       const query = { surveyId: 'surveyId' };
-      const req = { user: { _id: 'userId' } };
       const result = [
         { _id: 'collaboratorId', userId: 'userId', username: '' },
       ];
@@ -202,7 +201,7 @@ describe('CollaboratorController', () => {
 
       jest.spyOn(userService, 'getUserListByIds').mockResolvedValueOnce([]);
 
-      const response = await controller.getSurveyCollaboratorList(query, req);
+      const response = await controller.getSurveyCollaboratorList(query);
 
       expect(response).toEqual({
         code: 200,
@@ -214,11 +213,10 @@ describe('CollaboratorController', () => {
       const query: GetSurveyCollaboratorListDto = {
         surveyId: '',
       };
-      const req = { user: { _id: 'userId' } };
 
-      await expect(
-        controller.getSurveyCollaboratorList(query, req),
-      ).rejects.toThrow(HttpException);
+      await expect(controller.getSurveyCollaboratorList(query)).rejects.toThrow(
+        HttpException,
+      );
       expect(logger.error).toHaveBeenCalledTimes(1);
     });
   });
@@ -230,14 +228,13 @@ describe('CollaboratorController', () => {
         userId: 'userId',
         permissions: ['read'],
       };
-      const req = { user: { _id: 'userId' } };
       const result = { _id: 'userId', permissions: ['read'] };
 
       jest
         .spyOn(collaboratorService, 'changeUserPermission')
         .mockResolvedValue(result);
 
-      const response = await controller.changeUserPermission(reqBody, req);
+      const response = await controller.changeUserPermission(reqBody);
 
       expect(response).toEqual({
         code: 200,
@@ -251,11 +248,10 @@ describe('CollaboratorController', () => {
         userId: '',
         permissions: ['surveyManage'],
       };
-      const req = { user: { _id: 'userId' } };
 
-      await expect(
-        controller.changeUserPermission(reqBody, req),
-      ).rejects.toThrow(HttpException);
+      await expect(controller.changeUserPermission(reqBody)).rejects.toThrow(
+        HttpException,
+      );
       expect(logger.error).toHaveBeenCalledTimes(1);
     });
   });
@@ -263,14 +259,13 @@ describe('CollaboratorController', () => {
   describe('deleteCollaborator', () => {
     it('should delete collaborator successfully', async () => {
       const query = { surveyId: 'surveyId', userId: 'userId' };
-      const req = { user: { _id: 'userId' } };
       const result = { acknowledged: true, deletedCount: 1 };
 
       jest
         .spyOn(collaboratorService, 'deleteCollaborator')
         .mockResolvedValue(result);
 
-      const response = await controller.deleteCollaborator(query, req);
+      const response = await controller.deleteCollaborator(query);
 
       expect(response).toEqual({
         code: 200,
@@ -280,9 +275,8 @@ describe('CollaboratorController', () => {
 
     it('should throw an exception if validation fails', async () => {
       const query = { surveyId: '', userId: '' };
-      const req = { user: { _id: 'userId' } };
 
-      await expect(controller.deleteCollaborator(query, req)).rejects.toThrow(
+      await expect(controller.deleteCollaborator(query)).rejects.toThrow(
         HttpException,
       );
       expect(logger.error).toHaveBeenCalledTimes(1);

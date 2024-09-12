@@ -31,7 +31,7 @@ import {
 import { splitMembers } from '../utils/splitMember';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { GetWorkspaceListDto } from '../dto/getWorkspaceList.dto';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { Workspace } from 'src/models/workspace.entity';
@@ -46,7 +46,7 @@ export class WorkspaceController {
     private readonly workspaceMemberService: WorkspaceMemberService,
     private readonly userService: UserService,
     private readonly surveyMetaService: SurveyMetaService,
-    private readonly logger: Logger,
+    private readonly logger: XiaojuSurveyLogger,
   ) {}
 
   @Get('getRoleList')
@@ -64,10 +64,7 @@ export class WorkspaceController {
   async create(@Body() workspace: CreateWorkspaceDto, @Request() req) {
     const { value, error } = CreateWorkspaceDto.validate(workspace);
     if (error) {
-      this.logger.error(
-        `CreateWorkspaceDto validate failed: ${error.message}`,
-        { req },
-      );
+      this.logger.error(`CreateWorkspaceDto validate failed: ${error.message}`);
       throw new HttpException(
         `参数错误: 请联系管理员`,
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -137,7 +134,6 @@ export class WorkspaceController {
     if (error) {
       this.logger.error(
         `GetWorkspaceListDto validate failed: ${error.message}`,
-        { req },
       );
       throw new HttpException(
         `参数错误: 请联系管理员`,

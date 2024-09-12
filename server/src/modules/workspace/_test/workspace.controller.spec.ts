@@ -10,7 +10,7 @@ import { Workspace } from 'src/models/workspace.entity';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { User } from 'src/models/user.entity';
 
 jest.mock('src/guards/authentication.guard');
@@ -65,7 +65,7 @@ describe('WorkspaceController', () => {
           },
         },
         {
-          provide: Logger,
+          provide: XiaojuSurveyLogger,
           useValue: {
             info: jest.fn(),
             error: jest.fn(),

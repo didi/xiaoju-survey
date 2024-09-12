@@ -2,7 +2,7 @@
   <el-switch v-model="newValue" @change="changeData" />
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 const props = defineProps({
@@ -23,4 +23,15 @@ const changeData = (value) => {
     value
   })
 }
+watch(
+  () => props.formConfig.value,
+  (newVal) => {
+    if (newVal !== newValue.value) {
+      newValue.value = newVal
+    }
+  },
+  {
+    immediate: true
+  }
+)
 </script>

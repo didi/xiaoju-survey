@@ -7,7 +7,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 
 import { UserService } from 'src/modules/auth/services/user.service';
 import { AuthService } from 'src/modules/auth/services/auth.service';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 
 jest.mock('src/guards/authentication.guard');
 jest.mock('src/guards/survey.guard');
@@ -49,7 +49,7 @@ describe('SurveyHistoryController', () => {
           useClass: jest.fn().mockImplementation(() => ({})),
         },
         {
-          provide: Logger,
+          provide: XiaojuSurveyLogger,
           useValue: {
             info: jest.fn(),
             error: jest.fn(),
@@ -66,7 +66,7 @@ describe('SurveyHistoryController', () => {
   it('should return history list when query is valid', async () => {
     const queryInfo = { surveyId: 'survey123', historyType: 'published' };
 
-    await controller.getList(queryInfo, {});
+    await controller.getList(queryInfo);
 
     expect(surveyHistoryService.getHistoryList).toHaveBeenCalledWith({
       surveyId: queryInfo.surveyId,

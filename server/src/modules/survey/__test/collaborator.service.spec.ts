@@ -3,13 +3,13 @@ import { CollaboratorService } from '../services/collaborator.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { MongoRepository } from 'typeorm';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 import { InsertManyResult, ObjectId } from 'mongodb';
 
 describe('CollaboratorService', () => {
   let service: CollaboratorService;
   let repository: MongoRepository<Collaborator>;
-  let logger: Logger;
+  let logger: XiaojuSurveyLogger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,7 +20,7 @@ describe('CollaboratorService', () => {
           useClass: MongoRepository,
         },
         {
-          provide: Logger,
+          provide: XiaojuSurveyLogger,
           useValue: {
             info: jest.fn(),
           },
@@ -32,7 +32,7 @@ describe('CollaboratorService', () => {
     repository = module.get<MongoRepository<Collaborator>>(
       getRepositoryToken(Collaborator),
     );
-    logger = module.get<Logger>(Logger);
+    logger = module.get<XiaojuSurveyLogger>(XiaojuSurveyLogger);
   });
 
   describe('create', () => {

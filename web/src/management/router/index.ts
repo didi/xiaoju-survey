@@ -9,6 +9,9 @@ import { SurveyPermissions } from '@/management/utils/types/workSpace'
 import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+import 'element-plus/theme-chalk/src/message-box.scss'
+import 'element-plus/theme-chalk/src/button.scss'
+import 'element-plus/theme-chalk/src/overlay.scss'
 import { useUserStore } from '@/management/stores/user'
 import { useEditStore } from '@/management/stores/edit'
 
@@ -24,6 +27,14 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true,
       title: '问卷列表'
+    }
+  },
+  {
+    path: '/download',
+    name: 'download',
+    component: () => import('../pages/downloadTask/TaskList.vue'),
+    meta: {
+      needLogin: true
     }
   },
   {

@@ -12,6 +12,7 @@ export enum EXCEPTION_CODE {
   SURVEY_TYPE_ERROR = 3003, // 问卷类型错误
   SURVEY_NOT_FOUND = 3004, // 问卷不存在
   SURVEY_CONTENT_NOT_ALLOW = 3005, // 存在禁用内容
+  SURVEY_SAVE_CONFLICT = 3006, // 问卷冲突
   CAPTCHA_INCORRECT = 4001, // 验证码不正确
   WHITELIST_ERROR = 4002, // 白名单校验错误
 

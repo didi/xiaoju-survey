@@ -286,14 +286,14 @@ export const useQuestionStore = defineStore('question', () => {
     return questionData.value[field].index
   }
   const addNeedHideFields = (fields) => {
-    fields.forEach(field => {
-      if(!needHideFields.value.includes(field)) {
+    fields.forEach((field) => {
+      if (!needHideFields.value.includes(field)) {
         needHideFields.value.push(field)
       }
     })
   }
   const removeNeedHideFields = (fields) => {
-    needHideFields.value = needHideFields.value.filter(field => !fields.includes(field))
+    needHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
   }
   return {
     

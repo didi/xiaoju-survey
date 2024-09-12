@@ -2,6 +2,7 @@ import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
+import { cleanRichTextWithMediaTag } from 'src/utils/xss'
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
@@ -245,7 +246,7 @@ export class SurveyResponseController {
             if (quota !== 0 && quota <= optionCountData[val]) {
               const item = dataList.find((item) => item['field'] === field);
               throw new HttpException(
-                `【${item['title']}】中的【${option['text']}】所选人数已达到上限，请重新选择`,
+                `【${cleanRichTextWithMediaTag(item['title'])}】中的【${cleanRichTextWithMediaTag(option['text'])}】所选人数已达到上限，请重新选择`,
                 EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
               );
             }

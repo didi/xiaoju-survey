@@ -1,4 +1,4 @@
-import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import { computed, defineComponent, shallowRef, defineAsyncComponent, watch } from 'vue'
 import { includes } from 'lodash-es'
 
 import BaseChoice from '../BaseChoice'
@@ -49,6 +49,7 @@ export default defineComponent({
   },
   emits: ['change'],
   setup(props, { emit }) {
+    
     const disableState = computed(() => {
       if (!props.maxNum) {
         return false
@@ -57,7 +58,7 @@ export default defineComponent({
     })
     const isDisabled = (item) => {
       const { value } = props
-      return disableState.value && !includes(value, item.value)
+      return disableState.value && !includes(value, item.hash)
     }
     const myOptions = computed(() => {
       const { options } = props
@@ -67,6 +68,20 @@ export default defineComponent({
           disabled: (item.release === 0) || isDisabled(item)
         }
       })
+    })
+    // 兼容断点续答情况下选项配额为0的情况
+    watch(() => props.value, (value) => {
+      const disabledHash = myOptions.value.filter(i => i.disabled).map(i => i.hash)
+      if (value && disabledHash.length) {
+        disabledHash.forEach(hash => {
+          const index = value.indexOf(hash)
+          if( index> -1) {
+            const newValue = [...value]
+            newValue.splice(index, 1)
+            onChange(newValue)
+          }
+        })
+      }
     })
     const onChange = (value) => {
       const key = props.field
@@ -96,6 +111,7 @@ export default defineComponent({
     return {
       onChange,
       handleSelectMoreChange,
+      disableState,
       myOptions,
       selectMoreView
     }
@@ -111,6 +127,7 @@ export default defineComponent({
         options={myOptions}
         onChange={onChange}
         value={value}
+        layout={this.layout}
         quotaNoDisplay={quotaNoDisplay}
       >
         {{

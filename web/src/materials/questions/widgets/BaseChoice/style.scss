@@ -25,11 +25,41 @@
     padding: 0 0.2rem !important;
     box-sizing: border-box;
 
+   
+
+    // .choice-content, .choice-item {
+    //   width: 100%;
+    // }
+
+    &.vertical {
+      display:  flex;
+      flex-direction: column;
+
+      .choice-outer {
+        width: 100%;
+      }
+    }
+
+    &.horizontal {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      flex-wrap: wrap;
+
+      .choice-outer {
+        width: 50%;
+
+        .question {
+          padding-top: 0;
+        }
+      }
+    }
+
     .choice-item {
       position: relative;
       display: inline-flex;
-      // align-items: center;
-      width: 50%;
+      align-items: center;
+      width: 100%;
       box-sizing: border-box;
       vertical-align: top;
       // height: .88rem;
@@ -98,7 +128,6 @@
         .qicon.qicon-gouxuan {
           display: inline-block;
           font-size: 0.32rem;
-          line-height: 0.32rem;
           border-color: $primary-color;
           background-color: $primary-color;
           color: #fff;

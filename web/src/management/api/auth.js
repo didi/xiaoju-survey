@@ -11,3 +11,11 @@ export const login = (data) => {
 export const getUserInfo = () => {
   return axios.get('/user/getUserInfo')
 }
+/** 获取密码强度 */
+export const getPasswordStrength = (password) => {
+  return axios.get('/auth/register/password/strength', {
+    params: {
+      password
+    }
+  })
+}

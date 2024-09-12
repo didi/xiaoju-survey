@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
-import { pick } from 'lodash-es'
+import { cloneDeep, pick } from 'lodash-es'
 
 import { isMobile as isInMobile } from '@/render/utils/index'
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
@@ -47,7 +47,6 @@ export const useSurveyStore = defineStore('survey', () => {
   const formValues = ref({})
   const whiteData = ref({})
   const pageConf = ref([])
-  
 
   const router = useRouter()
   const questionStore = useQuestionStore()
@@ -160,97 +159,54 @@ export const useSurveyStore = defineStore('survey', () => {
     questionStore.initQuotaMap()
 
   }
-
-  // 加载上次填写过的数据到问卷页
-  function loadFormData(params, formData) {
-    // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
-    const { questionData, questionSeq, rules, formValues } = adapter.generateData({
-      bannerConf: params.bannerConf,
-      baseConf: params.baseConf,
-      bottomConf: params.bottomConf,
-      dataConf: params.dataConf,
-      skinConf: params.skinConf,
-      submitConf: params.submitConf,
-    })
-
+  function fillFormData(formData) {
+    const _formValues = cloneDeep(formValues.value)
     for(const key in formData){
-      formValues[key] = formData[key]
+      _formValues[key] = formData[key]
     }
-
-    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
-    questionStore.questionData = questionData
-    questionStore.questionSeq = questionSeq
-
-    // 将数据设置到state上
-    rules.value = rules
-    bannerConf.value = params.bannerConf
-    baseConf.value = params.baseConf
-    bottomConf.value = params.bottomConf
-    dataConf.value = params.dataConf
-    skinConf.value = params.skinConf
-    submitConf.value = params.submitConf
-    formValues.value = formValues
-
-    whiteData.value = params.whiteData
-    pageConf.value = params.pageConf
-    
-    // 获取已投票数据
-    questionStore.initVoteData()
-    questionStore.initQuotaMap()
-
+    formValues.value = _formValues
   }
   const initSurvey = (option) => {
 
     setEnterTime()
-
     if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
       return
     }
+    // 加载空白问卷
+    clearFormData(option)
 
-    const { breakAnswer } = option.baseConf
-
+    const { breakAnswer, backAnswer } = option.baseConf
     const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
-    for(const key in localData){
-      localData[key] = decodeURIComponent(localData[key])
-    }
 
     const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
+    
     if(localData) {
-      if(isSubmit){
-        if(!option.baseConf.backAnswer) {
-          clearFormData(option)
-        } else {
-          confirm({
-            title: "您之前已提交过问卷，是否要回填？",
-            onConfirm: async () => {
-              try {
-                loadFormData(option, localData)
-              } catch (error) {
-                console.log(error)
-              } finally {
-                confirm.close()
-              }
-            },
-            onCancel: async() => {
-              try {
-                clearFormData({ bannerConf, baseConf, bottomConf, dataConf, skinConf, submitConf })
-              } catch (error) {
-                console.log(error)
-              } finally {
-                confirm.close()
-              }
+      // 断点续答
+      if(breakAnswer) {
+        confirm({
+          title: "是否继续上次填写的内容？",
+          onConfirm: async () => {
+            try {
+              // 回填答题内容
+              fillFormData(localData)
+            } catch (error) {
+              console.log(error)
+            } finally {
+              confirm.close()
             }
-          })
-        }
-      } else {
-        if(!breakAnswer) {
-          clearFormData(option)
-        } else {
+          },
+          onCancel: async() => {
+            confirm.close()
+          }
+        })
+      } else if (backAnswer) {
+        if(isSubmit){
           confirm({
-            title: "您之前已填写部分内容, 是否要继续填写?",
+            title: "是否继续上次提交的内容？",
             onConfirm: async () => {
               try {
-                loadFormData(option, localData)
+                // 回填答题内容
+                fillFormData(localData)
               } catch (error) {
                 console.log(error)
               } finally {
@@ -258,13 +214,7 @@ export const useSurveyStore = defineStore('survey', () => {
               }
             },
             onCancel: async() => {
-              try {
-                clearFormData(option)
-              } catch (error) {
-                console.log(error)
-              } finally {
-                confirm.close()
-              }
+              confirm.close()
             }
           })
         }
@@ -285,11 +235,11 @@ export const useSurveyStore = defineStore('survey', () => {
 
   const showLogicEngine = ref()
   const initShowLogicEngine = (showLogicConf) => {
-    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
+    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf || [])
   }
   const jumpLogicEngine = ref()
   const initJumpLogicEngine = (jumpLogicConf) => {
-    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
+    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf || [])
   }
 
   return {

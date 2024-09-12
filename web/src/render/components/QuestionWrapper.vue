@@ -4,6 +4,7 @@
     :moduleConfig="questionConfig"
     :indexNumber="indexNumber"
     :showTitle="true"
+    @input="handleInput"
     @change="handleChange"
   ></QuestionRuleContainer>
 </template>
@@ -31,7 +32,7 @@ const props = defineProps({
     default: () => {
       return {}
     }
-  },
+  }
 })
 const emit = defineEmits(['change'])
 const questionStore = useQuestionStore()
@@ -41,11 +42,7 @@ const formValues = computed(() => {
   return surveyStore.formValues
 })
 const { showLogicEngine } = storeToRefs(surveyStore)
-const {
-  changeField,
-  changeIndex,
-  needHideFields,
-} = storeToRefs(questionStore)
+const { changeField, changeIndex, needHideFields } = storeToRefs(questionStore)
 // 题型配置转换
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
@@ -66,7 +63,6 @@ const questionConfig = computed(() => {
     let { options: optionWithQuota } = useOptionsQuota(field)
     
     alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
-    console.log({alloptions})
   }
   if (
     NORMAL_CHOICES.includes(type) &&
@@ -104,14 +100,12 @@ const logicshow = computed(() => {
   return result === undefined ? true : result
 })
 
-
 const logicskip = computed(() => {
   return needHideFields.value.includes(props.moduleConfig.field)
 })
 const visibily = computed(() => {
   return logicshow.value && !logicskip.value
 })
-
 
 // 当题目被隐藏时，清空题目的选中项，实现a显示关联b，b显示关联c场景下，b隐藏不影响题目c的展示
 watch(
@@ -120,7 +114,7 @@ watch(
     const { field, type, innerType } = props.moduleConfig
     if (!newVal && oldVal) {
       // 如果被隐藏题目有选中值，则需要清空选中值
-      if(formValues.value[field].toString()) {
+      if (formValues.value[field].toString()) {
         let value = ''
         // 题型是多选，或者子题型是多选（innerType是用于投票）
         if (type === QUESTION_TYPE.CHECKBOX || innerType === QUESTION_TYPE.CHECKBOX) {
@@ -152,45 +146,52 @@ const handleChange = (data) => {
   processJumpSkip()
 }
 
+const handleInput = () => {
+  localStorageBack()
+}
+
 const processJumpSkip = () => {
-    const targetResult = surveyStore.jumpLogicEngine
-      .getResultsByField(changeField.value, surveyStore.formValues)
-      .map(item => {
-        // 获取目标题的序号，处理跳转问卷末尾为最大题的序号
-        const index = item.target === 'end' ? surveyStore.dataConf.dataList.length : questionStore.getQuestionIndexByField(item.target)
-        return {
-          index,
-          ...item
-        }
-      })
-    const notMatchedFields = targetResult.filter(item => !item.result)
-    const matchedFields = targetResult.filter(item => item.result)
-    // 目标题均未匹配，需要展示出来条件题和目标题之间的题目
-    if (notMatchedFields.length) {
-      notMatchedFields.forEach(element => {
-        const endIndex = element.index
-        const fields = surveyStore.dataConf.dataList.slice(changeIndex.value + 1, endIndex).map(item => item.field)
-        // hideMap中remove被跳过的题
-        questionStore.removeNeedHideFields(fields)
-      });
-    }
-  
-    if (!matchedFields.length) return
-    // 匹配到多个目标题时，取最大序号的题目
-    const maxIndexQuestion =
-      matchedFields.filter(item => item.result).sort((a, b) => b.index - a.index)[0].index
-  
-    // 条件题和目标题之间的题目隐藏
-    const skipKey = surveyStore.dataConf.dataList
-      .slice(changeIndex.value + 1, maxIndexQuestion).map(item => item.field)
-    questionStore.addNeedHideFields(skipKey)
+  const targetResult = surveyStore.jumpLogicEngine
+    .getResultsByField(changeField.value, surveyStore.formValues)
+    .map((item) => {
+      // 获取目标题的序号，处理跳转问卷末尾为最大题的序号
+      const index =
+        item.target === 'end'
+          ? surveyStore.dataConf.dataList.length
+          : questionStore.getQuestionIndexByField(item.target)
+      return {
+        index,
+        ...item
+      }
+    })
+  const notMatchedFields = targetResult.filter((item) => !item.result)
+  const matchedFields = targetResult.filter((item) => item.result)
+  // 目标题均未匹配，需要展示出来条件题和目标题之间的题目
+  if (notMatchedFields.length) {
+    notMatchedFields.forEach((element) => {
+      const endIndex = element.index
+      const fields = surveyStore.dataConf.dataList
+        .slice(changeIndex.value + 1, endIndex)
+        .map((item) => item.field)
+      // hideMap中remove被跳过的题
+      questionStore.removeNeedHideFields(fields)
+    })
   }
 
+  if (!matchedFields.length) return
+  // 匹配到多个目标题时，取最大序号的题目
+  const maxIndexQuestion = matchedFields
+    .filter((item) => item.result)
+    .sort((a, b) => b.index - a.index)[0].index
+
+  // 条件题和目标题之间的题目隐藏
+  const skipKey = surveyStore.dataConf.dataList
+    .slice(changeIndex.value + 1, maxIndexQuestion)
+    .map((item) => item.field)
+  questionStore.addNeedHideFields(skipKey)
+}
 const localStorageBack = () => {
   var formData = Object.assign({}, surveyStore.formValues);
-  for(const key in formData){
-    formData[key] = encodeURIComponent(formData[key])
-  }
 
   //浏览器存储
   localStorage.removeItem(surveyStore.surveyPath + "_questionData")

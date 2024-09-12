@@ -29,7 +29,7 @@
 
 <br />
 
-&ensp;&ensp;XIAOJUSURVEY is an open-source form builder and analytics platform to create questionnaires, exams, polls, quizzes, and analyze data online.
+&ensp;&ensp;XIAOJUSURVEY is an enterprises form builder and analytics platform to create questionnaires, exams, polls, quizzes, and analyze data online.
 
 &ensp;&ensp;The internal system has accumulated over 40 question types and more than 100 selected templates, suitable for market research, customer satisfaction surveys, online exams, voting, reporting, evaluations, and many other scenarios. In terms of data capabilities, it has been honed through hundreds of millions of iterations, resulting in the ability to provide online reports with per-question statistics, cross-analysis, and multi-channel analysis, quickly meeting professional analysis needs.
 

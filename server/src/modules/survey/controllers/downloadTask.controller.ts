@@ -79,15 +79,16 @@ export class DownloadTaskController {
   async downloadList(
     @Query()
     queryInfo: GetDownloadTaskListDto,
+    @Request() req,
   ) {
     const { value, error } = GetDownloadTaskListDto.validate(queryInfo);
     if (error) {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { ownerId, pageIndex, pageSize } = value;
+    const { pageIndex, pageSize } = value;
     const { total, list } = await this.downloadTaskService.getDownloadTaskList({
-      ownerId,
+      ownerId: req.user._id.toString(),
       pageIndex,
       pageSize,
     });

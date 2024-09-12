@@ -13,6 +13,7 @@ import { load } from 'cheerio';
 import { get } from 'lodash';
 import { FileService } from 'src/modules/file/services/file.service';
 import { XiaojuSurveyLogger } from 'src/logger';
+import moment from 'moment';
 
 @Injectable()
 export class DownloadTaskService {
@@ -41,6 +42,7 @@ export class DownloadTaskService {
     operatorId: string;
     params: any;
   }) {
+    const filename = `${responseSchema.title}-${params.isDesensitive ? '脱敏' : '原'}回收数据-${moment().format('YYYYMMDDHHmmss')}.xlsx`;
     const downloadTask = this.downloadTaskRepository.create({
       surveyId,
       surveyPath: responseSchema.surveyPath,
@@ -50,6 +52,7 @@ export class DownloadTaskService {
         ...params,
         title: responseSchema.title,
       },
+      filename,
     });
     await this.downloadTaskRepository.save(downloadTask);
     return downloadTask._id.toString();
@@ -65,7 +68,7 @@ export class DownloadTaskService {
     pageSize: number;
   }) {
     const where = {
-      onwer: ownerId,
+      ownerId,
       'curStatus.status': {
         $ne: RECORD_STATUS.REMOVED,
       },
@@ -209,16 +212,12 @@ export class DownloadTaskService {
         { name: 'sheet1', data: xlsxData, options: {} },
       ]);
 
-      const isDesensitive = taskInfo.params?.isDesensitive;
-
-      const originalname = `${taskInfo.params.title}-${isDesensitive ? '脱敏' : '原'}回收数据.xlsx`;
-
       const file: Express.Multer.File = {
         fieldname: 'file',
-        originalname: originalname,
+        originalname: taskInfo.filename,
         encoding: '7bit',
         mimetype: 'application/octet-stream',
-        filename: originalname,
+        filename: taskInfo.filename,
         size: buffer.length,
         buffer: buffer,
         stream: null,
@@ -246,7 +245,6 @@ export class DownloadTaskService {
           $set: {
             curStatus,
             url,
-            filename: originalname,
             fileKey: key,
             fileSize: buffer.length,
           },

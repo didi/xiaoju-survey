@@ -7,11 +7,12 @@
 import { ref, computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter } from 'vue-router'
-import { ElMessage, } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-import { publishSurvey, saveSurvey } from '@/management/api/survey'
+import { publishSurvey, saveSurvey, seizeSession } from '@/management/api/survey'
 import buildData from './buildData'
 import { storeToRefs } from 'pinia'
+import { CODE_MAP } from '@/management/api/base'
 
 interface Props {
   updateLogicConf: any
@@ -27,6 +28,16 @@ const { schema, sessionId } = storeToRefs(editStore)
 const saveData = computed(() => {
   return buildData(schema.value, sessionId.value)
 })
+
+const seize = async () => {
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
+  if (seizeRes.code === 200) {
+    location.reload();
+  } else {
+    ElMessage.error('获取权限失败，请重试')
+  }
+}
+
 const router = useRouter()
 
 const validate = () => {
@@ -61,8 +72,33 @@ const onSave = async () => {
     return null
   }
 
-  const res: Record<string, any> = await saveSurvey(saveData.value)
-  return res
+  try {
+    const res: any = await saveSurvey(saveData.value)
+    if(!res) {
+      return null
+    }
+    if (res.code === 200) {
+      ElMessage.success('保存成功')
+      return res
+    } else if (res.code === 3006) {
+      ElMessageBox.alert(res.errmsg, '提示', {
+        confirmButtonText: '刷新同步',
+        callback: (action: string) => {
+          if (action === 'confirm') {
+            seize();
+          }
+        }
+      });
+      return null
+    } else {
+      ElMessage.error(res.errmsg)
+      return null
+    }
+  } catch (error) {
+    ElMessage.error('保存问卷失败')
+    return null
+  }
+
 }
 const handlePublish = async () => {
   if (isPublishing.value) {
@@ -81,11 +117,7 @@ const handlePublish = async () => {
 
   try {
     const saveRes: any = await onSave()
-    if (!saveRes) {
-      return
-    }
-    if(saveRes && saveRes?.code !== 200) {
-      ElMessage.error(`保存失败 ${saveRes.errmsg}`)
+    if (!saveRes || saveRes.code !== CODE_MAP.SUCCESS) {
       return
     }
     const publishRes: any = await publishSurvey({ surveyId: saveData.value.surveyId })

@@ -19,14 +19,14 @@
         :prop="field.key"
         :label="field.title"
         :width="field.width"
-        class-name="link"
+        :class-name="[field.key]"
         :formatter="field.formatter"
       >
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template v-slot="{ row }">
-          <el-button size="small" @click="handleDownload(row)"> 下载 </el-button>
-          <el-button type="primary" size="small" @click="openDeleteDialog(row)"> 删除 </el-button>
+          <span v-if="row.curStatus?.status === 'finished'" class="text-btn download-btn" @click="handleDownload(row)"> 下载 </span>
+          <span class="text-btn delete-btn" @click="openDeleteDialog(row)"> 删除 </span>
         </template>
       </el-table-column>
     </el-table>
@@ -35,31 +35,21 @@
         background
         layout="prev, pager, next"
         :total="total"
-        :size="pageSize"
+        small
+        :page-size="pageSize"
         @current-change="handleCurrentChange"
       >
       </el-pagination>
     </div>
-    <el-dialog v-model="centerDialogVisible" title="" width="500" align-center>
-      <span>确认删除下载记录吗？</span>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="centerDialogVisible = false"> 取消 </el-button>
-          <el-button type="primary" @click="confirmDelete"> 确认 </el-button>
-        </div>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { get, map } from 'lodash-es'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteDownloadTask, getDownloadTaskList } from '@/management/api/downloadTask'
 import { CODE_MAP } from '@/management/api/base'
-import 'element-plus/theme-chalk/src/message.scss'
-import 'element-plus/theme-chalk/src/message-box.scss'
 
 import moment from 'moment'
 // 引入中文
@@ -68,9 +58,9 @@ import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 const loading = ref(false)
-const pageSize = ref(15)
+const pageSize = ref(10)
 const total = ref(0)
-const dataList = reactive([])
+const dataList: Array<any> = reactive([])
 
 onMounted(() => {
   getList({ pageIndex: 1 })
@@ -87,7 +77,8 @@ const getList = async ({ pageIndex }: { pageIndex: number }) => {
   const res: Record<string, any> = await getDownloadTaskList(params)
   if (res.code === CODE_MAP.SUCCESS) {
     total.value = res.data.total
-    dataList.values = res.data.list
+    const list = res.data.list as any
+    dataList.splice(0, dataList.length, ...list);
   }
   loading.value = false
 }
@@ -99,7 +90,6 @@ const statusTextMap: Record<string, string> = {
   removed: '已删除',
 };
 
-const centerDialogVisible = ref(false)
 let currentDelRow: Record<string, any> = {}
 // 下载文件
 const handleDownload = async (row: any) => {
@@ -112,20 +102,33 @@ const handleDownload = async (row: any) => {
   }
 }
 // 删除文件
-const openDeleteDialog = (row: any) => {
-  centerDialogVisible.value = true
-  currentDelRow = row
+const openDeleteDialog = async (row: any) => {
+  try {
+    await ElMessageBox.confirm('是否确认删除？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    currentDelRow = row
+    confirmDelete()
+  } catch (error) {
+    console.log('取消删除')
+  }
 }
 
 // 确认删除文件
 const confirmDelete = async () => {
   try {
-    await deleteDownloadTask(currentDelRow.taskId)
-    await getList({ pageIndex: 1 })
+    const res: Record<string, any> = await deleteDownloadTask(currentDelRow.taskId)
+    if (res.code !== CODE_MAP.SUCCESS) {
+      ElMessage.error(res.errmsg)
+    } else {
+      ElMessage.success('删除成功');
+      await getList({ pageIndex: 1 })
+    }
   } catch (error) {
     ElMessage.error("删除失败，请刷新重试")
   }
-  centerDialogVisible.value = false
 }
 
 const fields = ['filename', 'fileSize', 'createDate', 'curStatus']
@@ -177,12 +180,29 @@ const handleCurrentChange = (val: number) => {
   background-color: #f6f7f9;
 
   .list-wrapper {
+    width: 90%;
+    min-width: 1080px;
     padding: 10px 20px;
     background: #fff;
+    margin: 0 auto;
 
     .list-table {
       .cell {
         text-align: center;
+      }
+      .text-btn {
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 20px;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+      .download-btn {
+        color: $primary-color;
+      }
+      .delete-btn {
+        color: red;
       }
     }
     .small-text {

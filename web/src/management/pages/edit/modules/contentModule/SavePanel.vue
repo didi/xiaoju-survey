@@ -86,7 +86,7 @@ const onSave = async () => {
 }
 
 const seize = async () => {
-  const seizeRes: Record<string, any> = await seizeSession({ sessionId:sessionId.value })
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
   if (seizeRes.code === 200) {
     location.reload();
   } else {
@@ -154,10 +154,12 @@ const handleSave = async () => {
       ElMessage.success('保存成功')
       return res
     } else if (res.code === 3006) {
-      ElMessageBox.alert('当前问卷已在其它页面开启编辑，点击“抢占”以获取保存权限。', '提示', {
-        confirmButtonText: '抢占',
-        callback: () => {
-          seize();
+      ElMessageBox.alert(res.errmsg, '提示', {
+        confirmButtonText: '刷新同步',
+        callback: (action: string) => {
+          if (action === 'confirm') {
+            seize();
+          }
         }
       });
     } else {

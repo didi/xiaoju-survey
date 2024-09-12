@@ -2,7 +2,6 @@ import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
-import { cleanRichTextWithMediaTag } from 'src/utils/xss'
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
@@ -23,6 +22,14 @@ import { XiaojuSurveyLogger } from 'src/logger';
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { QUESTION_TYPE } from 'src/enums/question';
+
+const optionQuestionType: Array<string> = [
+  QUESTION_TYPE.RADIO,
+  QUESTION_TYPE.CHECKBOX,
+  QUESTION_TYPE.BINARY_CHOICE,
+  QUESTION_TYPE.VOTE,
+];
 
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
@@ -207,6 +214,7 @@ export class SurveyResponseController {
     const optionTextAndId = dataList
       .filter((questionItem) => {
         return (
+          optionQuestionType.includes(questionItem.type) &&
           Array.isArray(questionItem.options) &&
           questionItem.options.length > 0 &&
           decryptedData[questionItem.field]
@@ -222,20 +230,23 @@ export class SurveyResponseController {
         return pre;
       }, {});
 
+    // 使用redis作为锁，校验选项配额
     const surveyId = responseSchema.pageId;
     const lockKey = `locks:optionSelectedCount:${surveyId}`;
     const lock = await this.redisService.lockResource(lockKey, 1000);
     this.logger.info(`lockKey: ${lockKey}`);
     try {
+      const successParams = [];
       for (const field in decryptedData) {
         const value = decryptedData[field];
         const values = Array.isArray(value) ? value : [value];
         if (field in optionTextAndId) {
-          const optionCountData = await this.counterService.get({
-            key: field,
-            surveyPath,
-            type: 'option',
-          });
+          const optionCountData =
+            (await this.counterService.get({
+              key: field,
+              surveyPath,
+              type: 'option',
+            })) || {};
 
           //遍历选项hash值
           for (const val of values) {
@@ -243,38 +254,41 @@ export class SurveyResponseController {
               (opt) => opt['hash'] === val,
             );
             const quota = parseInt(option['quota']);
-            if (quota !== 0 && quota <= optionCountData[val]) {
-              const item = dataList.find((item) => item['field'] === field);
-              throw new HttpException(
-                `【${cleanRichTextWithMediaTag(item['title'])}】中的【${cleanRichTextWithMediaTag(option['text'])}】所选人数已达到上限，请重新选择`,
-                EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
-              );
+            if (
+              quota &&
+              optionCountData?.[val] &&
+              quota <= optionCountData[val]
+            ) {
+              return {
+                code: EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
+                data: {
+                  field,
+                  optionHash: option.hash,
+                },
+              };
             }
+            if (!optionCountData[val]) {
+              optionCountData[val] = 0;
+            }
+            optionCountData[val]++;
           }
-        }
-      }
-
-      for (const field in decryptedData) {
-        const value = decryptedData[field];
-        const values = Array.isArray(value) ? value : [value];
-        if (field in optionTextAndId) {
-          const optionCountData = await this.counterService.get({
+          if (!optionCountData['total']) {
+            optionCountData['total'] = 1;
+          } else {
+            optionCountData['total']++;
+          }
+          successParams.push({
             key: field,
             surveyPath,
             type: 'option',
+            data: optionCountData,
           });
-          for (const val of values) {
-            optionCountData[val]++;
-            this.counterService.set({
-              key: field,
-              surveyPath,
-              type: 'option',
-              data: optionCountData,
-            });
-          }
-          optionCountData['total']++;
         }
       }
+      // 校验通过后统一更新
+      await Promise.all(
+        successParams.map((item) => this.counterService.set(item)),
+      );
     } catch (error) {
       this.logger.error(error.message);
       throw error;

@@ -43,7 +43,7 @@ const handleLogout = () => {
 const activeIndex = ref('2')
 </script>
 
-<style>
+<style lang="scss" scoped>
 .question-list-root {
   height: 100%;
   background-color: #f6f7f9;
@@ -94,7 +94,7 @@ const activeIndex = ref('2')
     }
   }
   .table-container {
-    padding: 20px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     width: 100%; /* 确保容器宽度为100% */

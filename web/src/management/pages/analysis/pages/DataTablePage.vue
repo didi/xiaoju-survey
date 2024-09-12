@@ -32,14 +32,22 @@
       v-model="downloadDialogVisible"
       title="导出确认"
       width="500"
+      style="padding: 40px;"
     >
-      <el-form :model="downloadForm">
+      <el-form :model="downloadForm" label-width="100px" label-position="left" >
         <el-form-item label="导出内容">
           <el-radio-group v-model="downloadForm.isDesensitive">
             <el-radio :value="true">脱敏数据</el-radio>
-            <el-radio value="Venue">原回收数据</el-radio>
+            <el-radio :value="false">原回收数据</el-radio>
           </el-radio-group>
         </el-form-item>
+        <div class="download-tips">
+          <div>注：</div>
+          <div>
+            <p>推荐优先下载脱敏数据，如手机号：1***3。</p>
+            <p>原回收数据可能存在敏感信息，请谨慎下载。</p>
+          </div>
+        </div>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -163,9 +171,9 @@ const confirmDownload = async () => {
     const createRes = await createDownloadSurveyResponseTask({ surveyId: route.params.id, isDesensitive: downloadForm.isDesensitive })
     dataTableState.downloadDialogVisible = false
     if (createRes.code === 200) {
+      ElMessage.success(`下载文件计算中，可前往“下载中心”查看`)
       try {
         const taskInfo = await checkIsTaskFinished(createRes.data.taskId)
-        console.log(taskInfo)
         if (taskInfo.url) {
           window.open(taskInfo.url)
           ElMessage.success("导出成功")
@@ -215,6 +223,11 @@ const checkIsTaskFinished = (taskId) => {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+.download-tips {
+  display: flex;
+  color: #ec4e29;
 }
 
 .menus {

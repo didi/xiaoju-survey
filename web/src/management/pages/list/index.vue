@@ -187,7 +187,7 @@ const handleLogout = () => {
 }
 // 下载页面
 const handleDownload = () => {
-  router.push('/survey/downloadTask/')
+  router.push({ name: 'download' })
 }
 </script>
 

@@ -80,6 +80,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { useEditStore } from '@/management/stores/edit'
 import { cleanRichText } from '@/common/xss'
+import { cleanRichTextWithMediaTag } from '@/common/xss'
 
 export default {
   name: 'OptionConfig',
@@ -110,7 +111,7 @@ export default {
       return mapData
     },
     textOptions() {
-      return this.curOptions.map((item) => item.text)
+      return this.curOptions.map((item) => cleanRichTextWithMediaTag(item.text))
     }
   },
   components: {

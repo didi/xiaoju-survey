@@ -24,13 +24,16 @@ import LeftMenu from '@/management/components/LeftMenu.vue'
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
+
 const editStore = useEditStore()
 const { init, setSurveyId } = editStore
+
 const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-  setSurveyId(route.params.id as string)
+  const surveyId = route.params.id as string
+  setSurveyId(surveyId)
 
   try {
     await init()

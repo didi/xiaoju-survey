@@ -53,22 +53,22 @@ const meta = {
       description: '这是用于描述选项',
       defaultValue: [
         {
-          text: '选项1',
-          imageUrl: '',
-          others: false,
-          mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          hash: '115019'
+          "text": "选项1",
+          "imageUrl": "",
+          "others": false,
+          "mustOthers": false,
+          "othersKey": "",
+          "placeholderDesc": "",
+          "hash": "115019"
         },
         {
-          text: '选项2',
-          imageUrl: '',
-          others: false,
-          mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          hash: '115020'
+          "text": "选项2",
+          "imageUrl": "",
+          "others": false,
+          "mustOthers": false,
+          "othersKey": "",
+          "placeholderDesc": "",
+          "hash": "115020"
         }
       ]
     },
@@ -77,6 +77,12 @@ const meta = {
       propType: String,
       description: '排列方式',
       defaultValue: 'vertical'
+    },
+    {
+      name: 'quotaNoDisplay',
+      propType: Boolean,
+      description: '不展示配额剩余数量',
+      defaultValue: false
     }
   ],
   formConfig: [basicConfig, {
@@ -101,6 +107,24 @@ const meta = {
         ]
       },
     ]
+  },{
+    name: 'optionQuota',
+    label: '选项配额',
+    labelStyle: {
+      'font-weight': 'bold'
+    },
+    type: 'QuotaConfig',
+    // 输出转换
+    valueSetter({ options, quotaNoDisplay}) {
+      return [{
+        key: 'options',
+        value: options
+      },
+      {
+        key: 'quotaNoDisplay',
+        value: quotaNoDisplay
+      }]
+    }
   }],
   editConfigure: {
     optionEdit: {

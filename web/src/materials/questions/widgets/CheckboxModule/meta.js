@@ -117,20 +117,40 @@ const meta = {
           label: '至少选择数',
           type: 'InputNumber',
           key: 'minNum',
-          value: '',
+          value: 0,
           min: 0,
-          max: 'maxNum',
+          max: moduleConfig => { return  moduleConfig?.maxNum || 0 },
           contentClass: 'input-number-config'
         },
         {
           label: '最多选择数',
           type: 'InputNumber',
           key: 'maxNum',
-          value: '',
-          min: 'minNum',
+          value: 0,
+          min: moduleConfig => { return moduleConfig?.minNum || 0 },
+          max: moduleConfig => { return moduleConfig?.options?.length },
           contentClass: 'input-number-config'
-        }
+        },
       ]
+    },
+    {
+      name: 'optionQuota',
+      label: '选项配额',
+      labelStyle: {
+        'font-weight': 'bold'
+      },
+      type: 'QuotaConfig',
+      // 输出转换
+      valueSetter({ options, quotaNoDisplay}) {
+        return [{
+          key: 'options',
+          value: options
+        },
+        {
+          key: 'quotaNoDisplay',
+          value: quotaNoDisplay
+        }]
+      }
     }
   ],
   editConfigure: {

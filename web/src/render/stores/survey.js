@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
-import { pick } from 'lodash-es'
+import { cloneDeep, pick } from 'lodash-es'
 
 import { isMobile as isInMobile } from '@/render/utils/index'
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
@@ -12,12 +12,16 @@ import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'
 // 设置中文
-moment.locale('zh-cn')
+
 
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
-// import { jumpLogicRule } from '@/common/logicEngine/jumpLogicRule'
+import useCommandComponent from '../hooks/useCommandComponent'
+import BackAnswerDialog from '../components/BackAnswerDialog.vue'
 
+const confirm = useCommandComponent(BackAnswerDialog)
+
+moment.locale('zh-cn')
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -26,6 +30,8 @@ const CODE_MAP = {
   ERROR: 500,
   NO_AUTH: 403
 }
+
+
 export const useSurveyStore = defineStore('survey', () => {
   const surveyPath = ref('')
   const isMobile = ref(isInMobile())
@@ -109,13 +115,11 @@ export const useSurveyStore = defineStore('survey', () => {
 
     return isSuccess
   }
-  const initSurvey = (option) => {
-    setEnterTime()
 
-    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
-      return
-    }
 
+
+  // 加载空白页面
+  function clearFormData(option) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const {
       questionData,
@@ -134,6 +138,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
+    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -148,8 +153,75 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues.value = _formValues
     whiteData.value = option.whiteData
     pageConf.value = option.pageConf
+    
     // 获取已投票数据
     questionStore.initVoteData()
+    questionStore.initQuotaMap()
+
+  }
+  function fillFormData(formData) {
+    const _formValues = cloneDeep(formValues.value)
+    for(const key in formData){
+      _formValues[key] = formData[key]
+    }
+    formValues.value = _formValues
+  }
+  const initSurvey = (option) => {
+
+    setEnterTime()
+    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
+      return
+    }
+    // 加载空白问卷
+    clearFormData(option)
+
+    const { breakAnswer, backAnswer } = option.baseConf
+    const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
+
+    const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
+    
+    if(localData) {
+      // 断点续答
+      if(breakAnswer) {
+        confirm({
+          title: "是否继续上次填写的内容？",
+          onConfirm: async () => {
+            try {
+              // 回填答题内容
+              fillFormData(localData)
+            } catch (error) {
+              console.log(error)
+            } finally {
+              confirm.close()
+            }
+          },
+          onCancel: async() => {
+            confirm.close()
+          }
+        })
+      } else if (backAnswer) {
+        if(isSubmit){
+          confirm({
+            title: "是否继续上次提交的内容？",
+            onConfirm: async () => {
+              try {
+                // 回填答题内容
+                fillFormData(localData)
+              } catch (error) {
+                console.log(error)
+              } finally {
+                confirm.close()
+              }
+            },
+            onCancel: async() => {
+              confirm.close()
+            }
+          })
+        }
+      }
+    } else {
+      clearFormData(option)
+    }
   }
 
   // 用户输入或者选择后，更新表单数据
@@ -163,11 +235,11 @@ export const useSurveyStore = defineStore('survey', () => {
 
   const showLogicEngine = ref()
   const initShowLogicEngine = (showLogicConf) => {
-    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
+    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf || [])
   }
   const jumpLogicEngine = ref()
   const initJumpLogicEngine = (jumpLogicConf) => {
-    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
+    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf || [])
   }
 
   return {

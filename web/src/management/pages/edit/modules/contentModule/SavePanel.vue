@@ -18,10 +18,10 @@ import { ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import { saveSurvey } from '@/management/api/survey'
+import { saveSurvey, seizeSession } from '@/management/api/survey'
 import buildData from './buildData'
 
 interface Props {
@@ -44,8 +44,8 @@ const saveText = computed(
 )
 
 const editStore = useEditStore()
-const { schemaUpdateTime } = storeToRefs(editStore)
-const { schema } = editStore
+const { schemaUpdateTime, schema, sessionId } = storeToRefs(editStore)
+
 
 const validate = () => {
   let checked = true
@@ -68,16 +68,30 @@ const validate = () => {
   }
 }
 
-const saveData = async () => {
-  const saveData = buildData(schema)
+const onSave = async () => {
+  const saveData = buildData(schema.value, sessionId.value);
+  if (!saveData.sessionId) {
+    ElMessage.error('sessionId有误')
+    return null
+  }
 
   if (!saveData.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null
   }
 
-  const res = await saveSurvey(saveData)
+  const res: Record<string, any> = await saveSurvey(saveData)
+  
   return res
+}
+
+const seize = async () => {
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
+  if (seizeRes.code === 200) {
+    location.reload();
+  } else {
+    ElMessage.error('获取权限失败，请重试')
+  }
 }
 
 const timerHandle = ref<NodeJS.Timeout | number | null>(null)
@@ -95,7 +109,7 @@ const triggerAutoSave = () => {
       isShowAutoSave.value = true
       nextTick(async () => {
         try {
-          const res: any = await saveData()
+          const res: any = await handleSave()
           if (res.code === 200) {
             autoSaveStatus.value = 'succeed'
           } else {
@@ -120,21 +134,34 @@ const handleSave = async () => {
     return
   }
 
-  isSaving.value = true
   isShowAutoSave.value = false
 
   // 保存检测
   const { checked, msg } = validate()
   if (!checked) {
-    isSaving.value = false
     ElMessage.error(msg)
     return
   }
 
+  isSaving.value = true
+
   try {
-    const res: any = await saveData()
+    const res: any = await onSave()
+    if(!res) {
+      return
+    }
     if (res.code === 200) {
       ElMessage.success('保存成功')
+      return res
+    } else if (res.code === 3006) {
+      ElMessageBox.alert(res.errmsg, '提示', {
+        confirmButtonText: '刷新同步',
+        callback: (action: string) => {
+          if (action === 'confirm') {
+            seize();
+          }
+        }
+      });
     } else {
       ElMessage.error(res.errmsg)
     }

@@ -23,7 +23,6 @@ const changeData = (value) => {
     value
   })
 }
-
 watch(
   () => props.formConfig.value,
   (newVal) => {

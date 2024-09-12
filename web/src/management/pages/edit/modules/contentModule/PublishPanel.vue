@@ -4,14 +4,15 @@
   </el-button>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-
-import { publishSurvey, saveSurvey } from '@/management/api/survey'
+import { publishSurvey, saveSurvey, seizeSession } from '@/management/api/survey'
 import buildData from './buildData'
+import { storeToRefs } from 'pinia'
+import { CODE_MAP } from '@/management/api/base'
 
 interface Props {
   updateLogicConf: any
@@ -22,7 +23,21 @@ const props = defineProps<Props>()
 
 const isPublishing = ref<boolean>(false)
 const editStore = useEditStore()
-const { schema, getSchemaFromRemote } = editStore
+const { getSchemaFromRemote } = editStore
+const { schema, sessionId } = storeToRefs(editStore)
+const saveData = computed(() => {
+  return buildData(schema.value, sessionId.value)
+})
+
+const seize = async () => {
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
+  if (seizeRes.code === 200) {
+    location.reload();
+  } else {
+    ElMessage.error('获取权限失败，请重试')
+  }
+}
+
 const router = useRouter()
 
 const validate = () => {
@@ -45,6 +60,46 @@ const validate = () => {
   }
 }
 
+const onSave = async () => {
+  
+  if (!saveData.value.sessionId) {
+    ElMessage.error('未获取到sessionId')
+    return null
+  }
+  
+  if (!saveData.value.surveyId) {
+    ElMessage.error('未获取到问卷id')
+    return null
+  }
+
+  try {
+    const res: any = await saveSurvey(saveData.value)
+    if(!res) {
+      return null
+    }
+    if (res.code === 200) {
+      ElMessage.success('保存成功')
+      return res
+    } else if (res.code === 3006) {
+      ElMessageBox.alert(res.errmsg, '提示', {
+        confirmButtonText: '刷新同步',
+        callback: (action: string) => {
+          if (action === 'confirm') {
+            seize();
+          }
+        }
+      });
+      return null
+    } else {
+      ElMessage.error(res.errmsg)
+      return null
+    }
+  } catch (error) {
+    ElMessage.error('保存问卷失败')
+    return null
+  }
+
+}
 const handlePublish = async () => {
   if (isPublishing.value) {
     return
@@ -60,22 +115,12 @@ const handlePublish = async () => {
     return
   }
 
-  const saveData = buildData(schema)
-  if (!saveData.surveyId) {
-    isPublishing.value = false
-    ElMessage.error('未获取到问卷id')
-    return
-  }
-
   try {
-    const saveRes: any = await saveSurvey(saveData)
-    if (saveRes.code !== 200) {
-      isPublishing.value = false
-      ElMessage.error(saveRes.errmsg || '问卷保存失败')
+    const saveRes: any = await onSave()
+    if (!saveRes || saveRes.code !== CODE_MAP.SUCCESS) {
       return
     }
-
-    const publishRes: any = await publishSurvey({ surveyId: saveData.surveyId })
+    const publishRes: any = await publishSurvey({ surveyId: saveData.value.surveyId })
     if (publishRes.code === 200) {
       ElMessage.success('发布成功')
       getSchemaFromRemote()

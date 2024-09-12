@@ -9,7 +9,7 @@ import { ResponseSchemaService } from '../../surveyResponse/services/responseSch
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
-import { Logger } from 'src/logger';
+import { XiaojuSurveyLogger } from 'src/logger';
 
 import { UserService } from 'src/modules/auth/services/user.service';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
@@ -28,7 +28,7 @@ describe('DataStatisticController', () => {
   let dataStatisticService: DataStatisticService;
   let responseSchemaService: ResponseSchemaService;
   let pluginManager: XiaojuSurveyPluginManager;
-  let logger: Logger;
+  let logger: XiaojuSurveyLogger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,7 +56,7 @@ describe('DataStatisticController', () => {
           })),
         },
         {
-          provide: Logger,
+          provide: XiaojuSurveyLogger,
           useValue: {
             error: jest.fn(),
           },
@@ -73,7 +73,7 @@ describe('DataStatisticController', () => {
     pluginManager = module.get<XiaojuSurveyPluginManager>(
       XiaojuSurveyPluginManager,
     );
-    logger = module.get<Logger>(Logger);
+    logger = module.get<XiaojuSurveyLogger>(XiaojuSurveyLogger);
 
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
@@ -123,7 +123,7 @@ describe('DataStatisticController', () => {
         .spyOn(dataStatisticService, 'getDataTable')
         .mockResolvedValueOnce(mockDataTable);
 
-      const result = await controller.data(mockRequest.query, mockRequest);
+      const result = await controller.data(mockRequest.query);
 
       expect(result).toEqual({
         code: 200,
@@ -169,7 +169,7 @@ describe('DataStatisticController', () => {
         .spyOn(dataStatisticService, 'getDataTable')
         .mockResolvedValueOnce(mockDataTable);
 
-      const result = await controller.data(mockRequest.query, mockRequest);
+      const result = await controller.data(mockRequest.query);
 
       expect(result).toEqual({
         code: 200,
@@ -187,9 +187,9 @@ describe('DataStatisticController', () => {
         },
       };
 
-      await expect(
-        controller.data(mockRequest.query, mockRequest),
-      ).rejects.toThrow(HttpException);
+      await expect(controller.data(mockRequest.query)).rejects.toThrow(
+        HttpException,
+      );
       expect(logger.error).toHaveBeenCalledTimes(1);
     });
   });

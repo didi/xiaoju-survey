@@ -41,8 +41,8 @@
         "innerType": "radio",
         "field": "data606",
         "title": "标题2",
-        "minNum": "",
-        "maxNum": "",
+        "minNum": 0,
+        "maxNum": 0,
         "options": [
           {
             "text": "选项1",

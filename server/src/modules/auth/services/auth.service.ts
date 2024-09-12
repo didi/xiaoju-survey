@@ -35,4 +35,13 @@ export class AuthService {
     }
     return user;
   }
+
+  async expiredCheck(token: string) {
+    try {
+      verify(token, this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET'));
+    } catch (err) {
+      return true;
+    }
+    return false;
+  }
 }

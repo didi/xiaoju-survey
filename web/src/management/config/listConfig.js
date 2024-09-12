@@ -102,7 +102,7 @@ export const statusMaps = {
   new: '未发布',
   editing: '修改中',
   published: '已发布',
-  removed: '',
+  removed: '已删除',
   pausing: ''
 }
 

@@ -5,6 +5,7 @@
         <img class="logo-img" src="/imgs/Logo.webp" alt="logo" />
         <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
           <el-menu-item index="1">问卷列表</el-menu-item>
+          <el-menu-item index="2" @click="handleDownload">下载中心</el-menu-item>
         </el-menu>
       </div>
       <div class="login-info">
@@ -183,6 +184,10 @@ const onCreate = () => {
 const handleLogout = () => {
   userStore.logout()
   router.replace({ name: 'login' })
+}
+// 下载页面
+const handleDownload = () => {
+  router.push({ name: 'download' })
 }
 </script>
 

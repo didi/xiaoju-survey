@@ -34,6 +34,7 @@ import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 import { SessionService } from '../services/session.service';
 import { MemberType, WhitelistType } from 'src/interfaces/survey';
+import { UserService } from 'src/modules/auth/services/user.service';
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -47,6 +48,7 @@ export class SurveyController {
     private readonly logger: XiaojuSurveyLogger,
     private readonly counterService: CounterService,
     private readonly sessionService: SessionService,
+    private readonly userService: UserService,
   ) {}
 
   @Get('/getBannerData')
@@ -146,11 +148,21 @@ export class SurveyController {
     if (latestEditingOne && latestEditingOne._id.toString() !== sessionId) {
       const curSession = await this.sessionService.findOne(sessionId);
       if (curSession.createDate <= latestEditingOne.updateDate) {
-        // 在当前用户打开之后，有人保存过了
-        throw new HttpException(
-          '当前问卷已在其它页面开启编辑',
-          EXCEPTION_CODE.SURVEY_SAVE_CONFLICT,
-        );
+        // 在当前用户打开之后，被其他页面保存过了
+        const isSameOperator =
+          latestEditingOne.userId === req.user._id.toString();
+        let preOperator;
+        if (!isSameOperator) {
+          preOperator = await this.userService.getUserById(
+            latestEditingOne.userId,
+          );
+        }
+        return {
+          code: EXCEPTION_CODE.SURVEY_SAVE_CONFLICT,
+          errmsg: isSameOperator
+            ? '当前问卷已在其它页面开启编辑，刷新以获取最新内容'
+            : `当前问卷已由 ${preOperator.username} 编辑，刷新以获取最新内容`,
+        };
       }
     }
     await this.sessionService.updateSessionToEditing({ sessionId, surveyId });
@@ -329,11 +341,6 @@ export class SurveyController {
       surveyPath: surveyMeta.surveyPath,
       code: surveyConf.code,
       pageId: surveyId,
-    });
-
-    await this.counterService.createCounters({
-      surveyPath: surveyMeta.surveyPath,
-      dataList: surveyConf.code.dataConf.dataList,
     });
 
     await this.surveyHistoryService.addHistory({

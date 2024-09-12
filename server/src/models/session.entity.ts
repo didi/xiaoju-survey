@@ -12,4 +12,7 @@ export class Session extends BaseEntity {
 
   @Column()
   surveyId: string;
+
+  @Column()
+  userId: string;
 }

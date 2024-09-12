@@ -39,3 +39,5 @@ yarn.lock
 !.vscode/extensions.json
 
 tmp
+exportfile
+userUpload

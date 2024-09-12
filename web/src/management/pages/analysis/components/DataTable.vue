@@ -60,6 +60,7 @@
 <script setup>
 import { ref } from 'vue'
 import ImagePreview from './ImagePreview.vue'
+import { cleanRichTextWithMediaTag } from '@/common/xss'
 
 const props = defineProps({
   tableData: {
@@ -78,8 +79,16 @@ const popoverVirtualRef = ref()
 const popoverContent = ref('')
 
 const getContent = (content) => {
-  // const content = cleanRichText(value)
-  return content === 0 ? 0 : content || '未知'
+  if (Array.isArray(content)) {
+    return content.map(item => getContent(item)).join(',');
+  }
+  if (content === null || content === undefined) {
+    return ''
+  }
+  if (typeof content !== 'string') {
+    content = content + ''
+  }
+  return cleanRichTextWithMediaTag(content) || '未知'
 }
 const setPopoverContent = (content) => {
   popoverContent.value = content

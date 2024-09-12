@@ -39,6 +39,8 @@ export class SessionController {
     reqBody: {
       surveyId: string;
     },
+    @Request()
+    req,
   ) {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
@@ -50,7 +52,10 @@ export class SessionController {
     }
 
     const surveyId = value.surveyId;
-    const session = await this.sessionService.create({ surveyId });
+    const session = await this.sessionService.create({
+      surveyId,
+      userId: req.user._id.toString(),
+    });
 
     return {
       code: 200,

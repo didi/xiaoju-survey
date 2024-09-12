@@ -12,9 +12,10 @@ export class SessionService {
     private readonly sessionRepository: MongoRepository<Session>,
   ) {}
 
-  create({ surveyId }) {
+  create({ surveyId, userId }) {
     const session = this.sessionRepository.create({
       surveyId,
+      userId,
     });
     return this.sessionRepository.save(session);
   }

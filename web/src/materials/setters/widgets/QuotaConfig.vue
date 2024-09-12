@@ -17,7 +17,7 @@
             <div v-html="cleanRichTextWithMediaTag(scope.row.text)"></div>
           </template>
         </el-table-column>
-        <el-table-column property="quota" style="width: 50%;">
+        <el-table-column property="quota" style="width: 50%">
           <template #header>
             <div style="display: flex; align-items: center">
               <span>配额设置</span>
@@ -95,7 +95,7 @@ const cancel = () => {
 }
 const confirm = () => {
   dialogVisible.value = false
-  // 更新选项 
+  // 更新选项
   handleQuotaChange()
   emit(FORM_CHANGE_EVENT_KEY, {
     options: optionData.value,
@@ -151,11 +151,11 @@ watch(
   width: 90%;
   display: flex;
   justify-content: flex-end;
-  :deep(.cell){
+  :deep(.cell) {
     line-height: 35px;
   }
-  .quota-no-display{
-    padding-top: 8px
+  .quota-no-display {
+    padding-top: 8px;
   }
 }
 .quota-title {
@@ -169,7 +169,6 @@ watch(
   color: #ffa600;
   cursor: pointer;
   font-size: 14px;
-  
 }
 .dialog {
   width: 41vw;

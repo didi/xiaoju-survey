@@ -156,7 +156,7 @@ export class DownloadTaskService {
         {
           $set: {
             curStatus: {
-              status: RECORD_STATUS.COMOPUTETING,
+              status: RECORD_STATUS.COMPUTING,
               date: Date.now(),
             },
           },

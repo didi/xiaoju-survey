@@ -54,7 +54,6 @@ const meta = {
       defaultValue: [
         {
           text: '对',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -63,7 +62,6 @@ const meta = {
         },
         {
           text: '错',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',

@@ -47,7 +47,7 @@ const { changeField, changeIndex, needHideFields } = storeToRefs(questionStore)
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
   const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
-  // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
+
   let alloptions = options
 
   if (type === QUESTION_TYPE.VOTE) {
@@ -61,6 +61,33 @@ const questionConfig = computed(() => {
     options.some(option => option.quota > 0)) {
     // 处理普通选择题的选项配额
     let { options: optionWithQuota } = useOptionsQuota(field)
+
+    // 兼容断点续答情况下选项配额为0的情况
+      const disabledHash = optionWithQuota.filter(i => i.disabled).map(i => i.hash)
+      const value = formValues.value[field]
+      if (value && disabledHash.length) {
+        disabledHash.forEach(hash => {
+          const index = value.indexOf(hash)
+          if(index> -1) {
+            if(type === QUESTION_TYPE.CHECKBOX) {
+              const newValue = [...value]
+              newValue.splice(index, 1)
+              const data = {
+                key: field,
+                value: newValue
+              }
+              surveyStore.changeData(data)
+            } else {
+              const data = {
+                key: field,
+                value: ''
+              }
+              surveyStore.changeData(data)
+            }
+          }
+        })
+      }
+
     
     alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
   }

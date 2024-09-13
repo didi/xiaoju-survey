@@ -19,7 +19,6 @@ export function getRandom(len) {
 
 const optionListItem = [
   'text',
-  'imageUrl',
   'others',
   'mustOthers',
   'limit',

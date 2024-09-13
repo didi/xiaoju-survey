@@ -21,6 +21,7 @@ import BackAnswerDialog from '../components/BackAnswerDialog.vue'
 
 const confirm = useCommandComponent(BackAnswerDialog)
 
+
 moment.locale('zh-cn')
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
@@ -179,48 +180,25 @@ export const useSurveyStore = defineStore('survey', () => {
     const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
 
     const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
-    
-    if(localData) {
-      // 断点续答
-      if(breakAnswer) {
-        confirm({
-          title: "是否继续上次填写的内容？",
-          onConfirm: async () => {
-            try {
-              // 回填答题内容
-              fillFormData(localData)
-            } catch (error) {
-              console.log(error)
-            } finally {
-              confirm.close()
-            }
-          },
-          onCancel: async() => {
-            confirm.close()
+    // 开启了断点续答 or 回填上一次提交内容
+    if((breakAnswer || (backAnswer && isSubmit)) && localData) {
+      const title = breakAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
+      confirm({
+        title: title,
+        onConfirm: async () => {
+          try {
+            // 回填答题内容
+            fillFormData(localData);
+          } catch (error) {
+            console.error(error);
+          } finally {
+            confirm.close();
           }
-        })
-      } else if (backAnswer) {
-        if(isSubmit){
-          confirm({
-            title: "是否继续上次提交的内容？",
-            onConfirm: async () => {
-              try {
-                // 回填答题内容
-                fillFormData(localData)
-              } catch (error) {
-                console.log(error)
-              } finally {
-                confirm.close()
-              }
-            },
-            onCancel: async() => {
-              confirm.close()
-            }
-          })
+        },
+        onCancel: async () => {
+          confirm.close();
         }
-      }
-    } else {
-      clearFormData(option)
+      });
     }
   }
 

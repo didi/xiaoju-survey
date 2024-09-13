@@ -21,7 +21,6 @@ export class LocalHandler implements FileUploadHandler {
     )
       .split(sep)
       .join('/');
-    console.log(filePath);
     const physicalPath = join(this.physicalRootPath, filePath);
     await fse.mkdir(dirname(physicalPath), { recursive: true });
     const writeStream = createWriteStream(physicalPath);

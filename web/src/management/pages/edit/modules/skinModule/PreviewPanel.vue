@@ -137,7 +137,6 @@ export default defineComponent({
   }
 
   .box {
-    background-color: var(--primary-background-color);
     position: relative;
 
     .mask {
@@ -150,9 +149,7 @@ export default defineComponent({
     }
 
     .content {
-      margin: 0 0.3rem;
       background: rgba(255, 255, 255, var(--opacity));
-      border-radius: 8px 8px 0 0;
     }
   }
 }

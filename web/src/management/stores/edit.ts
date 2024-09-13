@@ -56,6 +56,8 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
     },
     skinConf: {
       backgroundConf: {
+        type: 'color',
+        image: '',
         color: '#fff'
       },
       themeConf: {

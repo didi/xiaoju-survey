@@ -30,12 +30,15 @@
             <i-ep-monitor />
           </div>
         </div>
-        <div :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`">
+        <div
+          :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`"
+          :style="[previewPanelBgStyle]"
+        >
           <div class="wrapper">
             <div class="tips-wrapper">
               <i-ep-WarningFilled /> <span>用户预览模式，数据不保存！</span>
             </div>
-            <div v-loading="loading" element-loading-text="加载中..." style="height: 100%">
+            <div class="iframe-wrapper" v-loading="loading" element-loading-text="加载中...">
               <iframe
                 v-loading="loading"
                 id="iframe-preview"
@@ -52,8 +55,9 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useEditStore } from '@/management/stores/edit'
 
 const route = useRoute()
 
@@ -61,6 +65,17 @@ const dialogTableVisible = ref(false)
 const previewTab = ref(1)
 const surveyId = route.params.id
 const loading = ref(true)
+const editStore = useEditStore()
+const { schema } = editStore
+
+const previewPanelBgStyle = computed(() => {
+  const isPc = previewTab.value === 2
+  if (!isPc) return {}
+  const { type, image, color } = schema?.skinConf?.backgroundConf ?? {}
+  return type === 'image'
+    ? { background: `url(${image}) no-repeat center center`, backgroundSize: 'cover' }
+    : { backgroundColor: color }
+})
 
 const openDialog = () => {
   const iframePreview = document.getElementById('iframe-preview')
@@ -125,12 +140,27 @@ const closedDialog = () => {
     &.pc {
       display: flex;
       justify-content: center;
-      background: #f7f7f7;
       box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
       height: 726px;
       .wrapper {
-        width: 636px;
-        height: 704px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .tips-wrapper {
+          justify-content: center;
+        }
+
+        .iframe-wrapper {
+          width: 636px;
+          flex: 1;
+          margin-top: 20px;
+          border-radius: 8px 8px 0 0;
+          overflow: hidden;
+        }
       }
     }
     &.phone {
@@ -148,6 +178,9 @@ const closedDialog = () => {
         padding-bottom: 14px;
         display: flex;
         flex-direction: column;
+        .iframe-wrapper {
+          height: 100%;
+        }
       }
       iframe {
         border-radius: 0px 0px 20px 20px;
@@ -156,6 +189,7 @@ const closedDialog = () => {
   }
   .tips-wrapper {
     display: flex;
+    width: 100%;
     align-items: center;
     background: $primary-bg-color;
     color: $primary-color;

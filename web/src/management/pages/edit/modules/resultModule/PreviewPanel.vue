@@ -49,8 +49,6 @@ const moduleConfig = toRef(schema, 'submitConf')
   max-height: 812px;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: var(--primary-background-color);
-  padding: 0 0.3rem;
   .result-page {
     background: rgba(255, 255, 255, var(--opacity));
     display: flex;

@@ -44,6 +44,17 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       logoImageWidth: '60%',
     },
     skinConf: {
+      backgroundConf: {
+        color: '#fff',
+        type: 'color',
+        image: '',
+      },
+      themeConf: {
+        color: '#ffa600',
+      },
+      contentConf: {
+        opacity: 100,
+      },
       skinColor: '#4a4c5b',
       inputBgColor: '#ffffff',
     },
@@ -327,6 +338,17 @@ export const mockResponseSchema: ResponseSchema = {
       logoImageWidth: '60%',
     },
     skinConf: {
+      backgroundConf: {
+        color: '#fff',
+        type: 'color',
+        image: '',
+      },
+      themeConf: {
+        color: '#ffa600',
+      },
+      contentConf: {
+        opacity: 100,
+      },
       skinColor: '#4a4c5b',
       inputBgColor: '#ffffff',
     },

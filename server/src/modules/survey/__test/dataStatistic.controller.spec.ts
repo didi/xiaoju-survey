@@ -251,6 +251,8 @@ describe('DataStatisticController', () => {
           skinConf: {
             backgroundConf: {
               color: '#fff',
+              type: 'color',
+              image: '',
             },
             themeConf: {
               color: '#ffa600',

@@ -172,7 +172,21 @@ describe('SurveyController', () => {
             endTime: '2034-01-23 21:59:05',
           },
           bottomConf: { logoImage: '/imgs/Logo.webp', logoImageWidth: '60%' },
-          skinConf: { skinColor: '#4a4c5b', inputBgColor: '#ffffff' },
+          skinConf: {
+            skinColor: '#4a4c5b',
+            inputBgColor: '#ffffff',
+            backgroundConf: {
+              color: '#fff',
+              type: 'color',
+              image: '',
+            },
+            themeConf: {
+              color: '#ffa600',
+            },
+            contentConf: {
+              opacity: 100,
+            },
+          },
           submitConf: {},
           dataConf: {
             dataList: [],

@@ -40,7 +40,9 @@
     "skinColor": "#4a4c5b",
     "inputBgColor": "#ffffff",
     "backgroundConf": {
-      "color": "#ffffff"
+      "color": "#ffffff",
+      "type": "color",
+      "image": ""
     },
     "themeConf": {
       "color": "#ffa600"

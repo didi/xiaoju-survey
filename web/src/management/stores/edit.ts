@@ -69,7 +69,6 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
       begTime: '',
       endTime: '',
       language: 'chinese',
-      showVoteProcess: 'allow',
       tLimit: 0,
       answerBegTime: '',
       answerEndTime: '',

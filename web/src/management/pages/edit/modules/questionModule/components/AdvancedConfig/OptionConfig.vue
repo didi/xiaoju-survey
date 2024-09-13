@@ -141,20 +141,13 @@ export default {
       this.initCurOption()
     },
     addOption(text = '选项', others = false, index = -1, fieldId) {
-      let addOne
-      if (this.curOptions[0]) {
-        addOne = _cloneDeep(this.curOptions[0])
-      } else {
-        addOne = {
-          text: '',
-          hash: '',
-          others: false,
-          mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          score: 0,
-          limit: ''
-        }
+      let addOne = {
+        text: '',
+        hash: '',
+        others: false,
+        mustOthers: false,
+        othersKey: '',
+        placeholderDesc: ''
       }
       for (const i in addOne) {
         if (i === 'others') {

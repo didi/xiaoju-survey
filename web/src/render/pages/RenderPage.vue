@@ -40,6 +40,7 @@ import encrypt from '../utils/encrypt'
 import useCommandComponent from '../hooks/useCommandComponent'
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
 import { useQuestionInfo } from '../hooks/useQuestionInfo'
+import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant'
 
 interface Props {
   questionInfo?: any
@@ -153,13 +154,13 @@ const normalizationRequestBody = () => {
   }
 
   //浏览器缓存数据
-  localStorage.removeItem(surveyPath.value + "_questionData")
-  localStorage.removeItem("isSubmit")
+  localStorage.removeItem(surveyPath.value + FORMDATA_SUFFIX)
+  localStorage.removeItem(SUBMIT_FLAG)
   //数据加密
-  var formData : Record<string, any> = Object.assign({}, surveyStore.formValues)
+  let formData : Record<string, any> = Object.assign({}, surveyStore.formValues)
   
-  localStorage.setItem(surveyPath.value + "_questionData", JSON.stringify(formData))
-  localStorage.setItem('isSubmit', JSON.stringify(true))
+  localStorage.setItem(surveyPath.value + FORMDATA_SUFFIX, JSON.stringify(formData))
+  localStorage.setItem(SUBMIT_FLAG, JSON.stringify(true))
   
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo.encryptType

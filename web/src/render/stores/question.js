@@ -4,9 +4,9 @@ import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
 import { queryVote } from '@/render/api/survey'
 import { QUESTION_TYPE, NORMAL_CHOICES } from '@/common/typeEnum'
+import { parseJson } from '@/render/utils/index'
+import { VOTE_INFO_KEY, QUOTA_INFO_KEY } from '@/render/utils/constant' 
 
-const VOTE_INFO_KEY = 'voteinfo'
-const QUOTA_INFO_KEY = 'limitinfo'
 
 // 投票进度逻辑聚合
 const usevVoteMap = (questionData) => {
@@ -63,7 +63,7 @@ const usevVoteMap = (questionData) => {
     const { key: questionKey, value: questionVal } = data
     // 更新前获取接口缓存在localStorage中的数据
     const localData = localStorage.getItem(VOTE_INFO_KEY)
-    const voteinfo = JSON.parse(localData)
+    const voteinfo = parseJson(localData)
     const currentQuestion = questionData.value[questionKey]
     const options = currentQuestion.options
     const voteTotal = voteinfo?.[questionKey]?.total || 0

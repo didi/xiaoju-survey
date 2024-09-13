@@ -3,10 +3,11 @@ import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { cloneDeep, pick } from 'lodash-es'
 
-import { isMobile as isInMobile } from '@/render/utils/index'
+import { isMobile as isInMobile, parseJson } from '@/render/utils/index'
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
 import { useQuestionStore } from '@/render/stores/question'
 import { useErrorInfo } from '@/render/stores/errorInfo'
+import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant' 
 
 import moment from 'moment'
 // 引入中文
@@ -17,9 +18,9 @@ import 'moment/locale/zh-cn'
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import useCommandComponent from '../hooks/useCommandComponent'
-import BackAnswerDialog from '../components/BackAnswerDialog.vue'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
 
-const confirm = useCommandComponent(BackAnswerDialog)
+const confirm = useCommandComponent(ConfirmDialog)
 
 
 moment.locale('zh-cn')
@@ -177,9 +178,9 @@ export const useSurveyStore = defineStore('survey', () => {
     clearFormData(option)
 
     const { breakAnswer, backAnswer } = option.baseConf
-    const localData = JSON.parse(localStorage.getItem(surveyPath.value + "_questionData"))
+    const localData = parseJson(localStorage.getItem(surveyPath.value + FORMDATA_SUFFIX))
 
-    const isSubmit = JSON.parse(localStorage.getItem('isSubmit'))
+    const isSubmit = parseJson(localStorage.getItem(SUBMIT_FLAG))
     // 开启了断点续答 or 回填上一次提交内容
     if((breakAnswer || (backAnswer && isSubmit)) && localData) {
       const title = breakAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
@@ -195,7 +196,7 @@ export const useSurveyStore = defineStore('survey', () => {
             confirm.close();
           }
         },
-        onCancel: async () => {
+        onClose: async () => {
           confirm.close();
         }
       });

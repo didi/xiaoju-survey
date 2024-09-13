@@ -51,6 +51,7 @@
   },
   "pageConf": [],
   "logicConf": {
-    "showLogicConf": []
+    "showLogicConf": [],
+    "jumpLogicConf": []
   }
 }

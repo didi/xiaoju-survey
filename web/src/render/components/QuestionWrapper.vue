@@ -16,10 +16,10 @@ import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
 import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
-import { cloneDeep } from 'lodash-es'
+import { debounce, cloneDeep } from 'lodash-es'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
-
+import { SUBMIT_FLAG } from '../utils/constant'
 import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 
 const props = defineProps({
@@ -168,14 +168,12 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === NORMAL_CHOICES) {
     questionStore.updateQuotaData(data)
   }
-  // 断点续答的的数据缓存
-  localStorageBack()
   processJumpSkip()
 }
 
-const handleInput = () => {
+const handleInput = debounce(() => {
   localStorageBack()
-}
+}, 500)
 
 const processJumpSkip = () => {
   const targetResult = surveyStore.jumpLogicEngine
@@ -218,11 +216,11 @@ const processJumpSkip = () => {
   questionStore.addNeedHideFields(skipKey)
 }
 const localStorageBack = () => {
-  var formData = Object.assign({}, surveyStore.formValues);
+  let formData = Object.assign({}, surveyStore.formValues);
 
   //浏览器存储
-  localStorage.removeItem(surveyStore.surveyPath + "_questionData")
-  localStorage.setItem(surveyStore.surveyPath + "_questionData", JSON.stringify(formData))
-  localStorage.setItem('isSubmit', JSON.stringify(false))
+  localStorage.removeItem(surveyStore.surveyPath + FORMDATA_SUFFIX)
+  localStorage.setItem(surveyStore.surveyPath + FORMDATA_SUFFIX, JSON.stringify(formData))
+  localStorage.setItem(SUBMIT_FLAG, JSON.stringify(false))
 }
 </script>

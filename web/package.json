@@ -11,7 +11,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/materials/setters/widgets/QuotaConfig.vue"
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@logicflow/core": "2.0.0",

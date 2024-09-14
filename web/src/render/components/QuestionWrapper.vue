@@ -15,7 +15,6 @@ import QuestionRuleContainer from '../../materials/questions/QuestionRuleContain
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
-import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
 import { cloneDeep } from 'lodash-es'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
@@ -57,17 +56,7 @@ const questionConfig = computed(() => {
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
-  if(NORMAL_CHOICES.includes(type) &&
-    options.some(option => option.quota > 0)) {
-    // 处理普通选择题的选项配额
-    let { options: optionWithQuota } = useOptionsQuota(field)
-    
-    alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
-  }
-  if (
-    NORMAL_CHOICES.includes(type) &&
-    options.some(option => option.others)
-  ) {
+  if (NORMAL_CHOICES.includes(type) && options.some((option) => option.others)) {
     // 处理普通选择题的填写更多
     let { options, othersValue } = useShowOthers(field)
     const othersOptions = unref(options)
@@ -137,10 +126,6 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     questionStore.updateVoteData(data)
   }
-  // 处理选项配额
-  if (props.moduleConfig.type === NORMAL_CHOICES) {
-    questionStore.updateQuotaData(data)
-  }
   // 断点续答的的数据缓存
   localStorageBack()
   processJumpSkip()
@@ -191,11 +176,11 @@ const processJumpSkip = () => {
   questionStore.addNeedHideFields(skipKey)
 }
 const localStorageBack = () => {
-  var formData = Object.assign({}, surveyStore.formValues);
+  var formData = Object.assign({}, surveyStore.formValues)
 
   //浏览器存储
-  localStorage.removeItem(surveyStore.surveyPath + "_questionData")
-  localStorage.setItem(surveyStore.surveyPath + "_questionData", JSON.stringify(formData))
+  localStorage.removeItem(surveyStore.surveyPath + '_questionData')
+  localStorage.setItem(surveyStore.surveyPath + '_questionData', JSON.stringify(formData))
   localStorage.setItem('isSubmit', JSON.stringify(false))
 }
 </script>

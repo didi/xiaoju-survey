@@ -10,7 +10,7 @@ import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
-import { RedisService } from 'src/modules/redis/redis.service';
+// import { RedisService } from 'src/modules/redis/redis.service';
 
 import moment from 'moment';
 import * as Joi from 'joi';
@@ -41,7 +41,7 @@ export class SurveyResponseController {
     private readonly messagePushingTaskService: MessagePushingTaskService,
     private readonly counterService: CounterService,
     private readonly logger: XiaojuSurveyLogger,
-    private readonly redisService: RedisService,
+    // private readonly redisService: RedisService,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
@@ -224,17 +224,15 @@ export class SurveyResponseController {
         const arr = cur.options.map((optionItem) => ({
           hash: optionItem.hash,
           text: optionItem.text,
-          quota: optionItem.quota,
         }));
         pre[cur.field] = arr;
         return pre;
       }, {});
 
-    // 使用redis作为锁，校验选项配额
     const surveyId = responseSchema.pageId;
-    const lockKey = `locks:optionSelectedCount:${surveyId}`;
-    const lock = await this.redisService.lockResource(lockKey, 1000);
-    this.logger.info(`lockKey: ${lockKey}`);
+    // const lockKey = `locks:optionSelectedCount:${surveyId}`;
+    // const lock = await this.redisService.lockResource(lockKey, 1000);
+    // this.logger.info(`lockKey: ${lockKey}`);
     try {
       const successParams = [];
       for (const field in decryptedData) {
@@ -250,23 +248,6 @@ export class SurveyResponseController {
 
           //遍历选项hash值
           for (const val of values) {
-            const option = optionTextAndId[field].find(
-              (opt) => opt['hash'] === val,
-            );
-            const quota = parseInt(option['quota']);
-            if (
-              quota &&
-              optionCountData?.[val] &&
-              quota <= optionCountData[val]
-            ) {
-              return {
-                code: EXCEPTION_CODE.RESPONSE_OVER_LIMIT,
-                data: {
-                  field,
-                  optionHash: option.hash,
-                },
-              };
-            }
             if (!optionCountData[val]) {
               optionCountData[val] = 0;
             }
@@ -292,10 +273,11 @@ export class SurveyResponseController {
     } catch (error) {
       this.logger.error(error.message);
       throw error;
-    } finally {
-      await this.redisService.unlockResource(lock);
-      this.logger.info(`unlockResource: ${lockKey}`);
     }
+    // finally {
+    //   await this.redisService.unlockResource(lock);
+    //   this.logger.info(`unlockResource: ${lockKey}`);
+    // }
 
     // 入库
     const surveyResponse =

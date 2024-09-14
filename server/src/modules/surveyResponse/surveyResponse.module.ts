@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MessageModule } from '../message/message.module';
-import { RedisModule } from '../redis/redis.module';
+// import { RedisModule } from '../redis/redis.module';
 
 import { ResponseSchemaService } from './services/responseScheme.service';
 import { SurveyResponseService } from './services/surveyResponse.service';
 import { CounterService } from './services/counter.service';
 import { ClientEncryptService } from './services/clientEncrypt.service';
-import { RedisService } from '../redis/redis.service';
+// import { RedisService } from '../redis/redis.service';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';
@@ -35,7 +35,7 @@ import { ConfigModule } from '@nestjs/config';
     ]),
     ConfigModule,
     MessageModule,
-    RedisModule,
+    // RedisModule,
     AuthModule,
     WorkspaceModule,
   ],
@@ -52,7 +52,7 @@ import { ConfigModule } from '@nestjs/config';
     CounterService,
     ClientEncryptService,
     LoggerProvider,
-    RedisService,
+    // RedisService,
   ],
   exports: [
     ResponseSchemaService,

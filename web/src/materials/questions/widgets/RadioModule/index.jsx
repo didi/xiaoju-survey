@@ -31,28 +31,10 @@ export default defineComponent({
     readonly: {
       type: Boolean,
       default: false
-    },
-    quotaNoDisplay:{
-      type: Boolean,
-      default: false
     }
   },
   emits: ['change'],
   setup(props, { emit }) {
-    // 兼容断点续答情况下选项配额为0的情况
-    watch(() => props.value, (value) => {
-      const disabledHash = props.options.filter(i => i.disabled).map(i => i.hash)
-      if (value && disabledHash.length) {
-        disabledHash.forEach(hash => {
-          const index = value.indexOf(hash)
-          if( index> -1) {
-            const newValue = [...value]
-            newValue.splice(index, 1)
-            onChange(newValue)
-          }
-        })
-      }
-    })
     const onChange = (value) => {
       const key = props.field
       emit('change', {
@@ -99,7 +81,6 @@ export default defineComponent({
           field={this.field}
           layout={this.layout}
           onChange={this.onChange}
-          quotaNoDisplay={this.quotaNoDisplay}
         >
           {{
             selectMore: (scoped) => {

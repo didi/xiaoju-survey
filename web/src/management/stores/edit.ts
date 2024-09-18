@@ -6,6 +6,7 @@ import {
   set as _set,
   isNumber as _isNumber
 } from 'lodash-es'
+import { ElMessageBox } from 'element-plus'
 import { QUESTION_TYPE } from '@/common/typeEnum'
 import { getQuestionByType } from '@/management/utils/index'
 import { filterQuestionPreviewData } from '@/management/utils/index'
@@ -24,7 +25,6 @@ import { CODE_MAP } from '../api/base'
 import { RuleBuild } from '@/common/logicEngine/RuleBuild'
 import { useShowLogicInfo } from '@/management/hooks/useShowLogicInfo'
 import { useJumpLogicInfo } from '@/management/hooks/useJumpLogicInfo'
-import { ElMessageBox } from 'element-plus'
 
 const innerMetaConfig = {
   submit: {
@@ -106,6 +106,22 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
     schema.pageConf = codeData.pageConf
   }
 
+
+  const sessionId = ref('')
+  async function initSessionId() {
+    const sessionIdKey = `${surveyId.value}_sessionId`;
+    const localSessionId = sessionStorage.getItem(sessionIdKey)
+    if (localSessionId) {
+      sessionId.value = localSessionId
+    } else {
+      const res: Record<string, any> = await getSessionId({ surveyId: surveyId.value })
+      if (res.code === 200) {
+        sessionId.value = res.data.sessionId
+        sessionStorage.setItem(sessionIdKey, sessionId.value)
+      }
+    }
+  }
+
   async function getSchemaFromRemote() {
     const res: any = await getSurveyById(surveyId.value)
     if (res.code === 200) {
@@ -145,13 +161,14 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
       throw new Error(res.errmsg || '问卷不存在')
     }
   }
-
+  
   return {
     schema,
-    initSchema,
     getSchemaFromRemote,
     showLogicEngine,
     jumpLogicEngine,
+    sessionId,
+    initSessionId,
   }
 }
 
@@ -489,35 +506,55 @@ type IBannerList = Record<string, IBannerItem>
 
 
 export const useEditStore = defineStore('edit', () => {
-  const surveyId = ref('')
   const bannerList: Ref<IBannerList> = ref({})
+  const fetchBannerData = async () => {
+    const res: any = await getBannerData()
+    if (res.code === CODE_MAP.SUCCESS) {
+      bannerList.value = res.data
+    }
+  }
+
   const cooperPermissions = ref(Object.values(SurveyPermissions))
+  const fetchCooperPermissions = async (id: string) => {
+    const res: any = await getCollaboratorPermissions(id)
+    if (res.code === CODE_MAP.SUCCESS) {
+      cooperPermissions.value = res.data.permissions
+    }
+  }
+
   const schemaUpdateTime = ref(Date.now())
+  function updateTime() {
+    schemaUpdateTime.value = Date.now()
+  }
   
+  const surveyId = ref('')
   function setSurveyId(id: string) {
     surveyId.value = id
   }
 
-  const { schema, initSchema, getSchemaFromRemote, showLogicEngine, jumpLogicEngine } =
-    useInitializeSchema(surveyId, () => {
+  // 初始化schem相关
+  const { 
+    schema, 
+    sessionId, 
+    initSessionId, 
+    getSchemaFromRemote, 
+    showLogicEngine, 
+    jumpLogicEngine 
+  } = useInitializeSchema(surveyId, () => {
       editGlobalBaseConf.initCounts()
     })
 
-  const sessionId = ref('')
-
-  async function initSessionId() {
-    const sessionIdKey = `${surveyId.value}_sessionId`;
-    const localSessionId = sessionStorage.getItem(sessionIdKey)
-    if (localSessionId) {
-      sessionId.value = localSessionId
-    } else {
-      const res: Record<string, any> = await getSessionId({ surveyId: surveyId.value })
-      if (res.code === 200) {
-        sessionId.value = res.data.sessionId
-        sessionStorage.setItem(sessionIdKey, sessionId.value)
-      }
-    }
+  function changeSchema({ key, value }: { key: string; value: any }) {
+    _set(schema, key, value)
+    updateTime()
   }
+
+  function changeThemePreset(presets: any) {
+    Object.keys(presets).forEach((key) => {
+      _set(schema, key, presets[key])
+    })
+  }
+
 
   const questionDataList = toRef(schema, 'questionDataList')
 
@@ -527,85 +564,15 @@ export const useEditStore = defineStore('edit', () => {
   }
 
 
-  const fetchBannerData = async () => {
-    const res: any = await getBannerData()
-    if (res.code === CODE_MAP.SUCCESS) {
-      bannerList.value = res.data
+
+  const createNewQuestion = ({ type }: { type: QUESTION_TYPE }) => {
+    const fields = questionDataList.value.map((item: any) => item.field)
+    const newQuestion = getQuestionByType(type, fields)
+    newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
+    if (type === QUESTION_TYPE.VOTE) {
+      newQuestion.innerType = QUESTION_TYPE.RADIO
     }
-  }
-
-  const fetchCooperPermissions = async (id: string) => {
-    const res: any = await getCollaboratorPermissions(id)
-    if (res.code === CODE_MAP.SUCCESS) {
-      cooperPermissions.value = res.data.permissions
-    }
-  }
-  // const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } = useLogicEngine(schema)
-  const {
-    currentEditOne,
-    currentEditKey,
-    currentEditStatus,
-    moduleConfig,
-    formConfigList,
-    currentEditMeta,
-    setCurrentEditOne,
-    changeCurrentEditStatus
-  } = useCurrentEdit({ schema, questionDataList })
-
-  async function init() {
-    const { metaData } = schema
-    if (!metaData || (metaData as any)?._id !== surveyId.value) {
-      await getSchemaFromRemote()
-      await initSessionId()
-    }
-    currentEditOne.value = null
-    currentEditStatus.value = 'Success'
-  }
-
-  function updateTime() {
-    schemaUpdateTime.value = Date.now()
-  }
-
-  const {
-    pageEditOne,
-    pageConf,
-    isFinallyPage,
-    pageCount,
-    pageQuestionData,
-    getSorter,
-    updatePageEditOne,
-    deletePage,
-    pageOperations,
-    addPage,
-    getPageQuestionData,
-    copyPage,
-    swapArrayRanges,
-    setPage
-  } = usePageEdit({ schema, questionDataList }, updateTime)
-
-  const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionDataListOperations(
-    {
-      questionDataList,
-      updateTime,
-      pageOperations,
-      updateCounts: editGlobalBaseConf.updateCounts
-    }
-  )
-
-  function moveQuestionDataList(data: any) {
-    const { startIndex, endIndex } = getSorter()
-    const newData = [
-      ...questionDataList.value.slice(0, startIndex),
-      ...data,
-      ...questionDataList.value.slice(endIndex)
-    ]
-    const countTotal: number = (schema.pageConf as Array<number>).reduce(
-      (v: number, i: number) => v + i
-    )
-    if (countTotal != newData.length) {
-      schema.pageConf[pageEditOne.value - 1] = (schema.pageConf[pageEditOne.value - 1] + 1) as never
-    }
-    setQuestionDataList(newData)
+    return newQuestion
   }
 
   const compareQuestionSeq = (val: Array<any>) => {
@@ -643,25 +610,74 @@ export const useEditStore = defineStore('edit', () => {
     }
   })
 
-  const createNewQuestion = ({ type }: { type: QUESTION_TYPE }) => {
-    const fields = questionDataList.value.map((item: any) => item.field)
-    const newQuestion = getQuestionByType(type, fields)
-    newQuestion.title = newQuestion.title = `标题${newQuestionIndex.value + 1}`
-    if (type === QUESTION_TYPE.VOTE) {
-      newQuestion.innerType = QUESTION_TYPE.RADIO
+  
+  // 当前编辑题目
+  const {
+    currentEditOne,
+    currentEditKey,
+    currentEditStatus,
+    moduleConfig,
+    formConfigList,
+    currentEditMeta,
+    setCurrentEditOne,
+    changeCurrentEditStatus
+  } = useCurrentEdit({ schema, questionDataList })
+
+
+  // 初始化问卷
+  async function init() {
+    const { metaData } = schema
+    if (!metaData || (metaData as any)?._id !== surveyId.value) {
+      await getSchemaFromRemote()
+      await initSessionId()
     }
-    return newQuestion
+    currentEditOne.value = null
+    currentEditStatus.value = 'Success'
   }
 
-  function changeSchema({ key, value }: { key: string; value: any }) {
-    _set(schema, key, value)
-    updateTime()
-  }
+  
+  // 分页相关
+  const {
+    pageEditOne,
+    pageConf,
+    isFinallyPage,
+    pageCount,
+    pageQuestionData,
+    getSorter,
+    updatePageEditOne,
+    deletePage,
+    pageOperations,
+    addPage,
+    getPageQuestionData,
+    copyPage,
+    swapArrayRanges,
+    setPage
+  } = usePageEdit({ schema, questionDataList }, updateTime)
 
-  function changeThemePreset(presets: any) {
-    Object.keys(presets).forEach((key) => {
-      _set(schema, key, presets[key])
-    })
+  // 问卷列表相关操作
+  const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionDataListOperations(
+    {
+      questionDataList,
+      updateTime,
+      pageOperations,
+      updateCounts: editGlobalBaseConf.updateCounts
+    }
+  )
+
+  function moveQuestionDataList(data: any) {
+    const { startIndex, endIndex } = getSorter()
+    const newData = [
+      ...questionDataList.value.slice(0, startIndex),
+      ...data,
+      ...questionDataList.value.slice(endIndex)
+    ]
+    const countTotal: number = (schema.pageConf as Array<number>).reduce(
+      (v: number, i: number) => v + i
+    )
+    if (countTotal != newData.length) {
+      schema.pageConf[pageEditOne.value - 1] = (schema.pageConf[pageEditOne.value - 1] + 1) as never
+    }
+    setQuestionDataList(newData)
   }
 
   return {
@@ -669,7 +685,6 @@ export const useEditStore = defineStore('edit', () => {
     surveyId,
     sessionId,
     setSurveyId,
-    initSessionId,
     bannerList,
     fetchBannerData,
     cooperPermissions,
@@ -702,7 +717,6 @@ export const useEditStore = defineStore('edit', () => {
     setQuestionDataList,
     moveQuestionDataList,
     init,
-    initSchema,
     getSchemaFromRemote,
     copyQuestion,
     addQuestion,

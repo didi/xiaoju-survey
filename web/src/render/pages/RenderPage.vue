@@ -155,11 +155,11 @@ const normalizationRequestBody = () => {
   localStorage.removeItem(surveyPath.value + FORMDATA_SUFFIX)
   localStorage.removeItem(SUBMIT_FLAG)
   //数据加密
-  let formData : Record<string, any> = Object.assign({}, surveyStore.formValues)
-  
+  let formData: Record<string, any> = Object.assign({}, surveyStore.formValues)
+
   localStorage.setItem(surveyPath.value + FORMDATA_SUFFIX, JSON.stringify(formData))
   localStorage.setItem(SUBMIT_FLAG, JSON.stringify(true))
-  
+
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo.encryptType
     result.data = encrypt[result.encryptType as 'rsa']({

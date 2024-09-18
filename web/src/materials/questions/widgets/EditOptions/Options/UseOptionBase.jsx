@@ -12,7 +12,7 @@ function useOptionBase(options) {
       others: false,
       mustOthers: false,
       othersKey: '',
-      placeholderDesc: '',
+      placeholderDesc: ''
     }
     if (typeof text !== 'string') {
       text = '选项'

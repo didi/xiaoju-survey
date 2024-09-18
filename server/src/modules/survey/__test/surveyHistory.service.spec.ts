@@ -82,8 +82,7 @@ describe('SurveyHistoryService', () => {
         surveyId,
         schema,
         type,
-        user,
-        sessionId: '',
+        user
       });
 
       expect(spyCreate).toHaveBeenCalledWith({

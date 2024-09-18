@@ -56,17 +56,17 @@ const meta = {
           text: '选项1',
           others: false,
           mustOthers: false,
-          othersKey: "",
-          placeholderDesc: "",
-          hash: "115019"
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115019'
         },
         {
-          text: "选项2",
+          text: '选项2',
           others: false,
           mustOthers: false,
-          othersKey: "",
-          placeholderDesc: "",
-          hash: "115020"
+          othersKey: '',
+          placeholderDesc: '',
+          hash: '115020'
         }
       ]
     },

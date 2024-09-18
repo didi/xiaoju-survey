@@ -38,11 +38,11 @@ export const formatLink = (url) => {
  */
 export function parseJson(jsonString) {
   try {
-    return JSON.parse(jsonString);
+    return JSON.parse(jsonString)
   } catch (error) {
-    console.error("Error parsing JSON:", error);
-    return null;
+    console.error('Error parsing JSON:', error)
+    return null
   }
 }
 
-export default parseJson;
+export default parseJson

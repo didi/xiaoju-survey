@@ -7,10 +7,9 @@ export const createDownloadSurveyResponseTask = ({ surveyId, isDesensitive }) =>
   })
 }
 
-export const getDownloadTask = taskId => {
+export const getDownloadTask = (taskId) => {
   return axios.get('/downloadTask/getDownloadTask', { params: { taskId } })
 }
-
 
 export const getDownloadTaskList = ({ pageIndex, pageSize }) => {
   return axios.get('/downloadTask/getDownloadTaskList', {
@@ -24,6 +23,6 @@ export const getDownloadTaskList = ({ pageIndex, pageSize }) => {
 //问卷删除
 export const deleteDownloadTask = (taskId) => {
   return axios.post('/downloadTask/deleteDownloadTask', {
-    taskId,
+    taskId
   })
 }

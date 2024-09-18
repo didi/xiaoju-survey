@@ -28,7 +28,7 @@ export default {
     tip: '回填前一次作答中的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
     placement: 'top',
     type: 'CustomedSwitch',
-    value: false,
+    value: false
   },
   limit_fillsubmitAnswer: {
     key: 'fillsubmitAnswer',
@@ -36,7 +36,7 @@ export default {
     tip: '回填前一次提交的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
     placement: 'top',
     type: 'CustomedSwitch',
-    value: false,
+    value: false
   },
   interview_pwd_switch: {
     key: 'passwordSwitch',
@@ -112,5 +112,5 @@ export default {
     relyFunc: (data) => {
       return data.whitelistType == 'MEMBER'
     }
-  },
+  }
 }

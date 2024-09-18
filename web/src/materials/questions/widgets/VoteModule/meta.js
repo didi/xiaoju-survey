@@ -118,7 +118,9 @@ const meta = {
           key: 'minNum',
           value: '',
           min: 0,
-          max: moduleConfig => { return  moduleConfig?.maxNum || 0 },
+          max: (moduleConfig) => {
+            return moduleConfig?.maxNum || 0
+          },
           contentClass: 'input-number-config'
         },
         {
@@ -126,8 +128,12 @@ const meta = {
           type: 'InputNumber',
           key: 'maxNum',
           value: '',
-          min: moduleConfig => { return moduleConfig?.minNum || 0 },
-          max: moduleConfig => { return moduleConfig?.options?.length || 0 },
+          min: (moduleConfig) => {
+            return moduleConfig?.minNum || 0
+          },
+          max: (moduleConfig) => {
+            return moduleConfig?.options?.length || 0
+          },
           contentClass: 'input-number-config'
         }
       ]

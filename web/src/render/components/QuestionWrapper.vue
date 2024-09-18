@@ -130,15 +130,15 @@ const handleChange = (data) => {
   debounceLocalStorageSave(data)
 }
 const handleInput = (e) => {
-  let data = { 
-    key: props.moduleConfig.field, 
-    value: e.target.value 
+  let data = {
+    key: props.moduleConfig.field,
+    value: e.target.value
   }
   debounceLocalStorageSave(data)
 }
 
 const debounceLocalStorageSave = (data) => {
-  const formData  = cloneDeep(formValues.value)
+  const formData = cloneDeep(formValues.value)
   let { key, value } = data
   if (key in formData) {
     formData[key] = value

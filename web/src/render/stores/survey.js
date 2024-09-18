@@ -7,7 +7,7 @@ import { isMobile as isInMobile, parseJson } from '@/render/utils/index'
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
 import { useQuestionStore } from '@/render/stores/question'
 import { useErrorInfo } from '@/render/stores/errorInfo'
-import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant' 
+import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant'
 
 import moment from 'moment'
 // 引入中文
@@ -20,7 +20,6 @@ import useCommandComponent from '../hooks/useCommandComponent'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 
 const confirm = useCommandComponent(ConfirmDialog)
-
 
 moment.locale('zh-cn')
 /**
@@ -136,7 +135,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
-    
+
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -175,24 +174,24 @@ export const useSurveyStore = defineStore('survey', () => {
 
     const isSubmit = parseJson(localStorage.getItem(SUBMIT_FLAG))
     // 开启了断点续答 or 回填上一次提交内容
-    if((breakpointAnswer || (fillsubmitAnswer && isSubmit)) && localData) {
+    if ((breakpointAnswer || (fillsubmitAnswer && isSubmit)) && localData) {
       const title = breakpointAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
       confirm({
         title: title,
         onConfirm: async () => {
           try {
             // 回填答题内容
-            fillFormData(localData);
+            fillFormData(localData)
           } catch (error) {
-            console.error(error);
+            console.error(error)
           } finally {
-            confirm.close();
+            confirm.close()
           }
         },
         onClose: async () => {
-          confirm.close();
+          confirm.close()
         }
-      });
+      })
     }
   }
 

@@ -53,7 +53,7 @@ const meta = {
       description: '这是用于描述选项',
       defaultValue: [
         {
-          text: 选项1,
+          text: '选项1',
           others: false,
           mustOthers: false,
           othersKey: "",

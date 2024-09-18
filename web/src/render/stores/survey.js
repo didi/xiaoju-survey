@@ -140,7 +140,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
-    // todo: 建议通过questionStore提供setqueationdata方法修改属性，否则不好跟踪变化
+    
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -177,13 +177,13 @@ export const useSurveyStore = defineStore('survey', () => {
     // 加载空白问卷
     clearFormData(option)
 
-    const { breakAnswer, backAnswer } = option.baseConf
+    const { breakpointAnswer, fillsubmitAnswer } = option.baseConf
     const localData = parseJson(localStorage.getItem(surveyPath.value + FORMDATA_SUFFIX))
 
     const isSubmit = parseJson(localStorage.getItem(SUBMIT_FLAG))
     // 开启了断点续答 or 回填上一次提交内容
-    if((breakAnswer || (backAnswer && isSubmit)) && localData) {
-      const title = breakAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
+    if((breakpointAnswer || (fillsubmitAnswer && isSubmit)) && localData) {
+      const title = breakpointAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
       confirm({
         title: title,
         onConfirm: async () => {

@@ -36,7 +36,7 @@ export const formatLink = (url) => {
  * @param {string} jsonString - JSON 字符串
  * @returns {any} 解析后的对象或 null
  */
-function parseJson(jsonString) {
+export function parseJson(jsonString) {
   try {
     return JSON.parse(jsonString);
   } catch (error) {

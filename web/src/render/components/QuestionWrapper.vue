@@ -19,7 +19,7 @@ import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
 import { debounce, cloneDeep } from 'lodash-es'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
-import { SUBMIT_FLAG } from '../utils/constant'
+import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '../utils/constant'
 import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 
 const props = defineProps({
@@ -169,11 +169,24 @@ const handleChange = (data) => {
     questionStore.updateQuotaData(data)
   }
   processJumpSkip()
+  debounceLocalStorageSave(data)
+}
+const handleInput = (e) => {
+  let data = { 
+    key: props.moduleConfig.field, 
+    value: e.target.value 
+  }
+  debounceLocalStorageSave(data)
 }
 
-const handleInput = debounce(() => {
-  localStorageBack()
-}, 500)
+const debounceLocalStorageSave = (data) => {
+  const formData  = cloneDeep(formValues.value)
+  let { key, value } = data
+  if (key in formData) {
+    formData[key] = value
+  }
+  debounce(() => localStorageSave(formData), 500)()
+}
 
 const processJumpSkip = () => {
   const targetResult = surveyStore.jumpLogicEngine
@@ -215,9 +228,7 @@ const processJumpSkip = () => {
     .map((item) => item.field)
   questionStore.addNeedHideFields(skipKey)
 }
-const localStorageBack = () => {
-  let formData = Object.assign({}, surveyStore.formValues);
-
+const localStorageSave = (formData) => {
   //浏览器存储
   localStorage.removeItem(surveyStore.surveyPath + FORMDATA_SUFFIX)
   localStorage.setItem(surveyStore.surveyPath + FORMDATA_SUFFIX, JSON.stringify(formData))

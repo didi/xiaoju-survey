@@ -3,9 +3,9 @@ import { defineStore } from 'pinia'
 import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
 import { queryVote } from '@/render/api/survey'
-import { QUESTION_TYPE, NORMAL_CHOICES } from '@/common/typeEnum'
+import { QUESTION_TYPE } from '@/common/typeEnum'
 import { parseJson } from '@/render/utils/index'
-import { VOTE_INFO_KEY, QUOTA_INFO_KEY } from '@/render/utils/constant' 
+import { VOTE_INFO_KEY } from '@/render/utils/constant' 
 
 
 // 投票进度逻辑聚合

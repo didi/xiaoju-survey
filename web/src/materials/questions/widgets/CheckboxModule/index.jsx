@@ -1,4 +1,4 @@
-import { computed, defineComponent, shallowRef, defineAsyncComponent, watch } from 'vue'
+import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
 import { includes } from 'lodash-es'
 
 import BaseChoice from '../BaseChoice'

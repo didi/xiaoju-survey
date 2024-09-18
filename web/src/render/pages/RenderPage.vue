@@ -39,7 +39,6 @@ import encrypt from '../utils/encrypt'
 
 import useCommandComponent from '../hooks/useCommandComponent'
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
-import { useQuestionInfo } from '../hooks/useQuestionInfo'
 import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant'
 
 interface Props {

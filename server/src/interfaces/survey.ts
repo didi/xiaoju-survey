@@ -60,7 +60,6 @@ export interface DataItem {
   rangeConfig?: any;
   starStyle?: string;
   innerType?: string;
-  quotaNoDisplay?: boolean;
 }
 
 export interface Option {
@@ -70,7 +69,6 @@ export interface Option {
   othersKey?: string;
   placeholderDesc: string;
   hash: string;
-  quota?: number;
 }
 
 export interface DataConf {

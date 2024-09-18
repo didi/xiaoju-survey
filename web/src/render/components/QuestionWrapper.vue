@@ -15,7 +15,6 @@ import QuestionRuleContainer from '../../materials/questions/QuestionRuleContain
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
-import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
 import { debounce, cloneDeep } from 'lodash-es'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
@@ -57,44 +56,7 @@ const questionConfig = computed(() => {
     alloptions = alloptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
   }
-  if(NORMAL_CHOICES.includes(type) &&
-    options.some(option => option.quota > 0)) {
-    // 处理普通选择题的选项配额
-    let { options: optionWithQuota } = useOptionsQuota(field)
-
-    // 兼容断点续答情况下选项配额为0的情况
-      const disabledHash = optionWithQuota.filter(i => i.disabled).map(i => i.hash)
-      const value = formValues.value[field]
-      if (value && disabledHash.length) {
-        disabledHash.forEach(hash => {
-          const index = value.indexOf(hash)
-          if(index> -1) {
-            if(type === QUESTION_TYPE.CHECKBOX) {
-              const newValue = [...value]
-              newValue.splice(index, 1)
-              const data = {
-                key: field,
-                value: newValue
-              }
-              surveyStore.changeData(data)
-            } else {
-              const data = {
-                key: field,
-                value: ''
-              }
-              surveyStore.changeData(data)
-            }
-          }
-        })
-      }
-
-    
-    alloptions = alloptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
-  }
-  if (
-    NORMAL_CHOICES.includes(type) &&
-    options.some(option => option.others)
-  ) {
+  if (NORMAL_CHOICES.includes(type) && options.some((option) => option.others)) {
     // 处理普通选择题的填写更多
     let { options, othersValue } = useShowOthers(field)
     const othersOptions = unref(options)
@@ -163,10 +125,6 @@ const handleChange = (data) => {
   // 处理投票题
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     questionStore.updateVoteData(data)
-  }
-  // 处理选项配额
-  if (props.moduleConfig.type === NORMAL_CHOICES) {
-    questionStore.updateQuotaData(data)
   }
   processJumpSkip()
   debounceLocalStorageSave(data)

@@ -14,7 +14,6 @@ import moment from 'moment'
 import 'moment/locale/zh-cn'
 // 设置中文
 
-
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
 import useCommandComponent from '../hooks/useCommandComponent'
@@ -32,7 +31,6 @@ const CODE_MAP = {
   ERROR: 500,
   NO_AUTH: 403
 }
-
 
 export const useSurveyStore = defineStore('survey', () => {
   const surveyPath = ref('')
@@ -118,8 +116,6 @@ export const useSurveyStore = defineStore('survey', () => {
     return isSuccess
   }
 
-
-
   // 加载空白页面
   function clearFormData(option) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
@@ -155,21 +151,18 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues.value = _formValues
     whiteData.value = option.whiteData
     pageConf.value = option.pageConf
-    
+
     // 获取已投票数据
     questionStore.initVoteData()
-    questionStore.initQuotaMap()
-
   }
   function fillFormData(formData) {
     const _formValues = cloneDeep(formValues.value)
-    for(const key in formData){
+    for (const key in formData) {
       _formValues[key] = formData[key]
     }
     formValues.value = _formValues
   }
   const initSurvey = (option) => {
-
     setEnterTime()
     if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
       return

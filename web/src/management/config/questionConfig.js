@@ -41,15 +41,13 @@ export const defaultQuestionConfig = {
       text: '选项1',
       others: false,
       othersKey: '',
-      placeholderDesc: '',
-      quota: '0'
+      placeholderDesc: ''
     },
     {
       text: '选项2',
       others: false,
       othersKey: '',
-      placeholderDesc: '',
-      quota: '0'
+      placeholderDesc: ''
     }
   ],
   star: 5,
@@ -76,6 +74,5 @@ export const defaultQuestionConfig = {
       placeholder: '500',
       value: 500
     }
-  },
-  quotaNoDisplay: false
+  }
 }

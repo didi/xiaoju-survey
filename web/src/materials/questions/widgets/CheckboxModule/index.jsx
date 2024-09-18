@@ -41,15 +41,10 @@ export default defineComponent({
     maxNum: {
       type: [Number, String],
       default: 1
-    },
-    quotaNoDisplay:{
-      type: Boolean,
-      default: false
     }
   },
   emits: ['change'],
   setup(props, { emit }) {
-    
     const disableState = computed(() => {
       if (!props.maxNum) {
         return false
@@ -65,7 +60,7 @@ export default defineComponent({
       return options.map((item) => {
         return {
           ...item,
-          disabled: (item.release === 0) || isDisabled(item)
+          disabled: isDisabled(item)
         }
       })
     })
@@ -97,13 +92,12 @@ export default defineComponent({
     return {
       onChange,
       handleSelectMoreChange,
-      disableState,
       myOptions,
       selectMoreView
     }
   },
   render() {
-    const { readonly, field, myOptions, onChange, maxNum, value, quotaNoDisplay, selectMoreView } = this
+    const { readonly, field, myOptions, onChange, maxNum, value, selectMoreView } = this
     return (
       <BaseChoice
         uiTarget="checkbox"
@@ -114,7 +108,6 @@ export default defineComponent({
         onChange={onChange}
         value={value}
         layout={this.layout}
-        quotaNoDisplay={quotaNoDisplay}
       >
         {{
           selectMore: (scoped) => {

@@ -73,7 +73,6 @@ const pageIndex = computed(() => questionStore.pageIndex)
 const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
-
 const route = useRoute()
 onMounted(() => {
   const surveyId = route.params.surveyId
@@ -188,15 +187,6 @@ const submitSurver = async () => {
     const res: any = await submitForm(params)
     if (res.code === 200) {
       router.replace({ name: 'successPage' })
-    } else if(res.code === 9003) {
-      // 更新填写的过程中配额减少情况
-      questionStore.initQuotaMap()
-      const titile = useQuestionInfo(res.data.field).questionTitle
-      const optionText = useQuestionInfo(res.data.field).getOptionTitle(res.data.optionHash)
-      const message = `【${titile}】的【${optionText}】配额已满，请重新选择`
-      alert({
-        title: message
-      })
     } else {
       alert({
         title: res.errmsg || '提交失败'

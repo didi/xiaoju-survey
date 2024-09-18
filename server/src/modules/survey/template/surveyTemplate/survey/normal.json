@@ -47,8 +47,7 @@
             "mustOthers": false,
             "othersKey": "",
             "placeholderDesc": "",
-            "hash": "115019",
-            "quota": "0"
+            "hash": "115019"
           },
           {
             "text": "选项2",
@@ -56,11 +55,9 @@
             "mustOthers": false,
             "othersKey": "",
             "placeholderDesc": "",
-            "hash": "115020",
-            "quota": "0"
+            "hash": "115020"
           }
-        ],
-        "quotaNoDisplay": false
+        ]
       }
     ]
   }

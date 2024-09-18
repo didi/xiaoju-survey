@@ -75,55 +75,34 @@ const meta = {
       propType: String,
       description: '排列方式',
       defaultValue: 'vertical'
-    },
-    {
-      name: 'quotaNoDisplay',
-      propType: Boolean,
-      description: '不展示配额剩余数量',
-      defaultValue: false
     }
   ],
-  formConfig: [basicConfig, {
-    name: 'optionConfig',
-    title: '选项配置',
-    type: 'Customed',
-    content: [
-      {
-        label: '排列方式',
-        type: 'RadioGroup',
-        key: 'layout',
-        value: 'vertical',
-        options: [
-          {
-            label: '竖排',
-            value: 'vertical'
-          },
-          {
-            label: '横排',
-            value: 'horizontal'
-          },
-        ]
-      },
-    ]
-  },{
-    name: 'optionQuota',
-    label: '选项配额',
-    labelStyle: {
-      'font-weight': 'bold'
-    },
-    type: 'QuotaConfig',
-    // 输出转换
-    valueSetter({ options, quotaNoDisplay}) {
-      return [{
-        key: 'options',
-        value: options
-      },
-      {
-        key: 'quotaNoDisplay',
-        value: quotaNoDisplay
-      }]
+  formConfig: [
+    basicConfig,
+    {
+      name: 'optionConfig',
+      title: '选项配置',
+      type: 'Customed',
+      content: [
+        {
+          label: '排列方式',
+          type: 'RadioGroup',
+          key: 'layout',
+          value: 'vertical',
+          options: [
+            {
+              label: '竖排',
+              value: 'vertical'
+            },
+            {
+              label: '横排',
+              value: 'horizontal'
+            }
+          ]
+        }
+      ]
     }
-  }],
+  ],
   editConfigure: {
     optionEdit: {
       show: true

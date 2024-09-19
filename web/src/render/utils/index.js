@@ -30,19 +30,3 @@ export const formatLink = (url) => {
   }
   return `http://${url}`
 }
-
-/**
- * 安全地解析 JSON 字符串
- * @param {string} jsonString - JSON 字符串
- * @returns {any} 解析后的对象或 null
- */
-export function parseJson(jsonString) {
-  try {
-    return JSON.parse(jsonString)
-  } catch (error) {
-    console.error('Error parsing JSON:', error)
-    return null
-  }
-}
-
-export default parseJson

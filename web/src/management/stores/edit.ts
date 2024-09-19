@@ -619,8 +619,7 @@ export const useEditStore = defineStore('edit', () => {
   async function init() {
     const { metaData } = schema
     if (!metaData || (metaData as any)?._id !== surveyId.value) {
-      await getSchemaFromRemote()
-      await initSessionId()
+      await Promise.all([getSchemaFromRemote(), initSessionId()])
     }
     currentEditOne.value = null
     currentEditStatus.value = 'Success'

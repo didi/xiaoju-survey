@@ -9,7 +9,7 @@
   ></QuestionRuleContainer>
 </template>
 <script setup>
-import { unref, computed, watch } from 'vue'
+import { unref, computed, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
@@ -20,6 +20,7 @@ import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
 import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '../utils/constant'
 import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
+import localstorage from '@/common/localstorage'
 
 const props = defineProps({
   indexNumber: {
@@ -127,24 +128,27 @@ const handleChange = (data) => {
     questionStore.updateVoteData(data)
   }
   processJumpSkip()
-  debounceLocalStorageSave(data)
+  valueTemp.value = data.value
+  debounceStorageSave()
 }
+const valueTemp = ref()
 const handleInput = (e) => {
-  let data = {
-    key: props.moduleConfig.field,
-    value: e.target.value
-  }
-  debounceLocalStorageSave(data)
+  valueTemp.value = e.target.value
+  debounceStorageSave()
 }
 
-const debounceLocalStorageSave = (data) => {
+const debounceStorageSave = debounce(() => {
+  let data = {
+    key: props.moduleConfig.field,
+    value: valueTemp.value
+  }
   const formData = cloneDeep(formValues.value)
   let { key, value } = data
   if (key in formData) {
     formData[key] = value
   }
-  debounce(() => localStorageSave(formData), 500)()
-}
+  localStorageSave(formData)
+}, 500)
 
 const processJumpSkip = () => {
   const targetResult = surveyStore.jumpLogicEngine
@@ -187,9 +191,8 @@ const processJumpSkip = () => {
   questionStore.addNeedHideFields(skipKey)
 }
 const localStorageSave = (formData) => {
-  //浏览器存储
-  localStorage.removeItem(surveyStore.surveyPath + FORMDATA_SUFFIX)
-  localStorage.setItem(surveyStore.surveyPath + FORMDATA_SUFFIX, JSON.stringify(formData))
-  localStorage.setItem(SUBMIT_FLAG, JSON.stringify(false))
+  localstorage.removeItem(surveyStore.surveyPath + FORMDATA_SUFFIX)
+  localstorage.setItem(surveyStore.surveyPath + FORMDATA_SUFFIX, formData)
+  localstorage.setItem(SUBMIT_FLAG, false)
 }
 </script>

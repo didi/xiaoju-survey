@@ -2,9 +2,7 @@
   <div class="data-table-page">
     <template v-if="tableData.total">
       <div class="menus">
-        <el-button type="primary" :loading="isDownloading" @click="onDownload"
-          >导出全部数据</el-button
-        >
+        <el-button type="primary" :loading="isDownloading" @click="onDownload">导出全部数据</el-button>
         <el-switch
           class="desensitive-switch"
           :model-value="isShowOriginData"

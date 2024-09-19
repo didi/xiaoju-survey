@@ -4,8 +4,8 @@ import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
 import { queryVote } from '@/render/api/survey'
 import { QUESTION_TYPE } from '@/common/typeEnum'
-import { parseJson } from '@/render/utils/index'
 import { VOTE_INFO_KEY } from '@/render/utils/constant'
+import localstorage from '@/common/localstorage'
 
 // 投票进度逻辑聚合
 const usevVoteMap = (questionData) => {
@@ -28,19 +28,16 @@ const usevVoteMap = (questionData) => {
       return
     }
     try {
-      localStorage.removeItem(VOTE_INFO_KEY)
+      localstorage.removeItem(VOTE_INFO_KEY)
       const voteRes = await queryVote({
         surveyPath,
         fieldList: fieldList.join(',')
       })
 
       if (voteRes.code === 200) {
-        localStorage.setItem(
-          VOTE_INFO_KEY,
-          JSON.stringify({
-            ...voteRes.data
-          })
-        )
+        localstorage.setItem(VOTE_INFO_KEY, {
+          ...voteRes.data
+        })
         setVoteMap(voteRes.data)
       }
     } catch (error) {
@@ -60,9 +57,8 @@ const usevVoteMap = (questionData) => {
   }
   const updateVoteData = (data) => {
     const { key: questionKey, value: questionVal } = data
-    // 更新前获取接口缓存在localStorage中的数据
-    const localData = localStorage.getItem(VOTE_INFO_KEY)
-    const voteinfo = parseJson(localData)
+    // 更新前获取接口缓存在localstorage中的数据
+    const voteinfo = localstorage.getItem(VOTE_INFO_KEY)
     const currentQuestion = questionData.value[questionKey]
     const options = currentQuestion.options
     const voteTotal = voteinfo?.[questionKey]?.total || 0

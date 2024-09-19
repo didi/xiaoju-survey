@@ -18,11 +18,11 @@
       </CooperationPanel>
       <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
-      <SavePanel 
-        :updateLogicConf="updateLogicConf" 
-        :updateWhiteConf="updateWhiteConf" 
-        :seize="seize">
-      </SavePanel>
+      <SavePanel
+        :updateLogicConf="updateLogicConf"
+        :updateWhiteConf="updateWhiteConf"
+        :seize="seize"
+      ></SavePanel>
       <PublishPanel
         :updateLogicConf="updateLogicConf"
         :updateWhiteConf="updateWhiteConf"
@@ -47,7 +47,6 @@ import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 import { seizeSession } from '@/management/api/survey'
-
 
 const editStore = useEditStore()
 const { schema, changeSchema } = editStore

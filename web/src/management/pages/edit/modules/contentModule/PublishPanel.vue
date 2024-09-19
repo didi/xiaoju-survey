@@ -30,7 +30,6 @@ const saveData = computed(() => {
   return buildData(schema.value, sessionId.value)
 })
 
-
 const router = useRouter()
 
 const validate = () => {

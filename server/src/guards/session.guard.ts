@@ -18,7 +18,7 @@ export class SessionGuard implements CanActivate {
     );
 
     const sessionId = get(request, sessionIdKey);
-    
+
     if (sessionId) {
       const sessionInfo = await this.sessionService.findOne(sessionId);
       request.sessionInfo = sessionInfo;

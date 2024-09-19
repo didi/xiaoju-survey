@@ -92,7 +92,7 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
   })
   const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } =
     useLogicEngine(schema)
-  
+
   function initSchema({ metaData, codeData }: { metaData: any; codeData: any }) {
     schema.metaData = metaData
     schema.bannerConf = _merge({}, schema.bannerConf, codeData.bannerConf)
@@ -106,10 +106,9 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
     schema.pageConf = codeData.pageConf
   }
 
-
   const sessionId = ref('')
   async function initSessionId() {
-    const sessionIdKey = `${surveyId.value}_sessionId`;
+    const sessionIdKey = `${surveyId.value}_sessionId`
     const localSessionId = sessionStorage.getItem(sessionIdKey)
     if (localSessionId) {
       sessionId.value = localSessionId
@@ -161,14 +160,14 @@ function useInitializeSchema(surveyId: Ref<string>, initializeSchemaCallBack: ()
       throw new Error(res.errmsg || '问卷不存在')
     }
   }
-  
+
   return {
     schema,
     getSchemaFromRemote,
     showLogicEngine,
     jumpLogicEngine,
     sessionId,
-    initSessionId,
+    initSessionId
   }
 }
 
@@ -495,15 +494,12 @@ function useLogicEngine(schema: any) {
   }
 }
 
-
 type IBannerItem = {
   name: string
   key: string
   list: Array<Object>
 }
 type IBannerList = Record<string, IBannerItem>
-
-
 
 export const useEditStore = defineStore('edit', () => {
   const bannerList: Ref<IBannerList> = ref({})
@@ -526,23 +522,23 @@ export const useEditStore = defineStore('edit', () => {
   function updateTime() {
     schemaUpdateTime.value = Date.now()
   }
-  
+
   const surveyId = ref('')
   function setSurveyId(id: string) {
     surveyId.value = id
   }
 
   // 初始化schem相关
-  const { 
-    schema, 
-    sessionId, 
-    initSessionId, 
-    getSchemaFromRemote, 
-    showLogicEngine, 
-    jumpLogicEngine 
+  const {
+    schema,
+    sessionId,
+    initSessionId,
+    getSchemaFromRemote,
+    showLogicEngine,
+    jumpLogicEngine
   } = useInitializeSchema(surveyId, () => {
-      editGlobalBaseConf.initCounts()
-    })
+    editGlobalBaseConf.initCounts()
+  })
 
   function changeSchema({ key, value }: { key: string; value: any }) {
     _set(schema, key, value)
@@ -555,15 +551,12 @@ export const useEditStore = defineStore('edit', () => {
     })
   }
 
-
   const questionDataList = toRef(schema, 'questionDataList')
 
   const editGlobalBaseConf = useEditGlobalBaseConf(questionDataList, updateTime)
   function setQuestionDataList(data: any) {
     schema.questionDataList = data
   }
-
-
 
   const createNewQuestion = ({ type }: { type: QUESTION_TYPE }) => {
     const fields = questionDataList.value.map((item: any) => item.field)
@@ -610,7 +603,6 @@ export const useEditStore = defineStore('edit', () => {
     }
   })
 
-  
   // 当前编辑题目
   const {
     currentEditOne,
@@ -623,7 +615,6 @@ export const useEditStore = defineStore('edit', () => {
     changeCurrentEditStatus
   } = useCurrentEdit({ schema, questionDataList })
 
-
   // 初始化问卷
   async function init() {
     const { metaData } = schema
@@ -635,7 +626,6 @@ export const useEditStore = defineStore('edit', () => {
     currentEditStatus.value = 'Success'
   }
 
-  
   // 分页相关
   const {
     pageEditOne,

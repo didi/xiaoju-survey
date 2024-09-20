@@ -14,7 +14,7 @@ import { SurveyHistoryService } from '../services/surveyHistory.service';
 import { Authentication } from 'src/guards/authentication.guard';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 @ApiTags('survey')
@@ -22,7 +22,7 @@ import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 export class SurveyHistoryController {
   constructor(
     private readonly surveyHistoryService: SurveyHistoryService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
   ) {}
 
   @Get('/getList')

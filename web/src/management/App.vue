@@ -4,13 +4,10 @@
 
 <script setup lang="ts">
 import { watch, onBeforeUnmount } from 'vue'
-import { get as _get } from 'lodash-es'
 import { useUserStore } from '@/management/stores/user'
 import { useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage, type Action } from 'element-plus'
-
-// 这里不需要自动跳转登录页面，所以单独引入axios
-import axios from 'axios'
+import { checkIsTokenValid } from '@/management/api/auth';
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -32,16 +29,9 @@ const showConfirmBox = () => {
 
 const checkAuth = async () => {
   try {
-    const token = _get(userStore, 'userInfo.token')
-
-    const res = await axios({
-      url: '/api/user/getUserInfo',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    if (res.data.code !== 200) {
-      showConfirmBox()
+    const res: Record<string, any> = await checkIsTokenValid()
+    if (res.code !== 200 || !res.data) {
+      showConfirmBox();
     } else {
       timer = setTimeout(
         () => {

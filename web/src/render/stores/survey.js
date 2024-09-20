@@ -3,9 +3,6 @@ import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { cloneDeep, pick } from 'lodash-es'
 import moment from 'moment'
-// 引入中文
-import 'moment/locale/zh-cn'
-// 设置中文
 
 import { isMobile as isInMobile } from '@/render/utils/index'
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
@@ -21,7 +18,6 @@ import localstorage from '@/common/localstorage'
 
 const confirm = useCommandComponent(ConfirmDialog)
 
-moment.locale('zh-cn')
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */

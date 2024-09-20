@@ -4,7 +4,7 @@
       <div class="menus">
         <el-button type="primary" :loading="isDownloading" @click="onDownload">导出全部数据</el-button>
         <el-switch
-          class="desensitive-switch"
+          class="desensitize-switch"
           :model-value="isShowOriginData"
           active-text="是否展示原数据"
           @input="onIsShowOriginChange"
@@ -31,7 +31,7 @@
     <el-dialog v-model="downloadDialogVisible" title="导出确认" width="500" style="padding: 40px">
       <el-form :model="downloadForm" label-width="100px" label-position="left">
         <el-form-item label="导出内容">
-          <el-radio-group v-model="downloadForm.isDesensitive">
+          <el-radio-group v-model="downloadForm.isMasked">
             <el-radio :value="true">脱敏数据</el-radio>
             <el-radio :value="false">原回收数据</el-radio>
           </el-radio-group>
@@ -63,7 +63,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import { getRecycleList } from '@/management/api/analysis'
 import { noDataConfig } from '@/management/config/analysisConfig'
 import DataTable from '../components/DataTable.vue'
-import { createDownloadSurveyResponseTask, getDownloadTask } from '@/management/api/downloadTask'
+import { createDownloadTask, getDownloadTask } from '@/management/api/downloadTask'
 
 const dataTableState = reactive({
   mainTableLoading: false,
@@ -78,8 +78,8 @@ const dataTableState = reactive({
   isDownloading: false,
   downloadDialogVisible: false,
   downloadForm: {
-    isDesensitive: true
-  }
+    isMasked: true,
+  },
 })
 
 const { mainTableLoading, tableData, isShowOriginData, downloadDialogVisible, isDownloading } =
@@ -137,7 +137,7 @@ const init = async () => {
     const res = await getRecycleList({
       page: dataTableState.currentPage,
       surveyId: route.params.id,
-      isDesensitive: !dataTableState.tmpIsShowOriginData // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
+      isMasked: !dataTableState.tmpIsShowOriginData // 发起请求的时候，isShowOriginData还没改变，暂存了一个字段
     })
 
     if (res.code === 200) {
@@ -162,10 +162,7 @@ const confirmDownload = async () => {
   }
   try {
     isDownloading.value = true
-    const createRes = await createDownloadSurveyResponseTask({
-      surveyId: route.params.id,
-      isDesensitive: downloadForm.isDesensitive
-    })
+    const createRes = await createDownloadTask({ surveyId: route.params.id, isMasked: downloadForm.isMasked })
     dataTableState.downloadDialogVisible = false
     if (createRes.code === 200) {
       ElMessage.success(`下载文件计算中，可前往“下载中心”查看`)
@@ -237,7 +234,7 @@ const checkIsTaskFinished = (taskId) => {
   margin-bottom: 20px;
 }
 
-.desensitive-switch {
+.desensitize-switch {
   float: right;
 }
 </style>

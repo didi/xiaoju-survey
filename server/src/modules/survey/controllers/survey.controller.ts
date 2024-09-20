@@ -17,7 +17,6 @@ import { SurveyConfService } from '../services/surveyConf.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 import { ContentSecurityService } from '../services/contentSecurity.service';
 import { SurveyHistoryService } from '../services/surveyHistory.service';
-import { CounterService } from 'src/modules/surveyResponse/services/counter.service';
 
 import BannerData from '../template/banner/index.json';
 import { CreateSurveyDto } from '../dto/createSurvey.dto';
@@ -26,7 +25,7 @@ import { Authentication } from 'src/guards/authentication.guard';
 import { HISTORY_TYPE } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
@@ -45,8 +44,7 @@ export class SurveyController {
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly contentSecurityService: ContentSecurityService,
     private readonly surveyHistoryService: SurveyHistoryService,
-    private readonly logger: XiaojuSurveyLogger,
-    private readonly counterService: CounterService,
+    private readonly logger: Logger,
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
   ) {}

@@ -12,13 +12,13 @@ import xlsx from 'node-xlsx';
 import { load } from 'cheerio';
 import { get } from 'lodash';
 import { FileService } from 'src/modules/file/services/file.service';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import moment from 'moment';
 
 @Injectable()
 export class DownloadTaskService {
-  private static taskList: Array<any> = [];
-  private static isExecuting: boolean = false;
+  static taskList: Array<any> = [];
+  static isExecuting: boolean = false;
 
   constructor(
     @InjectRepository(DownloadTask)
@@ -28,26 +28,29 @@ export class DownloadTaskService {
     private readonly surveyResponseRepository: MongoRepository<SurveyResponse>,
     private readonly dataStatisticService: DataStatisticService,
     private readonly fileService: FileService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
   ) {}
 
   async createDownloadTask({
     surveyId,
     responseSchema,
-    operatorId,
+    creatorId,
+    creator,
     params,
   }: {
     surveyId: string;
     responseSchema: ResponseSchema;
-    operatorId: string;
+    creatorId: string;
+    creator: string;
     params: any;
   }) {
-    const filename = `${responseSchema.title}-${params.isDesensitive ? '脱敏' : '原'}回收数据-${moment().format('YYYYMMDDHHmmss')}.xlsx`;
+    const filename = `${responseSchema.title}-${params.isMasked ? '脱敏' : '原'}回收数据-${moment().format('YYYYMMDDHHmmss')}.xlsx`;
     const downloadTask = this.downloadTaskRepository.create({
       surveyId,
       surveyPath: responseSchema.surveyPath,
       fileSize: '计算中',
-      ownerId: operatorId,
+      creatorId,
+      creator,
       params: {
         ...params,
         title: responseSchema.title,
@@ -59,16 +62,16 @@ export class DownloadTaskService {
   }
 
   async getDownloadTaskList({
-    ownerId,
+    creatorId,
     pageIndex,
     pageSize,
   }: {
-    ownerId: string;
+    creatorId: string;
     pageIndex: number;
     pageSize: number;
   }) {
     const where = {
-      ownerId,
+      creatorId,
       'curStatus.status': {
         $ne: RECORD_STATUS.REMOVED,
       },
@@ -131,9 +134,11 @@ export class DownloadTaskService {
     }
   }
 
-  private async executeTask() {
+  async executeTask() {
     try {
-      for (const taskId of DownloadTaskService.taskList) {
+      while (DownloadTaskService.taskList.length > 0) {
+        const taskId = DownloadTaskService.taskList.shift();
+        this.logger.info(`handle taskId: ${taskId}`);
         const taskInfo = await this.getDownloadTaskById({ taskId });
         if (!taskInfo || taskInfo.curStatus.status === RECORD_STATUS.REMOVED) {
           // 不存在或者已删除的，不处理
@@ -228,7 +233,7 @@ export class DownloadTaskService {
         configKey: 'SERVER_LOCAL_CONFIG',
         file,
         pathPrefix: 'exportfile',
-        keepOriginFilename: true,
+        filename: taskInfo.filename,
       });
 
       const curStatus = {

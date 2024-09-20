@@ -12,11 +12,11 @@ export class LocalHandler implements FileUploadHandler {
 
   async upload(
     file: Express.Multer.File,
-    options?: { pathPrefix?: string; keepOriginFilename?: boolean },
+    options?: { pathPrefix?: string; filename?: string },
   ): Promise<{ key: string }> {
     let filename;
-    if (options?.keepOriginFilename) {
-      filename = file.originalname;
+    if (options?.filename) {
+      filename = file.filename;
     } else {
       filename = await generateUniqueFilename(file.originalname);
     }

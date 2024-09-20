@@ -5,12 +5,12 @@ export class CreateDownloadDto {
   @ApiProperty({ description: '问卷id', required: true })
   surveyId: string;
   @ApiProperty({ description: '是否脱敏', required: false })
-  isDesensitive: boolean;
+  isMasked: boolean;
 
   static validate(data) {
     return Joi.object({
       surveyId: Joi.string().required(),
-      isDesensitive: Joi.boolean().allow(null).default(false),
+      isMasked: Joi.boolean().allow(null).default(false),
     }).validate(data);
   }
 }

@@ -1,12 +1,11 @@
-// logger.middleware.ts
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { XiaojuSurveyLogger } from '../logger/index'; // 替换为你实际的logger路径
+import { Logger } from '../logger/index'; // 替换为你实际的logger路径
 import { genTraceId } from '../logger/util';
 
 @Injectable()
 export class LogRequestMiddleware implements NestMiddleware {
-  constructor(private readonly logger: XiaojuSurveyLogger) {}
+  constructor(private readonly logger: Logger) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     const { method, originalUrl, ip } = req;

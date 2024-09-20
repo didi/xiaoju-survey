@@ -1,4 +1,12 @@
-import { Controller, Post, Body, HttpCode, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  Get,
+  Query,
+  Request,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserService } from '../services/user.service';
 import { CaptchaService } from '../services/captcha.service';
@@ -213,5 +221,29 @@ export class AuthController {
       code: 200,
       data: 'Weak',
     };
+  }
+
+  @Get('/verifyToken')
+  @HttpCode(200)
+  async verifyToken(@Request() req) {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+      return {
+        code: 200,
+        data: false,
+      };
+    }
+    try {
+      await this.authService.verifyToken(token);
+      return {
+        code: 200,
+        data: true,
+      };
+    } catch (error) {
+      return {
+        code: 200,
+        data: false,
+      };
+    }
   }
 }

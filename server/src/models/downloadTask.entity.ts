@@ -19,7 +19,11 @@ export class DownloadTask extends BaseEntity {
 
   // 任务创建人
   @Column()
-  ownerId: string;
+  creatorId: string;
+
+  // 任务创建人
+  @Column()
+  creator: string;
 
   // 文件名
   @Column()

@@ -9,7 +9,7 @@
     <script>
       ;(function () {
         function resetRemUnit() {
-          let PC_W = 750
+          const PC_W = 750
           let docEl = window.document.documentElement
           let width = docEl.getBoundingClientRect().width || 375
 
@@ -20,7 +20,7 @@
             }
           }
 
-          let f = Math.min(width / 7.5, 50)
+          const f = Math.min(width / 7.5, 50)
           docEl.style.fontSize = f + 'px'
 
           let d = window.document.createElement('div')
@@ -28,7 +28,7 @@
           d.style.display = 'none'
           let head = window.document.getElementsByTagName('head')[0]
           head.appendChild(d)
-          let realf = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'))
+          const realf = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'))
 
           if (f !== realf) {
             docEl.style.fontSize = f * (f / realf) + 'px'

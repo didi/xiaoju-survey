@@ -9,7 +9,7 @@ const myxss = new xss.FilterXSS({
   },
   onIgnoreTag(tag, html) {
     // <xxx>过滤为空，否则不过滤为空
-    let re1 = new RegExp('<.+?>', 'g')
+    const re1 = new RegExp('<.+?>', 'g')
     if (re1.test(html)) {
       return ''
     } else {

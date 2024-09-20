@@ -67,8 +67,9 @@ export class SessionController {
 
   @Post('/seize')
   @HttpCode(200)
-  @UseGuards(SessionGuard)
   @UseGuards(SurveyGuard)
+  @UseGuards(SessionGuard)
+  
   @SetMetadata('sessionId', 'body.sessionId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @UseGuards(Authentication)

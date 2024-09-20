@@ -25,14 +25,12 @@
     padding: 0 0.2rem !important;
     box-sizing: border-box;
 
-   
-
     // .choice-content, .choice-item {
     //   width: 100%;
     // }
 
     &.vertical {
-      display:  flex;
+      display: flex;
       flex-direction: column;
 
       .choice-outer {

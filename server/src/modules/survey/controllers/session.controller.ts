@@ -67,7 +67,9 @@ export class SessionController {
 
   @Post('/seize')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
   @UseGuards(SessionGuard)
+  
   @SetMetadata('sessionId', 'body.sessionId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @UseGuards(Authentication)
@@ -75,11 +77,11 @@ export class SessionController {
     @Request()
     req,
   ) {
-    const saveSession = req.saveSession;
+    const sessionInfo = req.sessionInfo;
 
     await this.sessionService.updateSessionToEditing({
-      sessionId: saveSession._id.toString(),
-      surveyId: saveSession.surveyId,
+      sessionId: sessionInfo._id.toString(),
+      surveyId: sessionInfo.surveyId,
     });
 
     return {

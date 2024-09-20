@@ -25,7 +25,13 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template v-slot="{ row }">
-          <span v-if="row.curStatus?.status === 'finished'" class="text-btn download-btn" @click="handleDownload(row)"> 下载 </span>
+          <span
+            v-if="row.curStatus?.status === 'finished'"
+            class="text-btn download-btn"
+            @click="handleDownload(row)"
+          >
+            下载
+          </span>
           <span class="text-btn delete-btn" @click="openDeleteDialog(row)"> 删除 </span>
         </template>
       </el-table-column>
@@ -71,14 +77,14 @@ const getList = async ({ pageIndex }: { pageIndex: number }) => {
   }
   const params = {
     pageSize: pageSize.value,
-    pageIndex,
+    pageIndex
   }
 
   const res: Record<string, any> = await getDownloadTaskList(params)
   if (res.code === CODE_MAP.SUCCESS) {
     total.value = res.data.total
     const list = res.data.list as any
-    dataList.splice(0, dataList.length, ...list);
+    dataList.splice(0, dataList.length, ...list)
   }
   loading.value = false
 }
@@ -87,8 +93,8 @@ const statusTextMap: Record<string, string> = {
   new: '排队中',
   computing: '计算中',
   finished: '已完成',
-  removed: '已删除',
-};
+  removed: '已删除'
+}
 
 let currentDelRow: Record<string, any> = {}
 // 下载文件
@@ -123,11 +129,11 @@ const confirmDelete = async () => {
     if (res.code !== CODE_MAP.SUCCESS) {
       ElMessage.error(res.errmsg)
     } else {
-      ElMessage.success('删除成功');
+      ElMessage.success('删除成功')
       await getList({ pageIndex: 1 })
     }
   } catch (error) {
-    ElMessage.error("删除失败，请刷新重试")
+    ElMessage.error('删除失败，请刷新重试')
   }
 }
 
@@ -162,7 +168,7 @@ const downloadListConfig = {
     formatter(row: Record<string, any>, column: Record<string, any>) {
       console.log({
         row,
-        column,
+        column
       })
       return statusTextMap[get(row, column.rawColumnKey)]
     }

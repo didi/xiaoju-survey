@@ -13,7 +13,6 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
-
 interface Props {
   formConfig: any
   moduleConfig: any
@@ -66,9 +65,12 @@ const handleInputChange = (value: number) => {
 
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
-watch(() => props.moduleConfig, (newVal) => {
-  myModuleConfig.value = newVal
-})
+watch(
+  () => props.moduleConfig,
+  (newVal) => {
+    myModuleConfig.value = newVal
+  }
+)
 watch(
   () => props.formConfig.value,
   (newVal) => {

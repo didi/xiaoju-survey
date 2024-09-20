@@ -22,21 +22,21 @@ export default {
     type: 'QuestionTimeHour',
     placement: 'top'
   },
-  limit_breakAnswer: {
-    key: 'breakAnswer',
+  limit_fillAnswer: {
+    key: 'fillAnswer',
     label: '允许断点续答',
     tip: '回填前一次作答中的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
     placement: 'top',
     type: 'CustomedSwitch',
-    value: false,
+    value: false
   },
-  limit_backAnswer: {
-    key: 'backAnswer',
+  limit_fillSubmitAnswer: {
+    key: 'fillSubmitAnswer',
     label: '自动填充上次提交内容',
     tip: '回填前一次提交的内容（注：更换设备/浏览器/清除缓存/更改内容重新发布则此功能失效）',
     placement: 'top',
     type: 'CustomedSwitch',
-    value: false,
+    value: false
   },
   interview_pwd_switch: {
     key: 'passwordSwitch',
@@ -112,5 +112,5 @@ export default {
     relyFunc: (data) => {
       return data.whitelistType === 'MEMBER'
     }
-  },
+  }
 }

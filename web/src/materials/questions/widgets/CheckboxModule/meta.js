@@ -53,7 +53,6 @@ const meta = {
       defaultValue: [
         {
           text: '选项1',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -62,7 +61,6 @@ const meta = {
         },
         {
           text: '选项2',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',

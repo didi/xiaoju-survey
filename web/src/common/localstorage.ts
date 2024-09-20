@@ -3,7 +3,7 @@ interface ExtendedItem {
   expires?: number // 可选属性
 }
 
-const storage = {
+const localstorage = {
   // 检查是否支持localStorage
   isSupported(): boolean {
     return typeof window !== 'undefined' && 'localStorage' in window
@@ -55,4 +55,4 @@ const storage = {
   }
 }
 
-export default storage
+export default localstorage

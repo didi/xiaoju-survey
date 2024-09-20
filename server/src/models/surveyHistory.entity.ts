@@ -19,7 +19,4 @@ export class SurveyHistory extends BaseEntity {
     username: string;
     _id: string;
   };
-
-  @Column('string')
-  sessionId: string;
 }

@@ -9,17 +9,18 @@
   ></QuestionRuleContainer>
 </template>
 <script setup>
-import { unref, computed, watch } from 'vue'
+import { unref, computed, watch, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import QuestionRuleContainer from '../../materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useShowOthers } from '@/render/hooks/useShowOthers'
 import { useShowInput } from '@/render/hooks/useShowInput'
-import { cloneDeep } from 'lodash-es'
+import { debounce, cloneDeep } from 'lodash-es'
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
-
+import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '../utils/constant'
 import { NORMAL_CHOICES, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
+import localstorage from '@/common/localstorage'
 
 const props = defineProps({
   indexNumber: {
@@ -46,7 +47,7 @@ const { changeField, changeIndex, needHideFields } = storeToRefs(questionStore)
 const questionConfig = computed(() => {
   let moduleConfig = props.moduleConfig
   const { type, field, options = [], ...rest } = cloneDeep(moduleConfig)
-  // console.log(field,'这里依赖的formValue，所以change时会触发重新计算')
+
   let alloptions = options
 
   if (type === QUESTION_TYPE.VOTE) {
@@ -126,14 +127,28 @@ const handleChange = (data) => {
   if (props.moduleConfig.type === QUESTION_TYPE.VOTE) {
     questionStore.updateVoteData(data)
   }
-  // 断点续答的的数据缓存
-  localStorageBack()
   processJumpSkip()
+  valueTemp.value = data.value
+  debounceStorageSave()
+}
+const valueTemp = ref()
+const handleInput = (e) => {
+  valueTemp.value = e.target.value
+  debounceStorageSave()
 }
 
-const handleInput = () => {
-  localStorageBack()
-}
+const debounceStorageSave = debounce(() => {
+  let data = {
+    key: props.moduleConfig.field,
+    value: valueTemp.value
+  }
+  const formData = cloneDeep(formValues.value)
+  let { key, value } = data
+  if (key in formData) {
+    formData[key] = value
+  }
+  localStorageSave(formData)
+}, 500)
 
 const processJumpSkip = () => {
   const targetResult = surveyStore.jumpLogicEngine
@@ -175,12 +190,9 @@ const processJumpSkip = () => {
     .map((item) => item.field)
   questionStore.addNeedHideFields(skipKey)
 }
-const localStorageBack = () => {
-  var formData = Object.assign({}, surveyStore.formValues)
-
-  //浏览器存储
-  localStorage.removeItem(surveyStore.surveyPath + '_questionData')
-  localStorage.setItem(surveyStore.surveyPath + '_questionData', JSON.stringify(formData))
-  localStorage.setItem('isSubmit', JSON.stringify(false))
+const localStorageSave = (formData) => {
+  localstorage.removeItem(surveyStore.surveyPath + FORMDATA_SUFFIX)
+  localstorage.setItem(surveyStore.surveyPath + FORMDATA_SUFFIX, formData)
+  localstorage.setItem(SUBMIT_FLAG, false)
 }
 </script>

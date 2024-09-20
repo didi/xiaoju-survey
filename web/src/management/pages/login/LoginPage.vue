@@ -39,7 +39,7 @@
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
             <el-input style="width: 280px" v-model="formData.captcha" size="large"></el-input>
-            <div class="captcha-img" click="refreshCaptcha" v-html="captchaImgData"></div>
+            <div class="captcha-img" @click="refreshCaptcha" v-html="captchaImgData"></div>
           </div>
         </el-form-item>
 

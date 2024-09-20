@@ -43,7 +43,6 @@
         "options": [
           {
             "text": "选项1",
-            "imageUrl": "",
             "others": false,
             "mustOthers": false,
             "othersKey": "",
@@ -52,7 +51,6 @@
           },
           {
             "text": "选项2",
-            "imageUrl": "",
             "others": false,
             "mustOthers": false,
             "othersKey": "",

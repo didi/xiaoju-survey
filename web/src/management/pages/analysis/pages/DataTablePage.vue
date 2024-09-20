@@ -28,13 +28,8 @@
       <EmptyIndex :data="noDataConfig" />
     </div>
 
-    <el-dialog
-      v-model="downloadDialogVisible"
-      title="导出确认"
-      width="500"
-      style="padding: 40px;"
-    >
-      <el-form :model="downloadForm" label-width="100px" label-position="left" >
+    <el-dialog v-model="downloadDialogVisible" title="导出确认" width="500" style="padding: 40px">
+      <el-form :model="downloadForm" label-width="100px" label-position="left">
         <el-form-item label="导出内容">
           <el-radio-group v-model="downloadForm.isDesensitive">
             <el-radio :value="true">脱敏数据</el-radio>
@@ -52,9 +47,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="downloadDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="confirmDownload()">
-            确认
-          </el-button>
+          <el-button type="primary" @click="confirmDownload()"> 确认 </el-button>
         </div>
       </template>
     </el-dialog>
@@ -85,11 +78,12 @@ const dataTableState = reactive({
   isDownloading: false,
   downloadDialogVisible: false,
   downloadForm: {
-    isDesensitive: true,
-  },
+    isDesensitive: true
+  }
 })
 
-const { mainTableLoading, tableData, isShowOriginData, downloadDialogVisible, isDownloading } = toRefs(dataTableState)
+const { mainTableLoading, tableData, isShowOriginData, downloadDialogVisible, isDownloading } =
+  toRefs(dataTableState)
 const downloadForm = dataTableState.downloadForm
 
 const route = useRoute()
@@ -168,7 +162,10 @@ const confirmDownload = async () => {
   }
   try {
     isDownloading.value = true
-    const createRes = await createDownloadSurveyResponseTask({ surveyId: route.params.id, isDesensitive: downloadForm.isDesensitive })
+    const createRes = await createDownloadSurveyResponseTask({
+      surveyId: route.params.id,
+      isDesensitive: downloadForm.isDesensitive
+    })
     dataTableState.downloadDialogVisible = false
     if (createRes.code === 200) {
       ElMessage.success(`下载文件计算中，可前往“下载中心”查看`)
@@ -176,12 +173,11 @@ const confirmDownload = async () => {
         const taskInfo = await checkIsTaskFinished(createRes.data.taskId)
         if (taskInfo.url) {
           window.open(taskInfo.url)
-          ElMessage.success("导出成功")
+          ElMessage.success('导出成功')
         }
       } catch (error) {
         ElMessage.error('导出失败，请重试')
       }
-      
     } else {
       ElMessage.error('导出失败，请重试')
     }
@@ -190,13 +186,12 @@ const confirmDownload = async () => {
   } finally {
     isDownloading.value = false
   }
-  
 }
 
 const checkIsTaskFinished = (taskId) => {
   return new Promise((resolve, reject) => {
     const run = () => {
-      getDownloadTask(taskId).then(res => {
+      getDownloadTask(taskId).then((res) => {
         if (res.code === 200 && res.data) {
           const status = res.data.curStatus.status
           if (status === 'new' || status === 'computing') {
@@ -207,15 +202,13 @@ const checkIsTaskFinished = (taskId) => {
             resolve(res.data)
           }
         } else {
-          reject("导出失败");
+          reject('导出失败')
         }
       })
     }
     run()
   })
 }
-
-
 </script>
 
 <style lang="scss" scoped>

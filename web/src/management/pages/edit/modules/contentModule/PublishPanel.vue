@@ -9,7 +9,7 @@ import { useEditStore } from '@/management/stores/edit'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
-import { publishSurvey, saveSurvey, seizeSession } from '@/management/api/survey'
+import { publishSurvey, saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 import { storeToRefs } from 'pinia'
 import { CODE_MAP } from '@/management/api/base'
@@ -17,6 +17,7 @@ import { CODE_MAP } from '@/management/api/base'
 interface Props {
   updateLogicConf: any
   updateWhiteConf: any
+  seize: any
 }
 
 const props = defineProps<Props>()
@@ -28,15 +29,6 @@ const { schema, sessionId } = storeToRefs(editStore)
 const saveData = computed(() => {
   return buildData(schema.value, sessionId.value)
 })
-
-const seize = async () => {
-  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
-  if (seizeRes.code === 200) {
-    location.reload();
-  } else {
-    ElMessage.error('获取权限失败，请重试')
-  }
-}
 
 const router = useRouter()
 
@@ -61,12 +53,11 @@ const validate = () => {
 }
 
 const onSave = async () => {
-  
   if (!saveData.value.sessionId) {
     ElMessage.error('未获取到sessionId')
     return null
   }
-  
+
   if (!saveData.value.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null
@@ -74,7 +65,7 @@ const onSave = async () => {
 
   try {
     const res: any = await saveSurvey(saveData.value)
-    if(!res) {
+    if (!res) {
       return null
     }
     if (res.code === 200) {
@@ -85,10 +76,10 @@ const onSave = async () => {
         confirmButtonText: '刷新同步',
         callback: (action: string) => {
           if (action === 'confirm') {
-            seize();
+            props.seize(sessionId.value)
           }
         }
-      });
+      })
       return null
     } else {
       ElMessage.error(res.errmsg)
@@ -98,7 +89,6 @@ const onSave = async () => {
     ElMessage.error('保存问卷失败')
     return null
   }
-
 }
 const handlePublish = async () => {
   if (isPublishing.value) {

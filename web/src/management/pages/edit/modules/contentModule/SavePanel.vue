@@ -21,12 +21,13 @@ import { useEditStore } from '@/management/stores/edit'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import { saveSurvey, seizeSession } from '@/management/api/survey'
+import { saveSurvey } from '@/management/api/survey'
 import buildData from './buildData'
 
 interface Props {
   updateLogicConf: any
   updateWhiteConf: any
+  seize: any
 }
 
 const route = useRoute()
@@ -45,7 +46,6 @@ const saveText = computed(
 
 const editStore = useEditStore()
 const { schemaUpdateTime, schema, sessionId } = storeToRefs(editStore)
-
 
 const validate = () => {
   let checked = true
@@ -69,7 +69,7 @@ const validate = () => {
 }
 
 const onSave = async () => {
-  const saveData = buildData(schema.value, sessionId.value);
+  const saveData = buildData(schema.value, sessionId.value)
   if (!saveData.sessionId) {
     ElMessage.error('sessionId有误')
     return null
@@ -81,17 +81,8 @@ const onSave = async () => {
   }
 
   const res: Record<string, any> = await saveSurvey(saveData)
-  
-  return res
-}
 
-const seize = async () => {
-  const seizeRes: Record<string, any> = await seizeSession({ sessionId: sessionId.value })
-  if (seizeRes.code === 200) {
-    location.reload();
-  } else {
-    ElMessage.error('获取权限失败，请重试')
-  }
+  return res
 }
 
 const timerHandle = ref<NodeJS.Timeout | number | null>(null)
@@ -147,7 +138,7 @@ const handleSave = async () => {
 
   try {
     const res: any = await onSave()
-    if(!res) {
+    if (!res) {
       return
     }
     if (res.code === 200) {
@@ -158,10 +149,10 @@ const handleSave = async () => {
         confirmButtonText: '刷新同步',
         callback: (action: string) => {
           if (action === 'confirm') {
-            seize();
+            props.seize(sessionId.value)
           }
         }
-      });
+      })
     } else {
       ElMessage.error(res.errmsg)
     }

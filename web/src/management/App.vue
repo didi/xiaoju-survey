@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, onBeforeUnmount } from 'vue'
 import { get as _get } from 'lodash-es'
 import { useUserStore } from '@/management/stores/user'
 import { useRouter } from 'vue-router'
@@ -23,11 +23,11 @@ const showConfirmBox = () => {
     showClose: false,
     callback: (action: Action) => {
       if (action === 'confirm') {
-        userStore.logout();
-        router.replace({ name: 'login' });
+        userStore.logout()
+        router.replace({ name: 'login' })
       }
     }
-  });
+  })
 }
 
 const checkAuth = async () => {
@@ -41,32 +41,40 @@ const checkAuth = async () => {
       }
     })
     if (res.data.code !== 200) {
-      showConfirmBox();
+      showConfirmBox()
     } else {
-      timer = setTimeout(() => {
-        checkAuth()
-      }, 30 * 60 * 1000);
+      timer = setTimeout(
+        () => {
+          checkAuth()
+        },
+        30 * 60 * 1000
+      )
     }
   } catch (error) {
     const e = error as any
     ElMessage.error(e.message)
   }
-  
 }
 
-watch(() => userStore.hasLogined, (hasLogined) => {
-  if (hasLogined) {
-    timer = setTimeout(() => {
-      checkAuth()
-    }, 30 * 60 * 1000);
-  } else {
-    clearTimeout(timer);
+watch(
+  () => userStore.hasLogined,
+  (hasLogined) => {
+    if (hasLogined) {
+      timer = setTimeout(
+        () => {
+          checkAuth()
+        },
+        30 * 60 * 1000
+      )
+    } else {
+      clearTimeout(timer)
+    }
   }
+)
+
+onBeforeUnmount(() => {
+  clearTimeout(timer)
 })
-
-
-
-
 </script>
 
 <style lang="scss">

@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/download',
     name: 'download',
-    component: () => import('../pages/downloadTask/TaskList.vue'),
+    component: () => import('../pages/download/DownloadPage.vue'),
     meta: {
       needLogin: true
     }

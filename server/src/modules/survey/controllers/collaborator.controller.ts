@@ -20,7 +20,7 @@ import {
   SURVEY_PERMISSION,
   SURVEY_PERMISSION_DESCRIPTION,
 } from 'src/enums/surveyPermission';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 
 import { CollaboratorService } from '../services/collaborator.service';
@@ -40,7 +40,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 export class CollaboratorController {
   constructor(
     private readonly collaboratorService: CollaboratorService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
     private readonly userService: UserService,
     private readonly surveyMetaService: SurveyMetaService,
     private readonly workspaceMemberServie: WorkspaceMemberService,

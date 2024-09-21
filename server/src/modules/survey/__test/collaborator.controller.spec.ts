@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CollaboratorController } from '../controllers/collaborator.controller';
 import { CollaboratorService } from '../services/collaborator.service';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { CreateCollaboratorDto } from '../dto/createCollaborator.dto';
 import { Collaborator } from 'src/models/collaborator.entity';
@@ -25,7 +25,7 @@ jest.mock('src/guards/workspace.guard');
 describe('CollaboratorController', () => {
   let controller: CollaboratorController;
   let collaboratorService: CollaboratorService;
-  let logger: XiaojuSurveyLogger;
+  let logger: Logger;
   let userService: UserService;
   let surveyMetaService: SurveyMetaService;
   let workspaceMemberServie: WorkspaceMemberService;
@@ -50,7 +50,7 @@ describe('CollaboratorController', () => {
           },
         },
         {
-          provide: XiaojuSurveyLogger,
+          provide: Logger,
           useValue: {
             error: jest.fn(),
             info: jest.fn(),
@@ -84,7 +84,7 @@ describe('CollaboratorController', () => {
 
     controller = module.get<CollaboratorController>(CollaboratorController);
     collaboratorService = module.get<CollaboratorService>(CollaboratorService);
-    logger = module.get<XiaojuSurveyLogger>(XiaojuSurveyLogger);
+    logger = module.get<Logger>(Logger);
     userService = module.get<UserService>(UserService);
     surveyMetaService = module.get<SurveyMetaService>(SurveyMetaService);
     workspaceMemberServie = module.get<WorkspaceMemberService>(

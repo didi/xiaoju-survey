@@ -4,12 +4,12 @@ import { Injectable, Scope } from '@nestjs/common';
 const log4jsLogger = log4js.getLogger();
 
 @Injectable({ scope: Scope.REQUEST })
-export class XiaojuSurveyLogger {
+export class Logger {
   private static inited = false;
   private traceId: string;
 
   static init(config: { filename: string }) {
-    if (XiaojuSurveyLogger.inited) {
+    if (Logger.inited) {
       return;
     }
     log4js.configure({
@@ -30,7 +30,7 @@ export class XiaojuSurveyLogger {
         default: { appenders: ['app'], level: 'trace' },
       },
     });
-    XiaojuSurveyLogger.inited = true;
+    Logger.inited = true;
   }
 
   _log(message, options: { dltag?: string; level: string }) {

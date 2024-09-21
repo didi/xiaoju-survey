@@ -8,7 +8,6 @@ import {
   Request,
   Post,
   Body,
-  // Response,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
@@ -17,10 +16,9 @@ import { ResponseSchemaService } from '../../surveyResponse/services/responseSch
 import { Authentication } from 'src/guards/authentication.guard';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-//后添加
 import { DownloadTaskService } from '../services/downloadTask.service';
 import {
   GetDownloadTaskDto,
@@ -38,7 +36,7 @@ export class DownloadTaskController {
   constructor(
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly downloadTaskService: DownloadTaskService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
   ) {}
 
   @Post('/createTask')
@@ -57,14 +55,15 @@ export class DownloadTaskController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { surveyId, isDesensitive } = value;
+    const { surveyId, isMasked } = value;
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPageId(surveyId);
     const id = await this.downloadTaskService.createDownloadTask({
       surveyId,
       responseSchema,
-      operatorId: req.user._id.toString(),
-      params: { isDesensitive },
+      creatorId: req.user._id.toString(),
+      creator: req.user.username,
+      params: { isMasked },
     });
     this.downloadTaskService.processDownloadTask({ taskId: id });
     return {
@@ -88,7 +87,7 @@ export class DownloadTaskController {
     }
     const { pageIndex, pageSize } = value;
     const { total, list } = await this.downloadTaskService.getDownloadTaskList({
-      ownerId: req.user._id.toString(),
+      creatorId: req.user._id.toString(),
       pageIndex,
       pageSize,
     });
@@ -139,7 +138,7 @@ export class DownloadTaskController {
       throw new HttpException('任务不存在', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    if (taskInfo.ownerId !== req.user._id.toString()) {
+    if (taskInfo.creatorId !== req.user._id.toString()) {
       throw new NoPermissionException('没有权限');
     }
     const res: Record<string, any> = {
@@ -172,7 +171,7 @@ export class DownloadTaskController {
       throw new HttpException('任务不存在', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    if (taskInfo.ownerId !== req.user._id.toString()) {
+    if (taskInfo.creatorId !== req.user._id.toString()) {
       throw new NoPermissionException('没有权限');
     }
 

@@ -7,7 +7,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 
 import { UserService } from 'src/modules/auth/services/user.service';
 import { AuthService } from 'src/modules/auth/services/auth.service';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 
 jest.mock('src/guards/authentication.guard');
 jest.mock('src/guards/survey.guard');
@@ -49,7 +49,7 @@ describe('SurveyHistoryController', () => {
           useClass: jest.fn().mockImplementation(() => ({})),
         },
         {
-          provide: XiaojuSurveyLogger,
+          provide: Logger,
           useValue: {
             info: jest.fn(),
             error: jest.fn(),

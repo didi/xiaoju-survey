@@ -15,7 +15,7 @@ import { SessionService } from '../services/session.service';
 import { Authentication } from 'src/guards/authentication.guard';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { SessionGuard } from 'src/guards/session.guard';
@@ -25,7 +25,7 @@ import { SessionGuard } from 'src/guards/session.guard';
 export class SessionController {
   constructor(
     private readonly sessionService: SessionService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
   ) {}
 
   @Post('/create')
@@ -69,7 +69,6 @@ export class SessionController {
   @HttpCode(200)
   @UseGuards(SurveyGuard)
   @UseGuards(SessionGuard)
-  
   @SetMetadata('sessionId', 'body.sessionId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @UseGuards(Authentication)

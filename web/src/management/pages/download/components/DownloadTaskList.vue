@@ -57,12 +57,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteDownloadTask, getDownloadTaskList } from '@/management/api/downloadTask'
 import { CODE_MAP } from '@/management/api/base'
 
-import moment from 'moment'
-// 引入中文
-import 'moment/locale/zh-cn'
-// 设置中文
-moment.locale('zh-cn')
-
 const loading = ref(false)
 const pageSize = ref(10)
 const total = ref(0)

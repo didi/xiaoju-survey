@@ -1,9 +1,9 @@
 import axios from './base'
 
-export const createDownloadSurveyResponseTask = ({ surveyId, isDesensitive }) => {
+export const createDownloadTask = ({ surveyId, isMasked }) => {
   return axios.post('/downloadTask/createTask', {
     surveyId,
-    isDesensitive
+    isMasked
   })
 }
 

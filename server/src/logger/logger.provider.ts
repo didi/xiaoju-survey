@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
 
-import { XiaojuSurveyLogger } from './index';
+import { Logger } from './index';
 
 export const LoggerProvider: Provider = {
-  provide: XiaojuSurveyLogger,
-  useClass: XiaojuSurveyLogger,
+  provide: Logger,
+  useClass: Logger,
 };

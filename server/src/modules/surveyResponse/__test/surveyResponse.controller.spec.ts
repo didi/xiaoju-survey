@@ -13,14 +13,14 @@ import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from 'src/modules/message/services/messagePushingTask.service';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 
 import { RECORD_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { UserService } from 'src/modules/auth/services/user.service';
@@ -122,7 +122,7 @@ describe('SurveyResponseController', () => {
           },
         },
         {
-          provide: XiaojuSurveyLogger,
+          provide: Logger,
           useValue: {
             error: jest.fn(),
             info: jest.fn(),
@@ -153,8 +153,8 @@ describe('SurveyResponseController', () => {
     clientEncryptService =
       module.get<ClientEncryptService>(ClientEncryptService);
 
-    const pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
+    const pluginManager = module.get<PluginManager>(
+      PluginManager,
     );
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),

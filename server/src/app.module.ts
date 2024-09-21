@@ -39,8 +39,8 @@ import { Collaborator } from './models/collaborator.entity';
 import { LoggerProvider } from './logger/logger.provider';
 import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
-import { XiaojuSurveyPluginManager } from './securityPlugin/pluginManager';
-import { XiaojuSurveyLogger } from './logger';
+import { PluginManager } from './securityPlugin/pluginManager';
+import { Logger } from './logger';
 import { DownloadTask } from './models/downloadTask.entity';
 import { Session } from './models/session.entity';
 
@@ -118,7 +118,7 @@ import { Session } from './models/session.entity';
 export class AppModule {
   constructor(
     private readonly configService: ConfigService,
-    private readonly pluginManager: XiaojuSurveyPluginManager,
+    private readonly pluginManager: PluginManager,
   ) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LogRequestMiddleware).forRoutes('*');
@@ -132,7 +132,7 @@ export class AppModule {
       ),
       new SurveyUtilPlugin(),
     );
-    XiaojuSurveyLogger.init({
+    Logger.init({
       filename: this.configService.get<string>('XIAOJU_SURVEY_LOGGER_FILENAME'),
     });
   }

@@ -12,10 +12,10 @@ export class CreateSurveyDto {
   surveyType: string;
 
   @ApiProperty({ description: '创建方法', required: false })
-  createMethod: string;
+  createMethod?: string;
 
   @ApiProperty({ description: '创建来源', required: false })
-  createFrom: string;
+  createFrom?: string;
 
   @ApiProperty({ description: '问卷创建在哪个空间下', required: false })
   workspaceId?: string;

@@ -11,7 +11,7 @@ import { cloneDeep } from 'lodash';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { RECORD_STATUS } from 'src/enums';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 
 describe('DataStatisticService', () => {
@@ -34,9 +34,7 @@ describe('DataStatisticService', () => {
     surveyResponseRepository = module.get<MongoRepository<SurveyResponse>>(
       getRepositoryToken(SurveyResponse),
     );
-    const manager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
+    const manager = module.get<PluginManager>(PluginManager);
     manager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
     );
@@ -204,7 +202,7 @@ describe('DataStatisticService', () => {
       });
     });
 
-    it('should return desensitive table data', async () => {
+    it('should return desensitized table data', async () => {
       const mockSchema = cloneDeep(mockSensitiveResponseSchema);
       const surveyResponseList: Array<SurveyResponse> = [
         {

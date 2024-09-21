@@ -19,7 +19,7 @@ import { getFilter, getOrder } from 'src/utils/surveyUtil';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { Authentication } from 'src/guards/authentication.guard';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { WorkspaceGuard } from 'src/guards/workspace.guard';
@@ -33,7 +33,7 @@ import { CollaboratorService } from '../services/collaborator.service';
 export class SurveyMetaController {
   constructor(
     private readonly surveyMetaService: SurveyMetaService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
     private readonly collaboratorService: CollaboratorService,
   ) {}
 

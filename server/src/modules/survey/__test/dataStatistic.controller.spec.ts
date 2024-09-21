@@ -8,8 +8,8 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
+import { Logger } from 'src/logger';
 
 import { UserService } from 'src/modules/auth/services/user.service';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
@@ -27,8 +27,8 @@ describe('DataStatisticController', () => {
   let controller: DataStatisticController;
   let dataStatisticService: DataStatisticService;
   let responseSchemaService: ResponseSchemaService;
-  let pluginManager: XiaojuSurveyPluginManager;
-  let logger: XiaojuSurveyLogger;
+  let pluginManager: PluginManager;
+  let logger: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,7 +56,7 @@ describe('DataStatisticController', () => {
           })),
         },
         {
-          provide: XiaojuSurveyLogger,
+          provide: Logger,
           useValue: {
             error: jest.fn(),
           },
@@ -70,10 +70,8 @@ describe('DataStatisticController', () => {
     responseSchemaService = module.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
-    pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
-    logger = module.get<XiaojuSurveyLogger>(XiaojuSurveyLogger);
+    pluginManager = module.get<PluginManager>(PluginManager);
+    logger = module.get<Logger>(Logger);
 
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
@@ -90,7 +88,7 @@ describe('DataStatisticController', () => {
       const mockRequest = {
         query: {
           surveyId,
-          isDesensitive: false,
+          isMasked: false,
           page: 1,
           pageSize: 10,
         },
@@ -131,12 +129,12 @@ describe('DataStatisticController', () => {
       });
     });
 
-    it('should return data table with isDesensitive', async () => {
+    it('should return data table with isMasked', async () => {
       const surveyId = new ObjectId().toString();
       const mockRequest = {
         query: {
           surveyId,
-          isDesensitive: true,
+          isMasked: true,
           page: 1,
           pageSize: 10,
         },

@@ -13,10 +13,10 @@ import { DataStatisticService } from '../services/dataStatistic.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
 import { Authentication } from 'src/guards/authentication.guard';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { AggregationStatisDto } from '../dto/aggregationStatis.dto';
@@ -30,8 +30,8 @@ export class DataStatisticController {
   constructor(
     private readonly responseSchemaService: ResponseSchemaService,
     private readonly dataStatisticService: DataStatisticService,
-    private readonly pluginManager: XiaojuSurveyPluginManager,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly pluginManager: PluginManager,
+    private readonly logger: Logger,
   ) {}
 
   @Get('/dataTable')
@@ -46,7 +46,7 @@ export class DataStatisticController {
   ) {
     const { value, error } = await Joi.object({
       surveyId: Joi.string().required(),
-      isDesensitive: Joi.boolean().default(true), // 默认true就是需要脱敏
+      isMasked: Joi.boolean().default(true), // 默认true就是需要脱敏
       page: Joi.number().default(1),
       pageSize: Joi.number().default(10),
     }).validate(queryInfo);
@@ -54,7 +54,7 @@ export class DataStatisticController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { surveyId, isDesensitive, page, pageSize } = value;
+    const { surveyId, isMasked, page, pageSize } = value;
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPageId(surveyId);
     const { total, listHead, listBody } =
@@ -65,10 +65,10 @@ export class DataStatisticController {
         pageSize,
       });
 
-    if (isDesensitive) {
+    if (isMasked) {
       // 脱敏
       listBody.forEach((item) => {
-        this.pluginManager.triggerHook('desensitiveData', item);
+        this.pluginManager.triggerHook('maskData', item);
       });
     }
 

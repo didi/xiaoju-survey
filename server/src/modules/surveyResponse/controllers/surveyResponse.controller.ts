@@ -18,7 +18,7 @@ import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CounterService } from '../services/counter.service';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
@@ -40,7 +40,7 @@ export class SurveyResponseController {
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
     private readonly counterService: CounterService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
     // private readonly redisService: RedisService,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,

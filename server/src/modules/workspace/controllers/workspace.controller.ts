@@ -31,7 +31,7 @@ import {
 import { splitMembers } from '../utils/splitMember';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-import { XiaojuSurveyLogger } from 'src/logger';
+import { Logger } from 'src/logger';
 import { GetWorkspaceListDto } from '../dto/getWorkspaceList.dto';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { Workspace } from 'src/models/workspace.entity';
@@ -46,7 +46,7 @@ export class WorkspaceController {
     private readonly workspaceMemberService: WorkspaceMemberService,
     private readonly userService: UserService,
     private readonly surveyMetaService: SurveyMetaService,
-    private readonly logger: XiaojuSurveyLogger,
+    private readonly logger: Logger,
   ) {}
 
   @Get('getRoleList')

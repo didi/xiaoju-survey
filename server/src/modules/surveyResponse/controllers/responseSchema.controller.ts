@@ -97,14 +97,17 @@ export class ResponseSchemaController {
     // 密码校验
     if (passwordSwitch) {
       if (settingPassword !== password) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException('密码验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
     }
 
     // 名单校验（手机号/邮箱）
     if (whitelistType === WhitelistType.CUSTOM) {
       if (!whitelist.includes(whitelistValue)) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
       }
     }
 
@@ -112,7 +115,7 @@ export class ResponseSchemaController {
     if (whitelistType === WhitelistType.MEMBER) {
       const user = await this.userService.getUserByUsername(whitelistValue);
       if (!user) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException('名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
 
       const workspaceMember = await this.workspaceMemberService.findAllByUserId(

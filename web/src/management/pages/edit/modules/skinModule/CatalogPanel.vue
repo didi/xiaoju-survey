@@ -26,15 +26,21 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
-
+import { getBannerData } from '@/management/api/skin.js'
 import skinPresets from '@/management/config/skinPresets.js'
 
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
 const groupName = ref<string>('temp')
-const bannerList = computed(() => editStore.bannerList || [])
+let bannerList = ref([])
+
+onMounted(async () => {
+  const res = await getBannerData()
+  bannerList.value = res.data
+})
+
 const groupList = computed(() =>
   Object.keys(bannerList.value).map((key) => ({
     label: bannerList.value[key].name,
@@ -53,11 +59,11 @@ const currentBannerList = computed(() => {
       })
     })
 
-  const allbanner = arr.reduce((acc, curr) => {
+  const allBanner = arr.reduce((acc, curr) => {
     return acc.concat(curr)
   }, [])
 
-  return allbanner.filter((item: any) => {
+  return allBanner.filter((item: any) => {
     if (groupName.value === 'temp') {
       return true
     } else {

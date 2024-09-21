@@ -12,19 +12,19 @@
   </CommonTemplate>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useEditStore } from '@/management/stores/edit'
+// import { onMounted } from 'vue'
+// import { useEditStore } from '@/management/stores/edit'
 
 import CommonTemplate from '../../components/CommonTemplate.vue'
 import CatalogPanel from '../../modules/skinModule/CatalogPanel.vue'
 import PreviewPanel from '../../modules/skinModule/PreviewPanel.vue'
 import SetterPanel from '../../modules/skinModule/SetterPanel.vue'
 
-const editStore = useEditStore()
+// const editStore = useEditStore()
 
-onMounted(() => {
-  editStore.fetchBannerData()
-})
+// onMounted(() => {
+//   editStore.fetchBannerData()
+// })
 </script>
 <style lang="scss" scoped>
 .navbar {

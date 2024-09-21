@@ -18,7 +18,7 @@ const router = useRouter()
 let timer: any
 
 const showConfirmBox = () => {
-  ElMessageBox.alert('登录状态已失效，请重新登陆。', '提示', {
+  ElMessageBox.alert('登录状态已失效，请重新登录。', '提示', {
     confirmButtonText: '确认',
     showClose: false,
     callback: (action: Action) => {
@@ -57,9 +57,9 @@ const checkAuth = async () => {
 }
 
 watch(
-  () => userStore.hasLogined,
-  (hasLogined) => {
-    if (hasLogined) {
+  () => userStore.hasLogin,
+  (hasLogin) => {
+    if (hasLogin) {
       timer = setTimeout(
         () => {
           checkAuth()

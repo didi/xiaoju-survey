@@ -1,7 +1,7 @@
 import { useQuestionStore } from '../stores/question'
 import { useSurveyStore } from '../stores/survey'
 
-export const useShowInput = (questionKey) => {
+export const useInputData = (questionKey) => {
   const questionStore = useQuestionStore()
   const surveyStore = useSurveyStore()
   const formValues = surveyStore.formValues

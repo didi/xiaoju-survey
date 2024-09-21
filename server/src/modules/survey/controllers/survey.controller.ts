@@ -33,7 +33,6 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 import { SessionService } from '../services/session.service';
-import { MemberType, WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 
 @ApiTags('survey')
@@ -245,16 +244,6 @@ export class SurveyController {
       surveyMeta.currentPermission = req.collaborator.permissions;
     } else {
       surveyMeta.isCollaborated = false;
-    }
-
-    // 白名单相关字段的默认值
-    const baseConf = surveyConf.code?.baseConf;
-    if (baseConf) {
-      baseConf.passwordSwitch = baseConf.passwordSwitch ?? false;
-      baseConf.password = baseConf.password ?? '';
-      baseConf.whitelistType = baseConf.whitelistType ?? WhitelistType.ALL;
-      baseConf.whitelist = baseConf.whitelist ?? [];
-      baseConf.memberType = baseConf.memberType ?? MemberType.MOBILE;
     }
 
     return {

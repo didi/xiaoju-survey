@@ -1,4 +1,4 @@
-import { reactive, type Ref } from 'vue'
+import { type Ref, reactive } from 'vue'
 
 export type TypeMethod = 'INIT' | 'MODIFY' | 'REMOVE' | 'ADD'
 

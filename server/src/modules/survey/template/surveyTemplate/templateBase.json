@@ -34,7 +34,14 @@
     "tLimit": 0,
     "language": "chinese",
     "answerBegTime": "00:00:00",
-    "answerEndTime": "23:59:59"
+    "answerEndTime": "23:59:59",
+    "passwordSwitch": false,
+    "password": "",
+    "whitelistType": "ALL",
+    "whitelist": [],
+    "memberType": "MOBILE",
+    "fillAnswer": false,
+    "fillSubmitAnswer": false
   },
   "skinConf": {
     "skinColor": "#4a4c5b",

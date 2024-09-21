@@ -1,5 +1,5 @@
 // 引入防抖函数
-import { debounce as _debounce } from 'lodash-es'
+import { debounce } from 'lodash-es'
 /**
  * @description: 监听元素尺寸变化
  * @param {*} el 元素dom
@@ -8,7 +8,7 @@ import { debounce as _debounce } from 'lodash-es'
  * @return {*}
  */
 export default (el, cb, wait = 200) => {
-  const resizeObserver = new ResizeObserver(_debounce(cb, wait))
+  const resizeObserver = new ResizeObserver(debounce(cb, wait))
 
   resizeObserver.observe(el)
 

@@ -197,7 +197,7 @@ async function handleLoginGuard(
   next: NavigationGuardNext
 ) {
   const userStore = useUserStore()
-  if (userStore?.hasLogined) {
+  if (userStore?.hasLogin) {
     await handlePermissionsGuard(to, from, next)
   } else {
     next({
@@ -221,8 +221,8 @@ async function handlePermissionsGuard(
   } else {
     // 如果跳转编辑页面，且跳转页面和上一页的surveyId不同，判断是否有对应页面权限
     if (currSurveyId !== prevSurveyId) {
-      await editStore.fetchCooperPermissions(currSurveyId as string)
-      if (hasRequiredPermissions(to.meta.permissions as string[], editStore.cooperPermissions)) {
+      const cooperPermissions = await editStore.fetchCooperPermissions(currSurveyId as string)
+      if (hasRequiredPermissions(to.meta.permissions as string[], cooperPermissions)) {
         next()
       } else {
         ElMessage.warning('您没有该问卷的相关协作权限')

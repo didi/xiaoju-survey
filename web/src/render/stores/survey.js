@@ -1,25 +1,20 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
-import { cloneDeep, pick } from 'lodash-es'
+import { pick } from 'lodash-es'
 import moment from 'moment'
 // 引入中文
 import 'moment/locale/zh-cn'
 // 设置中文
 
 import { isMobile as isInMobile } from '@/render/utils/index'
+
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
 import { useQuestionStore } from '@/render/stores/question'
 import { useErrorInfo } from '@/render/stores/errorInfo'
-import { FORMDATA_SUFFIX, SUBMIT_FLAG } from '@/render/utils/constant'
 
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
-import useCommandComponent from '../hooks/useCommandComponent'
-import ConfirmDialog from '../components/ConfirmDialog.vue'
-import localstorage from '@/common/localstorage'
-
-const confirm = useCommandComponent(ConfirmDialog)
 
 moment.locale('zh-cn')
 /**
@@ -61,6 +56,10 @@ export const useSurveyStore = defineStore('survey', () => {
 
   const setEnterTime = () => {
     enterTime.value = Date.now()
+  }
+
+  const setFormValues = (data) => {
+    formValues.value = data
   }
 
   const getEncryptInfo = async () => {
@@ -154,13 +153,7 @@ export const useSurveyStore = defineStore('survey', () => {
     // 获取已投票数据
     questionStore.initVoteData()
   }
-  function fillFormData(formData) {
-    const _formValues = cloneDeep(formValues.value)
-    for (const key in formData) {
-      _formValues[key] = formData[key]
-    }
-    formValues.value = _formValues
-  }
+
   const initSurvey = (option) => {
     setEnterTime()
     if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
@@ -168,31 +161,6 @@ export const useSurveyStore = defineStore('survey', () => {
     }
     // 加载空白问卷
     clearFormData(option)
-
-    const { fillAnswer, fillSubmitAnswer } = option.baseConf
-    const localData = localstorage.getItem(surveyPath.value + FORMDATA_SUFFIX)
-
-    const isSubmit = localstorage.getItem(SUBMIT_FLAG)
-    // 开启了断点续答 or 回填上一次提交内容
-    if ((fillAnswer || (fillSubmitAnswer && isSubmit)) && localData) {
-      const title = fillAnswer ? '是否继续上次填写的内容？' : '是否继续上次提交的内容？'
-      confirm({
-        title: title,
-        onConfirm: async () => {
-          try {
-            // 回填答题内容
-            fillFormData(localData)
-          } catch (error) {
-            console.error(error)
-          } finally {
-            confirm.close()
-          }
-        },
-        onClose: async () => {
-          confirm.close()
-        }
-      })
-    }
   }
 
   // 用户输入或者选择后，更新表单数据
@@ -204,6 +172,7 @@ export const useSurveyStore = defineStore('survey', () => {
     questionStore.setChangeField(key)
   }
 
+  // 初始化逻辑引擎
   const showLogicEngine = ref()
   const initShowLogicEngine = (showLogicConf) => {
     showLogicEngine.value = new RuleMatch().fromJson(showLogicConf || [])
@@ -231,6 +200,7 @@ export const useSurveyStore = defineStore('survey', () => {
     initSurvey,
     changeData,
     setWhiteData,
+    setFormValues,
     setSurveyPath,
     setEnterTime,
     getEncryptInfo,

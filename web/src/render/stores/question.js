@@ -4,11 +4,11 @@ import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
 import { queryVote } from '@/render/api/survey'
 import { QUESTION_TYPE } from '@/common/typeEnum'
-import { VOTE_INFO_KEY } from '@/render/utils/constant'
-import localstorage from '@/common/localstorage'
+
+import { getVoteData, setVoteData, clearVoteData } from '@/render/utils/storage'
 
 // 投票进度逻辑聚合
-const usevVoteMap = (questionData) => {
+const useVoteMap = (questionData) => {
   const voteMap = ref({})
   //初始化投票题的数据
   const initVoteData = async () => {
@@ -28,16 +28,14 @@ const usevVoteMap = (questionData) => {
       return
     }
     try {
-      localstorage.removeItem(VOTE_INFO_KEY)
+      clearVoteData()
       const voteRes = await queryVote({
         surveyPath,
         fieldList: fieldList.join(',')
       })
 
       if (voteRes.code === 200) {
-        localstorage.setItem(VOTE_INFO_KEY, {
-          ...voteRes.data
-        })
+        setVoteData(voteRes.data)
         setVoteMap(voteRes.data)
       }
     } catch (error) {
@@ -58,25 +56,25 @@ const usevVoteMap = (questionData) => {
   const updateVoteData = (data) => {
     const { key: questionKey, value: questionVal } = data
     // 更新前获取接口缓存在localstorage中的数据
-    const voteinfo = localstorage.getItem(VOTE_INFO_KEY)
+    const voteInfo = getVoteData()
     const currentQuestion = questionData.value[questionKey]
     const options = currentQuestion.options
-    const voteTotal = voteinfo?.[questionKey]?.total || 0
+    const voteTotal = voteInfo?.[questionKey]?.total || 0
     let totalPayload = {
       questionKey,
       voteKey: 'total',
       voteValue: voteTotal
     }
     options.forEach((option) => {
-      const optionhash = option.hash
-      const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
+      const optionHash = option.hash
+      const voteCount = voteInfo?.[questionKey]?.[optionHash] || 0
       // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
       if (
-        Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
+        Array.isArray(questionVal) ? questionVal.includes(optionHash) : questionVal === optionHash
       ) {
         const countPayload = {
           questionKey,
-          voteKey: optionhash,
+          voteKey: optionHash,
           voteValue: voteCount + 1
         }
         totalPayload.voteValue += 1
@@ -84,7 +82,7 @@ const usevVoteMap = (questionData) => {
       } else {
         const countPayload = {
           questionKey,
-          voteKey: optionhash,
+          voteKey: optionHash,
           voteValue: voteCount
         }
         updateVoteMapByKey(countPayload)
@@ -174,7 +172,7 @@ export const useQuestionStore = defineStore('question', () => {
   const setQuestionData = (data) => {
     questionData.value = data
   }
-  const { voteMap, setVoteMap, initVoteData, updateVoteData } = usevVoteMap(questionData)
+  const { voteMap, setVoteMap, initVoteData, updateVoteData } = useVoteMap(questionData)
 
   const changeSelectMoreData = (data) => {
     const { key, value, field } = data

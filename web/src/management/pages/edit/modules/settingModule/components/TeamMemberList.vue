@@ -65,7 +65,7 @@ const getSpaceMenus = async () => {
       id: v.ownerId,
       label: v.name,
       children: members?.map((v) => ({
-        id: v.userId,
+        id: `${v.workspaceId}_${v.userId}`,
         label: v.username
       }))
     })

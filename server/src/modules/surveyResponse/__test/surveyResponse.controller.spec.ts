@@ -153,9 +153,7 @@ describe('SurveyResponseController', () => {
     clientEncryptService =
       module.get<ClientEncryptService>(ClientEncryptService);
 
-    const pluginManager = module.get<PluginManager>(
-      PluginManager,
-    );
+    const pluginManager = module.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
     );

@@ -3,7 +3,7 @@
     <div class="left">
       <img class="logo-img" src="/imgs/Logo.webp" alt="logo" />
       <el-menu router default-active-index="survey" class="el-menu-demo" mode="horizontal">
-        <el-menu-item index="survey" >
+        <el-menu-item index="survey">
           <router-link :to="{ name: 'survey' }">问卷列表</router-link>
         </el-menu-item>
         <el-menu-item index="download">
@@ -34,8 +34,6 @@ const handleLogout = () => {
   userStore.logout()
   router.replace({ name: 'login' })
 }
-
-
 </script>
 
 <style lang="scss" scoped>

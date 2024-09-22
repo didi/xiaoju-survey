@@ -7,7 +7,7 @@
 <script setup>
 import { useSurveyStore } from '../../stores/survey'
 
-import { getSurveyData, getSurveySubmit } from '../../utils/storage'
+import { getSurveyData } from '../../utils/storage'
 
 import ConfirmDialog from '../ConfirmDialog.vue'
 

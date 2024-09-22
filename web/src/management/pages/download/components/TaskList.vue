@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" class="list-wrapper" v-if="total">
+  <div v-loading="loading" class="list-wrapper">
     <el-table
       v-if="total"
       ref="multipleListTable"
@@ -19,7 +19,7 @@
         :prop="field.key"
         :label="field.title"
         :width="field.width"
-        :class-name="[field.key]"
+        :class-name="field.key"
         :formatter="field.formatter"
       >
       </el-table-column>
@@ -36,6 +36,9 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else>
+      <EmptyIndex :data="noDownloadTaskConfig" />
+    </div>
     <div class="list-pagination" v-if="total">
       <el-pagination
         background
@@ -54,7 +57,10 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { get, map } from 'lodash-es'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { deleteDownloadTask, getDownloadTaskList } from '@/management/api/downloadTask'
+import EmptyIndex from '@/management/components/EmptyIndex.vue'
+import { noDownloadTaskConfig } from '@/management/config/listConfig'
+
+import { deleteDownloadTask, getDownloadTaskList } from '@/management/api/download'
 import { CODE_MAP } from '@/management/api/base'
 
 const loading = ref(false)
@@ -160,10 +166,6 @@ const downloadListConfig = {
     title: '状态',
     key: 'curStatus.status',
     formatter(row: Record<string, any>, column: Record<string, any>) {
-      console.log({
-        row,
-        column
-      })
       return statusTextMap[get(row, column.rawColumnKey)]
     }
   }

@@ -69,11 +69,9 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
 import { SpaceType } from '@/management/utils/types/workSpace'
-import { useUserStore } from '@/management/stores/user'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 
-const userStore = useUserStore()
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
@@ -86,7 +84,6 @@ const loading = ref(false)
 
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
-
 
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -165,7 +162,6 @@ const onSpaceCreate = () => {
 const onCreate = () => {
   router.push('/create')
 }
-
 </script>
 
 <style lang="scss" scoped>

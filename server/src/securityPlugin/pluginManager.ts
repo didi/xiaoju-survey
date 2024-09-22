@@ -1,4 +1,4 @@
-import { XiaojuSurveyPlugin } from './interface';
+import { SecurityPlugin } from './interface';
 
 type AllowHooks =
   | 'encryptResponseData'
@@ -7,9 +7,9 @@ type AllowHooks =
   | 'genSurveyPath';
 
 export class PluginManager {
-  private plugins: Array<XiaojuSurveyPlugin> = [];
+  private plugins: Array<SecurityPlugin> = [];
   // 注册插件
-  registerPlugin(...plugins: Array<XiaojuSurveyPlugin>) {
+  registerPlugin(...plugins: Array<SecurityPlugin>) {
     this.plugins.push(...plugins);
   }
 

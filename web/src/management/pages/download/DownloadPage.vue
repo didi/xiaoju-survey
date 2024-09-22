@@ -2,15 +2,14 @@
   <div class="question-list-root">
     <TopNav></TopNav>
     <div class="table-container">
-      <DownloadTaskList></DownloadTaskList>
+      <TaskList></TaskList>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import TopNav from '@/management/components/TopNav.vue';
-import DownloadTaskList from './components/DownloadTaskList.vue'
-
+import TopNav from '@/management/components/TopNav.vue'
+import TaskList from './components/TaskList.vue'
 </script>
 
 <style lang="scss" scoped>

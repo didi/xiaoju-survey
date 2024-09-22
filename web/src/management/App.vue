@@ -7,7 +7,7 @@ import { watch, onBeforeUnmount } from 'vue'
 import { useUserStore } from '@/management/stores/user'
 import { useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage, type Action } from 'element-plus'
-import { checkIsTokenValid } from '@/management/api/auth';
+import { checkIsTokenValid } from '@/management/api/auth'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -31,7 +31,7 @@ const checkAuth = async () => {
   try {
     const res: Record<string, any> = await checkIsTokenValid()
     if (res.code !== 200 || !res.data) {
-      showConfirmBox();
+      showConfirmBox()
     } else {
       timer = setTimeout(
         () => {

@@ -1,13 +1,8 @@
-import { XiaojuSurveyPlugin } from '../interface';
+import { SecurityPlugin } from '../interface';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
-import {
-  decryptData,
-  encryptData,
-  isDataSensitive,
-  maskData,
-} from './utils';
+import { decryptData, encryptData, isDataSensitive, maskData } from './utils';
 
-export class ResponseSecurityPlugin implements XiaojuSurveyPlugin {
+export class ResponseSecurityPlugin implements SecurityPlugin {
   constructor(private readonly secretKey: string) {}
   encryptResponseData(responseData: SurveyResponse) {
     const secretKeys = [];

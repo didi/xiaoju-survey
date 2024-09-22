@@ -21,5 +21,5 @@ export const getPasswordStrength = (password) => {
 }
 
 export const checkIsTokenValid = () => {
-  return axios.get('/auth/verifyToken');
+  return axios.get('/auth/verifyToken')
 }

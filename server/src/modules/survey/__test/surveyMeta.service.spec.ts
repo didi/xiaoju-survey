@@ -37,9 +37,7 @@ describe('SurveyMetaService', () => {
     surveyRepository = module.get<MongoRepository<SurveyMeta>>(
       getRepositoryToken(SurveyMeta),
     );
-    pluginManager = module.get<PluginManager>(
-      PluginManager,
-    );
+    pluginManager = module.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(new SurveyUtilPlugin());
   });
 

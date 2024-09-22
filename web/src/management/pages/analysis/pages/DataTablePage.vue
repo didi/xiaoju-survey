@@ -2,7 +2,9 @@
   <div class="data-table-page">
     <template v-if="tableData.total">
       <div class="menus">
-        <el-button type="primary" :loading="isDownloading" @click="onDownload">导出全部数据</el-button>
+        <el-button type="primary" :loading="isDownloading" @click="onDownload"
+          >导出全部数据</el-button
+        >
         <el-switch
           class="desensitize-switch"
           :model-value="isShowOriginData"
@@ -63,7 +65,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import { getRecycleList } from '@/management/api/analysis'
 import { noDataConfig } from '@/management/config/analysisConfig'
 import DataTable from '../components/DataTable.vue'
-import { createDownloadTask, getDownloadTask } from '@/management/api/downloadTask'
+import { createDownloadTask, getDownloadTask } from '@/management/api/download'
 
 const dataTableState = reactive({
   mainTableLoading: false,
@@ -78,8 +80,8 @@ const dataTableState = reactive({
   isDownloading: false,
   downloadDialogVisible: false,
   downloadForm: {
-    isMasked: true,
-  },
+    isMasked: true
+  }
 })
 
 const { mainTableLoading, tableData, isShowOriginData, downloadDialogVisible, isDownloading } =
@@ -162,20 +164,22 @@ const confirmDownload = async () => {
   }
   try {
     isDownloading.value = true
-    const createRes = await createDownloadTask({ surveyId: route.params.id, isMasked: downloadForm.isMasked })
+    const createRes = await createDownloadTask({
+      surveyId: route.params.id,
+      isMasked: downloadForm.isMasked
+    })
     dataTableState.downloadDialogVisible = false
-    if (createRes.code === 200) {
-      ElMessage.success(`下载文件计算中，可前往“下载中心”查看`)
-      try {
-        const taskInfo = await checkIsTaskFinished(createRes.data.taskId)
-        if (taskInfo.url) {
-          window.open(taskInfo.url)
-          ElMessage.success('导出成功')
-        }
-      } catch (error) {
-        ElMessage.error('导出失败，请重试')
+    if (createRes.code !== 200) {
+      ElMessage.error('导出失败，请重试')
+    }
+    ElMessage.success(`下载文件计算中，可前往“下载中心”查看`)
+    try {
+      const taskInfo = await checkIsTaskFinished(createRes.data.taskId)
+      if (taskInfo.url) {
+        window.open(taskInfo.url)
+        ElMessage.success('导出成功')
       }
-    } else {
+    } catch (error) {
       ElMessage.error('导出失败，请重试')
     }
   } catch (error) {

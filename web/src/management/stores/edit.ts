@@ -1,4 +1,4 @@
-import { type Ref, ref, toRef, computed } from 'vue'
+import { ref, toRef, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { set as _set, isNumber as _isNumber } from 'lodash-es'
 import { QUESTION_TYPE } from '@/common/typeEnum'

@@ -13,6 +13,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+yarn.lock
 
 # OS
 .DS_Store
@@ -38,3 +39,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 tmp
+exportfile
+userUpload

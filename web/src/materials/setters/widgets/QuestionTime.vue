@@ -22,10 +22,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import moment from 'moment'
-import 'moment/locale/zh-cn'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-moment.locale('zh-cn')
 
 interface Props {
   formConfig: any

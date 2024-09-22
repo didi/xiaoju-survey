@@ -54,7 +54,6 @@ const meta = {
       defaultValue: [
         {
           text: '选项1',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -63,7 +62,6 @@ const meta = {
         },
         {
           text: '选项2',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -120,7 +118,9 @@ const meta = {
           key: 'minNum',
           value: '',
           min: 0,
-          max: 'maxNum',
+          max: (moduleConfig) => {
+            return moduleConfig?.maxNum || 0
+          },
           contentClass: 'input-number-config'
         },
         {
@@ -128,7 +128,12 @@ const meta = {
           type: 'InputNumber',
           key: 'maxNum',
           value: '',
-          min: 'minNum',
+          min: (moduleConfig) => {
+            return moduleConfig?.minNum || 0
+          },
+          max: (moduleConfig) => {
+            return moduleConfig?.options?.length || 0
+          },
           contentClass: 'input-number-config'
         }
       ]

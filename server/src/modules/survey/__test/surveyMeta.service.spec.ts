@@ -3,7 +3,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 import { MongoRepository } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { RECORD_STATUS } from 'src/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
@@ -13,7 +13,7 @@ import { ObjectId } from 'mongodb';
 describe('SurveyMetaService', () => {
   let service: SurveyMetaService;
   let surveyRepository: MongoRepository<SurveyMeta>;
-  let pluginManager: XiaojuSurveyPluginManager;
+  let pluginManager: PluginManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,9 +37,7 @@ describe('SurveyMetaService', () => {
     surveyRepository = module.get<MongoRepository<SurveyMeta>>(
       getRepositoryToken(SurveyMeta),
     );
-    pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
+    pluginManager = module.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(new SurveyUtilPlugin());
   });
 

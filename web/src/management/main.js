@@ -6,6 +6,10 @@ import safeHtml from './directive/safeHtml'
 import App from './App.vue'
 import router from './router'
 
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
+
 const pinia = createPinia()
 const app = createApp(App)
 

@@ -1,4 +1,11 @@
-import { Controller, Get, Query, HttpCode, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  HttpCode,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { Authentication } from 'src/guards/authentication.guard';
@@ -41,6 +48,18 @@ export class UserController {
           username: item.username,
         };
       }),
+    };
+  }
+
+  @UseGuards(Authentication)
+  @Get('/getUserInfo')
+  async getUserInfo(@Request() req) {
+    return {
+      code: 200,
+      data: {
+        userId: req.user._id.toString(),
+        username: req.user.username,
+      },
     };
   }
 }

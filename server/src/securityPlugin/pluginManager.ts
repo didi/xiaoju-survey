@@ -1,15 +1,15 @@
-import { XiaojuSurveyPlugin } from './interface';
+import { SecurityPlugin } from './interface';
 
 type AllowHooks =
-  | 'beforeResponseDataCreate'
-  | 'afterResponseDataReaded'
-  | 'desensitiveData'
+  | 'encryptResponseData'
+  | 'decryptResponseData'
+  | 'maskData'
   | 'genSurveyPath';
 
-export class XiaojuSurveyPluginManager {
-  private plugins: Array<XiaojuSurveyPlugin> = [];
+export class PluginManager {
+  private plugins: Array<SecurityPlugin> = [];
   // 注册插件
-  registerPlugin(...plugins: Array<XiaojuSurveyPlugin>) {
+  registerPlugin(...plugins: Array<SecurityPlugin>) {
     this.plugins.push(...plugins);
   }
 
@@ -23,4 +23,4 @@ export class XiaojuSurveyPluginManager {
   }
 }
 
-export default new XiaojuSurveyPluginManager();
+export default new PluginManager();

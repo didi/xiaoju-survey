@@ -2,17 +2,29 @@
   <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
-import useCommandComponent from '../hooks/useCommandComponent'
-import { useSurveyStore } from '../stores/survey'
-
 import AlertDialog from '../components/AlertDialog.vue'
+import { useSurveyStore } from '../stores/survey'
+import useCommandComponent from '../hooks/useCommandComponent'
 
 const route = useRoute()
 const surveyStore = useSurveyStore()
+
+watch(
+  () => route.query.t,
+  () => {
+    location.reload()
+  }
+)
+
+onMounted(() => {
+  const surveyId = route.params.surveyId
+  console.log({ surveyId })
+  surveyStore.setSurveyPath(surveyId)
+  getDetail(surveyId as string)
+})
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
@@ -45,25 +57,11 @@ const loadData = (res: any, surveyPath: string) => {
     surveyStore.setSurveyPath(surveyPath)
     surveyStore.initSurvey(questionData)
     surveyStore.initShowLogicEngine(logicConf?.showLogicConf)
-    surveyStore.initJumpLogicEngine(logicConf.jumpLogicConf)
+    surveyStore.initJumpLogicEngine(logicConf?.jumpLogicConf)
   } else {
     throw new Error(res.errmsg)
   }
 }
-onMounted(() => {
-  const surveyId = route.params.surveyId
-  console.log({ surveyId })
-  surveyStore.setSurveyPath(surveyId)
-  getDetail(surveyId as string)
-})
-
-watch(
-  () => route.query.t,
-  () => {
-    location.reload()
-  }
-)
-
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
 

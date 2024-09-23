@@ -6,33 +6,12 @@ import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useSurveyStore } from './stores/survey'
+import applySkinConfig from '@/common/utils/applySkinConfig';
 
 const { skinConf } = storeToRefs(useSurveyStore())
 
-const updateSkinConfig = (value: any) => {
-  const root = document.documentElement
-  const { themeConf, backgroundConf, contentConf } = value
-
-  if (themeConf?.color) {
-    // 设置主题颜色
-    root.style.setProperty('--primary-color', themeConf?.color)
-  }
-
-  // 设置背景
-  const { color, type, image } = backgroundConf || {}
-  root.style.setProperty(
-    '--primary-background',
-    type === 'image' ? `url(${image}) no-repeat center center` : color
-  )
-
-  if (contentConf?.opacity.toString()) {
-    // 设置全局透明度
-    root.style.setProperty('--opacity', `${parseInt(contentConf.opacity) / 100}`)
-  }
-}
-
 watch(skinConf, (value) => {
-  updateSkinConfig(value)
+  applySkinConfig(value)
 })
 </script>
 <style lang="scss">
@@ -61,7 +40,6 @@ html {
   body {
     padding-top: 40px;
     background: var(--primary-background);
-    background-size: cover;
   }
   #app {
     border-radius: 8px 8px 0 0;

@@ -32,7 +32,6 @@
         </div>
         <div
           :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`"
-          :style="[previewPanelBgStyle]"
         >
           <div class="wrapper">
             <div class="tips-wrapper">
@@ -55,9 +54,8 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useEditStore } from '@/management/stores/edit'
 
 const route = useRoute()
 
@@ -65,17 +63,6 @@ const dialogTableVisible = ref(false)
 const previewTab = ref(1)
 const surveyId = route.params.id
 const loading = ref(true)
-const editStore = useEditStore()
-const { schema } = editStore
-
-const previewPanelBgStyle = computed(() => {
-  const isPc = previewTab.value === 2
-  if (!isPc) return {}
-  const { type, image, color } = schema?.skinConf?.backgroundConf ?? {}
-  return type === 'image'
-    ? { background: `url(${image}) no-repeat center center`, backgroundSize: 'cover' }
-    : { backgroundColor: color }
-})
 
 const openDialog = () => {
   const iframePreview = document.getElementById('iframe-preview')
@@ -142,6 +129,7 @@ const closedDialog = () => {
       justify-content: center;
       box-shadow: 0px 2px 10px -2px rgba(82, 82, 102, 0.2);
       height: 726px;
+      background: var(--primary-background);
       .wrapper {
         width: 100%;
         height: 100%;

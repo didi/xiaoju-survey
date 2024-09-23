@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, shallowRef, onMounted, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -66,7 +66,9 @@ const ruleForm = shallowRef<any>(null)
 const formTitle = ref('协作管理')
 
 const cooperOptions = ref([])
-onMounted(async () => {
+
+
+const fetchPermissionList = async () => {
   const res: any = await getPermissionList()
   if (res.code === CODE_MAP.SUCCESS) {
     cooperOptions.value = res.data.map((item: any) => {
@@ -78,7 +80,7 @@ onMounted(async () => {
   } else {
     ElMessage.error(res.errmsg || '获取权限信息失败')
   }
-})
+}
 
 const formModel = ref({
   members: [] as IMember[]
@@ -98,6 +100,7 @@ watch(
               role: item.permissions
             }
           })
+          fetchPermissionList()
         } else {
           formModel.value.members = []
           ElMessage.error(res.errmsg || '获取协作信息失败')

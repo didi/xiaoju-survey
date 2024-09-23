@@ -14,8 +14,8 @@ const surveyStore = useSurveyStore()
 
 watch(
   () => route.query.t,
-  () => {
-    location.reload()
+  (t) => {
+    if (t) location.reload()
   }
 )
 
@@ -62,6 +62,7 @@ const loadData = (res: any, surveyPath: string) => {
     throw new Error(res.errmsg)
   }
 }
+
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
 

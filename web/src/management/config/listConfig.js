@@ -88,13 +88,18 @@ export const noSpaceDataConfig = {
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSpaceSearchDataConfig = {
-  title: '没有满足该查询条件的团队空间哦',
+  title: '没有满足该查询条件的团队空间',
   desc: '可以更换条件查询试试',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSearchDataConfig = {
-  title: '没有满足该查询条件的问卷哦',
+  title: '没有满足该查询条件的问卷',
   desc: '可以更换条件查询试试',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noDownloadTaskConfig = {
+  title: '没有下载任务',
+  desc: '可以在数据分析进行下载',
   img: '/imgs/icons/list-empty.webp'
 }
 
@@ -102,7 +107,7 @@ export const statusMaps = {
   new: '未发布',
   editing: '修改中',
   published: '已发布',
-  removed: '',
+  removed: '已删除',
   pausing: ''
 }
 

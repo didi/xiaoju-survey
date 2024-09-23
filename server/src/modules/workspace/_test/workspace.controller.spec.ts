@@ -245,8 +245,10 @@ describe('WorkspaceController', () => {
       const req = { user: { _id: new ObjectId() } };
 
       const workspaceId = new ObjectId();
-      const memberList = [{ workspaceId, userId: new ObjectId() }];
+      const userId = new ObjectId();
+      const memberList = [{ workspaceId, userId: userId }];
       const workspaces = [{ _id: workspaceId, name: 'Test Workspace' }];
+      const userList = [{ _id: userId, username: 'Test User' }];
 
       jest
         .spyOn(workspaceService, 'findAllByUserId')
@@ -254,6 +256,9 @@ describe('WorkspaceController', () => {
       jest
         .spyOn(workspaceMemberService, 'batchSearchByWorkspace')
         .mockResolvedValue(memberList as unknown as Array<WorkspaceMember>);
+      jest
+        .spyOn(userService, 'getUserListByIds')
+        .mockResolvedValue(userList as User[]);
 
       const result = await controller.getWorkspaceAndMember(req);
 

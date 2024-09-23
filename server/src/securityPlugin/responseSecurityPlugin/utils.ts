@@ -50,7 +50,7 @@ export const decryptData = (data, { secretKey }) => {
   return CryptoJS.AES.decrypt(data, secretKey).toString(CryptoJS.enc.Utf8);
 };
 
-export const desensitiveData = (data: string): string => {
+export const maskData = (data: string): string => {
   if (!isString(data)) {
     return '*';
   }

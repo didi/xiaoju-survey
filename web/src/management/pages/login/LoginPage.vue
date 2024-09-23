@@ -39,25 +39,27 @@
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-wrapper">
             <el-input style="width: 280px" v-model="formData.captcha" size="large"></el-input>
-            <div class="captcha-img" click="refreshCaptcha" v-html="captchaImgData"></div>
+            <div class="captcha-img" @click="refreshCaptcha" v-html="captchaImgData"></div>
           </div>
         </el-form-item>
 
         <el-form-item class="button-group">
+          <el-button
+            :loading="pending.register"
+            class="button register-button"
+            @click="submitForm('register')"
+          >
+            注册
+          </el-button>
           <el-button
             :loading="pending.login"
             size="small"
             type="primary"
             class="button"
             @click="submitForm('login')"
-            >登录</el-button
           >
-          <el-button
-            :loading="pending.register"
-            class="button register-button"
-            @click="submitForm('register')"
-            >注册</el-button
-          >
+            登录
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -71,7 +73,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
-import { debounce as _debounce } from 'lodash-es'
+import { debounce } from 'lodash-es'
 
 import { getPasswordStrength, login, register } from '@/management/api/auth'
 import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
@@ -161,7 +163,7 @@ const rules = {
   ],
   password: [
     {
-      validator: _debounce(passwordValidator, 500),
+      validator: debounce(passwordValidator, 500),
       trigger: 'change'
     }
   ],
@@ -285,7 +287,7 @@ const refreshCaptcha = async () => {
     }
 
     .button {
-      width: 200px;
+      width: 204px;
       height: 40px;
       font-size: 14px;
     }
@@ -293,7 +295,6 @@ const refreshCaptcha = async () => {
     .register-button {
       border-color: #faa600;
       color: #faa600;
-      margin-left: 20px;
     }
   }
 

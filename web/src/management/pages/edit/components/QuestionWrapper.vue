@@ -7,7 +7,7 @@
   >
     <div><slot v-if="moduleConfig.type !== 'section'"></slot></div>
 
-    <div :class="[showHover ? 'visibily' : 'hidden', 'hoverItem']">
+    <div :class="[showHover ? 'visibility' : 'hidden', 'hoverItem']">
       <div
         class="item el-icon-rank"
         @click.stop.prevent

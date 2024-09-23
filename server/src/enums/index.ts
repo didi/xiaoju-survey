@@ -6,6 +6,9 @@ export enum RECORD_STATUS {
   PUBLISHED = 'published', // 发布
   REMOVED = 'removed', // 删除
   FORCE_REMOVED = 'forceRemoved', // 从回收站删除
+  COMPUTING = 'computing', // 计算中
+  FINISHED = 'finished', // 已完成
+  ERROR = 'error', // 错误
 }
 
 // 历史类型

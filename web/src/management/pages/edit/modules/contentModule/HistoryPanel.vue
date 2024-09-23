@@ -29,8 +29,6 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import moment from 'moment'
-import 'moment/locale/zh-cn'
-moment.locale('zh-cn')
 
 import { getSurveyHistory } from '@/management/api/survey'
 

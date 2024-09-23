@@ -6,11 +6,13 @@ export enum EXCEPTION_CODE {
   USER_EXISTS = 2001, // 用户已存在
   USER_NOT_EXISTS = 2002, // 用户不存在
   USER_PASSWORD_WRONG = 2003, // 用户名或密码错误
+  PASSWORD_INVALID = 2004, // 密码无效
   NO_SURVEY_PERMISSION = 3001, // 没有问卷权限
   SURVEY_STATUS_TRANSFORM_ERROR = 3002, // 问卷状态转换报错
   SURVEY_TYPE_ERROR = 3003, // 问卷类型错误
   SURVEY_NOT_FOUND = 3004, // 问卷不存在
   SURVEY_CONTENT_NOT_ALLOW = 3005, // 存在禁用内容
+  SURVEY_SAVE_CONFLICT = 3006, // 问卷冲突
   CAPTCHA_INCORRECT = 4001, // 验证码不正确
   WHITELIST_ERROR = 4002, // 白名单校验错误
 

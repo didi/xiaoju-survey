@@ -82,6 +82,22 @@ describe('AuthController', () => {
         new HttpException('验证码不正确', EXCEPTION_CODE.CAPTCHA_INCORRECT),
       );
     });
+
+    it('should throw HttpException with PASSWORD_INVALID code when password is invalid', async () => {
+      const mockUserInfo = {
+        username: 'testUser',
+        password: '无效的密码abc123',
+        captchaId: 'testCaptchaId',
+        captcha: 'testCaptcha',
+      };
+
+      await expect(controller.register(mockUserInfo)).rejects.toThrow(
+        new HttpException(
+          '密码只能输入数字、字母、特殊字符',
+          EXCEPTION_CODE.PASSWORD_INVALID,
+        ),
+      );
+    });
   });
 
   describe('login', () => {
@@ -202,6 +218,31 @@ describe('AuthController', () => {
       expect(result.code).toBe(200);
       expect(result.data.id).toBe(mockCaptchaId.toString());
       expect(typeof result.data.img).toBe('string');
+    });
+  });
+
+  describe('password strength', () => {
+    it('it should return strong', async () => {
+      await expect(
+        controller.getPasswordStrength('abcd&1234'),
+      ).resolves.toEqual({
+        code: 200,
+        data: 'Strong',
+      });
+    });
+
+    it('it should return medium', async () => {
+      await expect(controller.getPasswordStrength('abc123')).resolves.toEqual({
+        code: 200,
+        data: 'Medium',
+      });
+    });
+
+    it('it should return weak', async () => {
+      await expect(controller.getPasswordStrength('123456')).resolves.toEqual({
+        code: 200,
+        data: 'Weak',
+      });
     });
   });
 });

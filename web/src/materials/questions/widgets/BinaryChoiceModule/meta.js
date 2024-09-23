@@ -54,7 +54,6 @@ const meta = {
       defaultValue: [
         {
           text: '对',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -63,7 +62,6 @@ const meta = {
         },
         {
           text: '错',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -71,9 +69,40 @@ const meta = {
           hash: '115020'
         }
       ]
+    },
+    {
+      name: 'layout',
+      propType: String,
+      description: '排列方式',
+      defaultValue: 'vertical'
     }
   ],
-  formConfig: [basicConfig],
+  formConfig: [
+    basicConfig,
+    {
+      name: 'optionConfig',
+      title: '选项配置',
+      type: 'Customed',
+      content: [
+        {
+          label: '排列方式',
+          type: 'RadioGroup',
+          key: 'layout',
+          value: 'vertical',
+          options: [
+            {
+              label: '竖排',
+              value: 'vertical'
+            },
+            {
+              label: '横排',
+              value: 'horizontal'
+            }
+          ]
+        }
+      ]
+    }
+  ],
   editConfigure: {
     optionEdit: {
       show: false

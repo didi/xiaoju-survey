@@ -97,7 +97,7 @@ export default defineComponent({
 
     return (
       <div class="choice-wrapper">
-        <div class={[isMatrix ? 'nest-box' : '', 'choice-box']}>
+        <div class={[isMatrix ? 'nest-box' : '', 'choice-box', this.layout || 'vertical']}>
           {getOptions.map((item, index) => {
             return (
               !item.hide && (
@@ -106,11 +106,10 @@ export default defineComponent({
                   style={this.choiceStyle}
                   class={['choice-outer']}
                 >
-                  <div style="position: relative">
+                  <div style="position: relative" class="choice-content">
                     {!/^\s*$/.test(item.text) && (
                       <div
                         class={[
-                          this.layout === 'vertical' ? 'vertical' : '',
                           isChecked(item) ? 'is-checked' : '',
                           index === getOptions.length - 1 ? 'lastchild' : '',
                           index === getOptions.length - 2 ? 'last2child' : '',
@@ -142,7 +141,7 @@ export default defineComponent({
                             <span
                               v-html={filterXSS(item.text)}
                               class="item-title-text"
-                              style="display: block; height: auto; padding: 9px 0"
+                              style="display: block; height: auto; padding-top: 9px"
                             ></span>
                           )}
                           {slots.vote?.({

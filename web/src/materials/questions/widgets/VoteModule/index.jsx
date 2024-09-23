@@ -103,7 +103,6 @@ export default defineComponent({
     return (
       <BaseChoice
         uiTarget={innerType}
-        layout={'vertical'}
         name={this.field}
         innerType={this.innerType}
         value={this.value}

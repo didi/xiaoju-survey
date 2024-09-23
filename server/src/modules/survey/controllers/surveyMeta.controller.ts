@@ -51,9 +51,7 @@ export class SurveyMetaController {
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
-      this.logger.error(`updateMeta_parameter error: ${error.message}`, {
-        req,
-      });
+      this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const survey = req.surveyMeta;
@@ -81,7 +79,7 @@ export class SurveyMetaController {
   ) {
     const { value, error } = GetSurveyListDto.validate(queryInfo);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const { curPage, pageSize, workspaceId } = value;
@@ -91,14 +89,14 @@ export class SurveyMetaController {
       try {
         filter = getFilter(JSON.parse(decodeURIComponent(value.filter)));
       } catch (error) {
-        this.logger.error(error.message, { req });
+        this.logger.error(error.message);
       }
     }
     if (value.order) {
       try {
         order = order = getOrder(JSON.parse(decodeURIComponent(value.order)));
       } catch (error) {
-        this.logger.error(error.message, { req });
+        this.logger.error(error.message);
       }
     }
     const userId = req.user._id.toString();

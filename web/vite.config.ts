@@ -67,7 +67,9 @@ export default defineConfig({
       'yup',
       'crypto-js/sha256',
       'element-plus/es/locale/lang/zh-cn',
-      'node-forge'
+      'node-forge',
+      '@logicflow/core',
+      '@logicflow/extension'
     ]
   },
   plugins: [
@@ -118,6 +120,10 @@ export default defineConfig({
     port: 8080,
     proxy: {
       '/api': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/exportfile': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true
       },

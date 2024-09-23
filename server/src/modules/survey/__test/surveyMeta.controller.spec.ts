@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyMetaController } from '../controllers/surveyMeta.controller';
 import { SurveyMetaService } from '../services/surveyMeta.service';
-import { LoggerProvider } from 'src/logger/logger.provider';
+import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { CollaboratorService } from '../services/collaborator.service';
@@ -28,7 +28,12 @@ describe('SurveyMetaController', () => {
               .mockResolvedValue({ count: 0, data: [] }),
           },
         },
-        LoggerProvider,
+        {
+          provide: Logger,
+          useValue: {
+            error() {},
+          },
+        },
         {
           provide: CollaboratorService,
           useValue: {
@@ -116,6 +121,7 @@ describe('SurveyMetaController', () => {
               curStatus: {
                 date: date,
               },
+              surveyType: 'normal',
             },
           ],
         });
@@ -140,10 +146,12 @@ describe('SurveyMetaController', () => {
                 /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
               ),
             }),
+            surveyType: 'normal',
           }),
         ]),
       },
     });
+
     expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
       pageNum: queryInfo.curPage,
       pageSize: queryInfo.pageSize,
@@ -193,5 +201,25 @@ describe('SurveyMetaController', () => {
       order: { createDate: -1 },
       workspaceId: undefined,
     });
+  });
+
+  it('should handle Joi validation in getList', async () => {
+    const invalidQueryInfo: any = {
+      curPage: 'invalid',
+      pageSize: 10,
+    };
+    const req = {
+      user: {
+        username: 'test-user',
+        _id: new ObjectId(),
+      },
+    };
+
+    try {
+      await controller.getList(invalidQueryInfo, req);
+    } catch (error) {
+      expect(error).toBeInstanceOf(HttpException);
+      expect(error.code).toBe(EXCEPTION_CODE.PARAMETER_ERROR);
+    }
   });
 });

@@ -80,6 +80,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { useEditStore } from '@/management/stores/edit'
 import { cleanRichText } from '@/common/xss'
+import { cleanRichTextWithMediaTag } from '@/common/xss'
 
 export default {
   name: 'OptionConfig',
@@ -110,7 +111,7 @@ export default {
       return mapData
     },
     textOptions() {
-      return this.curOptions.map((item) => item.text)
+      return this.curOptions.map((item) => cleanRichTextWithMediaTag(item.text))
     }
   },
   components: {
@@ -140,20 +141,13 @@ export default {
       this.initCurOption()
     },
     addOption(text = '选项', others = false, index = -1, fieldId) {
-      let addOne
-      if (this.curOptions[0]) {
-        addOne = _cloneDeep(this.curOptions[0])
-      } else {
-        addOne = {
-          text: '',
-          hash: '',
-          others: false,
-          mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          score: 0,
-          limit: ''
-        }
+      let addOne = {
+        text: '',
+        hash: '',
+        others: false,
+        mustOthers: false,
+        othersKey: '',
+        placeholderDesc: ''
       }
       for (const i in addOne) {
         if (i === 'others') {

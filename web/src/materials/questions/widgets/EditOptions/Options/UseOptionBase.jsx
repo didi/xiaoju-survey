@@ -6,22 +6,13 @@ import GetHash from '@materials/questions/common/utils/getOptionHash'
 function useOptionBase(options) {
   const optionList = ref(options)
   const addOption = (text = '选项', others = false, index = -1, field) => {
-    // const {} = payload
-    let addOne
-    if (optionList.value[0]) {
-      addOne = cloneDeep(optionList.value[0])
-    } else {
-      addOne = {
-        text: '',
-        hash: '',
-        imageUrl: '',
-        others: false,
-        mustOthers: false,
-        othersKey: '',
-        placeholderDesc: '',
-        score: 0,
-        limit: ''
-      }
+    let addOne = {
+      text: '',
+      hash: '',
+      others: false,
+      mustOthers: false,
+      othersKey: '',
+      placeholderDesc: ''
     }
     if (typeof text !== 'string') {
       text = '选项'

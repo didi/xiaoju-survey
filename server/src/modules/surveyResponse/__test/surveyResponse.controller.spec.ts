@@ -13,7 +13,7 @@ import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from 'src/modules/message/services/messagePushingTask.service';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
@@ -153,9 +153,7 @@ describe('SurveyResponseController', () => {
     clientEncryptService =
       module.get<ClientEncryptService>(ClientEncryptService);
 
-    const pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
+    const pluginManager = module.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
     );
@@ -220,7 +218,8 @@ describe('SurveyResponseController', () => {
       jest
         .spyOn(clientEncryptService, 'deleteEncryptInfo')
         .mockResolvedValueOnce(undefined);
-      const result = await controller.createResponse(reqBody, {});
+
+      const result = await controller.createResponse(reqBody);
 
       expect(result).toEqual({ code: 200, msg: '提交成功' });
       expect(
@@ -267,7 +266,7 @@ describe('SurveyResponseController', () => {
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
         .mockResolvedValueOnce(null);
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         SurveyNotFoundException,
       );
     });
@@ -276,7 +275,7 @@ describe('SurveyResponseController', () => {
       const reqBody = cloneDeep(mockSubmitData);
       delete reqBody.sign;
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         HttpException,
       );
 
@@ -289,7 +288,7 @@ describe('SurveyResponseController', () => {
       const reqBody = cloneDeep(mockDecryptErrorBody);
       reqBody.sign = 'mock sign';
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         HttpException,
       );
 
@@ -305,7 +304,7 @@ describe('SurveyResponseController', () => {
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
         .mockResolvedValueOnce(mockResponseSchema);
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         HttpException,
       );
     });
@@ -317,7 +316,7 @@ describe('SurveyResponseController', () => {
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
         .mockResolvedValueOnce(mockResponseSchema);
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         HttpException,
       );
     });
@@ -343,7 +342,7 @@ describe('SurveyResponseController', () => {
           },
         } as ResponseSchema);
 
-      await expect(controller.createResponse(reqBody, {})).rejects.toThrow(
+      await expect(controller.createResponse(reqBody)).rejects.toThrow(
         new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
       );
     });

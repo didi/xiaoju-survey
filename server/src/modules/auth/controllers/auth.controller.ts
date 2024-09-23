@@ -195,7 +195,7 @@ export class AuthController {
   /**
    * 密码强度
    */
-  @Get('register/password/strength')
+  @Get('/password/strength')
   @HttpCode(200)
   async getPasswordStrength(@Query('password') password: string) {
     const numberReg = /[0-9]/.test(password);

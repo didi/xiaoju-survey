@@ -10,59 +10,15 @@ export default function useInitializeSchema(
 ) {
   const schema = reactive({
     metaData: null,
-    bannerConf: {
-      titleConfig: {
-        mainTitle: '<h3 style="text-align: center">欢迎填写问卷</h3>',
-        subTitle: `<p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>`,
-        applyTitle: ''
-      },
-      bannerConfig: {
-        bgImage: '',
-        bgImageAllowJump: false,
-        bgImageJumpLink: '',
-        videoLink: '',
-        postImg: ''
-      }
-    },
-    bottomConf: {
-      logoImage: '',
-      logoImageWidth: '28%'
-    },
-    skinConf: {
-      backgroundConf: {
-        color: '#fff'
-      },
-      themeConf: {
-        color: '#ffa600'
-      },
-      contentConf: {
-        opacity: 100
-      }
-    },
-    baseConf: {
-      begTime: '',
-      endTime: '',
-      language: 'chinese',
-      tLimit: 0,
-      answerBegTime: '',
-      answerEndTime: '',
-      answerLimitTime: 0
-    },
-    submitConf: {
-      submitTitle: '',
-      msgContent: {},
-      confirmAgain: {
-        is_again: true
-      },
-      link: ''
-    },
+    bannerConf: {},
+    bottomConf: {},
+    skinConf: {},
+    baseConf: {},
+    submitConf: {},
+    pageConf: [],
+    logicConf: {},
     questionDataList: [],
-    pageEditOne: 1,
-    pageConf: [], // 分页逻辑
-    logicConf: {
-      showLogicConf: [],
-      jumpLogicConf: []
-    }
+    pageEditOne: 1
   })
   const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } =
     useLogicEngine(schema)
@@ -73,11 +29,11 @@ export default function useInitializeSchema(
     schema.bottomConf = merge({}, schema.bottomConf, codeData.bottomConf)
     schema.skinConf = merge({}, schema.skinConf, codeData.skinConf)
     schema.baseConf = merge({}, schema.baseConf, codeData.baseConf)
+    schema.logicConf = codeData.logicConf
+    schema.pageConf = codeData.pageConf
     schema.submitConf = merge({}, schema.submitConf, codeData.submitConf)
     schema.questionDataList = codeData.questionDataList || []
-    schema.logicConf = codeData.logicConf
     schema.pageEditOne = 1
-    schema.pageConf = codeData.pageConf
   }
 
   const sessionId = ref('')

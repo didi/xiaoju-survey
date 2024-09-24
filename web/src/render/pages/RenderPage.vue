@@ -176,13 +176,11 @@ const handleSubmit = () => {
 
   .wrapper {
     min-height: 100%;
-    background-color: var(--primary-background-color);
     display: flex;
     flex-direction: column;
 
     .content {
       flex: 1;
-      margin: 0 0.3rem;
       background: rgba(255, 255, 255, var(--opacity));
       border-radius: 8px 8px 0 0;
       height: 100%;

@@ -14,21 +14,33 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+import applySkinConfig from '@/common/utils/applySkinConfig'
 
 import LeftMenu from '@/management/components/LeftMenu.vue'
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
 const editStore = useEditStore()
-const { init, setSurveyId } = editStore
+const { init, setSurveyId, schema } = editStore
 
 const router = useRouter()
 const route = useRoute()
+
+watch(
+  () => schema.skinConf,
+  (v) => {
+    applySkinConfig(v)
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
 
 onMounted(async () => {
   const surveyId = route.params.id as string

@@ -10,6 +10,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { validate } from '../../api/survey'
 import { useSurveyStore } from '../../stores/survey'
@@ -22,7 +23,7 @@ interface Emit {
 const emit = defineEmits<Emit>()
 
 const surveyStore = useSurveyStore()
-const { passwordSwitch, whitelistType, memberType, whitelistTip } = surveyStore.baseConf || {}
+const { passwordSwitch, whitelistType, memberType, whitelistTip }: any = surveyStore.baseConf || {}
 
 const bodyContent = computed(() => {
   const content = []
@@ -55,8 +56,11 @@ const bodyContent = computed(() => {
   return content
 })
 
-const handleSubmit = async (data, close) => {
-  const params = {
+const handleSubmit = async (data: { whitelist: string; password: string }, close: Function) => {
+  const params: {
+    surveyPath: string
+    [key: string]: string
+  } = {
     surveyPath: surveyStore.surveyPath
   }
   if (data.whitelist) {
@@ -65,7 +69,7 @@ const handleSubmit = async (data, close) => {
   if (data.password) {
     params.password = data.password
   }
-  const res = await validate(params)
+  const res: any = await validate(params)
 
   if (res.code != 200) {
     ElMessage.error(res.errmsg || '验证失败')

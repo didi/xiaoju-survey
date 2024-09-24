@@ -10,14 +10,14 @@ export default function useInitializeSchema(
 ) {
   const schema = reactive({
     metaData: null,
-    bannerConf: {},
-    bottomConf: {},
-    skinConf: {},
-    baseConf: {},
-    submitConf: {},
-    pageConf: [],
-    logicConf: {},
-    questionDataList: [],
+    bannerConf: {} as any,
+    bottomConf: {} as any,
+    skinConf: {} as any,
+    baseConf: {} as any,
+    submitConf: {} as any,
+    pageConf: [] as any,
+    logicConf: {} as any,
+    questionDataList: [] as any,
     pageEditOne: 1
   })
   const { showLogicEngine, initShowLogicEngine, jumpLogicEngine, initJumpLogicEngine } =

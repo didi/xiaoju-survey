@@ -34,7 +34,7 @@ import skinPresets from '@/management/config/skinPresets.js'
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
 const groupName = ref<string>('temp')
-let bannerList = ref([])
+let bannerList = ref<string[]>([])
 
 onMounted(async () => {
   const res = await getBannerData()
@@ -43,14 +43,14 @@ onMounted(async () => {
 
 const groupList = computed(() =>
   Object.keys(bannerList.value).map((key) => ({
-    label: bannerList.value[key].name,
+    label: (bannerList.value as any)[key].name,
     value: key
   }))
 )
 const currentBannerList = computed(() => {
   const arr = Object.keys(bannerList.value)
     .map((key) => {
-      return bannerList.value[key]
+      return (bannerList.value as any)[key]
     })
     .map((data) => {
       return data.list.map((item: any) => {

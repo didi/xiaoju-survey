@@ -51,7 +51,7 @@ interface Props {
 }
 
 interface Emit {
-  (ev: 'confirm', data, callback: () => void): void
+  (ev: 'confirm', data: any, callback: () => void): void
   (ev: 'close'): void
 }
 
@@ -71,7 +71,9 @@ const isVisible = ref(props.visible)
 const formValues = reactive(props.bodyContent || [])
 
 const handleConfirm = () => {
-  const data = {}
+  const data: {
+    [key: string]: any
+  } = {}
   formValues.forEach((item) => {
     data[item.key] = item.value
   })

@@ -19,7 +19,7 @@ import WhiteListDialog from './WhiteListDialog.vue'
 import FillDataDialog from './FillDataDialog.vue'
 
 const surveyStore = useSurveyStore()
-const baseConf = computed(() => surveyStore?.baseConf || {})
+const baseConf: any = computed(() => surveyStore?.baseConf)
 
 const showWhiteList = ref(false)
 const showFillData = ref(false)
@@ -27,7 +27,7 @@ const showFillData = ref(false)
 watch(
   () => baseConf.value,
   () => {
-    const { passwordSwitch, whitelistType } = baseConf.value || {}
+    const { passwordSwitch, whitelistType } = baseConf.value
 
     // 密码 or 白名单
     if ((whitelistType && whitelistType != 'ALL') || passwordSwitch) {

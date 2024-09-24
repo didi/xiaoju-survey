@@ -84,9 +84,9 @@ const validate = (callback: (v: boolean) => void) => {
 
 const normalizationRequestBody = () => {
   const enterTime = surveyStore.enterTime
-  const encryptInfo = surveyStore.encryptInfo as any
+  const encryptInfo: any = surveyStore.encryptInfo
   const formValues = surveyStore.formValues
-  const baseConf = surveyStore.baseConf
+  const baseConf: any = surveyStore.baseConf
 
   const result: any = {
     surveyPath: surveyPath.value,

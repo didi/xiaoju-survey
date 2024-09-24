@@ -4,7 +4,7 @@ import { set as _set, isNumber as _isNumber } from 'lodash-es'
 import { QUESTION_TYPE } from '@/common/typeEnum'
 import { getQuestionByType } from '@/management/utils/index'
 
-import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 import { getCollaboratorPermissions } from '@/management/api/space'
 
 import useInitializeSchema from './composables/useInitializeSchema'

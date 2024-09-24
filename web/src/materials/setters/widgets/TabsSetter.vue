@@ -30,7 +30,7 @@ const props = defineProps<IProps>()
 const emit = defineEmits<IEmit>()
 
 const tabList = computed(() => {
-  return props.formConfig?.tabList || []
+  return props.formConfig?.options || []
 })
 
 function handleTabClick(item: any) {

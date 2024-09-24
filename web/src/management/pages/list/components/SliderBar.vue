@@ -38,8 +38,8 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { type MenuItem } from '@/management/utils/types/workSpace'
-import { SpaceType } from '@/management/utils/types/workSpace'
+import { type MenuItem } from '@/management/utils/workSpace'
+import { SpaceType } from '@/management/utils/workSpace'
 
 const menuRef = ref()
 

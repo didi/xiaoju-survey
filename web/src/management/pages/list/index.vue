@@ -68,7 +68,7 @@ import SpaceList from './components/SpaceList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
-import { SpaceType } from '@/management/utils/types/workSpace'
+import { SpaceType } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 

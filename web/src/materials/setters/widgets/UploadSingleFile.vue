@@ -16,7 +16,7 @@
         :before-upload="beforeAvatarUpload"
         :on-success="onSuccess"
       >
-        <img src="/imgs/icons/upload.png" alt="上传图标" />
+        <i-ep-upload />
       </el-upload>
     </template>
   </el-input>
@@ -92,7 +92,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   box-sizing: border-box;
   .upload-img {
     .el-upload {
-      width: 80px;
+      width: 32px;
       height: 32px;
     }
   }

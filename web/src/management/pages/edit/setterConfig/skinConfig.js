@@ -14,22 +14,22 @@ export default [
       {
         type: 'TabsSetter',
         key: 'type',
-        tabList: [
+        options: [
           {
             label: '图片(<5M)',
-            value: 'image',
+            value: 'image'
           },
           {
             label: '颜色',
-            value: 'color',
+            value: 'color'
           }
         ]
       },
       {
         label: '背景图片',
         type: 'UploadSingleFile',
-        accept: "image/*",
-        limitSize: 5,// 单位MB
+        accept: 'image/*',
+        limitSize: 5, // 单位MB
         key: 'image',
         relyFunc: (data) => {
           return data.type === 'image'

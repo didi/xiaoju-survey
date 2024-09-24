@@ -88,7 +88,7 @@ import SpaceModify from './SpaceModify.vue'
 import TextSearch from '@/management/pages/list/components/TextSearch.vue'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import ToolBar from './ToolBar.vue'
-import { UserRole } from '@/management/utils/types/workSpace'
+import { UserRole } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 const showSpaceModify = ref(false)

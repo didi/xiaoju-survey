@@ -42,6 +42,13 @@ export type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
   surveyTotal: number
 }
 
+export interface ICollaborator {
+  _id?: string
+  userId: string
+  username: string
+  permissions: Array<number>
+}
+
 export enum SpaceType {
   Personal = 'personal',
   Group = 'group',
@@ -56,13 +63,6 @@ export enum UserRole {
 export const roleLabels: Record<UserRole, string> = {
   [UserRole.Admin]: '管理员',
   [UserRole.Member]: '成员'
-}
-
-export interface ICollaborator {
-  _id?: string
-  userId: string
-  username: string
-  permissions: Array<number>
 }
 
 export enum SurveyPermissions {

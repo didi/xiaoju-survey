@@ -30,7 +30,7 @@ import {
   type ListItem,
   type UserRole,
   roleLabels
-} from '@/management/utils/types/workSpace'
+} from '@/management/utils/workSpace'
 import { CODE_MAP } from '@/management/api/base'
 import { useUserStore } from '@/management/stores/user'
 

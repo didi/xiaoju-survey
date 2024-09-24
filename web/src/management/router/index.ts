@@ -5,7 +5,7 @@ import {
   type NavigationGuardNext
 } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'

@@ -45,7 +45,7 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import { getPermissionList, getCollaborator, saveCollaborator } from '@/management/api/space'
-import { type IMember, SurveyPermissions } from '@/management/utils/types/workSpace'
+import { type IMember, SurveyPermissions } from '@/management/utils/workSpace'
 import { CODE_MAP } from '@/management/api/base'
 
 import MemberSelect from './MemberSelect.vue'
@@ -66,7 +66,6 @@ const ruleForm = shallowRef<any>(null)
 const formTitle = ref('协作管理')
 
 const cooperOptions = ref([])
-
 
 const fetchPermissionList = async () => {
   const res: any = await getPermissionList()

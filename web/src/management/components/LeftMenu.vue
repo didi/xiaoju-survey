@@ -34,7 +34,7 @@ import { useEditStore } from '@/management/stores/edit'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 import LogoIcon from './LogoIcon.vue'
-import { SurveyPermissions } from '@/management/utils/types/workSpace.ts'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 const editStore = useEditStore()
 
 const tabArr = [

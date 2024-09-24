@@ -16,7 +16,7 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { type IMember, type ListItem } from '@/management/utils/types/workSpace'
+import { type IMember, type ListItem } from '@/management/utils/workSpace'
 import OperationSelect from './OperationSelect.vue'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 

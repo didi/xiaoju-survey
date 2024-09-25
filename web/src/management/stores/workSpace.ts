@@ -13,12 +13,8 @@ import {
   getSpaceDetail as getSpaceDetailReq
 } from '@/management/api/space'
 
-import { SpaceType } from '@/management/utils/types/workSpace'
-import {
-  type SpaceDetail,
-  type SpaceItem,
-  type IWorkspace
-} from '@/management/utils/types/workSpace'
+import { SpaceType } from '@/management/utils/workSpace'
+import { type SpaceDetail, type SpaceItem, type IWorkspace } from '@/management/utils/workSpace'
 
 import { useSurveyListStore } from './surveyList'
 

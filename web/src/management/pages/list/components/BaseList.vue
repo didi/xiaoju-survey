@@ -113,12 +113,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import 'element-plus/theme-chalk/src/message-box.scss'
 
-import moment from 'moment'
-// 引入中文
-import 'moment/locale/zh-cn'
-// 设置中文
-moment.locale('zh-cn')
-
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
@@ -133,7 +127,7 @@ import ToolBar from './ToolBar.vue'
 import TextSearch from './TextSearch.vue'
 import TextSelect from './TextSelect.vue'
 import TextButton from './TextButton.vue'
-import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 
 import {
   fieldConfig,

@@ -2,10 +2,12 @@
   "bannerConf": {
     "titleConfig": {
       "mainTitle": "<h3 style=\"text-align: center\">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与！</span></p>",
-      "subTitle": ""
+      "subTitle": "<p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style=\"color: rgb(204, 0, 0)\">期待您的参与！</span></p>"
     },
     "bannerConfig": {
       "bgImage": "/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp",
+      "bgImageAllowJump": false,
+      "bgImageJumpLink": "",
       "videoLink": "",
       "postImg": ""
     }
@@ -27,7 +29,8 @@
       "type": "link",
       "link": "",
       "buttonText": ""
-    }
+    },
+    "link": ""
   },
   "bottomConf": {
     "logoImage": "/imgs/Logo.webp",
@@ -39,13 +42,22 @@
     "tLimit": 0,
     "language": "chinese",
     "answerBegTime": "00:00:00",
-    "answerEndTime": "23:59:59"
+    "answerEndTime": "23:59:59",
+    "passwordSwitch": false,
+    "password": "",
+    "whitelistType": "ALL",
+    "whitelist": [],
+    "memberType": "MOBILE",
+    "fillAnswer": false,
+    "fillSubmitAnswer": false
   },
   "skinConf": {
     "skinColor": "#4a4c5b",
     "inputBgColor": "#ffffff",
     "backgroundConf": {
-      "color": "#ffffff"
+      "color": "#b8dbff",
+      "type": "color",
+      "image": ""
     },
     "themeConf": {
       "color": "#ffa600"
@@ -56,6 +68,7 @@
   },
   "pageConf": [],
   "logicConf": {
-    "showLogicConf": []
+    "showLogicConf": [],
+    "jumpLogicConf": []
   }
 }

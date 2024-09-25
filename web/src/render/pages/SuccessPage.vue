@@ -34,7 +34,9 @@ import communalLoader from '@materials/communals/communalLoader.js'
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 const surveyStore = useSurveyStore()
 
-const logoConf = computed(() => surveyStore?.bottomConf || {})
+const logoConf = computed(() => {
+  return surveyStore?.bottomConf || {}
+})
 const successMsg = computed(() => {
   const msgContent = (surveyStore?.submitConf as any)?.msgContent || {}
   return msgContent?.msg_200 || '提交成功'

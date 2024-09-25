@@ -12,9 +12,36 @@ export default [
     key: 'skinConf.backgroundConf',
     formConfigList: [
       {
+        type: 'TabsSetter',
+        key: 'type',
+        options: [
+          {
+            label: '图片(<5M)',
+            value: 'image'
+          },
+          {
+            label: '颜色',
+            value: 'color'
+          }
+        ]
+      },
+      {
+        label: '背景图片',
+        type: 'UploadSingleFile',
+        accept: 'image/*',
+        limitSize: 5, // 单位MB
+        key: 'image',
+        relyFunc: (data) => {
+          return data.type === 'image'
+        }
+      },
+      {
         label: '背景颜色',
         type: 'ColorPicker',
-        key: 'color'
+        key: 'color',
+        relyFunc: (data) => {
+          return data.type === 'color'
+        }
       }
     ]
   },

@@ -88,7 +88,7 @@ import SpaceModify from './SpaceModify.vue'
 import TextSearch from '@/management/pages/list/components/TextSearch.vue'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import ToolBar from './ToolBar.vue'
-import { UserRole } from '@/management/utils/types/workSpace'
+import { UserRole } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 
 const showSpaceModify = ref(false)
@@ -158,15 +158,11 @@ const handleModify = async (id: string) => {
   showSpaceModify.value = true
 }
 const handleDelete = (id: string) => {
-  ElMessageBox.confirm(
-    '删除团队后，团队内的问卷将同步被删除，请谨慎考虑！是否确认本次删除？',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  )
+  ElMessageBox.confirm('删除后团队内的问卷将同步被删除，是否确认本次删除？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
     .then(async () => {
       await workSpaceStore.deleteSpace(id)
       await workSpaceStore.getSpaceList()

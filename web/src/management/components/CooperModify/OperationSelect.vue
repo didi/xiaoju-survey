@@ -39,7 +39,7 @@ import { ref, computed, watch } from 'vue'
 import { ElMessageBox, type CheckboxValueType } from 'element-plus'
 
 import 'element-plus/theme-chalk/src/message-box.scss'
-import { type ListItem } from '@/management/utils/types/workSpace'
+import { type ListItem } from '@/management/utils/workSpace'
 
 const props = withDefaults(
   defineProps<{

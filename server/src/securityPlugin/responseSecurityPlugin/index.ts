@@ -1,15 +1,10 @@
-import { XiaojuSurveyPlugin } from '../interface';
+import { SecurityPlugin } from '../interface';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
-import {
-  decryptData,
-  encryptData,
-  isDataSensitive,
-  desensitiveData,
-} from './utils';
+import { decryptData, encryptData, isDataSensitive, maskData } from './utils';
 
-export class ResponseSecurityPlugin implements XiaojuSurveyPlugin {
+export class ResponseSecurityPlugin implements SecurityPlugin {
   constructor(private readonly secretKey: string) {}
-  beforeResponseDataCreate(responseData: SurveyResponse) {
+  encryptResponseData(responseData: SurveyResponse) {
     const secretKeys = [];
     if (responseData.data) {
       for (const key in responseData.data) {
@@ -39,7 +34,7 @@ export class ResponseSecurityPlugin implements XiaojuSurveyPlugin {
     responseData.secretKeys = secretKeys;
   }
 
-  afterResponseDataReaded(responseData: SurveyResponse) {
+  decryptResponseData(responseData: SurveyResponse) {
     const secretKeys = responseData.secretKeys;
     if (Array.isArray(secretKeys) && secretKeys.length > 0) {
       for (const key of secretKeys) {
@@ -57,10 +52,10 @@ export class ResponseSecurityPlugin implements XiaojuSurveyPlugin {
     responseData.secretKeys = [];
   }
 
-  desensitiveData(data: Record<string, any>) {
+  maskData(data: Record<string, any>) {
     Object.keys(data).forEach((key) => {
       if (isDataSensitive(data[key])) {
-        data[key] = desensitiveData(data[key]);
+        data[key] = maskData(data[key]);
       }
     });
   }

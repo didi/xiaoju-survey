@@ -2,21 +2,16 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { pick } from 'lodash-es'
+import moment from 'moment'
 
 import { isMobile as isInMobile } from '@/render/utils/index'
+
 import { getEncryptInfo as getEncryptInfoApi } from '@/render/api/survey'
 import { useQuestionStore } from '@/render/stores/question'
 import { useErrorInfo } from '@/render/stores/errorInfo'
 
-import moment from 'moment'
-// 引入中文
-import 'moment/locale/zh-cn'
-// 设置中文
-moment.locale('zh-cn')
-
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
-// import { jumpLogicRule } from '@/common/logicEngine/jumpLogicRule'
 
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
@@ -26,6 +21,7 @@ const CODE_MAP = {
   ERROR: 500,
   NO_AUTH: 403
 }
+
 export const useSurveyStore = defineStore('survey', () => {
   const surveyPath = ref('')
   const isMobile = ref(isInMobile())
@@ -56,6 +52,10 @@ export const useSurveyStore = defineStore('survey', () => {
 
   const setEnterTime = () => {
     enterTime.value = Date.now()
+  }
+
+  const setFormValues = (data) => {
+    formValues.value = data
   }
 
   const getEncryptInfo = async () => {
@@ -109,13 +109,9 @@ export const useSurveyStore = defineStore('survey', () => {
 
     return isSuccess
   }
-  const initSurvey = (option) => {
-    setEnterTime()
 
-    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
-      return
-    }
-
+  // 加载空白页面
+  function clearFormData(option) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
     const {
       questionData,
@@ -134,6 +130,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
+
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -148,8 +145,18 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues.value = _formValues
     whiteData.value = option.whiteData
     pageConf.value = option.pageConf
+
     // 获取已投票数据
     questionStore.initVoteData()
+  }
+
+  const initSurvey = (option) => {
+    setEnterTime()
+    if (!canFillQuestionnaire(option.baseConf, option.submitConf)) {
+      return
+    }
+    // 加载空白问卷
+    clearFormData(option)
   }
 
   // 用户输入或者选择后，更新表单数据
@@ -161,13 +168,14 @@ export const useSurveyStore = defineStore('survey', () => {
     questionStore.setChangeField(key)
   }
 
+  // 初始化逻辑引擎
   const showLogicEngine = ref()
   const initShowLogicEngine = (showLogicConf) => {
-    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf)
+    showLogicEngine.value = new RuleMatch().fromJson(showLogicConf || [])
   }
   const jumpLogicEngine = ref()
   const initJumpLogicEngine = (jumpLogicConf) => {
-    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf)
+    jumpLogicEngine.value = new RuleMatch().fromJson(jumpLogicConf || [])
   }
 
   return {
@@ -188,6 +196,7 @@ export const useSurveyStore = defineStore('survey', () => {
     initSurvey,
     changeData,
     setWhiteData,
+    setFormValues,
     setSurveyPath,
     setEnterTime,
     getEncryptInfo,

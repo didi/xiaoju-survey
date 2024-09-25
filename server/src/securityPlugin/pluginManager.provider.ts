@@ -1,9 +1,7 @@
-import xiaojuSurveyPluginManager, {
-  XiaojuSurveyPluginManager,
-} from './pluginManager';
+import securityPluginManager, { PluginManager } from './pluginManager';
 import { Provider } from '@nestjs/common';
 
 export const PluginManagerProvider: Provider = {
-  provide: XiaojuSurveyPluginManager,
-  useValue: xiaojuSurveyPluginManager,
+  provide: PluginManager,
+  useValue: securityPluginManager,
 };

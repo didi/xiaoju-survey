@@ -6,14 +6,14 @@ import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 
 @Injectable()
 export class SurveyMetaService {
   constructor(
     @InjectRepository(SurveyMeta)
     private readonly surveyRepository: MongoRepository<SurveyMeta>,
-    private readonly pluginManager: XiaojuSurveyPluginManager,
+    private readonly pluginManager: PluginManager,
   ) {}
 
   async getNewSurveyPath(): Promise<string> {

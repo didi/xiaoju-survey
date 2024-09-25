@@ -5,10 +5,13 @@ import {
   type NavigationGuardNext
 } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 import { analysisTypeMap } from '@/management/config/analysisConfig'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+import 'element-plus/theme-chalk/src/message-box.scss'
+import 'element-plus/theme-chalk/src/button.scss'
+import 'element-plus/theme-chalk/src/overlay.scss'
 import { useUserStore } from '@/management/stores/user'
 import { useEditStore } from '@/management/stores/edit'
 
@@ -24,6 +27,14 @@ const routes: RouteRecordRaw[] = [
     meta: {
       needLogin: true,
       title: '问卷列表'
+    }
+  },
+  {
+    path: '/download',
+    name: 'download',
+    component: () => import('../pages/download/DownloadPage.vue'),
+    meta: {
+      needLogin: true
     }
   },
   {
@@ -186,7 +197,7 @@ async function handleLoginGuard(
   next: NavigationGuardNext
 ) {
   const userStore = useUserStore()
-  if (userStore?.hasLogined) {
+  if (userStore?.hasLogin) {
     await handlePermissionsGuard(to, from, next)
   } else {
     next({
@@ -210,8 +221,8 @@ async function handlePermissionsGuard(
   } else {
     // 如果跳转编辑页面，且跳转页面和上一页的surveyId不同，判断是否有对应页面权限
     if (currSurveyId !== prevSurveyId) {
-      await editStore.fetchCooperPermissions(currSurveyId as string)
-      if (hasRequiredPermissions(to.meta.permissions as string[], editStore.cooperPermissions)) {
+      const cooperPermissions = await editStore.fetchCooperPermissions(currSurveyId as string)
+      if (hasRequiredPermissions(to.meta.permissions as string[], cooperPermissions)) {
         next()
       } else {
         ElMessage.warning('您没有该问卷的相关协作权限')

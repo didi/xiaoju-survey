@@ -66,7 +66,7 @@ describe('SurveyHistoryController', () => {
   it('should return history list when query is valid', async () => {
     const queryInfo = { surveyId: 'survey123', historyType: 'published' };
 
-    await controller.getList(queryInfo, {});
+    await controller.getList(queryInfo);
 
     expect(surveyHistoryService.getHistoryList).toHaveBeenCalledWith({
       surveyId: queryInfo.surveyId,

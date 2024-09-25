@@ -20,8 +20,8 @@ export const getSurveyById = (id) => {
   })
 }
 
-export const saveSurvey = ({ surveyId, configData }) => {
-  return axios.post('/survey/updateConf', { surveyId, configData })
+export const saveSurvey = ({ surveyId, configData, sessionId }) => {
+  return axios.post('/survey/updateConf', { surveyId, configData, sessionId })
 }
 
 export const publishSurvey = ({ surveyId }) => {
@@ -51,4 +51,12 @@ export const deleteSurvey = (surveyId) => {
 
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
+}
+
+export const getSessionId = ({ surveyId }) => {
+  return axios.post('/session/create', { surveyId })
+}
+
+export const seizeSession = ({ sessionId }) => {
+  return axios.post('/session/seize', { sessionId })
 }

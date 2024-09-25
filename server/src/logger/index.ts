@@ -1,15 +1,15 @@
 import * as log4js from 'log4js';
 import moment from 'moment';
-import { Request } from 'express';
+import { Injectable, Scope } from '@nestjs/common';
 const log4jsLogger = log4js.getLogger();
 
+@Injectable({ scope: Scope.REQUEST })
 export class Logger {
   private static inited = false;
-
-  constructor() {}
+  private traceId: string;
 
   static init(config: { filename: string }) {
-    if (this.inited) {
+    if (Logger.inited) {
       return;
     }
     log4js.configure({
@@ -30,25 +30,28 @@ export class Logger {
         default: { appenders: ['app'], level: 'trace' },
       },
     });
+    Logger.inited = true;
   }
 
-  _log(message, options: { dltag?: string; level: string; req?: Request }) {
+  _log(message, options: { dltag?: string; level: string }) {
     const datetime = moment().format('YYYY-MM-DD HH:mm:ss.SSS');
     const level = options?.level;
     const dltag = options?.dltag ? `${options.dltag}||` : '';
-    const traceIdStr = options?.req?.['traceId']
-      ? `traceid=${options?.req?.['traceId']}||`
-      : '';
+    const traceIdStr = this.traceId ? `traceid=${this.traceId}||` : '';
     return log4jsLogger[level](
       `[${datetime}][${level.toUpperCase()}]${dltag}${traceIdStr}${message}`,
     );
   }
 
-  info(message, options?: { dltag?: string; req?: Request }) {
+  setTraceId(traceId: string) {
+    this.traceId = traceId;
+  }
+
+  info(message, options?: { dltag?: string }) {
     return this._log(message, { ...options, level: 'info' });
   }
 
-  error(message, options: { dltag?: string; req?: Request }) {
+  error(message, options?: { dltag?: string }) {
     return this._log(message, { ...options, level: 'error' });
   }
 }

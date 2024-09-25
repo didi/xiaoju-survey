@@ -39,7 +39,7 @@ const moduleConfig = toRef(schema, 'submitConf')
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f6f7f9;
+  background: var(--primary-background);
 }
 
 .result-page-wrap {
@@ -49,8 +49,6 @@ const moduleConfig = toRef(schema, 'submitConf')
   max-height: 812px;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: var(--primary-background-color);
-  padding: 0 0.3rem;
   .result-page {
     background: rgba(255, 255, 255, var(--opacity));
     display: flex;

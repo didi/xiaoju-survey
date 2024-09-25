@@ -26,25 +26,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
-
+import { getBannerData } from '@/management/api/skin.js'
 import skinPresets from '@/management/config/skinPresets.js'
 
 const editStore = useEditStore()
 const { changeThemePreset } = editStore
 const groupName = ref<string>('temp')
-const bannerList = computed(() => editStore.bannerList || [])
+let bannerList = ref<string[]>([])
+
+onMounted(async () => {
+  const res = await getBannerData()
+  bannerList.value = res.data
+})
+
 const groupList = computed(() =>
   Object.keys(bannerList.value).map((key) => ({
-    label: bannerList.value[key].name,
+    label: (bannerList.value as any)[key].name,
     value: key
   }))
 )
 const currentBannerList = computed(() => {
   const arr = Object.keys(bannerList.value)
     .map((key) => {
-      return bannerList.value[key]
+      return (bannerList.value as any)[key]
     })
     .map((data) => {
       return data.list.map((item: any) => {
@@ -53,11 +59,11 @@ const currentBannerList = computed(() => {
       })
     })
 
-  const allbanner = arr.reduce((acc, curr) => {
+  const allBanner = arr.reduce((acc, curr) => {
     return acc.concat(curr)
   }, [])
 
-  return allbanner.filter((item: any) => {
+  return allBanner.filter((item: any) => {
     if (groupName.value === 'temp') {
       return true
     } else {
@@ -74,8 +80,8 @@ const changePreset = (banner: any) => {
   const name = banner.group + '-' + banner.title
   let presets = {
     'bannerConf.bannerConfig.bgImage': banner.src,
-    'skinConf.themeConf.color': '#FAA600',
-    'skinConf.backgroundConf.color': '#fff'
+    'skinConf.themeConf.color': '#faa600',
+    'skinConf.backgroundConf.color': '#f6f7f9'
   }
 
   if ((skinPresets as any)[name]) {

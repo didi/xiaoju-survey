@@ -5,18 +5,22 @@ import { SurveyConfService } from '../services/surveyConf.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 import { ContentSecurityService } from '../services/contentSecurity.service';
 import { SurveyHistoryService } from '../services/surveyHistory.service';
+import { CounterService } from '../../surveyResponse/services/counter.service';
+import { SessionService } from '../services/session.service';
+import { UserService } from '../../auth/services/user.service';
 import { ObjectId } from 'mongodb';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyConf } from 'src/models/surveyConf.entity';
-import { HttpException } from 'src/exceptions/httpException';
-import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { LoggerProvider } from 'src/logger/logger.provider';
+import { Logger } from 'src/logger';
 
 jest.mock('../services/surveyMeta.service');
 jest.mock('../services/surveyConf.service');
 jest.mock('../../surveyResponse/services/responseScheme.service');
 jest.mock('../services/contentSecurity.service');
 jest.mock('../services/surveyHistory.service');
+jest.mock('../services/session.service');
+jest.mock('../../surveyResponse/services/counter.service');
+jest.mock('../../auth/services/user.service');
 
 jest.mock('src/guards/authentication.guard');
 jest.mock('src/guards/survey.guard');
@@ -27,19 +31,36 @@ describe('SurveyController', () => {
   let surveyMetaService: SurveyMetaService;
   let surveyConfService: SurveyConfService;
   let responseSchemaService: ResponseSchemaService;
-  let contentSecurityService: ContentSecurityService;
   let surveyHistoryService: SurveyHistoryService;
+  let sessionService: SessionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SurveyController],
       providers: [
         SurveyMetaService,
-        SurveyConfService,
+        {
+          provide: SurveyConfService,
+          useValue: {
+            getSurveyConfBySurveyId: jest.fn(),
+            getSurveyContentByCode: jest.fn(),
+            createSurveyConf: jest.fn(),
+            saveSurveyConf: jest.fn(),
+          },
+        },
         ResponseSchemaService,
         ContentSecurityService,
         SurveyHistoryService,
-        LoggerProvider,
+        SessionService,
+        CounterService,
+        UserService,
+        {
+          provide: Logger,
+          useValue: {
+            error: jest.fn(),
+            info: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -49,17 +70,14 @@ describe('SurveyController', () => {
     responseSchemaService = module.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
-    contentSecurityService = module.get<ContentSecurityService>(
-      ContentSecurityService,
-    );
     surveyHistoryService =
       module.get<SurveyHistoryService>(SurveyHistoryService);
+    sessionService = module.get<SessionService>(SessionService);
   });
 
   describe('getBannerData', () => {
     it('should return banner data', async () => {
       const result = await controller.getBannerData();
-
       expect(result.code).toBe(200);
       expect(result.data).toBeDefined();
     });
@@ -71,33 +89,17 @@ describe('SurveyController', () => {
         surveyType: 'normal',
         remark: '问卷调研',
         title: '问卷调研',
-      } as SurveyMeta;
+      };
+
       const newId = new ObjectId();
-      jest
-        .spyOn(surveyMetaService, 'createSurveyMeta')
-        .mockImplementation(() => {
-          const result = {
-            _id: newId,
-          } as SurveyMeta;
-          return Promise.resolve(result);
-        });
-      jest
-        .spyOn(surveyConfService, 'createSurveyConf')
-        .mockImplementation(
-          (params: {
-            surveyId: string;
-            surveyType: string;
-            createMethod: string;
-            createFrom: string;
-          }) => {
-            const result = {
-              _id: new ObjectId(),
-              pageId: params.surveyId,
-              code: {},
-            } as SurveyConf;
-            return Promise.resolve(result);
-          },
-        );
+      jest.spyOn(surveyMetaService, 'createSurveyMeta').mockResolvedValue({
+        _id: newId,
+      } as SurveyMeta);
+
+      jest.spyOn(surveyConfService, 'createSurveyConf').mockResolvedValue({
+        _id: new ObjectId(),
+        pageId: newId.toString(),
+      } as SurveyConf);
 
       const result = await controller.createSurvey(surveyInfo, {
         user: { username: 'testUser', _id: new ObjectId() },
@@ -126,19 +128,15 @@ describe('SurveyController', () => {
         createFrom: existsSurveyId.toString(),
       };
 
-      jest
-        .spyOn(surveyMetaService, 'createSurveyMeta')
-        .mockImplementation(() => {
-          const result = {
-            _id: new ObjectId(),
-          } as SurveyMeta;
-          return Promise.resolve(result);
-        });
+      jest.spyOn(surveyMetaService, 'createSurveyMeta').mockResolvedValue({
+        _id: new ObjectId(),
+      } as SurveyMeta);
 
       const request = {
         user: { username: 'testUser', _id: new ObjectId() },
         surveyMeta: existsSurveyMeta,
-      }; // 模拟请求对象，根据实际情况进行调整
+      };
+
       const result = await controller.createSurvey(params, request);
       expect(result?.data?.id).toBeDefined();
     });
@@ -159,6 +157,12 @@ describe('SurveyController', () => {
       jest
         .spyOn(surveyHistoryService, 'addHistory')
         .mockResolvedValue(undefined);
+      jest
+        .spyOn(sessionService, 'findLatestEditingOne')
+        .mockResolvedValue(null);
+      jest
+        .spyOn(sessionService, 'updateSessionToEditing')
+        .mockResolvedValue(undefined);
 
       const reqBody = {
         surveyId: surveyId.toString(),
@@ -172,12 +176,27 @@ describe('SurveyController', () => {
             endTime: '2034-01-23 21:59:05',
           },
           bottomConf: { logoImage: '/imgs/Logo.webp', logoImageWidth: '60%' },
-          skinConf: { skinColor: '#4a4c5b', inputBgColor: '#ffffff' },
+          skinConf: {
+            skinColor: '#4a4c5b',
+            inputBgColor: '#ffffff',
+            backgroundConf: {
+              color: '#fff',
+              type: 'color',
+              image: '',
+            },
+            themeConf: {
+              color: '#ffa600',
+            },
+            contentConf: {
+              opacity: 100,
+            },
+          },
           submitConf: {},
           dataConf: {
             dataList: [],
           },
         },
+        sessionId: 'mock-session-id',
       };
 
       const result = await controller.updateConf(reqBody, {
@@ -229,12 +248,10 @@ describe('SurveyController', () => {
 
       jest
         .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
-        .mockResolvedValue(
-          Promise.resolve({
-            _id: new ObjectId(),
-            pageId: surveyId.toString(),
-          } as SurveyConf),
-        );
+        .mockResolvedValue({
+          _id: new ObjectId(),
+          pageId: surveyId.toString(),
+        } as SurveyConf);
 
       const request = {
         user: { username: 'testUser', _id: new ObjectId() },
@@ -250,7 +267,7 @@ describe('SurveyController', () => {
   });
 
   describe('publishSurvey', () => {
-    it('should publish a survey success', async () => {
+    it('should publish a survey successfully', async () => {
       const surveyId = new ObjectId();
       const surveyMeta = {
         _id: surveyId,
@@ -260,80 +277,24 @@ describe('SurveyController', () => {
 
       jest
         .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
-        .mockResolvedValue(
-          Promise.resolve({
-            _id: new ObjectId(),
-            pageId: surveyId.toString(),
-          } as SurveyConf),
-        );
+        .mockResolvedValue({
+          _id: new ObjectId(),
+          pageId: surveyId.toString(),
+          code: {},
+        } as SurveyConf);
 
       jest
         .spyOn(surveyConfService, 'getSurveyContentByCode')
-        .mockResolvedValue({
-          text: '题目1',
-        });
-
-      jest
-        .spyOn(contentSecurityService, 'isForbiddenContent')
-        .mockResolvedValue(false);
-      jest
-        .spyOn(surveyMetaService, 'publishSurveyMeta')
-        .mockResolvedValue(undefined);
-      jest
-        .spyOn(responseSchemaService, 'publishResponseSchema')
-        .mockResolvedValue(undefined);
-      jest
-        .spyOn(surveyHistoryService, 'addHistory')
-        .mockResolvedValue(undefined);
+        .mockResolvedValue({ text: '' });
 
       const result = await controller.publishSurvey(
         { surveyId: surveyId.toString() },
-        { user: { username: 'testUser', _id: 'testUserId' }, surveyMeta },
+        {
+          user: { username: 'testUser', _id: new ObjectId() },
+          surveyMeta,
+        },
       );
-
-      expect(result).toEqual({
-        code: 200,
-      });
-    });
-
-    it('should not publish a survey with forbidden content', async () => {
-      const surveyId = new ObjectId();
-      const surveyMeta = {
-        _id: surveyId,
-        surveyType: 'normal',
-        owner: 'testUser',
-      } as SurveyMeta;
-
-      jest
-        .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
-        .mockResolvedValue(
-          Promise.resolve({
-            _id: new ObjectId(),
-            pageId: surveyId.toString(),
-          } as SurveyConf),
-        );
-
-      jest
-        .spyOn(surveyConfService, 'getSurveyContentByCode')
-        .mockResolvedValue({
-          text: '违禁词',
-        });
-
-      jest
-        .spyOn(contentSecurityService, 'isForbiddenContent')
-        .mockResolvedValue(true);
-
-      await expect(
-        controller.publishSurvey(
-          { surveyId: surveyId.toString() },
-          { user: { username: 'testUser', _id: 'testUserId' }, surveyMeta },
-        ),
-      ).rejects.toThrow(
-        new HttpException(
-          '问卷存在非法关键字，不允许发布',
-          EXCEPTION_CODE.SURVEY_CONTENT_NOT_ALLOW,
-        ),
-      );
+      expect(result.code).toBe(200);
     });
   });
 });

@@ -22,6 +22,11 @@
       "msg_9002": "请勿多次提交！",
       "msg_9003": "您来晚了，已经满额！",
       "msg_9004": "提交失败！"
+    },
+    "jumpConfig": {
+      "type": "link",
+      "link": "",
+      "buttonText": ""
     }
   },
   "bottomConf": {

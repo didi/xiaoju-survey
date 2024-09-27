@@ -128,6 +128,7 @@ export const useSurveyStore = defineStore('survey', () => {
         'pageConf'
       ])
     )
+
     questionStore.questionData = questionData
     questionStore.questionSeq = questionSeq
 
@@ -142,6 +143,7 @@ export const useSurveyStore = defineStore('survey', () => {
     formValues.value = _formValues
     whiteData.value = option.whiteData
     pageConf.value = option.pageConf
+
     // 获取已投票数据
     questionStore.initVoteData()
 

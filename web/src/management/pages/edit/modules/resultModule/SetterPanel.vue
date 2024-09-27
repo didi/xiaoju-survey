@@ -5,7 +5,7 @@
     </div>
     <SetterField
       class="question-config-form"
-      label-position="top"
+      label-position="left"
       :form-config-list="formFields"
       :module-config="moduleConfig"
       @form-change="handleFormChange"
@@ -70,5 +70,26 @@ const handleFormChange = ({ key, value }: any) => {
 
 .question-config-form {
   padding: 30px 20px 50px 20px;
+}
+
+:deep(.group-wrap) {
+  margin-bottom: 0;
+  &:not(:last-child) {
+    margin-bottom: 32px;
+  }
+
+  .group-title {
+    margin-bottom: 12px;
+  }
+
+  .el-form-item {
+    margin-bottom: 16px;
+
+    .el-radio {
+      height: initial;
+      line-height: initial;
+      margin-bottom: initial;
+    }
+  }
 }
 </style>

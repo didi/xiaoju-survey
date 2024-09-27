@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { RECORD_STATUS } from 'src/enums';
 @Injectable()
 export class SurveyResponseService {
   constructor(

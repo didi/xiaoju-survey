@@ -19,4 +19,4 @@ XIAOJUSURVEY will never collect and/or report sensitive information, such as pri
 
 ## How do I opt-in to or opt-out of data sharing?
 
-See [docs](https://xiaojusurvey.didi.cn/docs/next/community/%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E5%A3%B0%E6%98%8E) for information on configuring this functionality.
+See [docs](https://xiaojusurvey.didi.cn/docs/next/community/%E6%95%B0%E6%8D%AE%E4%B8%8A%E6%8A%A5%E5%A3%B0%E6%98%8E) for information on configuring this functionality.

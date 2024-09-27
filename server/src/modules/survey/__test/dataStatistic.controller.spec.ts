@@ -275,6 +275,11 @@ describe('DataStatisticController', () => {
               again_text: '确认要提交吗？',
             },
             link: '',
+            jumpConfig: {
+              type: 'link',
+              link: '',
+              buttonText: '',
+            },
           },
           logicConf: {
             showLogicConf: [],

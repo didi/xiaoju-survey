@@ -5,7 +5,9 @@
         <img src="/imgs/icons/success.webp" class="success-img" />
         <div class="title-msg" v-safe-html="successText"></div>
       </div>
-      <div class="bottom-btn"></div>
+      <div v-if="jumpConfig.buttonText && jumpConfig.type === 'button'" class="jump-btn">
+        {{ jumpConfig.buttonText }}
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +19,7 @@ interface Props {
 }
 const props = defineProps<Props>()
 const successText = computed(() => props.moduleConfig?.msgContent?.msg_200 || '')
+const jumpConfig = computed(() => props.moduleConfig?.jumpConfig || {})
 </script>
 <style lang="scss" scoped>
 /*成功页面跳转全屏展示浮层*/
@@ -50,7 +53,18 @@ const successText = computed(() => props.moduleConfig?.msgContent?.msg_200 || ''
     font-size: 0.36rem;
   }
 }
-.bottom-btn {
-  height: 300px;
+.jump-btn {
+  background: var(--primary-color);
+  width: 90%;
+  border-radius: 0.08rem;
+  padding: 0.25rem 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.25rem;
+  font-weight: 500;
+  margin: 0 auto;
+  border: none;
 }
 </style>

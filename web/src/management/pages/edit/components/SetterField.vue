@@ -14,6 +14,7 @@
           v-for="(content, contentIndex) in item.content"
           :key="`${item.key}${contentIndex}`"
           :form-config="content"
+          v-show="isShowFormItem(content)"
         >
           <Component
             :is="components[content.type]"
@@ -81,6 +82,14 @@ const formatValue = ({ item, moduleConfig }: any) => {
 const formFieldData = ref<Array<any>>([])
 const init = ref<boolean>(true)
 const components = shallowRef<any>(props.customComponents || {})
+
+const isShowFormItem = (content: any) => {
+  if (_isFunction(content.toggleShowFn)) {
+    return content.toggleShowFn(props.moduleConfig)
+  } else {
+    return true
+  }
+}
 
 const handleFormChange = (data: any, formConfig: any) => {
   // 处理用户操作的设置器的值

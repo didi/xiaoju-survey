@@ -71,6 +71,11 @@ export const mockResponseSchema: ResponseSchema = {
         is_again: true,
         again_text: '确认要提交吗？',
       },
+      jumpConfig: {
+        type: 'link',
+        link: '',
+        buttonText: '',
+      },
     },
     dataConf: {
       dataList: [

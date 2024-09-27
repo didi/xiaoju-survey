@@ -76,7 +76,7 @@ export class UpgradeService {
           doc.updatedAt = new Date(doc.updateDate);
           delete doc.updateDate;
         } else {
-          doc.createdAt = new Date();
+          doc.updatedAt = new Date();
         }
       }
     };
@@ -143,7 +143,15 @@ export class UpgradeService {
 
     const save = async ({ doc, repository }) => {
       const entity = repository.create(doc);
-      await repository.save(entity);
+      await repository.updateOne(
+        {
+          _id: entity._id,
+        },
+        {
+          $set: entity,
+        },
+      );
+      // this.logger.info(JSON.stringify(updateRes));
     };
     this.logger.info(`upgrading...`);
     for (const repository of repositories) {

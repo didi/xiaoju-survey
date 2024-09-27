@@ -18,7 +18,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Logger } from 'src/logger';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
@@ -333,6 +333,9 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce({
           curStatus: {
             status: RECORD_STATUS.PUBLISHED,
+          },
+          subStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
           },
           code: {
             baseConf: {

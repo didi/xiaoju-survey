@@ -47,7 +47,7 @@ export default defineComponent({
     voteTotal: {
       type: Number,
       default: 10
-    }
+    },
   },
   emits: ['change'],
   setup(props, { emit, slots }) {

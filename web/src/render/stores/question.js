@@ -143,6 +143,9 @@ export const useQuestionStore = defineStore('question', () => {
 
   const isFinallyPage = computed(() => {
     const surveyStore = useSurveyStore()
+    if (surveyStore.pageConf.length === 0) {
+      return true
+    }
     return pageIndex.value === surveyStore.pageConf.length
   })
 

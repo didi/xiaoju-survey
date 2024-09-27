@@ -12,7 +12,6 @@ import { useErrorInfo } from '@/render/stores/errorInfo'
 
 import adapter from '../adapter'
 import { RuleMatch } from '@/common/logicEngine/RulesMatch'
-
 /**
  * CODE_MAP不从management引入，在dev阶段，会导致B端 router被加载，进而导致C端路由被添加 baseUrl: /management
  */
@@ -70,17 +69,17 @@ export const useSurveyStore = defineStore('survey', () => {
   }
 
   const canFillQuestionnaire = (baseConf, submitConf) => {
-    const { begTime, endTime, answerBegTime, answerEndTime } = baseConf
+    const { beginTime, endTime, answerBegTime, answerEndTime } = baseConf
     const { msgContent } = submitConf
     const now = Date.now()
     let isSuccess = true
 
-    if (now < new Date(begTime).getTime()) {
+    if (now < new Date(beginTime).getTime()) {
       isSuccess = false
       setErrorInfo({
         errorType: 'overTime',
         errorMsg: `<p>问卷未到开始填写时间，暂时无法进行填写<p/>
-                   <p>开始时间为: ${begTime}</p>`
+                   <p>开始时间为: ${beginTime}</p>`
       })
     } else if (now > new Date(endTime).getTime()) {
       isSuccess = false
@@ -109,7 +108,6 @@ export const useSurveyStore = defineStore('survey', () => {
 
     return isSuccess
   }
-
   // 加载空白页面
   function clearFormData(option) {
     // 根据初始的schema生成questionData, questionSeq, rules, formValues, 这四个字段
@@ -148,6 +146,7 @@ export const useSurveyStore = defineStore('survey', () => {
 
     // 获取已投票数据
     questionStore.initVoteData()
+
   }
 
   const initSurvey = (option) => {

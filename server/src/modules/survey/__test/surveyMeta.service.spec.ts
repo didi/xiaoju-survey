@@ -4,7 +4,7 @@ import { MongoRepository } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyUtilPlugin } from 'src/securityPlugin/surveyUtilPlugin';
@@ -98,6 +98,10 @@ describe('SurveyMetaService', () => {
     it('should edit a survey meta and return it if in NEW or EDITING status', async () => {
       const survey = new SurveyMeta();
       survey.curStatus = { status: RECORD_STATUS.PUBLISHED, date: Date.now() };
+      survey.subStatus = {
+        status: RECORD_SUB_STATUS.DEFAULT,
+        date: Date.now(),
+      };
       survey.statusList = [];
       jest.spyOn(surveyRepository, 'save').mockResolvedValue(survey);
 
@@ -116,6 +120,10 @@ describe('SurveyMetaService', () => {
       // 准备假的SurveyMeta对象
       const survey = new SurveyMeta();
       survey.curStatus = { status: RECORD_STATUS.NEW, date: Date.now() };
+      survey.subStatus = {
+        status: RECORD_SUB_STATUS.DEFAULT,
+        date: Date.now(),
+      };
       survey.statusList = [];
 
       // 模拟save方法
@@ -126,7 +134,7 @@ describe('SurveyMetaService', () => {
 
       // 验证结果
       expect(result).toBe(survey);
-      expect(survey.curStatus.status).toBe(RECORD_STATUS.REMOVED);
+      expect(survey.subStatus.status).toBe(RECORD_STATUS.REMOVED);
       expect(survey.statusList.length).toBe(1);
       expect(survey.statusList[0].status).toBe(RECORD_STATUS.REMOVED);
       expect(surveyRepository.save).toHaveBeenCalledTimes(1);
@@ -136,7 +144,10 @@ describe('SurveyMetaService', () => {
     it('should throw exception when survey is already removed', async () => {
       // 准备假的SurveyMeta对象，其状态已设置为REMOVED
       const survey = new SurveyMeta();
-      survey.curStatus = { status: RECORD_STATUS.REMOVED, date: Date.now() };
+      survey.curStatus = {
+        status: RECORD_STATUS.REMOVED,
+        date: Date.now(),
+      };
 
       // 调用要测试的方法并期待异常
       await expect(service.deleteSurveyMeta(survey)).rejects.toThrow(
@@ -191,6 +202,10 @@ describe('SurveyMetaService', () => {
         ...surveyMeta,
         curStatus: {
           status: RECORD_STATUS.PUBLISHED,
+          date: expect.any(Number),
+        },
+        subStatus: {
+          status: RECORD_SUB_STATUS.DEFAULT,
           date: expect.any(Number),
         },
       } as unknown as SurveyMeta;

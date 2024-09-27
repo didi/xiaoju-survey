@@ -3,7 +3,7 @@ import { ResponseSchemaController } from '../controllers/responseSchema.controll
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Logger } from 'src/logger';
@@ -69,6 +69,7 @@ describe('ResponseSchemaController', () => {
       const mockResponseSchema = {
         surveyPath: 'testSurveyPath',
         curStatus: { status: RECORD_STATUS.PUBLISHED, date: Date.now() },
+        subStatus: { status: RECORD_SUB_STATUS.DEFAULT, date: Date.now() },
       } as ResponseSchema;
 
       jest
@@ -97,7 +98,7 @@ describe('ResponseSchemaController', () => {
       jest
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
         .mockResolvedValue({
-          curStatus: { status: RECORD_STATUS.REMOVED },
+          subStatus: { status: RECORD_SUB_STATUS.REMOVED },
         } as ResponseSchema);
 
       await expect(controller.getSchema(mockQueryInfo)).rejects.toThrow(
@@ -125,6 +126,9 @@ describe('ResponseSchemaController', () => {
           curStatus: {
             status: 'published',
           },
+          subStatus: {
+            status: '',
+          },
           code: {
             baseConf: {
               passwordSwitch: true,
@@ -149,6 +153,9 @@ describe('ResponseSchemaController', () => {
           curStatus: {
             status: 'published',
           },
+          subStatus: {
+            status: '',
+          },
           code: {
             baseConf: {
               passwordSwitch: true,
@@ -171,6 +178,9 @@ describe('ResponseSchemaController', () => {
         .mockResolvedValue({
           curStatus: {
             status: 'published',
+          },
+          subStatus: {
+            status: '',
           },
           code: {
             baseConf: {
@@ -200,6 +210,9 @@ describe('ResponseSchemaController', () => {
           curStatus: {
             status: 'published',
           },
+          subStatus: {
+            status: '',
+          },
           code: {
             baseConf: {
               passwordSwitch: true,
@@ -227,6 +240,9 @@ describe('ResponseSchemaController', () => {
       .mockResolvedValue({
         curStatus: {
           status: 'published',
+        },
+        subStatus: {
+          status: '',
         },
         code: {
           baseConf: {

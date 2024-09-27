@@ -10,7 +10,6 @@ import { MessagePushingLogService } from '../services/messagePushingLog.service'
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 
-import { RECORD_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
 import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
@@ -121,7 +120,6 @@ describe('MessagePushingTaskService', () => {
           ownerId: mockOwnerId,
           surveys: { $all: [surveyId] },
           triggerHook: hook,
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
         },
       });
     });
@@ -146,7 +144,6 @@ describe('MessagePushingTaskService', () => {
         where: {
           ownerId: mockOwnerId,
           _id: new ObjectId(taskId),
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
         },
       });
     });
@@ -161,10 +158,6 @@ describe('MessagePushingTaskService', () => {
         pushAddress: 'http://update.example.com',
         triggerHook: MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED,
         surveys: ['new survey id'],
-        curStatus: {
-          status: RECORD_STATUS.EDITING,
-          date: Date.now(),
-        },
       };
       const existingTask = new MessagePushingTask();
       existingTask._id = new ObjectId(taskId);
@@ -197,34 +190,26 @@ describe('MessagePushingTaskService', () => {
       const taskId = '65afc62904d5db18534c0f78';
 
       const updateResult = { modifiedCount: 1 };
-      const mockOwnerId = '66028642292c50f8b71a9eee';
+      const mockOperatorId = '66028642292c50f8b71a9eee';
+      const mockOperator = 'mockOperator';
 
       jest.spyOn(repository, 'updateOne').mockResolvedValue(updateResult);
 
       const result = await service.remove({
         id: taskId,
-        ownerId: mockOwnerId,
+        operatorId: mockOperatorId,
+        operator: mockOperator,
       });
 
       expect(result).toEqual(updateResult);
       expect(repository.updateOne).toHaveBeenCalledWith(
         {
-          ownerId: mockOwnerId,
+          ownerId: mockOperatorId,
           _id: new ObjectId(taskId),
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
         },
         {
           $set: {
-            curStatus: {
-              status: RECORD_STATUS.REMOVED,
-              date: expect.any(Number),
-            },
-          },
-          $push: {
-            statusList: {
-              status: RECORD_STATUS.REMOVED,
-              date: expect.any(Number),
-            },
+            isDeleted: true,
           },
         },
       );

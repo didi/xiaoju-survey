@@ -1,7 +1,7 @@
 // 问卷设置，定义了字段和对应的设置器
 export default {
   base_effectTime: {
-    keys: ['begTime', 'endTime'],
+    keys: ['beginTime', 'endTime'],
     label: '答题有效期',
     type: 'QuestionTime',
     placeholder: 'yyyy-MM-dd hh:mm:ss'
@@ -114,5 +114,5 @@ export default {
     relyFunc: (data) => {
       return data.whitelistType == 'MEMBER'
     }
-  }
+  },
 }

@@ -30,7 +30,6 @@ import communalLoader from '@materials/communals/communalLoader.js'
 import useCommandComponent from '../hooks/useCommandComponent'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
-
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import VerifyDialog from '../components/VerifyDialog/index.vue'
 

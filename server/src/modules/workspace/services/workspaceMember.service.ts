@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
 
 @Injectable()
 export class WorkspaceMemberService {
@@ -24,25 +23,44 @@ export class WorkspaceMemberService {
   async batchCreate({
     workspaceId,
     members,
+    creator,
+    creatorId,
   }: {
     workspaceId: string;
     members: Array<{ userId: string; role: string }>;
+    creator: string;
+    creatorId: string;
   }) {
     if (members.length === 0) {
       return {
         insertedCount: 0,
       };
     }
+    const now = new Date();
     const dataToInsert = members.map((item) => {
       return {
         ...item,
         workspaceId,
+        createdAt: now,
+        updatedAt: now,
+        creator,
+        creatorId,
       };
     });
     return this.workspaceMemberRepository.insertMany(dataToInsert);
   }
 
-  async batchUpdate({ idList, role }: { idList: Array<string>; role: string }) {
+  async batchUpdate({
+    idList,
+    role,
+    operator,
+    operatorId,
+  }: {
+    idList: Array<string>;
+    role: string;
+    operator: string;
+    operatorId: string;
+  }) {
     if (idList.length === 0) {
       return {
         modifiedCount: 0,
@@ -57,6 +75,9 @@ export class WorkspaceMemberService {
       {
         $set: {
           role,
+          operator,
+          operatorId,
+          updatedAt: new Date(),
         },
       },
     );
@@ -94,11 +115,8 @@ export class WorkspaceMemberService {
     return this.workspaceMemberRepository.find({
       where: {
         workspaceId,
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
-      select: ['_id', 'createDate', 'curStatus', 'role', 'userId'],
+      select: ['_id', 'createdAt', 'curStatus', 'role', 'userId'],
     });
   }
 
@@ -111,7 +129,7 @@ export class WorkspaceMemberService {
     });
   }
 
-  async updateRole({ workspaceId, userId, role }) {
+  async updateRole({ workspaceId, userId, role, operator, operatorId }) {
     return this.workspaceMemberRepository.updateOne(
       {
         workspaceId,
@@ -120,6 +138,9 @@ export class WorkspaceMemberService {
       {
         $set: {
           role,
+          operator,
+          operatorId,
+          updatedAt: new Date(),
         },
       },
     );
@@ -135,9 +156,6 @@ export class WorkspaceMemberService {
   async countByWorkspaceId({ workspaceId }) {
     return this.workspaceMemberRepository.count({
       workspaceId,
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
-      },
     });
   }
 

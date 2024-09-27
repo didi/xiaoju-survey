@@ -63,15 +63,20 @@ const loadData = (res: any, surveyPath: string) => {
   }
 }
 
+function isObjectId(id: string) {  
+  const objectIdRegex = /^[0-9a-fA-F]{24}$/;  
+  return objectIdRegex.test(id);  
+}  
+
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
-
   try {
-    if (surveyPath.length > 8) {
+    if (isObjectId(surveyPath)) {
       const res: any = await getPreviewSchema({ surveyPath })
       loadData(res, surveyPath)
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
+      // checkStatus(res.data)
       loadData(res, surveyPath)
       surveyStore.getEncryptInfo()
     }

@@ -10,12 +10,14 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ElMessage } from 'element-plus'
-
+import AlertDialog from '../../components/AlertDialog.vue'
+import useCommandComponent from '../../hooks/useCommandComponent'
 import { validate } from '../../api/survey'
 import { useSurveyStore } from '../../stores/survey'
 
 import ConfirmDialog from '../ConfirmDialog.vue'
+
+const alert = useCommandComponent(AlertDialog)
 
 interface Emit {
   (ev: 'confirm'): void
@@ -71,8 +73,8 @@ const handleSubmit = async (data: { whitelist: string; password: string }, close
   }
   const res: any = await validate(params)
 
-  if (res.code != 200) {
-    ElMessage.error(res.errmsg || '验证失败')
+  if (res.code !== 200) {
+    alert({ title: res.errmsg || '验证失败' })
     return
   }
 

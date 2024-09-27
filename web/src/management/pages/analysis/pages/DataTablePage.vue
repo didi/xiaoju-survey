@@ -194,7 +194,7 @@ const checkIsTaskFinished = (taskId) => {
     const run = () => {
       getDownloadTask(taskId).then((res) => {
         if (res.code === 200 && res.data) {
-          const status = res.data.curStatus.status
+          const status = res.data.status
           if (status === 'new' || status === 'computing') {
             setTimeout(() => {
               run()

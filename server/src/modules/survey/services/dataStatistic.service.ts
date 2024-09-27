@@ -34,8 +34,8 @@ export class DataStatisticService {
     const dataListMap = keyBy(dataList, 'field');
     const where = {
       pageId: surveyId,
-      'curStatus.status': {
-        $ne: 'removed',
+      isDeleted: {
+        $ne: true,
       },
     };
     const [surveyResponseList, total] =
@@ -44,7 +44,7 @@ export class DataStatisticService {
         take: pageSize,
         skip: (pageNum - 1) * pageSize,
         order: {
-          createDate: -1,
+          createdAt: -1,
         },
       });
 
@@ -90,10 +90,10 @@ export class DataStatisticService {
       }
       return {
         ...data,
-        diffTime: (submitedData.diffTime / 1000).toFixed(2),
-        createDate: moment(submitedData.createDate).format(
-          'YYYY-MM-DD HH:mm:ss',
-        ),
+        diffTime: submitedData.diffTime
+          ? (submitedData.diffTime / 1000).toFixed(2)
+          : '0',
+        createdAt: moment(submitedData.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       };
     });
     return {
@@ -124,8 +124,8 @@ export class DataStatisticService {
         {
           $match: {
             pageId: surveyId,
-            'curStatus.status': {
-              $ne: 'removed',
+            isDeleted: {
+              $ne: true,
             },
           },
         },

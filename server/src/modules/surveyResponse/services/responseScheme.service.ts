@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 
 @Injectable()
 export class ResponseSchemaService {
@@ -23,10 +23,18 @@ export class ResponseSchemaService {
         status: RECORD_STATUS.PUBLISHED,
         date: Date.now(),
       };
+      clientSurvey.subStatus = {
+        status: RECORD_SUB_STATUS.DEFAULT,
+        date: Date.now(),
+      };
       return this.responseSchemaRepository.save(clientSurvey);
     } else {
       const curStatus = {
         status: RECORD_STATUS.PUBLISHED,
+        date: Date.now(),
+      };
+      const subStatus = {
+        status: RECORD_SUB_STATUS.DEFAULT,
         date: Date.now(),
       };
       const newClientSurvey = this.responseSchemaRepository.create({
@@ -35,7 +43,7 @@ export class ResponseSchemaService {
         code,
         pageId,
         curStatus,
-        statusList: [curStatus],
+        subStatus,
       });
       return this.responseSchemaRepository.save(newClientSurvey);
     }
@@ -53,22 +61,32 @@ export class ResponseSchemaService {
     });
   }
 
-  async deleteResponseSchema({ surveyPath }) {
+  async pausingResponseSchema({ surveyPath }) {
     const responseSchema = await this.responseSchemaRepository.findOne({
       where: { surveyPath },
     });
     if (responseSchema) {
-      const newStatus = {
-        status: RECORD_STATUS.PUBLISHED,
+      const subStatus = {
+        status: RECORD_SUB_STATUS.PAUSING,
         date: Date.now(),
       };
-      responseSchema.curStatus = newStatus;
-      if (Array.isArray(responseSchema.statusList)) {
-        responseSchema.statusList.push(newStatus);
-      } else {
-        responseSchema.statusList = [newStatus];
-      }
+      responseSchema.subStatus = subStatus;
+      responseSchema.curStatus.status = RECORD_STATUS.PUBLISHED;
       return this.responseSchemaRepository.save(responseSchema);
     }
+  }
+
+  async deleteResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: true,
+          updatedAt: new Date(),
+        },
+      },
+    );
   }
 }

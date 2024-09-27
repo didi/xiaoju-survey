@@ -11,4 +11,16 @@ export class WorkspaceMember extends BaseEntity {
 
   @Column()
   role: string;
+
+  @Column()
+  creator: string;
+
+  @Column()
+  creatorId: string;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
 }

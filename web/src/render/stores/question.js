@@ -3,11 +3,101 @@ import { defineStore } from 'pinia'
 import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
 import { queryVote } from '@/render/api/survey'
+import { QUESTION_TYPE } from '@/common/typeEnum'
 
-const VOTE_INFO_KEY = 'voteinfo'
+import { getVoteData, setVoteData, clearVoteData } from '@/render/utils/storage'
+
+// 投票进度逻辑聚合
+const useVoteMap = (questionData) => {
+  const voteMap = ref({})
+  //初始化投票题的数据
+  const initVoteData = async () => {
+    const surveyStore = useSurveyStore()
+    const surveyPath = surveyStore.surveyPath
+
+    const fieldList = []
+
+    for (const field in questionData.value) {
+      const { type } = questionData.value[field]
+      if (type.includes(QUESTION_TYPE.VOTE)) {
+        fieldList.push(field)
+      }
+    }
+
+    if (fieldList.length <= 0) {
+      return
+    }
+    try {
+      clearVoteData()
+      const voteRes = await queryVote({
+        surveyPath,
+        fieldList: fieldList.join(',')
+      })
+
+      if (voteRes.code === 200) {
+        setVoteData(voteRes.data)
+        setVoteMap(voteRes.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const updateVoteMapByKey = (data) => {
+    const { questionKey, voteKey, voteValue } = data
+    // 兼容为空的情况
+    if (!voteMap.value[questionKey]) {
+      voteMap.value[questionKey] = {}
+    }
+    voteMap.value[questionKey][voteKey] = voteValue
+  }
+  const setVoteMap = (data) => {
+    voteMap.value = data
+  }
+  const updateVoteData = (data) => {
+    const { key: questionKey, value: questionVal } = data
+    // 更新前获取接口缓存在localstorage中的数据
+    const voteInfo = getVoteData()
+    const currentQuestion = questionData.value[questionKey]
+    const options = currentQuestion.options
+    const voteTotal = voteInfo?.[questionKey]?.total || 0
+    let totalPayload = {
+      questionKey,
+      voteKey: 'total',
+      voteValue: voteTotal
+    }
+    options.forEach((option) => {
+      const optionHash = option.hash
+      const voteCount = voteInfo?.[questionKey]?.[optionHash] || 0
+      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
+      if (
+        Array.isArray(questionVal) ? questionVal.includes(optionHash) : questionVal === optionHash
+      ) {
+        const countPayload = {
+          questionKey,
+          voteKey: optionHash,
+          voteValue: voteCount + 1
+        }
+        totalPayload.voteValue += 1
+        updateVoteMapByKey(countPayload)
+      } else {
+        const countPayload = {
+          questionKey,
+          voteKey: optionHash,
+          voteValue: voteCount
+        }
+        updateVoteMapByKey(countPayload)
+      }
+      updateVoteMapByKey(totalPayload)
+    })
+  }
+  return {
+    voteMap,
+    initVoteData,
+    updateVoteData
+  }
+}
 
 export const useQuestionStore = defineStore('question', () => {
-  const voteMap = ref({})
   const questionData = ref(null)
   const questionSeq = ref([]) // 题目的顺序，因为可能会有分页的情况，所以是一个二维数组[[qid1, qid2], [qid3,qid4]]
   const pageIndex = ref(1) // 当前分页的索引
@@ -53,6 +143,9 @@ export const useQuestionStore = defineStore('question', () => {
 
   const isFinallyPage = computed(() => {
     const surveyStore = useSurveyStore()
+    if (surveyStore.pageConf.length === 0) {
+      return true
+    }
     return pageIndex.value === surveyStore.pageConf.length
   })
 
@@ -82,6 +175,7 @@ export const useQuestionStore = defineStore('question', () => {
   const setQuestionData = (data) => {
     questionData.value = data
   }
+  const { voteMap, setVoteMap, initVoteData, updateVoteData } = useVoteMap(questionData)
 
   const changeSelectMoreData = (data) => {
     const { key, value, field } = data
@@ -90,96 +184,6 @@ export const useQuestionStore = defineStore('question', () => {
 
   const setQuestionSeq = (data) => {
     questionSeq.value = data
-  }
-
-  const setVoteMap = (data) => {
-    voteMap.value = data
-  }
-
-  const updateVoteMapByKey = (data) => {
-    const { questionKey, voteKey, voteValue } = data
-    // 兼容为空的情况
-    if (!voteMap.value[questionKey]) {
-      voteMap.value[questionKey] = {}
-    }
-    voteMap.value[questionKey][voteKey] = voteValue
-  }
-
-  //初始化投票题的数据
-  const initVoteData = async () => {
-    const surveyStore = useSurveyStore()
-    const surveyPath = surveyStore.surveyPath
-
-    const fieldList = []
-
-    for (const field in questionData.value) {
-      const { type } = questionData.value[field]
-      if (/vote/.test(type)) {
-        fieldList.push(field)
-      }
-    }
-
-    if (fieldList.length <= 0) {
-      return
-    }
-    try {
-      localStorage.removeItem(VOTE_INFO_KEY)
-      const voteRes = await queryVote({
-        surveyPath,
-        fieldList: fieldList.join(',')
-      })
-
-      if (voteRes.code === 200) {
-        localStorage.setItem(
-          VOTE_INFO_KEY,
-          JSON.stringify({
-            ...voteRes.data
-          })
-        )
-        setVoteMap(voteRes.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const updateVoteData = (data) => {
-    const { key: questionKey, value: questionVal } = data
-    // 更新前获取接口缓存在localStorage中的数据
-    const localData = localStorage.getItem(VOTE_INFO_KEY)
-    const voteinfo = JSON.parse(localData)
-    const currentQuestion = questionData.value[questionKey]
-    const options = currentQuestion.options
-    const voteTotal = voteinfo?.[questionKey]?.total || 0
-    let totalPayload = {
-      questionKey,
-      voteKey: 'total',
-      voteValue: voteTotal
-    }
-    options.forEach((option) => {
-      const optionhash = option.hash
-      const voteCount = voteinfo?.[questionKey]?.[optionhash] || 0
-      // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
-      if (
-        Array.isArray(questionVal) ? questionVal.includes(optionhash) : questionVal === optionhash
-      ) {
-        const countPayload = {
-          questionKey,
-          voteKey: optionhash,
-          voteValue: voteCount + 1
-        }
-        totalPayload.voteValue += 1
-        updateVoteMapByKey(countPayload)
-      } else {
-        const countPayload = {
-          questionKey,
-          voteKey: optionhash,
-          voteValue: voteCount
-        }
-        updateVoteMapByKey(countPayload)
-      }
-      updateVoteMapByKey(totalPayload)
-    })
   }
 
   const setChangeField = (field) => {
@@ -199,7 +203,6 @@ export const useQuestionStore = defineStore('question', () => {
     needHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
   }
   return {
-    voteMap,
     questionData,
     questionSeq,
     renderData,
@@ -209,8 +212,8 @@ export const useQuestionStore = defineStore('question', () => {
     setQuestionData,
     changeSelectMoreData,
     setQuestionSeq,
+    voteMap,
     setVoteMap,
-    updateVoteMapByKey,
     initVoteData,
     updateVoteData,
     changeField,

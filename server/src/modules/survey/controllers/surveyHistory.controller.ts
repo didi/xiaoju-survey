@@ -5,7 +5,6 @@ import {
   HttpCode,
   UseGuards,
   SetMetadata,
-  Request,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,9 +17,8 @@ import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-
 @ApiTags('survey')
-@Controller('/api/surveyHisotry')
+@Controller('/api/surveyHistory')
 export class SurveyHistoryController {
   constructor(
     private readonly surveyHistoryService: SurveyHistoryService,
@@ -43,7 +41,6 @@ export class SurveyHistoryController {
       surveyId: string;
       historyType: string;
     },
-    @Request() req,
   ) {
     const { value, error } = Joi.object({
       surveyId: Joi.string().required(),
@@ -51,7 +48,7 @@ export class SurveyHistoryController {
     }).validate(queryInfo);
 
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 

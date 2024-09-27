@@ -47,7 +47,7 @@ export default defineComponent({
     voteTotal: {
       type: Number,
       default: 10
-    }
+    },
   },
   emits: ['change'],
   setup(props, { emit, slots }) {
@@ -141,7 +141,7 @@ export default defineComponent({
                             <span
                               v-html={filterXSS(item.text)}
                               class="item-title-text"
-                              style="display: block; height: auto; padding: 9px 0"
+                              style="display: block; height: auto; padding-top: 9px"
                             ></span>
                           )}
                           {slots.vote?.({

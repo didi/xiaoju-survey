@@ -9,9 +9,9 @@
     <script>
       ;(function () {
         function resetRemUnit() {
-          var PC_W = 750
-          var docEl = window.document.documentElement
-          var width = docEl.getBoundingClientRect().width || 375
+          const PC_W = 750
+          let docEl = window.document.documentElement
+          let width = docEl.getBoundingClientRect().width || 375
 
           if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
             width = width < PC_W ? width : PC_W
@@ -20,15 +20,15 @@
             }
           }
 
-          var f = Math.min(width / 7.5, 50)
+          const f = Math.min(width / 7.5, 50)
           docEl.style.fontSize = f + 'px'
 
-          var d = window.document.createElement('div')
+          let d = window.document.createElement('div')
           d.style.width = '1rem'
           d.style.display = 'none'
-          var head = window.document.getElementsByTagName('head')[0]
+          let head = window.document.getElementsByTagName('head')[0]
           head.appendChild(d)
-          var realf = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'))
+          const realf = parseFloat(window.getComputedStyle(d, null).getPropertyValue('width'))
 
           if (f !== realf) {
             docEl.style.fontSize = f * (f / realf) + 'px'

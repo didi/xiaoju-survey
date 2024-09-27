@@ -43,7 +43,6 @@ export class ResponseSchemaService {
         code,
         pageId,
         curStatus,
-        statusList: [curStatus],
         subStatus,
       });
       return this.responseSchemaRepository.save(newClientSurvey);
@@ -73,31 +72,21 @@ export class ResponseSchemaService {
       };
       responseSchema.subStatus = subStatus;
       responseSchema.curStatus.status = RECORD_STATUS.PUBLISHED;
-      if (Array.isArray(responseSchema.statusList)) {
-        responseSchema.statusList.push(subStatus);
-      } else {
-        responseSchema.statusList = [subStatus];
-      }
       return this.responseSchemaRepository.save(responseSchema);
     }
   }
 
   async deleteResponseSchema({ surveyPath }) {
-    const responseSchema = await this.responseSchemaRepository.findOne({
-      where: { surveyPath },
-    });
-    if (responseSchema) {
-      const newStatus = {
-        status: RECORD_STATUS.PUBLISHED,
-        date: Date.now(),
-      };
-      responseSchema.curStatus = newStatus;
-      if (Array.isArray(responseSchema.statusList)) {
-        responseSchema.statusList.push(newStatus);
-      } else {
-        responseSchema.statusList = [newStatus];
-      }
-      return this.responseSchemaRepository.save(responseSchema);
-    }
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: true,
+          updatedAt: new Date(),
+        },
+      },
+    );
   }
 }

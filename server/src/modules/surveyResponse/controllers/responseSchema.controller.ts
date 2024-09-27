@@ -44,13 +44,17 @@ export class ResponseSchemaController {
       await this.responseSchemaService.getResponseSchemaByPath(
         queryInfo.surveyPath,
       );
-    if (
-      !responseSchema ||
-      responseSchema.subStatus.status === RECORD_SUB_STATUS.REMOVED
-    ) {
+    if (!responseSchema || responseSchema.isDeleted) {
       throw new HttpException(
-        '问卷已删除',
+        '问卷不存在或已删除',
         EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
+      );
+    }
+
+    if (responseSchema.subStatus.status === RECORD_SUB_STATUS.PAUSING) {
+      throw new HttpException(
+        '该问卷已暂停回收',
+        EXCEPTION_CODE.RESPONSE_PAUSING,
       );
     }
 
@@ -82,7 +86,7 @@ export class ResponseSchemaController {
     // 问卷信息
     const schema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!schema || schema.subStatus.status === RECORD_SUB_STATUS.REMOVED) {
+    if (!schema || schema.isDeleted) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
 
@@ -97,14 +101,17 @@ export class ResponseSchemaController {
     // 密码校验
     if (passwordSwitch) {
       if (settingPassword !== password) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException('密码验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
     }
 
     // 名单校验（手机号/邮箱）
     if (whitelistType === WhitelistType.CUSTOM) {
       if (!whitelist.includes(whitelistValue)) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException(
+          '白名单验证失败',
+          EXCEPTION_CODE.WHITELIST_ERROR,
+        );
       }
     }
 
@@ -112,7 +119,7 @@ export class ResponseSchemaController {
     if (whitelistType === WhitelistType.MEMBER) {
       const user = await this.userService.getUserByUsername(whitelistValue);
       if (!user) {
-        throw new HttpException('验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
+        throw new HttpException('名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR);
       }
 
       const workspaceMember = await this.workspaceMemberService.findAllByUserId(

@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import {
   MESSAGE_PUSHING_TYPE,
   MESSAGE_PUSHING_HOOK,
@@ -20,15 +19,4 @@ export class UpdateMessagePushingTaskDto {
 
   @ApiProperty({ description: '绑定的问卷id', required: false })
   surveys?: string[];
-
-  @ApiProperty({ description: '任务状态', required: false })
-  curStatus?: {
-    status: RECORD_STATUS;
-    date: number;
-  };
-  @ApiProperty({ description: '任务子状态', required: false })
-  subStatus?: {
-    status: RECORD_SUB_STATUS;
-    date: number;
-  };
 }

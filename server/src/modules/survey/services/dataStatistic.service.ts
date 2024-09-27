@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
-import { RECORD_SUB_STATUS } from 'src/enums';
 
 import moment from 'moment';
 import { keyBy } from 'lodash';
@@ -35,8 +34,8 @@ export class DataStatisticService {
     const dataListMap = keyBy(dataList, 'field');
     const where = {
       pageId: surveyId,
-      'subStatus.status': {
-        $ne: RECORD_SUB_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     };
     const [surveyResponseList, total] =
@@ -45,7 +44,7 @@ export class DataStatisticService {
         take: pageSize,
         skip: (pageNum - 1) * pageSize,
         order: {
-          createDate: -1,
+          createdAt: -1,
         },
       });
 
@@ -91,10 +90,10 @@ export class DataStatisticService {
       }
       return {
         ...data,
-        diffTime: (submitedData.diffTime / 1000).toFixed(2),
-        createDate: moment(submitedData.createDate).format(
-          'YYYY-MM-DD HH:mm:ss',
-        ),
+        diffTime: submitedData.diffTime
+          ? (submitedData.diffTime / 1000).toFixed(2)
+          : '0',
+        createdAt: moment(submitedData.createdAt).format('YYYY-MM-DD HH:mm:ss'),
       };
     });
     return {
@@ -125,8 +124,8 @@ export class DataStatisticService {
         {
           $match: {
             pageId: surveyId,
-            'subStatus.status': {
-              $ne: RECORD_SUB_STATUS.REMOVED,
+            isDeleted: {
+              $ne: true,
             },
           },
         },

@@ -77,7 +77,10 @@ export class WorkspaceMemberController {
   @Post('updateRole')
   @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.WRITE_MEMBER])
   @SetMetadata('workspaceId', 'body.workspaceId')
-  async updateRole(@Body() updateDto: UpdateWorkspaceMemberDto) {
+  async updateRole(
+    @Body() updateDto: UpdateWorkspaceMemberDto,
+    @Request() req,
+  ) {
     const { error, value } = UpdateWorkspaceMemberDto.validate(updateDto);
     if (error) {
       throw new HttpException(
@@ -85,10 +88,14 @@ export class WorkspaceMemberController {
         EXCEPTION_CODE.PARAMETER_ERROR,
       );
     }
+    const operator = req.user.username,
+      operatorId = req.user._id.toString();
     const updateRes = await this.workspaceMemberService.updateRole({
       role: value.role,
       workspaceId: value.workspaceId,
       userId: value.userId,
+      operator,
+      operatorId,
     });
     return {
       code: 200,

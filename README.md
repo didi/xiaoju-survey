@@ -144,9 +144,9 @@ npm run local
 
 #### 1、配置数据库
 
-> 项目使用 MongoDB，需要提前准备，请查看[如何拥有 MongoDB 指南](./数据库#安装)
+> 项目使用 MongoDB，需要提前准备，请查看[如何拥有 MongoDB 指南](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E5%AE%89%E8%A3%85)
 
-配置数据库信息，查看[MongoDB 配置](./数据库)。
+配置数据库信息，查看[MongoDB 配置](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93)。
 
 #### 2、安装依赖
 

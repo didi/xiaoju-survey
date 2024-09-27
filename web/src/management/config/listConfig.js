@@ -27,9 +27,9 @@ export const spaceListConfig = {
     key: 'owner',
     width: 150
   },
-  createDate: {
+  createdAt: {
     title: '创建时间',
-    key: 'createDate',
+    key: 'createdAt',
     minWidth: 200
   }
 }
@@ -64,14 +64,14 @@ export const fieldConfig = {
     key: 'owner',
     width: 140
   },
-  updateDate: {
+  updatedAt: {
     title: '更新时间',
-    key: 'subStatus.date',
+    key: 'updatedAt',
     minWidth: 200
   },
-  createDate: {
+  createdAt: {
     title: '创建时间',
-    key: 'createDate',
+    key: 'createdAt',
     minWidth: 200
   }
 }
@@ -88,13 +88,18 @@ export const noSpaceDataConfig = {
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSpaceSearchDataConfig = {
-  title: '没有满足该查询条件的团队空间哦',
+  title: '没有满足该查询条件的团队空间',
   desc: '可以更换条件查询试试',
   img: '/imgs/icons/list-empty.webp'
 }
 export const noSearchDataConfig = {
-  title: '没有满足该查询条件的问卷哦',
+  title: '没有满足该查询条件的问卷',
   desc: '可以更换条件查询试试',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noDownloadTaskConfig = {
+  title: '没有下载任务',
+  desc: '可以在数据分析进行下载',
   img: '/imgs/icons/list-empty.webp'
 }
 
@@ -106,15 +111,15 @@ export const curStatus = {
   published: {
     value: 'published',
     label: '已发布'
-  }
-}
-
-// 子状态
-export const subStatus = {
+  },
   editing: {
     label: '修改中',
     value: 'editing'
   },
+}
+
+// 子状态
+export const subStatus = {
   pausing: {
     label: '暂停中',
     value: 'pausing'
@@ -171,7 +176,7 @@ export const curStatusSelect = {
     },
     curStatus.new,
     curStatus.published,
-    subStatus.editing,
+    curStatus.editing,
     subStatus.pausing
   ],
   default: ''
@@ -183,7 +188,7 @@ export const selectOptionsDict = Object.freeze({
 })
 
 export const buttonOptionsDict = Object.freeze({
-  'subStatus.date': {
+  'updatedAt': {
     label: '更新时间',
     icons: [
       {
@@ -204,7 +209,7 @@ export const buttonOptionsDict = Object.freeze({
       }
     ]
   },
-  createDate: {
+  createdAt: {
     label: '创建时间',
     icons: [
       {

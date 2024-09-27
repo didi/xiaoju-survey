@@ -21,8 +21,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
   code: {
     bannerConf: {
       titleConfig: {
-        mainTitle:
-          '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
+        mainTitle: '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
         subTitle: '',
       },
       bannerConfig: {
@@ -32,7 +31,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       },
     },
     baseConf: {
-      begTime: '2024-03-14 14:54:41',
+      beginTime: '2024-03-14 14:54:41',
       endTime: '2034-03-14 14:54:41',
       language: 'chinese',
       tLimit: 0,
@@ -44,6 +43,17 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       logoImageWidth: '60%',
     },
     skinConf: {
+      backgroundConf: {
+        color: '#fff',
+        type: 'color',
+        image: '',
+      },
+      themeConf: {
+        color: '#ffa600',
+      },
+      contentConf: {
+        opacity: 100,
+      },
       skinColor: '#4a4c5b',
       inputBgColor: '#ffffff',
     },
@@ -284,7 +294,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65f29f3192862d6a9067ad1c',
-} as ResponseSchema;
+} as unknown as ResponseSchema;
 
 export const mockResponseSchema: ResponseSchema = {
   _id: new ObjectId('65b0d46e04d5db18534c0f7c'),
@@ -303,19 +313,17 @@ export const mockResponseSchema: ResponseSchema = {
   code: {
     bannerConf: {
       titleConfig: {
-        mainTitle:
-          '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
+        mainTitle: '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
         subTitle: '',
       },
       bannerConfig: {
-        bgImage:
-          'http://10.190.55.101:3000/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+        bgImage: 'http://10.190.55.101:3000/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
         videoLink: '',
         postImg: '',
       },
     },
     baseConf: {
-      begTime: '2024-01-23 21:59:05',
+      beginTime: '2024-01-23 21:59:05',
       endTime: '2034-01-23 21:59:05',
       language: 'chinese',
       tLimit: 0,
@@ -327,6 +335,17 @@ export const mockResponseSchema: ResponseSchema = {
       logoImageWidth: '60%',
     },
     skinConf: {
+      backgroundConf: {
+        color: '#fff',
+        type: 'color',
+        image: '',
+      },
+      themeConf: {
+        color: '#ffa600',
+      },
+      contentConf: {
+        opacity: 100,
+      },
       skinColor: '#4a4c5b',
       inputBgColor: '#ffffff',
     },
@@ -634,4 +653,4 @@ export const mockResponseSchema: ResponseSchema = {
   pageId: '65afc62904d5db18534c0f78',
   createDate: 1710340841289,
   updateDate: 1710340841289.0,
-} as ResponseSchema;
+} as unknown as ResponseSchema;

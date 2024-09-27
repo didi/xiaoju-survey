@@ -12,6 +12,8 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+import './report'
+
 const isProd = process.env.NODE_ENV === 'production'
 
 const pages = createPages([
@@ -120,6 +122,10 @@ export default defineConfig({
     port: 8080,
     proxy: {
       '/api': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true
+      },
+      '/exportfile': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true
       },

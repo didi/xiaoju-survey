@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, Request } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
@@ -8,37 +8,48 @@ import { getPushingData } from 'src/utils/messagePushing';
 import { RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
-import { CounterService } from '../services/counter.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
+// import { RedisService } from 'src/modules/redis/redis.service';
 
 import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
+
+import { CounterService } from '../services/counter.service';
 import { Logger } from 'src/logger';
 import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { QUESTION_TYPE } from 'src/enums/question';
+
+const optionQuestionType: Array<string> = [
+  QUESTION_TYPE.RADIO,
+  QUESTION_TYPE.CHECKBOX,
+  QUESTION_TYPE.BINARY_CHOICE,
+  QUESTION_TYPE.VOTE,
+];
 
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
 export class SurveyResponseController {
   constructor(
     private readonly responseSchemaService: ResponseSchemaService,
-    private readonly counterService: CounterService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly clientEncryptService: ClientEncryptService,
     private readonly messagePushingTaskService: MessagePushingTaskService,
+    private readonly counterService: CounterService,
     private readonly logger: Logger,
+    // private readonly redisService: RedisService,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
 
   @Post('/createResponse')
   @HttpCode(200)
-  async createResponse(@Body() reqBody, @Request() req) {
+  async createResponse(@Body() reqBody) {
     // 检查签名
     checkSign(reqBody);
     // 校验参数
@@ -54,9 +65,7 @@ export class SurveyResponseController {
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
-      this.logger.error(`updateMeta_parameter error: ${error.message}`, {
-        req,
-      });
+      this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -74,10 +83,7 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (
-      !responseSchema ||
-      responseSchema.subStatus.status === RECORD_SUB_STATUS.REMOVED
-    ) {
+    if (!responseSchema || responseSchema.isDeleted) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
     if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {
@@ -133,12 +139,12 @@ export class SurveyResponseController {
 
     const now = Date.now();
     // 提交时间限制
-    const begTime = responseSchema.code?.baseConf?.begTime || 0;
+    const beginTime = responseSchema.code?.baseConf?.beginTime || 0;
     const endTime = responseSchema?.code?.baseConf?.endTime || 0;
-    if (begTime && endTime) {
-      const begTimeStamp = new Date(begTime).getTime();
+    if (beginTime && endTime) {
+      const beginTimeStamp = new Date(beginTime).getTime();
       const endTimeStamp = new Date(endTime).getTime();
-      if (now < begTimeStamp || now > endTimeStamp) {
+      if (now < beginTimeStamp || now > endTimeStamp) {
         throw new HttpException(
           '不在答题有效期内',
           EXCEPTION_CODE.RESPONSE_CURRENT_TIME_NOT_ALLOW,
@@ -215,6 +221,7 @@ export class SurveyResponseController {
     const optionTextAndId = dataList
       .filter((questionItem) => {
         return (
+          optionQuestionType.includes(questionItem.type) &&
           Array.isArray(questionItem.options) &&
           questionItem.options.length > 0 &&
           decryptedData[questionItem.field]
@@ -229,34 +236,55 @@ export class SurveyResponseController {
         return pre;
       }, {});
 
-    // 对用户提交的数据进行遍历处理
-    for (const field in decryptedData) {
-      const val = decryptedData[field];
-      const vals = Array.isArray(val) ? val : [val];
-      if (field in optionTextAndId) {
-        // 记录选项的提交数量，用于投票题回显、或者拓展上限限制功能
-        const optionCountData: Record<string, any> =
-          (await this.counterService.get({
-            surveyPath,
-            key: field,
-            type: 'option',
-          })) || { total: 0 };
-        optionCountData.total++;
-        for (const val of vals) {
-          if (!optionCountData[val]) {
-            optionCountData[val] = 1;
-          } else {
+    const surveyId = responseSchema.pageId;
+    // const lockKey = `locks:optionSelectedCount:${surveyId}`;
+    // const lock = await this.redisService.lockResource(lockKey, 1000);
+    // this.logger.info(`lockKey: ${lockKey}`);
+    try {
+      const successParams = [];
+      for (const field in decryptedData) {
+        const value = decryptedData[field];
+        const values = Array.isArray(value) ? value : [value];
+        if (field in optionTextAndId) {
+          const optionCountData =
+            (await this.counterService.get({
+              key: field,
+              surveyPath,
+              type: 'option',
+            })) || {};
+
+          //遍历选项hash值
+          for (const val of values) {
+            if (!optionCountData[val]) {
+              optionCountData[val] = 0;
+            }
             optionCountData[val]++;
           }
+          if (!optionCountData['total']) {
+            optionCountData['total'] = 1;
+          } else {
+            optionCountData['total']++;
+          }
+          successParams.push({
+            key: field,
+            surveyPath,
+            type: 'option',
+            data: optionCountData,
+          });
         }
-        this.counterService.set({
-          surveyPath,
-          key: field,
-          data: optionCountData,
-          type: 'option',
-        });
       }
+      // 校验通过后统一更新
+      await Promise.all(
+        successParams.map((item) => this.counterService.set(item)),
+      );
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
     }
+    // finally {
+    //   await this.redisService.unlockResource(lock);
+    //   this.logger.info(`unlockResource: ${lockKey}`);
+    // }
 
     // 入库
     const surveyResponse =
@@ -269,7 +297,6 @@ export class SurveyResponseController {
         optionTextAndId,
       });
 
-    const surveyId = responseSchema.pageId;
     const sendData = getPushingData({
       surveyResponse,
       questionList: responseSchema?.code?.dataConf?.dataList || [],

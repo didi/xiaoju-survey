@@ -1,4 +1,3 @@
-// logger.middleware.ts
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { Logger } from '../logger/index'; // 替换为你实际的logger路径
@@ -20,7 +19,6 @@ export class LogRequestMiddleware implements NestMiddleware {
       `method=${method}||uri=${originalUrl}||ip=${ip}||ua=${userAgent}||query=${query}||body=${body}`,
       {
         dltag: 'request_in',
-        req,
       },
     );
 
@@ -30,7 +28,6 @@ export class LogRequestMiddleware implements NestMiddleware {
         `status=${res.statusCode.toString()}||duration=${duration}ms`,
         {
           dltag: 'request_out',
-          req,
         },
       );
     });

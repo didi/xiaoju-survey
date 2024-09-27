@@ -3,7 +3,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 import { MongoRepository } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
@@ -13,7 +13,7 @@ import { ObjectId } from 'mongodb';
 describe('SurveyMetaService', () => {
   let service: SurveyMetaService;
   let surveyRepository: MongoRepository<SurveyMeta>;
-  let pluginManager: XiaojuSurveyPluginManager;
+  let pluginManager: PluginManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,9 +37,7 @@ describe('SurveyMetaService', () => {
     surveyRepository = module.get<MongoRepository<SurveyMeta>>(
       getRepositoryToken(SurveyMeta),
     );
-    pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
+    pluginManager = module.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(new SurveyUtilPlugin());
   });
 
@@ -109,9 +107,9 @@ describe('SurveyMetaService', () => {
 
       const result = await service.editSurveyMeta(survey);
 
-      expect(survey.subStatus.status).toEqual(RECORD_SUB_STATUS.EDITING);
+      expect(survey.curStatus.status).toEqual(RECORD_STATUS.EDITING);
       expect(survey.statusList.length).toBe(1);
-      expect(survey.statusList[0].status).toEqual(RECORD_SUB_STATUS.EDITING);
+      expect(survey.statusList[0].status).toEqual(RECORD_STATUS.EDITING);
       expect(surveyRepository.save).toHaveBeenCalledWith(survey);
       expect(result).toEqual(survey);
     });
@@ -136,9 +134,9 @@ describe('SurveyMetaService', () => {
 
       // 验证结果
       expect(result).toBe(survey);
-      expect(survey.subStatus.status).toBe(RECORD_SUB_STATUS.REMOVED);
+      expect(survey.subStatus.status).toBe(RECORD_STATUS.REMOVED);
       expect(survey.statusList.length).toBe(1);
-      expect(survey.statusList[0].status).toBe(RECORD_SUB_STATUS.REMOVED);
+      expect(survey.statusList[0].status).toBe(RECORD_STATUS.REMOVED);
       expect(surveyRepository.save).toHaveBeenCalledTimes(1);
       expect(surveyRepository.save).toHaveBeenCalledWith(survey);
     });
@@ -146,8 +144,8 @@ describe('SurveyMetaService', () => {
     it('should throw exception when survey is already removed', async () => {
       // 准备假的SurveyMeta对象，其状态已设置为REMOVED
       const survey = new SurveyMeta();
-      survey.subStatus = {
-        status: RECORD_SUB_STATUS.REMOVED,
+      survey.curStatus = {
+        status: RECORD_STATUS.REMOVED,
         date: Date.now(),
       };
 

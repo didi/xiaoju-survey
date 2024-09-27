@@ -5,8 +5,7 @@ import { BaseEntity } from './base.entity';
 @Entity({ name: 'captcha' })
 export class Captcha extends BaseEntity {
   @Index({
-    expireAfterSeconds:
-      new Date(Date.now() + 2 * 60 * 60 * 1000).getTime() / 1000,
+    expireAfterSeconds: 3600,
   })
   @ObjectIdColumn()
   _id: ObjectId;

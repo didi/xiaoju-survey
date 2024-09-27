@@ -8,7 +8,7 @@ import { SurveyMetaService } from '../services/surveyMeta.service';
 import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
-import { XiaojuSurveyPluginManager } from 'src/securityPlugin/pluginManager';
+import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { Logger } from 'src/logger';
 
 import { UserService } from 'src/modules/auth/services/user.service';
@@ -27,7 +27,7 @@ describe('DataStatisticController', () => {
   let controller: DataStatisticController;
   let dataStatisticService: DataStatisticService;
   let responseSchemaService: ResponseSchemaService;
-  let pluginManager: XiaojuSurveyPluginManager;
+  let pluginManager: PluginManager;
   let logger: Logger;
 
   beforeEach(async () => {
@@ -70,9 +70,7 @@ describe('DataStatisticController', () => {
     responseSchemaService = module.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
-    pluginManager = module.get<XiaojuSurveyPluginManager>(
-      XiaojuSurveyPluginManager,
-    );
+    pluginManager = module.get<PluginManager>(PluginManager);
     logger = module.get<Logger>(Logger);
 
     pluginManager.registerPlugin(
@@ -90,7 +88,7 @@ describe('DataStatisticController', () => {
       const mockRequest = {
         query: {
           surveyId,
-          isDesensitive: false,
+          isMasked: false,
           page: 1,
           pageSize: 10,
         },
@@ -123,7 +121,7 @@ describe('DataStatisticController', () => {
         .spyOn(dataStatisticService, 'getDataTable')
         .mockResolvedValueOnce(mockDataTable);
 
-      const result = await controller.data(mockRequest.query, mockRequest);
+      const result = await controller.data(mockRequest.query);
 
       expect(result).toEqual({
         code: 200,
@@ -131,12 +129,12 @@ describe('DataStatisticController', () => {
       });
     });
 
-    it('should return data table with isDesensitive', async () => {
+    it('should return data table with isMasked', async () => {
       const surveyId = new ObjectId().toString();
       const mockRequest = {
         query: {
           surveyId,
-          isDesensitive: true,
+          isMasked: true,
           page: 1,
           pageSize: 10,
         },
@@ -169,7 +167,7 @@ describe('DataStatisticController', () => {
         .spyOn(dataStatisticService, 'getDataTable')
         .mockResolvedValueOnce(mockDataTable);
 
-      const result = await controller.data(mockRequest.query, mockRequest);
+      const result = await controller.data(mockRequest.query);
 
       expect(result).toEqual({
         code: 200,
@@ -187,9 +185,9 @@ describe('DataStatisticController', () => {
         },
       };
 
-      await expect(
-        controller.data(mockRequest.query, mockRequest),
-      ).rejects.toThrow(HttpException);
+      await expect(controller.data(mockRequest.query)).rejects.toThrow(
+        HttpException,
+      );
       expect(logger.error).toHaveBeenCalledTimes(1);
     });
   });
@@ -235,7 +233,7 @@ describe('DataStatisticController', () => {
             },
           },
           baseConf: {
-            begTime: '2024-05-31 20:31:36',
+            beginTime: '2024-05-31 20:31:36',
             endTime: '2034-05-31 20:31:36',
             language: 'chinese',
             showVoteProcess: 'allow',
@@ -251,6 +249,8 @@ describe('DataStatisticController', () => {
           skinConf: {
             backgroundConf: {
               color: '#fff',
+              type: 'color',
+              image: '',
             },
             themeConf: {
               color: '#ffa600',

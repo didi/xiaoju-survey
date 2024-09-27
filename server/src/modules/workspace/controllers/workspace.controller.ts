@@ -64,10 +64,7 @@ export class WorkspaceController {
   async create(@Body() workspace: CreateWorkspaceDto, @Request() req) {
     const { value, error } = CreateWorkspaceDto.validate(workspace);
     if (error) {
-      this.logger.error(
-        `CreateWorkspaceDto validate failed: ${error.message}`,
-        { req },
-      );
+      this.logger.error(`CreateWorkspaceDto validate failed: ${error.message}`);
       throw new HttpException(
         `参数错误: 请联系管理员`,
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -103,10 +100,12 @@ export class WorkspaceController {
       }
     }
     const userId = req.user._id.toString();
+    const username = req.user.username;
     // 插入空间表
     const retWorkspace = await this.workspaceService.create({
       name: value.name,
       description: value.description,
+      owner: username,
       ownerId: userId,
     });
     const workspaceId = retWorkspace._id.toString();
@@ -120,6 +119,8 @@ export class WorkspaceController {
       await this.workspaceMemberService.batchCreate({
         workspaceId,
         members: value.members,
+        creator: username,
+        creatorId: userId,
       });
     }
     return {
@@ -137,7 +138,6 @@ export class WorkspaceController {
     if (error) {
       this.logger.error(
         `GetWorkspaceListDto validate failed: ${error.message}`,
-        { req },
       );
       throw new HttpException(
         `参数错误: 请联系管理员`,
@@ -210,7 +210,7 @@ export class WorkspaceController {
           const ownerInfo = userInfoMap?.[item.ownerId] || {};
           return {
             ...item,
-            createDate: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss'),
+            createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             owner: ownerInfo.username,
             currentUserId: curWorkspaceInfo.userId,
             currentUserRole: curWorkspaceInfo.role,
@@ -272,13 +272,24 @@ export class WorkspaceController {
   @UseGuards(WorkspaceGuard)
   @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.WRITE_WORKSPACE])
   @SetMetadata('workspaceId', 'params.id')
-  async update(@Param('id') id: string, @Body() workspace: CreateWorkspaceDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() workspace: CreateWorkspaceDto,
+    @Request() req,
+  ) {
     const members = workspace.members;
     if (!Array.isArray(members) || members.length === 0) {
       throw new HttpException('成员不能为空', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     delete workspace.members;
-    const updateRes = await this.workspaceService.update(id, workspace);
+    const operator = req.user.username,
+      operatorId = req.user._id.toString();
+    const updateRes = await this.workspaceService.update({
+      id,
+      workspace,
+      operator,
+      operatorId,
+    });
     this.logger.info(`updateRes: ${JSON.stringify(updateRes)}`);
     const { newMembers, adminMembers, userMembers } = splitMembers(members);
     if (
@@ -324,14 +335,20 @@ export class WorkspaceController {
       this.workspaceMemberService.batchCreate({
         workspaceId: id,
         members: newMembers,
+        creator: operator,
+        creatorId: operatorId,
       }),
       this.workspaceMemberService.batchUpdate({
         idList: adminMembers,
         role: WORKSPACE_ROLE.ADMIN,
+        operator,
+        operatorId,
       }),
       this.workspaceMemberService.batchUpdate({
         idList: userMembers,
         role: WORKSPACE_ROLE.USER,
+        operator,
+        operatorId,
       }),
     ]);
     this.logger.info(`updateRes: ${JSON.stringify(res)}`);
@@ -345,8 +362,13 @@ export class WorkspaceController {
   @UseGuards(WorkspaceGuard)
   @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.WRITE_WORKSPACE])
   @SetMetadata('workspaceId', 'params.id')
-  async delete(@Param('id') id: string) {
-    const res = await this.workspaceService.delete(id);
+  async delete(@Param('id') id: string, @Request() req) {
+    const operator = req.user.username,
+      operatorId = req.user._id.toString();
+    const res = await this.workspaceService.delete(id, {
+      operator,
+      operatorId,
+    });
     this.logger.info(`res: ${JSON.stringify(res)}`);
     return {
       code: 200,

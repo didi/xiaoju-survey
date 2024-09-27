@@ -16,7 +16,7 @@
         ></SubmitButton>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
-      <VerifyWhiteDialog />
+      <VerifyDialog />
     </div>
   </div>
 </template>
@@ -26,18 +26,25 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
+
+import useCommandComponent from '../hooks/useCommandComponent'
 import MainRenderer from '../components/MainRenderer.vue'
 import AlertDialog from '../components/AlertDialog.vue'
-import VerifyWhiteDialog from '../components/VerifyWhiteDialog.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
+import VerifyDialog from '../components/VerifyDialog/index.vue'
+
 import ProgressBar from '../components/ProgressBar.vue'
 
 import { useSurveyStore } from '../stores/survey'
 import { useQuestionStore } from '../stores/question'
 import { submitForm } from '../api/survey'
 import encrypt from '../utils/encrypt'
-
-import useCommandComponent from '../hooks/useCommandComponent'
+import {
+  clearSurveyData,
+  setSurveyData,
+  clearSurveySubmit,
+  setSurveySubmit
+} from '../utils/storage'
 
 interface Props {
   questionInfo?: any
@@ -70,15 +77,16 @@ const pageIndex = computed(() => questionStore.pageIndex)
 const { bannerConf, submitConf, bottomConf: logoConf, whiteData } = storeToRefs(surveyStore)
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
-const validate = (cbk: (v: boolean) => void) => {
+const validate = (callback: (v: boolean) => void) => {
   const index = 0
-  mainRef.value.$refs.formGroup[index].validate(cbk)
+  mainRef.value.$refs.formGroup[index].validate(callback)
 }
 
 const normalizationRequestBody = () => {
   const enterTime = surveyStore.enterTime
-  const encryptInfo = surveyStore.encryptInfo as any
+  const encryptInfo: any = surveyStore.encryptInfo
   const formValues = surveyStore.formValues
+  const baseConf: any = surveyStore.baseConf
 
   const result: any = {
     surveyPath: surveyPath.value,
@@ -88,12 +96,24 @@ const normalizationRequestBody = () => {
     ...whiteData.value
   }
 
+  // 自动回填开启时，记录数据
+  if (baseConf.fillSubmitAnswer) {
+    clearSurveyData(surveyPath.value)
+    clearSurveySubmit(surveyPath.value)
+
+    setSurveyData(surveyPath.value, formValues)
+    setSurveySubmit(surveyPath.value, 1)
+  }
+
+  // 数据加密
   if (encryptInfo?.encryptType) {
     result.encryptType = encryptInfo.encryptType
+
     result.data = encrypt[result.encryptType as 'rsa']({
       data: result.data,
       secretKey: encryptInfo?.data?.secretKey
     })
+
     if (encryptInfo?.data?.sessionId) {
       result.sessionId = encryptInfo.data.sessionId
     }
@@ -104,14 +124,13 @@ const normalizationRequestBody = () => {
   return result
 }
 
-const submitSurver = async () => {
+const submitSurvey = async () => {
   if (surveyPath.value.length > 8) {
     router.push({ name: 'successPage' })
     return
   }
   try {
     const params = normalizationRequestBody()
-    console.log(params)
     const res: any = await submitForm(params)
     if (res.code === 200) {
       router.replace({ name: 'successPage' })
@@ -137,7 +156,7 @@ const handleSubmit = () => {
       title: again_text,
       onConfirm: async () => {
         try {
-          submitSurver()
+          submitSurvey()
         } catch (error) {
           console.log(error)
         } finally {
@@ -146,7 +165,7 @@ const handleSubmit = () => {
       }
     })
   } else {
-    submitSurver()
+    submitSurvey()
   }
 }
 </script>
@@ -156,13 +175,11 @@ const handleSubmit = () => {
 
   .wrapper {
     min-height: 100%;
-    background-color: var(--primary-background-color);
     display: flex;
     flex-direction: column;
 
     .content {
       flex: 1;
-      margin: 0 0.3rem;
       background: rgba(255, 255, 255, var(--opacity));
       border-radius: 8px 8px 0 0;
       height: 100%;

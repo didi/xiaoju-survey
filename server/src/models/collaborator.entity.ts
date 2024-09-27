@@ -11,4 +11,16 @@ export class Collaborator extends BaseEntity {
 
   @Column('jsonb')
   permissions: Array<string>;
+
+  @Column()
+  creator: string;
+
+  @Column()
+  creatorId: string;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
 }

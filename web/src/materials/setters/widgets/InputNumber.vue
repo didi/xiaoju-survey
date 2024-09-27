@@ -13,6 +13,7 @@ import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
+
 interface Props {
   formConfig: any
   moduleConfig: any
@@ -24,12 +25,15 @@ interface Emit {
 
 const emit = defineEmits<Emit>()
 const props = defineProps<Props>()
-const modelValue = ref(Number(props.formConfig.value) || 0)
+const modelValue = ref(Number(props.formConfig.value))
+
+const myModuleConfig = ref(props.moduleConfig)
+
 const minModelValue = computed(() => {
   const { min } = props.formConfig
-  if (min) {
+  if (min !== undefined) {
     if (typeof min === 'function') {
-      return min(props.moduleConfig)
+      return min(myModuleConfig.value)
     } else {
       return Number(min)
     }
@@ -38,16 +42,13 @@ const minModelValue = computed(() => {
 })
 
 const maxModelValue = computed(() => {
-  const { max, min } = props.formConfig
-
+  const { max } = props.formConfig
   if (max) {
     if (typeof max === 'function') {
-      return max(props.moduleConfig)
+      return max(myModuleConfig.value)
     } else {
       return Number(max)
     }
-  } else if (min !== undefined && Array.isArray(props.moduleConfig?.options)) {
-    return props.moduleConfig.options.length
   } else {
     return Infinity
   }
@@ -65,6 +66,12 @@ const handleInputChange = (value: number) => {
 
   emit(FORM_CHANGE_EVENT_KEY, { key, value })
 }
+watch(
+  () => props.moduleConfig,
+  (newVal) => {
+    myModuleConfig.value = newVal
+  }
+)
 watch(
   () => props.formConfig.value,
   (newVal) => {

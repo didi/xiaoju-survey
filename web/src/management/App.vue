@@ -2,10 +2,69 @@
   <router-view></router-view>
 </template>
 
-<script>
-export default {
-  name: 'App'
+<script setup lang="ts">
+import { watch, onBeforeUnmount } from 'vue'
+import { useUserStore } from '@/management/stores/user'
+import { useRouter } from 'vue-router'
+import { ElMessageBox, ElMessage, type Action } from 'element-plus'
+import { checkIsTokenValid } from '@/management/api/auth'
+
+const userStore = useUserStore()
+const router = useRouter()
+
+let timer: any
+
+const showConfirmBox = () => {
+  ElMessageBox.alert('登录状态已失效，请重新登录。', '提示', {
+    confirmButtonText: '确认',
+    showClose: false,
+    callback: (action: Action) => {
+      if (action === 'confirm') {
+        userStore.logout()
+        router.replace({ name: 'login' })
+      }
+    }
+  })
 }
+
+const checkAuth = async () => {
+  try {
+    const res: Record<string, any> = await checkIsTokenValid()
+    if (res.code !== 200 || !res.data) {
+      showConfirmBox()
+    } else {
+      timer = setTimeout(
+        () => {
+          checkAuth()
+        },
+        30 * 60 * 1000
+      )
+    }
+  } catch (error) {
+    const e = error as any
+    ElMessage.error(e.message)
+  }
+}
+
+watch(
+  () => userStore.hasLogin,
+  (hasLogin) => {
+    if (hasLogin) {
+      timer = setTimeout(
+        () => {
+          checkAuth()
+        },
+        30 * 60 * 1000
+      )
+    } else {
+      clearTimeout(timer)
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  clearTimeout(timer)
+})
 </script>
 
 <style lang="scss">

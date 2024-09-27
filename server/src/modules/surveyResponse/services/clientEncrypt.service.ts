@@ -4,7 +4,6 @@ import { MongoRepository } from 'typeorm';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { ObjectId } from 'mongodb';
-import { RECORD_SUB_STATUS } from 'src/enums';
 
 @Injectable()
 export class ClientEncryptService {
@@ -38,26 +37,13 @@ export class ClientEncryptService {
     return this.clientEncryptRepository.findOne({
       where: {
         _id: new ObjectId(id),
-        'subStatus.status': {
-          $ne: RECORD_SUB_STATUS.REMOVED,
-        },
       },
     });
   }
 
   deleteEncryptInfo(id: string) {
-    return this.clientEncryptRepository.updateOne(
-      {
-        _id: new ObjectId(id),
-      },
-      {
-        $set: {
-          subStatus: {
-            status: RECORD_SUB_STATUS.REMOVED,
-            date: Date.now(),
-          },
-        },
-      },
-    );
+    return this.clientEncryptRepository.deleteOne({
+      _id: new ObjectId(id),
+    });
   }
 }

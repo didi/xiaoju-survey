@@ -1,4 +1,4 @@
-import { defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import { defineComponent, shallowRef, watch, defineAsyncComponent } from 'vue'
 import BaseChoice from '../BaseChoice'
 
 /**

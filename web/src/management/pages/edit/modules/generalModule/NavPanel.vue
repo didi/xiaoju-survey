@@ -74,6 +74,7 @@ const routes = [
         background-color: $primary-color;
         bottom: -16px;
         left: 20px;
+        z-index: 99;
       }
     }
 

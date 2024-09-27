@@ -27,11 +27,11 @@ export class SurveyResponse extends BaseEntity {
 
   @BeforeInsert()
   async onDataInsert() {
-    return await pluginManager.triggerHook('beforeResponseDataCreate', this);
+    return await pluginManager.triggerHook('encryptResponseData', this);
   }
 
   @AfterLoad()
   async onDataLoaded() {
-    return await pluginManager.triggerHook('afterResponseDataReaded', this);
+    return await pluginManager.triggerHook('decryptResponseData', this);
   }
 }

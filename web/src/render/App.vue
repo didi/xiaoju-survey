@@ -9,28 +9,26 @@ import { useSurveyStore } from './stores/survey'
 
 const { skinConf } = storeToRefs(useSurveyStore())
 
-const updateSkinConfig = (value: any) => {
+watch(skinConf, (skinConfig) => {
   const root = document.documentElement
-  const { themeConf, backgroundConf, contentConf } = value
+  const { themeConf, backgroundConf, contentConf }: any = skinConfig
 
   if (themeConf?.color) {
     // 设置主题颜色
     root.style.setProperty('--primary-color', themeConf?.color)
   }
 
-  if (backgroundConf?.color) {
-    // 设置背景颜色
-    root.style.setProperty('--primary-background-color', backgroundConf?.color)
-  }
+  // 设置背景
+  const { color, type, image } = backgroundConf || {}
+  root.style.setProperty(
+    '--primary-background',
+    type === 'image' ? `url(${image}) no-repeat center / cover` : color
+  )
 
   if (contentConf?.opacity.toString()) {
     // 设置全局透明度
-    root.style.setProperty('--opacity', `${parseInt(contentConf.opacity) / 100}`)
+    root.style.setProperty('--opacity', `${contentConf.opacity / 100}`)
   }
-}
-
-watch(skinConf, (value) => {
-  updateSkinConfig(value)
 })
 </script>
 <style lang="scss">
@@ -53,5 +51,16 @@ html {
   flex-direction: column;
   flex: 1;
   background-color: #fff;
+}
+
+@media screen and (min-width: 750px) {
+  body {
+    padding-top: 40px;
+    background: var(--primary-background);
+  }
+  #app {
+    border-radius: 8px 8px 0 0;
+    box-shadow: var(--el-box-shadow);
+  }
 }
 </style>

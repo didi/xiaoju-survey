@@ -6,7 +6,7 @@ export default defineComponent({
   props: {
     uiTarget: {
       type: String,
-      default: 'radio'
+      default: 'input'
     },
     customClass: {
       type: String,

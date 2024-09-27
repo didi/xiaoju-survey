@@ -114,12 +114,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 import 'element-plus/theme-chalk/src/message-box.scss'
 
-import moment from 'moment'
-// 引入中文
-import 'moment/locale/zh-cn'
-// 设置中文
-moment.locale('zh-cn')
-
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
@@ -134,7 +128,7 @@ import ToolBar from './ToolBar.vue'
 import TextSearch from './TextSearch.vue'
 import TextSelect from './TextSelect.vue'
 import TextButton from './TextButton.vue'
-import { SurveyPermissions } from '@/management/utils/types/workSpace'
+import { SurveyPermissions } from '@/management/utils/workSpace'
 
 import {
   fieldConfig,
@@ -165,7 +159,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['type', 'title', 'remark', 'owner', 'state', 'createDate', 'updateDate']
+const fields = ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
@@ -315,8 +309,8 @@ const getToolConfig = (row) => {
     funcList = permissionsBtn
   }
   const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if((row.curStatus.status !== curStatus.published.value && row.curStatus.status !== subStatus.editing.value) || (row.subStatus.status &&
-    row.subStatus.status != subStatus.editing.value)){
+  if (row.curStatus.status === curStatus.new.value || row.subStatus.status === subStatus.pausing.value) {
+    // 去掉暂停按钮
     order.splice(3, 1) 
     funcList = funcList.filter(item => item.key !== subStatus.pausing.value)
   }

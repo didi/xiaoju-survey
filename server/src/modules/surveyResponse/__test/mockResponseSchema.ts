@@ -25,8 +25,7 @@ export const mockResponseSchema: ResponseSchema = {
   code: {
     bannerConf: {
       titleConfig: {
-        mainTitle:
-          '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
+        mainTitle: '<h3 style="text-align: center">欢迎填写问卷</h3><p>为了给您提供更好的服务，希望您能抽出几分钟时间，将您的感受和建议告诉我们，<span style="color: rgb(204, 0, 0)">期待您的参与！</span></p>',
         subTitle: '',
       },
       bannerConfig: {
@@ -36,7 +35,7 @@ export const mockResponseSchema: ResponseSchema = {
       },
     },
     baseConf: {
-      begTime: '2024-03-14 14:54:41',
+      beginTime: '2024-03-14 14:54:41',
       endTime: '2034-03-14 14:54:41',
       language: 'chinese',
       tLimit: 10,
@@ -48,6 +47,17 @@ export const mockResponseSchema: ResponseSchema = {
       logoImageWidth: '60%',
     },
     skinConf: {
+      backgroundConf: {
+        color: '#fff',
+        type: 'color',
+        image: '',
+      },
+      themeConf: {
+        color: '#ffa600',
+      },
+      contentConf: {
+        opacity: 100,
+      },
       skinColor: '#4a4c5b',
       inputBgColor: '#ffffff',
     },
@@ -240,4 +250,4 @@ export const mockResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65f29f3192862d6a9067ad1c',
-} as ResponseSchema;
+} as unknown as ResponseSchema;

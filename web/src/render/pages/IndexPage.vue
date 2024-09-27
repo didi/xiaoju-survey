@@ -2,17 +2,29 @@
   <router-view></router-view>
 </template>
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-
 import { getPublishedSurveyInfo, getPreviewSchema } from '../api/survey'
-import useCommandComponent from '../hooks/useCommandComponent'
-import { useSurveyStore } from '../stores/survey'
-
 import AlertDialog from '../components/AlertDialog.vue'
+import { useSurveyStore } from '../stores/survey'
+import useCommandComponent from '../hooks/useCommandComponent'
 
 const route = useRoute()
 const surveyStore = useSurveyStore()
+
+watch(
+  () => route.query.t,
+  (t) => {
+    if (t) location.reload()
+  }
+)
+
+onMounted(() => {
+  const surveyId = route.params.surveyId
+  console.log({ surveyId })
+  surveyStore.setSurveyPath(surveyId)
+  getDetail(surveyId as string)
+})
 const loadData = (res: any, surveyPath: string) => {
   if (res.code === 200) {
     const data = res.data
@@ -45,42 +57,26 @@ const loadData = (res: any, surveyPath: string) => {
     surveyStore.setSurveyPath(surveyPath)
     surveyStore.initSurvey(questionData)
     surveyStore.initShowLogicEngine(logicConf?.showLogicConf)
-    surveyStore.initJumpLogicEngine(logicConf.jumpLogicConf)
+    surveyStore.initJumpLogicEngine(logicConf?.jumpLogicConf)
   } else {
     throw new Error(res.errmsg)
   }
 }
-onMounted(() => {
-  const surveyId = route.params.surveyId
-  console.log({ surveyId })
-  surveyStore.setSurveyPath(surveyId)
-  getDetail(surveyId as string)
-})
 
-watch(
-  () => route.query.t,
-  () => {
-    location.reload()
-  }
-)
-
-const checkStatus = (data: any) => {
-  const alert = useCommandComponent(AlertDialog)
-  if (data?.subStatus?.status == 'pausing') {
-    alert({ title:'问卷已暂停回收' })
-  }
-}
+function isObjectId(id: string) {  
+  const objectIdRegex = /^[0-9a-fA-F]{24}$/;  
+  return objectIdRegex.test(id);  
+}  
 
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)
-
   try {
-    if (surveyPath.length > 8) {
+    if (isObjectId(surveyPath)) {
       const res: any = await getPreviewSchema({ surveyPath })
       loadData(res, surveyPath)
     } else {
       const res: any = await getPublishedSurveyInfo({ surveyPath })
-      checkStatus(res.data)
+      // checkStatus(res.data)
       loadData(res, surveyPath)
       surveyStore.getEncryptInfo()
     }

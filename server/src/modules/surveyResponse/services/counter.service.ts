@@ -33,6 +33,7 @@ export class CounterService {
           surveyPath,
           type,
           data,
+          updatedAt: new Date(),
         },
       },
       {

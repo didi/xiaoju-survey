@@ -2,15 +2,14 @@
 export enum RECORD_STATUS {
   NEW = 'new', // 新建 | 未发布
   PUBLISHED = 'published', // 发布
-  CLOSE = 'close', // 关闭
+  EDITING = 'editing', // 编辑
+  FINISHED = 'finished', // 已结束
+  REMOVED = 'removed',
 }
 
 export const enum RECORD_SUB_STATUS {
   DEFAULT = '', // 默认
-  EDITING = 'editing', // 编辑
   PAUSING = 'pausing', // 暂停
-  REMOVED = 'removed', // 删除
-  FORCE_REMOVED = 'forceRemoved', // 从回收站删除
 }
 
 // 历史类型

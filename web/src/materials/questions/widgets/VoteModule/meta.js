@@ -54,7 +54,6 @@ const meta = {
       defaultValue: [
         {
           text: '选项1',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -63,7 +62,6 @@ const meta = {
         },
         {
           text: '选项2',
-          imageUrl: '',
           others: false,
           mustOthers: false,
           othersKey: '',
@@ -76,13 +74,13 @@ const meta = {
       name: 'minNum',
       propType: Number,
       description: '最少选择数',
-      defaultValue: 1
+      defaultValue: 0
     },
     {
       name: 'maxNum',
       propType: Number,
       description: '最多选择数',
-      defaultValue: 1
+      defaultValue: 0
     }
   ],
   formConfig: [
@@ -118,17 +116,24 @@ const meta = {
           label: '至少选择数',
           type: 'InputNumber',
           key: 'minNum',
-          value: '',
+          value: 0,
           min: 0,
-          max: 'maxNum',
+          max: (moduleConfig) => {
+            return moduleConfig?.maxNum || 0
+          },
           contentClass: 'input-number-config'
         },
         {
           label: '最多选择数',
           type: 'InputNumber',
           key: 'maxNum',
-          value: '',
-          min: 'minNum',
+          value: 0,
+          min: (moduleConfig) => {
+            return moduleConfig?.minNum || 0
+          },
+          max: (moduleConfig) => {
+            return moduleConfig?.options?.length || 0
+          },
           contentClass: 'input-number-config'
         }
       ]

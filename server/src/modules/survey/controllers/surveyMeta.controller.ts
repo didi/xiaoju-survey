@@ -51,16 +51,18 @@ export class SurveyMetaController {
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
-      this.logger.error(`updateMeta_parameter error: ${error.message}`, {
-        req,
-      });
+      this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const survey = req.surveyMeta;
     survey.title = value.title;
     survey.remark = value.remark;
 
-    await this.surveyMetaService.editSurveyMeta(survey);
+    await this.surveyMetaService.editSurveyMeta({
+      survey,
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
 
     return {
       code: 200,
@@ -81,7 +83,7 @@ export class SurveyMetaController {
   ) {
     const { value, error } = GetSurveyListDto.validate(queryInfo);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const { curPage, pageSize, workspaceId } = value;
@@ -91,14 +93,14 @@ export class SurveyMetaController {
       try {
         filter = getFilter(JSON.parse(decodeURIComponent(value.filter)));
       } catch (error) {
-        this.logger.error(error.message, { req });
+        this.logger.error(error.message);
       }
     }
     if (value.order) {
       try {
         order = order = getOrder(JSON.parse(decodeURIComponent(value.order)));
       } catch (error) {
-        this.logger.error(error.message, { req });
+        this.logger.error(error.message);
       }
     }
     const userId = req.user._id.toString();
@@ -129,9 +131,10 @@ export class SurveyMetaController {
           if (!item.surveyType) {
             item.surveyType = item.questionType || 'normal';
           }
-          item.createDate = moment(item.createDate).format(fmt);
+          item.createdAt = moment(item.createdAt).format(fmt);
           item.curStatus.date = moment(item.curStatus.date).format(fmt);
           item.subStatus.date = moment(item.subStatus.date).format(fmt);
+          item.updatedAt = moment(item.updatedAt).format(fmt);
           const surveyId = item._id.toString();
           if (cooperSurveyIdMap[surveyId]) {
             item.isCollaborated = true;

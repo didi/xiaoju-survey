@@ -29,14 +29,12 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
 import moment from 'moment'
-import 'moment/locale/zh-cn'
-moment.locale('zh-cn')
 
 import { getSurveyHistory } from '@/management/api/survey'
 
 const getItemData = (item: any) => ({
   operator: item?.operator?.username || '未知用户',
-  time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
+  time: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
 })
 
 const dailyList = ref<Array<any>>([])

@@ -1,6 +1,6 @@
-export interface XiaojuSurveyPlugin {
-  beforeResponseDataCreate?(responseData);
+export interface SecurityPlugin {
+  encryptResponseData?(responseData);
   afterResponseFind?(responseData);
-  desensitiveData?(data: Record<string, any>);
+  maskData?(data: Record<string, any>);
   genSurveyPath?();
 }

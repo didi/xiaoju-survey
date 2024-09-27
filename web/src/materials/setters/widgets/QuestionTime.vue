@@ -22,10 +22,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import moment from 'moment'
-import 'moment/locale/zh-cn'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
-moment.locale('zh-cn')
 
 interface Props {
   formConfig: any
@@ -45,7 +43,7 @@ const defaultEndTime = moment(defaultBeginTime).add(10, 'year').toDate()
 const locale = ref(zhCn)
 const begModelTime = ref(defaultBeginTime)
 const endModelTime = ref(defaultEndTime)
-const begTimeStr = ref(moment(defaultBeginTime).format(format))
+const beginTimeStr = ref(moment(defaultBeginTime).format(format))
 const endTimeStr = ref(moment(defaultEndTime).format(format))
 
 const handleDatePickerChange = (key: string, value: string) => {
@@ -54,10 +52,10 @@ const handleDatePickerChange = (key: string, value: string) => {
 
 watch(
   () => props.formConfig.value,
-  ([begTime, endTime]: any) => {
-    if (!!begTime && begTime !== begTimeStr.value) {
-      begTimeStr.value = begTime
-      begModelTime.value = new Date(begTime)
+  ([beginTime, endTime]: any) => {
+    if (!!beginTime && beginTime !== beginTimeStr.value) {
+      beginTimeStr.value = beginTime
+      begModelTime.value = new Date(beginTime)
     }
 
     if (!!endTime && endTime !== endTimeStr.value) {

@@ -6,7 +6,6 @@ import { MESSAGE_PUSHING_HOOK } from 'src/enums/messagePushing';
 import { CreateMessagePushingTaskDto } from '../dto/createMessagePushingTask.dto';
 import { UpdateMessagePushingTaskDto } from '../dto/updateMessagePushingTask.dto';
 import { ObjectId } from 'mongodb';
-import { RECORD_SUB_STATUS } from 'src/enums';
 import { MESSAGE_PUSHING_TYPE } from 'src/enums/messagePushing';
 import { MessagePushingLogService } from './messagePushingLog.service';
 import { httpPost } from 'src/utils/request';
@@ -44,8 +43,8 @@ export class MessagePushingTaskService {
     ownerId?: string;
   }): Promise<MessagePushingTask[]> {
     const where: Record<string, any> = {
-      'subStatus.status': {
-        $ne: RECORD_SUB_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     };
     if (surveyId) {
@@ -75,8 +74,8 @@ export class MessagePushingTaskService {
       where: {
         ownerId,
         _id: new ObjectId(id),
-        'subStatus.status': {
-          $ne: RECORD_SUB_STATUS.REMOVED,
+        isDeleted: {
+          $ne: true,
         },
       },
     });
@@ -103,25 +102,26 @@ export class MessagePushingTaskService {
     const updatedTask = Object.assign(existingTask, updateData);
     return await this.messagePushingTaskRepository.save(updatedTask);
   }
-  async remove({ id, ownerId }: { id: string; ownerId: string }) {
-    const subStatus = {
-      status: RECORD_SUB_STATUS.REMOVED,
-      date: Date.now(),
-    };
+
+  async remove({
+    id,
+    operator,
+    operatorId,
+  }: {
+    id: string;
+    operator: string;
+    operatorId: string;
+  }) {
     return this.messagePushingTaskRepository.updateOne(
       {
-        ownerId,
         _id: new ObjectId(id),
-        'subStatus.status': {
-          $ne: RECORD_SUB_STATUS.REMOVED,
-        },
       },
       {
         $set: {
-          subStatus,
-        },
-        $push: {
-          statusList: subStatus as never,
+          isDeleted: true,
+          operator,
+          operatorId,
+          deletedAt: new Date(),
         },
       },
     );
@@ -145,6 +145,9 @@ export class MessagePushingTaskService {
       {
         $push: {
           surveys: surveyId as never,
+        },
+        $set: {
+          updatedAt: new Date(),
         },
       },
     );

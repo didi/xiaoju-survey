@@ -32,7 +32,6 @@ const { percent } = useProgressBar()
 </script>
 <style lang="scss" scoped>
 .progress-outer {
-  z-index: 10000;
   position: relative;
   overflow: hidden;
   .progress-inner-wrapper-pc {

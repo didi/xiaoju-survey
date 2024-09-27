@@ -10,9 +10,9 @@ const getCountStr = () => {
 
 export const genTraceId = ({ ip }) => {
   // ip转16位 + 当前时间戳（毫秒级）+自增序列（1000开始自增到9000）+ 当前进程id的后5位
-  ip = ip.replace('::ffff:', '');
+  ip = ip.replace('::ffff:', '').replace('::1', '');
   let ipArr;
-  if (ip.indexOf(':') > 0) {
+  if (ip.indexOf(':') >= 0) {
     ipArr = ip.split(':').map((segment) => {
       // 将IPv6每个段转为16位，并补0到长度为4
       return parseInt(segment, 16).toString(16).padStart(4, '0');
@@ -20,7 +20,9 @@ export const genTraceId = ({ ip }) => {
   } else {
     ipArr = ip
       .split('.')
-      .map((item) => parseInt(item).toString(16).padStart(2, '0'));
+      .map((item) =>
+        item ? parseInt(item).toString(16).padStart(2, '0') : '',
+      );
   }
 
   return `${ipArr.join('')}${Date.now().toString()}${getCountStr()}${process.pid.toString().slice(-5)}`;

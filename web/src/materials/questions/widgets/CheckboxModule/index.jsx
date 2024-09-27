@@ -1,4 +1,4 @@
-import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
+import { computed, defineComponent, shallowRef, defineAsyncComponent, watch } from 'vue'
 import { includes } from 'lodash-es'
 
 import BaseChoice from '../BaseChoice'
@@ -41,10 +41,11 @@ export default defineComponent({
     maxNum: {
       type: [Number, String],
       default: 1
-    }
+    },
   },
   emits: ['change'],
   setup(props, { emit }) {
+    
     const disableState = computed(() => {
       if (!props.maxNum) {
         return false
@@ -53,14 +54,14 @@ export default defineComponent({
     })
     const isDisabled = (item) => {
       const { value } = props
-      return disableState.value && !includes(value, item.value)
+      return disableState.value && !includes(value, item.hash)
     }
     const myOptions = computed(() => {
       const { options } = props
       return options.map((item) => {
         return {
           ...item,
-          disabled: isDisabled(item)
+          disabled: (item.release === 0) || isDisabled(item)
         }
       })
     })
@@ -92,6 +93,7 @@ export default defineComponent({
     return {
       onChange,
       handleSelectMoreChange,
+      disableState,
       myOptions,
       selectMoreView
     }

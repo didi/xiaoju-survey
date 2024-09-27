@@ -42,7 +42,7 @@ describe('SurveyHistoryService', () => {
       msgContent: undefined,
     },
     baseConf: {
-      begTime: '',
+      beginTime: '',
       endTime: '',
       answerBegTime: '',
       answerEndTime: '',
@@ -78,7 +78,12 @@ describe('SurveyHistoryService', () => {
         .spyOn(repository, 'save')
         .mockResolvedValueOnce({} as SurveyHistory);
 
-      await service.addHistory({ surveyId, schema, type, user });
+      await service.addHistory({
+        surveyId,
+        schema,
+        type,
+        user,
+      });
 
       expect(spyCreate).toHaveBeenCalledWith({
         pageId: surveyId,

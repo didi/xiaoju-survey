@@ -37,9 +37,9 @@ instance.interceptors.response.use(
 
 instance.interceptors.request.use((config) => {
   const userStore = useUserStore()
-  const hasLogined = _get(userStore, 'hasLogined')
+  const hasLogin = _get(userStore, 'hasLogin')
   const token = _get(userStore, 'userInfo.token')
-  if (hasLogined && token) {
+  if (hasLogin && token) {
     if (!config.headers) {
       config.headers = {}
     }

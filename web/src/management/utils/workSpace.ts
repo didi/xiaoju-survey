@@ -33,13 +33,20 @@ export interface SpaceDetail {
 }
 
 export type SpaceItem = Required<Omit<SpaceDetail, 'members'>> & {
-  createDate: string
+  createdAt: string
   curStatus: { date: number; status: string }
   memberTotal: number
   currentUserRole: string
   owner: string
   ownerId: string
   surveyTotal: number
+}
+
+export interface ICollaborator {
+  _id?: string
+  userId: string
+  username: string
+  permissions: Array<number>
 }
 
 export enum SpaceType {
@@ -56,13 +63,6 @@ export enum UserRole {
 export const roleLabels: Record<UserRole, string> = {
   [UserRole.Admin]: '管理员',
   [UserRole.Member]: '成员'
-}
-
-export interface ICollaborator {
-  _id?: string
-  userId: string
-  username: string
-  permissions: Array<number>
 }
 
 export enum SurveyPermissions {

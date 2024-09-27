@@ -145,7 +145,7 @@ npm run local
 
 #### 1.Configure Database
 
-> The project uses MongoDB: [MongoDB Guide](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93#%E5%AE%89%E8%A3%85)
+> The project uses MongoDB: [MongoDB Guide](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E6%95%B0%E6%8D%AE%E5%BA%93)
 
 Configure the database, check MongoDB configuration.
 

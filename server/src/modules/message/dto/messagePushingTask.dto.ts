@@ -4,7 +4,6 @@ import {
   MESSAGE_PUSHING_TYPE,
   MESSAGE_PUSHING_HOOK,
 } from 'src/enums/messagePushing';
-import { RECORD_STATUS } from 'src/enums';
 
 export class MessagePushingTaskDto {
   @ApiProperty({ description: '任务id' })
@@ -27,12 +26,6 @@ export class MessagePushingTaskDto {
 
   @ApiProperty({ description: '所有者' })
   owner: string;
-
-  @ApiProperty({ description: '任务状态', required: false })
-  curStatus?: {
-    status: RECORD_STATUS;
-    date: number;
-  };
 }
 
 export class CodeDto {

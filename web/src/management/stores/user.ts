@@ -1,28 +1,29 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { getUserInfo, setUserInfo, clearUserInfo } from '@/management/utils/storage'
+
 type IUserInfo = {
   username: string
   token: string
 }
 
-const USER_INFO_KEY = 'surveyUserInfo'
 export const useUserStore = defineStore('user', () => {
   const userInfo = ref<IUserInfo | null>({
     username: '',
     token: ''
   })
-  const hasLogined = ref(false)
+  const hasLogin = ref(false)
   const loginTime = ref<number | null>(null)
   const initialized = ref(false)
 
   const init = () => {
-    const localData = localStorage.getItem(USER_INFO_KEY)
+    const localData = getUserInfo()
     if (localData) {
       try {
-        const { userInfo: info, loginTime: time } = JSON.parse(localData)
+        const { userInfo: info, loginTime: time } = localData as any
         if (Date.now() - time > 7 * 3600000) {
-          localStorage.removeItem(USER_INFO_KEY)
+          clearUserInfo()
         } else {
           login(info)
         }
@@ -34,21 +35,18 @@ export const useUserStore = defineStore('user', () => {
   }
   const login = (data: IUserInfo) => {
     userInfo.value = data
-    hasLogined.value = true
+    hasLogin.value = true
     loginTime.value = Date.now()
-    localStorage.setItem(
-      USER_INFO_KEY,
-      JSON.stringify({
-        userInfo: data,
-        loginTime: loginTime
-      })
-    )
+    setUserInfo({
+      userInfo: data,
+      loginTime: loginTime
+    })
   }
   const logout = () => {
     userInfo.value = null
-    hasLogined.value = false
-    localStorage.removeItem(USER_INFO_KEY)
+    hasLogin.value = false
+    clearUserInfo()
   }
 
-  return { userInfo, hasLogined, loginTime, initialized, init, login, logout }
+  return { userInfo, hasLogin, loginTime, initialized, init, login, logout }
 })

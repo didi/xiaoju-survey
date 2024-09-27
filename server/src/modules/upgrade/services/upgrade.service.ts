@@ -2,73 +2,201 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import { ResponseSchema } from 'src/models/ResponseSchema.entity';
+import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
+import { Workspace } from 'src/models/workspace.entity';
+import { Collaborator } from 'src/models/collaborator.entity';
+import { Counter } from 'src/models/counter.entity';
+import { DownloadTask } from 'src/models/downloadTask.entity';
+import { MessagePushingLog } from 'src/models/messagePushingLog.entity';
+import { MessagePushingTask } from 'src/models/messagePushingTask.entity';
+import { Session } from 'src/models/session.entity';
+import { SurveyConf } from 'src/models/surveyConf.entity';
+import { User } from 'src/models/user.entity';
+import { WorkspaceMember } from 'src/models/workspaceMember.entity';
+import { SESSION_STATUS } from 'src/enums/surveySessionStatus';
+import { Logger } from 'src/logger';
 
 @Injectable()
 export class UpgradeService {
   constructor(
-    @InjectRepository(SurveyMeta)
-    private readonly SurveyMeta: MongoRepository<SurveyMeta>,
+    private readonly logger: Logger,
+    @InjectRepository(Collaborator)
+    private readonly collaboratorRepository: MongoRepository<Collaborator>,
+    @InjectRepository(Counter)
+    private readonly counterRepository: MongoRepository<Counter>,
+    @InjectRepository(DownloadTask)
+    private readonly downloadTaskRepository: MongoRepository<DownloadTask>,
+    @InjectRepository(MessagePushingLog)
+    private readonly messagePushingLogRepository: MongoRepository<MessagePushingLog>,
+    @InjectRepository(MessagePushingTask)
+    private readonly messagePushingTaskRepository: MongoRepository<MessagePushingTask>,
     @InjectRepository(ResponseSchema)
-    private readonly ResponseSchema: MongoRepository<ResponseSchema>,
+    private readonly responseSchemaRepository: MongoRepository<ResponseSchema>,
+    @InjectRepository(Session)
+    private readonly sessionRepository: MongoRepository<Session>,
+    @InjectRepository(SurveyConf)
+    private readonly surveyConfRepository: MongoRepository<SurveyConf>,
+    @InjectRepository(SurveyMeta)
+    private readonly surveyMetaRepository: MongoRepository<SurveyMeta>,
+    @InjectRepository(User)
+    private readonly userRepository: MongoRepository<User>,
+    @InjectRepository(Workspace)
+    private readonly workspaceRepository: MongoRepository<Workspace>,
+    @InjectRepository(WorkspaceMember)
+    private readonly workspaceMemberRepository: MongoRepository<WorkspaceMember>,
   ) {}
 
-  async upgradeSubStatus() {
-    const surveyMetaList = await this.SurveyMeta.find();
-    const responseSchemaList = await this.ResponseSchema.find();
-
-    const callBack = (v: SurveyMeta | ResponseSchema) => {
-      // 将主状态的REMOVED，EDITING刷到子状态
-      //  主状态查一下历史数据删除前最近的状态是“新建”or“已发布
-      if (
-        v.curStatus.status == (RECORD_SUB_STATUS.REMOVED as any) ||
-        v.curStatus.status == (RECORD_SUB_STATUS.EDITING as any)
-      ) {
-        const subStatus = {
-          status: v.curStatus.status,
-          date: v.curStatus.date,
-        };
-        v.subStatus = subStatus as any;
-        console.log('subStatus', subStatus);
-        if (v.curStatus.status == (RECORD_SUB_STATUS.EDITING as any)) {
-          v.curStatus.status = RECORD_STATUS.PUBLISHED;
+  async upgradeFeatureStatus() {
+    const repositories = [
+      this.collaboratorRepository,
+      this.counterRepository,
+      this.downloadTaskRepository,
+      this.messagePushingLogRepository,
+      this.messagePushingTaskRepository,
+      this.responseSchemaRepository,
+      this.sessionRepository,
+      this.surveyConfRepository,
+      this.surveyMetaRepository,
+      this.userRepository,
+      this.workspaceRepository,
+      this.workspaceMemberRepository,
+    ];
+    const handleCreatedAtAndUpdatedAt = (doc) => {
+      if (!doc.createdAt) {
+        if (doc.createDate) {
+          doc.createdAt = new Date(doc.createDate);
+          delete doc.createDate;
+        } else {
+          doc.createdAt = new Date();
         }
-        if (v.curStatus.status == (RECORD_SUB_STATUS.REMOVED as any)) {
-          for (let index = v.statusList.length; index > 0; index--) {
-            const item = v.statusList[index];
-            if (
-              item?.status == RECORD_STATUS.PUBLISHED ||
-              item?.status == RECORD_STATUS.NEW
-            ) {
-              v.curStatus.status = item.status;
-              break;
-            }
-          }
-        }
-        return v;
       }
+      if (!doc.updatedAt) {
+        if (doc.updateDate) {
+          doc.updatedAt = new Date(doc.updateDate);
+          delete doc.updateDate;
+        } else {
+          doc.createdAt = new Date();
+        }
+      }
+    };
+
+    const handleDelStatus = (doc) => {
+      // 已删除的字段升级
+      if (doc?.curStatus?.status === 'removed') {
+        delete doc.curStatus;
+        doc.isDeleted = true;
+        doc.deletedAt = new Date(doc.updatedAt);
+      }
+    };
+
+    const handleSubStatus = (doc) => {
+      // 编辑中字段升级
       if (
-        v.curStatus.status == RECORD_STATUS.PUBLISHED ||
-        v.curStatus.status == RECORD_STATUS.NEW
+        !doc?.subStatus &&
+        (doc?.curStatus?.status == RECORD_STATUS.PUBLISHED ||
+          doc?.curStatus?.status == RECORD_STATUS.NEW ||
+          doc?.curStatus?.status === RECORD_STATUS.EDITING)
       ) {
         const subStatus = {
           status: RECORD_SUB_STATUS.DEFAULT,
-          date: v.statusList[0].date,
+          date: doc.curStatus.date,
         };
-        v.subStatus = subStatus;
+        doc.subStatus = subStatus;
       }
-      return v;
     };
 
-    surveyMetaList.map(async (v) => {
-      const item = callBack(v);
-      await this.SurveyMeta.save(item);
-    });
+    const handleBegTime = (doc) => {
+      if (!doc?.baseConf?.beginTime && doc?.baseConf?.begTime) {
+        doc.baseConf.beginTime = doc.baseConf.begTime;
+        delete doc.baseConf.begTime;
+      }
+    };
 
-    responseSchemaList.map(async (v) => {
-      const item = callBack(v);
-      await this.ResponseSchema.save(item);
-    });
+    const handleSessionStatus = (doc) => {
+      if (!doc.status && doc.curStatus) {
+        if (doc?.curStatus?.id && doc?.curStatus?.id === 'editing') {
+          doc.status = SESSION_STATUS.ACTIVATED;
+        } else {
+          doc.status = SESSION_STATUS.DEACTIVATED;
+        }
+        delete doc.curStatus;
+      }
+    };
+
+    const handleCreatorId = async (doc) => {
+      if (!doc.ownerId && doc.owner) {
+        const userInfo = await this.userRepository.findOne({
+          where: {
+            username: doc.owner,
+          },
+        });
+        if (userInfo && userInfo._id) {
+          doc.ownerId = userInfo._id.toString();
+        }
+      }
+      if (doc.ownerId && doc.owner && !doc.creatorId) {
+        doc.creatorId = doc.ownerId;
+        doc.creator = doc.owner;
+      }
+    };
+
+    const save = async ({ doc, repository }) => {
+      const entity = repository.create(doc);
+      await repository.save(entity);
+    };
+    this.logger.info(`upgrading...`);
+    for (const repository of repositories) {
+      const name =
+        typeof repository.target === 'function'
+          ? repository.target.name
+          : typeof repository.target === 'string'
+            ? repository.target
+            : '';
+
+      const cursor = repository.createCursor();
+      this.logger.info(`upgrading ${name}`);
+      while (await cursor.hasNext()) {
+        try {
+          const doc = await cursor.next();
+          // 把createDate和updateDate升级成createdAt和updatedAt
+          handleCreatedAtAndUpdatedAt(doc);
+          if (
+            repository === this.surveyMetaRepository ||
+            repository === this.responseSchemaRepository
+          ) {
+            // 新增subStatus字段
+            handleSubStatus(doc);
+          }
+          if (
+            repository === this.surveyMetaRepository ||
+            repository === this.downloadTaskRepository ||
+            repository === this.messagePushingTaskRepository ||
+            repository === this.workspaceRepository ||
+            repository === this.responseSchemaRepository
+          ) {
+            // 新增isDeleted等相关字段
+            handleDelStatus(doc);
+          }
+          // 同步sessionStatus到新定义的字段
+          if (repository === this.sessionRepository) {
+            handleSessionStatus(doc);
+          }
+          // 同步begTime，更新成beginTime
+          if (repository === this.surveyConfRepository) {
+            handleBegTime(doc);
+          }
+          // 同步ownerId到creatorId
+          if (repository === this.surveyMetaRepository) {
+            await handleCreatorId(doc);
+          }
+          await save({ repository, doc });
+        } catch (error) {
+          this.logger.error(`upgrade ${name} error ${error.message}`);
+        }
+      }
+      this.logger.info(`finish upgrade ${name}`);
+    }
+    this.logger.info(`upgrad finished...`);
   }
 }

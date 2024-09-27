@@ -150,8 +150,9 @@ export class MessagePushingTaskController {
   async remove(@Request() req, @Param('id') id: string) {
     const userId = req.user._id;
     const res = await this.messagePushingTaskService.remove({
-      ownerId: userId,
       id,
+      operator: req.user.username,
+      operatorId: userId,
     });
     return {
       code: 200,

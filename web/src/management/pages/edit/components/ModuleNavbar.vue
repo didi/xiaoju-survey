@@ -18,10 +18,15 @@
       </CooperationPanel>
       <PreviewPanel></PreviewPanel>
       <HistoryPanel></HistoryPanel>
-      <SavePanel :updateLogicConf="updateLogicConf" :updateWhiteConf="updateWhiteConf"></SavePanel>
+      <SavePanel
+        :updateLogicConf="updateLogicConf"
+        :updateWhiteConf="updateWhiteConf"
+        :seize="seize"
+      ></SavePanel>
       <PublishPanel
         :updateLogicConf="updateLogicConf"
         :updateWhiteConf="updateWhiteConf"
+        :seize="seize"
       ></PublishPanel>
     </div>
   </div>
@@ -30,6 +35,8 @@
 import { computed } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { storeToRefs } from 'pinia'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
 
 import BackPanel from '../modules/generalModule/BackPanel.vue'
 import TitlePanel from '../modules/generalModule/TitlePanel.vue'
@@ -39,6 +46,7 @@ import PreviewPanel from '../modules/contentModule/PreviewPanel.vue'
 import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
+import { seizeSession } from '@/management/api/survey'
 
 const editStore = useEditStore()
 const { schema, changeSchema } = editStore
@@ -68,15 +76,17 @@ const updateLogicConf = () => {
     }
 
     const showLogicConf = showLogicEngine.value.toJson()
-
-    // 更新逻辑配置
-    changeSchema({ key: 'logicConf', value: { showLogicConf } })
+    if (JSON.stringify(schema.logicConf.showLogicConf) !== JSON.stringify(showLogicConf)) {
+      // 更新逻辑配置
+      changeSchema({ key: 'logicConf', value: { showLogicConf } })
+    }
 
     return res
   }
-
   const jumpLogicConf = jumpLogicEngine.value.toJson()
-  changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
+  if (JSON.stringify(schema.logicConf.jumpLogicConf) !== JSON.stringify(jumpLogicConf)) {
+    changeSchema({ key: 'logicConf', value: { jumpLogicConf } })
+  }
 
   return res
 }
@@ -103,6 +113,16 @@ const updateWhiteConf = () => {
     return res
   }
   return res
+}
+
+// 重新获取sessionid
+const seize = async (sessionId: string) => {
+  const seizeRes: Record<string, any> = await seizeSession({ sessionId })
+  if (seizeRes.code === 200) {
+    location.reload()
+  } else {
+    ElMessage.error('获取权限失败，请重试')
+  }
 }
 </script>
 <style lang="scss" scoped>

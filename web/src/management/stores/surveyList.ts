@@ -30,8 +30,8 @@ function useSearchSurvey() {
   })
 
   const buttonValueMap = ref<Record<string, any>>({
-    'subStatus.date': '',
-    createDate: -1
+    'updatedAt': '',
+    createdAt: -1
   })
 
   const listFilter = computed(() => {
@@ -86,8 +86,8 @@ function useSearchSurvey() {
 
   function resetButtonValueMap() {
     buttonValueMap.value = {
-      'subStatus.date': '',
-      createDate: -1
+      'updatedAt': '',
+      createdAt: -1
     }
   }
 

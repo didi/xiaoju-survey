@@ -73,25 +73,6 @@ export default defineComponent({
       pageEditOne
     }
   },
-  watch: {
-    skinConf: {
-      handler(newVal) {
-        const { themeConf, backgroundConf, contentConf } = newVal
-        const root = document.documentElement
-        if (themeConf?.color) {
-          root.style.setProperty('--primary-color', themeConf?.color) // 设置主题颜色
-        }
-        if (backgroundConf?.color) {
-          root.style.setProperty('--primary-background-color', backgroundConf?.color) // 设置背景颜色
-        }
-        if (contentConf?.opacity.toString()) {
-          root.style.setProperty('--opacity', contentConf?.opacity / 100) // 设置全局透明度
-        }
-      },
-      immediate: true,
-      deep: true
-    }
-  }
 })
 </script>
 
@@ -103,7 +84,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f6f7f9;
+  background: var(--primary-background);
 }
 
 .pagination-wrapper {
@@ -137,7 +118,6 @@ export default defineComponent({
   }
 
   .box {
-    background-color: var(--primary-background-color);
     position: relative;
 
     .mask {
@@ -150,9 +130,7 @@ export default defineComponent({
     }
 
     .content {
-      margin: 0 0.3rem;
       background: rgba(255, 255, 255, var(--opacity));
-      border-radius: 8px 8px 0 0;
     }
   }
 }

@@ -22,7 +22,7 @@ export async function getSchemaBySurveyType(surveyType: string) {
   }
   const code = Object.assign({}, templateBase, codeData);
   const nowMoment = moment();
-  code.baseConf.begTime = nowMoment.format('YYYY-MM-DD HH:mm:ss');
+  code.baseConf.beginTime = nowMoment.format('YYYY-MM-DD HH:mm:ss');
   code.baseConf.endTime = nowMoment
     .add(10, 'years')
     .format('YYYY-MM-DD HH:mm:ss');
@@ -63,7 +63,7 @@ export function getListHeadByDataList(dataList) {
     type: QUESTION_TYPE.TEXT,
   });
   listHead.push({
-    field: 'createDate',
+    field: 'createdAt',
     title: '提交时间',
     type: QUESTION_TYPE.TEXT,
   });

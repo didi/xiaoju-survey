@@ -112,7 +112,7 @@ export enum MemberType {
 }
 
 export interface BaseConf {
-  begTime: string;
+  beginTime: string;
   endTime: string;
   answerBegTime: string;
   answerEndTime: string;
@@ -135,6 +135,17 @@ export interface BaseConf {
 export interface SkinConf {
   skinColor: string;
   inputBgColor: string;
+  backgroundConf: {
+    color: string;
+    type: string;
+    image: string;
+  };
+  contentConf: {
+    opacity: number;
+  };
+  themeConf: {
+    color: string;
+  };
 }
 
 export interface BottomConf {

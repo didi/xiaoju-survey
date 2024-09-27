@@ -69,7 +69,7 @@ export class CollaboratorController {
   ) {
     const { error, value } = CreateCollaboratorDto.validate(reqBody);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException(
         '系统错误，请联系管理员',
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -124,7 +124,7 @@ export class CollaboratorController {
   ) {
     const { error, value } = BatchSaveCollaboratorDto.validate(reqBody);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException(
         '系统错误，请联系管理员',
         EXCEPTION_CODE.PARAMETER_ERROR,
@@ -184,11 +184,15 @@ export class CollaboratorController {
         neIdList: collaboratorIdList,
         userIdList: newCollaboratorUserIdList,
       });
-      this.logger.info('batchDelete:' + JSON.stringify(delRes), { req });
+      this.logger.info('batchDelete:' + JSON.stringify(delRes));
+      const username = req.user.username;
+      const userId = req.user._id.toString();
       if (Array.isArray(newCollaborator) && newCollaborator.length > 0) {
         const insertRes = await this.collaboratorService.batchCreate({
           surveyId: value.surveyId,
           collaboratorList: newCollaborator,
+          creator: username,
+          creatorId: userId,
         });
         this.logger.info(`${JSON.stringify(insertRes)}`);
       }
@@ -198,6 +202,8 @@ export class CollaboratorController {
             this.collaboratorService.updateById({
               collaboratorId: item._id,
               permissions: item.permissions,
+              operator: username,
+              operatorId: userId,
             }),
           ),
         );
@@ -208,7 +214,7 @@ export class CollaboratorController {
       const delRes = await this.collaboratorService.batchDeleteBySurveyId(
         value.surveyId,
       );
-      this.logger.info(JSON.stringify(delRes), { req });
+      this.logger.info(JSON.stringify(delRes));
     }
 
     return {
@@ -225,11 +231,10 @@ export class CollaboratorController {
   ])
   async getSurveyCollaboratorList(
     @Query() query: GetSurveyCollaboratorListDto,
-    @Request() req,
   ) {
     const { error, value } = GetSurveyCollaboratorListDto.validate(query);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -263,17 +268,14 @@ export class CollaboratorController {
   @SetMetadata('surveyPermission', [
     SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
   ])
-  async changeUserPermission(
-    @Body() reqBody: ChangeUserPermissionDto,
-    @Request() req,
-  ) {
+  async changeUserPermission(@Body() reqBody: ChangeUserPermissionDto) {
     const { error, value } = Joi.object({
       surveyId: Joi.string(),
       userId: Joi.string(),
       permissions: Joi.array().items(Joi.string().required()),
     }).validate(reqBody);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -292,13 +294,13 @@ export class CollaboratorController {
   @SetMetadata('surveyPermission', [
     SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
   ])
-  async deleteCollaborator(@Query() query, @Request() req) {
+  async deleteCollaborator(@Query() query) {
     const { error, value } = Joi.object({
       surveyId: Joi.string(),
       userId: Joi.string(),
     }).validate(query);
     if (error) {
-      this.logger.error(error.message, { req });
+      this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
@@ -319,7 +321,7 @@ export class CollaboratorController {
     const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
 
     if (!surveyMeta) {
-      this.logger.error(`问卷不存在: ${surveyId}`, { req });
+      this.logger.error(`问卷不存在: ${surveyId}`);
       throw new HttpException('问卷不存在', EXCEPTION_CODE.SURVEY_NOT_FOUND);
     }
 

@@ -1,4 +1,4 @@
-import { computed, defineComponent, shallowRef, defineAsyncComponent, watch } from 'vue'
+import { computed, defineComponent, shallowRef, defineAsyncComponent } from 'vue'
 import { includes } from 'lodash-es'
 
 import BaseChoice from '../BaseChoice'
@@ -61,7 +61,7 @@ export default defineComponent({
       return options.map((item) => {
         return {
           ...item,
-          disabled: (item.release === 0) || isDisabled(item)
+          disabled: isDisabled(item)
         }
       })
     })
@@ -93,7 +93,6 @@ export default defineComponent({
     return {
       onChange,
       handleSelectMoreChange,
-      disableState,
       myOptions,
       selectMoreView
     }

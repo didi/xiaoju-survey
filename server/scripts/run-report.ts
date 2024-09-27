@@ -58,7 +58,5 @@ const readData = async (directory: string): Promise<PackageJson | null> => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(res),
-  }).catch((e) => {
-    console.log(99999, e);
-  });
+  }).catch(() => {});
 })();

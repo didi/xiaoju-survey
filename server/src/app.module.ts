@@ -44,8 +44,6 @@ import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
 import { PluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
-import { DownloadTask } from './models/downloadTask.entity';
-import { Session } from './models/session.entity';
 
 @Module({
   imports: [

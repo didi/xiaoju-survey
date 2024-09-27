@@ -33,4 +33,10 @@ export class MessagePushingTask extends BaseEntity {
 
   @Column()
   deletedAt: Date;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
 }

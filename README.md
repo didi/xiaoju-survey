@@ -222,4 +222,4 @@ npm run serve
 
 ## CHANGELOG
 
-关注重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)
+关注重大项目变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)。

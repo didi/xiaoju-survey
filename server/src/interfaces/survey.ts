@@ -112,7 +112,7 @@ export enum MemberType {
 }
 
 export interface BaseConf {
-  begTime: string;
+  beginTime: string;
   endTime: string;
   answerBegTime: string;
   answerEndTime: string;

@@ -24,6 +24,7 @@ export class SessionGuard implements CanActivate {
     }
     const sessionInfo = await this.sessionService.findOne(sessionId);
     request.sessionInfo = sessionInfo;
+    request.surveyId = sessionInfo.surveyId;
     return true;
   }
 }

@@ -20,7 +20,9 @@ export const genTraceId = ({ ip }) => {
   } else {
     ipArr = ip
       .split('.')
-      .map((item) => parseInt(item).toString(16).padStart(2, '0'));
+      .map((item) =>
+        item ? parseInt(item).toString(16).padStart(2, '0') : '',
+      );
   }
 
   return `${ipArr.join('')}${Date.now().toString()}${getCountStr()}${process.pid.toString().slice(-5)}`;

@@ -18,7 +18,7 @@ import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 @ApiTags('survey')
-@Controller('/api/surveyHisotry')
+@Controller('/api/surveyHistory')
 export class SurveyHistoryController {
   constructor(
     private readonly surveyHistoryService: SurveyHistoryService,

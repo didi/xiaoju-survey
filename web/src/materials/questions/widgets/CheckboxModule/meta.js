@@ -134,9 +134,9 @@ const meta = {
             return moduleConfig?.options?.length
           },
           contentClass: 'input-number-config'
-        }
+        },
       ]
-    }
+    },
   ],
   editConfigure: {
     optionEdit: {

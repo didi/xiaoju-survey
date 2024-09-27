@@ -80,7 +80,7 @@ const popoverContent = ref('')
 
 const getContent = (content) => {
   if (Array.isArray(content)) {
-    return content.map((item) => getContent(item)).join(',')
+    return content.map(item => getContent(item)).join(',');
   }
   if (content === null || content === undefined) {
     return ''

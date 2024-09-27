@@ -118,7 +118,6 @@ describe('DownloadTaskService', () => {
       expect(downloadTaskRepository.findAndCount).toHaveBeenCalledWith({
         where: {
           creatorId: mockCreatorId,
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
         },
         take: 10,
         skip: 0,

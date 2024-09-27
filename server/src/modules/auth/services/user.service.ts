@@ -5,7 +5,6 @@ import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { hash256 } from 'src/utils/hash256';
-import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
@@ -53,9 +52,6 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         username: username,
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
     });
 
@@ -66,9 +62,6 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: {
         _id: new ObjectId(id),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
     });
 
@@ -79,13 +72,10 @@ export class UserService {
     const list = await this.userRepository.find({
       where: {
         username: new RegExp(username),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
       skip,
       take,
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     return list;
   }
@@ -96,11 +86,8 @@ export class UserService {
         _id: {
           $in: idList.map((item) => new ObjectId(item)),
         },
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     return list;
   }

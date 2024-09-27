@@ -172,7 +172,7 @@ describe('SurveyController', () => {
             bannerConfig: {},
           },
           baseConf: {
-            begTime: '2024-01-23 21:59:05',
+            beginTime: '2024-01-23 21:59:05',
             endTime: '2034-01-23 21:59:05',
           },
           bottomConf: { logoImage: '/imgs/Logo.webp', logoImageWidth: '60%' },

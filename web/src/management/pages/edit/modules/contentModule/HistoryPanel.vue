@@ -34,7 +34,7 @@ import { getSurveyHistory } from '@/management/api/survey'
 
 const getItemData = (item: any) => ({
   operator: item?.operator?.username || '未知用户',
-  time: moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
+  time: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
 })
 
 const dailyList = ref<Array<any>>([])

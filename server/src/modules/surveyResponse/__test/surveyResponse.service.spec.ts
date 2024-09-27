@@ -77,7 +77,7 @@ describe('SurveyResponseService', () => {
     expect(surveyResponseRepository.count).toHaveBeenCalledWith({
       where: {
         surveyPath,
-        'curStatus.status': { $ne: 'removed' },
+        'subStatus.status': { $ne: 'removed' },
       },
     });
   });

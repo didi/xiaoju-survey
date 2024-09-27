@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { Session } from 'src/models/session.entity';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { SESSION_STATUS } from 'src/enums/surveySessionStatus';
 
 @Injectable()
 export class SessionService {
@@ -16,6 +16,7 @@ export class SessionService {
     const session = this.sessionRepository.create({
       surveyId,
       userId,
+      status: SESSION_STATUS.DEACTIVATED,
     });
     return this.sessionRepository.save(session);
   }
@@ -32,33 +33,20 @@ export class SessionService {
     return this.sessionRepository.findOne({
       where: {
         surveyId,
-        'curStatus.status': {
-          $ne: RECORD_STATUS.NEW,
-        },
+        status: SESSION_STATUS.ACTIVATED,
       },
     });
   }
 
   updateSessionToEditing({ sessionId, surveyId }) {
-    const now = Date.now();
-    const editingStatus = {
-      status: RECORD_STATUS.EDITING,
-      date: now,
-    };
-    const newStatus = {
-      status: RECORD_STATUS.NEW,
-      date: now,
-    };
     return Promise.all([
-      this.sessionRepository.updateOne(
+      this.sessionRepository.update(
         {
           _id: new ObjectId(sessionId),
         },
         {
-          $set: {
-            curStatus: editingStatus,
-            updateDate: now,
-          },
+          status: SESSION_STATUS.ACTIVATED,
+          updatedAt: new Date(),
         },
       ),
       this.sessionRepository.updateMany(
@@ -70,8 +58,8 @@ export class SessionService {
         },
         {
           $set: {
-            curStatus: newStatus,
-            updateDate: now,
+            status: SESSION_STATUS.DEACTIVATED,
+            updatedAt: new Date(),
           },
         },
       ),

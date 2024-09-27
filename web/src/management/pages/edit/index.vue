@@ -24,6 +24,7 @@ import LeftMenu from '@/management/components/LeftMenu.vue'
 import CommonTemplate from './components/CommonTemplate.vue'
 import Navbar from './components/ModuleNavbar.vue'
 
+
 const editStore = useEditStore()
 const { init, setSurveyId, schema } = editStore
 

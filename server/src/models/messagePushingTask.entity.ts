@@ -27,4 +27,16 @@ export class MessagePushingTask extends BaseEntity {
 
   @Column()
   ownerId: string;
+
+  @Column()
+  isDeleted: boolean;
+
+  @Column()
+  deletedAt: Date;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
 }

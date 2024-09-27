@@ -20,6 +20,7 @@ export function getFilter(filterList: Array<FilterItem>) {
     'remark',
     'surveyType',
     'curStatus.status',
+    'subStatus.status',
   ];
   return filterList.reduce(
     (preItem, curItem) => {
@@ -61,7 +62,7 @@ export function getFilter(filterList: Array<FilterItem>) {
 }
 
 export function getOrder(order: Array<OrderItem>) {
-  const allowOrderFields = ['createDate', 'updateDate', 'curStatus.date'];
+  const allowOrderFields = ['createdAt', 'updatedAt', 'curStatus.date'];
 
   const orderList = order.filter((orderItem) =>
     allowOrderFields.includes(orderItem.field),

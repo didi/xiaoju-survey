@@ -144,7 +144,7 @@ export class SurveyController {
 
     if (latestEditingOne && latestEditingOne._id.toString() !== sessionId) {
       const curSession = await this.sessionService.findOne(sessionId);
-      if (curSession.createDate <= latestEditingOne.updateDate) {
+      if (curSession.createdAt <= latestEditingOne.updatedAt) {
         // 在当前用户打开之后，被其他页面保存过了
         const isSameOperator =
           latestEditingOne.userId === req.user._id.toString();
@@ -194,8 +194,35 @@ export class SurveyController {
   async deleteSurvey(@Request() req) {
     const surveyMeta = req.surveyMeta;
 
-    await this.surveyMetaService.deleteSurveyMeta(surveyMeta);
-    await this.responseSchemaService.deleteResponseSchema({
+    const delMetaRes = await this.surveyMetaService.deleteSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const delResponseRes =
+      await this.responseSchemaService.deleteResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(delMetaRes));
+    this.logger.info(JSON.stringify(delResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/pausingSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async pausingSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    await this.surveyMetaService.pausingSurveyMeta(surveyMeta);
+    await this.responseSchemaService.pausingResponseSchema({
       surveyPath: surveyMeta.surveyPath,
     });
 
@@ -305,6 +332,12 @@ export class SurveyController {
     const username = req.user.username;
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+    if (surveyMeta.isDeleted) {
+      throw new HttpException(
+        '问卷已删除，无法发布',
+        EXCEPTION_CODE.SURVEY_NOT_FOUND,
+      );
+    }
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 
@@ -330,7 +363,8 @@ export class SurveyController {
       pageId: surveyId,
     });
 
-    await this.surveyHistoryService.addHistory({
+    // 添加发布历史可以异步添加
+    this.surveyHistoryService.addHistory({
       surveyId,
       schema: surveyConf.code,
       type: HISTORY_TYPE.PUBLISH_HIS,

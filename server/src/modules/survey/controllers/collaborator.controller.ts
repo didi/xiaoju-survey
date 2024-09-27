@@ -185,10 +185,14 @@ export class CollaboratorController {
         userIdList: newCollaboratorUserIdList,
       });
       this.logger.info('batchDelete:' + JSON.stringify(delRes));
+      const username = req.user.username;
+      const userId = req.user._id.toString();
       if (Array.isArray(newCollaborator) && newCollaborator.length > 0) {
         const insertRes = await this.collaboratorService.batchCreate({
           surveyId: value.surveyId,
           collaboratorList: newCollaborator,
+          creator: username,
+          creatorId: userId,
         });
         this.logger.info(`${JSON.stringify(insertRes)}`);
       }
@@ -198,6 +202,8 @@ export class CollaboratorController {
             this.collaboratorService.updateById({
               collaboratorId: item._id,
               permissions: item.permissions,
+              operator: username,
+              operatorId: userId,
             }),
           ),
         );

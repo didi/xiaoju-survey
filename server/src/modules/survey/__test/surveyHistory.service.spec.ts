@@ -42,7 +42,7 @@ describe('SurveyHistoryService', () => {
       msgContent: undefined,
     },
     baseConf: {
-      begTime: '',
+      beginTime: '',
       endTime: '',
       answerBegTime: '',
       answerEndTime: '',

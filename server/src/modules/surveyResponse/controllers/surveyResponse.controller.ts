@@ -5,6 +5,7 @@ import { checkSign } from 'src/utils/checkSign';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
+import { RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
@@ -82,8 +83,14 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!responseSchema || responseSchema.curStatus.status === 'removed') {
+    if (!responseSchema || responseSchema.isDeleted) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
+    }
+    if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {
+      throw new HttpException(
+        '该问卷已暂停，无法提交',
+        EXCEPTION_CODE.RESPONSE_PAUSING,
+      );
     }
 
     // 白名单的verifyId校验
@@ -132,12 +139,12 @@ export class SurveyResponseController {
 
     const now = Date.now();
     // 提交时间限制
-    const begTime = responseSchema.code?.baseConf?.begTime || 0;
+    const beginTime = responseSchema.code?.baseConf?.beginTime || 0;
     const endTime = responseSchema?.code?.baseConf?.endTime || 0;
-    if (begTime && endTime) {
-      const begTimeStamp = new Date(begTime).getTime();
+    if (beginTime && endTime) {
+      const beginTimeStamp = new Date(beginTime).getTime();
       const endTimeStamp = new Date(endTime).getTime();
-      if (now < begTimeStamp || now > endTimeStamp) {
+      if (now < beginTimeStamp || now > endTimeStamp) {
         throw new HttpException(
           '不在答题有效期内',
           EXCEPTION_CODE.RESPONSE_CURRENT_TIME_NOT_ALLOW,

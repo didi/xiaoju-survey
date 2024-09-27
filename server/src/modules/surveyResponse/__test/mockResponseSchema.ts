@@ -1,11 +1,15 @@
 import { ResponseSchema } from 'src/models/responseSchema.entity';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 export const mockResponseSchema: ResponseSchema = {
   _id: new ObjectId('65f29f8892862d6a9067ad25'),
   curStatus: {
     status: RECORD_STATUS.PUBLISHED,
+    date: 1710399368439,
+  },
+  subStatus: {
+    status: RECORD_SUB_STATUS.DEFAULT,
     date: 1710399368439,
   },
   statusList: [
@@ -32,7 +36,7 @@ export const mockResponseSchema: ResponseSchema = {
       },
     },
     baseConf: {
-      begTime: '2024-03-14 14:54:41',
+      beginTime: '2024-03-14 14:54:41',
       endTime: '2034-03-14 14:54:41',
       language: 'chinese',
       tLimit: 10,
@@ -247,4 +251,4 @@ export const mockResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65f29f3192862d6a9067ad1c',
-} as ResponseSchema;
+} as unknown as ResponseSchema;

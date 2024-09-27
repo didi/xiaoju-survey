@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { DownloadTask } from 'src/models/downloadTask.entity';
-import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { ResponseSchemaService } from 'src/modules/surveyResponse/services/responseScheme.service';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
@@ -14,11 +13,12 @@ import { get } from 'lodash';
 import { FileService } from 'src/modules/file/services/file.service';
 import { Logger } from 'src/logger';
 import moment from 'moment';
+import { DOWNLOAD_TASK_STATUS } from 'src/enums/downloadTaskStatus';
 
 @Injectable()
 export class DownloadTaskService {
-  static taskList: Array<any> = [];
-  static isExecuting: boolean = false;
+  private static taskList: Array<any> = [];
+  private static isExecuting: boolean = false;
 
   constructor(
     @InjectRepository(DownloadTask)
@@ -56,6 +56,7 @@ export class DownloadTaskService {
         title: responseSchema.title,
       },
       filename,
+      status: DOWNLOAD_TASK_STATUS.WAITING,
     });
     await this.downloadTaskRepository.save(downloadTask);
     return downloadTask._id.toString();
@@ -72,8 +73,8 @@ export class DownloadTaskService {
   }) {
     const where = {
       creatorId,
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     };
     const [surveyDownloadList, total] =
@@ -82,7 +83,7 @@ export class DownloadTaskService {
         take: pageSize,
         skip: (pageIndex - 1) * pageSize,
         order: {
-          createDate: -1,
+          createdAt: -1,
         },
       });
     return {
@@ -103,24 +104,25 @@ export class DownloadTaskService {
     return null;
   }
 
-  async deleteDownloadTask({ taskId }: { taskId: string }) {
-    const curStatus = {
-      status: RECORD_STATUS.REMOVED,
-      date: Date.now(),
-    };
+  async deleteDownloadTask({
+    taskId,
+    operator,
+    operatorId,
+  }: {
+    taskId: string;
+    operator: string;
+    operatorId: string;
+  }) {
     return this.downloadTaskRepository.updateOne(
       {
         _id: new ObjectId(taskId),
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
-        },
       },
       {
         $set: {
-          curStatus,
-        },
-        $push: {
-          statusList: curStatus as never,
+          isDeleted: true,
+          operator,
+          operatorId,
+          deletedAt: new Date(),
         },
       },
     );
@@ -140,7 +142,7 @@ export class DownloadTaskService {
         const taskId = DownloadTaskService.taskList.shift();
         this.logger.info(`handle taskId: ${taskId}`);
         const taskInfo = await this.getDownloadTaskById({ taskId });
-        if (!taskInfo || taskInfo.curStatus.status === RECORD_STATUS.REMOVED) {
+        if (!taskInfo || taskInfo.isDeleted) {
           // 不存在或者已删除的，不处理
           continue;
         }
@@ -160,10 +162,8 @@ export class DownloadTaskService {
         },
         {
           $set: {
-            curStatus: {
-              status: RECORD_STATUS.COMPUTING,
-              date: Date.now(),
-            },
+            status: DOWNLOAD_TASK_STATUS.COMPUTING,
+            updatedAt: new Date(),
           },
         },
       );
@@ -176,9 +176,6 @@ export class DownloadTaskService {
         await this.responseSchemaService.getResponseSchemaByPageId(surveyId);
       const where = {
         pageId: surveyId,
-        'curStatus.status': {
-          $ne: 'removed',
-        },
       };
       const total = await this.surveyResponseRepository.count(where);
       const pageSize = 200;
@@ -205,9 +202,13 @@ export class DownloadTaskService {
           for (const headItem of listHead) {
             const field = headItem.field;
             const val = get(bodyItem, field, '');
-            const $ = load(val);
-            const text = $.text();
-            bodyData.push(text);
+            if (typeof val === 'string') {
+              const $ = load(val);
+              const text = $.text();
+              bodyData.push(text);
+            } else {
+              bodyData.push(val);
+            }
           }
           xlsxBody.push(bodyData);
         }
@@ -236,11 +237,6 @@ export class DownloadTaskService {
         filename: taskInfo.filename,
       });
 
-      const curStatus = {
-        status: RECORD_STATUS.FINISHED,
-        date: Date.now(),
-      };
-
       // 更新计算结果
       const updateFinishRes = await this.downloadTaskRepository.updateOne(
         {
@@ -248,32 +244,24 @@ export class DownloadTaskService {
         },
         {
           $set: {
-            curStatus,
+            status: DOWNLOAD_TASK_STATUS.SUCCEED,
             url,
             fileKey: key,
             fileSize: buffer.length,
-          },
-          $push: {
-            statusList: curStatus as never,
+            updatedAt: new Date(),
           },
         },
       );
       this.logger.info(JSON.stringify(updateFinishRes));
     } catch (error) {
-      const curStatus = {
-        status: RECORD_STATUS.ERROR,
-        date: Date.now(),
-      };
       await this.downloadTaskRepository.updateOne(
         {
           _id: taskInfo._id,
         },
         {
           $set: {
-            curStatus,
-          },
-          $push: {
-            statusList: curStatus as never,
+            status: DOWNLOAD_TASK_STATUS.FAILED,
+            updatedAt: new Date(),
           },
         },
       );

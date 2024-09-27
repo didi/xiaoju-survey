@@ -38,7 +38,7 @@ export const useProgressBar = () => {
 
   const percent = computed(() => {
     const { fillCount, topicCount } = surveySchedule.value
-    return Math.floor((100 / topicCount) * fillCount) || 0 + '%'
+    return (Math.floor((100 / topicCount) * fillCount) || 0) + '%'
   })
 
   return { surveySchedule, percent }

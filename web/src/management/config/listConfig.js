@@ -27,9 +27,9 @@ export const spaceListConfig = {
     key: 'owner',
     width: 150
   },
-  createDate: {
+  createdAt: {
     title: '创建时间',
-    key: 'createDate',
+    key: 'createdAt',
     minWidth: 200
   }
 }
@@ -64,14 +64,14 @@ export const fieldConfig = {
     key: 'owner',
     width: 140
   },
-  updateDate: {
+  updatedAt: {
     title: '更新时间',
-    key: 'curStatus.date',
+    key: 'updatedAt',
     minWidth: 200
   },
-  createDate: {
+  createdAt: {
     title: '创建时间',
-    key: 'createDate',
+    key: 'createdAt',
     minWidth: 200
   }
 }
@@ -103,13 +103,36 @@ export const noDownloadTaskConfig = {
   img: '/imgs/icons/list-empty.webp'
 }
 
-export const statusMaps = {
-  new: '未发布',
-  editing: '修改中',
-  published: '已发布',
-  removed: '已删除',
-  pausing: ''
+export const curStatus = {
+  new: {
+    value: 'new',
+    label: '未发布'
+  },
+  published: {
+    value: 'published',
+    label: '已发布'
+  },
+  editing: {
+    label: '修改中',
+    value: 'editing'
+  },
 }
+
+// 子状态
+export const subStatus = {
+  pausing: {
+    label: '暂停中',
+    value: 'pausing'
+  }
+}
+
+export const statusMaps = {
+  ...Object.fromEntries(Object.keys(curStatus).map(key => ([key, curStatus[key].label]))),
+  ...Object.fromEntries(Object.keys(subStatus).map(key => ([key, subStatus[key].label])))
+}
+
+export const curStatusKey = 'curStatus.status';
+export const subStatusKey = 'subStatus.status';
 
 // 问卷类型
 export const surveyTypeSelect = {
@@ -151,29 +174,21 @@ export const curStatusSelect = {
       value: '',
       label: '全部状态'
     },
-    {
-      value: 'new',
-      label: '未发布'
-    },
-    {
-      value: 'published',
-      label: '已发布'
-    },
-    {
-      value: 'editing',
-      label: '修改中'
-    }
+    curStatus.new,
+    curStatus.published,
+    curStatus.editing,
+    subStatus.pausing
   ],
   default: ''
 }
 
 export const selectOptionsDict = Object.freeze({
   surveyType: surveyTypeSelect,
-  'curStatus.status': curStatusSelect
+  status: curStatusSelect,
 })
 
 export const buttonOptionsDict = Object.freeze({
-  'curStatus.date': {
+  'updatedAt': {
     label: '更新时间',
     icons: [
       {
@@ -194,7 +209,7 @@ export const buttonOptionsDict = Object.freeze({
       }
     ]
   },
-  createDate: {
+  createdAt: {
     label: '创建时间',
     icons: [
       {

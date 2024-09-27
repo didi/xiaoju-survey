@@ -183,7 +183,6 @@ export const useEditStore = defineStore('edit', () => {
     surveyId,
     sessionId,
     setSurveyId,
-
     cooperPermissions,
     fetchCooperPermissions,
 

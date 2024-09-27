@@ -35,7 +35,7 @@ export const createSurvey = (data) => {
 }
 
 export const getSurveyHistory = ({ surveyId, historyType }) => {
-  return axios.get('/surveyHisotry/getList', {
+  return axios.get('/surveyHistory/getList', {
     params: {
       surveyId,
       historyType
@@ -51,6 +51,16 @@ export const deleteSurvey = (surveyId) => {
 
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
+}
+
+export const pausingSurvey= (surveyId) => {
+  return axios.post('/survey/pausingSurvey', {
+    surveyId
+  })
+}
+
+export const upgradeSubStatus = () => {
+  return axios.get('/upgrade/subStatus')
 }
 
 export const getSessionId = ({ surveyId }) => {

@@ -26,7 +26,7 @@
       <el-table-column label="操作" width="200">
         <template v-slot="{ row }">
           <span
-            v-if="row.curStatus?.status === 'finished'"
+            v-if="row?.status === 'succeed'"
             class="text-btn download-btn"
             @click="handleDownload(row)"
           >
@@ -90,21 +90,19 @@ const getList = async ({ pageIndex }: { pageIndex: number }) => {
 }
 
 const statusTextMap: Record<string, string> = {
-  new: '排队中',
+  waiting: '排队中',
   computing: '计算中',
-  finished: '已完成',
-  removed: '已删除'
+  succeed: '已完成',
+  failed: '导出失败',
 }
 
 let currentDelRow: Record<string, any> = {}
 // 下载文件
 const handleDownload = async (row: any) => {
-  if (row.curStatus.status === 'removed') {
-    ElMessage.error('文件已删除')
-    return
-  }
   if (row.url) {
     window.open(row.url)
+  } else {
+    ElMessageBox.alert('文件不存在')
   }
 }
 // 删除文件
@@ -137,7 +135,7 @@ const confirmDelete = async () => {
   }
 }
 
-const fields = ['filename', 'fileSize', 'createDate', 'curStatus']
+const fields = ['filename', 'fileSize', 'createdAt', 'status']
 
 const fieldList = computed(() => {
   return map(fields, (f) => {
@@ -157,14 +155,14 @@ const downloadListConfig = {
     key: 'fileSize',
     width: 140
   },
-  createDate: {
+  createdAt: {
     title: '下载时间',
-    key: 'createDate',
+    key: 'createdAt',
     width: 240
   },
-  curStatus: {
+  status: {
     title: '状态',
-    key: 'curStatus.status',
+    key: 'status',
     formatter(row: Record<string, any>, column: Record<string, any>) {
       return statusTextMap[get(row, column.rawColumnKey)]
     }

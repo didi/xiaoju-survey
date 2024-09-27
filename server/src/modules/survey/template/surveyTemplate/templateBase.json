@@ -32,7 +32,7 @@
     "logoImageWidth": "60%"
   },
   "baseConf": {
-    "begTime": "2024-01-01 00:00:00",
+    "beginTime": "2024-01-01 00:00:00",
     "endTime": "2034-01-01 00:00:00",
     "tLimit": 0,
     "language": "chinese",

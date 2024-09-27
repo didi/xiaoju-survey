@@ -108,18 +108,17 @@ watchEffect(() => {
 
   .jump-btn {
     background: var(--primary-color);
-    border-radius: 2px;
     width: 90%;
-    height: 40px;
-    line-height: 40px;
+    border-radius: 0.08rem;
+    padding: 0.2rem 0;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 0.3rem;
     font-weight: 500;
-    margin: 32px auto 0;
-    cursor: pointer;
+    margin: 0.5rem auto 0;
+    border: none;
   }
 }
 </style>

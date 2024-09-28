@@ -36,6 +36,9 @@ export class SurveyMeta extends BaseEntity {
 
   @Column()
   workspaceId: string;
+  
+  @Column()
+  groupId: string;
 
   @Column()
   curStatus: {

@@ -10,6 +10,11 @@ export interface MenuItem {
   children?: MenuItem[]
 }
 
+export type IGroup = {
+  _id?: string
+  name: string
+}
+
 export type IWorkspace = {
   _id?: string
   name: string
@@ -49,11 +54,28 @@ export interface ICollaborator {
   permissions: Array<number>
 }
 
+export type GroupItem = {
+  _id: string,
+  name: string,
+  createDate: string
+  curStatus: { date: number; status: string }
+  memberTotal: number
+  currentUserRole: string
+  ownerId: string
+  surveyTotal: number
+}
+
 export enum SpaceType {
   Personal = 'personal',
   Group = 'group',
   Teamwork = 'teamwork'
 }
+
+export enum GroupType {
+  Personal = 'personal',
+  Teamwork = 'teamwork',
+}
+
 export enum UserRole {
   Admin = 'admin',
   Member = 'user'

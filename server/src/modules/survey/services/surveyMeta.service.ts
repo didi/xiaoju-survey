@@ -47,6 +47,7 @@ export class SurveyMetaService {
     createMethod: string;
     createFrom: string;
     workspaceId?: string;
+    groupId?: string;
   }) {
     const {
       title,
@@ -57,6 +58,7 @@ export class SurveyMetaService {
       createFrom,
       userId,
       workspaceId,
+      groupId,
     } = params;
     const surveyPath = await this.getNewSurveyPath();
     const newSurvey = this.surveyRepository.create({
@@ -71,6 +73,7 @@ export class SurveyMetaService {
       createMethod,
       createFrom,
       workspaceId,
+      groupId: groupId && groupId !== '' ? groupId : null,
     });
 
     return await this.surveyRepository.save(newSurvey);
@@ -143,9 +146,10 @@ export class SurveyMetaService {
     filter: Record<string, any>;
     order: Record<string, any>;
     workspaceId?: string;
+    groupId?: string;
     surveyIdList?: Array<string>;
   }): Promise<{ data: any[]; count: number }> {
-    const { pageNum, pageSize, userId, username, workspaceId, surveyIdList } =
+    const { pageNum, pageSize, userId, username, workspaceId, groupId, surveyIdList } =
       condition;
     const skip = (pageNum - 1) * pageSize;
     try {
@@ -159,6 +163,12 @@ export class SurveyMetaService {
       );
       if (condition.filter['curStatus.status']) {
         query['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
+      }
+      if (groupId && groupId !== '-1') {  
+        query.groupId = groupId === '-2' ? {  
+          $exists: true,
+          $eq: null
+        }: groupId;
       }
       if (workspaceId) {
         query.workspaceId = workspaceId;
@@ -224,6 +234,15 @@ export class SurveyMetaService {
       workspaceId,
       isDeleted: {
         $ne: true,
+      },
+    });
+    return total;
+  }
+  async countSurveyMetaByGroupId({ groupId }) {
+    const total = await this.surveyRepository.count({
+      groupId,
+      'curStatus.status': {
+        $ne: RECORD_STATUS.REMOVED,
       },
     });
     return total;

@@ -98,6 +98,8 @@
       :type="modifyType"
       :visible="showModify"
       :question-info="questionInfo"
+      :group-all-list="groupAllList"
+      :group-type="groupType"
       @on-close-codify="onCloseModify"
     />
     <CooperModify :modifyId="cooperId" :visible="cooperModify" @on-close-codify="onCooperClose" />
@@ -142,7 +144,7 @@ import {
 
 const surveyListStore = useSurveyListStore()
 const workSpaceStore = useWorkSpaceStore()
-const { workSpaceId } = storeToRefs(workSpaceStore)
+const { workSpaceId, groupAllList, groupType } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const props = defineProps({
   loading: {
@@ -363,7 +365,6 @@ const onDelete = async (row) => {
       type: 'warning'
     })
   } catch (error) {
-    console.log('取消删除')
     return
   }
 

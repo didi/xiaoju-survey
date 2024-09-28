@@ -10,11 +10,16 @@ import {
   updateSpace as updateSpaceReq,
   deleteSpace as deleteSpaceReq,
   getSpaceList as getSpaceListReq,
-  getSpaceDetail as getSpaceDetailReq
+  getSpaceDetail as getSpaceDetailReq,
+  createGroup,
+  getGroupList as getGroupListReq,
+  updateGroup as updateGroupReq,
+  deleteGroup as deleteGroupReq
 } from '@/management/api/space'
 
-import { SpaceType } from '@/management/utils/workSpace'
-import { type SpaceDetail, type SpaceItem, type IWorkspace } from '@/management/utils/workSpace'
+import { SpaceType, GroupType } from '@/management/utils/workSpace'
+import { type SpaceDetail, type SpaceItem, type IWorkspace, type IGroup, type GroupItem, } from '@/management/utils/workSpace'
+
 
 import { useSurveyListStore } from './surveyList'
 
@@ -24,16 +29,18 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     {
       icon: 'icon-wodekongjian',
       name: '我的空间',
-      id: SpaceType.Personal
+      id: GroupType.Personal,
+      children: []
     },
     {
       icon: 'icon-tuanduikongjian',
       name: '团队空间',
-      id: SpaceType.Group,
+      id: GroupType.Teamwork,
       children: []
     }
   ])
-  const spaceType = ref(SpaceType.Personal)
+  const spaceType = ref(SpaceType.Group)
+  const groupType = ref(GroupType.Personal)
   const workSpaceId = ref('')
   const spaceDetail = ref<SpaceDetail | null>(null)
   const workSpaceList = ref<SpaceItem[]>([])
@@ -78,8 +85,15 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     }
   }
 
-  function changeSpaceType(id: SpaceType) {
+  function changeGroupType(id: GroupType) {
+    groupType.value = id
+    spaceType.value = SpaceType.Group
+    workSpaceId.value = ''
+  }
+
+  function changeSpaceType(id: GroupType) {
     spaceType.value = id
+    groupType.value = id
   }
 
   function changeWorkSpace(id: string) {
@@ -126,10 +140,99 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   function setSpaceDetail(data: null | SpaceDetail) {
     spaceDetail.value = data
   }
+  
+  // 分组
+  const groupList = ref<GroupItem[]>([])
+  const groupAllList = ref<IGroup>([])
+  const groupListTotal = ref(0)
+  const groupDetail = ref<GroupItem | null>(null)
+  async function addGroup(params: IGroup) {
+    const { name } = params
+    const res: any = await createGroup({ name })
+
+    if (res.code === CODE_MAP.SUCCESS) {
+      ElMessage.success('添加成功')
+    } else {
+      ElMessage.error('createGroup  code err' + res.errmsg)
+    }
+  }
+
+  async function updateGroup(params: Required<IGroup>) {
+    const { _id, name } = params
+    const res: any = await updateGroupReq({ _id, name })
+
+    if (res?.code === CODE_MAP.SUCCESS) {
+      ElMessage.success('更新成功')
+    } else {
+      ElMessage.error(res?.errmsg)
+    }
+  }
+
+  async function getGroupList(params = { curPage: 1 }) {
+    try {
+      const res: any = await getGroupListReq(params)
+      if (res.code === CODE_MAP.SUCCESS) {
+        const { list, allList, total } = res.data
+        let group = list.map((item: GroupItem) => {
+          return {
+            id: item._id,
+            name: item.name
+          }
+        })
+        group.unshift({
+          id: -1, 
+          name: '全部' 
+        }, {
+          id: -2, 
+          name: '未分组' 
+        })
+        allList.unshift({
+          _id: '', 
+          name: '未分组' 
+        })
+        groupList.value = list
+        groupListTotal.value = total
+        spaceMenus.value[0].children = group
+        groupAllList.value = allList
+      } else {
+        ElMessage.error('getGroupList' + res.errmsg)
+      }
+    } catch (err) {
+      ElMessage.error('getGroupList' + err)
+    }
+  }
+
+  function getGroupDetail(id: string) {
+    try {
+      const data = groupList.value.find((item: GroupItem) => item._id === id)
+      groupDetail.value = data
+    } catch (err) {
+      ElMessage.error('groupDetail' + err)
+    }
+  }
+
+  function setGroupDetail(data: null | SpaceDetail) {
+    groupDetail.value = data
+  }
+
+  async function deleteGroup(id: string) {
+    try {
+      const res: any = await deleteGroupReq(id)
+
+      if (res.code === CODE_MAP.SUCCESS) {
+        ElMessage.success('删除成功')
+      } else {
+        ElMessage.error(res.errmsg)
+      }
+    } catch (err: any) {
+      ElMessage.error(err)
+    }
+  }
 
   return {
     spaceMenus,
     spaceType,
+    groupType,
     workSpaceId,
     spaceDetail,
     workSpaceList,
@@ -137,10 +240,21 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     getSpaceList,
     getSpaceDetail,
     changeSpaceType,
+    changeGroupType,
     changeWorkSpace,
     addSpace,
     deleteSpace,
     updateSpace,
-    setSpaceDetail
+    setSpaceDetail,
+    groupList,
+    groupAllList,
+    groupListTotal,
+    groupDetail,
+    addGroup,
+    updateGroup,
+    getGroupList,
+    getGroupDetail,
+    setGroupDetail,
+    deleteGroup
   }
 })

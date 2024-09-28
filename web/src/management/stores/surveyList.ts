@@ -8,6 +8,7 @@ import { CODE_MAP } from '@/management/api/base'
 import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
 
 import { useWorkSpaceStore } from './workSpace'
+import { GroupType } from '@/management/utils/workSpace'
 
 import {
   curStatus,
@@ -150,7 +151,8 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         pageSize: payload?.pageSize || 10, // 默认一页10条
         filter: filterString,
         order: orderString,
-        workspaceId: workSpaceStore.workSpaceId
+        workspaceId: workSpaceStore.groupType === GroupType.Teamwork ? workSpaceStore.workSpaceId : '',
+        groupId: workSpaceStore.groupType === GroupType.Personal ? workSpaceStore.workSpaceId : ''
       }
 
       const res: any = await getSurveyListReq(params)

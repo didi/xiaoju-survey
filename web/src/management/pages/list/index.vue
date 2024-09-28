@@ -2,23 +2,32 @@
   <div class="question-list-root">
     <TopNav></TopNav>
     <div class="content-wrap">
-      <SliderBar :menus="spaceMenus" @select="handleSpaceSelect" />
+      <SliderBar :menus="spaceMenus" :activeValue="activeValue" @select="handleSpaceSelect" />
       <div class="list-content">
         <div class="top">
           <h2>
-            {{ spaceType === SpaceType.Group ? '团队空间' : currentTeamSpace?.name || '问卷列表' }}
+            {{ tableTitle }}
           </h2>
           <div class="operation">
             <el-button
               class="btn create-btn"
               type="default"
               @click="onSpaceCreate"
-              v-if="spaceType == SpaceType.Group"
+              v-if="spaceType === SpaceType.Group && groupType === GroupType.Teamwork"
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建团队空间</span>
             </el-button>
-            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId">
+            <el-button
+              class="btn create-btn"
+              type="default"
+              @click="onGroupCreate"
+              v-if="spaceType === SpaceType.Group && groupType === GroupType.Personal"
+            >
+              <i class="iconfont icon-chuangjian"></i>
+              <span>创建分组</span>
+            </el-button>
+            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId && groupType === GroupType.Teamwork">
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
@@ -46,15 +55,29 @@
           :loading="spaceLoading"
           :data="workSpaceList"
           :total="workSpaceListTotal"
-          v-if="spaceType === SpaceType.Group"
+          v-if="spaceType === SpaceType.Group && groupType === GroupType.Teamwork"
         ></SpaceList>
+        <GroupList
+          ref="groupListRef"
+          @refresh="fetchGroupList"
+          :loading="groupLoading"
+          :data="groupList"
+          :total="groupListTotal"
+          v-if="spaceType === SpaceType.Group && groupType === GroupType.Personal"
+        ></GroupList>
       </div>
     </div>
     <SpaceModify
       v-if="showSpaceModify"
       :type="modifyType"
       :visible="showSpaceModify"
-      @on-close-codify="onCloseModify"
+      @on-close-codify="onCloseSpaceModify"
+    />
+    <GroupModify
+      v-if="showGroupModify"
+      type="add"
+      :visible="showGroupModify"
+      @on-close-codify="onCloseGroupModify"
     />
   </div>
 </template>
@@ -65,10 +88,13 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
+import GroupList from './components/GroupList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
+import GroupModify from './components/GroupModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
-import { SpaceType } from '@/management/utils/workSpace'
+import { SpaceType, GroupType } from '@/management/utils/workSpace'
+
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 
@@ -76,14 +102,38 @@ const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
-const { spaceMenus, workSpaceId, spaceType, workSpaceList, workSpaceListTotal } =
+const { spaceMenus, workSpaceId, spaceType, groupType, workSpaceList, workSpaceListTotal, groupList, groupListTotal } =
   storeToRefs(workSpaceStore)
 const router = useRouter()
+
+const tableTitle = computed(() => {
+  if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Personal) {
+    return '我的空间'
+  } else if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Teamwork) {
+    return '团队空间'
+  } else {
+    return currentTeamSpace?.name || '问卷列表'
+  }
+})
+
+const activeValue = computed(() => {
+  if(workSpaceId.value !== '') {
+    return workSpaceId.value
+  }
+  if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Personal) {
+    return GroupType.Personal
+  } else if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Teamwork) {
+    return GroupType.Teamwork
+  } else {
+    return workSpaceId.value
+  }
+})
 
 const loading = ref(false)
 
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
+const groupLoading = ref(false)
 
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -92,23 +142,31 @@ const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = false
 }
 
+const fetchGroupList = async (params?: any) => {
+  groupLoading.value = true
+  workSpaceStore.changeWorkSpace('')
+  workSpaceStore.getGroupList(params)
+  groupLoading.value = false
+}
+
 const handleSpaceSelect = (id: SpaceType | string) => {
-  if (id === spaceType.value || id === workSpaceId.value) {
+  if ((spaceType.value === SpaceType.Group && id === groupType.value) || id === workSpaceId.value) {
     return void 0
   }
-
   switch (id) {
-    case SpaceType.Personal:
-      workSpaceStore.changeSpaceType(SpaceType.Personal)
+    case GroupType.Personal:
+      workSpaceStore.changeGroupType(GroupType.Personal)
       workSpaceStore.changeWorkSpace('')
+      fetchGroupList()
       break
-    case SpaceType.Group:
-      workSpaceStore.changeSpaceType(SpaceType.Group)
+    case GroupType.Teamwork:
+      workSpaceStore.changeGroupType(GroupType.Teamwork)
       workSpaceStore.changeWorkSpace('')
       fetchSpaceList()
       break
     default:
-      workSpaceStore.changeSpaceType(SpaceType.Teamwork)
+      let parentMenu = spaceMenus.value.find((parent: typeof spaceMenus) => parent.children.find((children: typeof spaceMenus) => children.id === id))
+      workSpaceStore.changeSpaceType(parentMenu.id)
       workSpaceStore.changeWorkSpace(id)
       break
   }
@@ -131,8 +189,11 @@ const fetchSurveyList = async (params?: any) => {
 }
 
 onMounted(() => {
+  fetchGroupList()
   fetchSpaceList()
   fetchSurveyList()
+  spaceType.value = SpaceType.Group
+  groupType.value = GroupType.Personal
 })
 
 const modifyType = ref('add')
@@ -149,7 +210,7 @@ const onSetGroup = async () => {
   showSpaceModify.value = true
 }
 
-const onCloseModify = (type: string) => {
+const onCloseSpaceModify = (type: string) => {
   showSpaceModify.value = false
   if (type === 'update' && spaceListRef.value) {
     fetchSpaceList()
@@ -160,6 +221,20 @@ const onSpaceCreate = () => {
   modifyType.value = 'add'
   showSpaceModify.value = true
 }
+
+// 分组
+
+const showGroupModify = ref<boolean>(false)
+
+const onCloseGroupModify = () => {
+  showGroupModify.value = false
+  fetchGroupList()
+}
+
+const onGroupCreate = () => {
+  showGroupModify.value = true
+}
+
 const onCreate = () => {
   router.push('/create')
 }

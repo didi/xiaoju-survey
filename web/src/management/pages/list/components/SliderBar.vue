@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :default-active="SpaceType.Personal"
+    :default-active="activeValue"
     class="el-menu-vertical"
     ref="menuRef"
     @select="handleSelect"
@@ -39,16 +39,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { type MenuItem } from '@/management/utils/workSpace'
-import { SpaceType } from '@/management/utils/workSpace'
-
+import { GroupType } from '@/management/utils/workSpace'
 const menuRef = ref()
 
 withDefaults(
   defineProps<{
-    menus: Array<MenuItem>
+    menus: Array<MenuItem>,
+      activeValue: string
   }>(),
   {
-    menus: () => []
+    menus: () => [],
+    activeValue: GroupType.Personal
   }
 )
 const emit = defineEmits(['select'])

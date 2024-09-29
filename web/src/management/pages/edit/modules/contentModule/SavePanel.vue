@@ -8,7 +8,7 @@
           {{ saveText }}
         </span>
         <i-ep-loading class="icon" v-if="autoSaveStatus === 'saving'" />
-        <i-ep-check class="icon succeed" v-else-if="autoSaveStatus === 'succeed'" />
+        <i-ep-check class="icon succeed" v-if="autoSaveStatus === 'succeed'" />
       </div>
     </transition>
   </div>
@@ -99,20 +99,23 @@ const triggerAutoSave = () => {
       isShowAutoSave.value = true
       nextTick(async () => {
         try {
-          const res: any = await handleSave()
-          if (res.code === 200) {
-            autoSaveStatus.value = 'succeed'
-          } else {
-            autoSaveStatus.value = 'failed'
+          const res: any = await doSave()
+          if (res !== undefined)  {
+            if (res.code === 200) {
+              autoSaveStatus.value = 'succeed'
+            } else {
+              autoSaveStatus.value = 'failed'
+            }
+            isShowAutoSave.value = true
           }
-
+        } catch (err) {
+          autoSaveStatus.value = 'failed'
+          isShowAutoSave.value = true
+        } finally {
           setTimeout(() => {
             isShowAutoSave.value = false
             timerHandle.value = null
           }, 300)
-        } catch (err) {
-          autoSaveStatus.value = 'failed'
-          isShowAutoSave.value = true
         }
       })
     }, 2000)
@@ -120,6 +123,17 @@ const triggerAutoSave = () => {
 }
 
 const handleSave = async () => {
+  const res: any = await doSave()
+  if (res !== undefined && res.code === 200) {
+    ElMessage.success('保存成功')
+  }
+}
+
+/**
+ * 保存问卷
+ * @return 无返回时说明保存失败并由函数内部完成统一提示，有返回时，code为200为保存成功，不为200时，使用errmsg由外部实现错误信息展示
+ */
+const doSave = async () => {
   if (isSaving.value) {
     return
   }
@@ -141,7 +155,6 @@ const handleSave = async () => {
       return
     }
     if (res.code === 200) {
-      ElMessage.success('保存成功')
       return res
     } else if (res.code === 3006) {
       ElMessageBox.alert(res.errmsg, '提示', {

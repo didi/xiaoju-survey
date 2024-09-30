@@ -37,9 +37,4 @@ describe('UpdateMessagePushingTaskDto', () => {
     dto.surveys = null;
     expect(dto.surveys).toBeNull();
   });
-
-  it('should have a nullable curStatus', () => {
-    dto.curStatus = null;
-    expect(dto.curStatus).toBeNull();
-  });
 });

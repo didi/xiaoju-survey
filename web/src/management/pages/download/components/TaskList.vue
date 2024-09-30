@@ -44,7 +44,7 @@
         background
         layout="prev, pager, next"
         :total="total"
-        small
+        size="small"
         :page-size="pageSize"
         @current-change="handleCurrentChange"
       >

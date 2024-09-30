@@ -20,6 +20,7 @@ describe('ResponseSchemaService', () => {
             findOne: jest.fn().mockResolvedValue(mockResponseSchema),
             create: jest.fn(),
             save: jest.fn(),
+            updateOne: jest.fn(),
           },
         },
       ],
@@ -120,22 +121,24 @@ describe('ResponseSchemaService', () => {
   describe('deleteResponseSchema', () => {
     it('should delete response schema by survey path', async () => {
       jest
-        .spyOn(responseSchemaRepository, 'findOne')
+        .spyOn(responseSchemaRepository, 'updateOne')
         .mockResolvedValueOnce(cloneDeep(mockResponseSchema));
-      jest
-        .spyOn(responseSchemaRepository, 'save')
-        .mockResolvedValueOnce(undefined);
 
       await service.deleteResponseSchema({
         surveyPath: mockResponseSchema.surveyPath,
       });
 
-      expect(responseSchemaRepository.findOne).toHaveBeenCalledWith({
-        where: {
+      expect(responseSchemaRepository.updateOne).toHaveBeenCalledWith(
+        {
           surveyPath: mockResponseSchema.surveyPath,
         },
-      });
-      expect(responseSchemaRepository.save).toHaveBeenCalledTimes(1);
+        {
+          $set: {
+            isDeleted: true,
+            updatedAt: new Date(),
+          },
+        },
+      );
     });
   });
 });

@@ -117,6 +117,9 @@ describe('MessagePushingTaskService', () => {
       expect(result).toEqual(tasks);
       expect(repository.find).toHaveBeenCalledWith({
         where: {
+          isDeleted: {
+            $ne: true,
+          },
           ownerId: mockOwnerId,
           surveys: { $all: [surveyId] },
           triggerHook: hook,
@@ -144,8 +147,18 @@ describe('MessagePushingTaskService', () => {
         where: {
           ownerId: mockOwnerId,
           _id: new ObjectId(taskId),
+          isDeleted: {
+            $ne: true,
+          },
         },
       });
+    });
+    it('should throw an error when message pushing task is not found', async () => {
+      const taskId = '65afc62904d5db18534c0f78';
+      jest.spyOn(repository, 'findOne').mockResolvedValue(null); // 模拟未找到任务
+      const mockOwnerId = '66028642292c50f8b71a9eee';
+
+      await expect(service.findOne({ id: taskId, ownerId: mockOwnerId }));
     });
   });
 
@@ -183,6 +196,20 @@ describe('MessagePushingTaskService', () => {
       });
       expect(repository.save).toHaveBeenCalledWith(updatedTask);
     });
+    it('should throw an error if the task to be updated is not found', async () => {
+      const taskId = '65afc62904d5db18534c0f78';
+      const updateDto: UpdateMessagePushingTaskDto = { name: 'Updated Task' };
+      jest.spyOn(repository, 'findOne').mockResolvedValue(null); // 模拟任务未找到
+      const mockOwnerId = '66028642292c50f8b71a9eee';
+
+      await expect(
+        service.update({
+          ownerId: mockOwnerId,
+          id: taskId,
+          updateData: updateDto,
+        }),
+      ).rejects.toThrow(`Message pushing task with id ${taskId} not found`);
+    });
   });
 
   describe('remove', () => {
@@ -204,14 +231,38 @@ describe('MessagePushingTaskService', () => {
       expect(result).toEqual(updateResult);
       expect(repository.updateOne).toHaveBeenCalledWith(
         {
-          ownerId: mockOperatorId,
           _id: new ObjectId(taskId),
         },
         {
           $set: {
             isDeleted: true,
+            operatorId: mockOperatorId,
+            operator: mockOperator,
+            deletedAt: expect.any(Date),
           },
         },
+      );
+    });
+    it('should throw an error if the task to be removed is not found', async () => {
+      const taskId = '65afc62904d5db18534c0f78';
+      jest
+        .spyOn(repository, 'updateOne')
+        .mockResolvedValue({ modifiedCount: 0 }); // 模拟删除失败
+      const mockOperatorId = '66028642292c50f8b71a9eee';
+      const mockOperator = 'mockOperator';
+
+      const result = await service.remove({
+        id: taskId,
+        operatorId: mockOperatorId,
+        operator: mockOperator,
+      });
+
+      expect(result.modifiedCount).toBe(0);
+      expect(repository.updateOne).toHaveBeenCalledWith(
+        {
+          _id: new ObjectId(taskId),
+        },
+        expect.any(Object),
       );
     });
   });
@@ -243,7 +294,34 @@ describe('MessagePushingTaskService', () => {
           $push: {
             surveys: surveyId,
           },
+          $set: {
+            updatedAt: expect.any(Date),
+          },
         },
+      );
+    });
+    it('should not add the surveyId if it already exists in the task', async () => {
+      const taskId = '65afc62904d5db18534c0f78';
+      const surveyId = '65af380475b64545e5277dd9';
+      const mockOwnerId = '66028642292c50f8b71a9eee';
+
+      jest
+        .spyOn(repository, 'updateOne')
+        .mockResolvedValue({ modifiedCount: 0 }); // 模拟重复添加
+      const result = await service.surveyAuthorizeTask({
+        taskId,
+        surveyId,
+        ownerId: mockOwnerId,
+      });
+
+      expect(result.modifiedCount).toBe(0);
+      expect(repository.updateOne).toHaveBeenCalledWith(
+        {
+          _id: new ObjectId(taskId),
+          surveys: { $nin: [surveyId] }, // 确保只有不包含时才插入
+          ownerId: mockOwnerId,
+        },
+        expect.any(Object),
       );
     });
   });

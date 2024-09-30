@@ -75,6 +75,25 @@ describe('CollaboratorService', () => {
     });
   });
 
+  describe('deleteCollaborator', () => {
+    it('should delete a collaborator by userId and surveyId', async () => {
+      const deleteOneSpy = jest
+        .spyOn(repository, 'deleteOne')
+        .mockResolvedValue({ acknowledged: true, deletedCount: 1 });
+
+      const result = await service.deleteCollaborator({
+        userId: '1',
+        surveyId: '1',
+      });
+
+      expect(deleteOneSpy).toHaveBeenCalledWith({
+        userId: '1',
+        surveyId: '1',
+      });
+      expect(result).toEqual({ acknowledged: true, deletedCount: 1 });
+    });
+  });
+
   describe('batchCreate', () => {
     it('should batch create collaborators', async () => {
       const insertManySpy = jest
@@ -86,12 +105,190 @@ describe('CollaboratorService', () => {
       const result = await service.batchCreate({
         surveyId: '1',
         collaboratorList: [{ userId: '1', permissions: [] }],
+        creator: 'testCreator',
+        creatorId: 'testCreatorId',
       });
 
       expect(insertManySpy).toHaveBeenCalledWith([
-        { surveyId: '1', userId: '1', permissions: [] },
+        {
+          userId: '1',
+          permissions: [],
+          surveyId: '1',
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+          creator: 'testCreator',
+          creatorId: 'testCreatorId',
+        },
       ]);
       expect(result).toEqual({ insertedCount: 1 });
+    });
+  });
+
+  describe('changeUserPermission', () => {
+    it("should update a user's permissions", async () => {
+      const updateOneSpy = jest
+        .spyOn(repository, 'updateOne')
+        .mockResolvedValue({});
+
+      const result = await service.changeUserPermission({
+        userId: '1',
+        surveyId: '1',
+        permission: 'read',
+        operator: 'testOperator',
+        operatorId: 'testOperatorId',
+      });
+
+      expect(updateOneSpy).toHaveBeenCalledWith(
+        {
+          surveyId: '1',
+          userId: '1',
+        },
+        {
+          $set: {
+            permission: 'read',
+            operator: 'testOperator',
+            operatorId: 'testOperatorId',
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('batchDelete', () => {
+    it('should batch delete collaborators', async () => {
+      const mockResult = { acknowledged: true, deletedCount: 1 };
+      const deleteManySpy = jest
+        .spyOn(repository, 'deleteMany')
+        .mockResolvedValue(mockResult);
+
+      const collaboratorId = new ObjectId().toString();
+
+      const result = await service.batchDelete({
+        surveyId: '1',
+        idList: [collaboratorId],
+      });
+
+      const expectedQuery = {
+        surveyId: '1',
+        $or: [
+          {
+            _id: {
+              $in: [new ObjectId(collaboratorId)],
+            },
+          },
+        ],
+      };
+
+      expect(logger.info).toHaveBeenCalledWith(JSON.stringify(expectedQuery));
+      expect(deleteManySpy).toHaveBeenCalledWith(expectedQuery);
+      expect(result).toEqual(mockResult);
+    });
+    it('should batch delete collaborators by idList and userIdList', async () => {
+      const collaboratorId = new ObjectId().toString();
+      const deleteManySpy = jest
+        .spyOn(repository, 'deleteMany')
+        .mockResolvedValue({ acknowledged: true, deletedCount: 2 });
+
+      const result = await service.batchDelete({
+        idList: [collaboratorId],
+        userIdList: ['user1', 'user2'],
+        surveyId: '1',
+      });
+
+      const expectedQuery = {
+        surveyId: '1',
+        $or: [
+          {
+            userId: {
+              $in: ['user1', 'user2'],
+            },
+          },
+          {
+            _id: {
+              $in: [new ObjectId(collaboratorId)],
+            },
+          },
+        ],
+      };
+
+      expect(deleteManySpy).toHaveBeenCalledWith(expectedQuery);
+      expect(result).toEqual({ acknowledged: true, deletedCount: 2 });
+    });
+
+    it('should handle batch delete with neIdList only', async () => {
+      const neCollaboratorId = new ObjectId().toString();
+      const deleteManySpy = jest
+        .spyOn(repository, 'deleteMany')
+        .mockResolvedValue({ acknowledged: true, deletedCount: 1 });
+
+      const result = await service.batchDelete({
+        neIdList: [neCollaboratorId],
+        surveyId: '1',
+      });
+
+      const expectedQuery = {
+        surveyId: '1',
+        $or: [
+          {
+            _id: {
+              $nin: [new ObjectId(neCollaboratorId)],
+            },
+          },
+        ],
+      };
+
+      expect(deleteManySpy).toHaveBeenCalledWith(expectedQuery);
+      expect(result).toEqual({ acknowledged: true, deletedCount: 1 });
+    });
+  });
+
+  describe('batchDeleteBySurveyId', () => {
+    it('should batch delete collaborators by survey id', async () => {
+      const mockResult = { acknowledged: true, deletedCount: 1 };
+      const deleteManySpy = jest
+        .spyOn(repository, 'deleteMany')
+        .mockResolvedValue(mockResult);
+
+      const surveyId = new ObjectId().toString();
+
+      const result = await service.batchDeleteBySurveyId(surveyId);
+
+      expect(deleteManySpy).toHaveBeenCalledWith({
+        surveyId,
+      });
+      expect(result).toEqual(mockResult);
+    });
+  });
+
+  describe('updateById', () => {
+    it('should update collaborator by id', async () => {
+      const updateOneSpy = jest
+        .spyOn(repository, 'updateOne')
+        .mockResolvedValue({});
+      const collaboratorId = new ObjectId().toString();
+      const result = await service.updateById({
+        collaboratorId,
+        permissions: [],
+        operator: 'testOperator',
+        operatorId: 'testOperatorId',
+      });
+
+      expect(updateOneSpy).toHaveBeenCalledWith(
+        {
+          _id: new ObjectId(collaboratorId),
+        },
+        {
+          $set: {
+            permissions: [],
+            operator: 'testOperator',
+            operatorId: 'testOperatorId',
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+      expect(result).toEqual({});
     });
   });
 
@@ -110,38 +307,6 @@ describe('CollaboratorService', () => {
       const result = await service.getSurveyCollaboratorList({ surveyId: '1' });
 
       expect(findSpy).toHaveBeenCalledWith({ surveyId: '1' });
-      expect(result).toEqual([
-        {
-          _id: new ObjectId(collaboratorId),
-          surveyId: '1',
-          userId: '1',
-          permissions: [],
-        },
-      ]);
-    });
-  });
-
-  describe('getCollaboratorListByIds', () => {
-    it('should return a list of collaborators by ids', async () => {
-      const collaboratorId = new ObjectId().toString();
-      const findSpy = jest.spyOn(repository, 'find').mockResolvedValue([
-        {
-          _id: new ObjectId(collaboratorId),
-          surveyId: '1',
-          userId: '1',
-          permissions: [],
-        },
-      ] as Collaborator[]);
-
-      const result = await service.getCollaboratorListByIds({
-        idList: [collaboratorId],
-      });
-
-      expect(findSpy).toHaveBeenCalledWith({
-        _id: {
-          $in: [new ObjectId(collaboratorId)],
-        },
-      });
       expect(result).toEqual([
         {
           _id: new ObjectId(collaboratorId),
@@ -183,127 +348,6 @@ describe('CollaboratorService', () => {
     });
   });
 
-  describe('changeUserPermission', () => {
-    it("should update a user's permissions", async () => {
-      const updateOneSpy = jest
-        .spyOn(repository, 'updateOne')
-        .mockResolvedValue({});
-
-      const result = await service.changeUserPermission({
-        userId: '1',
-        surveyId: '1',
-        permission: 'read',
-      });
-
-      expect(updateOneSpy).toHaveBeenCalledWith(
-        {
-          surveyId: '1',
-          userId: '1',
-        },
-        {
-          $set: {
-            permission: 'read',
-          },
-        },
-      );
-      expect(result).toEqual({});
-    });
-  });
-
-  describe('deleteCollaborator', () => {
-    it('should delete a collaborator', async () => {
-      const mockResult = { acknowledged: true, deletedCount: 1 };
-      const deleteOneSpy = jest
-        .spyOn(repository, 'deleteOne')
-        .mockResolvedValue(mockResult);
-
-      const result = await service.deleteCollaborator({
-        userId: '1',
-        surveyId: '1',
-      });
-
-      expect(deleteOneSpy).toHaveBeenCalledWith({
-        userId: '1',
-        surveyId: '1',
-      });
-      expect(result).toEqual(mockResult);
-    });
-  });
-
-  describe('batchDelete', () => {
-    it('should batch delete collaborators', async () => {
-      const mockResult = { acknowledged: true, deletedCount: 1 };
-      const deleteManySpy = jest
-        .spyOn(repository, 'deleteMany')
-        .mockResolvedValue(mockResult);
-
-      const collaboratorId = new ObjectId().toString();
-
-      const result = await service.batchDelete({
-        surveyId: '1',
-        idList: [collaboratorId],
-      });
-
-      const expectedQuery = {
-        surveyId: '1',
-        $or: [
-          {
-            _id: {
-              $in: [new ObjectId(collaboratorId)],
-            },
-          },
-        ],
-      };
-
-      expect(logger.info).toHaveBeenCalledWith(JSON.stringify(expectedQuery));
-      expect(deleteManySpy).toHaveBeenCalledWith(expectedQuery);
-      expect(result).toEqual(mockResult);
-    });
-  });
-
-  describe('batchDeleteBySurveyId', () => {
-    it('should batch delete collaborators by survey id', async () => {
-      const mockResult = { acknowledged: true, deletedCount: 1 };
-      const deleteManySpy = jest
-        .spyOn(repository, 'deleteMany')
-        .mockResolvedValue(mockResult);
-
-      const surveyId = new ObjectId().toString();
-
-      const result = await service.batchDeleteBySurveyId(surveyId);
-
-      expect(deleteManySpy).toHaveBeenCalledWith({
-        surveyId,
-      });
-      expect(result).toEqual(mockResult);
-    });
-  });
-
-  describe('updateById', () => {
-    it('should update collaborator by id', async () => {
-      const updateOneSpy = jest
-        .spyOn(repository, 'updateOne')
-        .mockResolvedValue({});
-      const collaboratorId = new ObjectId().toString();
-      const result = await service.updateById({
-        collaboratorId,
-        permissions: [],
-      });
-
-      expect(updateOneSpy).toHaveBeenCalledWith(
-        {
-          _id: new ObjectId(collaboratorId),
-        },
-        {
-          $set: {
-            permissions: [],
-          },
-        },
-      );
-      expect(result).toEqual({});
-    });
-  });
-
   describe('getCollaboratorListByUserId', () => {
     it('should return a list of collaborators by user id', async () => {
       const userId = new ObjectId().toString();
@@ -325,6 +369,49 @@ describe('CollaboratorService', () => {
       });
       expect(result).toEqual([
         { _id: '1', surveyId: '1', userId, permissions: [] },
+      ]);
+    });
+
+    it('should return a list of collaborators by their IDs', async () => {
+      const collaboratorId1 = new ObjectId().toString();
+      const collaboratorId2 = new ObjectId().toString();
+      const findSpy = jest.spyOn(repository, 'find').mockResolvedValue([
+        {
+          _id: new ObjectId(collaboratorId1),
+          surveyId: '1',
+          userId: 'user1',
+          permissions: [],
+        },
+        {
+          _id: new ObjectId(collaboratorId2),
+          surveyId: '2',
+          userId: 'user2',
+          permissions: [],
+        },
+      ] as Collaborator[]);
+
+      const result = await service.getCollaboratorListByIds({
+        idList: [collaboratorId1, collaboratorId2],
+      });
+
+      expect(findSpy).toHaveBeenCalledWith({
+        _id: {
+          $in: [new ObjectId(collaboratorId1), new ObjectId(collaboratorId2)],
+        },
+      });
+      expect(result).toEqual([
+        {
+          _id: new ObjectId(collaboratorId1),
+          surveyId: '1',
+          userId: 'user1',
+          permissions: [],
+        },
+        {
+          _id: new ObjectId(collaboratorId2),
+          surveyId: '2',
+          userId: 'user2',
+          permissions: [],
+        },
       ]);
     });
   });

@@ -71,8 +71,8 @@ const mockClientEncryptInfo = {
       date: 1710399425273.0,
     },
   ],
-  createDate: 1710399425273.0,
-  updateDate: 1710399425273.0,
+  createdAt: 1710399425273.0,
+  updatedAt: 1710399425273.0,
 };
 
 describe('SurveyResponseController', () => {
@@ -178,7 +178,7 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce({
           _id: new ObjectId('65fc2dd77f4520858046e129'),
           clientTime: 1711025112552,
-          createDate: 1711025113146,
+          createdAt: 1711025113146,
           curStatus: {
             status: RECORD_STATUS.NEW,
             date: 1711025113146,
@@ -212,7 +212,7 @@ describe('SurveyResponseController', () => {
           ],
 
           surveyPath: 'EBzdmnSp',
-          updateDate: 1711025113146,
+          updatedAt: 1711025113146,
           secretKeys: [],
         } as unknown as SurveyResponse);
       jest

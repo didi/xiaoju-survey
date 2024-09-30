@@ -24,11 +24,13 @@ export class SurveyGroupService {
   }
 
   async findAll(userId: string, name: string, skip: number, pageSize: number) {
-    const total = await this.SurveyGroup.count();
-    const list = await this.SurveyGroup.find({  
+    const [list, total] = await this.SurveyGroup.findAndCount({  
         skip: skip,
         take: pageSize,
         where: name ? { name: { $regex: name, $options: 'i' }, ownerId: userId } : { ownerId: userId },
+        order: {
+          createdAt: -1,
+        },
     })
     const allList = await this.SurveyGroup.find({
         where: { ownerId: userId },

@@ -57,10 +57,8 @@ export interface ICollaborator {
 export type GroupItem = {
   _id: string,
   name: string,
-  createDate: string
-  curStatus: { date: number; status: string }
-  memberTotal: number
-  currentUserRole: string
+  createdAt: string
+  updatedAt?: string
   ownerId: string
   surveyTotal: number
 }

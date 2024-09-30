@@ -2,8 +2,9 @@
     <div class="search">
       <TextSearch placeholder="请输入分组名称" :value="searchVal" @search="onSearchText" />
     </div>
-    <div class="list-wrap" v-if="props.total > 0">
+    <div class="list-wrap" v-if="props.total">
       <el-table
+        v-if="props.total"
         ref="multipleListTable"
         class="list-table"
         :data="data"
@@ -59,6 +60,7 @@
     </div>
     <div class="list-pagination">
       <el-pagination
+        v-if="props.total"
         v-model:current-page="curPage"
         background
         @current-change="handleCurrentChange"
@@ -178,7 +180,10 @@
     } else if(key === 'open') {
       workSpaceStore.changeSpaceType(GroupType.Personal)
       workSpaceStore.changeWorkSpace(data._id)
-      surveyListStore.getSurveyList()
+      surveyListStore.getSurveyList({
+        pageSize: 10,
+        curPage: 1
+      })
     }
   }
   

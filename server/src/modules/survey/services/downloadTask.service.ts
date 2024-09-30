@@ -17,8 +17,8 @@ import { DOWNLOAD_TASK_STATUS } from 'src/enums/downloadTaskStatus';
 
 @Injectable()
 export class DownloadTaskService {
-  private static taskList: Array<any> = [];
-  private static isExecuting: boolean = false;
+  static taskList: Array<any> = [];
+  static isExecuting: boolean = false;
 
   constructor(
     @InjectRepository(DownloadTask)
@@ -153,7 +153,7 @@ export class DownloadTaskService {
     }
   }
 
-  private async handleDownloadTask({ taskInfo }) {
+  async handleDownloadTask({ taskInfo }) {
     try {
       // 更新任务状态为计算中
       const updateRes = await this.downloadTaskRepository.updateOne(

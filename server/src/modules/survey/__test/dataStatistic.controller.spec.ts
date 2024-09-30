@@ -109,8 +109,8 @@ describe('DataStatisticController', () => {
           },
         ],
         listBody: [
-          { diffTime: '0.5', createDate: '2024-02-11' },
-          { diffTime: '0.5', createDate: '2024-02-11' },
+          { diffTime: '0.5', createdAt: '2024-02-11' },
+          { diffTime: '0.5', createdAt: '2024-02-11' },
         ],
       };
 
@@ -155,8 +155,8 @@ describe('DataStatisticController', () => {
           },
         ],
         listBody: [
-          { diffTime: '0.5', createDate: '2024-02-11', data123: '15200000000' },
-          { diffTime: '0.5', createDate: '2024-02-11', data123: '13800000000' },
+          { diffTime: '0.5', createdAt: '2024-02-11', data123: '15200000000' },
+          { diffTime: '0.5', createdAt: '2024-02-11', data123: '13800000000' },
         ],
       };
 
@@ -212,8 +212,8 @@ describe('DataStatisticController', () => {
             date: 1717158851823,
           },
         ],
-        createDate: 1717158851823,
-        updateDate: 1717159136025,
+        createdAt: 1717158851823,
+        updatedAt: 1717159136025,
         title: '问卷调研',
         surveyPath: 'ZdGNzTTR',
         code: {

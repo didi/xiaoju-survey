@@ -115,11 +115,16 @@ describe('WorkspaceMemberController', () => {
       };
       const updateResult = { modifiedCount: 1 };
 
+      // Mock request object
+      const req = {
+        user: { username: 'admin', _id: 'operatorId' },
+      };
+
       jest
         .spyOn(workspaceMemberService, 'updateRole')
         .mockResolvedValue(updateResult);
 
-      const result = await controller.updateRole(updateDto);
+      const result = await controller.updateRole(updateDto, req);
 
       expect(result).toEqual({
         code: 200,
@@ -128,9 +133,11 @@ describe('WorkspaceMemberController', () => {
         },
       });
       expect(workspaceMemberService.updateRole).toHaveBeenCalledWith({
+        role: updateDto.role,
         workspaceId: updateDto.workspaceId,
         userId: updateDto.userId,
-        role: updateDto.role,
+        operator: req.user.username,
+        operatorId: req.user._id.toString(),
       });
     });
 
@@ -140,8 +147,11 @@ describe('WorkspaceMemberController', () => {
         userId: '',
         role: '',
       };
+      const req = {
+        user: { username: 'admin', _id: 'operatorId' },
+      };
 
-      await expect(controller.updateRole(updateDto)).rejects.toThrow(
+      await expect(controller.updateRole(updateDto, req)).rejects.toThrow(
         HttpException,
       );
     });

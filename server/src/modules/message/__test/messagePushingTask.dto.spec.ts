@@ -8,7 +8,6 @@ import {
   MESSAGE_PUSHING_TYPE,
   MESSAGE_PUSHING_HOOK,
 } from 'src/enums/messagePushing';
-import { RECORD_STATUS } from 'src/enums';
 
 describe('MessagePushingTaskDto', () => {
   let dto: MessagePushingTaskDto;
@@ -34,9 +33,9 @@ describe('MessagePushingTaskDto', () => {
   });
 
   it('should have a type', () => {
-    dto.type = MESSAGE_PUSHING_TYPE.HTTP; // Set your desired type here
+    dto.type = MESSAGE_PUSHING_TYPE.HTTP;
     expect(dto.type).toBeDefined();
-    expect(dto.type).toEqual(MESSAGE_PUSHING_TYPE.HTTP); // Adjust based on your enum
+    expect(dto.type).toEqual(MESSAGE_PUSHING_TYPE.HTTP);
   });
 
   it('should have a push address', () => {
@@ -46,13 +45,13 @@ describe('MessagePushingTaskDto', () => {
   });
 
   it('should have a trigger hook', () => {
-    dto.triggerHook = MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED; // Set your desired hook here
+    dto.triggerHook = MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED;
     expect(dto.triggerHook).toBeDefined();
-    expect(dto.triggerHook).toEqual(MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED); // Adjust based on your enum
+    expect(dto.triggerHook).toEqual(MESSAGE_PUSHING_HOOK.RESPONSE_INSERTED);
   });
 
   it('should have an array of surveys', () => {
-    dto.surveys = ['survey1', 'survey2']; // Set your desired surveys here
+    dto.surveys = ['survey1', 'survey2'];
     expect(dto.surveys).toBeDefined();
     expect(dto.surveys).toEqual(['survey1', 'survey2']);
   });
@@ -61,13 +60,6 @@ describe('MessagePushingTaskDto', () => {
     dto.owner = 'test_owner';
     expect(dto.owner).toBeDefined();
     expect(dto.owner).toBe('test_owner');
-  });
-
-  it('should have current status', () => {
-    dto.curStatus = { status: RECORD_STATUS.NEW, date: Date.now() };
-    expect(dto.curStatus).toBeDefined();
-    expect(dto.curStatus.status).toEqual(RECORD_STATUS.NEW);
-    expect(dto.curStatus.date).toBeDefined();
   });
 });
 

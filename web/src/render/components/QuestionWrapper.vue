@@ -91,10 +91,8 @@ const questionConfig = computed(() => {
 const updateFormData = (value) => {
   const key = props.moduleConfig.field
   const formData = cloneDeep(formValues.value)
-  if (key in formData) {
-    formData[key] = value
-  }
-
+  formData[key] = value
+  console.log(formData)
   return formData
 }
 

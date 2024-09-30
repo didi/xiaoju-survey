@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { getPushingData } from './messagePushing';
+import { getPushingData } from '../messagePushing';
 import { RECORD_STATUS } from 'src/enums';
 
 describe('getPushingData', () => {

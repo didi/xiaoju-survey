@@ -59,18 +59,25 @@ describe('SurveyMetaController', () => {
       remark: '',
     };
 
+    const mockUser = {
+      username: 'test-user',
+      _id: new ObjectId(),
+    };
+
     const req = {
-      user: {
-        username: 'test-user',
-      },
+      user: mockUser,
       surveyMeta: survey,
     };
 
     const result = await controller.updateMeta(reqBody, req);
 
     expect(surveyMetaService.editSurveyMeta).toHaveBeenCalledWith({
-      title: reqBody.title,
-      remark: reqBody.remark,
+      operator: mockUser.username,
+      operatorId: mockUser._id.toString(),
+      survey: {
+        title: reqBody.title,
+        remark: reqBody.remark,
+      },
     });
 
     expect(result).toEqual({ code: 200 });
@@ -116,8 +123,8 @@ describe('SurveyMetaController', () => {
           data: [
             {
               _id: new ObjectId(),
-              createDate: date,
-              updateDate: date,
+              createdAt: date,
+              updatedAt: date,
               curStatus: {
                 date: date,
               },
@@ -138,7 +145,7 @@ describe('SurveyMetaController', () => {
         count: 10,
         data: expect.arrayContaining([
           expect.objectContaining({
-            createDate: expect.stringMatching(
+            createdAt: expect.stringMatching(
               /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
             ),
             curStatus: expect.objectContaining({
@@ -183,7 +190,7 @@ describe('SurveyMetaController', () => {
           condition: [{ field: 'surveyType', value: 'normal' }],
         },
       ]),
-      order: JSON.stringify([{ field: 'createDate', value: -1 }]),
+      order: JSON.stringify([{ field: 'createdAt', value: -1 }]),
     };
     const userId = new ObjectId().toString();
     const req = {
@@ -203,7 +210,7 @@ describe('SurveyMetaController', () => {
       surveyIdList: [],
       userId,
       filter: { surveyType: 'normal', title: { $regex: 'hahah' } },
-      order: { createDate: -1 },
+      order: { createdAt: -1 },
       workspaceId: undefined,
     });
   });

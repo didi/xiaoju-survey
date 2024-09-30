@@ -145,7 +145,7 @@ describe('DownloadTaskController', () => {
             filename: 'mockFile.csv',
             url: 'http://mock-url.com',
             fileSize: 1024,
-            createDate: Date.now(),
+            createdAt: Date.now(),
           },
         ],
       };
@@ -219,10 +219,13 @@ describe('DownloadTaskController', () => {
   describe('deleteFileByName', () => {
     it('should delete a download task successfully', async () => {
       const mockBody = { taskId: 'mockTaskId' };
-      const mockReq = { user: { _id: 'mockUserId' } };
+      const mockUserId = new ObjectId();
+      const mockReq = {
+        user: { _id: mockUserId, username: 'mockUsername' },
+      };
       const mockTaskInfo: any = {
         _id: new ObjectId(),
-        creatorId: 'mockUserId',
+        creatorId: mockUserId.toString(),
       };
       const mockDelRes = { modifiedCount: 1 };
 
@@ -237,6 +240,8 @@ describe('DownloadTaskController', () => {
 
       expect(downloadTaskService.deleteDownloadTask).toHaveBeenCalledWith({
         taskId: mockBody.taskId,
+        operator: mockReq.user.username,
+        operatorId: mockReq.user._id.toString(),
       });
       expect(result).toEqual({ code: 200, data: true });
     });

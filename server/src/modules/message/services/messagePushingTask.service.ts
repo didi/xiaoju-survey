@@ -63,14 +63,14 @@ export class MessagePushingTaskService {
     });
   }
 
-  async findOne({
+  findOne({
     id,
     ownerId,
   }: {
     id: string;
     ownerId: string;
   }): Promise<MessagePushingTask> {
-    return await this.messagePushingTaskRepository.findOne({
+    return this.messagePushingTaskRepository.findOne({
       where: {
         ownerId,
         _id: new ObjectId(id),

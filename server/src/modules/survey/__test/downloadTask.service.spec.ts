@@ -9,7 +9,7 @@ import { DataStatisticService } from '../services/dataStatistic.service';
 import { FileService } from 'src/modules/file/services/file.service';
 import { Logger } from 'src/logger';
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
+import { DOWNLOAD_TASK_STATUS } from 'src/enums/downloadTaskStatus';
 
 describe('DownloadTaskService', () => {
   let service: DownloadTaskService;
@@ -93,6 +93,7 @@ describe('DownloadTaskService', () => {
           title: mockParams.responseSchema.title,
         },
         filename: expect.any(String),
+        status: DOWNLOAD_TASK_STATUS.WAITING,
       });
       expect(downloadTaskRepository.save).toHaveBeenCalled();
       expect(result).toEqual(mockTaskId);
@@ -118,10 +119,11 @@ describe('DownloadTaskService', () => {
       expect(downloadTaskRepository.findAndCount).toHaveBeenCalledWith({
         where: {
           creatorId: mockCreatorId,
+          isDeleted: { $ne: true },
         },
         take: 10,
         skip: 0,
-        order: { createDate: -1 },
+        order: { createdAt: -1 },
       });
 
       expect(result).toEqual({
@@ -160,32 +162,84 @@ describe('DownloadTaskService', () => {
   });
 
   describe('deleteDownloadTask', () => {
-    it('should update task status to REMOVED', async () => {
+    it('should mark task as deleted and set deletedAt', async () => {
       const mockTaskId = new ObjectId().toString();
+      const mockOperator = 'operatorName';
+      const mockOperatorId = 'operatorId1';
       const mockUpdateResult = { matchedCount: 1 };
 
       jest
         .spyOn(downloadTaskRepository, 'updateOne')
         .mockResolvedValue(mockUpdateResult as any);
 
-      const result = await service.deleteDownloadTask({ taskId: mockTaskId });
+      const result = await service.deleteDownloadTask({
+        taskId: mockTaskId,
+        operator: mockOperator,
+        operatorId: mockOperatorId,
+      });
 
       expect(downloadTaskRepository.updateOne).toHaveBeenCalledWith(
-        {
-          _id: new ObjectId(mockTaskId),
-          'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
-        },
+        { _id: new ObjectId(mockTaskId) },
         {
           $set: {
-            curStatus: {
-              status: RECORD_STATUS.REMOVED,
-              date: expect.any(Number),
-            },
+            isDeleted: true,
+            operator: mockOperator,
+            operatorId: mockOperatorId,
+            deletedAt: expect.any(Date),
           },
-          $push: { statusList: expect.any(Object) },
         },
       );
       expect(result).toEqual(mockUpdateResult);
+    });
+  });
+
+  describe('processDownloadTask', () => {
+    it('should push task to queue and execute if not executing', async () => {
+      const mockTaskId = new ObjectId().toString();
+      jest.spyOn(service, 'executeTask').mockImplementation(jest.fn());
+
+      service.processDownloadTask({ taskId: mockTaskId });
+
+      expect(DownloadTaskService.taskList).toContain(mockTaskId);
+      expect(service.executeTask).toHaveBeenCalled();
+    });
+
+    it('should handle already executing case', async () => {
+      const mockTaskId = new ObjectId().toString();
+      DownloadTaskService.isExecuting = true;
+      jest.spyOn(service, 'executeTask').mockImplementation(jest.fn());
+
+      service.processDownloadTask({ taskId: mockTaskId });
+
+      expect(DownloadTaskService.taskList).toContain(mockTaskId);
+      expect(service.executeTask).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('executeTask', () => {
+    it('should process and execute tasks in queue', async () => {
+      const mockTaskId = new ObjectId().toString();
+      DownloadTaskService.taskList.push(mockTaskId);
+
+      jest.spyOn(service, 'getDownloadTaskById').mockResolvedValue({
+        _id: new ObjectId(mockTaskId),
+        isDeleted: false,
+      } as any);
+
+      jest.spyOn(service, 'handleDownloadTask').mockResolvedValue(undefined);
+
+      await service.executeTask();
+
+      expect(service.getDownloadTaskById).toHaveBeenCalledWith({
+        taskId: mockTaskId,
+      });
+      expect(service.handleDownloadTask).toHaveBeenCalled();
+    });
+
+    it('should stop executing when queue is empty', async () => {
+      DownloadTaskService.taskList = [];
+      await service.executeTask();
+      expect(DownloadTaskService.isExecuting).toBe(false);
     });
   });
 });

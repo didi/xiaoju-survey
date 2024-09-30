@@ -157,6 +157,7 @@ const onCloseModify = (type: string) => {
   }
 }
 const onSpaceCreate = () => {
+  modifyType.value = 'add'
   showSpaceModify.value = true
 }
 const onCreate = () => {

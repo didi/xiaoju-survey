@@ -14,8 +14,8 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       date: 1710399368439,
     },
   ],
-  createDate: 1710399368440,
-  updateDate: 1710399368440,
+  createdAt: 1710399368440,
+  updatedAt: 1710399368440,
   title: '加密全流程',
   surveyPath: 'EBzdmnSp',
   code: {
@@ -32,7 +32,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       },
     },
     baseConf: {
-      begTime: '2024-03-14 14:54:41',
+      beginTime: '2024-03-14 14:54:41',
       endTime: '2034-03-14 14:54:41',
       language: 'chinese',
       tLimit: 0,
@@ -295,7 +295,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65f29f3192862d6a9067ad1c',
-} as ResponseSchema;
+} as unknown as ResponseSchema;
 
 export const mockResponseSchema: ResponseSchema = {
   _id: new ObjectId('65b0d46e04d5db18534c0f7c'),
@@ -326,7 +326,7 @@ export const mockResponseSchema: ResponseSchema = {
       },
     },
     baseConf: {
-      begTime: '2024-01-23 21:59:05',
+      beginTime: '2024-01-23 21:59:05',
       endTime: '2034-01-23 21:59:05',
       language: 'chinese',
       tLimit: 0,
@@ -654,6 +654,6 @@ export const mockResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65afc62904d5db18534c0f78',
-  createDate: 1710340841289,
-  updateDate: 1710340841289.0,
-} as ResponseSchema;
+  createdAt: 1710340841289,
+  updatedAt: 1710340841289.0,
+} as unknown as ResponseSchema;

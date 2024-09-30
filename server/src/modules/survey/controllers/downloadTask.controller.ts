@@ -98,7 +98,7 @@ export class DownloadTaskController {
         list: list.map((data) => {
           const item: Record<string, any> = {};
           item.taskId = data._id.toString();
-          item.curStatus = data.curStatus;
+          item.status = data.status;
           item.filename = data.filename;
           item.url = data.url;
           const fmt = 'YYYY-MM-DD HH:mm:ss';
@@ -114,7 +114,7 @@ export class DownloadTaskController {
             }
             item.fileSize = `${size.toFixed()} ${units[unitIndex]}`;
           }
-          item.createDate = moment(Number(data.createDate)).format(fmt);
+          item.createdAt = moment(data.createdAt).format(fmt);
           return item;
         }),
       },
@@ -177,6 +177,8 @@ export class DownloadTaskController {
 
     const delRes = await this.downloadTaskService.deleteDownloadTask({
       taskId,
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
     });
 
     return {

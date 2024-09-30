@@ -57,7 +57,6 @@ const onSave = async () => {
     ElMessage.error('未获取到sessionId')
     return null
   }
-
   if (!saveData.value.surveyId) {
     ElMessage.error('未获取到问卷id')
     return null

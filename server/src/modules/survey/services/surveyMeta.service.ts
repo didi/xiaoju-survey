@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository, FindOptionsOrder } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
@@ -65,6 +65,7 @@ export class SurveyMetaService {
       surveyType: surveyType,
       surveyPath,
       creator: username,
+      creatorId: userId,
       owner: username,
       ownerId: userId,
       createMethod,
@@ -75,11 +76,36 @@ export class SurveyMetaService {
     return await this.surveyRepository.save(newSurvey);
   }
 
-  async editSurveyMeta(survey: SurveyMeta) {
-    if (
-      survey.curStatus.status !== RECORD_STATUS.NEW &&
-      survey.curStatus.status !== RECORD_STATUS.EDITING
-    ) {
+  async pausingSurveyMeta(survey: SurveyMeta) {
+    if (survey?.curStatus?.status === RECORD_STATUS.NEW) {
+      throw new HttpException(
+        '问卷不能暂停',
+        EXCEPTION_CODE.SURVEY_STATUS_TRANSFORM_ERROR,
+      );
+    }
+    const subCurStatus = {
+      status: RECORD_SUB_STATUS.PAUSING,
+      date: Date.now(),
+    };
+    survey.subStatus = subCurStatus;
+    if (Array.isArray(survey.statusList)) {
+      survey.statusList.push(subCurStatus);
+    } else {
+      survey.statusList = [subCurStatus];
+    }
+    return this.surveyRepository.save(survey);
+  }
+
+  async editSurveyMeta({
+    survey,
+    operator,
+    operatorId,
+  }: {
+    survey: SurveyMeta;
+    operator: string;
+    operatorId: string;
+  }) {
+    if (survey?.curStatus?.status !== RECORD_STATUS.EDITING) {
       const newStatus = {
         status: RECORD_STATUS.EDITING,
         date: Date.now(),
@@ -87,27 +113,26 @@ export class SurveyMetaService {
       survey.curStatus = newStatus;
       survey.statusList.push(newStatus);
     }
+    survey.updatedAt = new Date();
+    survey.operator = operator;
+    survey.operatorId = operatorId;
     return this.surveyRepository.save(survey);
   }
 
-  async deleteSurveyMeta(survey: SurveyMeta) {
-    if (survey.curStatus.status === RECORD_STATUS.REMOVED) {
-      throw new HttpException(
-        '问卷已删除，不能重复删除',
-        EXCEPTION_CODE.SURVEY_STATUS_TRANSFORM_ERROR,
-      );
-    }
-    const newStatusInfo = {
-      status: RECORD_STATUS.REMOVED,
-      date: Date.now(),
-    };
-    survey.curStatus = newStatusInfo;
-    if (Array.isArray(survey.statusList)) {
-      survey.statusList.push(newStatusInfo);
-    } else {
-      survey.statusList = [newStatusInfo];
-    }
-    return this.surveyRepository.save(survey);
+  async deleteSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: true,
+          operator,
+          operatorId,
+          deletedAt: new Date(),
+        },
+      },
+    );
   }
 
   async getSurveyMetaList(condition: {
@@ -125,14 +150,16 @@ export class SurveyMetaService {
     const skip = (pageNum - 1) * pageSize;
     try {
       const query: Record<string, any> = Object.assign(
-        {},
         {
-          'curStatus.status': {
-            $ne: 'removed',
+          isDeleted: {
+            $ne: true,
           },
         },
         condition.filter,
       );
+      if (condition.filter['curStatus.status']) {
+        query['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
+      }
       if (workspaceId) {
         query.workspaceId = workspaceId;
       } else {
@@ -160,9 +187,8 @@ export class SurveyMetaService {
         condition.order && Object.keys(condition.order).length > 0
           ? (condition.order as FindOptionsOrder<SurveyMeta>)
           : ({
-              createDate: -1,
+              createdAt: -1,
             } as FindOptionsOrder<SurveyMeta>);
-
       const [data, count] = await this.surveyRepository.findAndCount({
         where: query,
         skip,
@@ -181,6 +207,10 @@ export class SurveyMetaService {
       date: Date.now(),
     };
     surveyMeta.curStatus = curStatus;
+    surveyMeta.subStatus = {
+      status: RECORD_SUB_STATUS.DEFAULT,
+      date: Date.now(),
+    };
     if (Array.isArray(surveyMeta.statusList)) {
       surveyMeta.statusList.push(curStatus);
     } else {
@@ -192,8 +222,8 @@ export class SurveyMetaService {
   async countSurveyMetaByWorkspaceId({ workspaceId }) {
     const total = await this.surveyRepository.count({
       workspaceId,
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     });
     return total;

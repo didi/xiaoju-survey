@@ -43,7 +43,7 @@ const defaultEndTime = moment(defaultBeginTime).add(10, 'year').toDate()
 const locale = ref(zhCn)
 const begModelTime = ref(defaultBeginTime)
 const endModelTime = ref(defaultEndTime)
-const begTimeStr = ref(moment(defaultBeginTime).format(format))
+const beginTimeStr = ref(moment(defaultBeginTime).format(format))
 const endTimeStr = ref(moment(defaultEndTime).format(format))
 
 const handleDatePickerChange = (key: string, value: string) => {
@@ -52,10 +52,10 @@ const handleDatePickerChange = (key: string, value: string) => {
 
 watch(
   () => props.formConfig.value,
-  ([begTime, endTime]: any) => {
-    if (!!begTime && begTime !== begTimeStr.value) {
-      begTimeStr.value = begTime
-      begModelTime.value = new Date(begTime)
+  ([beginTime, endTime]: any) => {
+    if (!!beginTime && beginTime !== beginTimeStr.value) {
+      beginTimeStr.value = beginTime
+      begModelTime.value = new Date(beginTime)
     }
 
     if (!!endTime && endTime !== endTimeStr.value) {

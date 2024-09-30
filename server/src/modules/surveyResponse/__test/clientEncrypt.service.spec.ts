@@ -3,7 +3,6 @@ import { MongoRepository } from 'typeorm';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { ClientEncrypt } from 'src/models/clientEncrypt.entity';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
-import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
@@ -22,6 +21,7 @@ describe('ClientEncryptService', () => {
             save: jest.fn(),
             findOne: jest.fn(),
             updateOne: jest.fn(),
+            deleteOne: jest.fn(),
           },
         },
       ],
@@ -88,9 +88,6 @@ describe('ClientEncryptService', () => {
       expect(repository.findOne).toHaveBeenCalledWith({
         where: {
           _id: new ObjectId(id),
-          'curStatus.status': {
-            $ne: RECORD_STATUS.REMOVED,
-          },
         },
       });
       expect(result).toEqual(encryptInfo);
@@ -109,11 +106,13 @@ describe('ClientEncryptService', () => {
   describe('deleteEncryptInfo', () => {
     it('should delete encrypt info by id', async () => {
       const id = new ObjectId().toHexString();
-      const updateResult = { matchedCount: 1, modifiedCount: 1 };
-      jest.spyOn(repository, 'updateOne').mockResolvedValue(updateResult);
+      const deleteResult = { matchedCount: 1, modifiedCount: 1 };
+      jest
+        .spyOn(repository, 'deleteOne')
+        .mockResolvedValue(deleteResult as any);
 
       const result = await service.deleteEncryptInfo(id);
-      expect(result).toEqual(updateResult);
+      expect(result).toEqual(deleteResult);
     });
   });
 });

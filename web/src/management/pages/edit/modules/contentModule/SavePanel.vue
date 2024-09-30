@@ -81,7 +81,6 @@ const onSave = async () => {
   }
 
   const res: Record<string, any> = await saveSurvey(saveData)
-
   return res
 }
 

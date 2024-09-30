@@ -1,5 +1,6 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { DOWNLOAD_TASK_STATUS } from 'src/enums/downloadTaskStatus';
 
 @Entity({ name: 'downloadTask' })
 export class DownloadTask extends BaseEntity {
@@ -35,4 +36,13 @@ export class DownloadTask extends BaseEntity {
 
   @Column()
   params: string;
+
+  @Column()
+  isDeleted: boolean;
+
+  @Column()
+  deletedAt: Date;
+
+  @Column()
+  status: DOWNLOAD_TASK_STATUS;
 }

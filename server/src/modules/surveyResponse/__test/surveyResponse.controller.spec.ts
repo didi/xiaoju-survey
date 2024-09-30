@@ -18,7 +18,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 
-import { RECORD_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { Logger } from 'src/logger';
 import { ResponseSchema } from 'src/models/responseSchema.entity';
@@ -71,8 +71,8 @@ const mockClientEncryptInfo = {
       date: 1710399425273.0,
     },
   ],
-  createDate: 1710399425273.0,
-  updateDate: 1710399425273.0,
+  createdAt: 1710399425273.0,
+  updatedAt: 1710399425273.0,
 };
 
 describe('SurveyResponseController', () => {
@@ -178,7 +178,7 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce({
           _id: new ObjectId('65fc2dd77f4520858046e129'),
           clientTime: 1711025112552,
-          createDate: 1711025113146,
+          createdAt: 1711025113146,
           curStatus: {
             status: RECORD_STATUS.NEW,
             date: 1711025113146,
@@ -212,7 +212,7 @@ describe('SurveyResponseController', () => {
           ],
 
           surveyPath: 'EBzdmnSp',
-          updateDate: 1711025113146,
+          updatedAt: 1711025113146,
           secretKeys: [],
         } as unknown as SurveyResponse);
       jest
@@ -333,6 +333,9 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce({
           curStatus: {
             status: RECORD_STATUS.PUBLISHED,
+          },
+          subStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
           },
           code: {
             baseConf: {

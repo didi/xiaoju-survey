@@ -6,7 +6,6 @@ import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 
 import { ObjectId } from 'mongodb';
-import { RECORD_STATUS } from 'src/enums';
 
 interface FindAllByIdWithPaginationParams {
   workspaceIdList: string[];
@@ -31,10 +30,13 @@ export class WorkspaceService {
   async create(workspace: {
     name: string;
     description: string;
+    owner: string;
     ownerId: string;
   }): Promise<Workspace> {
     const newWorkspace = this.workspaceRepository.create({
       ...workspace,
+      creatorId: workspace.ownerId,
+      creator: workspace.owner,
     });
     return this.workspaceRepository.save(newWorkspace);
   }
@@ -56,8 +58,8 @@ export class WorkspaceService {
       _id: {
         $in: workspaceIdList.map((item) => new ObjectId(item)),
       },
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     };
 
@@ -68,11 +70,11 @@ export class WorkspaceService {
       },
       select: [
         '_id',
-        'curStatus',
         'name',
         'description',
         'ownerId',
-        'createDate',
+        'creatorId',
+        'createdAt',
       ],
     });
   }
@@ -91,8 +93,8 @@ export class WorkspaceService {
       _id: {
         $in: workspaceIdList.map((m) => new ObjectId(m)),
       },
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+      isDeleted: {
+        $ne: true,
       },
     };
     if (name) {
@@ -103,31 +105,40 @@ export class WorkspaceService {
       skip,
       take: limit,
       order: {
-        createDate: -1,
+        createdAt: -1,
       },
     });
     return { list: data, count };
   }
 
-  update(id: string, workspace: Partial<Workspace>) {
+  update({
+    id,
+    workspace,
+    operator,
+    operatorId,
+  }: {
+    id: string;
+    workspace: Partial<Workspace>;
+    operator: string;
+    operatorId: string;
+  }) {
+    workspace.updatedAt = new Date();
+    workspace.operator = operator;
+    workspace.operatorId = operatorId;
     return this.workspaceRepository.update(id, workspace);
   }
 
-  async delete(id: string) {
-    const newStatus = {
-      status: RECORD_STATUS.REMOVED,
-      date: Date.now(),
-    };
+  async delete(id: string, { operator, operatorId }) {
     const workspaceRes = await this.workspaceRepository.updateOne(
       {
         _id: new ObjectId(id),
       },
       {
         $set: {
-          curStatus: newStatus,
-        },
-        $push: {
-          statusList: newStatus as never,
+          isDeleted: true,
+          deletedAt: new Date(),
+          operator,
+          operatorId,
         },
       },
     );
@@ -137,10 +148,10 @@ export class WorkspaceService {
       },
       {
         $set: {
-          curStatus: newStatus,
-        },
-        $push: {
-          statusList: newStatus as never,
+          isDeleted: true,
+          deletedAt: new Date(),
+          operator,
+          operatorId,
         },
       },
     );
@@ -155,8 +166,8 @@ export class WorkspaceService {
     return await this.workspaceRepository.find({
       where: {
         ownerId: userId,
-        'curStatus.status': {
-          $ne: RECORD_STATUS.REMOVED,
+        isDeleted: {
+          $ne: true,
         },
       },
       order: {
@@ -168,7 +179,7 @@ export class WorkspaceService {
         'name',
         'description',
         'ownerId',
-        'createDate',
+        'createdAt',
       ],
     });
   }

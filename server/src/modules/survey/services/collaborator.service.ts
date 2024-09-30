@@ -22,12 +22,17 @@ export class CollaboratorService {
     return this.collaboratorRepository.save(collaborator);
   }
 
-  async batchCreate({ surveyId, collaboratorList }) {
+  async batchCreate({ surveyId, collaboratorList, creator, creatorId }) {
+    const now = new Date();
     const res = await this.collaboratorRepository.insertMany(
       collaboratorList.map((item) => {
         return {
           ...item,
           surveyId,
+          createdAt: now,
+          updatedAt: now,
+          creator,
+          creatorId,
         };
       }),
     );
@@ -60,7 +65,13 @@ export class CollaboratorService {
     return info;
   }
 
-  async changeUserPermission({ userId, surveyId, permission }) {
+  async changeUserPermission({
+    userId,
+    surveyId,
+    permission,
+    operator,
+    operatorId,
+  }) {
     const updateRes = await this.collaboratorRepository.updateOne(
       {
         surveyId,
@@ -69,6 +80,9 @@ export class CollaboratorService {
       {
         $set: {
           permission,
+          operator,
+          operatorId,
+          updatedAt: new Date(),
         },
       },
     );
@@ -134,7 +148,7 @@ export class CollaboratorService {
     return delRes;
   }
 
-  updateById({ collaboratorId, permissions }) {
+  updateById({ collaboratorId, permissions, operator, operatorId }) {
     return this.collaboratorRepository.updateOne(
       {
         _id: new ObjectId(collaboratorId),
@@ -142,6 +156,9 @@ export class CollaboratorService {
       {
         $set: {
           permissions,
+          operator,
+          operatorId,
+          updatedAt: new Date(),
         },
       },
     );

@@ -5,7 +5,6 @@ import { UserService } from '../services/user.service';
 import { User } from 'src/models/user.entity';
 import { HttpException } from 'src/exceptions/httpException';
 import { hash256 } from 'src/utils/hash256';
-import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 describe('UserService', () => {
@@ -145,7 +144,6 @@ describe('UserService', () => {
     expect(userRepository.findOne).toHaveBeenCalledWith({
       where: {
         username: username,
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
     });
     expect(user).toEqual(userInfo);
@@ -163,7 +161,6 @@ describe('UserService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: {
         username: username,
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
     });
     expect(user).toBe(null);
@@ -184,7 +181,6 @@ describe('UserService', () => {
     expect(userRepository.findOne).toHaveBeenCalledWith({
       where: {
         _id: new ObjectId(id),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
     });
     expect(user).toEqual(userInfo);
@@ -202,7 +198,6 @@ describe('UserService', () => {
     expect(findOneSpy).toHaveBeenCalledWith({
       where: {
         _id: new ObjectId(id),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
     });
     expect(user).toBe(null);
@@ -211,8 +206,8 @@ describe('UserService', () => {
   it('should return a list of users by username', async () => {
     const username = 'test';
     const userList = [
-      { _id: new ObjectId(), username: 'testUser1', createDate: new Date() },
-      { _id: new ObjectId(), username: 'testUser2', createDate: new Date() },
+      { _id: new ObjectId(), username: 'testUser1', createdAt: new Date() },
+      { _id: new ObjectId(), username: 'testUser2', createdAt: new Date() },
     ];
 
     jest
@@ -228,11 +223,10 @@ describe('UserService', () => {
     expect(userRepository.find).toHaveBeenCalledWith({
       where: {
         username: new RegExp(username),
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
       skip: 0,
       take: 10,
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     expect(result).toEqual(userList);
   });
@@ -243,12 +237,12 @@ describe('UserService', () => {
       {
         _id: new ObjectId(idList[0]),
         username: 'testUser1',
-        createDate: new Date(),
+        createdAt: new Date(),
       },
       {
         _id: new ObjectId(idList[1]),
         username: 'testUser2',
-        createDate: new Date(),
+        createdAt: new Date(),
       },
     ];
 
@@ -263,9 +257,8 @@ describe('UserService', () => {
         _id: {
           $in: idList.map((id) => new ObjectId(id)),
         },
-        'curStatus.status': { $ne: RECORD_STATUS.REMOVED },
       },
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     expect(result).toEqual(userList);
   });

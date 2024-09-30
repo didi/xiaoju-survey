@@ -58,23 +58,53 @@ describe('WorkspaceMemberService', () => {
         { userId: 'userId1', role: 'admin' },
         { userId: 'userId2', role: 'user' },
       ];
-      const dataToInsert = members.map((item) => ({ ...item, workspaceId }));
+      const creator = 'creatorName';
+      const creatorId = 'creatorId';
+      const now = new Date();
+      const dataToInsert = members.map((item) => ({
+        ...item,
+        workspaceId,
+        createdAt: now,
+        updatedAt: now,
+        creator,
+        creatorId,
+      }));
 
-      jest
-        .spyOn(repository, 'insertMany')
-        .mockResolvedValueOnce({ insertedCount: members.length } as any);
+      jest.spyOn(repository, 'insertMany').mockResolvedValueOnce({
+        insertedCount: members.length,
+      } as any);
 
-      const result = await service.batchCreate({ workspaceId, members });
+      const result = await service.batchCreate({
+        workspaceId,
+        members,
+        creator,
+        creatorId,
+      });
 
       expect(result).toEqual({ insertedCount: members.length });
-      expect(repository.insertMany).toHaveBeenCalledWith(dataToInsert);
+      expect(repository.insertMany).toHaveBeenCalledWith(
+        dataToInsert.map((item) => {
+          return {
+            ...item,
+            createdAt: expect.any(Date),
+            updatedAt: expect.any(Date),
+          };
+        }),
+      );
     });
 
     it('should return insertedCount 0 if no members to insert', async () => {
       const workspaceId = new ObjectId().toString();
       const members = [];
+      const creator = 'creatorName';
+      const creatorId = 'creatorId';
 
-      const result = await service.batchCreate({ workspaceId, members });
+      const result = await service.batchCreate({
+        workspaceId,
+        members,
+        creator,
+        creatorId,
+      });
 
       expect(result).toEqual({ insertedCount: 0 });
     });
@@ -84,12 +114,19 @@ describe('WorkspaceMemberService', () => {
     it('should batch update workspace members roles', async () => {
       const idList = [new ObjectId().toString(), new ObjectId().toString()];
       const role = 'user';
+      const operator = 'operatorName';
+      const operatorId = 'operatorId';
 
       jest
         .spyOn(repository, 'updateMany')
         .mockResolvedValue({ modifiedCount: idList.length } as any);
 
-      const result = await service.batchUpdate({ idList, role });
+      const result = await service.batchUpdate({
+        idList,
+        role,
+        operator,
+        operatorId,
+      });
 
       expect(result).toEqual({ modifiedCount: idList.length });
     });
@@ -97,8 +134,15 @@ describe('WorkspaceMemberService', () => {
     it('should return modifiedCount 0 if no ids to update', async () => {
       const idList = [];
       const role = 'user';
+      const operator = 'operatorName';
+      const operatorId = 'operatorId';
 
-      const result = await service.batchUpdate({ idList, role });
+      const result = await service.batchUpdate({
+        idList,
+        role,
+        operator,
+        operatorId,
+      });
 
       expect(result).toEqual({ modifiedCount: 0 });
     });
@@ -160,17 +204,25 @@ describe('WorkspaceMemberService', () => {
       const workspaceId = 'workspaceId';
       const userId = 'userId';
       const role = 'admin';
+      const operator = 'operatorName';
+      const operatorId = 'operatorId';
 
       jest
         .spyOn(repository, 'updateOne')
         .mockResolvedValue({ modifiedCount: 1 } as any);
 
-      const result = await service.updateRole({ workspaceId, userId, role });
+      const result = await service.updateRole({
+        workspaceId,
+        userId,
+        role,
+        operator,
+        operatorId,
+      });
 
       expect(result).toEqual({ modifiedCount: 1 });
       expect(repository.updateOne).toHaveBeenCalledWith(
         { workspaceId, userId },
-        { $set: { role } },
+        { $set: { role, operator, operatorId, updatedAt: expect.any(Date) } },
       );
     });
   });

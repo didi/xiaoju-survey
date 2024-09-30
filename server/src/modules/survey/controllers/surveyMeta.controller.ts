@@ -58,7 +58,11 @@ export class SurveyMetaController {
     survey.title = value.title;
     survey.remark = value.remark;
 
-    await this.surveyMetaService.editSurveyMeta(survey);
+    await this.surveyMetaService.editSurveyMeta({
+      survey,
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
 
     return {
       code: 200,
@@ -127,9 +131,10 @@ export class SurveyMetaController {
           if (!item.surveyType) {
             item.surveyType = item.questionType || 'normal';
           }
-          item.createDate = moment(item.createDate).format(fmt);
-          item.updateDate = moment(item.updateDate).format(fmt);
+          item.createdAt = moment(item.createdAt).format(fmt);
           item.curStatus.date = moment(item.curStatus.date).format(fmt);
+          item.subStatus.date = moment(item.subStatus.date).format(fmt);
+          item.updatedAt = moment(item.updatedAt).format(fmt);
           const surveyId = item._id.toString();
           if (cooperSurveyIdMap[surveyId]) {
             item.isCollaborated = true;

@@ -109,7 +109,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['refresh'])
 const workSpaceStore = useWorkSpaceStore()
-const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createDate']
+const fields = ['name', 'surveyTotal', 'memberTotal', 'owner', 'createdAt']
 const fieldList = computed(() => {
   return map(fields, (f) => {
     return get(spaceListConfig, f, null)

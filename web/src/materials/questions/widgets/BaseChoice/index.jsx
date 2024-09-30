@@ -47,7 +47,7 @@ export default defineComponent({
     voteTotal: {
       type: Number,
       default: 10
-    }
+    },
   },
   emits: ['change'],
   setup(props, { emit, slots }) {
@@ -64,7 +64,6 @@ export default defineComponent({
     const onRadioClick = (item, $event) => {
       $event && $event.stopPropagation()
       $event && $event.preventDefault()
-
       if (!isChecked(item)) {
         emit('change', item.hash)
       }

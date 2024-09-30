@@ -39,3 +39,4 @@ export const validate = ({ surveyPath, password = '', whitelist = '' }) => {
     whitelist
   })
 }
+

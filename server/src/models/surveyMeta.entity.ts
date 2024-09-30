@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, BeforeInsert } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from '../enums';
 
 @Entity({ name: 'surveyMeta' })
 export class SurveyMeta extends BaseEntity {
@@ -19,6 +20,9 @@ export class SurveyMeta extends BaseEntity {
   creator: string;
 
   @Column()
+  creatorId: string;
+
+  @Column()
   owner: string;
 
   @Column()
@@ -32,4 +36,48 @@ export class SurveyMeta extends BaseEntity {
 
   @Column()
   workspaceId: string;
+
+  @Column()
+  curStatus: {
+    status: RECORD_STATUS;
+    date: number;
+  };
+
+  @Column()
+  subStatus: {
+    status: RECORD_SUB_STATUS;
+    date: number;
+  };
+
+  @Column()
+  statusList: Array<{
+    status: RECORD_STATUS | RECORD_SUB_STATUS;
+    date: number;
+  }>;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
+
+  @Column()
+  isDeleted: boolean;
+
+  @Column()
+  deletedAt: Date;
+
+  @BeforeInsert()
+  initDefaultInfo() {
+    const now = Date.now();
+    if (!this.curStatus) {
+      const curStatus = { status: RECORD_STATUS.NEW, date: now };
+      this.curStatus = curStatus;
+      this.statusList = [curStatus];
+    }
+    if (!this.subStatus) {
+      const subStatus = { status: RECORD_SUB_STATUS.DEFAULT, date: now };
+      this.subStatus = subStatus;
+    }
+  }
 }

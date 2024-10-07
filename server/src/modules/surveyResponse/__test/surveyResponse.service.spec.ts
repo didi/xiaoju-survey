@@ -18,6 +18,7 @@ describe('SurveyResponseService', () => {
             create: jest.fn(),
             save: jest.fn(),
             count: jest.fn(),
+            find: jest.fn(),
           },
         },
       ],
@@ -69,16 +70,12 @@ describe('SurveyResponseService', () => {
   it('should get the total survey response count by path', async () => {
     const surveyPath = 'testPath';
     const count = 10;
-    jest.spyOn(surveyResponseRepository, 'count').mockResolvedValue(count);
+    jest
+      .spyOn(surveyResponseRepository, 'find')
+      .mockResolvedValue(new Array(10));
 
     const result = await service.getSurveyResponseTotalByPath(surveyPath);
 
     expect(result).toEqual(count);
-    expect(surveyResponseRepository.count).toHaveBeenCalledWith({
-      where: {
-        surveyPath,
-        'subStatus.status': { $ne: 'removed' },
-      },
-    });
   });
 });

@@ -17,7 +17,9 @@ export default function usePageEdit(
   updateTime: () => void
 ) {
   const pageConf = computed(() => schema.pageConf)
-  const pageEditOne = computed(() => schema.pageEditOne)
+  const pageEditOne = computed(() => {
+    return schema.pageEditOne
+  })
   const isFinallyPage = computed(() => {
     return pageEditOne.value === pageConf.value.length
   })

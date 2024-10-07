@@ -18,8 +18,8 @@ export const mockResponseSchema: ResponseSchema = {
       date: 1710399368439,
     },
   ],
-  createDate: 1710399368440,
-  updateDate: 1710399368440,
+  createdAt: 1710399368440,
+  updatedAt: 1710399368440,
   title: '加密全流程',
   surveyPath: 'EBzdmnSp',
   code: {

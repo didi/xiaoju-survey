@@ -50,6 +50,7 @@ describe('CounterService', () => {
           surveyPath: 'testPath',
           type: 'testType',
           data,
+          updatedAt: expect.any(Date),
         },
       },
       { upsert: true },

@@ -2,12 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyMetaService } from '../services/surveyMeta.service';
 import { MongoRepository } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
-import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
-import { SurveyUtilPlugin } from 'src/securityPlugin/surveyUtilPlugin';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 
 describe('SurveyMetaService', () => {
@@ -26,10 +24,11 @@ describe('SurveyMetaService', () => {
             count: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
+            updateOne: jest.fn(),
             findAndCount: jest.fn(),
           },
         },
-        PluginManagerProvider,
+        PluginManager,
       ],
     }).compile();
 
@@ -38,18 +37,18 @@ describe('SurveyMetaService', () => {
       getRepositoryToken(SurveyMeta),
     );
     pluginManager = module.get<PluginManager>(PluginManager);
-    pluginManager.registerPlugin(new SurveyUtilPlugin());
   });
 
   describe('getNewSurveyPath', () => {
     it('should generate a new survey path', async () => {
-      jest.spyOn(surveyRepository, 'count').mockResolvedValueOnce(1);
+      jest.spyOn(pluginManager, 'triggerHook').mockResolvedValueOnce('path1');
       jest.spyOn(surveyRepository, 'count').mockResolvedValueOnce(0);
 
       const surveyPath = await service.getNewSurveyPath();
 
-      expect(typeof surveyPath).toBe('string');
-      expect(surveyRepository.count).toHaveBeenCalledTimes(2);
+      expect(surveyPath).toBe('path1');
+      expect(pluginManager.triggerHook).toHaveBeenCalledTimes(1);
+      expect(surveyRepository.count).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -63,14 +62,11 @@ describe('SurveyMetaService', () => {
         userId: new ObjectId().toString(),
         createMethod: '',
         createFrom: '',
+        workspaceId: 'workspace1',
       };
       const newSurvey = new SurveyMeta();
 
-      const mockedSurveyPath = 'mockedSurveyPath';
-      jest
-        .spyOn(service, 'getNewSurveyPath')
-        .mockResolvedValue(mockedSurveyPath);
-
+      jest.spyOn(service, 'getNewSurveyPath').mockResolvedValue('path1');
       jest
         .spyOn(surveyRepository, 'create')
         .mockImplementation(() => newSurvey);
@@ -82,97 +78,118 @@ describe('SurveyMetaService', () => {
         title: params.title,
         remark: params.remark,
         surveyType: params.surveyType,
-        surveyPath: mockedSurveyPath,
+        surveyPath: 'path1',
         creator: params.username,
-        ownerId: params.userId,
+        creatorId: params.userId,
         owner: params.username,
+        ownerId: params.userId,
         createMethod: params.createMethod,
         createFrom: params.createFrom,
+        workspaceId: params.workspaceId,
       });
       expect(surveyRepository.save).toHaveBeenCalledWith(newSurvey);
       expect(result).toEqual(newSurvey);
     });
   });
 
-  describe('editSurveyMeta', () => {
-    it('should edit a survey meta and return it if in NEW or EDITING status', async () => {
+  describe('pausingSurveyMeta', () => {
+    it('should throw an exception if survey is in NEW status', async () => {
+      const survey = new SurveyMeta();
+      survey.curStatus = { status: RECORD_STATUS.NEW, date: Date.now() };
+
+      await expect(service.pausingSurveyMeta(survey)).rejects.toThrow(
+        HttpException,
+      );
+    });
+
+    it('should pause a survey and update subStatus', async () => {
       const survey = new SurveyMeta();
       survey.curStatus = { status: RECORD_STATUS.PUBLISHED, date: Date.now() };
-      survey.subStatus = {
-        status: RECORD_SUB_STATUS.DEFAULT,
-        date: Date.now(),
-      };
       survey.statusList = [];
+
       jest.spyOn(surveyRepository, 'save').mockResolvedValue(survey);
 
-      const result = await service.editSurveyMeta(survey);
+      const result = await service.pausingSurveyMeta(survey);
 
-      expect(survey.curStatus.status).toEqual(RECORD_STATUS.EDITING);
+      expect(survey.subStatus.status).toBe(RECORD_SUB_STATUS.PAUSING);
       expect(survey.statusList.length).toBe(1);
-      expect(survey.statusList[0].status).toEqual(RECORD_STATUS.EDITING);
+      expect(survey.statusList[0].status).toBe(RECORD_SUB_STATUS.PAUSING);
+      expect(surveyRepository.save).toHaveBeenCalledWith(survey);
+      expect(result).toEqual(survey);
+    });
+  });
+
+  describe('editSurveyMeta', () => {
+    it('should edit a survey meta and return it', async () => {
+      const survey = new SurveyMeta();
+      survey.curStatus = { status: RECORD_STATUS.PUBLISHED, date: Date.now() };
+      survey.statusList = [];
+
+      const operator = 'editor';
+      const operatorId = 'editorId';
+
+      jest.spyOn(surveyRepository, 'save').mockResolvedValue(survey);
+
+      const result = await service.editSurveyMeta({
+        survey,
+        operator,
+        operatorId,
+      });
+
+      expect(survey.curStatus.status).toBe(RECORD_STATUS.EDITING);
+      expect(survey.statusList.length).toBe(1);
+      expect(survey.statusList[0].status).toBe(RECORD_STATUS.EDITING);
+      expect(survey.operator).toBe(operator);
+      expect(survey.operatorId).toBe(operatorId);
       expect(surveyRepository.save).toHaveBeenCalledWith(survey);
       expect(result).toEqual(survey);
     });
   });
 
   describe('deleteSurveyMeta', () => {
-    it('should delete survey meta and update status', async () => {
-      // 准备假的SurveyMeta对象
-      const survey = new SurveyMeta();
-      survey.curStatus = { status: RECORD_STATUS.NEW, date: Date.now() };
-      survey.subStatus = {
-        status: RECORD_SUB_STATUS.DEFAULT,
-        date: Date.now(),
-      };
-      survey.statusList = [];
+    it('should mark a survey as deleted', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'deleter';
+      const operatorId = 'deleterId';
 
-      // 模拟save方法
-      jest.spyOn(surveyRepository, 'save').mockResolvedValue(survey);
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue({
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      });
 
-      // 调用要测试的方法
-      const result = await service.deleteSurveyMeta(survey);
+      const result = await service.deleteSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
 
-      // 验证结果
-      expect(result).toBe(survey);
-      expect(survey.subStatus.status).toBe(RECORD_STATUS.REMOVED);
-      expect(survey.statusList.length).toBe(1);
-      expect(survey.statusList[0].status).toBe(RECORD_STATUS.REMOVED);
-      expect(surveyRepository.save).toHaveBeenCalledTimes(1);
-      expect(surveyRepository.save).toHaveBeenCalledWith(survey);
-    });
-
-    it('should throw exception when survey is already removed', async () => {
-      // 准备假的SurveyMeta对象，其状态已设置为REMOVED
-      const survey = new SurveyMeta();
-      survey.curStatus = {
-        status: RECORD_STATUS.REMOVED,
-        date: Date.now(),
-      };
-
-      // 调用要测试的方法并期待异常
-      await expect(service.deleteSurveyMeta(survey)).rejects.toThrow(
-        HttpException,
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: true,
+            operator,
+            operatorId,
+            deletedAt: expect.any(Date),
+          },
+        },
       );
-
-      // 验证save方法没有被调用
-      expect(surveyRepository.save).not.toHaveBeenCalled();
+      expect(result.matchedCount).toBe(1);
     });
   });
 
   describe('getSurveyMetaList', () => {
     it('should return a list of survey metadata', async () => {
-      // 准备模拟数据
       const mockData = [
         { _id: 1, title: 'Survey 1' },
-        { _id: 2, title: 'Survey 2' },
       ] as unknown as Array<SurveyMeta>;
-      const mockCount = 2;
+      const mockCount = 1;
 
       jest
         .spyOn(surveyRepository, 'findAndCount')
         .mockResolvedValue([mockData, mockCount]);
 
-      // 调用方法并检查返回值
       const condition = {
         pageNum: 1,
         pageSize: 10,
@@ -181,44 +198,47 @@ describe('SurveyMetaService', () => {
         filter: {},
         order: {},
       };
+
       const result = await service.getSurveyMetaList(condition);
 
-      // 验证返回值
       expect(result).toEqual({ data: mockData, count: mockCount });
-      // 验证repository方法被正确调用
       expect(surveyRepository.findAndCount).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('publishSurveyMeta', () => {
-    it('should publish a survey meta and add status to statusList', async () => {
-      // 准备模拟数据
-      const surveyMeta = {
-        id: 1,
-        title: 'Test Survey',
-        statusList: [],
-      } as unknown as SurveyMeta;
-      const savedSurveyMeta = {
-        ...surveyMeta,
-        curStatus: {
-          status: RECORD_STATUS.PUBLISHED,
-          date: expect.any(Number),
-        },
-        subStatus: {
-          status: RECORD_SUB_STATUS.DEFAULT,
-          date: expect.any(Number),
-        },
-      } as unknown as SurveyMeta;
+    it('should publish a survey and update curStatus', async () => {
+      const surveyMeta = new SurveyMeta();
+      surveyMeta.statusList = [];
 
-      jest.spyOn(surveyRepository, 'save').mockResolvedValue(savedSurveyMeta);
+      jest.spyOn(surveyRepository, 'save').mockResolvedValue(surveyMeta);
 
-      // 调用方法并检查返回值
       const result = await service.publishSurveyMeta({ surveyMeta });
 
-      // 验证返回值
-      expect(result).toEqual(savedSurveyMeta);
-      // 验证repository方法被正确调用
-      expect(surveyRepository.save).toHaveBeenCalledWith(savedSurveyMeta);
+      expect(surveyMeta.curStatus.status).toBe(RECORD_STATUS.PUBLISHED);
+      expect(surveyMeta.statusList.length).toBe(1);
+      expect(surveyMeta.statusList[0].status).toBe(RECORD_STATUS.PUBLISHED);
+      expect(surveyRepository.save).toHaveBeenCalledWith(surveyMeta);
+      expect(result).toEqual(surveyMeta);
+    });
+  });
+
+  describe('countSurveyMetaByWorkspaceId', () => {
+    it('should return the count of surveys in a workspace', async () => {
+      const workspaceId = 'workspace1';
+      const mockCount = 5;
+
+      jest.spyOn(surveyRepository, 'count').mockResolvedValue(mockCount);
+
+      const result = await service.countSurveyMetaByWorkspaceId({
+        workspaceId,
+      });
+
+      expect(result).toBe(mockCount);
+      expect(surveyRepository.count).toHaveBeenCalledWith({
+        workspaceId,
+        isDeleted: { $ne: true },
+      });
     });
   });
 });

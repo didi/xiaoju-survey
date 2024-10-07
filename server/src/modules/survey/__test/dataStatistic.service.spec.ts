@@ -151,8 +151,8 @@ describe('DataStatisticService', () => {
               date: 1710340863123.0,
             },
           ],
-          createDate: 1710340863123.0,
-          updateDate: 1710340863123.0,
+          createdAt: 1710340863123.0,
+          updatedAt: 1710340863123.0,
         },
       ] as unknown as Array<SurveyResponse>;
 
@@ -196,7 +196,7 @@ describe('DataStatisticService', () => {
             data413: expect.any(Number),
             data863: expect.any(String),
             diffTime: expect.any(String),
-            createDate: expect.any(String),
+            createdAt: expect.any(String),
           }),
         ]),
       });
@@ -273,8 +273,8 @@ describe('DataStatisticService', () => {
               date: 1710400232161.0,
             },
           ],
-          createDate: 1710400232161.0,
-          updateDate: 1710400232161.0,
+          createdAt: 1710400232161.0,
+          updatedAt: 1710400232161.0,
         },
       ] as unknown as Array<SurveyResponse>;
 
@@ -295,7 +295,7 @@ describe('DataStatisticService', () => {
       expect(result.listBody).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            createDate: expect.any(String),
+            createdAt: expect.any(String),
             data405: expect.any(String),
             data450: expect.any(String),
             data458: expect.any(String),

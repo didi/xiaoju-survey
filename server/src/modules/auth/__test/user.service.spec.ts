@@ -206,8 +206,8 @@ describe('UserService', () => {
   it('should return a list of users by username', async () => {
     const username = 'test';
     const userList = [
-      { _id: new ObjectId(), username: 'testUser1', createDate: new Date() },
-      { _id: new ObjectId(), username: 'testUser2', createDate: new Date() },
+      { _id: new ObjectId(), username: 'testUser1', createdAt: new Date() },
+      { _id: new ObjectId(), username: 'testUser2', createdAt: new Date() },
     ];
 
     jest
@@ -226,7 +226,7 @@ describe('UserService', () => {
       },
       skip: 0,
       take: 10,
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     expect(result).toEqual(userList);
   });
@@ -237,12 +237,12 @@ describe('UserService', () => {
       {
         _id: new ObjectId(idList[0]),
         username: 'testUser1',
-        createDate: new Date(),
+        createdAt: new Date(),
       },
       {
         _id: new ObjectId(idList[1]),
         username: 'testUser2',
-        createDate: new Date(),
+        createdAt: new Date(),
       },
     ];
 
@@ -258,7 +258,7 @@ describe('UserService', () => {
           $in: idList.map((id) => new ObjectId(id)),
         },
       },
-      select: ['_id', 'username', 'createDate'],
+      select: ['_id', 'username', 'createdAt'],
     });
     expect(result).toEqual(userList);
   });

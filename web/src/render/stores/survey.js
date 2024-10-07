@@ -161,9 +161,7 @@ export const useSurveyStore = defineStore('survey', () => {
   // 用户输入或者选择后，更新表单数据
   const changeData = (data) => {
     let { key, value } = data
-    if (key in formValues.value) {
-      formValues.value[key] = value
-    }
+    formValues.value[key] = value
     questionStore.setChangeField(key)
   }
 

@@ -14,8 +14,8 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       date: 1710399368439,
     },
   ],
-  createDate: 1710399368440,
-  updateDate: 1710399368440,
+  createdAt: 1710399368440,
+  updatedAt: 1710399368440,
   title: '加密全流程',
   surveyPath: 'EBzdmnSp',
   code: {
@@ -664,6 +664,6 @@ export const mockResponseSchema: ResponseSchema = {
     },
   },
   pageId: '65afc62904d5db18534c0f78',
-  createDate: 1710340841289,
-  updateDate: 1710340841289.0,
+  createdAt: 1710340841289,
+  updatedAt: 1710340841289.0,
 } as unknown as ResponseSchema;

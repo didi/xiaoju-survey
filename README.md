@@ -33,29 +33,49 @@
 
 &ensp;&ensp;内部系统已沉淀 40+种题型，累积精选模板 100+，适用于市场调研、客户满意度调研、在线考试、投票、报道、测评等众多场景。数据能力上，经过上亿量级打磨，沉淀了分题统计、交叉分析、多渠道分析等在线报表能力，快速满足专业化分析。
 
-# 功能简介
+# 功能特性
 
-- 问卷管理：创、编、投、收、数据分析
+**🌈 易用**
 
-- 多样化题型：单行输入框、多行输入框、单项选择、多项选择、判断题、评分、投票、...
+- 多类型数据采集，轻松创建调研表单：文本输入、数据选择、评分、投票、文件上传等。
 
-- 用户管理：登录、注册、权限管理
+- 智能逻辑编排，设计多规则动态表单：显示逻辑、跳转逻辑、选项引用、题目引用等。
 
-- 数据安全：传输加密、脱敏等
+- 精细权限管理，支持高效团队协同：空间管理、多角色权限管理等。
 
-> 更全的建设请查阅 [功能介绍](https://xiaojusurvey.didi.cn/docs/next/document/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B)
+- 数据在线分析和导出，洞察调研结果：数据导出、回收数据管理、分题统计、交叉分析等。
+
+**🎨 好看**
+
+- 主题自由定制，适配您的品牌：自定义颜色、背景、图片、Logo、结果页规则等。
+
+- 无缝嵌入各终端，满足不同场景需求：多端嵌入式小问卷 SDK。
+
+**🚀 安全、可扩展**
+
+- 安全能力可扩展，提供安全相关建设的经验指导：传输加密、敏感词库、发布审查等。
+
+- 自定义 Hook 配置，轻松集成多方系统与各类工具：数据推送集成、消息推送集成等。
 
 <img src="https://github.com/didi/xiaoju-survey/assets/16012672/dd427471-368d-49d9-bc44-13c34d84e3be"  width="700" />
 
-_**(个人和企业用户均可快速构建特定领域的调研类解决方案。)**_
+1、 **全部功能**请查看 [功能介绍](https://xiaojusurvey.didi.cn/docs/next/document/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B)。
+
+2、**企业**和**个人**均可快速构建特定领域的调研类解决方案。
 
 # 技术
 
-Web 端：Vue3 + ElementPlus；C 端多端渲染（规划中）
+**1、Web 端：Vue3 + ElementPlus**
 
-Server 端：Nestjs + MongoDB；Java（在建，[欢迎加入共建](https://github.com/didi/xiaoju-survey/issues/306)）
+&ensp;&ensp;C 端多端渲染：ReactNative SDK 建设中
 
-智能化基座：（规划中）
+**2、Server 端：NestJS + MongoDB**
+
+&ensp;&ensp;Java 版：建设中，[欢迎加入共建](https://github.com/didi/xiaoju-survey/issues/306)
+
+**3、能力增强**
+
+&ensp;&ensp;在线平台：建设中、智能化问卷：规划中
 
 # 项目优势
 
@@ -106,101 +126,25 @@ Server 端：Nestjs + MongoDB；Java（在建，[欢迎加入共建](https://git
 
   前后端分离，提供 Docker 化方案，提供了完善的部署指导手册。
 
-# 快速启动
+# 快速使用
 
-Node 版本 >= 18.x，
-[查看环境准备指导](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
+_（在线平台建设中）_
 
-复制工程
+# 本地开发
 
-```shell
-git clone git@github.com:didi/xiaoju-survey.git
-```
+请查看 [本地安装手册](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B) 来启动项目。
 
-## 服务端启动
+# 快速部署
 
-### 方案一、快速启动，无需安装数据库
+### 服务部署
 
-> _便于快速预览工程，对于正式项目需要使用方案二。_
+请查看 [快速部署指导](https://xiaojusurvey.didi.cn/docs/next/document/%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2/Docker%E9%83%A8%E7%BD%B2) 。
 
-#### 1、安装依赖
+### 一键部署
 
-```shell
-cd server
-npm install
-```
+_（手册编写中）_
 
-#### 2、启动
-
-```shell
-npm run local
-```
-
-> 服务运行依赖 [mongodb-memory-server](https://github.com/nodkz/mongodb-memory-server)：
->
-> 1、数据保存在内存中，重启服务会更新数据。<br />2、启动内存服务器新实例时，如果找不到 MongoDB 二进制文件会自动下载，因此首次可能需要一些时间。
-
-### 方案二、(生产推荐)
-
-#### 1、配置数据库
-
-> 项目使用 MongoDB，需要提前准备，请查看[如何拥有 MongoDB 指南](./数据库#安装)
-
-配置数据库信息，查看[MongoDB 配置](./数据库)。
-
-#### 2、安装依赖
-
-```shell
-cd server
-npm install
-```
-
-#### 3、启动
-
-```shell
-npm run dev
-```
-
-## 前端启动
-
-### 安装依赖
-
-```shell
-cd web
-npm install
-```
-
-### 启动
-
-```shell
-npm run serve
-```
-
-## 访问
-
-### 问卷管理端
-
-[http://localhost:8080/management](http://localhost:8080)
-
-### 问卷投放端
-
-创建并发布问卷。
-
-[http://localhost:8080/render/:surveyPath](http://localhost:8080/render/:surveyPath)
-
-<br /><br />
-
-## 微信交流群（推荐）
-
-官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入。任何问题和合作可以联系小助手：
-
-<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
-
-## QQ 交流群
-
-官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入：
-
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
+<br />
 
 ## Star
 
@@ -208,18 +152,26 @@ npm run serve
 
 [![Star History Chart](https://api.star-history.com/svg?repos=didi/xiaoju-survey&type=Date)](https://star-history.com/#didi/xiaoju-survey&Date)
 
-## 记录
+## 交流群
+
+官方群会发布项目最新消息、建设计划和社区活动，欢迎你的加入。
+
+<img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
+
+_任何问题和合作可以联系小助手。_
+
+## 案例
 
 如果你使用了该项目，请记录反馈：[我在使用](https://github.com/didi/xiaoju-survey/issues/64)，你的支持是我们最大的动力。
+
+## Future Tasks
+
+[欢迎了解项目发展和共建](https://github.com/didi/xiaoju-survey/issues/85)，你的支持是我们最大的动力。
 
 ## 贡献
 
 如果你想成为贡献者或者扩展技术栈，请查看：[贡献者指南](https://xiaojusurvey.didi.cn/docs/next/share/%E5%A6%82%E4%BD%95%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE)，你的加入使我们最大的荣幸。
 
-## Future Tasks
-
-[欢迎共建](https://github.com/didi/xiaoju-survey/issues/85)
-
 ## CHANGELOG
 
-关注重大项目变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)。
+关注项目重大变更：[MAJOR CHANGELOG](https://github.com/didi/xiaoju-survey/issues/48)。

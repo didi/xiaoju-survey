@@ -33,27 +33,43 @@
 
 &ensp;&ensp;The internal system has accumulated over 40 question types and more than 100 selected templates, suitable for market research, customer satisfaction surveys, online exams, voting, reporting, evaluations, and many other scenarios. In terms of data capabilities, it has been honed through hundreds of millions of iterations, resulting in the ability to provide online reports with per-question statistics, cross-analysis, and multi-channel analysis, quickly meeting professional analysis needs.
 
-# Function Overview
+# Features
 
-- Questionnaire Management: Create, edit, distribute, collect, data analysis.
+**🌈 Easy to use**
 
-- Diverse Question Types: Single-line input, multi-line input, single choice, multiple choice, true/false, rating, voting, etc.
+- Multi-type data collection, easy to create forms: text input, data selection, scoring, voting, file upload, etc.
 
-- User Management: Login, registration, permissions management.
+- Smart logic arrangement, design multi-rule dynamic forms: display logic, jump logic, option reference, title reference, etc.
 
-- Data Security: Encrypted transmission, data masking, etc.
+- Multiple permission management, support efficient team collaboration: space management, multi-role permission management, etc.
 
-> For more comprehensive features, please refer to the [documentation](https://xiaojusurvey.didi.cn/docs/next/document/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B).
+- Online data analysis and export, insight into survey results: data export, recycled data management, sub-topic statistics, cross-analysis, etc.
+
+**🎨 Good-looking**
+
+- Free customization of themes to adapt to your brand: custom colors, backgrounds, pictures, logos, result page rules, etc.
+
+- Seamlessly embedded in various terminals to meet the needs of different scenarios: multi-terminal embedded small questionnaire SDK.
+
+**🚀 Secure and scalable**
+
+- Scalable security capabilities, providing experience guidance for security-related construction: encrypted transmission, data masking, etc.
+
+- Customized Hook configuration, easy integration of multiple systems and various tools: data push, message push, etc.
 
 <img src="https://github.com/didi/xiaoju-survey/assets/16012672/508ce30f-0ae8-4f5f-84a7-e96de8238a7f"  width="700" />
 
-_**(Both individual and enterprise users can quickly build survey solutions specific to their fields.)**_
+1. For more comprehensive features, please refer to the [documentation](https://xiaojusurvey.didi.cn/docs/next/document/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D/%E5%9F%BA%E7%A1%80%E6%B5%81%E7%A8%8B).
+
+2. Both individual and enterprise users can quickly build survey solutions specific to their fields.
 
 # Technology
 
 Web: Vue3 + ElementPlus; Multi-end rendering for C-end (planning).
 
-Server: Nestjs + MongoDB; Java ([under construction](https://github.com/didi/xiaoju-survey/issues/306)).
+Server: NestJS + MongoDB; Java ([under construction](https://github.com/didi/xiaoju-survey/issues/306)).
+
+Online Platform: (under construction).
 
 Intelligent Foundation: (planning).
 
@@ -191,21 +207,17 @@ Create and publish a questionnaire.
 
 <br /><br />
 
+## Star
+
+Open source is not easy. If this project helps you, please star it ❤️❤️❤️. Your support is our greatest motivation.
+
+[![Star History Chart](https://api.star-history.com/svg?repos=didi/xiaoju-survey&type=Date)](https://star-history.com/#didi/xiaoju-survey&Date)
+
 ## WeChat Group
 
 The official group will release the latest project news, construction plans, and community activities. Any questions and cooperation can contact the assistant:
 
 <img src="https://img-hxy021.didistatic.com/static/starimg/img/KXKvc7sjHz1700061188156.png"  width="200" />
-
-## QQ Group
-
-The official group will release the latest project news, construction plans, and community activities. Welcome to join:
-
-[<img src="https://img-hxy021.didistatic.com/static/starimg/img/iJUmLIHKV21700192846057.png"  width="210" />](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=P61UJI_q8AzizyBLGOm-bUvzNrUnSQq-&authKey=yZFtL9biGB5yiIME3%2Bi%2Bf6XMOdTNiuf0pCIaviEEAIryySNzVy6LJ4xl7uHdEcrM&noverify=0&group_code=920623419)
-
-## Star
-
-Open source is not easy. If this project helps you, please star it ❤️❤️❤️. Your support is our greatest motivation.
 
 ## Feedback
 

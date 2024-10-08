@@ -135,7 +135,7 @@ describe('ResponseSchemaService', () => {
         {
           $set: {
             isDeleted: true,
-            updatedAt: new Date(),
+            updatedAt: expect.any(Date),
           },
         },
       );

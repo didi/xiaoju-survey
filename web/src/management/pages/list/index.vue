@@ -112,7 +112,7 @@ const tableTitle = computed(() => {
   } else if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Teamwork) {
     return '团队空间'
   } else {
-    return currentTeamSpace?.name || '问卷列表'
+    return currentTeamSpace.value?.name || '问卷列表';
   }
 })
 
@@ -165,8 +165,10 @@ const handleSpaceSelect = (id: SpaceType | string) => {
       fetchSpaceList()
       break
     default:
-      let parentMenu = spaceMenus.value.find((parent: typeof spaceMenus) => parent.children.find((children: typeof spaceMenus) => children.id === id))
-      workSpaceStore.changeSpaceType(parentMenu.id)
+      let parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id === id))
+      if(parentMenu != undefined) {
+        workSpaceStore.changeSpaceType(parentMenu.id)
+      }
       workSpaceStore.changeWorkSpace(id)
       break
   }

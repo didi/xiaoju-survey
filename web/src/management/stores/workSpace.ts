@@ -91,9 +91,9 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     workSpaceId.value = ''
   }
 
-  function changeSpaceType(id: GroupType) {
-    spaceType.value = id
-    groupType.value = id
+  function changeSpaceType(id: SpaceType | GroupType) {
+    spaceType.value = id as SpaceType
+    groupType.value = id as GroupType
   }
 
   function changeWorkSpace(id: string) {
@@ -143,7 +143,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   
   // 分组
   const groupList = ref<GroupItem[]>([])
-  const groupAllList = ref<IGroup>([])
+  const groupAllList = ref<IGroup[]>([])
   const groupListTotal = ref(0)
   const groupDetail = ref<GroupItem | null>(null)
   async function addGroup(params: IGroup) {
@@ -205,13 +205,17 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   function getGroupDetail(id: string) {
     try {
       const data = groupList.value.find((item: GroupItem) => item._id === id)
-      groupDetail.value = data
+      if(data != undefined) {
+        groupDetail.value = data
+      } else {
+        ElMessage.error('groupDetail 未找到分组')
+      }
     } catch (err) {
       ElMessage.error('groupDetail' + err)
     }
   }
 
-  function setGroupDetail(data: null | SpaceDetail) {
+  function setGroupDetail(data: null | GroupItem) {
     groupDetail.value = data
   }
 

@@ -22,8 +22,8 @@
   
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="onClose" v-if="!formDisabled">取消</el-button>
-          <el-button type="primary" class="save-btn" @click="onConfirm" v-if="!formDisabled">
+          <el-button @click="onClose">取消</el-button>
+          <el-button type="primary" class="save-btn" @click="onConfirm">
             确定
           </el-button>
         </div>
@@ -38,7 +38,7 @@
   import 'element-plus/theme-chalk/src/message.scss'
   
   import { QOP_MAP } from '@/management/utils/constant'
-  import { type IGroup } from '@/management/utils/types/workSpace'
+  import { type IGroup } from '@/management/utils/workSpace'
   import { useWorkSpaceStore } from '@/management/stores/workSpace'
   
   const workSpaceStore = useWorkSpaceStore()

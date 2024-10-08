@@ -33,9 +33,9 @@
         >
           <el-option
             v-for="item in groupAllList"
-            :key="item._id"
-            :label="item.name"
-            :value="item._id"
+            :key="item?._id"
+            :label="item?.name"
+            :value="item?._id"
           />
         </el-select>
       </el-form-item>

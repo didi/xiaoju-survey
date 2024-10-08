@@ -13,7 +13,7 @@ export const getUserInfo = () => {
 }
 /** 获取密码强度 */
 export const getPasswordStrength = (password) => {
-  return axios.get('/auth/register/password/strength', {
+  return axios.get('/auth/password/strength', {
     params: {
       password
     }

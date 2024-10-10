@@ -55,6 +55,7 @@
       :type="modifyType"
       :visible="showSpaceModify"
       @on-close-codify="onCloseModify"
+      @update-data="onCloseModifyInTeamWork"
     />
   </div>
 </template>
@@ -151,26 +152,24 @@ const onSetGroup = async () => {
 }
 
 const onCloseModifyInTeamWork = (data: IWorkspace) => {
-  const currentData = workSpaceList.value.find((item) => item._id === data._id)
-  if (currentData) {
-    currentData.name = data.name
-    currentData.memberTotal = data.members.length
-    currentData.description = data.description
-  }
-  const currentMenus: any = spaceMenus.value?.[1]?.children?.find(
-    (item: { id: string; name: string }) => item.id === data._id
-  )
-  if (currentMenus) {
-    currentMenus.name = data.name
+  if (spaceType.value === SpaceType.Teamwork) {
+    const currentData = workSpaceList.value.find((item) => item._id === data._id)
+    if (currentData) {
+      currentData.name = data.name
+      currentData.memberTotal = data.members.length
+      currentData.description = data.description
+    }
+    const currentMenus: any = spaceMenus.value?.[1]?.children?.find(
+      (item: { id: string; name: string }) => item.id === data._id
+    )
+    if (currentMenus) {
+      currentMenus.name = data.name
+    }
   }
 }
 
-const onCloseModify = (type: string, data: IWorkspace) => {
+const onCloseModify = (type: string) => {
   showSpaceModify.value = false
-  if (spaceType.value === SpaceType.Teamwork) {
-    onCloseModifyInTeamWork(data)
-    return
-  }
   if (type === 'update' && spaceListRef.value) {
     fetchSpaceList()
     spaceListRef.value.onCloseModify()

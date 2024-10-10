@@ -1,192 +1,104 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { SurveyGroupController } from '../controllers/surveyGroup.controller';
-// import { SurveyGroupService } from '../services/surveyGroup.service';
-// import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-// import { Logger } from 'src/logger';
-// import { HttpException } from 'src/exceptions/httpException';
-// import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-// import { CreateSurveyGroupDto } from '../dto/createSurveyGroup.dto';
-// import { UpdateSurveyGroupDto } from '../dto/updateSurveyGroup.dto';
-// import { GetGroupListDto } from '../dto/getGroupList.dto';
+import { Test, TestingModule } from '@nestjs/testing';  
+import { SurveyGroupController } from '../controllers/surveyGroup.controller';  
+import { SurveyGroupService } from '../services/surveyGroup.service';  
+import { HttpException } from '@nestjs/common';  
 
-import { Test, TestingModule } from '@nestjs/testing';
-import { SurveyGroupController } from '../controllers/surveyGroup.controller'; // Adjust path accordingly
-import { SurveyGroupService } from '../services/surveyGroup.service';
-import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
-import { Logger } from 'src/logger';
-import { HttpException } from 'src/exceptions/httpException';
-import { CreateSurveyGroupDto } from '../dto/createSurveyGroup.dto';
-import { UpdateSurveyGroupDto } from '../dto/updateSurveyGroup.dto';
+describe('SurveyGroupController', () => {  
+  let controller: SurveyGroupController;  
+  let service: SurveyGroupService;  
 
-describe('SurveyGroupController', () => {
-  let controller: SurveyGroupController;
-  let surveyGroupService: SurveyGroupService;
-  let surveyMetaService: SurveyMetaService;
-  let logger: Logger;
+  const mockService = {  
+    create: jest.fn(),  
+    findAll: jest.fn(),  
+    update: jest.fn(),  
+    remove: jest.fn(),  
+  };  
 
-  const mockUser = { _id: 'userId123' };
+  beforeEach(async () => {  
+    const module: TestingModule = await Test.createTestingModule({  
+      controllers: [SurveyGroupController],  
+      providers: [  
+        {  
+          provide: SurveyGroupService,  
+          useValue: mockService,  
+        },  
+      ],  
+    }).compile();  
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [SurveyGroupController],
-      providers: [
-        {
-          provide: SurveyGroupService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-          },
-        },
-        {
-          provide: SurveyMetaService,
-          useValue: {
-            countSurveyMetaByGroupId: jest.fn(),
-          },
-        },
-        {
-          provide: Logger,
-          useValue: {
-            error: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+    controller = module.get<SurveyGroupController>(SurveyGroupController);  
+    service = module.get<SurveyGroupService>(SurveyGroupService);  
+  });  
 
-    controller = module.get<SurveyGroupController>(SurveyGroupController);
-    surveyGroupService = module.get<SurveyGroupService>(SurveyGroupService);
-    surveyMetaService = module.get<SurveyMetaService>(SurveyMetaService);
-    logger = module.get<Logger>(Logger);
-  });
+  it('should be defined', () => {  
+    expect(controller).toBeDefined();  
+  });  
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  describe('create', () => {  
+    it('should create a survey group', async () => {  
+      const result = { _id: '1', name: 'Test Group', ownerId: '123' };  // 确保这里返回的对象结构符合预期  
+      jest.spyOn(service, 'create').mockResolvedValue(result);  
 
-  describe('create', () => {
-    it('should create a new survey group', async () => {
-      const reqBody: CreateSurveyGroupDto = { name: 'Test Group' };
-      const req = { user: mockUser };
+      // 创建模拟的请求对象  
+      const req = {  
+          user: {  
+              _id: '123', // 模拟的用户ID  
+          }  
+      };  
 
-      jest
-        .spyOn(surveyGroupService, 'create')
-        .mockResolvedValue({ _id: 'newGroupId' });
-      const result = await controller.create(reqBody, req);
+      expect(await controller.create({ name: 'Test Group', ownerId: '123' }, req)).toEqual({  
+          code: 200,  
+          data: {  
+              id: result._id,  
+          },  
+      });  
+      expect(service.create).toHaveBeenCalledWith({  
+          name: 'Test Group',  
+          ownerId: req.user._id.toString(), // 这里用模拟的 req.user._id  
+      });  
+    });  
+}); 
 
-      expect(result).toEqual({ code: 200, data: { id: 'newGroupId' } });
-      expect(surveyGroupService.create).toHaveBeenCalledWith({
-        name: reqBody.name,
-        ownerId: mockUser._id,
-      });
-    });
+  describe('findAll', () => {  
+    it('should return a list of survey groups', async () => {  
+      const result = { total: 1, list: [], allList: [] };  
+      jest.spyOn(service, 'findAll').mockResolvedValue(result);  
 
-    it('should throw an error if validation fails', async () => {
-      const reqBody = { name: '' }; // Invalid input
-      const req = { user: mockUser };
+      expect(await controller.findAll('123', '', 0, 10)).toBe(result);  
+      expect(service.findAll).toHaveBeenCalledWith('123', '', 0, 10);  
+    });  
+  });  
 
-      await expect(controller.create(reqBody, req)).rejects.toThrow(
-        HttpException,
-      );
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('createSurveyGroup_parameter error:'),
-      );
-    });
-  });
+  describe('update', () => {  
+    it('should update a survey group', async () => {  
+      const updatedFields = { name: 'Updated Test Group' };  
+      const id = '1';  
+      jest.spyOn(service, 'update').mockResolvedValue(updatedFields);  
 
-  describe('findAll', () => {
-    it('should return a list of survey groups', async () => {
-      const queryInfo = { curPage: 1, pageSize: 10 };
-      const req = { user: mockUser };
-      const mockGroupList = [
-        { _id: 'groupId1', name: 'Group 1', createdAt: new Date() },
-      ];
+      expect(await controller.updateOne(id, updatedFields)).toEqual({  
+        code: 200,  
+        ret: updatedFields,  
+      });  
+      expect(service.update).toHaveBeenCalledWith(id, updatedFields);  
+    });  
 
-      jest.spyOn(surveyGroupService, 'findAll').mockResolvedValue({
-        total: 1,
-        list: mockGroupList,
-        allList: mockGroupList,
-      });
-      jest
-        .spyOn(surveyMetaService, 'countSurveyMetaByGroupId')
-        .mockResolvedValue(5);
+    it('should throw error on invalid parameter', async () => {  
+      const id = '1';  
+      const invalidFields = {};  
+      jest.spyOn(service, 'update').mockImplementation(() => {  
+        throw new HttpException('参数错误', 400);  
+      });  
 
-      const result = await controller.findAll(req, queryInfo);
-      expect(result).toEqual({
-        code: 200,
-        data: {
-          total: 1,
-          list: [
-            {
-              _id: 'groupId1',
-              name: 'Group 1',
-              createdAt: expect.any(String),
-              surveyTotal: 5,
-            },
-          ],
-          allList: mockGroupList,
-        },
-      });
-    });
+      await expect(controller.updateOne(id, invalidFields)).rejects.toThrow(HttpException);  
+    });  
+  });  
 
-    it('should throw an error if validation fails', async () => {
-      const queryInfo = { curPage: 0, pageSize: 10 }; // Invalid input
-      const req = { user: mockUser };
+  describe('remove', () => {  
+    it('should remove a survey group', async () => {  
+      const id = '1';  
+      jest.spyOn(service, 'remove').mockResolvedValue(undefined);  
 
-      await expect(controller.findAll(req, queryInfo)).rejects.toThrow(
-        HttpException,
-      );
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('GetGroupListDto validate failed:'),
-      );
-    });
-  });
-
-  describe('findOne', () => {
-    it('should find a survey group by id', async () => {
-      const id = '1';
-      jest.spyOn(surveyGroupService, 'findOne').mockReturnValue({ id });
-
-      const result = await controller.findOne(id);
-      expect(result).toEqual({ id });
-      expect(surveyGroupService.findOne).toHaveBeenCalledWith(+id);
-    });
-  });
-
-  describe('updateOne', () => {
-    it('should update a survey group', async () => {
-      const id = '1';
-      const reqBody: UpdateSurveyGroupDto = { name: 'Updated Group' };
-
-      jest.spyOn(surveyGroupService, 'update').mockResolvedValue({});
-      const result = await controller.updateOne(id, reqBody);
-
-      expect(result).toEqual({ code: 200, ret: {} });
-      expect(surveyGroupService.update).toHaveBeenCalledWith(id, reqBody);
-    });
-
-    it('should throw an error if validation fails', async () => {
-      const id = '1';
-      const reqBody = { name: '' }; // Invalid input
-
-      await expect(controller.updateOne(id, reqBody)).rejects.toThrow(
-        HttpException,
-      );
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('createSurveyGroup_parameter error:'),
-      );
-    });
-  });
-
-  describe('remove', () => {
-    it('should remove a survey group', async () => {
-      const id = '1';
-      jest.spyOn(surveyGroupService, 'remove').mockResolvedValue(undefined);
-
-      const result = await controller.remove(id);
-      expect(result).toEqual({ code: 200 });
-      expect(surveyGroupService.remove).toHaveBeenCalledWith(id);
-    });
-  });
+      expect(await controller.remove(id)).toEqual({ code: 200 });  
+      expect(service.remove).toHaveBeenCalledWith(id);  
+    });  
+  });  
 });

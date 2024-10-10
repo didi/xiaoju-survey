@@ -1,127 +1,93 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { SurveyGroupService } from '../services/surveyGroup.service'; // Change path accordingly
-import { SurveyGroup } from 'src/models/surveyGroup.entity';
-import { SurveyMeta } from 'src/models/surveyMeta.entity';
-import { getMongoRepository } from 'typeorm';
-import { MongoRepository } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';  
+import { SurveyGroupService } from '../services/surveyGroup.service';  
+import { SurveyGroup } from 'src/models/surveyGroup.entity';  
+import { SurveyMeta } from 'src/models/surveyMeta.entity';  
+import { Repository } from 'typeorm';  
+import { getRepositoryToken } from '@nestjs/typeorm';  
 
-describe('SurveyGroupService', () => {
-  let service: SurveyGroupService;
-  let surveyGroupRepository: MongoRepository<SurveyGroup>;
-  let surveyMetaRepository: MongoRepository<SurveyMeta>;
+describe('SurveyGroupService', () => {  
+  let service: SurveyGroupService;  
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SurveyGroupService,
-        {
-          provide: getMongoRepository(SurveyGroup),
-          useValue: {
-            create: jest.fn(),
-            save: jest.fn(),
-            findAndCount: jest.fn(),
-            find: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-          },
-        },
-        {
-          provide: getMongoRepository(SurveyMeta),
-          useValue: {
-            updateMany: jest.fn(),
-          },
-        },
-      ],
-    }).compile();
+  const mockSurveyGroupRepository = {  
+    create: jest.fn(),  
+    save: jest.fn(),  
+    findAndCount: jest.fn(),  
+    find: jest.fn(),  
+    update: jest.fn(),  
+    delete: jest.fn(),  
+  };  
 
-    service = module.get<SurveyGroupService>(SurveyGroupService);
-    surveyGroupRepository = module.get(getMongoRepository(SurveyGroup));
-    surveyMetaRepository = module.get(getMongoRepository(SurveyMeta));
-  });
+  const mockSurveyMetaRepository = {  
+    updateMany: jest.fn(),  
+  };  
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+  beforeEach(async () => {  
+    const module: TestingModule = await Test.createTestingModule({  
+      providers: [  
+        SurveyGroupService,  
+        {  
+          provide: getRepositoryToken(SurveyGroup),  
+          useValue: mockSurveyGroupRepository,  
+        },  
+        {  
+          provide: getRepositoryToken(SurveyMeta),  
+          useValue: mockSurveyMetaRepository,  
+        },  
+      ],  
+    }).compile();  
 
-  describe('create', () => {
-    it('should create a new survey group', async () => {
-      const params = { name: 'Test Group', ownerId: 'ownerId123' };
-      const newGroup = { ...params, _id: 'newId' };
+    service = module.get<SurveyGroupService>(SurveyGroupService);  
+  });  
 
-      jest.spyOn(surveyGroupRepository, 'create').mockReturnValue(newGroup);
-      jest.spyOn(surveyGroupRepository, 'save').mockResolvedValue(newGroup);
+  it('should be defined', () => {  
+    expect(service).toBeDefined();  
+  });  
 
-      const result = await service.create(params);
-      expect(result).toEqual(newGroup);
-      expect(surveyGroupRepository.create).toHaveBeenCalledWith(params);
-      expect(surveyGroupRepository.save).toHaveBeenCalledWith(newGroup);
-    });
-  });
+  describe('create', () => {  
+    it('should create a survey group', async () => {  
+      const createParams = { name: 'Test Group', ownerId: '123' };  
+      const mockSavedGroup = { ...createParams, id: '1' };  
 
-  describe('findAll', () => {
-    it('should return a list of survey groups', async () => {
-      const userId = 'ownerId123';
-      const name = 'Test';
-      const skip = 0;
-      const pageSize = 10;
+      mockSurveyGroupRepository.create.mockReturnValue(mockSavedGroup);  
+      mockSurveyGroupRepository.save.mockResolvedValue(mockSavedGroup);  
 
-      const foundGroups = [
-        { name: 'Test Group 1', ownerId: userId, createdAt: new Date() },
-        { name: 'Test Group 2', ownerId: userId, createdAt: new Date() },
-      ];
-      const total = foundGroups.length;
+      expect(await service.create(createParams)).toEqual(mockSavedGroup);  
+      expect(mockSurveyGroupRepository.create).toHaveBeenCalledWith(createParams);  
+      expect(mockSurveyGroupRepository.save).toHaveBeenCalledWith(mockSavedGroup);  
+    });  
+  });  
 
-      jest
-        .spyOn(surveyGroupRepository, 'findAndCount')
-        .mockResolvedValue([foundGroups, total]);
-      jest
-        .spyOn(surveyGroupRepository, 'find')
-        .mockResolvedValue(
-          foundGroups.map(({ name }) => ({ _id: 'id', name })),
-        );
+  describe('findAll', () => {  
+    it('should return survey groups', async () => {  
+      const list = [{ id: '1', name: 'Test Group', ownerId: '123' }];  
+      const total = list.length;  
 
-      const result = await service.findAll(userId, name, skip, pageSize);
-      expect(result).toEqual({
-        total,
-        list: foundGroups,
-        allList: foundGroups,
-      });
-      expect(surveyGroupRepository.findAndCount).toHaveBeenCalled();
-      expect(surveyGroupRepository.find).toHaveBeenCalled();
-    });
-  });
+      mockSurveyGroupRepository.findAndCount.mockResolvedValue([list, total]);  
+      mockSurveyGroupRepository.find.mockResolvedValue(list);  
 
-  describe('update', () => {
-    it('should update a survey group', async () => {
-      const id = 'groupId123';
-      const updatedFields = { name: 'Updated Group' };
+      const result = await service.findAll('123', '', 0, 10);  
+      expect(result).toEqual({ total, list, allList: list });  
+      expect(mockSurveyGroupRepository.findAndCount).toHaveBeenCalled();  
+      expect(mockSurveyGroupRepository.find).toHaveBeenCalled();  
+    });  
+  });  
 
-      await service.update(id, updatedFields);
-      expect(surveyGroupRepository.update).toHaveBeenCalledWith(id, {
-        ...updatedFields,
-        updatedAt: expect.any(Date),
-      });
-    });
-  });
+  describe('update', () => {  
+    it('should update a survey group', async () => {  
+      const id = '1';  
+      const updatedFields = { name: 'Updated Test Group' };  
 
-  describe('remove', () => {
-    it('should remove a survey group', async () => {
-      const id = 'groupId123';
-      const query = { groupId: id };
-      const update = { $set: { groupId: null } };
+      await service.update(id, updatedFields);  
+      expect(mockSurveyGroupRepository.update).toHaveBeenCalledWith(id, { ...updatedFields, updatedAt: expect.any(Date) });  
+    });  
+  });  
 
-      jest.spyOn(surveyMetaRepository, 'updateMany').mockResolvedValue({});
-      jest
-        .spyOn(surveyGroupRepository, 'delete')
-        .mockResolvedValue({ affected: 1 });
-
-      const result = await service.remove(id);
-      expect(surveyMetaRepository.updateMany).toHaveBeenCalledWith(
-        query,
-        update,
-      );
-      expect(surveyGroupRepository.delete).toHaveBeenCalledWith(id);
-      expect(result).toEqual({ affected: 1 });
-    });
-  });
+  describe('remove', () => {  
+    it('should remove a survey group', async () => {  
+      const id = '1';  
+      await service.remove(id);  
+      expect(mockSurveyMetaRepository.updateMany).toHaveBeenCalledWith({ groupId: id }, { $set: { groupId: null } });  
+      expect(mockSurveyGroupRepository.delete).toHaveBeenCalledWith(id);  
+    });  
+  });  
 });

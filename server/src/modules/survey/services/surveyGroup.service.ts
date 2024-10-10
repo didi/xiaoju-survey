@@ -42,10 +42,6 @@ export class SurveyGroupService {
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} surveyGroup`;
-  }
-
   update(id: string, updatedFields: Partial<SurveyGroup>) {
     updatedFields.updatedAt = new Date();
     return this.SurveyGroup.update(id, updatedFields);

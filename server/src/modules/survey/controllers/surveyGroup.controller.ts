@@ -111,12 +111,6 @@ export class SurveyGroupController {
     };
   }
 
-  @Get(':id')
-  @HttpCode(200)
-  findOne(@Param('id') id: string) {
-    return this.SurveyGroupService.findOne(+id);
-  }
-
   @Post(':id')
   @HttpCode(200)
   async updateOne(

@@ -153,6 +153,7 @@ const handleSpaceSelect = (id: SpaceType | string) => {
   if ((spaceType.value === SpaceType.Group && id === groupType.value) || id === workSpaceId.value) {
     return void 0
   }
+  let parentMenu = undefined
   switch (id) {
     case GroupType.Personal:
       workSpaceStore.changeGroupType(GroupType.Personal)
@@ -165,7 +166,7 @@ const handleSpaceSelect = (id: SpaceType | string) => {
       fetchSpaceList()
       break
     default:
-      let parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id === id))
+      parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id === id))
       if(parentMenu != undefined) {
         workSpaceStore.changeSpaceType(parentMenu.id)
       }

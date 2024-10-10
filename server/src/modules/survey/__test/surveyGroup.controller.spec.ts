@@ -11,7 +11,6 @@ jest.mock('src/guards/authentication.guard');
 describe('SurveyGroupController', () => {
   let controller: SurveyGroupController;
   let service: SurveyGroupService;
-  let surveyMetaService: SurveyMetaService;
 
   const mockService = {
     create: jest.fn(),

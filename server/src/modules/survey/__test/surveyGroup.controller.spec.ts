@@ -1,12 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyGroupController } from '../controllers/surveyGroup.controller';
 import { SurveyGroupService } from '../services/surveyGroup.service';
-import { HttpException } from '@nestjs/common';
+import { SurveyMetaService } from '../services/surveyMeta.service';
+import { HttpException } from 'src/exceptions/httpException';
 import { ObjectId } from 'mongodb';
+import { Logger } from 'src/logger';
+
+jest.mock('src/guards/authentication.guard');
 
 describe('SurveyGroupController', () => {
   let controller: SurveyGroupController;
   let service: SurveyGroupService;
+  let surveyMetaService: SurveyMetaService;
 
   const mockService = {
     create: jest.fn(),
@@ -20,8 +25,21 @@ describe('SurveyGroupController', () => {
       controllers: [SurveyGroupController],
       providers: [
         {
+          provide: SurveyMetaService,
+          useValue: {
+            countSurveyMetaByGroupId: jest.fn().mockResolvedValue(0),
+          },
+        },
+        {
           provide: SurveyGroupService,
           useValue: mockService,
+        },
+        {
+          provide: Logger,
+          useValue: {
+            error: jest.fn(),
+            info: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -63,26 +81,26 @@ describe('SurveyGroupController', () => {
 
   describe('findAll', () => {
     it('should return a list of survey groups', async () => {
-      const result = { total: 1, list: [], allList: [] };
+      const result = { total: 0, list: [], allList: [] };
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       const mockReq = { user: { _id: new ObjectId() } };
       const mockQue = { curPage: 1, pageSize: 10, name: '' }
       const userId = mockReq.user._id.toString();
-      expect(await controller.findAll(mockReq, mockQue)).toBe(result);
+      expect(await controller.findAll(mockReq, mockQue)).toBe({ code: 200, data: result });
       expect(service.findAll).toHaveBeenCalledWith(userId, '', 0, 10);
     });
   });
 
   describe('update', () => {
     it('should update a survey group', async () => {
-      const updatedFields = { raw: '', generatedMaps: [] };
-      const updatedFieldOne = { name: 'update a survey group' };
+      const updatedFields = { name: 'xxx' }
+      const updatedResult = { raw: 'xxx', generatedMaps: [] }
       const id = '1';
-      jest.spyOn(service, 'update').mockResolvedValue(updatedFields);
+      jest.spyOn(service, 'update').mockResolvedValue(updatedResult);
 
-      expect(await controller.updateOne(id, updatedFieldOne)).toEqual({
+      expect(await controller.updateOne(id, updatedFields)).toEqual({
         code: 200,
-        ret: updatedFields,
+        ret: updatedResult,
       });
       expect(service.update).toHaveBeenCalledWith(id, updatedFields);
     });
@@ -90,10 +108,6 @@ describe('SurveyGroupController', () => {
     it('should throw error on invalid parameter', async () => {
       const id = '1';
       const invalidFields: any = {};
-      jest.spyOn(service, 'update').mockImplementation(() => {
-        throw new HttpException('参数错误', 400);
-      });
-
       await expect(controller.updateOne(id, invalidFields)).rejects.toThrow(
         HttpException,
       );

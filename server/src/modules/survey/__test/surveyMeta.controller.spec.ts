@@ -77,6 +77,7 @@ describe('SurveyMetaController', () => {
       survey: {
         title: reqBody.title,
         remark: reqBody.remark,
+        groupId: null,
       },
     });
 

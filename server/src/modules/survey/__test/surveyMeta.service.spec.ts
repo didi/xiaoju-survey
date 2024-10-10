@@ -86,6 +86,7 @@ describe('SurveyMetaService', () => {
         createMethod: params.createMethod,
         createFrom: params.createFrom,
         workspaceId: params.workspaceId,
+        groupId: null,
       });
       expect(surveyRepository.save).toHaveBeenCalledWith(newSurvey);
       expect(result).toEqual(newSurvey);

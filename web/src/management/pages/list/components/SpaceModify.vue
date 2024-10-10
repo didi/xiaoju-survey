@@ -121,14 +121,14 @@ const onConfirm = async () => {
       if (props.type === QOP_MAP.ADD) {
         try {
           await handleAdd()
-          emit('on-close-codify', 'update')
+          emit('on-close-codify', 'update', formModel.value)
         } catch (err) {
           ElMessage.error('createSpace status err' + err)
         }
       } else {
         try {
           await handleUpdate()
-          emit('on-close-codify', 'update')
+          emit('on-close-codify', 'update', formModel.value)
         } catch (err) {
           ElMessage.error('createSpace status err' + err)
         }

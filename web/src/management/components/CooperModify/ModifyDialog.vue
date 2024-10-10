@@ -186,8 +186,14 @@ const handleMembersChange = (val: IMember[]) => {
 }
 </script>
 
-<style lang="scss" rel="lang/scss" scoped>
+<style lang="scss" scoped>
 .base-form-root {
   padding: 20px;
+
+  :deep(.el-select) {
+    .el-select__placeholder {
+      text-align: right;
+    }
+  }
 }
 </style>

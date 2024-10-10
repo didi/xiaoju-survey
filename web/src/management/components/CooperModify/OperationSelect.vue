@@ -125,6 +125,11 @@ const handleCheckAll = (val: CheckboxValueType) => {
   :deep(.el-select__wrapper) {
     border: none;
     box-shadow: none;
+    &:hover,
+    &:focus {
+      border: none;
+      box-shadow: none;
+    }
   }
   :deep(.ishovering) {
     border: none;

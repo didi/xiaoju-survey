@@ -58,7 +58,8 @@ const value = ref('')
 const selectOptions = ref<ListItem[]>([])
 const loading = ref(false)
 
-const remoteMethod = async (query: string) => {
+const remoteMethod = async (q: string) => {
+  const query = q.trim()
   if (query !== '') {
     loading.value = true
     const res: any = await getUserList(query)

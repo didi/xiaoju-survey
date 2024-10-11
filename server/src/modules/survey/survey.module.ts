@@ -17,7 +17,7 @@ import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
 import { DownloadTaskController } from './controllers/downloadTask.controller';
 import { SessionController } from './controllers/session.controller';
-import { SurveyGroupController } from './controllers/surveyGroup.controller'
+import { SurveyGroupController } from './controllers/surveyGroup.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -40,7 +40,7 @@ import { CounterService } from '../surveyResponse/services/counter.service';
 import { FileService } from '../file/services/file.service';
 import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
-import { SurveyGroupService } from './services/surveyGroup.service'
+import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
 
 @Module({

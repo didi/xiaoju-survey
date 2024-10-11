@@ -149,8 +149,15 @@ export class SurveyMetaService {
     groupId?: string;
     surveyIdList?: Array<string>;
   }): Promise<{ data: any[]; count: number }> {
-    const { pageNum, pageSize, userId, username, workspaceId, groupId, surveyIdList } =
-      condition;
+    const {
+      pageNum,
+      pageSize,
+      userId,
+      username,
+      workspaceId,
+      groupId,
+      surveyIdList,
+    } = condition;
     const skip = (pageNum - 1) * pageSize;
     try {
       const query: Record<string, any> = Object.assign(
@@ -164,11 +171,14 @@ export class SurveyMetaService {
       if (condition.filter['curStatus.status']) {
         query['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
       }
-      if (groupId && groupId !== '-1') {  
-        query.groupId = groupId === '-2' ? {  
-          $exists: true,
-          $eq: null
-        }: groupId;
+      if (groupId && groupId !== '-1') {
+        query.groupId =
+          groupId === '-2'
+            ? {
+                $exists: true,
+                $eq: null,
+              }
+            : groupId;
       }
       if (workspaceId) {
         query.workspaceId = workspaceId;

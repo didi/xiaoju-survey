@@ -87,6 +87,21 @@ export class DataStatisticService {
                 .join(',')
             : optionTextMap[data[itemKey]]?.text || data[itemKey];
         }
+        // 将多级联动id还原成选项文案
+        if (
+          itemConfig.multilevelData &&
+          itemConfig.type === QUESTION_TYPE.MULTILEVEL
+        ) {
+          let optionTextMap = keyBy(itemConfig.multilevelData.children, 'hash');
+          data[itemKey] = data[itemKey]
+            ?.split(',')
+            .map((v) => {
+              const text = optionTextMap[v]?.text || v;
+              optionTextMap = keyBy(optionTextMap[v].children, 'hash');
+              return text;
+            })
+            .join('-');
+        }
       }
       return {
         ...data,

@@ -40,7 +40,7 @@ const useList = (props: any): IList => {
 
   // 节流
   const throttle = function (callback: any, delay = 20) {
-    let timer: number | null = null
+    let timer: any = null
     return function (args: any) {
       if (timer) {
         return 

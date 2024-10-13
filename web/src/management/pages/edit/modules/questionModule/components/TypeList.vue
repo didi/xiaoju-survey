@@ -11,6 +11,7 @@
         :list="item.questionList"
         :group="{ name: DND_GROUP, pull: 'clone', put: false }"
         :clone="createNewQuestion"
+        @end="onDragEnd"
         item-key="path"
       >
         <template #item="{ element }">
@@ -53,7 +54,7 @@ import { ref } from 'vue'
 
 const editStore = useEditStore()
 const { newQuestionIndex } = storeToRefs(editStore)
-const { addQuestion, setCurrentEditOne, createNewQuestion } = editStore
+const { addQuestion, hasSetCurrentEditOne, createNewQuestion } = editStore
 
 const activeNames = ref([0, 1])
 const previewImg = ref('')
@@ -67,7 +68,11 @@ questionLoader.init({
 const onQuestionType = ({ type }) => {
   const newQuestion = createNewQuestion({ type })
   addQuestion({ question: newQuestion, index: newQuestionIndex.value })
-  setCurrentEditOne(newQuestionIndex.value)
+  hasSetCurrentEditOne(newQuestionIndex.value)
+}
+
+const onDragEnd = (event) => {  
+  hasSetCurrentEditOne(event.newIndex)
 }
 
 const showPreview = ({ snapshot }, id) => {

@@ -11,6 +11,7 @@
         :list="item.questionList"
         :group="{ name: DND_GROUP, pull: 'clone', put: false }"
         :clone="createNewQuestion"
+        @end="onDragEnd"
         item-key="path"
       >
         <template #item="{ element }">
@@ -68,6 +69,10 @@ const onQuestionType = ({ type }) => {
   const newQuestion = createNewQuestion({ type })
   addQuestion({ question: newQuestion, index: newQuestionIndex.value })
   setCurrentEditOne(newQuestionIndex.value)
+}
+
+const onDragEnd = (event) => {  
+  setCurrentEditOne(event.newIndex)
 }
 
 const showPreview = ({ snapshot }, id) => {

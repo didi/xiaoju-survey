@@ -75,10 +75,6 @@ const onDragEnd = (event) => {
   hasSetCurrentEditOne(event.newIndex)
 }
 
-const onDragEnd = (event) => {  
-  setCurrentEditOne(event.newIndex)
-}
-
 const showPreview = ({ snapshot }, id) => {
   previewImg.value = snapshot
 

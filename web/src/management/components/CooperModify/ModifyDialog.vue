@@ -199,4 +199,8 @@ const handleMembersChange = (val: IMember[]) => {
     }
   }
 }
+
+:deep(.el-form-item.is-error .search-name .el-select__wrapper) {
+  box-shadow: 0 0 0 1px var(--el-border-color) inset;
+}
 </style>

@@ -3,6 +3,7 @@
     <el-select-v2
       v-model="value"
       filterable
+      class="search-name"
       remote
       :remote-method="remoteMethod"
       clearable

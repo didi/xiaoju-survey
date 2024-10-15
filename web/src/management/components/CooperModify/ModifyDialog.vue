@@ -115,6 +115,9 @@ const rules = {
     {
       trigger: 'change',
       validator: (rule: any, value: IMember[], callback: Function) => {
+        if (value.length === 0) {
+          callback('请添加协作者')
+        }
         if (value.filter((item: IMember) => !item.role.length).length) {
           callback('请设置协作者对应权限')
         }
@@ -190,7 +193,7 @@ const handleMembersChange = (val: IMember[]) => {
 .base-form-root {
   padding: 20px;
 
-  :deep(.el-select) {
+  :deep(.list-wrapper .el-select) {
     .el-select__placeholder {
       text-align: right;
     }

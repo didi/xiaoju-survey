@@ -125,6 +125,8 @@ const activeValue = computed(() => {
     return MenuType.PersonalGroup
   } else if(menuType.value === MenuType.SpaceGroup) {
     return MenuType.SpaceGroup
+  } else {
+    return ''
   }
 })
 

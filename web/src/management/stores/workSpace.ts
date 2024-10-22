@@ -175,7 +175,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       if (res.code === CODE_MAP.SUCCESS) {
         const { list, allList, total, notTotal } = res.data
         let allTotal = notTotal
-        let group = list.map((item: GroupItem) => {
+        const group = list.map((item: GroupItem) => {
           allTotal += item.surveyTotal 
           return {
             id: item._id,

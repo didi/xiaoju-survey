@@ -53,7 +53,13 @@ describe('SurveyGroupController', () => {
 
   describe('create', () => {
     it('should create a survey group', async () => {
-      const result = { _id: new ObjectId(), name: 'Test Group', ownerId: '123', createdAt: new Date(), updatedAt: new Date()  }; // 确保这里返回的对象结构符合预期
+      const result = {
+        _id: new ObjectId(),
+        name: 'Test Group',
+        ownerId: '123',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }; // 确保这里返回的对象结构符合预期
       jest.spyOn(service, 'create').mockResolvedValue(result);
 
       // 创建模拟的请求对象
@@ -63,9 +69,7 @@ describe('SurveyGroupController', () => {
         },
       };
 
-      expect(
-        await controller.create({ name: 'Test Group' }, req),
-      ).toEqual({
+      expect(await controller.create({ name: 'Test Group' }, req)).toEqual({
         code: 200,
         data: {
           id: result._id,
@@ -80,20 +84,23 @@ describe('SurveyGroupController', () => {
 
   describe('findAll', () => {
     it('should return a list of survey groups', async () => {
-      const result = { total: 0, list: [], allList: [] };
+      const result = { total: 0, notTotal: 0, list: [], allList: [] };
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       const mockReq = { user: { _id: new ObjectId() } };
-      const mockQue = { curPage: 1, pageSize: 10, name: '' }
+      const mockQue = { curPage: 1, pageSize: 10, name: '' };
       const userId = mockReq.user._id.toString();
-      expect(await controller.findAll(mockReq, mockQue)).toBe({ code: 200, data: result });
+      expect(await controller.findAll(mockReq, mockQue)).toEqual({
+        code: 200,
+        data: result,
+      });
       expect(service.findAll).toHaveBeenCalledWith(userId, '', 0, 10);
     });
   });
 
   describe('update', () => {
     it('should update a survey group', async () => {
-      const updatedFields = { name: 'xxx' }
-      const updatedResult = { raw: 'xxx', generatedMaps: [] }
+      const updatedFields = { name: 'xxx' };
+      const updatedResult = { raw: 'xxx', generatedMaps: [] };
       const id = '1';
       jest.spyOn(service, 'update').mockResolvedValue(updatedResult);
 

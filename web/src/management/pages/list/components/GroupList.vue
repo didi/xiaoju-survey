@@ -86,7 +86,7 @@
     noGroupSearchDataConfig,
     groupListConfig
   } from '@/management/config/listConfig'
-  import { GroupType } from '@/management/utils/workSpace'
+  import { MenuType } from '@/management/utils/workSpace'
   import GroupModify from './GroupModify.vue'
   import TextSearch from '@/management/pages/list/components/TextSearch.vue'
   import EmptyIndex from '@/management/components/EmptyIndex.vue'
@@ -178,8 +178,8 @@
     } else if (key === 'delete') {
       handleDelete(data._id)
     } else if(key === 'open') {
-      workSpaceStore.changeSpaceType(GroupType.Personal)
-      workSpaceStore.changeWorkSpace(data._id)
+      workSpaceStore.changeMenuType(MenuType.PersonalGroup)
+      workSpaceStore.changeGroup(data._id)
       surveyListStore.getSurveyList({
         pageSize: 10,
         curPage: 1

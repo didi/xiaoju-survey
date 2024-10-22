@@ -94,6 +94,9 @@ export class SurveyGroupController {
       pre[cur] = total;
       return pre;
     }, {});
+    const notTotal = await this.surveyMetaService.countSurveyMetaByGroupId({
+      groupId: null,
+    });
     return {
       code: 200,
       data: {
@@ -107,6 +110,7 @@ export class SurveyGroupController {
           };
         }),
         allList,
+        notTotal,
       },
     };
   }

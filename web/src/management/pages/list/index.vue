@@ -13,7 +13,7 @@
               class="btn create-btn"
               type="default"
               @click="onSpaceCreate"
-              v-if="spaceType === SpaceType.Group && groupType === GroupType.Teamwork"
+              v-if="menuType === MenuType.SpaceGroup && !workSpaceId"
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建团队空间</span>
@@ -22,12 +22,12 @@
               class="btn create-btn"
               type="default"
               @click="onGroupCreate"
-              v-if="spaceType === SpaceType.Group && groupType === GroupType.Personal"
+              v-if="menuType === MenuType.PersonalGroup && !groupId"
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建分组</span>
             </el-button>
-            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId && groupType === GroupType.Teamwork">
+            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId && menuType === MenuType.SpaceGroup">
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
@@ -35,7 +35,7 @@
               class="btn create-btn"
               type="default"
               @click="onCreate"
-              v-if="spaceType !== SpaceType.Group"
+              v-if="workSpaceId || groupId"
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建问卷</span>
@@ -47,7 +47,7 @@
           :data="surveyList"
           :total="surveyTotal"
           @refresh="fetchSurveyList"
-          v-if="spaceType !== SpaceType.Group"
+          v-if="workSpaceId || groupId"
         ></BaseList>
         <SpaceList
           ref="spaceListRef"
@@ -55,7 +55,7 @@
           :loading="spaceLoading"
           :data="workSpaceList"
           :total="workSpaceListTotal"
-          v-if="spaceType === SpaceType.Group && groupType === GroupType.Teamwork"
+          v-if="menuType === MenuType.SpaceGroup"
         ></SpaceList>
         <GroupList
           ref="groupListRef"
@@ -63,7 +63,7 @@
           :loading="groupLoading"
           :data="groupList"
           :total="groupListTotal"
-          v-if="spaceType === SpaceType.Group && groupType === GroupType.Personal"
+          v-if="menuType === MenuType.PersonalGroup"
         ></GroupList>
       </div>
     </div>
@@ -93,7 +93,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
-import { SpaceType, GroupType } from '@/management/utils/workSpace'
+import {  MenuType } from '@/management/utils/workSpace'
 
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
@@ -102,14 +102,14 @@ const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
-const { spaceMenus, workSpaceId, spaceType, groupType, workSpaceList, workSpaceListTotal, groupList, groupListTotal } =
+const { spaceMenus, workSpaceId, groupId, menuType, workSpaceList, workSpaceListTotal, groupList, groupListTotal } =
   storeToRefs(workSpaceStore)
 const router = useRouter()
 
 const tableTitle = computed(() => {
-  if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Personal) {
+  if(menuType.value === MenuType.PersonalGroup && !groupId.value) {
     return '我的空间'
-  } else if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Teamwork) {
+  } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
   } else {
     return currentTeamSpace.value?.name || '问卷列表';
@@ -119,13 +119,12 @@ const tableTitle = computed(() => {
 const activeValue = computed(() => {
   if(workSpaceId.value !== '') {
     return workSpaceId.value
-  }
-  if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Personal) {
-    return GroupType.Personal
-  } else if(spaceType.value === SpaceType.Group && groupType.value === GroupType.Teamwork) {
-    return GroupType.Teamwork
-  } else {
-    return workSpaceId.value
+  } else if(groupId.value !== '') {
+    return groupId.value
+  } else if(menuType.value === MenuType.PersonalGroup) {
+    return MenuType.PersonalGroup
+  } else if(menuType.value === MenuType.SpaceGroup) {
+    return MenuType.SpaceGroup
   }
 })
 
@@ -149,28 +148,32 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
-const handleSpaceSelect = (id: SpaceType | string) => {
-  if ((spaceType.value === SpaceType.Group && id === groupType.value) || id === workSpaceId.value) {
+const handleSpaceSelect = (id: MenuType | string) => {
+  if (groupId.value === id || workSpaceId.value === id) {
     return void 0
   }
   let parentMenu = undefined
   switch (id) {
-    case GroupType.Personal:
-      workSpaceStore.changeGroupType(GroupType.Personal)
+    case MenuType.PersonalGroup:
+      workSpaceStore.changeMenuType(MenuType.PersonalGroup)
       workSpaceStore.changeWorkSpace('')
       fetchGroupList()
       break
-    case GroupType.Teamwork:
-      workSpaceStore.changeGroupType(GroupType.Teamwork)
+    case MenuType.SpaceGroup:
+      workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       fetchSpaceList()
       break
     default:
-      parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id === id))
+      parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id.toString() === id))
       if(parentMenu != undefined) {
-        workSpaceStore.changeSpaceType(parentMenu.id)
+        workSpaceStore.changeMenuType(parentMenu.id)
+        if(parentMenu.id === MenuType.PersonalGroup) {
+          workSpaceStore.changeGroup(id)
+        } else if (parentMenu.id === MenuType.SpaceGroup) {
+          workSpaceStore.changeWorkSpace(id)
+        }
       }
-      workSpaceStore.changeWorkSpace(id)
       break
   }
   fetchSurveyList()
@@ -195,8 +198,6 @@ onMounted(() => {
   fetchGroupList()
   fetchSpaceList()
   fetchSurveyList()
-  spaceType.value = SpaceType.Group
-  groupType.value = GroupType.Personal
 })
 
 const modifyType = ref('add')

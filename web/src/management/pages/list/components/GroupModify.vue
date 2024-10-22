@@ -42,7 +42,7 @@
   import { useWorkSpaceStore } from '@/management/stores/workSpace'
   
   const workSpaceStore = useWorkSpaceStore()
-  const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
+  const emit = defineEmits(['on-close-codify'])
   const props = defineProps({
     type: String,
     width: String,

@@ -17,7 +17,7 @@ import {
   deleteGroup as deleteGroupReq
 } from '@/management/api/space'
 
-import { SpaceType, GroupType } from '@/management/utils/workSpace'
+import { GroupState, MenuType } from '@/management/utils/workSpace'
 import { type SpaceDetail, type SpaceItem, type IWorkspace, type IGroup, type GroupItem, } from '@/management/utils/workSpace'
 
 
@@ -29,18 +29,18 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     {
       icon: 'icon-wodekongjian',
       name: '我的空间',
-      id: GroupType.Personal,
+      id: MenuType.PersonalGroup,
       children: []
     },
     {
       icon: 'icon-tuanduikongjian',
       name: '团队空间',
-      id: GroupType.Teamwork,
+      id: MenuType.SpaceGroup,
       children: []
     }
   ])
-  const spaceType = ref(SpaceType.Group)
-  const groupType = ref(GroupType.Personal)
+  const menuType = ref(MenuType.PersonalGroup)
+  const groupId = ref('')
   const workSpaceId = ref('')
   const spaceDetail = ref<SpaceDetail | null>(null)
   const workSpaceList = ref<SpaceItem[]>([])
@@ -57,7 +57,8 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
         const workSpace = list.map((item: SpaceDetail) => {
           return {
             id: item._id,
-            name: item.name
+            name: item.name,
+            total: item.surveyTotal
           }
         })
         workSpaceList.value = list
@@ -85,19 +86,19 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     }
   }
 
-  function changeGroupType(id: GroupType) {
-    groupType.value = id
-    spaceType.value = SpaceType.Group
-    workSpaceId.value = ''
-  }
-
-  function changeSpaceType(id: SpaceType | GroupType) {
-    spaceType.value = id as SpaceType
-    groupType.value = id as GroupType
+  function changeMenuType(id: MenuType) {
+    menuType.value = id
   }
 
   function changeWorkSpace(id: string) {
     workSpaceId.value = id
+    groupId.value = ''
+    surveyListStore.resetSearch()
+  }
+
+  function changeGroup(id: string) {
+    groupId.value = id
+    workSpaceId.value = ''
     surveyListStore.resetSearch()
   }
 
@@ -172,19 +173,24 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     try {
       const res: any = await getGroupListReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
-        const { list, allList, total } = res.data
+        const { list, allList, total, notTotal } = res.data
+        let allTotal = notTotal
         let group = list.map((item: GroupItem) => {
+          allTotal += item.surveyTotal 
           return {
             id: item._id,
-            name: item.name
+            name: item.name,
+            total: item.surveyTotal,
           }
         })
         group.unshift({
-          id: -1, 
-          name: '全部' 
+          id: GroupState.All, 
+          name: '全部' ,
+          total: allTotal
         }, {
-          id: -2, 
-          name: '未分组' 
+          id: GroupState.Not, 
+          name: '未分组' ,
+          total: notTotal
         })
         allList.unshift({
           _id: '', 
@@ -234,18 +240,18 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   }
 
   return {
+    menuType,
     spaceMenus,
-    spaceType,
-    groupType,
+    groupId,
     workSpaceId,
     spaceDetail,
     workSpaceList,
     workSpaceListTotal,
     getSpaceList,
     getSpaceDetail,
-    changeSpaceType,
-    changeGroupType,
+    changeMenuType,
     changeWorkSpace,
+    changeGroup,
     addSpace,
     deleteSpace,
     updateSpace,

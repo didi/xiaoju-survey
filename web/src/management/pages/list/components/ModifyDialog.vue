@@ -21,7 +21,7 @@
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
-      <el-form-item prop="groupId" label="问卷分组" v-if="groupType !== GroupType.Teamwork">
+      <el-form-item prop="groupId" label="问卷分组" v-if="menuType === MenuType.PersonalGroup">
         <el-select
           v-model="current.groupId"
           placeholder="未分组"
@@ -55,7 +55,7 @@ import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
 
-import { GroupType } from '@/management/utils/workSpace'
+import { MenuType } from '@/management/utils/workSpace'
 
 export default {
   name: 'ModifyDialog',
@@ -65,12 +65,12 @@ export default {
     width: String,
     visible: Boolean,
     groupAllList: Array,
-    groupType: String,
+    menuType: String,
   },
   data() {
     return {
       QOP_MAP,
-      GroupType,
+      MenuType,
       loadingInstance: null,
       rules: {
         title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]

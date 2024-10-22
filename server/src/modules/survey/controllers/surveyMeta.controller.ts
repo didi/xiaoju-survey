@@ -58,7 +58,8 @@ export class SurveyMetaController {
     const survey = req.surveyMeta;
     survey.title = value.title;
     survey.remark = value.remark;
-    survey.groupId = value.groupId && value.groupId !== ''? value.groupId : null;
+    survey.groupId =
+      value.groupId && value.groupId !== '' ? value.groupId : null;
 
     await this.surveyMetaService.editSurveyMeta({
       survey,

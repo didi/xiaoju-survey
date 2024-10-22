@@ -100,7 +100,7 @@ export class SurveyController {
       createMethod,
       createFrom,
       workspaceId,
-      groupId
+      groupId,
     });
     await this.surveyConfService.createSurveyConf({
       surveyId: surveyMeta._id.toString(),

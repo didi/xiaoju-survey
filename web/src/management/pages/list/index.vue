@@ -55,7 +55,7 @@
           :loading="spaceLoading"
           :data="workSpaceList"
           :total="workSpaceListTotal"
-          v-if="menuType === MenuType.SpaceGroup"
+          v-if="menuType === MenuType.SpaceGroup && !workSpaceId"
         ></SpaceList>
         <GroupList
           ref="groupListRef"
@@ -63,7 +63,7 @@
           :loading="groupLoading"
           :data="groupList"
           :total="groupListTotal"
-          v-if="menuType === MenuType.PersonalGroup"
+          v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
       </div>
     </div>

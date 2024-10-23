@@ -29,7 +29,7 @@
         </template>
         <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id.toString()"  :class="[ active == item.id ? 'check-item' : '' ]">
           <div class="title-box">
-            <p>{{ item.name }}</p>
+            <p class="title-text">{{ item.name }}</p>
             <p class="title-total">{{ item.total }}</p>
          </div>
         </el-menu-item>
@@ -128,6 +128,13 @@ const handleMenu = (id: string) => {
       width: 100%; 
       display: flex; 
       justify-content: space-between;
+    }
+
+    .title-text {
+      width: 80%;
+      white-space: nowrap;
+      overflow: hidden; 
+      text-overflow: ellipsis;
     }
 
     .title-total {

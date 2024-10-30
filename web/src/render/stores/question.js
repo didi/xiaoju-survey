@@ -103,7 +103,7 @@ export const useQuestionStore = defineStore('question', () => {
   const pageIndex = ref(1) // 当前分页的索引
   const changeField = ref(null)
   const changeIndex = computed(() => {
-    return questionData.value[changeField.value].index
+    return questionData.value[changeField.value]?.index
   })
   const needHideFields = ref([])
 

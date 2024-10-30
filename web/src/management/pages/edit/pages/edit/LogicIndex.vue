@@ -73,6 +73,7 @@ const handleChange = (name: any) => {
   :deep(.el-tabs__content) {
     height: calc(100% - 10px);
     padding-bottom: 10px;
+    overflow-y: auto;
     :deep(el-tab-pane) {
       height: 100%;
       overflow: auto;

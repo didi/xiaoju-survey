@@ -23,7 +23,8 @@
           </div>
         </template>
       </div>
-      <Picker v-model="pickPop" :list="listPop" @confirm="onConfirm" @cancel="onCancel" />
+      <Picker :data="listPop"
+      :showToolbar="true"  v-model:visible="pickPop" @confirm="onConfirm" @cancel="onCancel" />
     </div>
     <div v-else class="multilevel-wrapper-pc">
       <div v-for="(v, i) in valList" :key="v+i" class="multilevel-select-item">
@@ -50,7 +51,7 @@
 </template>
 <script setup>
 import { ref, nextTick, onMounted, computed } from 'vue'
-import Picker from '../Picker/index.vue'
+import Picker from '@/management/pages/edit/components/Picker/index.vue'
 import { isMobile as isInMobile } from '@/render/utils/index'
 const props = defineProps({
   multilevelData: {
@@ -78,6 +79,7 @@ const placeholderList = computed(() => {
   return props.multilevelData.placeholder
 })
 
+
 const resetValList = (index) => {
   for (let i = valList.value.length-1; index < i; i--) {
       valList.value[i] = null;
@@ -103,17 +105,17 @@ const handleChange = async(val,i) => {
 }
 
 const onConfirm = (val) => {
-  valList.value[pickIndex.value] = val;
-  handleChange(val, pickIndex.value);
+  valList.value[pickIndex.value] = val[0];
+  handleChange(val[0], pickIndex.value);
   pickIndex.value=-1
 }
 const onCancel = () => {
   pickIndex.value=-1
 }
 
-const showPickPop = (list,index) => {
+const showPickPop = (list, index) => {
   pickPop.value = true;
-  listPop.value = list
+  listPop.value = [list];
   pickIndex.value = index
 }
 

@@ -184,13 +184,15 @@ export function handleAggretionData({ dataMap, item }) {
       type: dataMap[item.field].type,
       data: {
         ...item.data,
-        aggregation: aggregation.map((item) => {
-          return {
-            id: item.id,
-            text: item.text,
-            count: aggregationMap[item.id]?.count || 0,
-          };
-        }),
+        aggregation: aggregation
+          .map((item) => {
+            return {
+              id: item.id,
+              text: item.text,
+              count: aggregationMap[item.id]?.count || 0,
+            };
+          })
+          .filter((v) => v.count > 0),
       },
     };
   } else {

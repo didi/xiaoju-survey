@@ -125,6 +125,11 @@ const handleCheckAll = (val: CheckboxValueType) => {
   :deep(.el-select__wrapper) {
     border: none;
     box-shadow: none;
+    &:hover,
+    &:focus {
+      border: none;
+      box-shadow: none;
+    }
   }
   :deep(.ishovering) {
     border: none;
@@ -134,11 +139,11 @@ const handleCheckAll = (val: CheckboxValueType) => {
     display: flex;
     justify-content: flex-end;
   }
-  .operation-select {
-    :deep(.el-select__placeholder) {
-      text-align: right;
-    }
-  }
+  // .operation-select {
+  //   :deep(.el-select__placeholder) {
+  //     text-align: right;
+  //   }
+  // }
 }
 </style>
 <style lang="scss">

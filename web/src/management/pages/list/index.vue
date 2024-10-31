@@ -72,6 +72,7 @@
       :type="modifyType"
       :visible="showSpaceModify"
       @on-close-codify="onCloseSpaceModify"
+      @update-data="onCloseModifyInTeamWork"
     />
     <GroupModify
       v-if="showGroupModify"
@@ -97,6 +98,7 @@ import {  MenuType } from '@/management/utils/workSpace'
 
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
+import { type IWorkspace } from '@/management/utils/workSpace'
 
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
@@ -214,6 +216,23 @@ const onSetGroup = async () => {
   await workSpaceStore.getSpaceDetail(workSpaceId.value)
   modifyType.value = 'edit'
   showSpaceModify.value = true
+}
+
+const onCloseModifyInTeamWork = (data: IWorkspace) => {
+  if (spaceType.value === SpaceType.Teamwork) {
+    const currentData = workSpaceList.value.find((item) => item._id === data._id)
+    if (currentData) {
+      currentData.name = data.name
+      currentData.memberTotal = data.members.length
+      currentData.description = data.description
+    }
+    const currentMenus: any = spaceMenus.value?.[1]?.children?.find(
+      (item: { id: string; name: string }) => item.id === data._id
+    )
+    if (currentMenus) {
+      currentMenus.name = data.name
+    }
+  }
 }
 
 const onCloseSpaceModify = (type: string) => {

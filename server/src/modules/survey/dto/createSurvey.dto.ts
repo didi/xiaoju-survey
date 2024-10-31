@@ -20,6 +20,9 @@ export class CreateSurveyDto {
   @ApiProperty({ description: '问卷创建在哪个空间下', required: false })
   workspaceId?: string;
 
+  @ApiProperty({ description: '问卷创建在哪个分组下', required: false })
+  groupId?: string;
+
   static validate(data) {
     return Joi.object({
       title: Joi.string().required(),
@@ -36,6 +39,7 @@ export class CreateSurveyDto {
         otherwise: Joi.allow(null),
       }),
       workspaceId: Joi.string().allow(null, ''),
+      groupId: Joi.string().allow(null, ''),
     }).validate(data);
   }
 }

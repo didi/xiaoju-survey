@@ -7,7 +7,13 @@ export interface MenuItem {
   id: string
   name: string
   icon?: string
+  total?: Number
   children?: MenuItem[]
+}
+
+export type IGroup = {
+  _id?: string
+  name: string
 }
 
 export type IWorkspace = {
@@ -29,6 +35,7 @@ export interface SpaceDetail {
   name: string
   currentUserId?: string
   description: string
+  surveyTotal: number
   members: IMember[]
 }
 
@@ -49,14 +56,28 @@ export interface ICollaborator {
   permissions: Array<number>
 }
 
-export enum SpaceType {
-  Personal = 'personal',
-  Group = 'group',
-  Teamwork = 'teamwork'
+export type GroupItem = {
+  _id: string,
+  name: string,
+  createdAt: string
+  updatedAt?: string
+  ownerId: string
+  surveyTotal: number
 }
+
+export enum MenuType {
+  PersonalGroup = 'personalGroup',
+  SpaceGroup = 'spaceGroup',
+}
+
 export enum UserRole {
   Admin = 'admin',
   Member = 'user'
+}
+
+export enum GroupState {
+  All = 'all',
+  Not = 'nogrouped'
 }
 
 // 定义角色标签映射对象

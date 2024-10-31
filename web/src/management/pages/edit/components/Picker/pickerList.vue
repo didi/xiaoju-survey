@@ -1,20 +1,19 @@
 <template>
   <div class="list" ref="list">
     <ul :style="state.ulStyle">
-      <li v-for="(item, index) in props.column" :key="'item' + index" @click="setTop(index)">{{ item.text }}</li>
+      <li v-for="(item, index) in props.column" :key="'item' + index" >{{ item.text }}</li>
     </ul>
   </div>
 </template>
 
 <script setup>
 import { reactive, computed, onMounted, ref, watch, onBeforeUnmount } from 'vue'
-import { getClient, START_EVENT, MOVE_EVENT, END_EVENT } from './utils'
-import { isMobile as isInMobile } from '@/render/utils/index'
+import { getClient, START_EVENT, MOVE_EVENT, END_EVENT,isPC } from './utils'
 
 const DEFAULT_DURATION = 200
 const LIMIT_TIME = 300
 const LIMIT_DISTANCE = 15
-const IS_Mobile = isInMobile()
+const IS_PC = isPC()
 
 
 const props = defineProps({
@@ -85,7 +84,7 @@ const handleStart = (e) => {
 
   state.ulStyle.transitionDuration = `0ms`
   state.ulStyle.transitionProperty = `none`
-  if (!IS_Mobile) {
+  if (IS_PC) {
     document.addEventListener(MOVE_EVENT, handleMove, false)
     document.addEventListener(END_EVENT, handleEnd, false)
   }
@@ -114,7 +113,7 @@ const handleMove = (e) => {
 }
 
 const handleEnd = () => {
-  if (!IS_Mobile) {
+  if (IS_PC) {
     document.removeEventListener(MOVE_EVENT, handleMove, false)
     document.removeEventListener(END_EVENT, handleEnd, false)
   }
@@ -195,7 +194,7 @@ const mousewheel = (e) => {
 onMounted(() => {
   init();
   list.value.addEventListener(START_EVENT, handleStart, false)
-  if (!IS_Mobile) {
+  if (IS_PC) {
     list.value.addEventListener('wheel', mousewheel, false)
   } else {
     list.value.addEventListener(MOVE_EVENT, handleMove, false)
@@ -205,7 +204,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   list.value.removeEventListener(START_EVENT, handleStart, false)
-  if (!IS_Mobile) {
+  if (IS_PC) {
     list.value.removeEventListener('wheel', mousewheel, false)
     list.value.removeEventListener(MOVE_EVENT, handleMove, false)
     list.value.removeEventListener(END_EVENT, handleEnd, false)

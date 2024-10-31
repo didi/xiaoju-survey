@@ -50,7 +50,7 @@
   </div>
 </template>
 <script setup>
-import { ref, nextTick, onMounted, computed } from 'vue'
+import { ref, nextTick, onMounted, computed,onBeforeUnmount } from 'vue'
 import Picker from '@/management/pages/edit/components/Picker/index.vue'
 import { isMobile as isInMobile } from '@/render/utils/index'
 const props = defineProps({
@@ -73,7 +73,7 @@ const valList = ref([]);
 const pickPop = ref(false)
 const listPop = ref([])
 const pickIndex = ref(-1)
-const isMobile = isInMobile()
+const isMobile = ref(isInMobile())
 
 const placeholderList = computed(() => {
   return props.multilevelData.placeholder
@@ -119,10 +119,19 @@ const showPickPop = (list, index) => {
   pickIndex.value = index
 }
 
+const updateEquipment = () => {
+  isMobile.value = isInMobile()
+}
+
 onMounted(() => {
+  window.addEventListener('resize', updateEquipment)
   placeholderList.value.map(() => {
     valList.value.push(null)
   })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateEquipment)
 })
 
 

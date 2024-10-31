@@ -215,7 +215,7 @@ const onSetGroup = async () => {
 }
 
 const onCloseModifyInTeamWork = (data: IWorkspace) => {
-  if (spaceType.value === SpaceType.Teamwork) {
+  if (activeValue.value === MenuType.SpaceGroup) {
     const currentData = workSpaceList.value.find((item) => item._id === data._id)
     if (currentData) {
       currentData.name = data.name

@@ -78,7 +78,7 @@ export class SurveyController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    const { title, remark, createMethod, createFrom } = value;
+    const { title, remark, createMethod, createFrom, groupId } = value;
 
     let surveyType = '',
       workspaceId = null;
@@ -100,6 +100,7 @@ export class SurveyController {
       createMethod,
       createFrom,
       workspaceId,
+      groupId,
     });
     await this.surveyConfService.createSurveyConf({
       surveyId: surveyMeta._id.toString(),

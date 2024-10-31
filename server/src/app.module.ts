@@ -29,6 +29,7 @@ import { SurveyHistory } from './models/surveyHistory.entity';
 import { ResponseSchema } from './models/responseSchema.entity';
 import { Counter } from './models/counter.entity';
 import { SurveyResponse } from './models/surveyResponse.entity';
+import { SurveyGroup } from './models/surveyGroup.entity';
 import { ClientEncrypt } from './models/clientEncrypt.entity';
 import { Word } from './models/word.entity';
 import { MessagePushingTask } from './models/messagePushingTask.entity';
@@ -78,6 +79,7 @@ import { Logger } from './logger';
             SurveyConf,
             SurveyHistory,
             SurveyResponse,
+            SurveyGroup,
             Counter,
             ResponseSchema,
             ClientEncrypt,

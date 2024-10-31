@@ -1,14 +1,16 @@
 <template>
   <el-menu
-    :default-active="SpaceType.Personal"
+    :default-active="active"
     class="el-menu-vertical"
     ref="menuRef"
-    @select="handleSelect"
+    @select="handleMenu"
+    @open="handleMenu"
+    @close="handleMenu"
   >
-    <template v-for="(menu, index) in menus" :key="menu.id">
+    <template v-for="(menu, index) in props.menus" :key="menu.id">
       <el-menu-item
-        :class="[index === 0 ? 'bottom' : '', index > 2 ? 'sub-item' : 'main-item']"
-        :index="menu.id"
+        :class="[index === 0 ? 'bottom' : '', index > 2 ? 'sub-item' : 'main-item', active == menu.id ? 'check-item' : '' ]"
+        :index="menu.id.toString()"
         v-if="!menu.children?.length"
       >
         <template #title>
@@ -18,46 +20,65 @@
           </div>
         </template>
       </el-menu-item>
-      <el-menu-item-group v-else>
+      <el-sub-menu v-else :index="menu.id.toString()" :class="[ active == menu.id ? 'check-item' : '' ]">
         <template #title>
-          <el-menu-item :index="menu.id" class="sub-title main-item">
-            <div class="title-content">
+          <div class="title-content sub-title main-item">
               <i :class="['iconfont', menu.icon]"></i>
               <span>{{ menu.name }}</span>
             </div>
-          </el-menu-item>
         </template>
-        <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id">
-          <p>
-            {{ item.name }}
-          </p>
+        <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id.toString()"  :class="[ active == item.id ? 'check-item' : '' ]">
+          <div class="title-box">
+            <p class="title-text">{{ item.name }}</p>
+            <p class="title-total">{{ item.total }}</p>
+         </div>
         </el-menu-item>
-      </el-menu-item-group>
+      </el-sub-menu>
     </template>
   </el-menu>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { type MenuItem } from '@/management/utils/workSpace'
-import { SpaceType } from '@/management/utils/workSpace'
-
+import { MenuType } from '@/management/utils/workSpace'
 const menuRef = ref()
-
-withDefaults(
+const props = withDefaults(
   defineProps<{
-    menus: Array<MenuItem>
+    menus: Array<MenuItem>,
+      activeValue: string
   }>(),
   {
-    menus: () => []
+    menus: () => [],
+    activeValue: MenuType.PersonalGroup
   }
 )
+
+const active = computed({
+  get: () => {
+  return props.activeValue
+},
+set: () => {}
+})
+
 const emit = defineEmits(['select'])
-const handleSelect = (id: string) => {
+const handleMenu = (id: string) => {
+  active.value = id
   emit('select', id)
 }
 </script>
 
 <style lang="scss" scoped>
+.el-sub-menu {  
+    :deep(.el-sub-menu__icon-arrow) {  
+        transform: rotate(-90deg) !important;  
+    }  
+
+    &.is-opened {  
+        > :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {  
+            transform: rotate(0deg) !important;  
+        }  
+    }
+}  
 .el-menu-vertical {
   border: none;
   width: 200px;
@@ -94,10 +115,6 @@ const handleSelect = (id: string) => {
     &.sub-item {
       margin: 0;
     }
-    &.is-active {
-      // background-color: #F2F4F7;
-      background: #fef6e6 100% !important;
-    }
     &:hover {
       background-color: #f2f4f7;
     }
@@ -106,6 +123,27 @@ const handleSelect = (id: string) => {
       align-items: center;
       font-weight: 400;
     }
+
+    .title-box {
+      width: 100%; 
+      display: flex; 
+      justify-content: space-between;
+    }
+
+    .title-text {
+      width: 80%;
+      white-space: nowrap;
+      overflow: hidden; 
+      text-overflow: ellipsis;
+    }
+
+    .title-total {
+      font-size: 14px;
+      color: #92949D;
+      text-align: right;
+      font-weight: 400;
+    }
+
   }
   :deep(.el-menu-item-group) {
     > ul {
@@ -128,4 +166,7 @@ const handleSelect = (id: string) => {
   margin-right: 10px;
   color: #faa600 !important;
 }
+.check-item {
+    background: #fef6e6 100% !important
+  }
 </style>

@@ -6,7 +6,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { CODE_MAP } from '@/management/api/base'
 import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
-
+import { GroupState } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from './workSpace'
 
 import {
@@ -150,7 +150,8 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         pageSize: payload?.pageSize || 10, // 默认一页10条
         filter: filterString,
         order: orderString,
-        workspaceId: workSpaceStore.workSpaceId
+        workspaceId: workSpaceStore.workSpaceId,
+        groupId: workSpaceStore.groupId === GroupState.All ? '' : workSpaceStore.groupId
       }
 
       const res: any = await getSurveyListReq(params)

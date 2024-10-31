@@ -48,6 +48,7 @@ export class SurveyMetaController {
       title: Joi.string().required(),
       remark: Joi.string().allow(null, '').default(''),
       surveyId: Joi.string().required(),
+      groupId: Joi.string().allow(null, ''),
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
@@ -57,6 +58,8 @@ export class SurveyMetaController {
     const survey = req.surveyMeta;
     survey.title = value.title;
     survey.remark = value.remark;
+    survey.groupId =
+      value.groupId && value.groupId !== '' ? value.groupId : null;
 
     await this.surveyMetaService.editSurveyMeta({
       survey,
@@ -86,7 +89,7 @@ export class SurveyMetaController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { curPage, pageSize, workspaceId } = value;
+    const { curPage, pageSize, workspaceId, groupId } = value;
     let filter = {},
       order = {};
     if (value.filter) {
@@ -120,6 +123,7 @@ export class SurveyMetaController {
       filter,
       order,
       workspaceId,
+      groupId,
       surveyIdList,
     });
     return {

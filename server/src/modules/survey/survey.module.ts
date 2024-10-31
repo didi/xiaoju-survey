@@ -17,11 +17,13 @@ import { SurveyUIController } from './controllers/surveyUI.controller';
 import { CollaboratorController } from './controllers/collaborator.controller';
 import { DownloadTaskController } from './controllers/downloadTask.controller';
 import { SessionController } from './controllers/session.controller';
+import { SurveyGroupController } from './controllers/surveyGroup.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
+import { SurveyGroup } from 'src/models/surveyGroup.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { DownloadTask } from 'src/models/downloadTask.entity';
@@ -38,6 +40,7 @@ import { CounterService } from '../surveyResponse/services/counter.service';
 import { FileService } from '../file/services/file.service';
 import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
+import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
 
 @Module({
@@ -52,6 +55,7 @@ import { Session } from 'src/models/session.entity';
       Counter,
       DownloadTask,
       Session,
+      SurveyGroup,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -68,6 +72,7 @@ import { Session } from 'src/models/session.entity';
     CollaboratorController,
     DownloadTaskController,
     SessionController,
+    SurveyGroupController,
   ],
   providers: [
     DataStatisticService,
@@ -82,6 +87,7 @@ import { Session } from 'src/models/session.entity';
     DownloadTaskService,
     FileService,
     SessionService,
+    SurveyGroupService,
   ],
 })
 export class SurveyModule {}

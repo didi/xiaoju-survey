@@ -17,6 +17,9 @@ export class GetSurveyListDto {
   @ApiProperty({ description: '空间id', required: false })
   workspaceId?: string;
 
+  @ApiProperty({ description: '分组id', required: false })
+  groupId?: string;
+
   static validate(data) {
     return Joi.object({
       curPage: Joi.number().required(),
@@ -24,6 +27,7 @@ export class GetSurveyListDto {
       filter: Joi.string().allow(null),
       order: Joi.string().allow(null),
       workspaceId: Joi.string().allow(null, ''),
+      groupId: Joi.string().allow(null, ''),
     }).validate(data);
   }
 }

@@ -55,7 +55,7 @@ import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import MemberSelect from '@/management/components/CooperModify/MemberSelect.vue'
 
 const workSpaceStore = useWorkSpaceStore()
-const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur'])
+const emit = defineEmits(['on-close-codify', 'onFocus', 'change', 'blur', 'updateData'])
 const props = defineProps({
   type: String,
   width: String,
@@ -128,6 +128,7 @@ const onConfirm = async () => {
       } else {
         try {
           await handleUpdate()
+          emit('updateData', formModel.value)
           emit('on-close-codify', 'update')
         } catch (err) {
           ElMessage.error('createSpace status err' + err)

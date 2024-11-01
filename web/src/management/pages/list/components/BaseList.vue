@@ -98,6 +98,8 @@
       :type="modifyType"
       :visible="showModify"
       :question-info="questionInfo"
+      :group-all-list="groupAllList"
+      :menu-type="menuType"
       @on-close-codify="onCloseModify"
     />
     <CooperModify :modifyId="cooperId" :visible="cooperModify" @on-close-codify="onCooperClose" />
@@ -142,7 +144,7 @@ import {
 
 const surveyListStore = useSurveyListStore()
 const workSpaceStore = useWorkSpaceStore()
-const { workSpaceId } = storeToRefs(workSpaceStore)
+const { workSpaceId, groupAllList, menuType } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const props = defineProps({
   loading: {
@@ -363,7 +365,6 @@ const onDelete = async (row) => {
       type: 'warning'
     })
   } catch (error) {
-    console.log('取消删除')
     return
   }
 
@@ -371,6 +372,8 @@ const onDelete = async (row) => {
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('删除成功')
     onRefresh()
+    workSpaceStore.getGroupList()
+    workSpaceStore.getSpaceList()
   } else {
     ElMessage.error(res.errmsg || '删除失败')
   }
@@ -409,6 +412,8 @@ const onCloseModify = (type) => {
   questionInfo.value = {}
   if (type === 'update') {
     onRefresh()
+    workSpaceStore.getGroupList()
+    workSpaceStore.getSpaceList()
   }
 }
 const onRowClick = (row) => {

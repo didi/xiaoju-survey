@@ -2,71 +2,75 @@
   <div class="search">
     <TextSearch placeholder="请输入空间名称" :value="searchVal" @search="onSearchText" />
   </div>
-  <div class="list-wrap" v-if="props.total > 0">
-    <el-table
-      ref="multipleListTable"
-      class="list-table"
-      :data="data"
-      empty-text="暂无数据"
-      row-key="_id"
-      header-row-class-name="tableview-header"
-      row-class-name="tableview-row"
-      cell-class-name="tableview-cell"
-      v-loading="loading"
-      :height="550"
-      style="width: 100%"
-    >
-      <el-table-column column-key="space" width="20" />
-      <el-table-column
-        v-for="field in fieldList"
-        :key="(field as any)?.key"
-        :label="(field as any).title"
-        :column-key="(field as any).key"
-        :width="(field as any).width"
-        :min-width="(field as any).width || (field as any).minWidth"
-        class-name="link"
+  <template v-if="total > 0">
+    <div class="list-wrap">
+      <el-table
+        ref="multipleListTable"
+        class="list-table"
+        :data="data"
+        empty-text="暂无数据"
+        row-key="_id"
+        header-row-class-name="tableview-header"
+        row-class-name="tableview-row"
+        cell-class-name="tableview-cell"
+        v-loading="loading"
+        :height="550"
+        style="width: 100%"
       >
-        <template #default="scope">
-          <template v-if="(field as any).comp">
-            <component :is="(field as any).comp" type="table" :value="scope.row" />
+        <el-table-column column-key="space" width="20" />
+        <el-table-column
+          v-for="field in fieldList"
+          :key="(field as any)?.key"
+          :label="(field as any).title"
+          :column-key="(field as any).key"
+          :width="(field as any).width"
+          :min-width="(field as any).width || (field as any).minWidth"
+          class-name="link"
+        >
+          <template #default="scope">
+            <template v-if="(field as any).comp">
+              <component :is="(field as any).comp" type="table" :value="scope.row" />
+            </template>
+            <template v-else>
+              <span class="cell-span">{{ scope.row[(field as any).key] }}</span>
+            </template>
           </template>
-          <template v-else>
-            <span class="cell-span">{{ scope.row[(field as any).key] }}</span>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          :width="200"
+          label-class-name="operation"
+          class-name="table-options"
+        >
+          <template #default="scope">
+            <div class="space-tool-bar">
+              <ToolBar
+                :data="scope.row"
+                :tool-width="50"
+                :tools="getTools(scope.row)"
+                @click="handleClick"
+              />
+            </div>
           </template>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        :width="200"
-        label-class-name="operation"
-        class-name="table-options"
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="list-pagination">
+      <el-pagination
+        v-model:current-page="curPage"
+        background
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :total="props.total"
       >
-        <template #default="scope">
-          <div class="space-tool-bar">
-            <ToolBar
-              :data="scope.row"
-              :tool-width="50"
-              :tools="getTools(scope.row)"
-              @click="handleClick"
-            />
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+      </el-pagination>
+    </div>
+  </template>
+
   <div v-else>
     <EmptyIndex :data="!searchVal ? noSpaceDataConfig : noSpaceSearchDataConfig" />
   </div>
-  <div class="list-pagination">
-    <el-pagination
-      v-model:current-page="curPage"
-      background
-      @current-change="handleCurrentChange"
-      layout="prev, pager, next"
-      :total="props.total"
-    >
-    </el-pagination>
-  </div>
+
   <SpaceModify
     v-if="showSpaceModify"
     :type="modifyType"

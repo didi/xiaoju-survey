@@ -34,6 +34,25 @@ export const spaceListConfig = {
   }
 }
 
+export const groupListConfig = {
+  name: {
+    title: '分组名称',
+    key: 'name',
+    width: 200
+  },
+  surveyTotal: {
+    title: '问卷数',
+    key: 'surveyTotal',
+    width: 150,
+    tip: true
+  },
+  createdAt: {
+    title: '创建时间',
+    key: 'createdAt',
+    minWidth: 200
+  }
+}
+
 export const fieldConfig = {
   type: {
     title: '类型',
@@ -89,6 +108,16 @@ export const noSpaceDataConfig = {
 }
 export const noSpaceSearchDataConfig = {
   title: '没有满足该查询条件的团队空间',
+  desc: '可以更换条件查询试试',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noGroupDataConfig = {
+  title: '您还没有创建问卷分组',
+  desc: '赶快点击右上角立即创建问卷分组吧！',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noGroupSearchDataConfig = {
+  title: '没有满足该查询条件的问卷分组哦',
   desc: '可以更换条件查询试试',
   img: '/imgs/icons/list-empty.webp'
 }

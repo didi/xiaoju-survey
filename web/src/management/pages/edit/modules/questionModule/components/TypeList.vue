@@ -56,6 +56,7 @@ const editStore = useEditStore()
 const { newQuestionIndex, schema } = storeToRefs(editStore)
 const { addQuestion, setCurrentEditOne, getSorter, createNewQuestion } = editStore
 
+
 const activeNames = ref([0, 1])
 const previewImg = ref('')
 const isShowPreviewImage = ref(false)

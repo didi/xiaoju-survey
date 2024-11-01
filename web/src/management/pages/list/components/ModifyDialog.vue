@@ -21,6 +21,19 @@
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
+      <el-form-item prop="groupId" label="问卷分组" v-if="menuType === MenuType.PersonalGroup">
+        <el-select
+          v-model="current.groupId"
+          placeholder="未分组"
+        >
+          <el-option
+            v-for="item in groupAllList"
+            :key="item._id"
+            :label="item.name"
+            :value="item._id"
+          />
+        </el-select>
+      </el-form-item>
     </el-form>
 
     <template #footer>
@@ -35,7 +48,6 @@
 
 <script>
 import { pick as _pick } from 'lodash-es'
-
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
@@ -43,17 +55,22 @@ import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
 
+import { MenuType } from '@/management/utils/workSpace'
+
 export default {
   name: 'ModifyDialog',
   props: {
     type: String,
     questionInfo: Object,
     width: String,
-    visible: Boolean
+    visible: Boolean,
+    groupAllList: Array,
+    menuType: String,
   },
   data() {
     return {
       QOP_MAP,
+      MenuType,
       loadingInstance: null,
       rules: {
         title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
@@ -72,7 +89,8 @@ export default {
   methods: {
     getCurrent(val) {
       return {
-        ..._pick(val, ['title', 'remark'])
+        ..._pick(val, ['title', 'remark']),
+        groupId: val.groupId === null ? '' : val.groupId
       }
     },
     onClose() {

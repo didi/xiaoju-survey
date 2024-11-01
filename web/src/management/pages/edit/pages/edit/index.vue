@@ -16,7 +16,9 @@
 <script setup lang="ts">
 import { watch, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-
+import { useEditStore } from '@/management/stores/edit'
+const editStore = useEditStore()
+const { setCurrentEditOne } = editStore
 const routes = [
   {
     text: '内容设置',
@@ -38,6 +40,7 @@ watch(
   activeRouter,
   (val: any) => {
     // 避免编辑页刷新丢失query
+    setCurrentEditOne(null)
     const query = route.query
     router.push({ name: val, query })
   },

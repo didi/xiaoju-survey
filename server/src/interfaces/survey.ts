@@ -22,6 +22,20 @@ export interface NPS {
   rightText: string;
 }
 
+export interface MultilevelItem {
+  hash: string;
+  text: string;
+  children?: MultilevelItem[];
+}
+
+export interface MultilevelData {
+  placeholder: Array<{
+    hash: string;
+    text: string;
+  }>;
+  children: Array<MultilevelItem>;
+}
+
 export interface TextRange {
   min: {
     placeholder: string;
@@ -60,6 +74,7 @@ export interface DataItem {
   rangeConfig?: any;
   starStyle?: string;
   innerType?: string;
+  multilevelData: MultilevelData;
 }
 
 export interface Option {

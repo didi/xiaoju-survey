@@ -53,8 +53,8 @@ import { useEditStore } from '@/management/stores/edit'
 import { ref } from 'vue'
 
 const editStore = useEditStore()
-const { newQuestionIndex } = storeToRefs(editStore)
-const { addQuestion, hasSetCurrentEditOne, createNewQuestion } = editStore
+const { newQuestionIndex, schema } = storeToRefs(editStore)
+const { addQuestion, setCurrentEditOne, getSorter, createNewQuestion } = editStore
 
 const activeNames = ref([0, 1])
 const previewImg = ref('')
@@ -66,14 +66,18 @@ questionLoader.init({
 })
 
 const onQuestionType = ({ type }) => {
-  const newQuestion = createNewQuestion({ type })
-  addQuestion({ question: newQuestion, index: newQuestionIndex.value })
-  hasSetCurrentEditOne(newQuestionIndex.value)
-}
+  const newQuestion = createNewQuestion({ type });
+  addQuestion({ question: newQuestion, index: newQuestionIndex.value });
+  const { endIndex } = getSorter();
+  setTimeout(() => {
+    setCurrentEditOne(endIndex - 1);
+  });
+};
 
-const onDragEnd = (event) => {  
-  hasSetCurrentEditOne(event.newIndex)
-}
+const onDragEnd = (event) => {
+  const { startIndex } = getSorter();
+  setCurrentEditOne(schema.pageEditOne === 1 ? event.newIndex : startIndex + event.newIndex);
+};
 
 const showPreview = ({ snapshot }, id) => {
   previewImg.value = snapshot

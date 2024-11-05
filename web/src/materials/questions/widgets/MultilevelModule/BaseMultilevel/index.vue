@@ -23,8 +23,8 @@
           </div>
         </template>
       </div>
-      <Picker :data="listPop"
-      :showToolbar="true"  v-model:visible="pickPop" @confirm="onConfirm" @cancel="onCancel" />
+      <Picker :list="listPop"
+      :showToolbar="true"  v-model="pickPop" @confirm="onConfirm" @cancel="onCancel" />
     </div>
     <div v-else class="multilevel-wrapper-pc">
       <div v-for="(v, i) in valList" :key="v+i" class="multilevel-select-item">
@@ -105,8 +105,8 @@ const handleChange = async(val,i) => {
 }
 
 const onConfirm = (val) => {
-  valList.value[pickIndex.value] = val[0];
-  handleChange(val[0], pickIndex.value);
+  valList.value[pickIndex.value] = val;
+  handleChange(val, pickIndex.value);
   pickIndex.value=-1
 }
 const onCancel = () => {
@@ -115,12 +115,13 @@ const onCancel = () => {
 
 const showPickPop = (list, index) => {
   pickPop.value = true;
-  listPop.value = [list];
+  listPop.value = list;
   pickIndex.value = index
 }
 
 const updateEquipment = () => {
   isMobile.value = isInMobile()
+  pickPop.value = false
 }
 
 onMounted(() => {

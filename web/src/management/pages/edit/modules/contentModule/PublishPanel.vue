@@ -138,8 +138,6 @@ const handlePublish = async () => {
   outline: none;
   transition: .1s;
   font-weight: 500;
-  -webkit-user-select: none;
-  user-select: none;
   vertical-align: middle;
   background-color: #ffa600;
   border: #ffa600;
@@ -151,5 +149,6 @@ const handlePublish = async () => {
   line-height: 36px;
   padding: 0;
   font-size: 14px;
+  user-select: auto!important;
 }
 </style>

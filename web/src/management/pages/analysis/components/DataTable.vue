@@ -13,7 +13,7 @@
         v-for="item in props.tableData.listHead"
         :key="item.field"
         :prop="item.field"
-        :label="item.title"
+        :label="getContent(item.title)"
         minWidth="200"
       >
         <template #header="scope">
@@ -23,7 +23,7 @@
               @click="onPreviewImage"
               @mouseover="onPopoverRefOver(scope, 'head')"
               :ref="(el) => (popoverRefMap[scope.column.id] = el)"
-              v-html="item.title"
+              v-html="getContent(item.title) "
             >
             </span>
           </div>

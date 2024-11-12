@@ -138,13 +138,7 @@ export const useQuestionStore = defineStore('question', () => {
     const { startIndex, endIndex } = getSorter()
     const data = questionList.value[0]
     if (!data || !Array.isArray(data) || data.length === 0) return []
-    const list = [data.slice(startIndex, endIndex)]
-    const displaylist = list[0].filter(item =>  !needHideFields.value.includes(item.field))
-    
-    if (displaylist.length === 0 && !isFinallyPage.value) {
-      addPageIndex()
-    }
-    return list
+    return [data.slice(startIndex, endIndex)]
   })
 
   const isFinallyPage = computed(() => {

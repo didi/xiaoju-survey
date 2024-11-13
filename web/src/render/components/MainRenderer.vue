@@ -21,7 +21,7 @@ import { useSurveyStore } from '../stores/survey'
 
 const surveyStore = useSurveyStore()
 const questionStore = useQuestionStore()
-const { renderData, needHideFields } = storeToRefs(questionStore)
+const { renderData, needHideFields, showLogicHideFields } = storeToRefs(questionStore)
 
 
 const { rules, formValues } = storeToRefs(surveyStore)
@@ -39,7 +39,7 @@ watch(() => renderData.value, (value: any) => {
   }
   }
 })
-watch(() => needHideFields.value, (value: any)=> {
+watch(() => { return needHideFields.value.concat(showLogicHideFields.value) }, (value: any)=> {
   if(renderData.value.length ){
     const displaylist = renderData.value[0].filter((item: any) => !value.includes(item.field))
     if(displaylist.length === 0){

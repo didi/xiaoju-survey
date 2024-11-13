@@ -138,16 +138,20 @@ const logicShow = computed(() => {
 })
 watch(()=> logicShow.value, (value) => {
   if(!value){
-    questionStore.addNeedHideFields([props.moduleConfig.field])
+    questionStore.addShowLogicHideFields([props.moduleConfig.field])
   } else {
-    questionStore.removeNeedHideFields([props.moduleConfig.field])
+    questionStore.removeShowLogicHideFields([props.moduleConfig.field])
   }
 }, {
   immediate: true
 })
+
 // 跳转逻辑：题目是否需要跳过（隐藏）
+const logicSkip = computed(() => {
+  return needHideFields.value.includes(props.moduleConfig.field)
+})
 const visibility = computed(() => {
-  return !needHideFields.value.includes(props.moduleConfig.field)
+  return logicShow.value && !logicSkip.value
 })
 
 // 当题目被隐藏时，清空题目的选中项，实现a显示关联b，b显示关联c场景下，b隐藏不影响题目c的展示

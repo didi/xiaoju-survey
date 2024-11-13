@@ -203,6 +203,17 @@ export const useQuestionStore = defineStore('question', () => {
   const removeNeedHideFields = (fields) => {
     needHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
   }
+  const showLogicHideFields = ref([])
+  const addShowLogicHideFields = (fields) => {
+    fields.forEach((field) => {
+      if (!showLogicHideFields.value.includes(field)) {
+        showLogicHideFields.value.push(field)
+      }
+    })
+  }
+  const removeShowLogicHideFields = (fields) => {
+    showLogicHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
+  }
   return {
     questionData,
     questionSeq,
@@ -223,6 +234,9 @@ export const useQuestionStore = defineStore('question', () => {
     needHideFields,
     addNeedHideFields,
     removeNeedHideFields,
+    showLogicHideFields,
+    addShowLogicHideFields,
+    removeShowLogicHideFields,
     getQuestionIndexByField
   }
 })

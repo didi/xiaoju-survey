@@ -111,6 +111,7 @@ export const useQuestionStore = defineStore('question', () => {
   // 题目列表
   const questionList = computed(() => {
     let index = 1
+    const hideMap = needHideFields.value.concat(showLogicHideFields.value)
     return (
       questionSeq.value &&
       questionSeq.value.reduce((pre, item) => {
@@ -119,7 +120,7 @@ export const useQuestionStore = defineStore('question', () => {
         item.forEach((questionKey) => {
           const question = { ...questionData.value[questionKey] }
           // 开启显示序号
-          if (question.showIndex) {
+          if (question.showIndex && !hideMap.includes(questionKey)) {
             question.indexNumber = index++
           }
 

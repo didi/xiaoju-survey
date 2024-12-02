@@ -85,6 +85,7 @@ export class SurveyGroupController {
     const surveyTotalList = await Promise.all(
       groupIdList.map((item) => {
         return this.surveyMetaService.countSurveyMetaByGroupId({
+          userId,
           groupId: item,
         });
       }),
@@ -95,6 +96,7 @@ export class SurveyGroupController {
       return pre;
     }, {});
     const notTotal = await this.surveyMetaService.countSurveyMetaByGroupId({
+      userId,
       groupId: null,
     });
     return {

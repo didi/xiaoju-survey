@@ -199,9 +199,7 @@ const fetchSurveyList = async (params?: any) => {
 }
 
 onMounted(() => {
-  fetchGroupList()
   fetchSpaceList()
-  fetchSurveyList()
 })
 
 const modifyType = ref('add')

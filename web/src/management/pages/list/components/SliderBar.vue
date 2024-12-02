@@ -55,9 +55,9 @@ const props = withDefaults(
 
 const active = computed({
   get: () => {
-  return props.activeValue
-},
-set: () => {}
+    return props.activeValue
+  },
+  set: () => {}
 })
 
 const emit = defineEmits(['select'])

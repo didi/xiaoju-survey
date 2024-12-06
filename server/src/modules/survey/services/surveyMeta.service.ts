@@ -173,7 +173,7 @@ export class SurveyMetaService {
       }
       if (groupId && groupId !== 'all') {
         query.groupId =
-          groupId === 'nogrouped'
+          groupId === 'unclassified'
             ? {
                 $exists: true,
                 $eq: null,
@@ -248,8 +248,9 @@ export class SurveyMetaService {
     });
     return total;
   }
-  async countSurveyMetaByGroupId({ groupId }) {
+  async countSurveyMetaByGroupId({ groupId, userId = undefined }) {
     const total = await this.surveyRepository.count({
+      ownerId: userId,
       groupId,
       $or: [
         { workspaceId: { $exists: false } },

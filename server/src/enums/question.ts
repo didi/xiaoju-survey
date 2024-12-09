@@ -34,4 +34,8 @@ export enum QUESTION_TYPE {
    * 投票
    */
   VOTE = 'vote',
+  /**
+   * 多级联动
+   */
+  MULTILEVEL = 'multilevel',
 }

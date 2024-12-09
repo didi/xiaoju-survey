@@ -11,5 +11,5 @@ export default {
   vote: 'VoteModule',
   'matrix-checkbox': 'GroupModule',
   selectMoreModule: 'SelectMoreModule',
-  multilevel:'MultilevelModule',
+  cascader:'CascaderModule',
 }

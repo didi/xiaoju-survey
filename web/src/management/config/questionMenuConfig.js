@@ -55,11 +55,11 @@ export const menuItems = {
     icon: 'tixing-toupiao',
     title: '投票'
   },
-  multilevel: {
-    type: 'multilevel',
-    path: 'MultilevelModule',
-    snapshot: '/imgs/question-type-snapshot/multilevel.webp',
-    icon: 'multilevel-select',
+  cascader: {
+    type: 'cascader',
+    path: 'CascaderModule',
+    snapshot: '/imgs/question-type-snapshot/cascader.webp',
+    icon: 'cascader-select',
     title: '多级联动'
   }
 }
@@ -74,7 +74,7 @@ const menuGroup = [
     questionList: ['radio', 'checkbox', 'binary-choice', 'radio-star', 'radio-nps', 'vote']
   }, {
     title: '高级题型',
-    questionList: ['multilevel']
+    questionList: ['cascader']
   }
 ]
 

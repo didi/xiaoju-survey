@@ -166,15 +166,9 @@ export const useEditStore = defineStore('edit', () => {
       if (!questCount) {
         return startIndex
       }
-      return endIndex - 1
+      return endIndex
     }
   })
-
-  const hasSetCurrentEditOne = (value: number) => {
-    if(!currentEditOne.value) {
-      setCurrentEditOne(value)
-    }
-  }
 
   // 题目操作：增删改
   const { copyQuestion, addQuestion, deleteQuestion, moveQuestion } = useQuestionData({
@@ -200,7 +194,6 @@ export const useEditStore = defineStore('edit', () => {
     currentEditMeta,
     newQuestionIndex,
     setCurrentEditOne,
-    hasSetCurrentEditOne,
     changeCurrentEditStatus,
 
     pageEditOne,

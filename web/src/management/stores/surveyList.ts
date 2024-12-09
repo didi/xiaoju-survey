@@ -151,7 +151,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         filter: filterString,
         order: orderString,
         workspaceId: workSpaceStore.workSpaceId,
-        groupId: workSpaceStore.groupId === GroupState.All ? '' : workSpaceStore.groupId
+        groupId: workSpaceStore.groupId
       }
 
       const res: any = await getSurveyListReq(params)

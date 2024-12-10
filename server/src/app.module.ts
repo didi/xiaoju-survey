@@ -45,6 +45,8 @@ import { PluginManagerProvider } from './securityPlugin/pluginManager.provider';
 import { LogRequestMiddleware } from './middlewares/logRequest.middleware';
 import { PluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
+import { Channel } from './models/channel.entity';
+import { ChannelModule } from './modules/channel/channel.module';
 
 @Module({
   imports: [
@@ -91,6 +93,7 @@ import { Logger } from './logger';
             Collaborator,
             DownloadTask,
             Session,
+            Channel,
           ],
         };
       },
@@ -111,6 +114,7 @@ import { Logger } from './logger';
     FileModule,
     WorkspaceModule,
     UpgradeModule,
+    ChannelModule,
   ],
   controllers: [AppController],
   providers: [

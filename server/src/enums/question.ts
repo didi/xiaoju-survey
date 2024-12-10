@@ -37,5 +37,5 @@ export enum QUESTION_TYPE {
   /**
    * 多级联动
    */
-  MULTILEVEL = 'multilevel',
+  CASCADER = 'cascader',
 }

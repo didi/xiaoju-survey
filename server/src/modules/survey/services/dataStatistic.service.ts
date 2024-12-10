@@ -89,10 +89,10 @@ export class DataStatisticService {
         }
         // 将多级联动id还原成选项文案
         if (
-          itemConfig.multilevelData &&
-          itemConfig.type === QUESTION_TYPE.MULTILEVEL
+          itemConfig.cascaderData &&
+          itemConfig.type === QUESTION_TYPE.CASCADER
         ) {
-          let optionTextMap = keyBy(itemConfig.multilevelData.children, 'hash');
+          let optionTextMap = keyBy(itemConfig.cascaderData.children, 'hash');
           data[itemKey] = data[itemKey]
             ?.split(',')
             .map((v) => {

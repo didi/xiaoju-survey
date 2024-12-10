@@ -22,18 +22,18 @@ export interface NPS {
   rightText: string;
 }
 
-export interface MultilevelItem {
+export interface CascaderItem {
   hash: string;
   text: string;
-  children?: MultilevelItem[];
+  children?: CascaderItem[];
 }
 
-export interface MultilevelData {
+export interface CascaderDate {
   placeholder: Array<{
     hash: string;
     text: string;
   }>;
-  children: Array<MultilevelItem>;
+  children: Array<CascaderItem>;
 }
 
 export interface TextRange {
@@ -74,7 +74,7 @@ export interface DataItem {
   rangeConfig?: any;
   starStyle?: string;
   innerType?: string;
-  multilevelData: MultilevelData;
+  cascaderData: CascaderDate;
 }
 
 export interface Option {

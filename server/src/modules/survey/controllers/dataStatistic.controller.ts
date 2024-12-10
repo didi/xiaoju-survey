@@ -108,7 +108,7 @@ export class DataStatisticController {
       QUESTION_TYPE.RADIO_STAR,
       QUESTION_TYPE.RADIO_NPS,
       QUESTION_TYPE.VOTE,
-      QUESTION_TYPE.MULTILEVEL,
+      QUESTION_TYPE.CASCADER,
     ];
     const fieldList = responseSchema.code.dataConf.dataList
       .filter((item) => allowQuestionType.includes(item.type as QUESTION_TYPE))

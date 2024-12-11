@@ -8,6 +8,9 @@ export class Channel extends BaseEntity {
   ownerId: string;
 
   @Column()
+  operatorId: string;
+
+  @Column()
   name: string;
   
   @Column()
@@ -16,12 +19,12 @@ export class Channel extends BaseEntity {
   @Column()
   curStatus: {
     status: DELIVER_STATUS;
-    date: number;
+    date: Date;
   };
 
   @Column()
   statusList: Array<{
     status: DELIVER_STATUS;
-    date: number;
+    date: Date;
   }>;
 }

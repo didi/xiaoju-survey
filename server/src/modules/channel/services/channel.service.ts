@@ -7,7 +7,8 @@ import { Channel } from 'src/models/channel.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 
 import { DELIVER_STATUS, DELIVER_TYPE, IDeliverDataItem } from '../../../enums/channel';
-
+import { HttpException } from 'src/exceptions/httpException';
+import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
 interface FindAllByIdWithPaginationParams {
   idList: ObjectId[];
@@ -27,11 +28,13 @@ export class ChannelService {
     private channelRepository: MongoRepository<Channel>,
   ) {}
 
-  async create(channel: {
-    name: string;
-    type: DELIVER_TYPE;
-    ownerId: string;
-  }): Promise<Channel> {
+  async create(channel: Partial<Channel>): Promise<Channel> {
+    const curStatus = {
+      status: DELIVER_STATUS.RECYCLING,
+      date: new Date(),
+    }
+    channel.curStatus = curStatus
+    channel.statusList = [curStatus]
     const newChannel = this.channelRepository.create({
       ...channel,
     });
@@ -44,6 +47,65 @@ export class ChannelService {
         _id: new ObjectId(id),
       },
     });
+  }
+
+  update({
+    id,
+    channel,
+    operatorId,
+  }: {
+    id: string;
+    channel: Partial<Channel>;
+    operatorId: string,
+  }) {
+    return this.channelRepository.update(id, {
+      name: channel.name,
+      operatorId,
+      updatedAt: new Date()
+    });
+  }
+
+  async updateStatus({
+    id,
+    status,
+    operatorId,
+  }: {
+    id: string;
+    status: DELIVER_STATUS;
+    operatorId: string,
+  }) {
+    const curStatus = {
+      status,
+      date: new Date(),
+    }
+    const channel = await this.channelRepository.findOne({
+      where: {
+        ownerId: new ObjectId(operatorId),
+        _id: new ObjectId(id),
+        isDeleted: {
+          $ne: true,
+        },
+      },
+    });
+    if(!channel) {
+      throw new HttpException(
+        '渠道不存在',
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
+    }
+    if (channel?.curStatus?.status === status) {
+      throw new HttpException(
+        '状态操作异常',
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
+    } else {
+      channel.curStatus = curStatus
+      channel.statusList.push(curStatus)
+      channel.operatorId = operatorId
+      channel.updatedAt = new Date()
+
+      return this.channelRepository.save(channel);
+    }
   }
 
   async delete(id: string, { operatorId }) {

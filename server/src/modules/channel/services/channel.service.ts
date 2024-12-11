@@ -80,7 +80,7 @@ export class ChannelService {
     }
     const channel = await this.channelRepository.findOne({
       where: {
-        ownerId: new ObjectId(operatorId),
+        ownerId: operatorId,
         _id: new ObjectId(id),
         isDeleted: {
           $ne: true,

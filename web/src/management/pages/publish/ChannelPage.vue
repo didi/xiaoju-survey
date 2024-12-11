@@ -123,14 +123,15 @@ onMounted(async () => {
     }
     .content {
       display: flex;
-      height: calc(100% - 120px);
+      height: calc(100% - 90px);
       margin: 20px;
+      background-color: #fff;
+      overflow: auto;
     }
   }
 }
 
 .container-content {
-  background-color: #fff;
   width: 100%;
   padding: 30px 30px 80px;
   border-radius: 2px;

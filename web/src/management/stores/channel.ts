@@ -8,6 +8,7 @@ import { CODE_MAP } from '@/management/api/base'
 import {
   createChannel as createChannelReq,
   updateChannel as updateChannelReq,
+  changeChannelStatus as changeChannelStatusReq,
   deleteChannel as deleteChannelReq,
   getChannelList as getChannelListReq,
 } from '@/management/api/channel'
@@ -46,10 +47,46 @@ export const useChannelStore = defineStore('channel', () => {
       ElMessage.error('创建失败' + err)
     }
   }
+
+  async function deleteChannel(payload: any) {
+    try {
+      const res: any = await deleteChannelReq(payload)
+
+      if (res.code === CODE_MAP.SUCCESS) {
+        ElMessage.success('删除成功')
+        getChannelList()
+      } else {
+        ElMessage.error('删除失败' + res.errmsg)
+      }
+    } catch (err) {
+      ElMessage.error('删除失败' + err)
+    }
+  }
+
+   const updateChannel = async ({ channelId, name }: any) => {
+    try {
+      await updateChannelReq({ channelId, name })
+      getChannelList()
+    } catch (err) {
+      ElMessage.error('删除失败' + err)
+    }
+    
+  }
+  const changeChannelStatus = async ({channelId, status} : any) => {
+    try {
+      await changeChannelStatusReq(channelId, status)
+      getChannelList()
+    } catch (err) {
+      ElMessage.error('删除失败' + err)
+    }
+  } 
   return {
     channelList,
     channelTotal,
     getChannelList,
-    createChannel
+    createChannel,
+    updateChannel,
+    deleteChannel,
+    changeChannelStatus
   }
 })

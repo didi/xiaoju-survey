@@ -7,7 +7,6 @@ import {
   Param,
   UseGuards,
   Request,
-  SetMetadata,
   HttpCode,
   Query,
 } from '@nestjs/common';

@@ -34,7 +34,7 @@
         label="投放名称："
         prop="name"
         :rules="[
-          { required: true, message: '请输入投放名称' },
+          { required: true, message: '请输入投放名称', trigger: 'blur' },
         ]"
       >
         <el-input
@@ -70,14 +70,15 @@
   </el-dialog>
 </template>   
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
+import { ref, shallowRef } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { DELIVER_TYPE, DELIVER_TYPE_TEXT } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
 import { ElMessageBox } from 'element-plus'
 import CodeBlock from './CodeBlock.vue'
 import { Link, Aim } from '@element-plus/icons-vue'
+import type { t } from '@wangeditor/editor'
+import type { tr } from 'element-plus/es/locales.mjs'
 // <el-icon><Link /></el-icon>
 const channelStore = useChannelStore()
 const DELIVER_TYPE_DSEC = {
@@ -122,12 +123,20 @@ const handleClose = () => {
     name: ''
   }
 }
+const formRef = shallowRef()
 const handleConfirm = async () => {
-  await channelStore.createChannel({
-    name: channelForm.value.name.toString(),
-    type: curType.value
+  formRef.value.validate(async (valid: boolean) => {
+    if (valid) {
+      await channelStore.createChannel({
+        name: channelForm.value.name.toString(),
+        type: curType.value
+      })
+      dialogVisible.value = false
+      channelForm.value = {
+        name: ''
+      }
+    }
   })
-  dialogVisible.value = false
 }
 let introVisible = ref(false)
 const handleIntroOpen = () => {
@@ -167,7 +176,7 @@ const handleIntroClose = () => {
         }
       }
       .name{
-        font-size: 18px;
+        font-size: 16px;
         color: #2d2e33;
       }
     }

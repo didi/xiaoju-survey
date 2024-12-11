@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <ChannelModify :visible="dialogVisible"  @confirm="handleConfirm" />
+  <ChannelModify :visible="dialogVisible" @confirm="handleConfirm" @close="handleClose"/>
   <el-dialog
     v-model="introVisible"
     title="SDK接入方式"
@@ -43,7 +43,6 @@ import { ElMessageBox } from 'element-plus'
 import CodeBlock from './CodeBlock.vue'
 import { Link, Aim } from '@element-plus/icons-vue'
 import ChannelModify from './ChannelModify.vue'
-// <el-icon><Link /></el-icon>
 const channelStore = useChannelStore()
 const DELIVER_TYPE_DSEC = {
   [DELIVER_TYPE.SHORT_LINK]: '方式描述方式描述方式描述方式描述方式描述方式描述方式描述方式描述',
@@ -78,11 +77,13 @@ const handleClick = (type: DELIVER_TYPE) => {
   
 }
 const handleConfirm = async (name: string) => {
-  debugger
   await channelStore.createChannel({
     name,
     type: curType.value
   })
+  dialogVisible.value = false
+}
+const handleClose = () => {
   dialogVisible.value = false
 }
 let introVisible = ref(false)

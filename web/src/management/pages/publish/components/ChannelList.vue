@@ -34,7 +34,7 @@
   <div class="pagination-container">
     <el-pagination layout="prev, pager, next" :total="channelTotal" @current-change="handleCurrentChange"/>
   </div>
-  <ChannelModify :visible="channelModifyVisible" :channel-id="curChannelId" @confirm="handleRenameConfirm" />
+  <ChannelModify :visible="channelModifyVisible" :channel-id="curChannelId" @confirm="handleRenameConfirm" @close="handleRanameClose"/>
 </template>
 
 <script lang="ts" setup>
@@ -79,6 +79,10 @@ const handleRenameConfirm = (name: string) => {
     channelId: curChannelId.value,
     name
   })
+  channelModifyVisible.value = false
+  curChannelId.value = ''
+}
+const handleRanameClose = () => {
   channelModifyVisible.value = false
   curChannelId.value = ''
 }

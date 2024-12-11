@@ -48,7 +48,7 @@ const props = defineProps({
     default: '',
   },
 })
-const emit = defineEmits(['update:visible', 'confirm'])
+const emit = defineEmits(['close', 'confirm'])
 const channelForm = reactive({
   name: '',
 })
@@ -62,10 +62,9 @@ watch(
   }
 )
 const handleClose = () => {
-  emit('update:visible', false)
+  emit('close')
 }
 const handleConfirm = () => {
-  debugger
   formRef.value.validate(async (valid: boolean) => {
     if (valid) {
       emit('confirm', channelForm.name.toString())

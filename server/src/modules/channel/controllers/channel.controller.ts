@@ -19,7 +19,7 @@ import { Authentication } from 'src/guards/authentication.guard';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
-// import { UserService } from 'src/modules/auth/services/user.service';
+import { UserService } from 'src/modules/auth/services/user.service';
 import { Logger } from 'src/logger';
 import { ChannelService } from '../services/channel.service';
 import { SurveyResponseService } from 'src/modules/surveyResponse/services/surveyResponse.service';
@@ -35,6 +35,7 @@ import { DELIVER_STATUS } from 'src/enums/channel'
 export class ChannelController {
   constructor(
     private readonly channelService: ChannelService,
+    private readonly userService: UserService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly logger: Logger,
   ) {}

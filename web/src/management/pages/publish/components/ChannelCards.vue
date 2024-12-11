@@ -17,42 +17,7 @@
       </div>
     </div>
   </div>
-  <el-dialog
-    v-model="dialogVisible"
-    title="APP嵌入式问卷"
-    width="500"
-    :before-close="handleClose"
-  >
-    <el-form
-      ref="formRef"
-      style="max-width: 600px"
-      :model="channelForm"
-      label-width="auto"
-      class="demo-ruleForm"
-    >
-      <el-form-item
-        label="投放名称："
-        prop="name"
-        :rules="[
-          { required: true, message: '请输入投放名称', trigger: 'blur' },
-        ]"
-      >
-        <el-input
-          v-model.number="channelForm.name"
-          type="text"
-          autocomplete="off"
-        />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">
-          确认
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
+  <ChannelModify :visible="dialogVisible"  @confirm="handleConfirm" />
   <el-dialog
     v-model="introVisible"
     title="SDK接入方式"
@@ -77,8 +42,7 @@ import { useChannelStore } from '@/management/stores/channel'
 import { ElMessageBox } from 'element-plus'
 import CodeBlock from './CodeBlock.vue'
 import { Link, Aim } from '@element-plus/icons-vue'
-import type { t } from '@wangeditor/editor'
-import type { tr } from 'element-plus/es/locales.mjs'
+import ChannelModify from './ChannelModify.vue'
 // <el-icon><Link /></el-icon>
 const channelStore = useChannelStore()
 const DELIVER_TYPE_DSEC = {
@@ -101,9 +65,6 @@ const data = [
 ]
 const dialogVisible = ref(false)
 const curType = ref('')
-const channelForm = ref({
-  name: ''
-})
 const handleClick = (type: DELIVER_TYPE) => {
   curType.value = type
   switch (type) {
@@ -116,27 +77,13 @@ const handleClick = (type: DELIVER_TYPE) => {
   }
   
 }
-
-const handleClose = () => {
-  dialogVisible.value = false
-  channelForm.value = {
-    name: ''
-  }
-}
-const formRef = shallowRef()
-const handleConfirm = async () => {
-  formRef.value.validate(async (valid: boolean) => {
-    if (valid) {
-      await channelStore.createChannel({
-        name: channelForm.value.name.toString(),
-        type: curType.value
-      })
-      dialogVisible.value = false
-      channelForm.value = {
-        name: ''
-      }
-    }
+const handleConfirm = async (name: string) => {
+  debugger
+  await channelStore.createChannel({
+    name,
+    type: curType.value
   })
+  dialogVisible.value = false
 }
 let introVisible = ref(false)
 const handleIntroOpen = () => {

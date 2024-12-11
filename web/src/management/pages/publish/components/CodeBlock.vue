@@ -18,14 +18,13 @@
   Survey.init({
     host: 'http://127.0.0.1',
     port: '8081',
-    appId: '',
-    channel: '',
+    channelId: '67598f5b772bdea2b4211e31', // 投放渠道ID
   });
   
   // api调用方式
   Survey.show({
-    id: '',
-    appId: '',
+    id: '', // 创建的小桔问卷的activityId
+    type: '', // 展示类型
     type: 'dialog',
     onSuccess: () => {},
     onError: (error) => { console.log(error.message) }

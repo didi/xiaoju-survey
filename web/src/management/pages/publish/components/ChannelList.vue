@@ -1,6 +1,7 @@
 <template>
   <el-table :data="channelList" style="width: 100%">
-    <el-table-column prop="type" label="投放类型" width="180" >
+    <el-table-column prop="_id" label="渠道ID" width="230" />
+    <el-table-column prop="type" label="投放类型" width="160" >
       <template #default="scope">
         <el-tag>{{ DELIVER_TYPE_TEXT[scope.row.type as DELIVER_TYPE] }}</el-tag>
       </template>
@@ -11,7 +12,7 @@
         <el-tag :type="scope.row.curStatus.status === 'recycling' ? 'success' : 'danger'">{{ DELIVER_STATUS_TEXT[scope.row.curStatus.status as DELIVER_STATUS] }}</el-tag>
       </template>
     </el-table-column>
-    <el-table-column prop="count" label="回收量" width="180" />
+    <el-table-column prop="count" label="回收量" />
     <el-table-column prop="createdAt" label="创建日期" width="180" />
     <el-table-column prop="updatedAt" label="更新日期" width="180" >
       <template #default="scope">
@@ -33,19 +34,20 @@
   <div class="pagination-container">
     <el-pagination layout="prev, pager, next" :total="channelTotal" @current-change="handleCurrentChange"/>
   </div>
+  <ChannelModify :visible="channelModifyVisible" :channel-id="curChannelId" @confirm="handleRenameConfirm" />
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
-
 import { storeToRefs } from 'pinia' 
 import moment from 'moment'
 import { Delete, Edit, Open, TurnOff, Upload } from '@element-plus/icons-vue'
 
 import { DELIVER_TYPE_TEXT, DELIVER_TYPE, DELIVER_STATUS_TEXT, DELIVER_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
+import ChannelModify from './ChannelModify.vue' 
 
 const channelStore = useChannelStore()
 
@@ -66,8 +68,19 @@ const handleDelete = (channelId: string) => {
     channelId
   })
 }
+const channelModifyVisible = ref(false)
+const curChannelId = ref('')
 const handleRename = (channelId: string) => {
-  
+  curChannelId.value = channelId
+  channelModifyVisible.value = true
+}
+const handleRenameConfirm = (name: string) => {
+  channelStore.updateChannel({
+    channelId: curChannelId.value,
+    name
+  })
+  channelModifyVisible.value = false
+  curChannelId.value = ''
 }
 const handleClose = (channelId: string) => {
   ElMessageBox.confirm('关闭投放后，将停止问卷回收，是否继续?', '确定要关闭投放吗？', {

@@ -150,6 +150,27 @@ export class ChannelController {
     };
   }
 
+  @Get(':id')
+  @HttpCode(200)
+  async find(
+    @Param('id') id: string,
+    @Request() req
+  ) {
+    try {
+      const updateRes = await this.channelService.findOneById(id);
+      this.logger.info(`updateRes: ${JSON.stringify(updateRes)}`);
+      return {
+        code: 200,
+        data: updateRes,
+      };
+    } catch(e){
+      throw new HttpException(
+        `渠道不存在`,
+        EXCEPTION_CODE.SURVEY_NOT_FOUND,
+      );
+    }
+  }
+
   @Post('/status/:id')
   @HttpCode(200)
   async updateStatus(

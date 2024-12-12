@@ -64,8 +64,16 @@ const handleCurrentChange = (current: number) => {
   })
 }
 const handleDelete = (channelId: string) => {
-  channelStore.deleteChannel({
-    channelId
+  ElMessageBox.confirm('确定要删除该投放吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    channelStore.deleteChannel({
+      channelId
+    })
+  }).catch(() => {
+    
   })
 }
 const channelModifyVisible = ref(false)

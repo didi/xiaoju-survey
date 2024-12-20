@@ -18,7 +18,7 @@
   Survey.init({
     host: 'http://127.0.0.1',
     port: '8081',
-    channelId: '67598f5b772bdea2b4211e31', // 投放渠道ID
+    channelId: 'xxx', // 投放渠道ID
   });
   
   // api调用方式

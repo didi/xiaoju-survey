@@ -11,6 +11,7 @@
         :list="item.questionList"
         :group="{ name: DND_GROUP, pull: 'clone', put: false }"
         :clone="createNewQuestion"
+        @end="onDragEnd"
         item-key="path"
       >
         <template #item="{ element }">

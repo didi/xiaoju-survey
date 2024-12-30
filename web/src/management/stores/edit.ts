@@ -166,7 +166,7 @@ export const useEditStore = defineStore('edit', () => {
       if (!questCount) {
         return startIndex
       }
-      return endIndex - 1
+      return endIndex
     }
   })
 

@@ -6,7 +6,6 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { CODE_MAP } from '@/management/api/base'
 import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
-import { GroupState } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from './workSpace'
 
 import {

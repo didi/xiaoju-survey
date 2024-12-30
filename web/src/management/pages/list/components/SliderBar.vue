@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :default-active="active"
+    :default-openeds="['personalGroup', 'spaceGroup']"
     class="el-menu-vertical"
     ref="menuRef"
     @select="handleMenu"

@@ -94,7 +94,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
-import {  MenuType } from '@/management/utils/workSpace'
+import {  MenuType, GroupState } from '@/management/utils/workSpace'
 
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
@@ -198,8 +198,14 @@ const fetchSurveyList = async (params?: any) => {
   loading.value = false
 }
 
-onMounted(() => {
-  fetchSpaceList()
+onMounted(async () => {
+  // 获取分组列表和空间列表
+  await fetchSpaceList()
+  await fetchGroupList()
+  // 默认展开我的空间
+  workSpaceStore.changeMenuType(MenuType.PersonalGroup)
+  // 默认显示全部分组
+  workSpaceStore.changeGroup(GroupState.All)
 })
 
 const modifyType = ref('add')

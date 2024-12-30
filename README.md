@@ -75,7 +75,7 @@
 
 **3、能力增强**
 
-&ensp;&ensp;在线平台：建设中、智能化问卷：规划中
+&ensp;&ensp;智能化问卷：规划中
 
 # 项目优势
 
@@ -128,17 +128,35 @@
 
 # 快速使用
 
-_（在线平台建设中）_
+快速试用：https://xiaojuwenjuan.com/render/LWpBOxRx
+
+在线平台：https://xiaojuwenjuan.com
 
 # 本地开发
 
 请查看 [本地安装手册](https://xiaojusurvey.didi.cn/docs/next/document/%E6%A6%82%E8%BF%B0/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B) 来启动项目。
 
+```
+// 服务启动
+cd server
+npm install
+npm run local
+
+// 页面启动
+cd web
+npm install
+npm run serve
+
+// B端 http://localhost:8080/management
+
+// C端 http://localhost:8080/render/:surveyPath
+```
+
 # 快速部署
 
 ### 服务部署
 
-请查看 [快速部署指导](https://xiaojusurvey.didi.cn/docs/next/document/%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2/Docker%E9%83%A8%E7%BD%B2) 。
+请查看 [部署指导](https://xiaojusurvey.didi.cn/docs/next/document/%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2/Docker%E9%83%A8%E7%BD%B2) 。
 
 ### 一键部署
 

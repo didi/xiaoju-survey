@@ -77,7 +77,7 @@ export enum UserRole {
 
 export enum GroupState {
   All = 'all',
-  Not = 'nogrouped'
+  Not = 'unclassified'
 }
 
 // 定义角色标签映射对象

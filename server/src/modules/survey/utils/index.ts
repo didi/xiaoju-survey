@@ -161,6 +161,7 @@ export function handleAggretionData({ dataMap, item }) {
       title: dataMap[item.field].title,
       type: dataMap[item.field].type,
       data: {
+        ...item.data,
         aggregation: arr.map((item) => {
           const num = item.toString();
           return {
@@ -173,6 +174,27 @@ export function handleAggretionData({ dataMap, item }) {
         summary,
       },
     };
+  } else if (type == QUESTION_TYPE.CASCADER) {
+    const aggregation = getTextPaths(
+      dataMap[item.field].cascaderData.children,
+    );
+    return {
+      ...item,
+      title: dataMap[item.field].title,
+      type: dataMap[item.field].type,
+      data: {
+        ...item.data,
+        aggregation: aggregation
+          .map((item) => {
+            return {
+              id: item.id,
+              text: item.text,
+              count: aggregationMap[item.id]?.count || 0,
+            };
+          })
+          .filter((v) => v.count > 0),
+      },
+    };
   } else {
     return {
       ...item,
@@ -181,6 +203,27 @@ export function handleAggretionData({ dataMap, item }) {
     };
   }
 }
+
+const getTextPaths = (arr, textPrefix = '', idPrefix = '') => {
+  let paths = [];
+
+  arr.forEach((item) => {
+    const currentTextPath = textPrefix
+      ? `${textPrefix}-${item.text}`
+      : item.text;
+    const currentIdPath = idPrefix ? `${idPrefix},${item.hash}` : item.hash;
+
+    if (item.children && item.children.length > 0) {
+      paths = paths.concat(
+        getTextPaths(item.children, currentTextPath, currentIdPath),
+      );
+    } else {
+      paths.push({ id: currentIdPath, text: currentTextPath });
+    }
+  });
+
+  return paths;
+};
 
 function getAverage({ aggregation }) {
   const { sum, count } = aggregation.reduce(

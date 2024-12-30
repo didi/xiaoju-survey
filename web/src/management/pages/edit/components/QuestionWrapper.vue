@@ -85,7 +85,7 @@ const itemClass = computed(() => {
   }
 })
 const showHover = computed(() => {
-  return isHover.value || props.isSelected
+  return isHover.value
 })
 const showUp = computed(() => {
   return !props.isFirst

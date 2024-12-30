@@ -21,7 +21,7 @@
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
-      <el-form-item prop="groupId" label="问卷分组" v-if="menuType === MenuType.PersonalGroup">
+      <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup">
         <el-select
           v-model="current.groupId"
           placeholder="未分组"

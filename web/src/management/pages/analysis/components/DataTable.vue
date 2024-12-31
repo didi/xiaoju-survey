@@ -152,6 +152,13 @@ const onPreviewImage = (e) => {
       display: flex;
       align-items: center;
     }
+    :deep(.table-row-head) {
+      display: inline-block;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 :deep(.el-table td.el-table__cell div) {

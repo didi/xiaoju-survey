@@ -69,8 +69,8 @@ questionLoader.init({
 const onQuestionType = ({ type }) => {
   const newQuestion = createNewQuestion({ type });
   addQuestion({ question: newQuestion, index: newQuestionIndex.value });
-  const { endIndex } = getSorter();
   setTimeout(() => {
+    const { endIndex } = getSorter();
     setCurrentEditOne(endIndex - 1);
   });
 };

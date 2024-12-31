@@ -37,7 +37,7 @@ export default function usePageEdit(
   const getSorter = (index?: number) => {
     let startIndex = 0
     const newPageEditOne = index || pageEditOne.value
-    const endIndex = pageConf.value[newPageEditOne - 1]
+    const endIndex = newPageEditOne > pageConf.value.length ? 0 : pageConf.value[newPageEditOne - 1]
 
     for (let index = 0; index < pageConf.value.length; index++) {
       const item = pageConf.value[index]

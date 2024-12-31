@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import MaterialGroup from './MaterialGroup.vue'

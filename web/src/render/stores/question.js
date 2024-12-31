@@ -212,7 +212,7 @@ export const useQuestionStore = defineStore('question', () => {
     })
   }
   const removeShowLogicHideFields = (fields) => {
-    showLogicHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
+    showLogicHideFields.value = showLogicHideFields.value.filter((field) => !fields.includes(field))
   }
   return {
     questionData,

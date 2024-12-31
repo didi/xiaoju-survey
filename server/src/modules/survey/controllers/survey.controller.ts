@@ -137,7 +137,7 @@ export class SurveyController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    if(!surveyInfo.configData.dataConf.dataList.length){
+    if(!surveyInfo?.configData?.dataConf?.dataList?.length){
       this.logger.error('确少题目数据');
       throw new HttpException('请添加题目后重新保存问卷', EXCEPTION_CODE.PARAMETER_ERROR);
     }

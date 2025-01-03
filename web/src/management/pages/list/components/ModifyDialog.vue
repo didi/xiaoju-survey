@@ -21,7 +21,7 @@
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
-      <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup">
+      <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup && !current.isCollaborated">
         <el-select
           v-model="current.groupId"
           placeholder="未分组"
@@ -89,7 +89,7 @@ export default {
   methods: {
     getCurrent(val) {
       return {
-        ..._pick(val, ['title', 'remark']),
+        ..._pick(val, ['title', 'remark', 'isCollaborated']),
         groupId: val.groupId === null ? '' : val.groupId
       }
     },

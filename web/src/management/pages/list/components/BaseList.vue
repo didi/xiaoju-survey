@@ -85,6 +85,7 @@
         background
         layout="prev, pager, next"
         :total="total"
+        v-model:current-page="currentPage"
         @current-change="handleCurrentChange"
       >
       </el-pagination>
@@ -449,6 +450,14 @@ const onCooper = async (row) => {
 const onCooperClose = () => {
   cooperModify.value = false
 }
+const resetCurrentPage = () => {
+  currentPage.value = 1;
+  onRefresh();
+}
+
+defineExpose({
+  resetCurrentPage,
+})
 </script>
 
 <style lang="scss" scoped>

@@ -47,6 +47,7 @@
           :data="surveyList"
           :total="surveyTotal"
           @refresh="fetchSurveyList"
+          ref="listRef"
           v-if="workSpaceId || groupId"
         ></BaseList>
         <SpaceList
@@ -118,19 +119,12 @@ const tableTitle = computed(() => {
   }
 })
 
-const activeValue = computed(() => {
-  if(workSpaceId.value !== '') {
-    return workSpaceId.value
-  } else if(groupId.value !== '') {
-    return groupId.value
-  } else if(menuType.value === MenuType.PersonalGroup) {
-    return MenuType.PersonalGroup
-  } else if(menuType.value === MenuType.SpaceGroup) {
-    return MenuType.SpaceGroup
-  } else {
-    return ''
-  }
-})
+interface BaseListInstance {
+  resetCurrentPage: () => void;
+}
+
+const activeValue = ref('')
+const listRef = ref<BaseListInstance | null>(null);
 
 const loading = ref(false)
 
@@ -141,35 +135,35 @@ const groupLoading = ref(false)
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
   workSpaceStore.changeWorkSpace('')
-  workSpaceStore.getSpaceList(params)
+  await workSpaceStore.getSpaceList(params)
   spaceLoading.value = false
 }
 
 const fetchGroupList = async (params?: any) => {
   groupLoading.value = true
   workSpaceStore.changeWorkSpace('')
-  workSpaceStore.getGroupList(params)
+  await workSpaceStore.getGroupList(params)
   groupLoading.value = false
 }
 
-const handleSpaceSelect = (id: MenuType | string) => {
-  if (groupId.value === id || workSpaceId.value === id) {
+const handleSpaceSelect = async (id: string) => {
+  if (activeValue.value === id) {
     return void 0
   }
-  let parentMenu = undefined
+  activeValue.value = id;
   switch (id) {
     case MenuType.PersonalGroup:
       workSpaceStore.changeMenuType(MenuType.PersonalGroup)
       workSpaceStore.changeWorkSpace('')
-      fetchGroupList()
+      await fetchGroupList()
       break
     case MenuType.SpaceGroup:
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
-      fetchSpaceList()
+      await fetchSpaceList()
       break
-    default:
-      parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id.toString() === id))
+    default: {
+      const parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id.toString() === id))
       if(parentMenu != undefined) {
         workSpaceStore.changeMenuType(parentMenu.id)
         if(parentMenu.id === MenuType.PersonalGroup) {
@@ -178,9 +172,10 @@ const handleSpaceSelect = (id: MenuType | string) => {
           workSpaceStore.changeWorkSpace(id)
         }
       }
-      break
+      listRef?.value?.resetCurrentPage();
+      break;
+    }
   }
-  fetchSurveyList()
 }
 
 const fetchSurveyList = async (params?: any) => {
@@ -198,8 +193,12 @@ const fetchSurveyList = async (params?: any) => {
   loading.value = false
 }
 
-onMounted(() => {
-  fetchSpaceList()
+onMounted(async () => {
+  await fetchGroupList()
+  await fetchSpaceList()
+  activeValue.value = 'all'
+  workSpaceStore.changeGroup('all')
+  await fetchSurveyList()
 })
 
 const modifyType = ref('add')
@@ -244,8 +243,6 @@ const onSpaceCreate = () => {
   modifyType.value = 'add'
   showSpaceModify.value = true
 }
-
-// 分组
 
 const showGroupModify = ref<boolean>(false)
 

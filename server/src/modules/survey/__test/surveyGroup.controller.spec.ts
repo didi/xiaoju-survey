@@ -84,7 +84,12 @@ describe('SurveyGroupController', () => {
 
   describe('findAll', () => {
     it('should return a list of survey groups', async () => {
-      const result = { total: 0, notTotal: 0, list: [], allList: [] };
+      const result = {
+        total: 0,
+        unclassifiedSurveyTotal: 0,
+        list: [],
+        allList: [],
+      };
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       const mockReq = { user: { _id: new ObjectId() } };
       const mockQue = { curPage: 1, pageSize: 10, name: '' };
@@ -104,7 +109,15 @@ describe('SurveyGroupController', () => {
       const id = '1';
       jest.spyOn(service, 'update').mockResolvedValue(updatedResult);
 
-      expect(await controller.updateOne(id, updatedFields)).toEqual({
+      expect(
+        await controller.updateOne(
+          {
+            groupId: id,
+            name: 'xxx',
+          },
+          { user: { _id: new ObjectId() } },
+        ),
+      ).toEqual({
         code: 200,
         ret: updatedResult,
       });
@@ -113,10 +126,12 @@ describe('SurveyGroupController', () => {
 
     it('should throw error on invalid parameter', async () => {
       const id = '1';
-      const invalidFields: any = {};
-      await expect(controller.updateOne(id, invalidFields)).rejects.toThrow(
-        HttpException,
-      );
+      await expect(
+        controller.updateOne(
+          { groupId: id, name: '' },
+          { user: { _id: new ObjectId() } },
+        ),
+      ).rejects.toThrow(HttpException);
     });
   });
 

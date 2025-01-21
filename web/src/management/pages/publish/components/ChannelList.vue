@@ -7,9 +7,9 @@
       </template>
     </el-table-column>
     <el-table-column prop="name" label="投放名称" width="180" />
-    <el-table-column prop="curStatus" label="状态" >
+    <el-table-column prop="status" label="状态" >
       <template #default="scope">
-        <el-tag :type="scope.row.curStatus.status === 'recycling' ? 'success' : 'danger'">{{ CHANNEL_STATUS_TEXT[scope.row.curStatus.status as CHANNEL_STATUS] }}</el-tag>
+        <el-tag :type="scope.row.status === 'recycling' ? 'success' : 'danger'">{{ CHANNEL_STATUS_TEXT[scope.row.status as CHANNEL_STATUS] }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="count" label="回收量" />
@@ -24,7 +24,7 @@
     <el-table-column label="操作" :width="320" class-name="table-options" fixed="right">
       <template #default="scope">
         <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row._id)">重命名</el-button>
-        <el-button type="warning" text :icon="TurnOff" v-if="scope.row.curStatus.status === 'recycling'" @click="() => handleClose(scope.row._id)">关闭</el-button>
+        <el-button type="warning" text :icon="TurnOff" v-if="scope.row.status === 'recycling'" @click="() => handleClose(scope.row._id)">关闭</el-button>
         <el-button type="success" text :icon="Open" v-else @click="() => handleStart(scope.row._id)">启用</el-button>
         <el-button type="danger" text :icon="Delete" @click="() => handleDelete(scope.row._id)">删除</el-button>
       </template>

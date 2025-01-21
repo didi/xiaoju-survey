@@ -17,14 +17,5 @@ export class Channel extends BaseEntity {
   type: DELIVER_TYPE;
   
   @Column()
-  curStatus: {
-    status: DELIVER_STATUS;
-    date: Date;
-  };
-
-  @Column()
-  statusList: Array<{
-    status: DELIVER_STATUS;
-    date: Date;
-  }>;
+  status: DELIVER_STATUS;
 }

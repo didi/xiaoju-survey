@@ -29,12 +29,7 @@ export class ChannelService {
   ) {}
 
   async create(channel: Partial<Channel>): Promise<Channel> {
-    const curStatus = {
-      status: DELIVER_STATUS.RECYCLING,
-      date: new Date(),
-    }
-    channel.curStatus = curStatus
-    channel.statusList = [curStatus]
+    channel.status = DELIVER_STATUS.RECYCLING
     const newChannel = this.channelRepository.create({
       ...channel,
     });
@@ -74,10 +69,6 @@ export class ChannelService {
     status: DELIVER_STATUS;
     operatorId: string,
   }) {
-    const curStatus = {
-      status,
-      date: new Date(),
-    }
     const channel = await this.channelRepository.findOne({
       where: {
         ownerId: operatorId,
@@ -93,14 +84,13 @@ export class ChannelService {
         EXCEPTION_CODE.PARAMETER_ERROR,
       );
     }
-    if (channel?.curStatus?.status === status) {
+    if (channel?.status === status) {
       throw new HttpException(
         '状态操作异常',
         EXCEPTION_CODE.PARAMETER_ERROR,
       );
     } else {
-      channel.curStatus = curStatus
-      channel.statusList.push(curStatus)
+      channel.status = status
       channel.operatorId = operatorId
       channel.updatedAt = new Date()
 
@@ -140,7 +130,7 @@ export class ChannelService {
       },
       select: [
         '_id',
-        'curStatus',
+        'status',
         'name',
         'ownerId',
         'createdAt',

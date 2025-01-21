@@ -3,13 +3,13 @@
     <el-table-column prop="_id" label="渠道ID" width="230" />
     <el-table-column prop="type" label="投放类型" width="160" >
       <template #default="scope">
-        <el-tag>{{ DELIVER_TYPE_TEXT[scope.row.type as DELIVER_TYPE] }}</el-tag>
+        <el-tag>{{ CHANNEL_TYPE_TEXT[scope.row.type as CHANNEL_TYPE] }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="name" label="投放名称" width="180" />
     <el-table-column prop="curStatus" label="状态" >
       <template #default="scope">
-        <el-tag :type="scope.row.curStatus.status === 'recycling' ? 'success' : 'danger'">{{ DELIVER_STATUS_TEXT[scope.row.curStatus.status as DELIVER_STATUS] }}</el-tag>
+        <el-tag :type="scope.row.curStatus.status === 'recycling' ? 'success' : 'danger'">{{ CHANNEL_STATUS_TEXT[scope.row.curStatus.status as CHANNEL_STATUS] }}</el-tag>
       </template>
     </el-table-column>
     <el-table-column prop="count" label="回收量" />
@@ -45,7 +45,7 @@ import { storeToRefs } from 'pinia'
 import moment from 'moment'
 import { Delete, Edit, Open, TurnOff, Upload } from '@element-plus/icons-vue'
 
-import { DELIVER_TYPE_TEXT, DELIVER_TYPE, DELIVER_STATUS_TEXT, DELIVER_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
+import { CHANNEL_TYPE_TEXT, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
 import ChannelModify from './ChannelModify.vue' 
 
@@ -102,7 +102,7 @@ const handleClose = (channelId: string) => {
   }).then(() => {
     channelStore.changeChannelStatus({
       channelId,
-      status: DELIVER_STATUS.PAUSE
+      status: CHANNEL_STATUS.PAUSE
     })
   }).catch(() => {
     
@@ -111,7 +111,7 @@ const handleClose = (channelId: string) => {
 const handleStart = async (channelId: string) => {
   await channelStore.changeChannelStatus({
     channelId,
-    status: DELIVER_STATUS.RECYCLING
+    status: CHANNEL_STATUS.RECYCLING
   })
   ElMessage.success('投放已开启')
   

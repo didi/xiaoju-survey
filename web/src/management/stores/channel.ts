@@ -12,7 +12,7 @@ import {
   deleteChannel as deleteChannelReq,
   getChannelList as getChannelListReq,
 } from '@/management/api/channel'
-import { DELIVER_TYPE_TEXT, DELIVER_TYPE, DELIVER_STATUS_TEXT, type IDeliverDataItem } from '@/management/enums/channel'
+import { CHANNEL_TYPE_TEXT, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, type IDeliverDataItem } from '@/management/enums/channel'
 
 export const useChannelStore = defineStore('channel', () => {
   const channelList = ref<IDeliverDataItem[]>([])

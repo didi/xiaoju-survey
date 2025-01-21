@@ -15,11 +15,20 @@ import { Authentication } from 'src/guards/authentication.guard';
 import { LoggerProvider } from 'src/logger/logger.provider';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 
+import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { CollaboratorService } from 'src/modules/survey/services/collaborator.service';
+import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
+import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { Collaborator } from 'src/models/collaborator.entity';
+import { WorkspaceMember } from 'src/models/workspaceMember.entity';
+import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, User, SurveyResponse]),
+    TypeOrmModule.forFeature([Channel, User, SurveyResponse, SurveyMeta,Collaborator,WorkspaceMember]),
     ConfigModule,
     AuthModule,
+    WorkspaceModule
   ],
   controllers: [ChannelController],
   providers: [
@@ -28,6 +37,9 @@ import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider
     LoggerProvider,
     Authentication,
     PluginManagerProvider,
+    WorkspaceMemberService,
+    CollaboratorService,
+    SurveyMetaService,
   ],
   exports: [ChannelService],
 })

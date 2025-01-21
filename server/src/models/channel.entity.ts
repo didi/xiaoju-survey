@@ -1,11 +1,14 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { DELIVER_STATUS, DELIVER_TYPE } from '../enums/channel';
+import { CHANNEL_STATUS, CHANNEL_TYPE } from '../enums/channel';
 
 @Entity({ name: 'channel' })
 export class Channel extends BaseEntity {
   @Column()
   ownerId: string;
+
+  @Column()
+  surveyId: string;
 
   @Column()
   operatorId: string;
@@ -14,8 +17,8 @@ export class Channel extends BaseEntity {
   name: string;
   
   @Column()
-  type: DELIVER_TYPE;
+  type: CHANNEL_TYPE;
   
   @Column()
-  status: DELIVER_STATUS;
+  status: CHANNEL_STATUS;
 }

@@ -9,6 +9,7 @@ import {
   Request,
   HttpCode,
   Query,
+  SetMetadata,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import moment from 'moment';
@@ -26,7 +27,9 @@ import { SurveyResponseService } from 'src/modules/surveyResponse/services/surve
 import { CreateChannelDto } from '../dto/createChannel.dto';
 import { GetChannelListDto } from '../dto/getChannelList.dto';
 import { Channel } from 'src/models/channel.entity';
-import { DELIVER_STATUS } from 'src/enums/channel'
+import { CHANNEL_STATUS } from 'src/enums/channel'
+import { SurveyGuard } from 'src/guards/survey.guard';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 @ApiTags('channel')
 @ApiBearerAuth()
@@ -40,8 +43,11 @@ export class ChannelController {
     private readonly logger: Logger,
   ) {}
 
-  @Post()
+  @Post('/create')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async create(@Body() channel: CreateChannelDto, @Request() req) {
     const { value, error } = CreateChannelDto.validate(channel);
     if (error) {
@@ -58,6 +64,7 @@ export class ChannelController {
     const retChannel = await this.channelService.create({
       name: value.name,
       type: value.type,
+      surveyId: value.surveyId,
       ownerId: userId,
     });
     const channelId = retChannel._id.toString();
@@ -70,7 +77,10 @@ export class ChannelController {
     };
   }
 
-  @Get()
+  @Get('/getList')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
   async findAll(@Request() req, @Query() queryInfo: GetChannelListDto) {
     const { value, error } = GetChannelListDto.validate(queryInfo);
@@ -87,8 +97,9 @@ export class ChannelController {
     const username = req.user.username;
     const curPage = Number(value.curPage);
     const pageSize = Number(value.pageSize);
+    //todo 优化查询
     // 查询当前用户的的渠道列表
-    const channelList = await this.channelService.findAllByUserId(userId);
+    const channelList = await this.channelService.findAllBySurveyId(queryInfo.surveyId);
     const idList = channelList.map((item) => item._id);
     // 遍历查询渠道的回收量
     const channelCountList = await Promise.all(
@@ -131,8 +142,11 @@ export class ChannelController {
     };
   }
 
-  @Post(':id')
+  @Post('/update/:id')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async update(
     @Param('id') id: string,
     @Body() channel: Partial<Channel>,
@@ -150,8 +164,11 @@ export class ChannelController {
     };
   }
 
-  @Get(':id')
+  @Get('/find/:id')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async find(
     @Param('id') id: string,
     @Request() req
@@ -172,10 +189,13 @@ export class ChannelController {
   }
 
   @Post('/status/:id')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
   async updateStatus(
     @Param('id') id: string,
-    @Body() parama: Partial<{ status: DELIVER_STATUS }>,
+    @Body() parama: Partial<{ status: CHANNEL_STATUS }>,
     @Request() req
   ) {
     const operatorId = req.user._id.toString();
@@ -191,7 +211,10 @@ export class ChannelController {
   }
 
 
-  @Delete(':id')
+  @Delete('/delete/:id')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
   async delete(@Param('id') id: string, @Request() req) {
     const operatorId = req.user._id.toString();

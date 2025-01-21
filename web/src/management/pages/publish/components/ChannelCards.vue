@@ -43,6 +43,11 @@ import { ElMessageBox } from 'element-plus'
 import CodeBlock from './CodeBlock.vue'
 import { Link, Aim } from '@element-plus/icons-vue'
 import ChannelModify from './ChannelModify.vue'
+import { useEditStore } from '@/management/stores/edit' 
+import { storeToRefs  } from 'pinia'
+
+const editStore = useEditStore()
+const { surveyId } = storeToRefs(editStore)
 const channelStore = useChannelStore()
 const CHANNEL_TYPE_DSEC = {
   [CHANNEL_TYPE.SHORT_LINK]: '方式描述方式描述方式描述方式描述方式描述方式描述方式描述方式描述',
@@ -79,6 +84,7 @@ const handleClick = (type: CHANNEL_TYPE) => {
 const handleConfirm = async (name: string) => {
   await channelStore.createChannel({
     name,
+    surveyId: surveyId.value,
     type: curType.value
   })
   dialogVisible.value = false

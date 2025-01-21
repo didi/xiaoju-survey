@@ -1,21 +1,21 @@
 import axios from './base'
 // 渠道
-export const createChannel = ({ name, type }: any) => {
-  return axios.post('/channel', { name, type })
+export const createChannel = ({ name, type, surveyId }: any) => {
+  return axios.post('/channel/create', { name, type, surveyId })
 }
 
-export const updateChannel = ({ channelId, name }: any) => {
-  return axios.post(`/channel/${channelId}`, { name })
+export const updateChannel = ({ surveyId, channelId, name }: any) => {
+  return axios.post(`/channel/update/${channelId}`, { surveyId, name })
 }
 
 export const getChannelList = (params: any) => {
-  return axios.get('/channel', {
+  return axios.get('/channel/getList', {
     params
   })
 }
 
 export const deleteChannel = ({ channelId }: any) => {
-  return axios.delete(`/channel/${channelId}`)
+  return axios.delete(`/channel/delete/${channelId}`)
 }
 
 export const changeChannelStatus = (channelId: string, status: string) => {

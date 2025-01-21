@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 import { Channel } from 'src/models/channel.entity';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
 
-import { DELIVER_STATUS, DELIVER_TYPE, IDeliverDataItem } from '../../../enums/channel';
+import { CHANNEL_STATUS, CHANNEL_TYPE, IDeliverDataItem } from '../../../enums/channel';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 
@@ -29,7 +29,7 @@ export class ChannelService {
   ) {}
 
   async create(channel: Partial<Channel>): Promise<Channel> {
-    channel.status = DELIVER_STATUS.RECYCLING
+    channel.status = CHANNEL_STATUS.RECYCLING
     const newChannel = this.channelRepository.create({
       ...channel,
     });
@@ -66,7 +66,7 @@ export class ChannelService {
     operatorId,
   }: {
     id: string;
-    status: DELIVER_STATUS;
+    status: CHANNEL_STATUS;
     operatorId: string,
   }) {
     const channel = await this.channelRepository.findOne({
@@ -115,7 +115,7 @@ export class ChannelService {
       workspaceRes,
     };
   }
-
+  
   // 用户下的所有渠道
   async findAllByUserId(userId: string) {
     return await this.channelRepository.find({
@@ -138,6 +138,27 @@ export class ChannelService {
     });
   }
 
+  // 问卷下的所有渠道
+  async findAllBySurveyId(surveyId: string) {
+    return await this.channelRepository.find({
+      where: {
+        surveyId,
+        isDeleted: {
+          $ne: true,
+        },
+      },
+      order: {
+        _id: -1,
+      },
+      select: [
+        '_id',
+        'status',
+        'name',
+        'ownerId',
+        'createdAt',
+      ],
+    });
+  }
   // 分页查询
   async findAllByIdWithPagination({
     idList,

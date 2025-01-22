@@ -132,11 +132,11 @@ onMounted(async () => {
 }
 
 .container-content {
-  width: 70%;
+  width: 78%;
   margin: 0 auto;
   padding: 30px 30px 80px;
   border-radius: 2px;
-  min-width: 960px;
+  min-width: 1060px;
   .launch-tip {
     font-size: 12px;
     color: #fa881a;

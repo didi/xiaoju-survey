@@ -5,6 +5,12 @@ export enum CHANNEL_TYPE {
 	INJECT_APP = "inject_app",
 	INJECT_MP = "inject_mp",
 }
+export const CHANNEL_TYPE_ICON = {
+  [CHANNEL_TYPE.SHORT_LINK]: 'icon-a-icon_SDK2',
+  [CHANNEL_TYPE.INJECT_WEB]: "icon-icon_qianrushi",
+  [CHANNEL_TYPE.INJECT_APP]: "icon-icon_SDK",
+  [CHANNEL_TYPE.INJECT_MP]: "icon-icon_xiaochengxu",
+}
 export const CHANNEL_TYPE_TEXT = {
   [CHANNEL_TYPE.SHORT_LINK]: '短链接',
   [CHANNEL_TYPE.INJECT_WEB]: "Web嵌入问卷",

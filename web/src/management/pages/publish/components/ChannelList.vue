@@ -1,13 +1,15 @@
 <template>
   <el-table :data="channelList" style="width: 100%">
-    <!-- <el-table-column prop="_id" label="渠道ID" width="230" /> -->
-    <el-table-column prop="type" label="投放类型" width="160" >
+    <el-table-column prop="name" label="投放名称" width="180" >
       <template #default="scope">
-        <el-tag>{{ CHANNEL_TYPE_TEXT[scope.row.type as CHANNEL_TYPE] }}</el-tag>
+        <div class="channel_name">
+          <i :class="['iconfont channel_icon',CHANNEL_TYPE_ICON[scope.row.type as CHANNEL_TYPE] ] "></i>
+          <span>{{ scope.row.name }}</span>
+        </div>
+        <!-- <el-tag>{{ CHANNEL_TYPE_TEXT[scope.row.type as CHANNEL_TYPE] }}</el-tag> -->
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="投放名称" width="180" />
-    <el-table-column prop="status" label="状态" >
+    <el-table-column prop="status" label="状态" width="150" >
       <template #default="scope">
         <el-tag :type="scope.row.status === 'recycling' ? 'success' : 'danger'">{{ CHANNEL_STATUS_TEXT[scope.row.status as CHANNEL_STATUS] }}</el-tag>
       </template>
@@ -25,8 +27,12 @@
     <el-table-column label="操作" :width="320" class-name="table-options" fixed="right">
       <template #default="scope">
         <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row._id)">重命名</el-button>
-        <el-button type="warning" text :icon="TurnOff" v-if="scope.row.status === 'recycling'" @click="() => handleClose(scope.row._id)">关闭</el-button>
-        <el-button type="success" text :icon="Open" v-else @click="() => handleStart(scope.row._id)">启用</el-button>
+        <el-button type="primary" text v-if="scope.row.status === 'recycling'" @click="() => handleClose(scope.row._id)">
+          <i class="iconfont icon-icon_guanbi"></i>关闭
+        </el-button>
+        <el-button type="primary" text v-else @click="() => handleStart(scope.row._id)">
+          <i class="iconfont icon-icon_qiyong"></i>启用
+        </el-button>
         <el-button type="danger" text :icon="Delete" @click="() => handleDelete(scope.row._id)">删除</el-button>
       </template>
 
@@ -46,7 +52,7 @@ import { storeToRefs } from 'pinia'
 import moment from 'moment'
 import { Delete, Edit, Open, TurnOff, Upload } from '@element-plus/icons-vue'
 
-import { CHANNEL_TYPE_TEXT, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
+import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
 import { useEditStore } from '@/management/stores/edit'
 
@@ -130,4 +136,14 @@ const handleStart = async (channelId: string) => {
   display: flex;
   justify-content: flex-end;
 }
+.channel_name {
+  display: flex;
+  align-items: center;
+  .channel_icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #92949D;
+  }
+}
+
 </style>

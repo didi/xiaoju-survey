@@ -1,29 +1,37 @@
 <template>
     <div>
       <div class="header">
-        <h1>代码示例</h1>
-        <el-button type="primary" link>查看API配置项说明</el-button>
-        <!-- <a href="www.baidu.com">查看API配置项说明</a> -->
+        <h3>方式一： API调用</h3>
+        <el-button plain @click="copyCode('api')" id="api-code" :data-clipboard-text="code">{{ buttonLabel  }}</el-button>
       </div>
-      
       <pre><code>{{ code }}</code></pre>
+      <div class="header">
+        <h3>方式二： 组件调用</h3>
+        <el-button plain  @click="copyCode('component')" id="component-code" :data-clipboard-text="code1">{{ buttonLabel1 }}</el-button>
+      </div>
+      <pre><code>{{ code1 }}</code></pre>
     </div>
   </template>
   
   <script lang="ts" setup>
+  import { ref, onMounted } from 'vue';
+  import ClipboardJS from 'clipboard';
+
+  const buttonLabel =ref('复制代码')
+
+  
   
     const code = `import { Survey, SurveyCard } from 'react-native-xiaojusurvey'
   
-  // api初始化
+  // sdk初始化
   Survey.init({
     host: 'http://127.0.0.1',
     port: '8081',
-    channelId: 'xxx', // 投放渠道ID
   });
   
   // api调用方式
   Survey.show({
-    id: '', // 创建的小桔问卷的activityId
+    id: 'xxx', // 投放渠道ID
     type: '', // 展示类型
     type: 'dialog',
     onSuccess: () => {},
@@ -31,14 +39,47 @@
   });
   
   Survey.close();
-  
-  // card组件接入方式
-  <SurveyCard
-    id=''
-    appId=''
-    onSuccess={() => {}}
-    onError={(error) => { console.log(error.message) }}
-  />`
+  `
+  const buttonLabel1 =ref('复制代码')
+  const code1 = `import { Survey } from 'react-native-xiaojusurvey'
+
+// sdk初始化
+Survey.init({
+  host: 'http://127.0.0.1',
+  port: '8081',
+  appId: ''
+});
+
+// card组件接入方式
+<SurveyCard
+  id=''
+  appId=''
+  onSuccess={() => {}}
+  onError={(error) => { console.log(error.message) }}
+/>
+`
+  const copyCode = (type: string) => {
+    
+    const clipboard = new ClipboardJS(`#${type}-code`);
+    clipboard.on('success', (e) => {
+      console.log('代码已复制到剪贴板');
+      e.clearSelection();
+      if(type === 'api') {
+        buttonLabel.value = '已复制'
+      } else {
+        buttonLabel1.value = '已复制'
+      }
+    });
+    clipboard.on('error', (e) => {
+      console.error('复制代码失败');
+    });
+  };
+
+onMounted(() => {
+  // 初始化 clipboard
+  new ClipboardJS('.el-button');
+});
+
   </script>
   
   <style scoped>
@@ -46,7 +87,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin: 20px 0 10px 0;
+
   }
   pre {
     background-color: #f5f5f5;

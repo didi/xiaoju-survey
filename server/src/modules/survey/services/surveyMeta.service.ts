@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository, FindOptionsOrder } from 'typeorm';
+import { MongoRepository, FindOptionsOrder, ObjectLiteral } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
+import { GROUP_STATE } from 'src/enums/surveyGroup';
 
 @Injectable()
 export class SurveyMetaService {
@@ -153,14 +154,14 @@ export class SurveyMetaService {
       pageNum,
       pageSize,
       userId,
-      username,
+      // username,
       workspaceId,
       groupId,
       surveyIdList,
     } = condition;
     const skip = (pageNum - 1) * pageSize;
     try {
-      const query: Record<string, any> = Object.assign(
+      const query: ObjectLiteral = Object.assign(
         {
           isDeleted: {
             $ne: true,
@@ -168,40 +169,67 @@ export class SurveyMetaService {
         },
         condition.filter,
       );
-      if (condition.filter['curStatus.status']) {
-        query['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
+      const otherQuery: ObjectLiteral = {};
+      if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+        query.$or = [];
+        query.$or.push({
+          _id: {
+            $in: surveyIdList.map((item) => new ObjectId(item)),
+          },
+        });
       }
-      if (groupId && groupId !== 'all') {
-        query.groupId =
-          groupId === 'unclassified'
-            ? {
-                $exists: true,
-                $eq: null,
-              }
-            : groupId;
+
+      if (condition.filter['curStatus.status']) {
+        otherQuery['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
       }
       if (workspaceId) {
-        query.workspaceId = workspaceId;
+        otherQuery.workspaceId = workspaceId;
       } else {
-        query.workspaceId = {
-          $exists: false,
-        };
-        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用owenrId字段进行关联更加合理，此处做了兼容
-        query.$or = [
+        otherQuery.$and = [
           {
-            owner: username,
+            workspaceId: { $exists: false },
           },
           {
-            ownerId: userId,
+            workspaceId: null,
           },
         ];
-        if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
-          query.$or.push({
-            _id: {
-              $in: surveyIdList.map((item) => new ObjectId(item)),
-            },
-          });
+        if (groupId && groupId !== GROUP_STATE.ALL) {
+          if (groupId === GROUP_STATE.UNCLASSIFIED) {
+            if (!otherQuery.$or) {
+              otherQuery.$or = [];
+            }
+            otherQuery.$or.push(
+              ...[
+                {
+                  groupId: {
+                    $exists: false,
+                  },
+                },
+                {
+                  groupId: null,
+                },
+              ],
+            );
+          } else {
+            otherQuery.groupId = groupId;
+          }
         }
+        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用owenrId字段进行关联更加合理，此处做了兼容
+        // query.$or = [
+        //   {
+        //     owner: username,
+        //   },
+        //   {
+        //     ownerId: userId,
+        //   },
+        // ];
+        otherQuery.ownerId = userId;
+      }
+
+      if (Array.isArray(query.$or)) {
+        query.$or.push(otherQuery);
+      } else {
+        Object.assign(query, otherQuery);
       }
       const order =
         condition.order && Object.keys(condition.order).length > 0
@@ -248,22 +276,63 @@ export class SurveyMetaService {
     });
     return total;
   }
-  async countSurveyMetaByGroupId({ groupId, userId = undefined }) {
-    const total = await this.surveyRepository.count({
+
+  async countSurveyMetaByGroupId({
+    groupId,
+    userId,
+    surveyIdList,
+  }: {
+    groupId?: string;
+    userId: string;
+    surveyIdList?: Array<string>;
+  }) {
+    const query: ObjectLiteral = {};
+    if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+      query.$or = [];
+      query.$or.push({
+        _id: {
+          $in: surveyIdList.map((item) => new ObjectId(item)),
+        },
+      });
+    }
+
+    const otherQuery: ObjectLiteral = {
       ownerId: userId,
-      groupId,
-      $or: [
-        { workspaceId: { $exists: false } },
-        { workspaceId: null },
-        { workspaceId: '' },
-      ],
       isDeleted: {
         $ne: true,
       },
-      'curStatus.status': {
-        $ne: RECORD_STATUS.REMOVED,
+    };
+    otherQuery.$and = [
+      {
+        workspaceId: { $exists: false },
       },
-    });
+      {
+        workspaceId: null,
+      },
+    ];
+    if (groupId) {
+      if (groupId !== 'all') {
+        otherQuery.groupId = groupId;
+      }
+    } else {
+      otherQuery.$or = [
+        {
+          groupId: null,
+        },
+        {
+          groupId: {
+            $exists: false,
+          },
+        },
+      ];
+      // otherQuery.groupId = null;
+    }
+    if (Array.isArray(query.$or)) {
+      query.$or.push(otherQuery);
+    } else {
+      Object.assign(query, otherQuery);
+    }
+    const total = await this.surveyRepository.count(query);
     return total;
   }
 }

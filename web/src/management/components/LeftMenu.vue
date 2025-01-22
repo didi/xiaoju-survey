@@ -2,7 +2,7 @@
   <div class="nav">
     <LogoIcon />
     <template v-for="(tab, index) in tabs" :key="tab.text + index">
-      <router-link :to="tab.to" v-slot="{ isActive }">
+      <router-link :to="tab.to" v-slot="{ isActive }" :replace="true">
         <div
           :class="[
             'tab-btn',

@@ -84,7 +84,7 @@ export const createGroup = ({ name }: any) => {
 }
 
 export const updateGroup = ({ _id, name }: any) => {
-  return axios.post(`/surveyGroup/${_id}`, { name })
+  return axios.post(`/surveyGroup/update`, { name, groupId: _id })
 }
 
 export const getGroupList = (params: any) => {
@@ -94,5 +94,5 @@ export const getGroupList = (params: any) => {
 }
 
 export const deleteGroup = (id: string) => {
-  return axios.delete(`/surveyGroup/${id}`)
+  return axios.post(`/surveyGroup/delete`, { groupId: id })
 }

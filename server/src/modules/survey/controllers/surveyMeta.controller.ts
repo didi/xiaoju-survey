@@ -27,6 +27,7 @@ import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 
 import { GetSurveyListDto } from '../dto/getSurveyMetaList.dto';
 import { CollaboratorService } from '../services/collaborator.service';
+import { GROUP_STATE } from 'src/enums/surveyGroup';
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -107,8 +108,11 @@ export class SurveyMetaController {
       }
     }
     const userId = req.user._id.toString();
-    const cooperationList =
-      await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    let cooperationList = [];
+    if (groupId === GROUP_STATE.ALL) {
+      cooperationList =
+        await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
       pre[cur.surveyId] = cur;
       return pre;

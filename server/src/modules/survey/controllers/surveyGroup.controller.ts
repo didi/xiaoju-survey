@@ -2,9 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
   Body,
-  Param,
   UseGuards,
   Request,
   HttpCode,
@@ -23,16 +21,18 @@ import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { CreateSurveyGroupDto } from '../dto/createSurveyGroup.dto';
 import { UpdateSurveyGroupDto } from '../dto/updateSurveyGroup.dto';
 import { GetGroupListDto } from '../dto/getGroupList.dto';
+import { CollaboratorService } from '../services/collaborator.service';
 
 @ApiTags('surveyGroup')
 @ApiBearerAuth()
 @UseGuards(Authentication)
-@Controller('api/surveyGroup')
+@Controller('/api/surveyGroup')
 export class SurveyGroupController {
   constructor(
     private readonly surveyMetaService: SurveyMetaService,
-    private readonly SurveyGroupService: SurveyGroupService,
+    private readonly surveyGroupService: SurveyGroupService,
     private readonly logger: Logger,
+    private readonly collaboratorService: CollaboratorService,
   ) {}
   @Post()
   @HttpCode(200)
@@ -48,7 +48,7 @@ export class SurveyGroupController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const userId = req.user._id.toString();
-    const ret = await this.SurveyGroupService.create({
+    const ret = await this.surveyGroupService.create({
       name: value.name,
       ownerId: userId,
     });
@@ -75,7 +75,7 @@ export class SurveyGroupController {
     const curPage = Number(value.curPage);
     const pageSize = Number(value.pageSize);
     const skip = (curPage - 1) * pageSize;
-    const { total, list, allList } = await this.SurveyGroupService.findAll(
+    const { total, list, allList } = await this.surveyGroupService.findAll(
       userId,
       value.name,
       skip,
@@ -95,10 +95,20 @@ export class SurveyGroupController {
       pre[cur] = total;
       return pre;
     }, {});
-    const notTotal = await this.surveyMetaService.countSurveyMetaByGroupId({
-      userId,
-      groupId: null,
-    });
+    const unclassifiedSurveyTotal =
+      await this.surveyMetaService.countSurveyMetaByGroupId({
+        userId,
+        groupId: null,
+      });
+    const cooperationList =
+      await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    const surveyIdList = cooperationList.map((item) => item.surveyId);
+    const allSurveyTotal =
+      await this.surveyMetaService.countSurveyMetaByGroupId({
+        userId,
+        surveyIdList,
+        groupId: 'all',
+      });
     return {
       code: 200,
       data: {
@@ -112,34 +122,54 @@ export class SurveyGroupController {
           };
         }),
         allList,
-        notTotal,
+        unclassifiedSurveyTotal,
+        allSurveyTotal,
       },
     };
   }
 
-  @Post(':id')
+  @Post('/update')
   @HttpCode(200)
   async updateOne(
-    @Param('id') id: string,
     @Body()
     reqBody: UpdateSurveyGroupDto,
+    @Request()
+    req,
   ) {
     const { error, value } = UpdateSurveyGroupDto.validate(reqBody);
     if (error) {
       this.logger.error(`createSurveyGroup_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const ret = await this.SurveyGroupService.update(id, value);
+    const group = await this.surveyGroupService.findOne(value.groupId);
+    if (group.ownerId !== req.user._id.toString()) {
+      throw new HttpException('没有权限', EXCEPTION_CODE.NO_PERMISSION);
+    }
+    const ret = await this.surveyGroupService.update(value.group, {
+      name: value.name,
+    });
     return {
       code: 200,
       ret,
     };
   }
 
-  @Delete(':id')
+  @Post('delete')
   @HttpCode(200)
-  async remove(@Param('id') id: string) {
-    await this.SurveyGroupService.remove(id);
+  async remove(
+    @Request()
+    req,
+  ) {
+    const groupId = req.body.groupId;
+    if (!groupId) {
+      this.logger.error(`deleteSurveyGroup_parameter error: ${groupId}`);
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const group = await this.surveyGroupService.findOne(groupId);
+    if (group.ownerId !== req.user._id.toString()) {
+      throw new HttpException('没有权限', EXCEPTION_CODE.NO_PERMISSION);
+    }
+    await this.surveyGroupService.remove(groupId);
     return {
       code: 200,
     };

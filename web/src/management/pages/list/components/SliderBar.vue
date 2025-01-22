@@ -4,12 +4,11 @@
     class="el-menu-vertical"
     ref="menuRef"
     @select="handleMenu"
-    @open="handleMenu"
-    @close="handleMenu"
+    :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup]"
   >
     <template v-for="(menu, index) in props.menus" :key="menu.id">
       <el-menu-item
-        :class="[index === 0 ? 'bottom' : '', index > 2 ? 'sub-item' : 'main-item', active == menu.id ? 'check-item' : '' ]"
+        :class="[index === 0 ? 'bottom' : '', index > 2 ? 'sub-item' : 'main-item', activeValue == menu.id ? 'check-item' : '' ]"
         :index="menu.id.toString()"
         v-if="!menu.children?.length"
       >
@@ -20,14 +19,14 @@
           </div>
         </template>
       </el-menu-item>
-      <el-sub-menu v-else :index="menu.id.toString()" :class="[ active == menu.id ? 'check-item' : '' ]">
+      <el-sub-menu v-else :index="menu.id.toString()" :class="[ activeValue == menu.id ? 'check-item' : '' ]" default-opened>
         <template #title>
-          <div class="title-content sub-title main-item">
+          <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
               <i :class="['iconfont', menu.icon]"></i>
               <span>{{ menu.name }}</span>
             </div>
         </template>
-        <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id.toString()"  :class="[ active == item.id ? 'check-item' : '' ]">
+        <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id.toString()"  :class="[ activeValue == item.id ? 'check-item' : '' ]">
           <div class="title-box">
             <p class="title-text">{{ item.name }}</p>
             <p class="title-total">{{ item.total }}</p>
@@ -38,7 +37,7 @@
   </el-menu>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { type MenuItem } from '@/management/utils/workSpace'
 import { MenuType } from '@/management/utils/workSpace'
 const menuRef = ref()
@@ -53,16 +52,9 @@ const props = withDefaults(
   }
 )
 
-const active = computed({
-  get: () => {
-    return props.activeValue
-  },
-  set: () => {}
-})
-
 const emit = defineEmits(['select'])
 const handleMenu = (id: string) => {
-  active.value = id
+  console.log(`handleMenu ${id}`)
   emit('select', id)
 }
 </script>

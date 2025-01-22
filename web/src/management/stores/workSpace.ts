@@ -173,10 +173,8 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     try {
       const res: any = await getGroupListReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
-        const { list, allList, total, notTotal } = res.data
-        let allTotal = notTotal
+        const { list, allList, total, unclassifiedSurveyTotal, allSurveyTotal } = res.data
         const group = list.map((item: GroupItem) => {
-          allTotal += item.surveyTotal 
           return {
             id: item._id,
             name: item.name,
@@ -186,11 +184,11 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
         group.unshift({
           id: GroupState.All, 
           name: '全部' ,
-          total: allTotal
+          total: allSurveyTotal
         }, {
           id: GroupState.Not, 
           name: '未分组' ,
-          total: notTotal
+          total: unclassifiedSurveyTotal
         })
         allList.unshift({
           _id: '', 

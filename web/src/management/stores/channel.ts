@@ -14,24 +14,30 @@ import {
 } from '@/management/api/channel'
 import { CHANNEL_TYPE_TEXT, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, type IDeliverDataItem } from '@/management/enums/channel'
 
+import { useEditStore } from '@/management/stores/edit' 
+import { storeToRefs  } from 'pinia'
+
+const editStore = useEditStore()
+const { surveyId } = storeToRefs(editStore)
+
 export const useChannelStore = defineStore('channel', () => {
   const channelList = ref<IDeliverDataItem[]>([])
   const channelTotal = ref(0)
-  async function getChannelList(params = { curPage: 1 }) {
-      try {
-        const res: any = await getChannelListReq(params)
-  
-        if (res.code === CODE_MAP.SUCCESS) {
-          const { list, total } = res.data
-          channelList.value = list
-          channelTotal.value = total
-        } else {
-          ElMessage.error('getSpaceList' + res.errmsg)
-        }
-      } catch (err) {
-        ElMessage.error('getSpaceList' + err)
+  async function getChannelList(params = { surveyId: surveyId.value, curPage: 1 }) {
+    try {
+      const res: any = await getChannelListReq(params)
+
+      if (res.code === CODE_MAP.SUCCESS) {
+        const { list, total } = res.data
+        channelList.value = list
+        channelTotal.value = total
+      } else {
+        ElMessage.error('getChannelList' + res.errmsg)
       }
+    } catch (err) {
+      ElMessage.error('getChannelList' + err)
     }
+  }
 
   async function createChannel(payload: any) {
     try {

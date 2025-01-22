@@ -4,8 +4,8 @@ export const createChannel = ({ name, type, surveyId }: any) => {
   return axios.post('/channel/create', { name, type, surveyId })
 }
 
-export const updateChannel = ({ surveyId, channelId, name }: any) => {
-  return axios.post(`/channel/update/${channelId}`, { surveyId, name })
+export const updateChannel = ({ channelId, surveyId, name }: any) => {
+  return axios.post(`/channel/update`, { channelId, surveyId, name })
 }
 
 export const getChannelList = (params: any) => {
@@ -15,9 +15,9 @@ export const getChannelList = (params: any) => {
 }
 
 export const deleteChannel = ({ channelId }: any) => {
-  return axios.delete(`/channel/delete/${channelId}`)
+  return axios.post(`/channel/delete`, { channelId })
 }
 
 export const changeChannelStatus = (channelId: string, status: string) => {
-  return axios.post(`/channel/status/${channelId}`, { status})
+  return axios.post(`/channel/status`, { channelId, status})
 }

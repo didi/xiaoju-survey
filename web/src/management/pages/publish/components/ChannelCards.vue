@@ -102,10 +102,13 @@ const handleIntroClose = () => {
 </script> 
 <style lang="scss" scoped>
 .channel-cards {
-  width:  100%;
+  // width:  100%;
+  display: flex;
+
   .channel-card {
+    flex: 1;
     display: inline-block;
-    max-width: 280px;
+    // max-width: 280px;
     // height: 120px;
     margin: 0 20px 20px 0;
     background: #fff;

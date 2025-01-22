@@ -24,8 +24,11 @@ import { UserService } from 'src/modules/auth/services/user.service';
 import { Logger } from 'src/logger';
 import { ChannelService } from '../services/channel.service';
 import { SurveyResponseService } from 'src/modules/surveyResponse/services/surveyResponse.service';
+import { SurveyConfService } from 'src/modules/survey/services/surveyConf.service';
 import { CreateChannelDto } from '../dto/createChannel.dto';
 import { GetChannelListDto } from '../dto/getChannelList.dto';
+import { FindChannelDto } from '../dto/findChannel.dto';
+
 import { Channel } from 'src/models/channel.entity';
 import { CHANNEL_STATUS } from 'src/enums/channel'
 import { SurveyGuard } from 'src/guards/survey.guard';
@@ -40,6 +43,7 @@ export class ChannelController {
     private readonly channelService: ChannelService,
     private readonly userService: UserService,
     private readonly surveyResponseService: SurveyResponseService,
+    private readonly surveyConfService: SurveyConfService,
     private readonly logger: Logger,
   ) {}
 
@@ -97,8 +101,8 @@ export class ChannelController {
     const username = req.user.username;
     const curPage = Number(value.curPage);
     const pageSize = Number(value.pageSize);
-    //todo 优化查询
-    // 查询当前用户的的渠道列表
+
+    // 查询当前问卷的渠道列表
     const channelList = await this.channelService.findAllBySurveyId(queryInfo.surveyId);
     const idList = channelList.map((item) => item._id);
     // 遍历查询渠道的回收量
@@ -142,16 +146,16 @@ export class ChannelController {
     };
   }
 
-  @Post('/update/:id')
+  @Post('/update')
   @HttpCode(200)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async update(
-    @Param('id') id: string,
     @Body() channel: Partial<Channel>,
     @Request() req
   ) {
+    const id = req.body.channelId;
     const operatorId = req.user._id.toString();
     const updateRes = await this.channelService.update({
       id,
@@ -164,22 +168,35 @@ export class ChannelController {
     };
   }
 
-  @Get('/find/:id')
+  @Get('/find')
   @HttpCode(200)
-  @UseGuards(SurveyGuard)
-  @SetMetadata('surveyId', 'query.surveyId')
-  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async find(
-    @Param('id') id: string,
-    @Request() req
+    @Request() req,
+    @Query() queryInfo: FindChannelDto
   ) {
+    const id = queryInfo.channelId;
     try {
       const updateRes = await this.channelService.findOneById(id);
-      this.logger.info(`updateRes: ${JSON.stringify(updateRes)}`);
-      return {
-        code: 200,
-        data: updateRes,
-      };
+      this.logger.info(`channelInfo: ${JSON.stringify(updateRes)}`);
+
+      if(updateRes.status === CHANNEL_STATUS.RECYCLING) {
+        const surveyId = updateRes.surveyId;
+        const surveyConf =
+          await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
+
+        return {
+          code: 200,
+          data: {
+            channelInfo: { ...updateRes },
+            surveyConf,
+          },
+        };
+      } else {
+        return {
+          code: 200,
+          message: '渠道回收已关闭，无法访问'
+        };
+      }
     } catch(e){
       throw new HttpException(
         `渠道不存在`,
@@ -188,16 +205,16 @@ export class ChannelController {
     }
   }
 
-  @Post('/status/:id')
+  @Post('/status')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
   async updateStatus(
-    @Param('id') id: string,
     @Body() parama: Partial<{ status: CHANNEL_STATUS }>,
     @Request() req
   ) {
+    const id = req.body.channelId;
     const operatorId = req.user._id.toString();
     const updateRes = await this.channelService.updateStatus({
       id,
@@ -211,12 +228,13 @@ export class ChannelController {
   }
 
 
-  @Delete('/delete/:id')
+  @Post('/delete')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
-  async delete(@Param('id') id: string, @Request() req) {
+  async delete(@Request() req) {
+    const id = req.body.channelId;
     const operatorId = req.user._id.toString();
     const deleteRes = await this.channelService.delete(id, {operatorId});
     this.logger.info(`res: ${JSON.stringify(deleteRes)}`);

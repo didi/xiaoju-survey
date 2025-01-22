@@ -18,14 +18,18 @@ import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 import { CollaboratorService } from 'src/modules/survey/services/collaborator.service';
 import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
+import { SurveyConfService } from 'src/modules/survey/services/surveyConf.service';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { SurveyConf } from 'src/models/surveyConf.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
+
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
+import { SurveyModule } from 'src/modules/survey/survey.module';
 import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, User, SurveyResponse, SurveyMeta,Collaborator,WorkspaceMember]),
+    TypeOrmModule.forFeature([Channel, User, SurveyResponse, SurveyMeta, SurveyConf, Collaborator,WorkspaceMember]),
     ConfigModule,
     AuthModule,
     WorkspaceModule
@@ -40,6 +44,8 @@ import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
     WorkspaceMemberService,
     CollaboratorService,
     SurveyMetaService,
+    SurveyConfService,
+    SurveyModule,
   ],
   exports: [ChannelService],
 })

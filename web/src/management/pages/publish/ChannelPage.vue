@@ -9,9 +9,9 @@
         <template v-if="curStatus !== 'new'">
           <div class="container-content">
             <div class="box-link">
-              <span class="launch-tip"
+              <!-- <span class="launch-tip"
                 >说明：若您的问卷投放对象，涉及14周岁以下的用户，需征得其监护人的同意。</span
-              >
+              > -->
               <h2>问卷链接</h2>
               <div class="main-channel-wrap">
                 <ChannelRow
@@ -132,10 +132,11 @@ onMounted(async () => {
 }
 
 .container-content {
-  width: 100%;
+  width: 70%;
+  margin: 0 auto;
   padding: 30px 30px 80px;
   border-radius: 2px;
-
+  min-width: 960px;
   .launch-tip {
     font-size: 12px;
     color: #fa881a;

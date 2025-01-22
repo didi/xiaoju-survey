@@ -1,6 +1,6 @@
 <template>
   <el-table :data="channelList" style="width: 100%">
-    <el-table-column prop="_id" label="渠道ID" width="230" />
+    <!-- <el-table-column prop="_id" label="渠道ID" width="230" /> -->
     <el-table-column prop="type" label="投放类型" width="160" >
       <template #default="scope">
         <el-tag>{{ CHANNEL_TYPE_TEXT[scope.row.type as CHANNEL_TYPE] }}</el-tag>
@@ -14,6 +14,7 @@
     </el-table-column>
     <el-table-column prop="count" label="回收量" />
     <el-table-column prop="createdAt" label="创建日期" width="180" />
+    <el-table-column prop="currentUse" label="创建人" width="180" />
     <el-table-column prop="updatedAt" label="更新日期" width="180" >
       <template #default="scope">
         {{ moment(scope.row.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
@@ -47,19 +48,25 @@ import { Delete, Edit, Open, TurnOff, Upload } from '@element-plus/icons-vue'
 
 import { CHANNEL_TYPE_TEXT, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
+import { useEditStore } from '@/management/stores/edit'
+
 import ChannelModify from './ChannelModify.vue' 
 
 const channelStore = useChannelStore()
+const editStore = useEditStore()
 
 const {  channelList, channelTotal } = storeToRefs(channelStore)
+const { surveyId } =storeToRefs(editStore)
 
 onMounted(() => {
   channelStore.getChannelList({
+    surveyId: surveyId.value,
     curPage: 1
   })
 })
 const handleCurrentChange = (current: number) => {
   channelStore.getChannelList({
+    surveyId: surveyId.value,
     curPage: current
   })
 }

@@ -86,7 +86,8 @@ const normalizationURL = (value: any) => {
     display: flex;
     flex-direction: row;
     position: relative;
-    width: 500px;
+    flex: 1;
+    // width: 500px;
   }
 
   .crc-url-wrap {

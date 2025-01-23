@@ -33,7 +33,7 @@
             :class="`preview-tab-item ${previewTab == 3 ? 'active' : ''}`"
             @click="previewTab = 3"
           >
-            <i-ep-monitor />
+            <i class="iconfont icon-icon_qianrushiwenjuan"></i>
           </div>
         </div>
         <div
@@ -60,7 +60,7 @@
               <el-image :src="sdkImages[sdkType]" fit="contain"/>
             </div>
             
-            <el-button type="primary" @click="changeSdkType" :icon="Switch">预览模式</el-button>
+            <el-button class="sdk-preview-btn" type="primary" @click="changeSdkType" :icon="Switch">切换预览模式</el-button>
           </div>
         </div>
       </div>
@@ -249,7 +249,7 @@ const closedDialog = () => {
     }
     .el-button{
       position: absolute;
-      right: 8px;
+      right: 6px;
       bottom: 24px;
     }
   }

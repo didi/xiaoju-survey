@@ -35,7 +35,6 @@ import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 @ApiTags('channel')
-
 @Controller('/api/channel')
 export class ChannelController {
   constructor(
@@ -47,10 +46,9 @@ export class ChannelController {
   ) {}
 
   @Post('/create')
-  @ApiBearerAuth()
-  @UseGuards(Authentication)
   @HttpCode(200)
-  @UseGuards(SurveyGuard)
+  @ApiBearerAuth()
+  @UseGuards(Authentication, SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async create(@Body() channel: CreateChannelDto, @Request() req) {
@@ -84,8 +82,7 @@ export class ChannelController {
 
   @Get('/getList')
   @ApiBearerAuth()
-  @UseGuards(Authentication)
-  @UseGuards(SurveyGuard)
+  @UseGuards(Authentication, SurveyGuard)
   @SetMetadata('surveyId', 'query.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
@@ -150,10 +147,9 @@ export class ChannelController {
   }
 
   @Post('/update')
-  @ApiBearerAuth()
-  @UseGuards(Authentication)
   @HttpCode(200)
-  @UseGuards(SurveyGuard)
+  @ApiBearerAuth()
+  @UseGuards(Authentication, SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   async update(
@@ -212,8 +208,7 @@ export class ChannelController {
 
   @Post('/status')
   @ApiBearerAuth()
-  @UseGuards(Authentication)
-  @UseGuards(SurveyGuard)
+  @UseGuards(Authentication, SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
@@ -237,8 +232,7 @@ export class ChannelController {
 
   @Post('/delete')
   @ApiBearerAuth()
-  @UseGuards(Authentication)
-  @UseGuards(SurveyGuard)
+  @UseGuards(Authentication, SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)

@@ -35,8 +35,7 @@ import { SurveyGuard } from 'src/guards/survey.guard';
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 @ApiTags('channel')
-@ApiBearerAuth()
-@UseGuards(Authentication)
+
 @Controller('/api/channel')
 export class ChannelController {
   constructor(
@@ -48,6 +47,8 @@ export class ChannelController {
   ) {}
 
   @Post('/create')
+  @ApiBearerAuth()
+  @UseGuards(Authentication)
   @HttpCode(200)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
@@ -82,6 +83,8 @@ export class ChannelController {
   }
 
   @Get('/getList')
+  @ApiBearerAuth()
+  @UseGuards(Authentication)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'query.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
@@ -147,6 +150,8 @@ export class ChannelController {
   }
 
   @Post('/update')
+  @ApiBearerAuth()
+  @UseGuards(Authentication)
   @HttpCode(200)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
@@ -206,6 +211,8 @@ export class ChannelController {
   }
 
   @Post('/status')
+  @ApiBearerAuth()
+  @UseGuards(Authentication)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
@@ -229,6 +236,8 @@ export class ChannelController {
 
 
   @Post('/delete')
+  @ApiBearerAuth()
+  @UseGuards(Authentication)
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])

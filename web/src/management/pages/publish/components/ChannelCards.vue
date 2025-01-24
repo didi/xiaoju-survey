@@ -153,7 +153,7 @@ const handleIntroClose = () => {
       flex: 1;
       color: #6E707C;
       &:hover {
-        background:#efefef;
+        background:#fff;
       }
     }
   }

@@ -148,7 +148,7 @@ export default {
 }
 </script>
 
-<style lang="scss" rel="lang/scss" scoped>
+<style lang="scss" scoped>
 .base-form-root {
   padding: 20px;
 }

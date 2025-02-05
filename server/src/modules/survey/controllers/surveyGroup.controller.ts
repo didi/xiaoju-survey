@@ -145,7 +145,8 @@ export class SurveyGroupController {
     if (group.ownerId !== req.user._id.toString()) {
       throw new HttpException('没有权限', EXCEPTION_CODE.NO_PERMISSION);
     }
-    const ret = await this.surveyGroupService.update(value.group, {
+
+    const ret = await this.surveyGroupService.update(value.groupId, {
       name: value.name,
     });
     return {

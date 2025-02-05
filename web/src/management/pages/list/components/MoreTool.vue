@@ -53,7 +53,7 @@ const call = (t) => {
   })
 }
 </script>
-<style lang="scss" rel="stylesheet/scss">
+<style lang="scss" scoped>
 .el-popover.more-tool_popper {
   min-width: 80px;
   padding: 8px 3px;

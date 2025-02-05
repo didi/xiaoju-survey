@@ -15,9 +15,10 @@
               : ''
           ]"
         >
-          <i class="iconfont" :class="[route.icon]"></i>
           <a :href="href" @click="navigate"
-            ><span>{{ route.text }}</span></a
+            >
+            <i class="iconfont" :class="[route.icon]"></i>
+            <span>{{ route.text }}</span></a
           >
         </div>
       </router-link>

@@ -11,7 +11,6 @@ import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
-// import { RedisService } from 'src/modules/redis/redis.service';
 
 import moment from 'moment';
 import * as Joi from 'joi';
@@ -42,7 +41,6 @@ export class SurveyResponseController {
     private readonly messagePushingTaskService: MessagePushingTaskService,
     private readonly counterService: CounterService,
     private readonly logger: Logger,
-    // private readonly redisService: RedisService,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
@@ -237,9 +235,6 @@ export class SurveyResponseController {
       }, {});
 
     const surveyId = responseSchema.pageId;
-    // const lockKey = `locks:optionSelectedCount:${surveyId}`;
-    // const lock = await this.redisService.lockResource(lockKey, 1000);
-    // this.logger.info(`lockKey: ${lockKey}`);
     try {
       const successParams = [];
       for (const field in decryptedData) {
@@ -281,10 +276,6 @@ export class SurveyResponseController {
       this.logger.error(error.message);
       throw error;
     }
-    // finally {
-    //   await this.redisService.unlockResource(lock);
-    //   this.logger.info(`unlockResource: ${lockKey}`);
-    // }
 
     // 入库
     const surveyResponse =

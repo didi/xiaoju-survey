@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyGroupController } from '../controllers/surveyGroup.controller';
 import { SurveyGroupService } from '../services/surveyGroup.service';
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { CollaboratorService } from 'src/modules/survey/services/collaborator.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { ObjectId } from 'mongodb';
 import { Logger } from 'src/logger';
+import { SurveyGroup } from 'src/models/surveyGroup.entity';
 
 jest.mock('src/guards/authentication.guard');
 
@@ -17,6 +19,7 @@ describe('SurveyGroupController', () => {
     findAll: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
+    findOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -38,6 +41,13 @@ describe('SurveyGroupController', () => {
           useValue: {
             error: jest.fn(),
             info: jest.fn(),
+          },
+        },
+        {
+          provide: CollaboratorService,
+          useValue: {
+            getCollaborator: jest.fn(),
+            getCollaboratorListByUserId: jest.fn().mockResolvedValue([]),
           },
         },
       ],
@@ -89,6 +99,7 @@ describe('SurveyGroupController', () => {
         unclassifiedSurveyTotal: 0,
         list: [],
         allList: [],
+        allSurveyTotal: 0,
       };
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       const mockReq = { user: { _id: new ObjectId() } };
@@ -108,6 +119,10 @@ describe('SurveyGroupController', () => {
       const updatedResult = { raw: 'xxx', generatedMaps: [] };
       const id = '1';
       jest.spyOn(service, 'update').mockResolvedValue(updatedResult);
+      const mockUser = { _id: new ObjectId() };
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce({
+        ownerId: mockUser._id.toString(),
+      } as SurveyGroup);
 
       expect(
         await controller.updateOne(
@@ -115,7 +130,7 @@ describe('SurveyGroupController', () => {
             groupId: id,
             name: 'xxx',
           },
-          { user: { _id: new ObjectId() } },
+          { user: mockUser },
         ),
       ).toEqual({
         code: 200,
@@ -137,11 +152,20 @@ describe('SurveyGroupController', () => {
 
   describe('remove', () => {
     it('should remove a survey group', async () => {
-      const id = '1';
+      const mockUser = { _id: new ObjectId() };
+      const req = {
+        body: {
+          groupId: '1',
+        },
+        user: mockUser,
+      };
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce({
+        ownerId: mockUser._id.toString(),
+      } as SurveyGroup);
       jest.spyOn(service, 'remove').mockResolvedValue(undefined);
 
-      expect(await controller.remove(id)).toEqual({ code: 200 });
-      expect(service.remove).toHaveBeenCalledWith(id);
+      expect(await controller.remove(req)).toEqual({ code: 200 });
+      expect(service.remove).toHaveBeenCalledWith(req.body.groupId);
     });
   });
 });

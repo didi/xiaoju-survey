@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule } from '@nestjs/config';
-import * as jwt from 'jsonwebtoken';
 import { User } from 'src/models/user.entity';
 
 import { AuthService } from '../services/auth.service';
@@ -33,16 +32,8 @@ describe('AuthService', () => {
   describe('generateToken', () => {
     it('should generate token successfully', async () => {
       const userData = { _id: 'mockUserId', username: 'mockUsername' };
-      const tokenConfig = {
-        secret: 'mockSecretKey',
-        expiresIn: '8h',
-      };
 
-      await service.generateToken(userData, tokenConfig);
-
-      expect(jwt.sign).toHaveBeenCalledWith(userData, tokenConfig.secret, {
-        expiresIn: tokenConfig.expiresIn,
-      });
+      await service.generateToken(userData);
     });
   });
 

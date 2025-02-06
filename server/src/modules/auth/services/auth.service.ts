@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { sign, verify } from 'jsonwebtoken';
+import { sign, verify, SignOptions } from 'jsonwebtoken';
+import { StringValue } from 'ms';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -10,13 +11,15 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly userService: UserService,
   ) {}
-  async generateToken(
-    { _id, username }: { _id: string; username: string },
-    { secret, expiresIn }: { secret: string; expiresIn: string },
-  ) {
-    return sign({ _id, username }, secret, {
+  async generateToken({ _id, username }: { _id: string; username: string }) {
+    const secret = this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET');
+    const expiresIn: StringValue = this.configService.get<StringValue>(
+      'XIAOJU_SURVEY_JWT_EXPIRES_IN',
+    );
+    const signOptions: SignOptions = {
       expiresIn,
-    });
+    };
+    return sign({ _id, username }, secret, signOptions);
   }
 
   async verifyToken(token: string) {

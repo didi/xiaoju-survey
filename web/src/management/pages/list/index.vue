@@ -194,8 +194,7 @@ const fetchSurveyList = async (params?: any) => {
 }
 
 onMounted(async () => {
-  await fetchGroupList()
-  await fetchSpaceList()
+  await Promise.all([fetchGroupList(), fetchSpaceList()])
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

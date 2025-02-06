@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MessageModule } from '../message/message.module';
-// import { RedisModule } from '../redis/redis.module';
 
 import { ResponseSchemaService } from './services/responseScheme.service';
 import { SurveyResponseService } from './services/surveyResponse.service';
 import { CounterService } from './services/counter.service';
 import { ClientEncryptService } from './services/clientEncrypt.service';
-// import { RedisService } from '../redis/redis.service';
 
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { Counter } from 'src/models/counter.entity';

@@ -142,10 +142,9 @@ export class SurveyGroupController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const group = await this.surveyGroupService.findOne(value.groupId);
-    if (group.ownerId !== req.user._id.toString()) {
+    if (group?.ownerId !== req.user._id.toString()) {
       throw new HttpException('没有权限', EXCEPTION_CODE.NO_PERMISSION);
     }
-
     const ret = await this.surveyGroupService.update(value.groupId, {
       name: value.name,
     });
@@ -167,7 +166,7 @@ export class SurveyGroupController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const group = await this.surveyGroupService.findOne(groupId);
-    if (group.ownerId !== req.user._id.toString()) {
+    if (group?.ownerId !== req.user._id.toString()) {
       throw new HttpException('没有权限', EXCEPTION_CODE.NO_PERMISSION);
     }
     await this.surveyGroupService.remove(groupId);

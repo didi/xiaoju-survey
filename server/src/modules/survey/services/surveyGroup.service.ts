@@ -51,7 +51,7 @@ export class SurveyGroupService {
     });
   }
 
-  async update(id: string, updatedFields: Partial<SurveyGroup>) {
+  update(id: string, updatedFields: Partial<SurveyGroup>) {
     updatedFields.updatedAt = new Date();
     return this.surveyGroupRepository.update(id, updatedFields);
   }

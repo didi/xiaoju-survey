@@ -26,10 +26,11 @@
         />
         <p class="form-item-tip">备注仅自己可见</p>
       </el-form-item>
-      <el-form-item prop="groupId" label="问卷分组" v-if="menuType === MenuType.PersonalGroup">
+      <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup">
         <el-select
           v-model="form.groupId"
           placeholder="未分组"
+          clearable
         >
           <el-option
             v-for="item in groupAllList"
@@ -68,6 +69,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const workSpaceStore = useWorkSpaceStore()
+workSpaceStore.getGroupList()
 const { groupAllList, menuType, groupId, workSpaceId } = storeToRefs(workSpaceStore)
 
 const ruleForm = ref<any>(null)
@@ -80,7 +82,7 @@ const state = reactive({
   form: {
     title: '问卷调研',
     remark: '问卷调研',
-    groupId: groupId.value == GroupState.All || groupId.value == GroupState.Not ? '' : groupId.value
+    groupId: groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value
   }
 })
 const { rules, canSubmit, form } = toRefs(state)
@@ -108,7 +110,8 @@ const submit = () => {
     state.canSubmit = false
     const payload: any = {
       surveyType: selectType,
-      ...state.form
+      ...state.form,
+      groupId: groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value,
     }
     if (workSpaceId.value) {
       payload.workspaceId = workSpaceId.value

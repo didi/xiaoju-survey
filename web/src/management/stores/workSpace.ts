@@ -190,10 +190,6 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
           name: '未分组' ,
           total: unclassifiedSurveyTotal
         })
-        allList.unshift({
-          _id: '', 
-          name: '未分组' 
-        })
         groupList.value = list
         groupListTotal.value = total
         spaceMenus.value[0].children = group

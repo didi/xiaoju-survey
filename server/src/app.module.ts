@@ -60,18 +60,16 @@ import { Logger } from './logger';
         const authSource =
           (await configService.get<string>(
             'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',
-          )) || 'admin';
-        const database = await configService.get<string>(
-          'XIAOJU_SURVEY_MONGO_DB_NAME',
-        );
-        return {
+          )) || '';
+        const database =
+          (await configService.get<string>('XIAOJU_SURVEY_MONGO_DB_NAME')) ||
+          '';
+        const ret: Record<string, any> = {
           type: 'mongodb',
           connectTimeoutMS: 10000,
           socketTimeoutMS: 10000,
           url,
-          authSource,
           useNewUrlParser: true,
-          database,
           entities: [
             Captcha,
             User,
@@ -93,6 +91,13 @@ import { Logger } from './logger';
             Session,
           ],
         };
+        if (authSource) {
+          ret.authSource = authSource;
+        }
+        if (database) {
+          ret.database = database;
+        }
+        return ret;
       },
     }),
     AuthModule,

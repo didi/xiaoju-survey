@@ -71,18 +71,10 @@ export class AuthController {
       password: userInfo.password,
     });
 
-    const token = await this.authService.generateToken(
-      {
-        username: user.username,
-        _id: user._id.toString(),
-      },
-      {
-        secret: this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET'),
-        expiresIn: this.configService.get<string>(
-          'XIAOJU_SURVEY_JWT_EXPIRES_IN',
-        ),
-      },
-    );
+    const token = await this.authService.generateToken({
+      username: user.username,
+      _id: user._id.toString(),
+    });
     // 验证过的验证码要删掉，防止被别人保存重复调用
     this.captchaService.deleteCaptcha(userInfo.captchaId);
     return {
@@ -136,18 +128,10 @@ export class AuthController {
     }
     let token;
     try {
-      token = await this.authService.generateToken(
-        {
-          username: user.username,
-          _id: user._id.toString(),
-        },
-        {
-          secret: this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET'),
-          expiresIn: this.configService.get<string>(
-            'XIAOJU_SURVEY_JWT_EXPIRES_IN',
-          ),
-        },
-      );
+      token = await this.authService.generateToken({
+        username: user.username,
+        _id: user._id.toString(),
+      });
       // 验证过的验证码要删掉，防止被别人保存重复调用
       this.captchaService.deleteCaptcha(userInfo.captchaId);
     } catch (error) {

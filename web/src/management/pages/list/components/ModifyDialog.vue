@@ -25,6 +25,7 @@
         <el-select
           v-model="current.groupId"
           placeholder="未分组"
+          clearable
         >
           <el-option
             v-for="item in groupAllList"
@@ -54,8 +55,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
-
-import { MenuType } from '@/management/utils/workSpace'
+import { MenuType, GroupState } from '@/management/utils/workSpace'
 
 export default {
   name: 'ModifyDialog',
@@ -109,7 +109,8 @@ export default {
       try {
         const res = await updateSurvey({
           surveyId: this.questionInfo._id,
-          ...this.current
+          ...this.current,
+          groupId: this.current.groupId === GroupState.All || this.current.groupId === GroupState.Not ? '' : this.current.groupId,
         })
 
         if (res.code === CODE_MAP.SUCCESS) {

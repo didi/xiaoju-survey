@@ -25,6 +25,7 @@ import { Logger } from 'src/logger';
 import { ChannelService } from '../services/channel.service';
 import { SurveyResponseService } from 'src/modules/surveyResponse/services/surveyResponse.service';
 import { SurveyConfService } from 'src/modules/survey/services/surveyConf.service';
+import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 import { CreateChannelDto } from '../dto/createChannel.dto';
 import { GetChannelListDto } from '../dto/getChannelList.dto';
 import { FindChannelDto } from '../dto/findChannel.dto';
@@ -42,6 +43,7 @@ export class ChannelController {
     private readonly userService: UserService,
     private readonly surveyResponseService: SurveyResponseService,
     private readonly surveyConfService: SurveyConfService,
+    private readonly surveyMetaService: SurveyMetaService,
     private readonly logger: Logger,
   ) {}
 
@@ -184,12 +186,14 @@ export class ChannelController {
         const surveyId = updateRes.surveyId;
         const surveyConf =
           await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
-
+        const surveyMeta = 
+          await this.surveyMetaService.getSurveyById({ surveyId });
         return {
           code: 200,
           data: {
             channelInfo: { ...updateRes },
             surveyConf,
+            surveyMeta,
           },
         };
       } else {

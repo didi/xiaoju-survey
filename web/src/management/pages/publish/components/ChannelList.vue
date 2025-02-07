@@ -1,12 +1,12 @@
 <template>
   <el-table :data="channelList" style="width: 100%">
+    <el-table-column prop="_id" label="渠道ID" width="230" />
     <el-table-column prop="name" label="投放名称" width="180" >
       <template #default="scope">
         <div class="channel_name">
           <i :class="['iconfont channel_icon',CHANNEL_TYPE_ICON[scope.row.type as CHANNEL_TYPE] ] "></i>
           <span>{{ scope.row.name }}</span>
         </div>
-        <!-- <el-tag>{{ CHANNEL_TYPE_TEXT[scope.row.type as CHANNEL_TYPE] }}</el-tag> -->
       </template>
     </el-table-column>
     <el-table-column prop="status" label="状态" width="150" >

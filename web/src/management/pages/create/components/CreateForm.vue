@@ -111,7 +111,7 @@ const submit = () => {
     const payload: any = {
       surveyType: selectType,
       ...state.form,
-      groupId: groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value,
+      groupId: state.form.groupId === GroupState.All || state.form.groupId === GroupState.Not ? '' : state.form.groupId,
     }
     if (workSpaceId.value) {
       payload.workspaceId = workSpaceId.value

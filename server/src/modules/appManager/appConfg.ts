@@ -1,0 +1,1 @@
+export const appConfg = { appid: '2bAppid', secret: '2b123456' }

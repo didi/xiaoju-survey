@@ -161,12 +161,7 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  password: [
-    {
-      validator: debounce(passwordValidator, 500),
-      trigger: 'change'
-    }
-  ],
+  password: [{ required: true, validator: debounce(passwordValidator, 500), trigger: 'change' }],
   captcha: [
     {
       required: true,

@@ -34,21 +34,12 @@ const activeName = computed(() => {
 const beforeTabLeave = async () => {
   if (activeName.value === 'showLogic' && !showLogicEngine.value.rules.length) return true
   if (activeName.value === 'jumpLogic' && !jumpLogicEngine.value.rules.length) return true
-  const title = `提示`
-  const text = `切换到${activeName.value === 'showLogic' ? '跳转' : '显示'}设置后，将丢失当前${activeName.value === 'showLogic' ? '显示' : '跳转'}逻辑设置`
   try {
-    await ElMessageBox.confirm(text, title, {
+    await ElMessageBox.confirm('显示逻辑和跳转逻辑无法同时配置', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
-    if (activeName.value === 'showLogic') {
-      // 清空显示逻辑逻辑
-      showLogicEngine.value.clear()
-    } else {
-      // 清空跳转逻辑逻辑
-      jumpLogicEngine.value.clear()
-    }
     return true
   } catch (err) {
     return false

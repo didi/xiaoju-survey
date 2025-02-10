@@ -47,7 +47,9 @@ import SavePanel from '../modules/contentModule/SavePanel.vue'
 import PublishPanel from '../modules/contentModule/PublishPanel.vue'
 import CooperationPanel from '../modules/contentModule/CooperationPanel.vue'
 import { seizeSession } from '@/management/api/survey'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const editStore = useEditStore()
 const { schema, changeSchema } = editStore
 const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
@@ -55,10 +57,26 @@ const title = computed(() => (editStore.schema?.metaData as any)?.title || '')
 const { showLogicEngine, jumpLogicEngine } = storeToRefs(editStore)
 // 校验 - 逻辑
 const updateLogicConf = () => {
+  const { active } = route.query
   let res = {
     validated: true,
     message: ''
   }
+
+  // 如果显示逻辑和跳转逻辑都设置了需要删除一个后才能保存成功
+  if (
+    (showLogicEngine.value?.rules?.length && active === 'jumpLogic') ||
+    (jumpLogicEngine.value.rules?.length && active === 'showLogic')
+  ) {
+    return {
+      validated: false,
+      message:
+        active === 'jumpLogic'
+          ? '存在显示逻辑配置，删除后才能设置跳转逻辑'
+          : '存在跳转逻辑配置，删除后才能设置显示逻辑'
+    }
+  }
+
   if (
     showLogicEngine.value &&
     showLogicEngine.value.rules &&

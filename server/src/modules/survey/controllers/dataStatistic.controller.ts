@@ -84,6 +84,9 @@ export class DataStatisticController {
 
   @Get('/aggregationStatis')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE])
   @UseGuards(Authentication)
   async aggregationStatis(@Query() queryInfo: AggregationStatisDto) {
     // 聚合统计

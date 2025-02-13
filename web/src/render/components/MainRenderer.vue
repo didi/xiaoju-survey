@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import MaterialGroup from './MaterialGroup.vue'
@@ -21,12 +21,32 @@ import { useSurveyStore } from '../stores/survey'
 
 const surveyStore = useSurveyStore()
 const questionStore = useQuestionStore()
+const { renderData, needHideFields, showLogicHideFields, isFinallyPage } = storeToRefs(questionStore)
 
-const renderData = computed(() => questionStore.renderData)
 
 const { rules, formValues } = storeToRefs(surveyStore)
 
 const handleChangeData = (data: any) => {
   surveyStore.changeData(data)
 }
+
+// 在适当的地方调用 updatePageIndex 方法
+watch(() => renderData.value, (value: any) => {
+  if(value.length ){
+  const displaylist = value[0].filter((item: any) => !needHideFields.value.includes(item.field))
+  if(displaylist.length === 0 && !isFinallyPage.value){
+    questionStore.addPageIndex()
+  }
+  }
+})
+watch(() => { return needHideFields.value.concat(showLogicHideFields.value) }, (value: any)=> {
+  if(renderData.value.length ){
+    const displaylist = renderData.value[0].filter((item: any) => !value.includes(item.field))
+    if(displaylist.length === 0 && !isFinallyPage.value){
+      questionStore.addPageIndex()
+    }
+  }
+}, {
+  deep: true
+})
 </script>

@@ -100,7 +100,7 @@ const triggerAutoSave = () => {
       nextTick(async () => {
         try {
           const res: any = await doSave()
-          if (res !== undefined)  {
+          if (res !== undefined) {
             if (res.code === 200) {
               autoSaveStatus.value = 'succeed'
             } else {
@@ -125,7 +125,11 @@ const triggerAutoSave = () => {
 const handleSave = async () => {
   const res: any = await doSave()
   if (res !== undefined && res.code === 200) {
-    ElMessage.success('保存成功')
+    isShowAutoSave.value = true
+    autoSaveStatus.value = 'succeed'
+    setTimeout(() => {
+      isShowAutoSave.value = false
+    }, 300)
   }
 }
 

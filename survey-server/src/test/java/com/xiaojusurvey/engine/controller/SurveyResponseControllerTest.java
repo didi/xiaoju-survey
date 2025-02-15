@@ -9,11 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SurveyResponseControllerTest {
 
+    private static final Logger log = LoggerFactory.getLogger(SurveyResponseControllerTest.class);
     @Mock
     private SurveyResponseService surveyResponseService;
 

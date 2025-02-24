@@ -144,7 +144,7 @@ export const curStatus = {
   editing: {
     label: '修改中',
     value: 'editing'
-  },
+  }
 }
 
 // 子状态
@@ -156,12 +156,12 @@ export const subStatus = {
 }
 
 export const statusMaps = {
-  ...Object.fromEntries(Object.keys(curStatus).map(key => ([key, curStatus[key].label]))),
-  ...Object.fromEntries(Object.keys(subStatus).map(key => ([key, subStatus[key].label])))
+  ...Object.fromEntries(Object.keys(curStatus).map((key) => [key, curStatus[key].label])),
+  ...Object.fromEntries(Object.keys(subStatus).map((key) => [key, subStatus[key].label]))
 }
 
-export const curStatusKey = 'curStatus.status';
-export const subStatusKey = 'subStatus.status';
+export const curStatusKey = 'curStatus.status'
+export const subStatusKey = 'subStatus.status'
 
 // 问卷类型
 export const surveyTypeSelect = {
@@ -213,11 +213,11 @@ export const curStatusSelect = {
 
 export const selectOptionsDict = Object.freeze({
   surveyType: surveyTypeSelect,
-  status: curStatusSelect,
+  status: curStatusSelect
 })
 
 export const buttonOptionsDict = Object.freeze({
-  'updatedAt': {
+  updatedAt: {
     label: '更新时间',
     icons: [
       {

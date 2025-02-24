@@ -114,5 +114,5 @@ export default {
     relyFunc: (data) => {
       return data.whitelistType == 'MEMBER'
     }
-  },
+  }
 }

@@ -57,8 +57,8 @@ export interface ICollaborator {
 }
 
 export type GroupItem = {
-  _id: string,
-  name: string,
+  _id: string
+  name: string
   createdAt: string
   updatedAt?: string
   ownerId: string
@@ -67,7 +67,7 @@ export type GroupItem = {
 
 export enum MenuType {
   PersonalGroup = 'personalGroup',
-  SpaceGroup = 'spaceGroup',
+  SpaceGroup = 'spaceGroup'
 }
 
 export enum UserRole {

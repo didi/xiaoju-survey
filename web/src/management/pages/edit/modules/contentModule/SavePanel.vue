@@ -100,7 +100,7 @@ const triggerAutoSave = () => {
       nextTick(async () => {
         try {
           const res: any = await doSave()
-          if (res !== undefined)  {
+          if (res !== undefined) {
             if (res.code === 200) {
               autoSaveStatus.value = 'succeed'
             } else {

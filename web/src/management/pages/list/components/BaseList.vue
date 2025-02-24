@@ -42,7 +42,7 @@
         @row-click="onRowClick"
       >
         <el-table-column column-key="space" width="20" />
-       
+
         <el-table-column
           v-for="field in fieldList"
           :key="field.key"
@@ -121,7 +121,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
-import { deleteSurvey,pausingSurvey } from '@/management/api/survey'
+import { deleteSurvey, pausingSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
@@ -312,10 +312,13 @@ const getToolConfig = (row) => {
     funcList = permissionsBtn
   }
   const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if (row.curStatus.status === curStatus.new.value || row.subStatus.status === subStatus.pausing.value) {
+  if (
+    row.curStatus.status === curStatus.new.value ||
+    row.subStatus.status === subStatus.pausing.value
+  ) {
     // 去掉暂停按钮
-    order.splice(3, 1) 
-    funcList = funcList.filter(item => item.key !== subStatus.pausing.value)
+    order.splice(3, 1)
+    funcList = funcList.filter((item) => item.key !== subStatus.pausing.value)
   }
   const result = funcList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
 
@@ -351,7 +354,7 @@ const handleClick = (key, data) => {
     case 'cooper':
       onCooper(data)
       return
-      case 'pausing':
+    case 'pausing':
       onPausing(data)
       return
     default:
@@ -451,12 +454,12 @@ const onCooperClose = () => {
   cooperModify.value = false
 }
 const resetCurrentPage = () => {
-  currentPage.value = 1;
-  onRefresh();
+  currentPage.value = 1
+  onRefresh()
 }
 
 defineExpose({
-  resetCurrentPage,
+  resetCurrentPage
 })
 </script>
 

@@ -41,11 +41,10 @@ export default defineComponent({
     maxNum: {
       type: [Number, String],
       default: 1
-    },
+    }
   },
   emits: ['change'],
   setup(props, { emit }) {
-    
     const disableState = computed(() => {
       if (!props.maxNum) {
         return false

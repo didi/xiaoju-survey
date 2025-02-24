@@ -15,8 +15,7 @@
               : ''
           ]"
         >
-          <a :href="href" @click="navigate"
-            >
+          <a :href="href" @click="navigate">
             <i class="iconfont" :class="[route.icon]"></i>
             <span>{{ route.text }}</span></a
           >

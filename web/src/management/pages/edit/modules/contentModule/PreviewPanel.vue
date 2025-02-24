@@ -30,9 +30,7 @@
             <i-ep-monitor />
           </div>
         </div>
-        <div
-          :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`"
-        >
+        <div :class="`preview-panel ${previewTab == 1 ? 'phone' : 'pc'}`">
           <div class="wrapper">
             <div class="tips-wrapper">
               <i-ep-WarningFilled /> <span>用户预览模式，数据不保存！</span>

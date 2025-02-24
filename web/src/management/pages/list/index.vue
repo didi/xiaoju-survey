@@ -27,7 +27,12 @@
               <i class="iconfont icon-chuangjian"></i>
               <span>创建分组</span>
             </el-button>
-            <el-button type="default" class="btn" @click="onSetGroup" v-if="workSpaceId && menuType === MenuType.SpaceGroup">
+            <el-button
+              type="default"
+              class="btn"
+              @click="onSetGroup"
+              v-if="workSpaceId && menuType === MenuType.SpaceGroup"
+            >
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
@@ -95,7 +100,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TopNav from '@/management/components/TopNav.vue'
-import {  MenuType } from '@/management/utils/workSpace'
+import { MenuType } from '@/management/utils/workSpace'
 
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
@@ -105,26 +110,34 @@ const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
-const { spaceMenus, workSpaceId, groupId, menuType, workSpaceList, workSpaceListTotal, groupList, groupListTotal } =
-  storeToRefs(workSpaceStore)
+const {
+  spaceMenus,
+  workSpaceId,
+  groupId,
+  menuType,
+  workSpaceList,
+  workSpaceListTotal,
+  groupList,
+  groupListTotal
+} = storeToRefs(workSpaceStore)
 const router = useRouter()
 
 const tableTitle = computed(() => {
-  if(menuType.value === MenuType.PersonalGroup && !groupId.value) {
+  if (menuType.value === MenuType.PersonalGroup && !groupId.value) {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
   } else {
-    return currentTeamSpace.value?.name || '问卷列表';
+    return currentTeamSpace.value?.name || '问卷列表'
   }
 })
 
 interface BaseListInstance {
-  resetCurrentPage: () => void;
+  resetCurrentPage: () => void
 }
 
 const activeValue = ref('')
-const listRef = ref<BaseListInstance | null>(null);
+const listRef = ref<BaseListInstance | null>(null)
 
 const loading = ref(false)
 
@@ -150,7 +163,7 @@ const handleSpaceSelect = async (id: string) => {
   if (activeValue.value === id) {
     return void 0
   }
-  activeValue.value = id;
+  activeValue.value = id
   switch (id) {
     case MenuType.PersonalGroup:
       workSpaceStore.changeMenuType(MenuType.PersonalGroup)
@@ -163,17 +176,19 @@ const handleSpaceSelect = async (id: string) => {
       await fetchSpaceList()
       break
     default: {
-      const parentMenu = spaceMenus.value.find((parent: any) => parent.children.find((children: any) => children.id.toString() === id))
-      if(parentMenu != undefined) {
+      const parentMenu = spaceMenus.value.find((parent: any) =>
+        parent.children.find((children: any) => children.id.toString() === id)
+      )
+      if (parentMenu != undefined) {
         workSpaceStore.changeMenuType(parentMenu.id)
-        if(parentMenu.id === MenuType.PersonalGroup) {
+        if (parentMenu.id === MenuType.PersonalGroup) {
           workSpaceStore.changeGroup(id)
         } else if (parentMenu.id === MenuType.SpaceGroup) {
           workSpaceStore.changeWorkSpace(id)
         }
       }
-      listRef?.value?.resetCurrentPage();
-      break;
+      listRef?.value?.resetCurrentPage()
+      break
     }
   }
 }

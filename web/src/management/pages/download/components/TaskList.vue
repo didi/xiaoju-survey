@@ -93,7 +93,7 @@ const statusTextMap: Record<string, string> = {
   waiting: '排队中',
   computing: '计算中',
   succeed: '已完成',
-  failed: '导出失败',
+  failed: '导出失败'
 }
 
 let currentDelRow: Record<string, any> = {}

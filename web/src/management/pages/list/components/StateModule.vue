@@ -15,8 +15,8 @@ const props = defineProps({
   }
 })
 const status = computed(() => {
-  const {curStatus,subStatus } = props.value;
-  return subStatus?.status || curStatus?.status;
+  const { curStatus, subStatus } = props.value
+  return subStatus?.status || curStatus?.status
 })
 </script>
 
@@ -30,10 +30,10 @@ const status = computed(() => {
       background: $normal-color;
     }
   }
-  &-pausing{
-    color:  #EB505C;
+  &-pausing {
+    color: #eb505c;
     .list-state-badge {
-      background: #EB505C;
+      background: #eb505c;
     }
   }
   &-published {

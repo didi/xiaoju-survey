@@ -63,10 +63,10 @@ const loadData = (res: any, surveyPath: string) => {
   }
 }
 
-function isObjectId(id: string) {  
-  const objectIdRegex = /^[0-9a-fA-F]{24}$/;  
-  return objectIdRegex.test(id);  
-}  
+function isObjectId(id: string) {
+  const objectIdRegex = /^[0-9a-fA-F]{24}$/
+  return objectIdRegex.test(id)
+}
 
 const getDetail = async (surveyPath: string) => {
   const alert = useCommandComponent(AlertDialog)

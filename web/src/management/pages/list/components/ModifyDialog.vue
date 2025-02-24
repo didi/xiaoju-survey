@@ -21,12 +21,12 @@
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
-      <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup && !current.isCollaborated">
-        <el-select
-          v-model="current.groupId"
-          placeholder="未分组"
-          clearable
-        >
+      <el-form-item
+        prop="groupId"
+        label="分组"
+        v-if="menuType === MenuType.PersonalGroup && !current.isCollaborated"
+      >
+        <el-select v-model="current.groupId" placeholder="未分组" clearable>
           <el-option
             v-for="item in groupAllList"
             :key="item._id"
@@ -65,7 +65,7 @@ export default {
     width: String,
     visible: Boolean,
     groupAllList: Array,
-    menuType: String,
+    menuType: String
   },
   data() {
     return {
@@ -110,7 +110,10 @@ export default {
         const res = await updateSurvey({
           surveyId: this.questionInfo._id,
           ...this.current,
-          groupId: this.current.groupId === GroupState.All || this.current.groupId === GroupState.Not ? '' : this.current.groupId,
+          groupId:
+            this.current.groupId === GroupState.All || this.current.groupId === GroupState.Not
+              ? ''
+              : this.current.groupId
         })
 
         if (res.code === CODE_MAP.SUCCESS) {

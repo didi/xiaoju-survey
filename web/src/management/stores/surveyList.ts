@@ -6,18 +6,12 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { CODE_MAP } from '@/management/api/base'
 import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
-import { GroupState } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from './workSpace'
 
-import {
-  curStatus,
-  subStatus,
-  curStatusKey,
-  subStatusKey
-} from '@/management/config/listConfig'
+import { curStatus, subStatus, curStatusKey, subStatusKey } from '@/management/config/listConfig'
 
-const verdictStatus = (status:never) => {
-  if(curStatus[status]) return curStatusKey
+const verdictStatus = (status: never) => {
+  if (curStatus[status]) return curStatusKey
   if (subStatus[status]) return subStatusKey
   return curStatusKey
 }
@@ -26,11 +20,11 @@ function useSearchSurvey() {
   const searchVal = ref('')
   const selectValueMap = ref<Record<string, any>>({
     surveyType: '',
-    'status': '',
+    status: ''
   })
 
   const buttonValueMap = ref<Record<string, any>>({
-    'updatedAt': '',
+    updatedAt: '',
     createdAt: -1
   })
 
@@ -50,7 +44,7 @@ function useSearchSurvey() {
         comparator: '',
         condition: [
           {
-            field: verdictStatus( selectValueMap.value['status'] as never),
+            field: verdictStatus(selectValueMap.value['status'] as never),
             value: selectValueMap.value['status']
           }
         ]
@@ -80,13 +74,13 @@ function useSearchSurvey() {
   function resetSelectValueMap() {
     selectValueMap.value = {
       surveyType: '',
-     'status': ''
+      status: ''
     }
   }
 
   function resetButtonValueMap() {
     buttonValueMap.value = {
-      'updatedAt': '',
+      updatedAt: '',
       createdAt: -1
     }
   }

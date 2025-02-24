@@ -27,11 +27,7 @@
         <p class="form-item-tip">备注仅自己可见</p>
       </el-form-item>
       <el-form-item prop="groupId" label="分组" v-if="menuType === MenuType.PersonalGroup">
-        <el-select
-          v-model="form.groupId"
-          placeholder="未分组"
-          clearable
-        >
+        <el-select v-model="form.groupId" placeholder="未分组" clearable>
           <el-option
             v-for="item in groupAllList"
             :key="item?._id"
@@ -82,7 +78,8 @@ const state = reactive({
   form: {
     title: '问卷调研',
     remark: '问卷调研',
-    groupId: groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value
+    groupId:
+      groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value
   }
 })
 const { rules, canSubmit, form } = toRefs(state)
@@ -111,7 +108,10 @@ const submit = () => {
     const payload: any = {
       surveyType: selectType,
       ...state.form,
-      groupId: state.form.groupId === GroupState.All || state.form.groupId === GroupState.Not ? '' : state.form.groupId,
+      groupId:
+        state.form.groupId === GroupState.All || state.form.groupId === GroupState.Not
+          ? ''
+          : state.form.groupId
     }
     if (workSpaceId.value) {
       payload.workspaceId = workSpaceId.value

@@ -8,7 +8,11 @@
   >
     <template v-for="(menu, index) in props.menus" :key="menu.id">
       <el-menu-item
-        :class="[index === 0 ? 'bottom' : '', index > 2 ? 'sub-item' : 'main-item', activeValue == menu.id ? 'check-item' : '' ]"
+        :class="[
+          index === 0 ? 'bottom' : '',
+          index > 2 ? 'sub-item' : 'main-item',
+          activeValue == menu.id ? 'check-item' : ''
+        ]"
         :index="menu.id.toString()"
         v-if="!menu.children?.length"
       >
@@ -19,18 +23,28 @@
           </div>
         </template>
       </el-menu-item>
-      <el-sub-menu v-else :index="menu.id.toString()" :class="[ activeValue == menu.id ? 'check-item' : '' ]" default-opened>
+      <el-sub-menu
+        v-else
+        :index="menu.id.toString()"
+        :class="[activeValue == menu.id ? 'check-item' : '']"
+        default-opened
+      >
         <template #title>
           <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
-              <i :class="['iconfont', menu.icon]"></i>
-              <span>{{ menu.name }}</span>
-            </div>
+            <i :class="['iconfont', menu.icon]"></i>
+            <span>{{ menu.name }}</span>
+          </div>
         </template>
-        <el-menu-item v-for="item in menu.children" :key="item.id" :index="item.id.toString()"  :class="[ activeValue == item.id ? 'check-item' : '' ]">
+        <el-menu-item
+          v-for="item in menu.children"
+          :key="item.id"
+          :index="item.id.toString()"
+          :class="[activeValue == item.id ? 'check-item' : '']"
+        >
           <div class="title-box">
             <p class="title-text">{{ item.name }}</p>
             <p class="title-total">{{ item.total }}</p>
-         </div>
+          </div>
         </el-menu-item>
       </el-sub-menu>
     </template>
@@ -43,8 +57,8 @@ import { MenuType } from '@/management/utils/workSpace'
 const menuRef = ref()
 const props = withDefaults(
   defineProps<{
-    menus: Array<MenuItem>,
-      activeValue: string
+    menus: Array<MenuItem>
+    activeValue: string
   }>(),
   {
     menus: () => [],
@@ -60,17 +74,17 @@ const handleMenu = (id: string) => {
 </script>
 
 <style lang="scss" scoped>
-.el-sub-menu {  
-    :deep(.el-sub-menu__icon-arrow) {  
-        transform: rotate(-90deg) !important;  
-    }  
+.el-sub-menu {
+  :deep(.el-sub-menu__icon-arrow) {
+    transform: rotate(-90deg) !important;
+  }
 
-    &.is-opened {  
-        > :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {  
-            transform: rotate(0deg) !important;  
-        }  
+  &.is-opened {
+    > :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
+      transform: rotate(0deg) !important;
     }
-}  
+  }
+}
 .el-menu-vertical {
   border: none;
   width: 200px;
@@ -117,25 +131,24 @@ const handleMenu = (id: string) => {
     }
 
     .title-box {
-      width: 100%; 
-      display: flex; 
+      width: 100%;
+      display: flex;
       justify-content: space-between;
     }
 
     .title-text {
       width: 80%;
       white-space: nowrap;
-      overflow: hidden; 
+      overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .title-total {
       font-size: 14px;
-      color: #92949D;
+      color: #92949d;
       text-align: right;
       font-weight: 400;
     }
-
   }
   :deep(.el-menu-item-group) {
     > ul {
@@ -159,6 +172,6 @@ const handleMenu = (id: string) => {
   color: #faa600 !important;
 }
 .check-item {
-    background: #fef6e6 100% !important
-  }
+  background: #fef6e6 100% !important;
+}
 </style>

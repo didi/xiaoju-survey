@@ -72,7 +72,7 @@ export default defineComponent({
       isFinallyPage,
       pageEditOne
     }
-  },
+  }
 })
 </script>
 

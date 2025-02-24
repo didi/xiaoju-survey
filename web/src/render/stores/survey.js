@@ -146,7 +146,6 @@ export const useSurveyStore = defineStore('survey', () => {
 
     // 获取已投票数据
     questionStore.initVoteData()
-
   }
 
   const initSurvey = (option) => {

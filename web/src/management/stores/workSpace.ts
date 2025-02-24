@@ -18,8 +18,13 @@ import {
 } from '@/management/api/space'
 
 import { GroupState, MenuType } from '@/management/utils/workSpace'
-import { type SpaceDetail, type SpaceItem, type IWorkspace, type IGroup, type GroupItem, } from '@/management/utils/workSpace'
-
+import {
+  type SpaceDetail,
+  type SpaceItem,
+  type IWorkspace,
+  type IGroup,
+  type GroupItem
+} from '@/management/utils/workSpace'
 
 import { useSurveyListStore } from './surveyList'
 
@@ -141,7 +146,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   function setSpaceDetail(data: null | SpaceDetail) {
     spaceDetail.value = data
   }
-  
+
   // 分组
   const groupList = ref<GroupItem[]>([])
   const groupAllList = ref<IGroup[]>([])
@@ -178,18 +183,21 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
           return {
             id: item._id,
             name: item.name,
-            total: item.surveyTotal,
+            total: item.surveyTotal
           }
         })
-        group.unshift({
-          id: GroupState.All, 
-          name: '全部' ,
-          total: allSurveyTotal
-        }, {
-          id: GroupState.Not, 
-          name: '未分组' ,
-          total: unclassifiedSurveyTotal
-        })
+        group.unshift(
+          {
+            id: GroupState.All,
+            name: '全部',
+            total: allSurveyTotal
+          },
+          {
+            id: GroupState.Not,
+            name: '未分组',
+            total: unclassifiedSurveyTotal
+          }
+        )
         groupList.value = list
         groupListTotal.value = total
         spaceMenus.value[0].children = group
@@ -205,7 +213,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   function getGroupDetail(id: string) {
     try {
       const data = groupList.value.find((item: GroupItem) => item._id === id)
-      if(data != undefined) {
+      if (data != undefined) {
         groupDetail.value = data
       } else {
         ElMessage.error('groupDetail 未找到分组')

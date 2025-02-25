@@ -71,7 +71,11 @@ const onQuestionType = ({ type }) => {
   addQuestion({ question: newQuestion, index: newQuestionIndex.value });
   setTimeout(() => {
     const { endIndex } = getSorter();
-    setCurrentEditOne(endIndex - 1);
+    if(endIndex === newQuestionIndex.value) {
+      setCurrentEditOne(endIndex - 1);
+    } else {
+      setCurrentEditOne(newQuestionIndex.value);
+    }
   });
 };
 

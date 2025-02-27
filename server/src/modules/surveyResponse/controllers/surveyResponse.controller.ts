@@ -50,8 +50,35 @@ export class SurveyResponseController {
   @Post('/createResponse')
   @HttpCode(200)
   async createResponse(@Body() reqBody) {
+    const value = await this.validateParams(reqBody);
+    const { encryptType, sign, data, sessionId } = value;
+    
     // 检查签名
-    checkSign(reqBody);
+    if(sign) checkSign(reqBody);
+    
+
+    // 解密数据
+    let formValues: Record<string, any> = {};
+    if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
+      formValues =  this.getDecryptedData(data, sessionId);
+    } else {
+      formValues = JSON.parse(decodeURIComponent(data));
+    }
+    this.createResponseProcess(value, formValues);
+  }
+  // @Post('/createResponseWithOpen')
+  // @HttpCode(200)
+  // async createResponseWithOpen(@Body() reqBody) {
+  //   const value = await this.validateParams(reqBody);
+  //   const { encryptType, data, sessionId } = value;
+
+  //   // 解密数据
+  //   let formValues: Record<string, any> = {};
+
+  //   formValues = JSON.parse(decodeURIComponent(data));
+  //   this.createResponseProcess(value, formValues);
+  // }
+  private async validateParams(reqBody) { 
     // 校验参数
     const { value, error } = Joi.object({
       surveyPath: Joi.string().required(),
@@ -68,7 +95,33 @@ export class SurveyResponseController {
       this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
+    return value;
+  }
+  private async getDecryptedData (data, sessionId) {
+    const sessionData =
+        await this.clientEncryptService.getEncryptInfoById(sessionId);
+      try {
+        const privateKeyObject = forge.pki.privateKeyFromPem(
+          sessionData.data.privateKey,
+        );
+        let concatStr = '';
+        for (const item of data) {
+          concatStr += privateKeyObject.decrypt(
+            forge.util.decode64(item),
+            'RSA-OAEP',
+          );
+        }
 
+        return JSON.parse(decodeURIComponent(concatStr));
+      } catch (error) {
+        throw new HttpException(
+          '数据解密失败',
+          EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
+        );
+      }
+  }
+  async createResponseProcess(value, formValues) {
+    
     const {
       surveyPath,
       encryptType,
@@ -188,33 +241,6 @@ export class SurveyResponseController {
       }
     }
 
-    // 解密数据
-    let decryptedData: Record<string, any> = {};
-    if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
-      const sessionData =
-        await this.clientEncryptService.getEncryptInfoById(sessionId);
-      try {
-        const privateKeyObject = forge.pki.privateKeyFromPem(
-          sessionData.data.privateKey,
-        );
-        let concatStr = '';
-        for (const item of data) {
-          concatStr += privateKeyObject.decrypt(
-            forge.util.decode64(item),
-            'RSA-OAEP',
-          );
-        }
-
-        decryptedData = JSON.parse(decodeURIComponent(concatStr));
-      } catch (error) {
-        throw new HttpException(
-          '数据解密失败',
-          EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
-        );
-      }
-    } else {
-      decryptedData = JSON.parse(decodeURIComponent(data));
-    }
 
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
@@ -224,7 +250,7 @@ export class SurveyResponseController {
           optionQuestionType.includes(questionItem.type) &&
           Array.isArray(questionItem.options) &&
           questionItem.options.length > 0 &&
-          decryptedData[questionItem.field]
+          formValues[questionItem.field]
         );
       })
       .reduce((pre, cur) => {
@@ -242,8 +268,8 @@ export class SurveyResponseController {
     // this.logger.info(`lockKey: ${lockKey}`);
     try {
       const successParams = [];
-      for (const field in decryptedData) {
-        const value = decryptedData[field];
+      for (const field in formValues) {
+        const value = formValues[field];
         const values = Array.isArray(value) ? value : [value];
         if (field in optionTextAndId) {
           const optionCountData =
@@ -290,7 +316,7 @@ export class SurveyResponseController {
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse({
         surveyPath: value.surveyPath,
-        data: decryptedData,
+        data: formValues,
         clientTime,
         diffTime,
         surveyId: responseSchema.pageId,

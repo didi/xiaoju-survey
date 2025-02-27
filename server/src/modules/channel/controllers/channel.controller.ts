@@ -15,7 +15,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import moment from 'moment';
 
 import { Authentication } from 'src/guards/authentication.guard';
-
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
@@ -173,6 +173,7 @@ export class ChannelController {
 
   @Get('/find')
   @HttpCode(200)
+  @UseGuards(OpenAuthGuard)
   async find(
     @Request() req,
     @Query() queryInfo: FindChannelDto

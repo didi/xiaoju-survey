@@ -47,6 +47,7 @@ import { PluginManager } from './securityPlugin/pluginManager';
 import { Logger } from './logger';
 import { Channel } from './models/channel.entity';
 import { ChannelModule } from './modules/channel/channel.module';
+import { AppManagerModule } from './modules/appManager/appManager.module';
 
 @Module({
   imports: [
@@ -115,6 +116,7 @@ import { ChannelModule } from './modules/channel/channel.module';
     WorkspaceModule,
     UpgradeModule,
     ChannelModule,
+    AppManagerModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { verify as jwtVerify, sign as jwtSign } from 'jsonwebtoken';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { appConfg } from '../appConfg';
+import { APPList } from '../appConfg'
 
 
 @Injectable()
@@ -33,7 +33,8 @@ export class AppManagerService {
     }
     
     if(appToken) {
-      return Boolean(jwtVerify(appToken, appConfg.secret));
+      const appSecret = APPList.find(item => item.appId === appId)?.appSecret;
+      return Boolean(jwtVerify(appToken, appSecret));
     } else { 
       throw new HttpException(
         'APPID未在服务中注册',

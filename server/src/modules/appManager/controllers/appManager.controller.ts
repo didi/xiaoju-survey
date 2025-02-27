@@ -1,27 +1,45 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AppManagerService } from '../services/appManager.service';
-import { appConfg } from '../appConfg'
+import { APPList } from '../appConfg'
+import { CreateTokenDto } from '../dto/createToken.dto';
+import { VerifyTokenDto } from '../dto/verifyToken.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('appManager')
+@ApiTags('appManager')
+@Controller('/api/appManager')
 export class AppManagerController {
   constructor(private readonly appManager: AppManagerService) {}
 
   // 生成 appToken
-  @Post('get-token')
-  getAppToken() {
-    return this.appManager.generateToken(appConfg.appid, appConfg.secret);
+  @Post('getToken')
+  getAppToken( 
+    @Body() body: CreateTokenDto
+  ) {
+    const { appId } = body;
+    if (!appId) {
+      throw new Error('Missing required fields');
+    }
+    const appSecret = APPList.find(item => item.appId === appId)?.appSecret;
+    if(!appSecret) {
+      throw new Error('Invalid appId');
+    }
+    return this.appManager.generateToken(appId, appSecret);
   }
 
   // 认证请求
   @Post('verify')
   verifySignature(
-    @Body('appId') appId: string,
-    @Body('appToken') appToken: string,
+    @Body() body: VerifyTokenDto
   ) {
+    const { appId, appToken } = body
     if (!appId || !appToken) {
-      return { success: false, error: 'Missing required fields' };
+      throw new Error('Missing required fields');
     }
 
-    return this.appManager.checkAppManager(appId, appToken);
+    if(this.appManager.checkAppManager(appId, appToken)) {
+      return { code: 200, success: true };
+    } else {
+      throw new Error('Invalid appId or appToken');
+    }
   }
 }

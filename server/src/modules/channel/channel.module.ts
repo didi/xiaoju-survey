@@ -12,6 +12,7 @@ import { ChannelController } from './controllers/channel.controller';
 
 import { AuthModule } from '../auth/auth.module';
 import { Authentication } from 'src/guards/authentication.guard';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 import { LoggerProvider } from 'src/logger/logger.provider';
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 
@@ -40,6 +41,7 @@ import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
     SurveyResponseService,
     LoggerProvider,
     Authentication,
+    OpenAuthGuard,
     PluginManagerProvider,
     WorkspaceMemberService,
     CollaboratorService,

@@ -66,18 +66,18 @@ export class SurveyResponseController {
     }
     this.createResponseProcess(value, formValues);
   }
-  // @Post('/createResponseWithOpen')
-  // @HttpCode(200)
-  // async createResponseWithOpen(@Body() reqBody) {
-  //   const value = await this.validateParams(reqBody);
-  //   const { encryptType, data, sessionId } = value;
+  @Post('/createResponseWithOpen')
+  @HttpCode(200)
+  async createResponseWithOpen(@Body() reqBody) {
+    const value = await this.validateParams(reqBody);
+    const { encryptType, data, sessionId } = value;
 
-  //   // 解密数据
-  //   let formValues: Record<string, any> = {};
+    // 解密数据
+    let formValues: Record<string, any> = {};
 
-  //   formValues = JSON.parse(decodeURIComponent(data));
-  //   this.createResponseProcess(value, formValues);
-  // }
+    formValues = JSON.parse(decodeURIComponent(data));
+    this.createResponseProcess(value, formValues);
+  }
   private async validateParams(reqBody) { 
     // 校验参数
     const { value, error } = Joi.object({

@@ -178,8 +178,8 @@ export class ChannelController {
     @Request() req,
     @Query() queryInfo: FindChannelDto
   ) {
-    const id = queryInfo.channelId;
     try {
+      const id = queryInfo.channelId;
       const updateRes = await this.channelService.findOneById(id);
       this.logger.info(`channelInfo: ${JSON.stringify(updateRes)}`);
 

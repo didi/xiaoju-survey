@@ -9,5 +9,8 @@ import { OpenAuthGuard } from 'src/guards/openAuth.guard';
     AppManagerService,
     OpenAuthGuard
   ],
+  exports: [
+    AppManagerService
+  ]
 })
 export class AppManagerModule {}

@@ -28,7 +28,7 @@ export class AppManagerController {
 
   // 认证请求
   @Post('verify')
-  verifySignature(
+  async verifySignature(
     @Body() body: VerifyTokenDto
   ) {
     const { appId, appToken } = body
@@ -36,10 +36,11 @@ export class AppManagerController {
       throw new Error('Missing required fields');
     }
 
-    if(this.appManager.checkAppManager(appId, appToken)) {
+    try {
+      await this.appManager.checkAppManager(appId, appToken)
       return { code: 200, success: true };
-    } else {
-      throw new Error('Invalid appId or appToken');
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

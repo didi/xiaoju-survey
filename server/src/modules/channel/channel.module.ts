@@ -23,7 +23,7 @@ import { SurveyConfService } from 'src/modules/survey/services/surveyConf.servic
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
-
+import { AppManagerService } from 'src/modules/appManager/services/appManager.service'; 
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { SurveyModule } from 'src/modules/survey/survey.module';
 import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
@@ -48,6 +48,7 @@ import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
     SurveyMetaService,
     SurveyConfService,
     SurveyModule,
+    AppManagerService,
   ],
   exports: [ChannelService],
 })

@@ -1,33 +1,31 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { APPList } from '../modules/appManager/appConfg';
 import { AppManagerService } from '../modules/appManager/services/appManager.service';
-import { Logger } from '../logger';
 
 @Injectable()
 export class OpenAuthGuard implements CanActivate {
   constructor(
     private readonly appManagerService: AppManagerService,
-    private readonly logger: Logger
   ) {}
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { headers } = request;
 
     const appId = headers['x-app-id'];
-    const appToken = headers['x-app-oken'];
-    this.logger.info('OpenAuthGuard checking:');
+    const appToken = headers['x-app-token'];
 
     if (!appId) {
       throw new Error('Missing required parameters');
     }
 
-    if (!APPList.includes(appId)) {
-      throw new Error('Invalid appid');
+    if (!APPList.map(i => i.appId).includes(appId)) {
+      throw new Error('Invalid appId');
     }
-    if(this.appManagerService.checkAppManager(appId, appToken)) {
+    try {
+      await this.appManagerService.checkAppManager(appId, appToken)
       return true
-    } else {
-      throw new Error('Invalid appToken')
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

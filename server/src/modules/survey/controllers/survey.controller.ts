@@ -78,7 +78,8 @@ export class SurveyController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    const { title, remark, createMethod, createFrom, groupId } = value;
+    const { title, remark, createMethod, createFrom, groupId, questionList } =
+      value;
 
     let surveyType = '',
       workspaceId = null;
@@ -107,6 +108,7 @@ export class SurveyController {
       surveyType: surveyType,
       createMethod: value.createMethod,
       createFrom: value.createFrom,
+      questionList,
     });
     return {
       code: 200,

@@ -126,7 +126,7 @@ const updateEquipment = () => {
 
 onMounted(() => {
   window.addEventListener('resize', updateEquipment)
-  placeholderList.value.map(() => {
+  placeholderList?.value?.map(() => {
     valList.value.push(null)
   })
 })

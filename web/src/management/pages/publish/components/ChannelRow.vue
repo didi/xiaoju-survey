@@ -17,45 +17,47 @@
         <el-tooltip class="item" effect="dark" content="复制链接" placement="top">
           <a
             class="cru-suffix j-copy"
-            :data-clipboard-text="normalizationURL(data)"
             @click="handleCopy"
           >
             <i class="font23 iconfont icon-fuzhi"></i>
           </a>
         </el-tooltip>
-        <QRCode class="cru-suffix" :url="normalizationURL(data)" />
+        <QRCode class="cru-suffix" :url="url" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Clipboard from 'clipboard'
+import copy from 'copy-to-clipboard'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import QRCode from './QRCode.vue'
+import { computed } from 'vue'
 
 interface Props {
   data: any
   styleWrap: any
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const handleCopy = () => {
-  const clipboard = new Clipboard('.j-copy')
-  clipboard.on('success', (e) => {
+  const data = copy(url.value)
+  if (data) {
     ElMessage({
       type: 'success',
-      message: `已复制渠道链接：${e.text}`
+      message: `已复制渠道链接：${url.value}`
     })
-
-    clipboard.destroy()
-  })
+  }
 }
 
 const handleOpenPage = (url: string) => window.open(url)
+
+const url = computed(() => {
+  return normalizationURL(props.data)
+})
 
 const normalizationURL = (value: any) => {
   const url = value.fullUrl

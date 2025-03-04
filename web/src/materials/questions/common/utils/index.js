@@ -2,7 +2,7 @@ import { forEach as _forEach, trim as _trim } from 'lodash-es'
 import { escapeFilterXSS } from '@/common/xss'
 
 // 获取选项的hash
-export function getNewHash(hashMap) {
+export function getNewHash(hashMap = {}) {
   let random = getRandom()
   while (random in hashMap) {
     random = getRandom()

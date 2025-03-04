@@ -20,8 +20,10 @@ export class SurveyConfService {
     surveyType: string;
     createMethod: string;
     createFrom: string;
+    questionList?: Array<any>;
   }) {
-    const { surveyId, surveyType, createMethod, createFrom } = params;
+    const { surveyId, surveyType, createMethod, createFrom, questionList } =
+      params;
     let schemaData = null;
     if (createMethod === 'copy') {
       const codeInfo = await this.getSurveyConfBySurveyId(createFrom);
@@ -29,6 +31,9 @@ export class SurveyConfService {
     } else {
       try {
         schemaData = await getSchemaBySurveyType(surveyType);
+        if (questionList && questionList.length > 0) {
+          schemaData.dataConf.dataList = questionList;
+        }
       } catch (error) {
         throw new HttpException(
           error.message,

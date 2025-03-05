@@ -58,25 +58,45 @@ export class SurveyResponseController {
     
 
     // 解密数据
+    let result = data;
     let formValues: Record<string, any> = {};
     if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
-      formValues =  this.getDecryptedData(data, sessionId);
-    } else {
-      formValues = JSON.parse(decodeURIComponent(data));
+      result =  await this.getDecryptedDataRSA(data, sessionId);
     }
-    this.createResponseProcess(value, formValues);
+    formValues = JSON.parse(JSON.stringify(result));
+    try {
+      this.createResponseProcess({...value, data:formValues});
+      return {
+        code: 200,
+        msg: '提交成功',
+      };
+    }
+    catch (error) {
+      this.logger.error(`createResponse error: ${error.message}`);
+      throw new HttpException(error.message, error.code);
+    }
   }
   @Post('/createResponseWithOpen')
   @HttpCode(200)
   async createResponseWithOpen(@Body() reqBody) {
     const value = await this.validateParams(reqBody);
-    const { encryptType, data, sessionId } = value;
+    const { data } = value;
 
     // 解密数据
     let formValues: Record<string, any> = {};
 
     formValues = JSON.parse(decodeURIComponent(data));
-    this.createResponseProcess(value, formValues);
+    try {
+      this.createResponseProcess({...value, data:formValues});
+      return {
+        code: 200,
+        msg: '提交成功',
+      };
+    }
+    catch (error) {
+      this.logger.error(`createResponse error: ${error.message}`);
+      throw new HttpException(error.message, error.code);
+    }
   }
   private async validateParams(reqBody) { 
     // 校验参数
@@ -97,7 +117,7 @@ export class SurveyResponseController {
     }
     return value;
   }
-  private async getDecryptedData (data, sessionId) {
+  private async getDecryptedDataRSA (data, sessionId) {
     const sessionData =
         await this.clientEncryptService.getEncryptInfoById(sessionId);
       try {
@@ -120,18 +140,17 @@ export class SurveyResponseController {
         );
       }
   }
-  async createResponseProcess(value, formValues) {
+  async createResponseProcess(params) {
     
     const {
       surveyPath,
-      encryptType,
-      data,
       sessionId,
       clientTime,
       diffTime,
       password,
       whitelist: whitelistValue,
-    } = value;
+      data: formValues
+    } = params;
 
     // 查询schema
     const responseSchema =
@@ -263,9 +282,7 @@ export class SurveyResponseController {
       }, {});
 
     const surveyId = responseSchema.pageId;
-    // const lockKey = `locks:optionSelectedCount:${surveyId}`;
-    // const lock = await this.redisService.lockResource(lockKey, 1000);
-    // this.logger.info(`lockKey: ${lockKey}`);
+
     try {
       const successParams = [];
       for (const field in formValues) {
@@ -315,7 +332,7 @@ export class SurveyResponseController {
     // 入库
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse({
-        surveyPath: value.surveyPath,
+        surveyPath: surveyPath,
         data: formValues,
         clientTime,
         diffTime,
@@ -339,9 +356,6 @@ export class SurveyResponseController {
     // 入库成功后，要把密钥删掉，防止被重复使用
     this.clientEncryptService.deleteEncryptInfo(sessionId);
 
-    return {
-      code: 200,
-      msg: '提交成功',
-    };
+    
   }
 }

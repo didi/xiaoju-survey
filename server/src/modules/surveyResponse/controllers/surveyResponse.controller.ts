@@ -146,7 +146,6 @@ export class SurveyResponseController {
       }
   }
   async createResponseProcess(params) {
-    
     const {
       surveyPath,
       sessionId,

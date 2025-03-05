@@ -111,7 +111,7 @@ export class ChannelController {
     const channelCountList = await Promise.all(
       idList.map((item) => {
         return this.surveyResponseService.getSurveyResponseTotalByChannel({
-          channelId: item,
+          channelId: item.toString(),
         });
       }),
     );

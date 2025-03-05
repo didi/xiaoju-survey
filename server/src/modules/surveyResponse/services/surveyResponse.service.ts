@@ -18,6 +18,7 @@ export class SurveyResponseService {
     surveyId,
     surveyPath,
     optionTextAndId,
+    channelId = undefined,
   }) {
     const newSubmitData = this.surveyResponseRepository.create({
       surveyPath,
@@ -27,6 +28,7 @@ export class SurveyResponseService {
       diffTime,
       pageId: surveyId,
       optionTextAndId,
+      channelId,
     });
 
     // 提交问卷
@@ -44,10 +46,10 @@ export class SurveyResponseService {
     });
     return (data || []).length;
   }
-  async getSurveyResponseTotalByChannel({ channelId }) {
+  async getSurveyResponseTotalByChannel({  channelId }) {
     const data = await this.surveyResponseRepository.find({
       where: {
-        channelId,
+        channelId: channelId,
       },
     });
     return (data || []).length;

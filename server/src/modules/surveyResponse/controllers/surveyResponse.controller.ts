@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, UseGuards } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
@@ -24,6 +24,7 @@ import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 import { QUESTION_TYPE } from 'src/enums/question';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 
 const optionQuestionType: Array<string> = [
   QUESTION_TYPE.RADIO,
@@ -77,23 +78,27 @@ export class SurveyResponseController {
     }
   }
   @Post('/createResponseWithOpen')
+  @UseGuards(OpenAuthGuard)
   @HttpCode(200)
   async createResponseWithOpen(@Body() reqBody) {
+    if(!reqBody.channelId) {
+      throw new HttpException('缺少渠道参数', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
     const value = await this.validateParams(reqBody);
     const { data } = value;
+    const channelId = reqBody.channelId;
 
     // 解密数据
     let formValues: Record<string, any> = {};
 
-    formValues = JSON.parse(decodeURIComponent(data));
+    formValues = JSON.parse(JSON.stringify(data));
     try {
-      this.createResponseProcess({...value, data:formValues});
+      this.createResponseProcess({...value, data:formValues, channelId });
       return {
         code: 200,
         msg: '提交成功',
       };
-    }
-    catch (error) {
+    } catch (error) {
       this.logger.error(`createResponse error: ${error.message}`);
       throw new HttpException(error.message, error.code);
     }
@@ -149,7 +154,7 @@ export class SurveyResponseController {
       diffTime,
       password,
       whitelist: whitelistValue,
-      data: formValues
+      data: formValues,
     } = params;
 
     // 查询schema
@@ -330,15 +335,19 @@ export class SurveyResponseController {
     // }
 
     // 入库
+    const model: any = {
+      surveyPath: surveyPath,
+      data: formValues,
+      clientTime,
+      diffTime,
+      surveyId: responseSchema.pageId,
+      optionTextAndId,
+    }
+    if(params.channelId) {
+      model.channelId = params.channelId;
+    }
     const surveyResponse =
-      await this.surveyResponseService.createSurveyResponse({
-        surveyPath: surveyPath,
-        data: formValues,
-        clientTime,
-        diffTime,
-        surveyId: responseSchema.pageId,
-        optionTextAndId,
-      });
+      await this.surveyResponseService.createSurveyResponse(model);
 
     const sendData = getPushingData({
       surveyResponse,

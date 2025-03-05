@@ -60,10 +60,10 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const url = await configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
-        const authSource =
-          (await configService.get<string>(
-            'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',
-          )) || 'admin';
+        // const authSource =
+        //   (await configService.get<string>(
+        //     'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',
+        //   )) || 'admin';
         const database = await configService.get<string>(
           'XIAOJU_SURVEY_MONGO_DB_NAME',
         );
@@ -72,7 +72,7 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
           connectTimeoutMS: 10000,
           socketTimeoutMS: 10000,
           url,
-          authSource,
+          // authSource,
           useNewUrlParser: true,
           database,
           entities: [

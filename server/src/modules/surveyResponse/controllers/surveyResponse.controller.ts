@@ -341,9 +341,7 @@ export class SurveyResponseController {
       diffTime,
       surveyId: responseSchema.pageId,
       optionTextAndId,
-    }
-    if(params.channelId) {
-      model.channelId = params.channelId;
+      channelId: params.channelId
     }
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse(model);

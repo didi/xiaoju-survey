@@ -14,26 +14,33 @@
   </template>
   
   <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, toRefs } from 'vue';
   import ClipboardJS from 'clipboard';
 
   const buttonLabel =ref('复制代码')
 
+  const props = defineProps<{
+    surveyPath: {
+      type: String;
+      required: false;
+    };
+  }>();
+  const { surveyPath } = toRefs(props);
   
-  
-    const code = `import { Survey, SurveyCard } from 'react-native-xiaojusurvey'
+    const code = `import { Survey, SurveyCard } from 'xiaojusurvey-sdk-rn'
   
   // sdk初始化
   Survey.init({
     host: 'http://127.0.0.1',
     port: '8081',
+    appId: '2bAppid'
+    channelId: 'xxx' // 渠道id
   });
   
   // api调用方式
   Survey.show({
-    id: 'xxx', // 投放渠道ID
-    type: '', // 展示类型
-    type: 'dialog',
+    id: '${surveyPath.value || 'xxx'}', // 问卷投放id
+    type: 'card', // 展示类型
     onSuccess: () => {},
     onError: (error) => { console.log(error.message) }
   });
@@ -41,19 +48,20 @@
   Survey.close();
   `
   const buttonLabel1 =ref('复制代码')
-  const code1 = `import { Survey } from 'react-native-xiaojusurvey'
+  const code1 = `import { Survey } from 'xiaojusurvey-sdk-rn'
 
 // sdk初始化
 Survey.init({
   host: 'http://127.0.0.1',
   port: '8081',
-  appId: ''
+  appId: '2bAppid'
+  channelId: 'xxx'
 });
 
 // card组件接入方式
 <SurveyCard
-  id=''
-  appId=''
+  id='${surveyPath.value || 'xxx'}' // 问卷投放id
+  type='card'
   onSuccess={() => {}}
   onError={(error) => { console.log(error.message) }}
 />

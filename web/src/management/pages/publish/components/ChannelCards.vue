@@ -29,7 +29,7 @@
         SDK接入方式
       </div>
     </template>
-    <CodeBlock />
+    <CodeBlock :surveyPath="getSurveyPath" />
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleIntroClose">
@@ -40,7 +40,7 @@
   </el-dialog>
 </template>   
 <script lang="ts" setup>
-import { ref, shallowRef } from 'vue'
+import { ref, computed } from 'vue'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_TYPE_TEXT } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
@@ -54,7 +54,7 @@ import { storeToRefs  } from 'pinia'
 // import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 
 const editStore = useEditStore()
-const { surveyId } = storeToRefs(editStore)
+const { surveyId, schema } = storeToRefs(editStore)
 const channelStore = useChannelStore()
 const CHANNEL_TYPE_DSEC = {
   [CHANNEL_TYPE.SHORT_LINK]: '方式描述方式描述方式描述方式描述方式描述方式描述方式描述方式描述',
@@ -62,12 +62,7 @@ const CHANNEL_TYPE_DSEC = {
   [CHANNEL_TYPE.INJECT_APP]: "将问卷通过SDK方式嵌入到IOS、Android等应用中。",
   [CHANNEL_TYPE.INJECT_MP]: "将问卷通过SDK嵌入到小程序中，在小程序中进行调查收集。",
 }
-// const CHANNEL_TYPE_ICON = {
-//   [CHANNEL_TYPE.SHORT_LINK]: Link,
-//   [CHANNEL_TYPE.INJECT_WEB]: "link",
-//   [CHANNEL_TYPE.INJECT_APP]: Aim,
-//   [CHANNEL_TYPE.INJECT_MP]: Link,
-// }
+
 const data = [
   CHANNEL_TYPE.SHORT_LINK,
   CHANNEL_TYPE.INJECT_WEB,
@@ -76,6 +71,9 @@ const data = [
 ]
 const dialogVisible = ref(false)
 const curType = ref('')
+const getSurveyPath = computed(() => {
+  return schema.value?.metaData?.surveyPath || ''
+})
 const handleClick = (e: any, type: CHANNEL_TYPE) => {
   e.stopPropagation()
   e.preventDefault()
@@ -88,7 +86,6 @@ const handleClick = (e: any, type: CHANNEL_TYPE) => {
       ElMessageBox.alert(`${CHANNEL_TYPE_TEXT[type]}方式即将上线，敬请期待`, '提示')
       break;
   }
-  
 }
 const handleConfirm = async (name: string) => {
   await channelStore.createChannel({

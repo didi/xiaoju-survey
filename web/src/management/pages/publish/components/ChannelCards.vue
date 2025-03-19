@@ -72,7 +72,7 @@ const data = [
 const dialogVisible = ref(false)
 const curType = ref('')
 const getSurveyPath = computed(() => {
-  return schema.value?.metaData?.surveyPath || ''
+  return (schema.value?.metaData as any).surveyPath || ''
 })
 const handleClick = (e: any, type: CHANNEL_TYPE) => {
   e.stopPropagation()

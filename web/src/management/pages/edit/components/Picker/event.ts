@@ -1,4 +1,3 @@
-
 interface IEvent {
   handleConfirm: () => void,
   handleCancel: () => void
@@ -6,7 +5,9 @@ interface IEvent {
 
 const useEvent = ({ emit, ctx }: any): IEvent => {
   const handleConfirm = () => {
-    emit('confirm', ctx.list[ctx.index])
+    const list = ctx.list.value
+    const index = ctx.index.value
+    emit('confirm', list[index])
     emit('update:modelValue', false)
   }
 

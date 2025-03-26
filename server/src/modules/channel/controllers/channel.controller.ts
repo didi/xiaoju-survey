@@ -192,7 +192,7 @@ export class ChannelController {
         return {
           code: 200,
           data: {
-            channelInfo: { ...updateRes, surveyPath:surveyMeta.surveyPath },
+             ...updateRes, surveyPath:surveyMeta.surveyPath,
           },
         };
       } else {

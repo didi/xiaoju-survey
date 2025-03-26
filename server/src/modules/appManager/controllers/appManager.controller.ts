@@ -12,7 +12,7 @@ export class AppManagerController {
 
   // 生成 appToken
   @Post('getToken')
-  getAppToken( 
+  async getAppToken( 
     @Body() body: CreateTokenDto
   ) {
     const { appId } = body;
@@ -23,7 +23,11 @@ export class AppManagerController {
     if(!appSecret) {
       throw new Error('Invalid appId');
     }
-    return this.appManager.generateToken(appId, appSecret);
+    const token = await this.appManager.generateToken(appId, appSecret);
+    return {
+      code: 200,
+      data: token
+    }
   }
 
   // 认证请求

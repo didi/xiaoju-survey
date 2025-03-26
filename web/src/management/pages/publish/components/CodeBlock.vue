@@ -27,20 +27,20 @@
   }>();
   const { surveyPath } = toRefs(props);
   
-    const code = `import { Survey, SurveyCard } from 'xiaojusurvey-sdk-rn'
+    const code = `import { Survey } from 'xiaojusurvey-sdk-rn'
   
   // sdk初始化
   Survey.init({
-    host: 'http://127.0.0.1',
-    port: '8081',
+    host: '', // 请填写你的域名
+    port: '', // 请填写你的端口
     appId: '2bAppid'
-    channelId: 'xxx' // 渠道id
+    channelId: '' // 请填写你的渠道id
   });
   
   // api调用方式
   Survey.show({
     id: '${surveyPath.value || 'xxx'}', // 问卷投放id
-    type: 'card', // 展示类型
+    type: 'card',
     onSuccess: () => {},
     onError: (error) => { console.log(error.message) }
   });
@@ -48,14 +48,14 @@
   Survey.close();
   `
   const buttonLabel1 =ref('复制代码')
-  const code1 = `import { Survey } from 'xiaojusurvey-sdk-rn'
+  const code1 = `import { Survey, SurveyCard } from 'xiaojusurvey-sdk-rn'
 
 // sdk初始化
 Survey.init({
-  host: 'http://127.0.0.1',
-  port: '8081',
+  host: '', // 请填写你的域名
+  port: '', // 请填写你的端口
   appId: '2bAppid'
-  channelId: 'xxx'
+  channelId: '' // 请填写你的渠道id
 });
 
 // card组件接入方式

@@ -64,9 +64,10 @@ const CHANNEL_TYPE_DSEC = {
 }
 
 const data = [
-  CHANNEL_TYPE.SHORT_LINK,
-  CHANNEL_TYPE.INJECT_WEB,
   CHANNEL_TYPE.INJECT_APP,
+  // CHANNEL_TYPE.SHORT_LINK,
+  CHANNEL_TYPE.INJECT_WEB,
+  
   CHANNEL_TYPE.INJECT_MP
 ]
 const dialogVisible = ref(false)
@@ -133,7 +134,7 @@ const handleIntroClose = () => {
       justify-content: space-between;
       align-items: center;
       line-height: 24px;
-      background: #E3E4E8;
+      background: #f6f7f9;
       .intro {
         font-size: 12px;
         // &:hover{

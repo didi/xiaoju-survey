@@ -24,7 +24,7 @@
       </template>
     </el-table-column>
     <!-- <el-table-column prop="owner" label="创建人" width="180" /> -->
-    <el-table-column label="操作" :width="320" class-name="table-options" fixed="right">
+    <el-table-column label="操作" :width="320" class-name="table-options">
       <template #default="scope">
         <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row._id)">重命名</el-button>
         <el-button type="primary" text v-if="scope.row.status === 'recycling'" @click="() => handleClose(scope.row._id)">

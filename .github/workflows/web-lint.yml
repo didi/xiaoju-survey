@@ -1,0 +1,45 @@
+# Lint
+name: Web Lint
+
+on:
+  push:
+    branches:
+      - main
+      - releases/**
+    paths:
+      - web/**
+  pull_request:
+    branches:
+      - develop
+      - main
+      - releases/**
+      - feature/**
+    paths:
+      - web/**
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: cd web && npm install
+
+      - name: Type-Check
+        run: cd web && npm run type-check
+
+      - name: Lint
+        run: cd web && npm run lint
+
+      - name: Format
+        run: cd web && npm run format

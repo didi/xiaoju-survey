@@ -1,0 +1,185 @@
+{
+  "name": "xiaojusurvey-sdk-rn",
+  "version": "0.1.0",
+  "description": "xiaoju survey react-native SDK",
+  "source": "./src/index.tsx",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/src/index.d.ts",
+      "import": "./lib/module/index.js",
+      "require": "./lib/commonjs/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "scripts": {
+    "example": "yarn workspace xiaojusurvey-sdk-rn-example",
+    "test": "jest",
+    "typecheck": "tsc",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "clean": "del-cli lib",
+    "prepare": "bob build && cp -r src/assets lib/assets",
+    "release": "release-it"
+  },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://git.xiaojukeji.com/xiaoju-question/survey/survey-engine.git"
+  },
+  "author": "linhaonan <linhaonan@didiglobal.com> (https://git.xiaojukeji.com/xiaoju-question/survey/survey-engine)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://git.xiaojukeji.com/xiaoju-question/survey/survey-engine/issues"
+  },
+  "homepage": "https://git.xiaojukeji.com/xiaoju-question/survey/survey-engine#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@commitlint/config-conventional": "^17.0.2",
+    "@evilmartians/lefthook": "^1.5.0",
+    "@react-native/eslint-config": "^0.73.1",
+    "@release-it/conventional-changelog": "^5.0.0",
+    "@types/jest": "^29.5.5",
+    "@types/react": "^18.2.44",
+    "commitlint": "^17.0.2",
+    "del-cli": "^5.1.0",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
+    "react": "18.2.0",
+    "react-native": "0.74.3",
+    "react-native-builder-bob": "^0.28.1",
+    "release-it": "^15.0.0",
+    "typescript": "^5.2.2"
+  },
+  "resolutions": {
+    "@types/react": "^18.2.44"
+  },
+  "optionalDependencies": {
+    "axios": "^1.7.9"
+  },
+  "peerDependencies": {
+    "axios": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "workspaces": [
+    "example"
+  ],
+  "packageManager": "yarn@3.6.1",
+  "jest": {
+    "preset": "react-native",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example/node_modules",
+      "<rootDir>/lib/"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@react-native",
+      "prettier"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react-native/no-inline-styles": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          "quoteProps": "consistent",
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "es5",
+          "useTabs": false
+        }
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ],
+  "prettier": {
+    "quoteProps": "consistent",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "commonjs",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "create-react-native-library": {
+    "type": "library",
+    "version": "0.39.0"
+  }
+}

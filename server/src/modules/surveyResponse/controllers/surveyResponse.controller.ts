@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, UseGuards } from '@nestjs/common';
 import { HttpException } from 'src/exceptions/httpException';
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { checkSign } from 'src/utils/checkSign';
@@ -23,6 +23,7 @@ import { WhitelistType } from 'src/interfaces/survey';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 import { QUESTION_TYPE } from 'src/enums/question';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 
 const optionQuestionType: Array<string> = [
   QUESTION_TYPE.RADIO,
@@ -48,8 +49,59 @@ export class SurveyResponseController {
   @Post('/createResponse')
   @HttpCode(200)
   async createResponse(@Body() reqBody) {
+    const value = await this.validateParams(reqBody);
+    const { encryptType, sign, data, sessionId } = value;
+    
     // 检查签名
-    checkSign(reqBody);
+    if(sign) checkSign(reqBody);
+    
+
+    // 解密数据
+    let result = data;
+    let formValues: Record<string, any> = {};
+    if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
+      result =  await this.getDecryptedDataRSA(data, sessionId);
+    }
+    formValues = JSON.parse(JSON.stringify(result));
+    try {
+      this.createResponseProcess({...value, data:formValues});
+      return {
+        code: 200,
+        msg: '提交成功',
+      };
+    }
+    catch (error) {
+      this.logger.error(`createResponse error: ${error.message}`);
+      throw new HttpException(error.message, error.code);
+    }
+  }
+  @Post('/createResponseWithOpen')
+  @UseGuards(OpenAuthGuard)
+  @HttpCode(200)
+  async createResponseWithOpen(@Body() reqBody) {
+    if(!reqBody.channelId) {
+      throw new HttpException('缺少渠道参数', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const value = await this.validateParams(reqBody);
+    const { data } = value;
+    const channelId = reqBody.channelId;
+
+    // 解密数据
+    let formValues: Record<string, any> = {};
+
+    formValues = JSON.parse(JSON.stringify(data));
+    try {
+      this.createResponseProcess({...value, data:formValues, channelId });
+      return {
+        code: 200,
+        msg: '提交成功',
+      };
+    } catch (error) {
+      this.logger.error(`createResponse error: ${error.message}`);
+      throw new HttpException(error.message, error.code);
+    }
+  }
+  private async validateParams(reqBody) { 
     // 校验参数
     const { value, error } = Joi.object({
       surveyPath: Joi.string().required(),
@@ -66,17 +118,41 @@ export class SurveyResponseController {
       this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
+    return value;
+  }
+  private async getDecryptedDataRSA (data, sessionId) {
+    const sessionData =
+        await this.clientEncryptService.getEncryptInfoById(sessionId);
+      try {
+        const privateKeyObject = forge.pki.privateKeyFromPem(
+          sessionData.data.privateKey,
+        );
+        let concatStr = '';
+        for (const item of data) {
+          concatStr += privateKeyObject.decrypt(
+            forge.util.decode64(item),
+            'RSA-OAEP',
+          );
+        }
 
+        return JSON.parse(decodeURIComponent(concatStr));
+      } catch (error) {
+        throw new HttpException(
+          '数据解密失败',
+          EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
+        );
+      }
+  }
+  async createResponseProcess(params) {
     const {
       surveyPath,
-      encryptType,
-      data,
       sessionId,
       clientTime,
       diffTime,
       password,
       whitelist: whitelistValue,
-    } = value;
+      data: formValues,
+    } = params;
 
     // 查询schema
     const responseSchema =
@@ -186,33 +262,6 @@ export class SurveyResponseController {
       }
     }
 
-    // 解密数据
-    let decryptedData: Record<string, any> = {};
-    if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
-      const sessionData =
-        await this.clientEncryptService.getEncryptInfoById(sessionId);
-      try {
-        const privateKeyObject = forge.pki.privateKeyFromPem(
-          sessionData.data.privateKey,
-        );
-        let concatStr = '';
-        for (const item of data) {
-          concatStr += privateKeyObject.decrypt(
-            forge.util.decode64(item),
-            'RSA-OAEP',
-          );
-        }
-
-        decryptedData = JSON.parse(decodeURIComponent(concatStr));
-      } catch (error) {
-        throw new HttpException(
-          '数据解密失败',
-          EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
-        );
-      }
-    } else {
-      decryptedData = JSON.parse(decodeURIComponent(data));
-    }
 
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
@@ -222,7 +271,7 @@ export class SurveyResponseController {
           optionQuestionType.includes(questionItem.type) &&
           Array.isArray(questionItem.options) &&
           questionItem.options.length > 0 &&
-          decryptedData[questionItem.field]
+          formValues[questionItem.field]
         );
       })
       .reduce((pre, cur) => {
@@ -237,8 +286,8 @@ export class SurveyResponseController {
     const surveyId = responseSchema.pageId;
     try {
       const successParams = [];
-      for (const field in decryptedData) {
-        const value = decryptedData[field];
+      for (const field in formValues) {
+        const value = formValues[field];
         const values = Array.isArray(value) ? value : [value];
         if (field in optionTextAndId) {
           const optionCountData =
@@ -278,15 +327,17 @@ export class SurveyResponseController {
     }
 
     // 入库
+    const model: any = {
+      surveyPath: surveyPath,
+      data: formValues,
+      clientTime,
+      diffTime,
+      surveyId: responseSchema.pageId,
+      optionTextAndId,
+      channelId: params.channelId
+    }
     const surveyResponse =
-      await this.surveyResponseService.createSurveyResponse({
-        surveyPath: value.surveyPath,
-        data: decryptedData,
-        clientTime,
-        diffTime,
-        surveyId: responseSchema.pageId,
-        optionTextAndId,
-      });
+      await this.surveyResponseService.createSurveyResponse(model);
 
     const sendData = getPushingData({
       surveyResponse,
@@ -304,9 +355,6 @@ export class SurveyResponseController {
     // 入库成功后，要把密钥删掉，防止被重复使用
     this.clientEncryptService.deleteEncryptInfo(sessionId);
 
-    return {
-      code: 200,
-      msg: '提交成功',
-    };
+    
   }
 }

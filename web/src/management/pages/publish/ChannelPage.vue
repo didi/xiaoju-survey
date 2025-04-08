@@ -58,7 +58,6 @@ import ChannelList from './components/ChannelList.vue'
 import ChannelCards from './components/ChannelCards.vue'
 import Navbar from './components/Navbar.vue'
 
-const backgroundImage = '/imgs/phone-bg.webp'
 const defaultConfig = {
   title: '问卷未发布',
   desc: '点击发布后，问卷就可以对外投放了哦！',

@@ -46,12 +46,9 @@ import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_TYPE_TEXT } from '@/management
 import { useChannelStore } from '@/management/stores/channel'
 import { ElMessageBox } from 'element-plus'
 import CodeBlock from './CodeBlock.vue'
-import { Link, Aim } from '@element-plus/icons-vue'
 import ChannelModify from './ChannelModify.vue'
 import { useEditStore } from '@/management/stores/edit' 
 import { storeToRefs  } from 'pinia'
-
-// import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
 
 const editStore = useEditStore()
 const { surveyId, schema } = storeToRefs(editStore)

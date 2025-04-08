@@ -2,9 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
   Body,
-  Param,
   UseGuards,
   Request,
   HttpCode,
@@ -64,7 +62,6 @@ export class ChannelController {
     }
 
     const userId = req.user._id.toString();
-    const username = req.user.username;
     // 插入渠道表
     const retChannel = await this.channelService.create({
       name: value.name,
@@ -185,8 +182,6 @@ export class ChannelController {
 
       if(updateRes.status === CHANNEL_STATUS.RECYCLING) {
         const surveyId = updateRes.surveyId;
-        const surveyConf =
-          await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
         const surveyMeta = 
           await this.surveyMetaService.getSurveyById({ surveyId });
         return {

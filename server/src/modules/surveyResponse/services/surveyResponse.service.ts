@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { SurveyResponse } from 'src/models/surveyResponse.entity';
-import { channel } from 'diagnostics_channel';
 
 @Injectable()
 export class SurveyResponseService {

@@ -37,7 +37,7 @@
   </el-dialog>
 </template>  
 <script lang="ts" setup>
-import { ref, shallowRef, reactive, toRefs, watch } from 'vue'
+import { shallowRef, reactive, watch } from 'vue'
 const props = defineProps({
   visible: {
     type: Boolean,

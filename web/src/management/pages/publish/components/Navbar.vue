@@ -10,7 +10,7 @@
 import { defineProps } from 'vue'
 import BackPanel from '../../edit/modules/generalModule/BackPanel.vue'
 import TitlePanel from '../../edit/modules/generalModule/TitlePanel.vue'
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     default: ''

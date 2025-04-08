@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import Joi from 'joi';
-import { CHANNEL_TYPE } from '../../../enums/channel';
 
 export class FindChannelDto {
   @ApiProperty({ description: '渠道id', required: true })

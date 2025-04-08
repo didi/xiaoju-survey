@@ -23,7 +23,6 @@
         
       </template>
     </el-table-column>
-    <!-- <el-table-column prop="owner" label="创建人" width="180" /> -->
     <el-table-column label="操作" :width="320" class-name="table-options">
       <template #default="scope">
         <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row._id)">重命名</el-button>
@@ -50,9 +49,9 @@ import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia' 
 import moment from 'moment'
-import { Delete, Edit, Open, TurnOff, Upload } from '@element-plus/icons-vue'
+import { Delete, Edit } from '@element-plus/icons-vue'
 
-import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS, type IDeliverDataItem } from '@/management/enums/channel'
+import { CHANNEL_TYPE_ICON, CHANNEL_TYPE, CHANNEL_STATUS_TEXT, CHANNEL_STATUS } from '@/management/enums/channel'
 import { useChannelStore } from '@/management/stores/channel'
 import { useEditStore } from '@/management/stores/edit'
 

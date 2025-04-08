@@ -78,7 +78,7 @@ Survey.init({
         buttonLabel1.value = '已复制'
       }
     });
-    clipboard.on('error', (e) => {
+    clipboard.on('error', () => {
       console.error('复制代码失败');
     });
   };

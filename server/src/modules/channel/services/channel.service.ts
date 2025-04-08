@@ -4,9 +4,8 @@ import { MongoRepository } from 'typeorm';
 import { ObjectId } from 'mongodb';
 
 import { Channel } from 'src/models/channel.entity';
-import { SurveyResponse } from 'src/models/surveyResponse.entity';
 
-import { CHANNEL_STATUS, CHANNEL_TYPE, IDeliverDataItem } from '../../../enums/channel';
+import { CHANNEL_STATUS, IDeliverDataItem } from '../../../enums/channel';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 

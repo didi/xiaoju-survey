@@ -25,6 +25,9 @@ export class SurveyResponse extends BaseEntity {
   @Column('jsonb')
   optionTextAndId: Record<string, any>;
 
+  @Column()
+  channelId: string;
+
   @BeforeInsert()
   async onDataInsert() {
     return await pluginManager.triggerHook('encryptResponseData', this);

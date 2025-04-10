@@ -13,7 +13,7 @@
       <div class="option-handwrite">
         <div class="option-header">
           <div class="header-item flex-1">选项内容</div>
-          <div class="header-item w285">选项后增添输入框</div>
+          <div class="header-item w285" v-if="showOthers">选项后增添输入框</div>
         </div>
         <div>
           <draggable :list="curOptions" handle=".drag-handle" itemKey="hash">
@@ -28,7 +28,7 @@
                     @blur="onBlur($event, index)"
                   ></div>
                 </div>
-                <div class="oitem moreInfo lh36">
+                <div class="oitem moreInfo lh36" v-if="showOthers">
                   <el-switch
                     :modelValue="element.others"
                     @change="(val) => changeOptionOthers(val, element)"
@@ -56,7 +56,7 @@
             <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 添加新选项 </span>
           </div>
 
-          <div class="add-option" @click="addOtherOption">
+          <div class="add-option" @click="addOtherOption" v-if="showOthers">
             <span class="add-option-item"> <i-ep-circlePlus class="icon" /> 其他____ </span>
           </div>
         </div>
@@ -81,6 +81,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 import { useEditStore } from '@/management/stores/edit'
 import { cleanRichText } from '@/common/xss'
 import { cleanRichTextWithMediaTag } from '@/common/xss'
+import { storeToRefs } from 'pinia'
 
 export default {
   name: 'OptionConfig',
@@ -112,6 +113,11 @@ export default {
     },
     textOptions() {
       return this.curOptions.map((item) => cleanRichTextWithMediaTag(item.text))
+    },
+    showOthers() {
+      const editStore = useEditStore()
+      const { currentEditMeta } = storeToRefs(editStore)
+      return currentEditMeta.value?.editConfigure?.optionEditBar.configure.showOthers
     }
   },
   components: {

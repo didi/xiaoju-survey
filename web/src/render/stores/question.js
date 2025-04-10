@@ -103,6 +103,7 @@ export const useQuestionStore = defineStore('question', () => {
   const pageIndex = ref(1) // 当前分页的索引
   const changeField = ref(null)
   const changeIndex = computed(() => {
+    if(!changeField.value || !questionData.value) return null
     return questionData.value[changeField.value]?.index
   })
   const needHideFields = ref([])
@@ -110,6 +111,7 @@ export const useQuestionStore = defineStore('question', () => {
   // 题目列表
   const questionList = computed(() => {
     let index = 1
+    const hideMap = needHideFields.value.concat(showLogicHideFields.value)
     return (
       questionSeq.value &&
       questionSeq.value.reduce((pre, item) => {
@@ -118,7 +120,7 @@ export const useQuestionStore = defineStore('question', () => {
         item.forEach((questionKey) => {
           const question = { ...questionData.value[questionKey] }
           // 开启显示序号
-          if (question.showIndex) {
+          if (question.showIndex && !hideMap.includes(questionKey)) {
             question.indexNumber = index++
           }
 
@@ -202,6 +204,17 @@ export const useQuestionStore = defineStore('question', () => {
   const removeNeedHideFields = (fields) => {
     needHideFields.value = needHideFields.value.filter((field) => !fields.includes(field))
   }
+  const showLogicHideFields = ref([])
+  const addShowLogicHideFields = (fields) => {
+    fields.forEach((field) => {
+      if (!showLogicHideFields.value.includes(field)) {
+        showLogicHideFields.value.push(field)
+      }
+    })
+  }
+  const removeShowLogicHideFields = (fields) => {
+    showLogicHideFields.value = showLogicHideFields.value.filter((field) => !fields.includes(field))
+  }
   return {
     questionData,
     questionSeq,
@@ -222,6 +235,9 @@ export const useQuestionStore = defineStore('question', () => {
     needHideFields,
     addNeedHideFields,
     removeNeedHideFields,
+    showLogicHideFields,
+    addShowLogicHideFields,
+    removeShowLogicHideFields,
     getQuestionIndexByField
   }
 })

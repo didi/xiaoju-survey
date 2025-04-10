@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { defineComponent, getCurrentInstance,watch,onMounted,onBeforeUnmount } from 'vue'
+import { defineComponent, watch,onMounted,onBeforeUnmount } from 'vue'
 import useList from './list'
 import useEvent from './event'
 
@@ -37,11 +37,11 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const { ctx } = getCurrentInstance()
     const $useList = useList(props)
-    const $useEvent = useEvent({ emit, ctx })
+    const { list, index } = $useList
+    const $useEvent = useEvent({ emit, ctx: { list, index} })
 
-
+    
     const hideOverflow = () => {
       document.documentElement.style.overflow = 'hidden';
     }
@@ -92,7 +92,6 @@ export default defineComponent({
         restoreOverflow()
       }
     })
-
 
     return {
       ...$useList,

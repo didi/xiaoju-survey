@@ -136,6 +136,16 @@ const logicShow = computed(() => {
   const result = showLogicEngine.value.match(props.moduleConfig.field, 'question', formValues.value)
   return result === undefined ? true : result
 })
+watch(()=> logicShow.value, (value) => {
+  if(!value){
+    questionStore.addShowLogicHideFields([props.moduleConfig.field])
+  } else {
+    questionStore.removeShowLogicHideFields([props.moduleConfig.field])
+  }
+}, {
+  immediate: true
+})
+
 // 跳转逻辑：题目是否需要跳过（隐藏）
 const logicSkip = computed(() => {
   return needHideFields.value.includes(props.moduleConfig.field)

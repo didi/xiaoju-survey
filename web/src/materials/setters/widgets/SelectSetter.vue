@@ -38,10 +38,6 @@ const emit = defineEmits<Emit>()
 const placeholder = computed(() => {
   const defaultValue = '请选择'
 
-  if (!['matrixOptionsRely', 'optionOrigin'].includes(props.formConfig.key)) {
-    return props.formConfig.label
-  }
-
   return defaultValue
 })
 

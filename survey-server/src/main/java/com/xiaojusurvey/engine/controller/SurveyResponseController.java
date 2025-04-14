@@ -28,10 +28,10 @@ public class SurveyResponseController {
         return RpcResultUtil.createSuccessResult(surveyResponseService.getResponseSchema(surveyPath));
     }
 
+
     @PostMapping("/surveyResponse/createResponse")
     public RpcResult<?> createResponse(@RequestBody ResponseParam responseParam) {
 
         return surveyResponseService.createResponse(responseParam);
     }
-
 }

@@ -20,4 +20,5 @@ public interface SurveyResponseService {
     RpcResult<?> createResponse(ResponseParam responseParam);
 
     String getSignByData(Map<String, Object> sourceData, String timeStamp);
+
 }

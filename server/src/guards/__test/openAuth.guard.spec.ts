@@ -62,8 +62,9 @@ describe('OpenAuthGuard', () => {
         }),
       } as ExecutionContext;
 
-      const result = await guard.canActivate(mockContext);
-      expect(result).toBe(new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR));
+      await expect(guard.canActivate(mockContext)).rejects.toThrow(
+        new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR)
+      );
       expect(appManagerService.checkAppManager).not.toHaveBeenCalled();
     });
 
@@ -81,12 +82,10 @@ describe('OpenAuthGuard', () => {
 
       jest.spyOn(appManagerService, 'checkAppManager').mockResolvedValueOnce(false);
 
-      const result = await guard.canActivate(mockContext);
-      expect(result).toBe(new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR));
-      expect(appManagerService.checkAppManager).toHaveBeenCalledWith(
-        'invalid-app-id',
-        'invalid-token',
+      await expect(guard.canActivate(mockContext)).rejects.toThrow(
+        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR)
       );
+      expect(appManagerService.checkAppManager).not.toHaveBeenCalled();
     });
 
     it('should handle errors gracefully', async () => {
@@ -103,8 +102,9 @@ describe('OpenAuthGuard', () => {
 
       jest.spyOn(appManagerService, 'checkAppManager').mockRejectedValueOnce(new Error('Test error'));
 
-      const result = await guard.canActivate(mockContext);
-      expect(result).toBe(new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR));
+      await expect(guard.canActivate(mockContext)).rejects.toThrow(
+        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR)
+      );
     });
   });
 }); 

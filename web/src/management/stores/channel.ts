@@ -12,7 +12,7 @@ import {
   deleteChannel as deleteChannelReq,
   getChannelList as getChannelListReq,
 } from '@/management/api/channel'
-import {  CHANNEL_TYPE, type IDeliverDataItem } from '@/management/enums/channel'
+import { type IDeliverDataItem } from '@/management/enums/channel'
 
 import { useEditStore } from '@/management/stores/edit' 
 import { storeToRefs  } from 'pinia'

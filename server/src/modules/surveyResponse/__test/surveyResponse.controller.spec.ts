@@ -25,6 +25,10 @@ import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { AppManagerService } from 'src/modules/appManager/services/appManager.service';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
+
+
 
 const mockDecryptErrorBody = {
   surveyPath: 'EBzdmnSp',
@@ -80,9 +84,10 @@ describe('SurveyResponseController', () => {
   let responseSchemaService: ResponseSchemaService;
   let surveyResponseService: SurveyResponseService;
   let clientEncryptService: ClientEncryptService;
+  let testingModule: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    testingModule = await Test.createTestingModule({
       controllers: [SurveyResponseController],
       providers: [
         {
@@ -140,20 +145,34 @@ describe('SurveyResponseController', () => {
             findAllByUserId: jest.fn(),
           },
         },
+        {
+          provide: AppManagerService,
+          useValue: {
+            // Mock the methods used in the tests
+            someMethod: jest.fn(),
+          },
+        },
+        {
+          provide: OpenAuthGuard,
+          useValue: {
+            canActivate: jest.fn().mockReturnValue(true), // Mock guard behavior
+          },
+        },
       ],
-    }).compile();
+    })
+    .compile();
 
-    controller = module.get<SurveyResponseController>(SurveyResponseController);
-    responseSchemaService = module.get<ResponseSchemaService>(
+    controller = testingModule.get<SurveyResponseController>(SurveyResponseController);
+    responseSchemaService = testingModule.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
-    surveyResponseService = module.get<SurveyResponseService>(
+    surveyResponseService = testingModule.get<SurveyResponseService>(
       SurveyResponseService,
     );
     clientEncryptService =
-      module.get<ClientEncryptService>(ClientEncryptService);
+      testingModule.get<ClientEncryptService>(ClientEncryptService);
 
-    const pluginManager = module.get<PluginManager>(PluginManager);
+    const pluginManager = testingModule.get<PluginManager>(PluginManager);
     pluginManager.registerPlugin(
       new ResponseSecurityPlugin('dataAesEncryptSecretKey'),
     );
@@ -348,6 +367,137 @@ describe('SurveyResponseController', () => {
       await expect(controller.createResponse(reqBody)).rejects.toThrow(
         new HttpException('白名单验证失败', EXCEPTION_CODE.WHITELIST_ERROR),
       );
+    });
+  });
+
+  describe('createResponseWithOpen', () => {
+    let appManagerService: AppManagerService;
+    let openAuthGuard: OpenAuthGuard;
+
+    beforeEach(() => {
+      appManagerService = testingModule.get<AppManagerService>(AppManagerService);
+      openAuthGuard = testingModule.get<OpenAuthGuard>(OpenAuthGuard);
+    });
+
+    it('should create response with valid auth headers', async () => {
+      // 准备测试数据
+      const reqBody = cloneDeep(mockSubmitData);
+      const mockContext = {
+        switchToHttp: () => ({
+          getRequest: () => ({
+            headers: {
+              'x-app-id': 'test-app-id',
+              'x-app-token': 'test-app-token',
+            },
+            body: reqBody,
+          }),
+        }),
+      };
+
+      // Mock 服务响应
+      jest.spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce(mockResponseSchema);
+      jest.spyOn(surveyResponseService, 'getSurveyResponseTotalByPath')
+        .mockResolvedValueOnce(0);
+      jest.spyOn(surveyResponseService, 'createSurveyResponse')
+        .mockResolvedValueOnce({
+          _id: new ObjectId('65fc2dd77f4520858046e129'),
+          clientTime: 1711025112552,
+          createdAt: 1711025113146,
+          curStatus: {
+            status: RECORD_STATUS.NEW,
+            date: 1711025113146,
+          },
+          // ... 其他响应数据
+        } as unknown as SurveyResponse);
+
+      // 验证 Guard
+      const canActivate = await openAuthGuard.canActivate(mockContext as any);
+      expect(canActivate).toBe(true);
+
+      // 执行请求
+      const result = await controller.createResponseWithOpen(reqBody);
+
+      // 验证结果
+      expect(result).toEqual({ code: 200, msg: '提交成功' });
+    });
+
+    it('should reject request without auth headers', async () => {
+      const reqBody = cloneDeep(mockSubmitData);
+      const mockContext = {
+        switchToHttp: () => ({
+          getRequest: () => ({
+            headers: {}, // 没有认证头
+            body: reqBody,
+          }),
+        }),
+      };
+
+      const canActivate = await openAuthGuard.canActivate(mockContext as any);
+      expect(canActivate).toBe(false);
+    });
+
+    it('should reject request with invalid auth token', async () => {
+      const reqBody = cloneDeep(mockSubmitData);
+      const mockContext = {
+        switchToHttp: () => ({
+          getRequest: () => ({
+            headers: {
+              'x-app-id': 'test-app-id',
+              'x-app-token': 'invalid-token',
+            },
+            body: reqBody,
+          }),
+        }),
+      };
+
+      // Mock AppManagerService 验证失败
+      jest.spyOn(appManagerService, 'checkAppManager')
+        .mockResolvedValueOnce(false);
+
+      const canActivate = await openAuthGuard.canActivate(mockContext as any);
+      expect(canActivate).toBe(false);
+    });
+
+    it('should handle survey not found error', async () => {
+      const reqBody = cloneDeep(mockSubmitData);
+      
+      // Mock 认证通过
+      jest.spyOn(openAuthGuard, 'canActivate')
+        .mockResolvedValueOnce(true);
+
+      // Mock 问卷不存在
+      jest.spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce(null);
+
+      await expect(controller.createResponseWithOpen(reqBody))
+        .rejects
+        .toThrow(SurveyNotFoundException);
+    });
+
+    it('should handle survey paused status', async () => {
+      const reqBody = cloneDeep(mockSubmitData);
+      
+      // Mock 认证通过
+      jest.spyOn(openAuthGuard, 'canActivate')
+        .mockResolvedValueOnce(true);
+
+      // Mock 问卷暂停状态
+      jest.spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValueOnce({
+          ...mockResponseSchema,
+          subStatus: {
+            status: RECORD_SUB_STATUS.PAUSING,
+            date: Date.now(),
+          },
+        });
+
+      await expect(controller.createResponseWithOpen(reqBody))
+        .rejects
+        .toThrow(new HttpException(
+          '该问卷已暂停，无法提交',
+          EXCEPTION_CODE.RESPONSE_PAUSING
+        ));
     });
   });
 });

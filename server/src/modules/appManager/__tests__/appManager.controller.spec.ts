@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppManagerController } from '../controllers/appManager.controller';
 import { AppManagerService } from '../services/appManager.service';
 import { Logger } from '@nestjs/common';
-import { EXCEPTION_CODE } from '../../../enums/exceptionCode';
-import { HttpException } from 'src/exceptions/httpException';
+// import { EXCEPTION_CODE } from '../../../enums/exceptionCode';
+// import { HttpException } from 'src/exceptions/httpException';
 import { APPList } from '../appConfg'
 
 describe('AppManagerController', () => {

@@ -64,7 +64,7 @@ export class SurveyResponseController {
     }
     formValues = JSON.parse(JSON.stringify(result));
     try {
-      this.createResponseProcess({...value, data:formValues});
+      await this.createResponseProcess({...value, data:formValues});
       return {
         code: 200,
         msg: '提交成功',
@@ -91,7 +91,7 @@ export class SurveyResponseController {
 
     formValues = JSON.parse(JSON.stringify(data));
     try {
-      this.createResponseProcess({...value, data:formValues, channelId });
+      await this.createResponseProcess({...value, data:formValues, channelId });
       return {
         code: 200,
         msg: '提交成功',

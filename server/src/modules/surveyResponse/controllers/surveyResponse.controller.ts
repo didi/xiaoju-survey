@@ -53,7 +53,7 @@ export class SurveyResponseController {
     const { encryptType, sign, data, sessionId } = value;
     
     // 检查签名
-    if(sign) checkSign(reqBody);
+    checkSign(reqBody);
     
 
     // 解密数据
@@ -72,7 +72,7 @@ export class SurveyResponseController {
     }
     catch (error) {
       this.logger.error(`createResponse error: ${error.message}`);
-      throw new HttpException(error.message, error.code);
+      throw error;
     }
   }
   @Post('/createResponseWithOpen')
@@ -91,14 +91,14 @@ export class SurveyResponseController {
 
     formValues = JSON.parse(JSON.stringify(data));
     try {
-      await this.createResponseProcess({...value, data:formValues, channelId });
+      await this.createResponseProcess({...value, data:formValues, channelId }, false);
       return {
         code: 200,
         msg: '提交成功',
       };
     } catch (error) {
       this.logger.error(`createResponse error: ${error.message}`);
-      throw new HttpException(error.message, error.code);
+      throw error; 
     }
   }
   private async validateParams(reqBody) { 
@@ -143,7 +143,7 @@ export class SurveyResponseController {
         );
       }
   }
-  async createResponseProcess(params) {
+  async createResponseProcess(params, canPush = true) {
     const {
       surveyPath,
       sessionId,
@@ -339,21 +339,23 @@ export class SurveyResponseController {
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse(model);
 
-    const sendData = getPushingData({
-      surveyResponse,
-      questionList: responseSchema?.code?.dataConf?.dataList || [],
-      surveyId,
-      surveyPath: responseSchema.surveyPath,
-    });
+    if(canPush) {
+      const sendData = getPushingData({
+        surveyResponse,
+        questionList: responseSchema?.code?.dataConf?.dataList || [],
+        surveyId,
+        surveyPath: responseSchema.surveyPath,
+      });
 
-    // 异步执行推送任务
-    this.messagePushingTaskService.runResponseDataPush({
-      surveyId,
-      sendData,
-    });
+      // 异步执行推送任务
+      this.messagePushingTaskService.runResponseDataPush({
+        surveyId,
+        sendData,
+      });
+    }
 
     // 入库成功后，要把密钥删掉，防止被重复使用
-    this.clientEncryptService.deleteEncryptInfo(sessionId);
+    if (sessionId) this.clientEncryptService.deleteEncryptInfo(sessionId);
 
     
   }

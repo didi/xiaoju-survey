@@ -50,7 +50,7 @@ export class SurveyResponseController {
   @HttpCode(200)
   async createResponse(@Body() reqBody) {
     const value = await this.validateParams(reqBody);
-    const { encryptType, sign, data, sessionId } = value;
+    const { encryptType, data, sessionId } = value;
     
     // 检查签名
     checkSign(reqBody);

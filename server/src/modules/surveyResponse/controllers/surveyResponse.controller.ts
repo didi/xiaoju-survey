@@ -89,7 +89,7 @@ export class SurveyResponseController {
     // 解密数据
     let formValues: Record<string, any> = {};
 
-    formValues = JSON.parse(JSON.stringify(data));
+    formValues = typeof data === "string" ? JSON.parse(data) : JSON.parse(JSON.stringify(data));
     try {
       await this.createResponseProcess({...value, data:formValues, channelId }, false);
       return {

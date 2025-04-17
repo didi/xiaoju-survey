@@ -67,13 +67,8 @@ export const asyncCheckSurveyValid = async (): Promise<{
         appId,
       });
       // console.log('tokenResp: ', tokenResp);
-<<<<<<< HEAD
-      if (tokenResp) {
-        setServerConfig({ ...config, appToken: tokenResp });
-=======
       if (tokenResp.data) {
         setServerConfig({ ...config, appToken: tokenResp.data });
->>>>>>> dd/d_feature/sdk_rn
       } else {
         return { error: new Error('get appToken faild') };
       }

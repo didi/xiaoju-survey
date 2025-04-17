@@ -86,7 +86,7 @@ const normalizationURL = (value: any) => {
     display: flex;
     flex-direction: row;
     position: relative;
-    flex: 1;
+    flex: 0 0 auto;
     // width: 500px;
   }
 

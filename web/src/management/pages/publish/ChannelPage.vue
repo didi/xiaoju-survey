@@ -23,10 +23,10 @@
             </div>
             
             <br/>
-            <div class="box-channelList">
+            <div class="box-channelList" v-if="channelTotal > 0">
               <h2>投放列表</h2>
               <div class="main-channel-wrap">
-                <ChannelList/>
+                <ChannelList />
               </div>
             </div>
             <div class="box-channelList">
@@ -44,7 +44,9 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, toRef } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useEditStore } from '@/management/stores/edit'
+import { useChannelStore } from '@/management/stores/channel'
 import { useRoute, useRouter } from 'vue-router'
 import { get as _get } from 'lodash-es'
 
@@ -63,9 +65,12 @@ const defaultConfig = {
   desc: '点击发布后，问卷就可以对外投放了哦！',
   img: '/imgs/icons/unpublished.webp'
 }
-
+const channelStore = useChannelStore()
 const editStore = useEditStore()
 const { schema, init, setSurveyId } = editStore
+
+
+const {  channelList, channelTotal } = storeToRefs(channelStore)
 const metaData = toRef(schema, 'metaData')
 const curStatus = computed(() => _get(metaData.value, 'curStatus.status', 'new'))
 const mainChannel = computed(() => {

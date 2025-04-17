@@ -51,7 +51,7 @@ class QuestionDataFormater {
   }
 
   formateData(): FormateConfigData {
-    const { title, activityId, data } = this.data;
+    const { title, activityId = '', data } = this.data;
     const { dataConf, baseConf, submitConf } = data;
     const { dataList = [] } = dataConf;
     const { beginTime, endTime, loginLimit } = baseConf;

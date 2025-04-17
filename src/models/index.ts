@@ -5,15 +5,13 @@ export interface IResponse<T> {
 }
 
 export interface SurveyChannelData {
-  channelInfo: {
-    ownerId: string;
-    surveyId: string;
-    operatorId: string;
-    name: string;
-    type: string;
-    status: string;
-    surveyPath: string;
-  };
+  ownerId: string;
+  surveyId: string;
+  operatorId: string;
+  name: string;
+  type: string;
+  status: string;
+  surveyPath: string;
 }
 
 export interface SurveySchemaData {

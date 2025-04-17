@@ -64,7 +64,7 @@ export const CardRender: React.FC<any> = (
       }
 
       // 判断show里传入activityId是否等于channel关联的SurveyPath
-      if (channelData?.channelInfo.surveyPath !== activityId) {
+      if (channelData?.surveyPath !== activityId) {
         setLoading(false);
         onError && onError(new Error('surveyPath is invalid'));
         return;

@@ -59,7 +59,7 @@ export const NPSRating: React.FC<NPSRatingProps> = (props) => {
   };
   return (
     <View style={[styles.wrap, containerStyle]}>
-      {Array.from({ length: max }, (_, i) => i).map((star, index) => (
+      {Array.from({ length: max }, (_, i) => i).map((_, index) => (
         <Pressable
           key={index}
           onPress={() => !disable && handleRating(index + 1)}

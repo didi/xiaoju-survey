@@ -96,6 +96,10 @@ onMounted(async () => {
       router.replace({ name: 'survey' })
     }, 1000)
   }
+  channelStore.getChannelList({
+    surveyId: route.params.id as string,
+    curPage: 1
+  })
 })
 </script>
 <style lang="scss" scoped>

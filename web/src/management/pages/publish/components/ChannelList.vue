@@ -63,12 +63,6 @@ const editStore = useEditStore()
 const {  channelList, channelTotal } = storeToRefs(channelStore)
 const { surveyId } =storeToRefs(editStore)
 
-onMounted(() => {
-  channelStore.getChannelList({
-    surveyId: surveyId.value,
-    curPage: 1
-  })
-})
 const handleCurrentChange = (current: number) => {
   channelStore.getChannelList({
     surveyId: surveyId.value,

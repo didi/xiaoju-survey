@@ -43,9 +43,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  channelId: {
-    type: String,
-    default: '',
+  channel: {
+    type: Object,
+    default: () => {
+      return {}
+    },
   },
 })
 const emit = defineEmits(['close', 'confirm'])
@@ -57,7 +59,7 @@ watch(
   () => props.visible,
   (val) => {
     if (val) {
-      channelForm.name = ''
+      channelForm.name = props.channel.name || ''
     }
   }
 )

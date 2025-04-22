@@ -25,7 +25,7 @@
     </el-table-column>
     <el-table-column label="操作" :width="320" class-name="table-options">
       <template #default="scope">
-        <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row._id)">重命名</el-button>
+        <el-button type="primary" text :icon="Edit" @click="() => handleRename(scope.row)">重命名</el-button>
         <el-button type="primary" text v-if="scope.row.status === 'recycling'" @click="() => handleClose(scope.row._id)">
           <i class="iconfont icon-icon_guanbi"></i>关闭
         </el-button>
@@ -40,11 +40,11 @@
   <div class="pagination-container">
     <el-pagination layout="prev, pager, next" :total="channelTotal" @current-change="handleCurrentChange"/>
   </div>
-  <ChannelModify :visible="channelModifyVisible" :channel-id="curChannelId" @confirm="handleRenameConfirm" @close="handleRanameClose"/>
+  <ChannelModify :visible="channelModifyVisible" :channel="curChannel" @confirm="handleRenameConfirm" @close="handleRanameClose"/>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia' 
@@ -84,8 +84,12 @@ const handleDelete = (channelId: string) => {
 }
 const channelModifyVisible = ref(false)
 const curChannelId = ref('')
-const handleRename = (channelId: string) => {
+const curChannel = ref({})
+
+const handleRename = (row: any) => {
+  const channelId = row._id
   curChannelId.value = channelId
+  curChannel.value = row
   channelModifyVisible.value = true
 }
 const handleRenameConfirm = (name: string) => {

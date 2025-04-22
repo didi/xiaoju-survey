@@ -7,7 +7,7 @@
   </el-checkbox>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { FORM_CHANGE_EVENT_KEY } from '@/materials/setters/constant'
 
 interface Props {

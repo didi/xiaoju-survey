@@ -161,11 +161,7 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (
-      !responseSchema ||
-      responseSchema.isDeleted ||
-      responseSchema.curStatus.status === RECORD_STATUS.REMOVED
-    ) {
+    if (!responseSchema || responseSchema.isDeleted || responseSchema.curStatus.status === RECORD_STATUS.REMOVED) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
     if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {

@@ -38,6 +38,14 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/recycleBin',
+    name: 'recycleBin',
+    component: () => import('../pages/recycleBin/recycleBin.vue'),
+    meta: {
+      needLogin: true
+    }
+  },
+  {
     path: '/survey/:id/edit',
     meta: {
       needLogin: true,

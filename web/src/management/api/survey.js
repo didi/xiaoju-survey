@@ -44,6 +44,21 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
   })
 }
 
+// 移动至回收站
+export const removeSurvey = (surveyId) => {
+  return axios.post('/survey/removeSurvey', {
+    surveyId
+  })
+}
+
+// 移出回收站
+export const restoreSurvey = (surveyId) => {
+  return axios.post('/survey/restoreSurvey', {
+    surveyId
+  })
+}
+
+// 从回收站删除
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
     surveyId

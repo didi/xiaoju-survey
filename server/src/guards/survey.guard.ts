@@ -8,6 +8,7 @@ import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.servic
 import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException';
 import { NoPermissionException } from 'src/exceptions/noPermissionException';
 
+// 页面显示逻辑。此处需要更改，增加被删除的状态
 @Injectable()
 export class SurveyGuard implements CanActivate {
   constructor(

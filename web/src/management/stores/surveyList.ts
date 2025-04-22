@@ -131,13 +131,34 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   } = useSearchSurvey()
 
   const workSpaceStore = useWorkSpaceStore()
-  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
-    const filterString = JSON.stringify(
-      listFilter.value.filter((item) => {
-        return item.condition[0].value
-      })
-    )
-    const orderString = JSON.stringify(listOrder.value)
+  async function getSurveyList(payload: { curPage?: number; pageSize?: number; recycle?: boolean; extraOrder?: any }) {
+    const originalListFilter = listFilter.value;
+
+    let tempListFilter = [...originalListFilter];
+
+    const extraFilter = {
+        comparator: payload.recycle ? '$eq' : '$ne',
+        condition: [{
+          field: 'curStatus.status',
+          conparator: payload.recycle ? '$eq' : '$ne',
+          value: 'REMOVED',
+        }]
+    };
+    if (payload.recycle) {
+      tempListFilter.push(extraFilter);
+    }
+
+    const filteredList = tempListFilter.filter((item) => {
+      return item.condition[0].value;
+    });
+
+    const filterString = JSON.stringify(filteredList);
+    alert("filter string send:" + filterString);
+     // 使用 extraOrder 或默认的 listOrder
+    const order = payload.extraOrder || listOrder.value;
+    const orderString = JSON.stringify(order);
+    alert("order string send:" + orderString);
+
     try {
       const params = {
         curPage: payload?.curPage || 1,
@@ -150,11 +171,17 @@ export const useSurveyListStore = defineStore('surveyList', () => {
 
       const res: any = await getSurveyListReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
+        alert("request code:" + res.code);
+        alert("request message: " + res.data.data);
+        alert("request count: " + res.data.count);
         surveyList.value = res.data.data
         surveyTotal.value = res.data.count
       } else {
+        alert("request code:" + res.code);
+        alert("request message: " + res.errmsg);
         ElMessage.error(res.errmsg)
       }
+      
     } catch (error) {
       ElMessage.error('getSurveyList status' + error)
     }

@@ -233,8 +233,8 @@ const getToolConfig = (row) => {
       label: '修改'
     },
     {
-      key: 'delete',
-      label: '删除',
+      key: 'remove',
+      label: '回收',
       icon: 'icon-shanchu'
     },
     {
@@ -283,8 +283,8 @@ const getToolConfig = (row) => {
             label: '修改'
           },
           {
-            key: 'delete',
-            label: '删除',
+            key: 'remove',
+            label: '回收',
             icon: 'icon-shanchu'
           },
           {
@@ -311,11 +311,8 @@ const getToolConfig = (row) => {
     permissionsBtn.splice(-1)
     funcList = permissionsBtn
   }
-  const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if (
-    row.curStatus.status === curStatus.new.value ||
-    row.subStatus.status === subStatus.pausing.value
-  ) {
+  const order = ['edit', 'analysis', 'release', 'pausing', 'remove', 'copy', 'cooper']
+  if (row.curStatus.status === curStatus.new.value || row.subStatus.status === subStatus.pausing.value) {
     // 去掉暂停按钮
     order.splice(3, 1)
     funcList = funcList.filter((item) => item.key !== subStatus.pausing.value)
@@ -348,8 +345,8 @@ const handleClick = (key, data) => {
         }
       })
       return
-    case 'delete':
-      onDelete(data)
+    case 'remove':
+      onRemove(data)
       return
     case 'cooper':
       onCooper(data)
@@ -361,9 +358,10 @@ const handleClick = (key, data) => {
       return
   }
 }
-const onDelete = async (row) => {
+
+const onRemove = async (row) => {
   try {
-    await ElMessageBox.confirm('是否确认删除？', '提示', {
+    await ElMessageBox.confirm('是否放入回收站？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -372,7 +370,7 @@ const onDelete = async (row) => {
     return
   }
 
-  const res = await deleteSurvey(row._id)
+  const res = await removeSurvey(row._id)
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('删除成功')
     onRefresh()

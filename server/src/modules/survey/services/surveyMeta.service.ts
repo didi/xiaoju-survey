@@ -123,6 +123,38 @@ export class SurveyMetaService {
     return this.surveyRepository.save(survey);
   }
 
+  async removeSurveyMeta({ surveyId, operator, operatorId }) {
+    console.log('removeSurveyMeta', surveyId, operator, operatorId);
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.REMOVED, date: new Date() }, 
+          operator,
+          operatorId
+        },
+      },
+    );
+  }
+
+  // 恢复问卷，转入编辑状态
+  async restoreSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.EDITING, date: new Date() }, 
+          operator,
+          operatorId
+        },
+      },
+    );
+  }
+
   async deleteSurveyMeta({ surveyId, operator, operatorId }) {
     return this.surveyRepository.updateOne(
       {

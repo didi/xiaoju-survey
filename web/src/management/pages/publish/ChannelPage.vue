@@ -70,7 +70,7 @@ const editStore = useEditStore()
 const { schema, init, setSurveyId } = editStore
 
 
-const {  channelList, channelTotal } = storeToRefs(channelStore)
+const { channelTotal } = storeToRefs(channelStore)
 const metaData = toRef(schema, 'metaData')
 const curStatus = computed(() => _get(metaData.value, 'curStatus.status', 'new'))
 const mainChannel = computed(() => {

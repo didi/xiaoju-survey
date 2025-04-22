@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { storeToRefs } from 'pinia' 

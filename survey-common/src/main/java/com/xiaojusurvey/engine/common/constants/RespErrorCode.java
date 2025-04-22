@@ -24,9 +24,9 @@ public enum RespErrorCode {
     RESPONSE_CURRENT_TIME_NOT_ALLOW(9002, "当前时间不允许提交"),
     RESPONSE_OVER_LIMIT(9003, "超出限制"),
     RESPONSE_SCHEMA_REMOVED(9004, "问卷已删除"),
-    RESPONSE_DATA_DECRYPT_ERROR(9005, "问卷已删除"),
-    UPLOAD_FILE_ERROR(5001, "上传文件错误");
-
+    RESPONSE_DATA_DECRYPT_ERROR(9005, "数据解密失败"),
+    UPLOAD_FILE_ERROR(5001, "上传文件错误"),
+    WHITELIST_ERROR(4002, "白名单校验错误");
 
     private final int code;
     private final String message;

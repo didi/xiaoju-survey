@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
     public User getUserById(String userId) {
         return mongoRepository.findOne(new Query(Criteria.where("_id").is(userId)), User.class);
     }
+
+    @Override
+    public User getUserByUsername(String whitelist) {
+        return mongoRepository.findOne(new Query(Criteria.where("username").is(whitelist)), User.class);
+    }
 }

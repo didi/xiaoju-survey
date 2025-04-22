@@ -203,6 +203,7 @@ const fetchSurveyList = async (params?: any) => {
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }
+  params.recycle = false
   loading.value = true
   await surveyListStore.getSurveyList(params)
   loading.value = false

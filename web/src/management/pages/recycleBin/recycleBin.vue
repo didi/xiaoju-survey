@@ -9,20 +9,9 @@
           :total="surveyTotal"
           @refresh="fetchRecycleList"
           ref="listRef"
+          :recycleBin="true"
           v-if="workSpaceId || groupId"
       ></BaseList>
-  
-      <!-- 分页组件 -->
-      <div class="pagination" style="text-align: right;">
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          :total="total"
-          @current-change="handlePageChange"
-        />
-      </div>
     </div>
   </template>
   
@@ -30,6 +19,7 @@
   import { ref, onMounted } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useRouter } from 'vue-router'
+  import BaseList from '@/management/pages/list/components/BaseList.vue'
   import { useSurveyListStore } from '@/management/stores/surveyList'
   import { useWorkSpaceStore } from '@/management/stores/workSpace'
   import TopNav from '@/management/components/TopNav.vue'
@@ -63,8 +53,6 @@
 
     params.recycle = true;
     params.extraOrder = extraOrder;
-    alert("recycle: " + true);
-    alert(JSON.stringify(extraOrder)); // 打印额外的排序条件
 
     if (workSpaceId.value) {
       params.workspaceId = workSpaceId.value
@@ -72,11 +60,6 @@
     loading.value = true
     await surveyListStore.getSurveyList(params)
     loading.value = false
-  }
-  
-  const handlePageChange = (page: number) => {
-    currentPage.value = page
-    fetchRecycleList()
   }
   
   onMounted(() => {

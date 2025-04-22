@@ -140,24 +140,19 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         comparator: payload.recycle ? '$eq' : '$ne',
         condition: [{
           field: 'curStatus.status',
-          conparator: payload.recycle ? '$eq' : '$ne',
-          value: 'REMOVED',
+          comparator: payload.recycle ? '$eq' : '$ne',
+          value: 'removed',
         }]
     };
-    if (payload.recycle) {
-      tempListFilter.push(extraFilter);
-    }
+    tempListFilter.push(extraFilter);
 
     const filteredList = tempListFilter.filter((item) => {
       return item.condition[0].value;
     });
 
     const filterString = JSON.stringify(filteredList);
-    alert("filter string send:" + filterString);
-     // 使用 extraOrder 或默认的 listOrder
     const order = payload.extraOrder || listOrder.value;
     const orderString = JSON.stringify(order);
-    alert("order string send:" + orderString);
 
     try {
       const params = {
@@ -171,14 +166,9 @@ export const useSurveyListStore = defineStore('surveyList', () => {
 
       const res: any = await getSurveyListReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
-        alert("request code:" + res.code);
-        alert("request message: " + res.data.data);
-        alert("request count: " + res.data.count);
         surveyList.value = res.data.data
         surveyTotal.value = res.data.count
       } else {
-        alert("request code:" + res.code);
-        alert("request message: " + res.errmsg);
         ElMessage.error(res.errmsg)
       }
       

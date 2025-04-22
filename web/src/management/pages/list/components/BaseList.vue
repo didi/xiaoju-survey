@@ -71,7 +71,7 @@
             <ToolBar
               :data="scope.row"
               type="list"
-              :tools="getToolConfig(scope.row)"
+              :tools="getToolConfig(scope.row, recycleBin)"
               :tool-width="50"
               @click="handleClick"
             />
@@ -159,6 +159,10 @@ const props = defineProps({
   total: {
     type: Number,
     default: 0
+  },
+  recycleBin: { // 增加 recycleBin 属性
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits(['refresh'])
@@ -225,7 +229,7 @@ const onRefresh = async () => {
   emit('refresh', params)
 }
 
-const getToolConfig = (row) => {
+const getToolConfig = (row, recycle) => {
   let funcList = []
   const permissionsBtn = [
     {
@@ -236,6 +240,16 @@ const getToolConfig = (row) => {
       key: 'remove',
       label: '回收',
       icon: 'icon-shanchu'
+    },
+    {
+      key: 'delete', 
+      label: '删除',
+      icon: 'icon-shanchu'
+    },
+    {
+      key: 'restore',
+      label: '恢复',
+      icon: 'icon-huifu'
     },
     {
       key: QOP_MAP.COPY,
@@ -259,6 +273,21 @@ const getToolConfig = (row) => {
       label: '协作'
     }
   ]
+  if (recycle) {
+    funcList.push(
+      {
+      key: 'delete', 
+      label: '删除',
+      },
+      {
+        key: 'restore',
+        label: '恢复',
+      },
+    )
+    const order = ['delete', 'restore']
+    const result = funcList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+    return result
+  }
   if (!workSpaceId.value) {
     if (!row.isCollaborated) {
       // 创建人显示协作按钮
@@ -354,6 +383,12 @@ const handleClick = (key, data) => {
     case 'pausing':
       onPausing(data)
       return
+    case 'delete':
+      onDelete(data)
+      return
+    case 'restore':
+      onRestore(data)
+      return
     default:
       return
   }
@@ -372,12 +407,56 @@ const onRemove = async (row) => {
 
   const res = await removeSurvey(row._id)
   if (res.code === CODE_MAP.SUCCESS) {
+    ElMessage.success('放入回收站成功')
+    onRefresh()
+    workSpaceStore.getGroupList()
+    workSpaceStore.getSpaceList()
+  } else {
+    ElMessage.error(res.errmsg || '放入回收站失败')
+  }
+}
+
+const onDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm('是否删除？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (error) {
+    return
+  }
+
+  const res = await deleteSurvey(row._id)
+  if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('删除成功')
     onRefresh()
     workSpaceStore.getGroupList()
     workSpaceStore.getSpaceList()
   } else {
     ElMessage.error(res.errmsg || '删除失败')
+  }
+}
+
+const onRestore = async (row) => {
+  try {
+    await ElMessageBox.confirm('是否恢复该问卷？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (error) {
+    return
+  }
+
+  const res = await restoreSurvey(row._id)
+  if (res.code === CODE_MAP.SUCCESS) {
+    ElMessage.success('恢复成功')
+    onRefresh()
+    workSpaceStore.getGroupList()
+    workSpaceStore.getSpaceList()
+  } else {
+    ElMessage.error(res.errmsg || '恢复失败')
   }
 }
 

@@ -81,9 +81,13 @@
   </div>
 </template>
 <script setup>
-import { ref, nextTick, onMounted, computed, onBeforeUnmount } from 'vue'
+import { ref, nextTick, onMounted, computed, onBeforeUnmount, watch } from 'vue'
 import Picker from '@/management/pages/edit/components/Picker/index.vue'
 import { isMobile as isInMobile } from '@/render/utils/index'
+defineOptions({
+  name: 'BaseCascader'
+})
+
 const props = defineProps({
   cascaderData: {
     type: Object,
@@ -105,6 +109,36 @@ const pickPop = ref(false)
 const listPop = ref([])
 const pickIndex = ref(-1)
 const isMobile = ref(isInMobile())
+
+// 根据hash获取数据
+function getValListByHash(list, hash) {
+  for (const item of list) {
+    if (item.hash === hash) {
+      return item
+    }
+
+    if (item.children) {
+      const result = getValListByHash(item.children, hash)
+      if (result) return result
+    }
+  }
+
+  return null
+}
+
+watch(
+  () => props.value,
+  (val) => {
+    const hashList = val?.split(',') || []
+    valList.value = props.cascaderData.placeholder.map((_item, i) => {
+      const val = hashList[i] ? getValListByHash(props.cascaderData.children, hashList[i]) : null
+      return val
+    })
+  },
+  {
+    once: true
+  }
+)
 
 const placeholderList = computed(() => {
   return props.cascaderData.placeholder

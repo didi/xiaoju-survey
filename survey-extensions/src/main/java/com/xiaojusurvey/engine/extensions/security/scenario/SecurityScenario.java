@@ -38,6 +38,7 @@ public abstract class SecurityScenario {
         }
         if (obj instanceof String) {
             log.error("{} 基于String的不可变性，不支持修改String {}", obj.getClass().getName(), obj);
+            return;
         }
 
         // 如果对象是map，则只操作其value

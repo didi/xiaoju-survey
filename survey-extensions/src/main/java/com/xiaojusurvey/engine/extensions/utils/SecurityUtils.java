@@ -34,7 +34,7 @@ public class SecurityUtils {
     /**
      * 地址正则表达式
      */
-    private static final Pattern ADDRESS_PATTERN = Pattern.compile(".*省|.*自治区|.*市|.*区|.*镇|.*县");
+    private static final Pattern ADDRESS_PATTERN = Pattern.compile("(.*?省|.*?自治区|.*?市|.*?区|.*?县|.*?镇)");
 
     /**
      * 邮箱正则
@@ -145,6 +145,13 @@ public class SecurityUtils {
         String aesSecretKey = environment.getProperty("XIAOJU_SURVEY_RESPONSE_AES_SECRET_KEY");
         if (!StringUtils.hasText(aesSecretKey)) {
             aesSecretKey = "EncryptSecretKey";
+        }
+        if (aesSecretKey.length() < 16) {
+            log.warn("密钥长度为{}，小于16字节，将返回默认密钥", aesSecretKey.length());
+            aesSecretKey = "EncryptSecretKey";
+        } else if (aesSecretKey.length() > 16) {
+            log.warn("密钥长度为{}，大于16字节，将取前16字节作为密钥", aesSecretKey.length());
+            aesSecretKey = aesSecretKey.substring(0, 16);
         }
         return aesSecretKey;
     }

@@ -14,14 +14,9 @@ public @interface DataSecurity {
     SecurityScenarioEnum securityScenario();
 
     /**
-     * 算法（加密时使用）
+     * 密钥，默认从配置文件中获取
      */
-    String algorithm() default "aes";
-
-    /**
-     * 密钥
-     */
-    String secretKey();
+    String secretKey() default "";
 
     /**
      * 占位符，数据脱敏时使用

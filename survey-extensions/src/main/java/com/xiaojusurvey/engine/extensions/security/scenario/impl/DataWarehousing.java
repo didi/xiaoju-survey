@@ -2,6 +2,7 @@ package com.xiaojusurvey.engine.extensions.security.scenario.impl;
 
 import com.xiaojusurvey.engine.common.enums.SecurityScenarioEnum;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataSecurityInvocation;
+import com.xiaojusurvey.engine.extensions.security.scenario.DataWrapper;
 import com.xiaojusurvey.engine.extensions.security.scenario.SecurityScenario;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,20 +19,19 @@ public class DataWarehousing extends SecurityScenario {
      * 数据加密
      */
     @Override
-    public void before(DataSecurityInvocation dataSecurityInvocation) {
+    public void before(DataSecurityInvocation dataSecurityInvocation, DataWrapper dataWrapper) {
         if (Objects.isNull(dataSecurityInvocation)) {
             return;
         }
-        encryptData(dataSecurityInvocation.getArguments(), dataSecurityInvocation);
+        encryptData(dataWrapper, dataSecurityInvocation);
     }
 
     /**
      * 数据解密
      */
     @Override
-    public Object after(DataSecurityInvocation dataSecurityInvocation, Object result) {
-        decryptData(result, dataSecurityInvocation);
-        return result;
+    public void after(DataSecurityInvocation dataSecurityInvocation, DataWrapper dataWrapper) {
+        decryptData(dataWrapper, dataSecurityInvocation);
     }
 
     @Override

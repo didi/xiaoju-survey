@@ -2,6 +2,7 @@ package com.xiaojusurvey.engine.extensions.security.scenario.aop;
 
 import com.xiaojusurvey.engine.common.enums.SecurityScenarioEnum;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataSecurityInvocation;
+import com.xiaojusurvey.engine.extensions.security.scenario.DataWrapper;
 import com.xiaojusurvey.engine.extensions.security.scenario.SecurityScenario;
 import com.xiaojusurvey.engine.extensions.security.scenario.annotation.DataSecurity;
 import lombok.extern.slf4j.Slf4j;
@@ -46,11 +47,15 @@ public class SecurityScenarioAspect implements InitializingBean {
             SecurityScenario securityScenario = securityScenarioMap.get(annotation.securityScenario());
             DataSecurityInvocation invocation = new DataSecurityInvocation(method.getName(), method.getParameterTypes(), pjp.getArgs(), annotation);
             // 方法进入前处理
-            securityScenario.before(invocation);
-            // 方法进行中
-            Object result = pjp.proceed();
+            DataWrapper dataWrapper = DataWrapper.builder().value(invocation.getArguments()).build();
+            securityScenario.before(invocation, dataWrapper);
+            invocation.setArguments((Object[]) dataWrapper.getValue());
+            // 方法执行
+            Object proceed = pjp.proceed(pjp.getArgs());
+            DataWrapper proceedWrapper = DataWrapper.builder().value(proceed).build();
             // 方法结束处理
-            return securityScenario.after(invocation, result);
+            securityScenario.after(invocation, proceedWrapper);
+            return proceedWrapper.getValue();
         }
         return pjp.proceed();
     }
@@ -58,9 +63,7 @@ public class SecurityScenarioAspect implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         if (!CollectionUtils.isEmpty(securityScenarios)) {
-            securityScenarios.forEach(scenario -> {
-                securityScenarioMap.put(scenario.getSecurityScenario(), scenario);
-            });
+            securityScenarios.forEach(scenario -> securityScenarioMap.put(scenario.getSecurityScenario(), scenario));
         }
     }
 }

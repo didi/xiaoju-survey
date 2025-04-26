@@ -1,56 +1,87 @@
 <template>
   <div class="cascader-wrapper">
     <div class="cascader-wrapper-mobile" v-if="isMobile">
-      <div v-for="(v, i) in valList" :key="v+i" class="cascader-select-item">
+      <div v-for="(v, i) in valList" :key="v + i" class="cascader-select-item">
         <template v-if="i == 0">
-          <div :class="`select-input ${i==pickIndex ? 'border-active' : ''}`" @click="showPickPop(props.cascaderData.children,i)">
+          <div
+            :class="`select-input ${i == pickIndex ? 'border-active' : ''}`"
+            @click="showPickPop(props.cascaderData.children, i)"
+          >
             <div class="select-input-left">
-                <div v-if="valList[i]" class="select-input-active">{{ valList[i].text }}</div>
-                <div v-else class="select-input-placeholder">{{ placeholderList[i].text }}</div>
+              <div v-if="valList[i]" class="select-input-active">{{ valList[i].text }}</div>
+              <div v-else class="select-input-placeholder">{{ placeholderList[i].text }}</div>
             </div>
-            <div class="select-input-right"><i-ep-ArrowDown class="arrow-down-icon"/></div>
+            <div class="select-input-right"><i-ep-ArrowDown class="arrow-down-icon" /></div>
           </div>
         </template>
         <template v-else>
           <div v-if="valList[i - 1] && valList[i - 1]?.children?.length > 0">
-            <div :class="`select-input ${i==pickIndex ? 'border-active' : ''}`" @click="showPickPop(valList[i - 1].children,i)">
+            <div
+              :class="`select-input ${i == pickIndex ? 'border-active' : ''}`"
+              @click="showPickPop(valList[i - 1].children, i)"
+            >
               <div class="select-input-left">
                 <div v-if="valList[i]" class="select-input-active">{{ valList[i].text }}</div>
                 <div v-else class="select-input-placeholder">{{ placeholderList[i].text }}</div>
               </div>
-              <div class="select-input-right"><i-ep-ArrowDown class="arrow-down-icon"/></div>
+              <div class="select-input-right"><i-ep-ArrowDown class="arrow-down-icon" /></div>
             </div>
           </div>
         </template>
       </div>
-      <Picker :list="listPop"
-      :showToolbar="true"  v-model="pickPop" @confirm="onConfirm" @cancel="onCancel" />
+      <Picker
+        :list="listPop"
+        :showToolbar="true"
+        v-model="pickPop"
+        @confirm="onConfirm"
+        @cancel="onCancel"
+      />
     </div>
     <div v-else class="cascader-wrapper-pc">
-      <div v-for="(v, i) in valList" :key="v+i" class="cascader-select-item">
+      <div v-for="(v, i) in valList" :key="v + i" class="cascader-select-item">
         <template v-if="i == 0">
           <div v-if="props.readonly" class="cascader-mask"></div>
-          <el-select v-model="valList[i]"  @change="(data)=>handleChange(data,i)" :placeholder="placeholderList[i].text" size="large" value-key="hash"
-            style="width: 194px">
-            <el-option  v-for="item in props.cascaderData.children" :key="item.hash" :label="item.text"
-              :value="item" />
+          <el-select
+            v-model="valList[i]"
+            @change="(data) => handleChange(data, i)"
+            :placeholder="placeholderList[i].text"
+            size="large"
+            value-key="hash"
+            style="width: 194px"
+          >
+            <el-option
+              v-for="item in props.cascaderData.children"
+              :key="item.hash"
+              :label="item.text"
+              :value="item"
+            />
           </el-select>
         </template>
         <template v-else>
           <div v-if="valList[i - 1] && valList[i - 1]?.children?.length > 0">
-            <el-select v-model="valList[i]" @change="(data)=>handleChange(data,i)" :placeholder="placeholderList[i].text" size="large" value-key="hash"
-              style="width: 194px">
-              <el-option v-for="item in valList[i - 1].children" :key="item.hash" :label="item.text" :value="item" />
+            <el-select
+              v-model="valList[i]"
+              @change="(data) => handleChange(data, i)"
+              :placeholder="placeholderList[i].text"
+              size="large"
+              value-key="hash"
+              style="width: 194px"
+            >
+              <el-option
+                v-for="item in valList[i - 1].children"
+                :key="item.hash"
+                :label="item.text"
+                :value="item"
+              />
             </el-select>
           </div>
         </template>
       </div>
     </div>
-
   </div>
 </template>
 <script setup>
-import { ref, nextTick, onMounted, computed,onBeforeUnmount } from 'vue'
+import { ref, nextTick, onMounted, computed, onBeforeUnmount } from 'vue'
 import Picker from '@/management/pages/edit/components/Picker/index.vue'
 import { isMobile as isInMobile } from '@/render/utils/index'
 const props = defineProps({
@@ -59,8 +90,8 @@ const props = defineProps({
     default: () => ({})
   },
   value: {
-      type: String,
-      default: ''
+    type: String,
+    default: ''
   },
   readonly: {
     type: Boolean,
@@ -69,7 +100,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['change'])
 
-const valList = ref([]);
+const valList = ref([])
 const pickPop = ref(false)
 const listPop = ref([])
 const pickIndex = ref(-1)
@@ -79,43 +110,42 @@ const placeholderList = computed(() => {
   return props.cascaderData.placeholder
 })
 
-
 const resetValList = (index) => {
-  for (let i = valList.value.length-1; index < i; i--) {
-      valList.value[i] = null;
-    }
+  for (let i = valList.value.length - 1; index < i; i--) {
+    valList.value[i] = null
+  }
 }
 
-const handleChange = async(val,i) => {
+const handleChange = async (val, i) => {
   await nextTick()
   resetValList(i)
-   if (val?.children?.length == 0) {
-    const hashList = [];
-    valList.value.map(v => {
+  if (val?.children?.length == 0) {
+    const hashList = []
+    valList.value.map((v) => {
       if (v) {
         hashList.push(v.hash)
       }
     })
-    emit('change',hashList.join(','))
+    emit('change', hashList.join(','))
   } else {
     if (props.value) {
-      emit('change','')
-   }
+      emit('change', '')
+    }
   }
 }
 
 const onConfirm = (val) => {
-  valList.value[pickIndex.value] = val;
-  handleChange(val, pickIndex.value);
-  pickIndex.value=-1
+  valList.value[pickIndex.value] = val
+  handleChange(val, pickIndex.value)
+  pickIndex.value = -1
 }
 const onCancel = () => {
-  pickIndex.value=-1
+  pickIndex.value = -1
 }
 
 const showPickPop = (list, index) => {
-  pickPop.value = true;
-  listPop.value = list;
+  pickPop.value = true
+  listPop.value = list
   pickIndex.value = index
 }
 
@@ -134,12 +164,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('resize', updateEquipment)
 })
-
-
 </script>
 <style lang="scss" scoped>
 .cascader-wrapper {
-  .cascader-mask{
+  .cascader-mask {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -149,43 +177,43 @@ onBeforeUnmount(() => {
   }
   &-pc {
     display: flex;
-    .cascader-select-item{
+    .cascader-select-item {
       margin-right: 8px;
       position: relative;
     }
   }
   &-mobile {
-    .cascader-select-item{
+    .cascader-select-item {
       margin-bottom: 8px;
     }
   }
-  .select-input{
+  .select-input {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width:100%;
+    width: 100%;
     height: 40px;
-    background: #FFFFFF;
-    border: 1px solid rgba(227,228,232,1);
+    background: #ffffff;
+    border: 1px solid rgba(227, 228, 232, 1);
     border-radius: 2px;
     padding: 9px 12px;
-    &-placeholder{
+    &-placeholder {
       font-size: 14px;
-      color: #C8C9CD;
+      color: #c8c9cd;
     }
-    &-active{
+    &-active {
       font-size: 14px;
-      color: #4A4C5B;
+      color: #4a4c5b;
     }
-    &:active{
+    &:active {
       // background: #F6F7F9;
       border-color: $primary-color;
     }
-    &.border-active{
+    &.border-active {
       border-color: $primary-color;
     }
-    .arrow-down-icon{
-      color:#C8C9CD;
+    .arrow-down-icon {
+      color: #c8c9cd;
     }
   }
 }

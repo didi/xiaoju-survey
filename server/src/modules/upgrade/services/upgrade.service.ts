@@ -84,6 +84,8 @@ export class UpgradeService {
     const handleDelStatus = (doc) => {
       // 已删除的字段升级
       if (doc?.curStatus?.status === 'removed') {
+        doc.updatedAt = new Date(doc.updatedAt);
+      } else if (doc?.isDeleted) {
         delete doc.curStatus;
         doc.isDeleted = true;
         doc.deletedAt = new Date(doc.updatedAt);

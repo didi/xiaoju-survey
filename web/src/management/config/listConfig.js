@@ -88,6 +88,11 @@ export const fieldConfig = {
     key: 'updatedAt',
     minWidth: 200
   },
+  deleteAt: {
+    title: '删除时间',
+    key: 'deleteAt',
+    minWidth: 200
+  },
   createdAt: {
     title: '创建时间',
     key: 'createdAt',

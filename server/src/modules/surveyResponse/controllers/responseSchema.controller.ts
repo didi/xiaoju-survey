@@ -10,7 +10,7 @@ import {
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
-import { RECORD_SUB_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ApiTags } from '@nestjs/swagger';
 import Joi from 'joi';
 import { Logger } from 'src/logger';
@@ -44,7 +44,11 @@ export class ResponseSchemaController {
       await this.responseSchemaService.getResponseSchemaByPath(
         queryInfo.surveyPath,
       );
-    if (!responseSchema || responseSchema.isDeleted) {
+    if (
+      !responseSchema ||
+      responseSchema.isDeleted ||
+      responseSchema.curStatus.status === RECORD_STATUS.REMOVED
+    ) {
       throw new HttpException(
         '问卷不存在或已删除',
         EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,

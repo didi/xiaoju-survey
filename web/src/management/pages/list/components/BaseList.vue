@@ -160,13 +160,19 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  recycleBin: { // 增加 recycleBin 属性
+  recycleBin: {
     type: Boolean,
     default: false
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
+const fields = computed(() => {
+  if (props.recycleBin) {
+    return ['type', 'title', 'remark', 'owner', 'createdAt', 'deleteAt']
+  } else {
+    return ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
+  }
+})
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})

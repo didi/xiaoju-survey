@@ -4,7 +4,7 @@ import { data } from "cheerio/lib/api/attributes";
 import { Authentication } from "src/guards/authentication.guard";
 import { CollaboratorService } from '../services/collaborator.service';
 import { SurveyMetaService } from '../services/surveyMeta.service';
-import { WorkspaceService } from "src/modules/workspace/services/workspace.service"; 
+import { WorkspaceService } from "src/modules/workspace/services/workspace.service";
 
 
 
@@ -40,7 +40,7 @@ export class RecycleBinController {
             isRecycleBin: true,
           });
 
-        
+
         return {
             code: 200,
             data: {

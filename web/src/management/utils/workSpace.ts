@@ -8,6 +8,7 @@ export interface MenuItem {
   name: string
   icon?: string
   total?: Number
+  count?: Number
   children?: MenuItem[]
 }
 

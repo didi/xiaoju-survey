@@ -219,6 +219,10 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
+const getRecycleBinCount = async (params?: any) => {
+  await workSpaceStore.getRecycleBinCount(params)
+}
+
 const handleSpaceSelect = async (id: string) => {
   if (activeValue.value === id) {
     return void 0
@@ -274,6 +278,7 @@ const fetchSurveyList = async (params?: any) => {
 
 onMounted(async () => {
   await Promise.all([fetchGroupList(), fetchSpaceList()])
+  await getRecycleBinCount()
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

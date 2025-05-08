@@ -18,6 +18,7 @@ import { CollaboratorController } from './controllers/collaborator.controller';
 import { DownloadTaskController } from './controllers/downloadTask.controller';
 import { SessionController } from './controllers/session.controller';
 import { SurveyGroupController } from './controllers/surveyGroup.controller';
+import { RecycleBinController } from './controllers/recycleBin.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -73,6 +74,7 @@ import { Session } from 'src/models/session.entity';
     DownloadTaskController,
     SessionController,
     SurveyGroupController,
+    RecycleBinController,
   ],
   providers: [
     DataStatisticService,

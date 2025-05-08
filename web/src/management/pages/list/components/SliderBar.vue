@@ -23,7 +23,7 @@
               <i :class="['iconfont', menu.icon]"></i>
               <span>{{ menu.name }}</span>
             </div>
-            <p class="title-total" v-if="menu.id === MenuType.RecycleBin">{{ 123 }}</p>
+            <p class="title-total" v-if="menu.id === MenuType.RecycleBin">{{ menu.count }}</p>
           </div>
         </template>
       </el-menu-item>
@@ -45,7 +45,6 @@
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
             <span>{{ menu.name }}</span>
-            <p class="title-total" v-if="menu.id === MenuType.RecycleBin">{{ 123 }}</p>
           </div>
         </template>
       </el-menu-item>

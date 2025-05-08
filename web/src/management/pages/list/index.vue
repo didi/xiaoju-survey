@@ -127,6 +127,8 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.RecycleBin) {
+    return '回收站'
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }
@@ -174,6 +176,10 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      break
+    case MenuType.RecycleBin:
+      workSpaceStore.changeMenuType(MenuType.RecycleBin)
+      workSpaceStore.changeWorkSpace('')
       break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>

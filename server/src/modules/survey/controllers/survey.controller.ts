@@ -22,7 +22,7 @@ import BannerData from '../template/banner/index.json';
 import { CreateSurveyDto } from '../dto/createSurvey.dto';
 
 import { Authentication } from 'src/guards/authentication.guard';
-import { HISTORY_TYPE } from 'src/enums';
+import { HISTORY_TYPE, RECORD_STATUS } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { Logger } from 'src/logger';
@@ -313,6 +313,12 @@ export class SurveyController {
 
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+
+    if (surveyMeta.curStatus.status == RECORD_STATUS.REMOVED) {
+      this.logger.info("survey is removed");
+      throw new HttpException('问卷已被删除', EXCEPTION_CODE.SURVEY_REMOVED);
+    }
+
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 

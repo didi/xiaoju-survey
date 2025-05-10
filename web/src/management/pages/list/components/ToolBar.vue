@@ -54,6 +54,15 @@ const handleClick = (e) => {
 <style lang="scss" scoped>
 .tool-bar-root {
   margin-left: -16px;
+
+  gap: 0px;
+  padding-left: 0px;
+
+  .tool-root {
+    min-width: 50px;
+    white-space: nowrap;
+    text-align: center;
+  }
   .tool-root:not(:last-child) {
     border-right: solid 1px $border-color;
   }

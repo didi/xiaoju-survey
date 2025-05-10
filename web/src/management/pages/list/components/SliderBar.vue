@@ -4,7 +4,7 @@
     class="el-menu-vertical"
     ref="menuRef"
     @select="handleMenu"
-    :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup]"
+    :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup, MenuType.RecycleBin]"
   >
     <template v-for="(menu, index) in props.menus" :key="menu.id">
       <el-menu-item

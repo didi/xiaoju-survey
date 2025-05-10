@@ -9,9 +9,6 @@
         <el-menu-item index="download">
           <router-link :to="{ name: 'download' }">下载中心</router-link>
         </el-menu-item>
-        <el-menu-item index="recycleBin">
-          <router-link :to="{ name: 'recycleBin' }">回收站</router-link>
-        </el-menu-item>
       </el-menu>
     </div>
     <div class="login-info">

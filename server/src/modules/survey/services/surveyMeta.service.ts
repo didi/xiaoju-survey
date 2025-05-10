@@ -8,6 +8,8 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { GROUP_STATE } from 'src/enums/surveyGroup';
+import { update } from 'lodash';
+import { log } from 'console';
 
 @Injectable()
 export class SurveyMetaService {
@@ -132,6 +134,7 @@ export class SurveyMetaService {
       {
         $set: {
           curStatus: { status: RECORD_STATUS.REMOVED, date: new Date() }, 
+          updatedAt: new Date(),
           operator,
           operatorId
         },
@@ -148,6 +151,7 @@ export class SurveyMetaService {
       {
         $set: {
           curStatus: { status: RECORD_STATUS.EDITING, date: new Date() }, 
+          updatedAt: new Date(),
           operator,
           operatorId
         },
@@ -341,6 +345,9 @@ export class SurveyMetaService {
       {
         workspaceId: null,
       },
+      {   
+        "curStatus.status": { $ne: RECORD_STATUS.REMOVED },
+      }
     ];
     if (groupId) {
       if (groupId !== 'all') {

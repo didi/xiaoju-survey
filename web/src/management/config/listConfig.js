@@ -136,6 +136,10 @@ export const noDownloadTaskConfig = {
   desc: '可以在数据分析进行下载',
   img: '/imgs/icons/list-empty.webp'
 }
+export const noRemovedData = {
+  title: '没有被回收问卷', 
+  img: '/imgs/icons/list-empty.webp'
+}
 
 export const curStatus = {
   new: {

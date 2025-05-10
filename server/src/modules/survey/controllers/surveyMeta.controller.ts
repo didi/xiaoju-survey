@@ -90,7 +90,7 @@ export class SurveyMetaController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { curPage, pageSize, workspaceId, groupId } = value;
+    const { curPage, pageSize, workspaceId, groupId, isRecycleBin } = value;
     let filter = {},
       order = {};
     if (value.filter) {
@@ -129,6 +129,7 @@ export class SurveyMetaController {
       workspaceId,
       groupId,
       surveyIdList,
+      isRecycleBin,
     });
     return {
       code: 200,

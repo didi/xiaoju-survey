@@ -9,6 +9,7 @@ import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
 import { useWorkSpaceStore } from './workSpace'
 
 import { curStatus, subStatus, curStatusKey, subStatusKey } from '@/management/config/listConfig'
+import { MenuType } from '../utils/workSpace'
 
 const verdictStatus = (status: never) => {
   if (curStatus[status]) return curStatusKey
@@ -131,7 +132,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   } = useSearchSurvey()
 
   const workSpaceStore = useWorkSpaceStore()
-  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
+  async function getSurveyList(payload: { curPage?: number; pageSize?: number; isRecycleBin?: boolean }) {
     const filterString = JSON.stringify(
       listFilter.value.filter((item) => {
         return item.condition[0].value
@@ -145,7 +146,8 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         filter: filterString,
         order: orderString,
         workspaceId: workSpaceStore.workSpaceId,
-        groupId: workSpaceStore.groupId
+        groupId: workSpaceStore.groupId,
+        isRecycleBin: payload?.isRecycleBin || false,
       }
 
       const res: any = await getSurveyListReq(params)

@@ -53,7 +53,7 @@
           :total="surveyTotal"
           @refresh="fetchSurveyList"
           ref="listRef"
-          v-if="workSpaceId || groupId"
+          v-if="workSpaceId || groupId || menuType === MenuType.RecycleBin"
         ></BaseList>
         <SpaceList
           ref="spaceListRef"
@@ -146,6 +146,7 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
+const isRecycleBin = ref(false)
 
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -161,8 +162,8 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
-const getRecycleBinCount = async (params?: any) => {
-  await workSpaceStore.getRecycleBinCount(params)
+const getRecycleBinList = async (params?: any) => {
+  await workSpaceStore.getRecycleBinList(params)
 }
 
 const handleSpaceSelect = async (id: string) => {
@@ -175,17 +176,22 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.PersonalGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchGroupList()
+      isRecycleBin.value = false
       break
     case MenuType.SpaceGroup:
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      isRecycleBin.value = false
       break
     case MenuType.RecycleBin:
       workSpaceStore.changeMenuType(MenuType.RecycleBin)
       workSpaceStore.changeWorkSpace('')
+      isRecycleBin.value = true
+      await fetchSurveyList()
       break
     default: {
+      isRecycleBin.value = false
       const parentMenu = spaceMenus.value.find((parent: any) =>
         parent.children.find((children: any) => children.id.toString() === id)
       )
@@ -198,6 +204,7 @@ const handleSpaceSelect = async (id: string) => {
         }
       }
       listRef?.value?.resetCurrentPage()
+      await fetchSurveyList()
       break
     }
   }
@@ -213,6 +220,7 @@ const fetchSurveyList = async (params?: any) => {
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }
+  params.isRecycleBin = isRecycleBin.value
   loading.value = true
   await surveyListStore.getSurveyList(params)
   loading.value = false
@@ -220,7 +228,7 @@ const fetchSurveyList = async (params?: any) => {
 
 onMounted(async () => {
   await Promise.all([fetchGroupList(), fetchSpaceList()])
-  await getRecycleBinCount()
+  await getRecycleBinList()
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

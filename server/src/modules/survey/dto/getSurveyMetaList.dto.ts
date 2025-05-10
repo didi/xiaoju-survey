@@ -20,6 +20,9 @@ export class GetSurveyListDto {
   @ApiProperty({ description: '分组id', required: false })
   groupId?: string;
 
+  @ApiProperty({ description: '是否查询回收站', required: false })
+  isRecycleBin?: boolean;
+
   static validate(data) {
     return Joi.object({
       curPage: Joi.number().required(),
@@ -28,6 +31,7 @@ export class GetSurveyListDto {
       order: Joi.string().allow(null),
       workspaceId: Joi.string().allow(null, ''),
       groupId: Joi.string().allow(null, ''),
+      isRecycleBin: Joi.boolean().allow(null, false),
     }).validate(data);
   }
 }

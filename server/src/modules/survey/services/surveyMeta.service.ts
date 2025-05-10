@@ -149,6 +149,7 @@ export class SurveyMetaService {
     workspaceId?: string;
     groupId?: string;
     surveyIdList?: Array<string>;
+    isRecycleBin?: boolean;
   }): Promise<{ data: any[]; count: number }> {
     const {
       pageNum,
@@ -158,17 +159,30 @@ export class SurveyMetaService {
       workspaceId,
       groupId,
       surveyIdList,
+      isRecycleBin,
     } = condition;
     const skip = (pageNum - 1) * pageSize;
     try {
-      const query: ObjectLiteral = Object.assign(
-        {
-          isDeleted: {
-            $ne: true,
+      var query: ObjectLiteral
+      if (isRecycleBin) {
+        query = Object.assign(
+          {
+            isDeleted: {
+              $eq: true,
+            },
           },
-        },
-        condition.filter,
-      );
+          condition.filter,
+        );
+      } else {
+        query = Object.assign(
+          {
+            isDeleted: {
+              $ne: true,
+            },
+          },
+          condition.filter,
+        );
+      }
       const otherQuery: ObjectLiteral = {};
       if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
         query.$or = [];

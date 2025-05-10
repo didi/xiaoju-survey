@@ -97,8 +97,8 @@ export const deleteGroup = (id: string) => {
   return axios.post(`/surveyGroup/delete`, { groupId: id })
 }
 
-export const getRecycleBinCount = (params: any) => {
-  return axios.get('/recycleBin/count', {
+export const getRecycleBinList = (params: any) => {
+  return axios.get('/recycleBin', {
     params
   })
 }

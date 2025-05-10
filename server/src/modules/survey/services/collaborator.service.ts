@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { ObjectId } from 'mongodb';
 import { Logger } from 'src/logger';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 @Injectable()
 export class CollaboratorService {
@@ -164,11 +165,24 @@ export class CollaboratorService {
     );
   }
 
-  getCollaboratorListByUserId({ userId }) {
-    return this.collaboratorRepository.find({
-      where: {
-        userId,
-      },
-    });
+  getCollaboratorListByUserId({ userId, isRecycleBin = false }) {
+    if (isRecycleBin) {
+      return this.collaboratorRepository.find({
+        where: {
+          userId,
+          permissions: {
+            $elemMatch: {
+              $eq: SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+            },
+          },
+        },
+      });
+    } else {
+      return this.collaboratorRepository.find({
+        where: {
+          userId,
+        },
+      });
+    }
   }
 }

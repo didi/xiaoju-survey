@@ -15,7 +15,7 @@ import {
   getGroupList as getGroupListReq,
   updateGroup as updateGroupReq,
   deleteGroup as deleteGroupReq,
-  getRecycleBinList as getRecycleBinListReq
+  getRecycleBinCount as getRecycleBinCountReq
 } from '@/management/api/space'
 
 import { GroupState, MenuType } from '@/management/utils/workSpace'
@@ -250,9 +250,9 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   }
 
 
-  async function getRecycleBinList(params?:  any) {
+  async function getRecycleBinCount(params?:  any) {
     try {
-      const res: any = await getRecycleBinListReq(params)
+      const res: any = await getRecycleBinCountReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
         const { count } = res.data
         spaceMenus.value[2].count = count
@@ -291,6 +291,6 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     getGroupDetail,
     setGroupDetail,
     deleteGroup,
-    getRecycleBinList
+    getRecycleBinCount: getRecycleBinCount
   }
 })

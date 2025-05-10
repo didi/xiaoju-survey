@@ -165,12 +165,25 @@ export class CollaboratorService {
     );
   }
 
-  getCollaboratorListByUserId({ userId }) {
-    return this.collaboratorRepository.find({
-      where: {
-        userId,
-      },
-    });
+  getCollaboratorListByUserId({ userId, isRecycleBin = false }) {
+    if (isRecycleBin) {
+      return this.collaboratorRepository.find({
+        where: {
+          userId,
+          permissions: {
+            $elemMatch: {
+              $eq: SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+            },
+          },
+        },
+      });
+    } else {
+      return this.collaboratorRepository.find({
+        where: {
+          userId,
+        },
+      });
+    }
   }
   
   getManageListByUserId({ userId }) {

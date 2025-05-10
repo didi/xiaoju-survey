@@ -111,9 +111,9 @@ export class SurveyMetaController {
     }
     const userId = req.user._id.toString();
     let cooperationList = [];
-    if (groupId === GROUP_STATE.ALL) {
+    if (groupId === GROUP_STATE.ALL || isRecycleBin) {
       cooperationList =
-        await this.collaboratorService.getCollaboratorListByUserId({ userId });
+        await this.collaboratorService.getCollaboratorListByUserId({ userId, isRecycleBin });
     }
     if (isRecycleBin) {
       cooperationList = 

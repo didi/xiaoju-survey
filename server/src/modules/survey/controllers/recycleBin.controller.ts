@@ -11,7 +11,7 @@ import { Authentication } from "src/guards/authentication.guard";
 @Controller('/api/recycleBin')
 export class RecycleBinController {
 
-    @Get('/count')
+    @Get('')
     @HttpCode(200)
     async getCount(@Request() req) {
         return {

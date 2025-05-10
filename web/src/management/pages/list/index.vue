@@ -53,8 +53,16 @@
           :total="surveyTotal"
           @refresh="fetchSurveyList"
           ref="listRef"
-          v-if="workSpaceId || groupId || menuType === MenuType.RecycleBin"
+          v-if="workSpaceId || groupId"
         ></BaseList>
+        <RecycleBinList
+          :loading="loading"
+          :data="surveyList"
+          :total="surveyTotal"
+          @refresh="fetchSurveyList"
+          ref="listRef"
+          v-if="menuType === MenuType.RecycleBin"
+        ></RecycleBinList>
         <SpaceList
           ref="spaceListRef"
           @refresh="fetchSpaceList"
@@ -144,6 +152,7 @@ import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseList from './components/BaseList.vue'
+import RecycleBinList from './components/RecycleBinList.vue'
 import SpaceList from './components/SpaceList.vue'
 import GroupList from './components/GroupList.vue'
 import SliderBar from './components/SliderBar.vue'
@@ -221,8 +230,8 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
-const getRecycleBinList = async (params?: any) => {
-  await workSpaceStore.getRecycleBinList(params)
+const getRecycleBinCount = async (params?: any) => {
+  await workSpaceStore.getRecycleBinCount(params)
 }
 
 const handleSpaceSelect = async (id: string) => {
@@ -287,7 +296,7 @@ const fetchSurveyList = async (params?: any) => {
 
 onMounted(async () => {
   await Promise.all([fetchGroupList(), fetchSpaceList()])
-  await getRecycleBinList()
+  await getRecycleBinCount()
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

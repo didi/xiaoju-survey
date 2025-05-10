@@ -43,6 +43,7 @@ import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
+import { WorkspaceService } from '../workspace/services/workspace.service';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { Session } from 'src/models/session.entity';
     FileService,
     SessionService,
     SurveyGroupService,
+    WorkspaceService,
   ],
 })
 export class SurveyModule {}

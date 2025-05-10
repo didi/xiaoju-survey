@@ -14,6 +14,7 @@ import moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { WorkspaceService } from 'src/modules/workspace/services/workspace.service';
 
 import { getFilter, getOrder } from 'src/utils/surveyUtil';
 import { HttpException } from 'src/exceptions/httpException';
@@ -36,6 +37,7 @@ export class SurveyMetaController {
     private readonly surveyMetaService: SurveyMetaService,
     private readonly logger: Logger,
     private readonly collaboratorService: CollaboratorService,
+    private readonly workspaceService: WorkspaceService,
   ) {}
 
   @Post('/updateMeta')
@@ -109,15 +111,20 @@ export class SurveyMetaController {
     }
     const userId = req.user._id.toString();
     let cooperationList = [];
-    if (groupId === GROUP_STATE.ALL) {
+    if (groupId === GROUP_STATE.ALL || isRecycleBin) {
       cooperationList =
-        await this.collaboratorService.getCollaboratorListByUserId({ userId });
+        await this.collaboratorService.getCollaboratorListByUserId({ userId, isRecycleBin });
     }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
       pre[cur.surveyId] = cur;
       return pre;
     }, {});
-    const surveyIdList = cooperationList.map((item) => item.surveyId);
+    const surveyIdList1 = cooperationList.map((item) => item.surveyId);
+    let surveyIdList2 = []
+    if (isRecycleBin) {
+      surveyIdList2 = (await this.workspaceService.getAdminSurveyIdList(userId, isRecycleBin)).data.surveyIdList
+    }
+    const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];
     const username = req.user.username;
     const data = await this.surveyMetaService.getSurveyMetaList({
       pageNum: curPage,

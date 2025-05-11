@@ -95,6 +95,30 @@ export const fieldConfig = {
   }
 }
 
+export const recycleBinFieldConfig = {
+  title: {
+    title: '标题',
+    key: 'title',
+    width: 240,
+    tip: true
+  },
+  createdAt: {
+    title: '创建时间',
+    key: 'createdAt',
+    minWidth: 200
+  },
+  deletedAt: {
+    title: '删除时间',
+    key: 'deletedAt',
+    minWidth: 200
+  },
+  owner: {
+    title: '所有者',
+    key: 'owner',
+    width: 140
+  }
+}
+
 export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',

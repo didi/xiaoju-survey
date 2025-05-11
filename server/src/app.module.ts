@@ -57,7 +57,15 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const url = await configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
+        // const url = await configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
+        // const url = 'mongodb+srv://ChengyuWang:ChengyuWang@cluster0.xknmqdf.mongodb.net/';
+
+        const rawUrl = configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
+        const url = rawUrl ? rawUrl.replace(/^"+|"+$/g, '') : '';
+
+        // 添加调试日志
+        console.log('MongoDB connection URL:', url);
+
         const authSource =
           (await configService.get<string>(
             'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',

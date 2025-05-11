@@ -191,7 +191,7 @@ const tableTitle = computed(() => {
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
   } else if (menuType.value === MenuType.RecycleBin) {
-    return '回收站'
+    return ''
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }

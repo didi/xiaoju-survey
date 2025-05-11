@@ -1,28 +1,8 @@
 <template>
   <div class="tableview-root">
     <div class="filter-wrap">
-      <div class="select">
-        <TextSelect
-          v-for="item in Object.keys(selectOptionsDict)"
-          :key="item"
-          :options="selectOptionsDict[item]"
-          :value="selectValueMap[item]"
-          @change="(value) => onSelectChange(item, value)"
-        />
-      </div>
+      <h2>回收站</h2>
       <div class="search">
-        <TextButton
-          v-for="item in Object.keys(buttonOptionsDict)"
-          :key="item"
-          @change="(value) => onButtonChange(item, value)"
-          :option="buttonOptionsDict[item]"
-          :icon="
-            buttonOptionsDict[item].icons.find(
-              (iconItem) => iconItem.effectValue === buttonValueMap[item]
-            ).icon
-          "
-          link
-        />
         <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
       </div>
     </div>
@@ -61,7 +41,7 @@
               />
             </template>
             <template v-else>
-              <span class="cell-span">{{ scope.row[field.key] }}</span>
+              <span class="cell-span">{{ formatField(field.key, scope.row[field.key]) }}</span>
             </template>
           </template>
         </el-table-column>
@@ -112,6 +92,7 @@ import { ref, computed, unref } from 'vue'
 import { useRouter } from 'vue-router'
 import { get, map } from 'lodash-es'
 import { storeToRefs } from 'pinia'
+import moment from 'moment'
 
 import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
@@ -140,8 +121,10 @@ import {
   selectOptionsDict,
   buttonOptionsDict,
   curStatus,
-  subStatus
+  subStatus,
+  recycleBinFieldConfig
 } from '@/management/config/listConfig'
+import { color } from 'echarts'
 
 const surveyListStore = useSurveyListStore()
 const workSpaceStore = useWorkSpaceStore()
@@ -162,7 +145,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
+const fields = ['type', 'title', 'remark', 'state', 'createdAt', 'updatedAt', 'deletedAt', 'owner']
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
@@ -184,8 +167,8 @@ const currentComponent = computed(() => {
 
 const fieldList = computed(() => {
   return map(fields, (f) => {
-    return get(fieldConfig, f, null)
-  })
+    return get(recycleBinFieldConfig, f, null)
+  }).filter(field => field !== null)
 })
 const data = computed(() => {
   return props.data
@@ -202,6 +185,13 @@ const dataList = computed(() => {
     }
   })
 })
+
+const formatField = (key, value) => {
+  if (key === 'deletedAt' && value) {
+    return moment(value).format('YYYY-MM-DD HH:mm:ss')
+  }
+  return value
+}
 
 const order = computed(() => {
   const formatOrder = Object.entries(buttonValueMap.value)
@@ -227,105 +217,29 @@ const onRefresh = async () => {
 
 const getToolConfig = (row) => {
   let funcList = []
-  const permissionsBtn = [
-    {
-      key: QOP_MAP.EDIT,
-      label: '修改'
-    },
-    {
-      key: 'delete',
-      label: '删除',
-      icon: 'icon-shanchu'
-    },
-    {
-      key: QOP_MAP.COPY,
-      label: '复制',
-      icon: 'icon-shanchu'
-    },
-    {
-      key: 'analysis',
-      label: '数据'
-    },
-    {
-      key: 'release',
-      label: '投放'
-    },
-    {
-      key: subStatus.pausing.value,
-      label: '暂停'
-    },
-    {
-      key: 'cooper',
-      label: '协作'
-    }
-  ]
-  if (!workSpaceId.value) {
-    if (!row.isCollaborated) {
-      // 创建人显示协作按钮
-      funcList = funcList.concat(permissionsBtn)
-    } else {
-      if (row.currentPermissions.includes(SurveyPermissions.DataManage)) {
-        // 协作人判断权限显示数据分析按钮
-        funcList.push({
-          key: 'analysis',
-          label: '数据'
-        })
-      }
-      if (row.currentPermissions.includes(SurveyPermissions.SurveyManage)) {
-        // 协作人判断权限显示投放按钮
-        funcList.push(
-          {
-            key: subStatus.pausing.value,
-            label: '暂停'
-          },
-          {
-            key: QOP_MAP.EDIT,
-            label: '修改'
-          },
-          {
-            key: 'delete',
-            label: '删除',
-            icon: 'icon-shanchu'
-          },
-          {
-            key: QOP_MAP.COPY,
-            label: '复制',
-            icon: 'icon-shanchu'
-          },
-          {
-            key: 'release',
-            label: '投放'
-          }
-        )
-      }
-      if (row.currentPermissions.includes(SurveyPermissions.CollaboratorManage)) {
-        // 协作人判断权限显示协作按钮
-        funcList.push({
-          key: 'cooper',
-          label: '协作'
-        })
-      }
-    }
-  } else {
-    // 团队空间没有开放协作功能，不需要判断按钮状态
-    permissionsBtn.splice(-1)
-    funcList = permissionsBtn
-  }
-  const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if (
-    row.curStatus.status === curStatus.new.value ||
-    row.subStatus.status === subStatus.pausing.value
-  ) {
-    // 去掉暂停按钮
-    order.splice(3, 1)
-    funcList = funcList.filter((item) => item.key !== subStatus.pausing.value)
-  }
+  funcList.push({
+    key: 'recover',
+    label: '恢复'
+  },
+  {
+    key: 'complete_delete',
+    label: '彻底删除',
+      width: 70,
+      color: 'red'
+  })
+  const order = ['recover', 'complete_delete']
   const result = funcList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
 
   return result
 }
 const handleClick = (key, data) => {
   switch (key) {
+    case 'recover':
+      onRecover(data)
+      return
+    case 'complete_delete':
+      onCompleteDelete(data)
+      return
     case QOP_MAP.EDIT:
       onModify(data, QOP_MAP.EDIT)
       return
@@ -383,6 +297,38 @@ const onDelete = async (row) => {
   }
 }
 
+const onRecover = async (row) => {
+  const res = await recoverSurvey(row._id)
+  if (res.code === CODE_MAP.SUCCESS) {
+    ElMessage.success('恢复成功')
+    onRefresh()
+    workSpaceStore.getRecycleBinCount()
+  } else {
+    ElMessage.error(res.errmsg || '恢复失败')
+  }
+}
+
+const onCompleteDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm('将从回收站中永久删除改问卷，是否确认删除？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+  } catch (error) {
+    return
+  }
+
+  const res = await completeDeleteSurvey(row._id)
+  if (res.code === CODE_MAP.SUCCESS) {
+    ElMessage.success('删除成功')
+    onRefresh()
+    workSpaceStore.getRecycleBinCount()
+  } else {
+    ElMessage.error(res.errmsg || '删除失败')
+  }
+}
+
 const onPausing = async (row) => {
   try {
     await ElMessageBox.confirm('“暂停回收”后问卷将不能填写，是否继续？', '提示', {
@@ -420,13 +366,16 @@ const onCloseModify = (type) => {
     workSpaceStore.getSpaceList()
   }
 }
-const onRowClick = (row) => {
-  router.push({
-    name: 'QuestionEditIndex',
-    params: {
-      id: row._id
-    }
-  })
+const onRowClick = async (row) => {
+
+  try {
+    await ElMessageBox.alert('该问卷已被删除，无法继续访问。', '提示', {
+      confirmButtonText: '返回问卷列表',
+      type: 'warning'
+    })
+  } catch (error) {
+    return
+  }
 }
 const onSearchText = (e) => {
   searchVal.value = e

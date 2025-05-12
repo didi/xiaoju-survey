@@ -219,6 +219,33 @@ export class SurveyController {
   }
 
   @HttpCode(200)
+  @Post('/recoverSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async recoverSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const delMetaRes = await this.surveyMetaService.recoverSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const delResponseRes =
+      await this.responseSchemaService.recoverResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(delMetaRes));
+    this.logger.info(JSON.stringify(delResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
   @Post('/pausingSurvey')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')

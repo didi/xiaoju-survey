@@ -36,7 +36,7 @@
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
-            <el-button
+            <!-- <el-button
               class="btn create-btn"
               type="default"
               @click="onCreate"
@@ -44,7 +44,19 @@
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建问卷</span>
-            </el-button>
+            </el-button> -->
+            <el-button
+              class="btn create-btn"
+              type="default"
+              @click="onCreateMethod"
+              v-if="workSpaceId || groupId"
+            >
+              <i class="iconfont icon-chuangjian"></i>
+              <span>创建问卷</span>
+           </el-button>
+
+
+
           </div>
         </div>
         <BaseList
@@ -71,6 +83,13 @@
           :total="groupListTotal"
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
+  
+        <CreateMethodDialog 
+          :visible="showMethodDialog"
+          :methods="CREATE_METHODS"
+          @update:visible="val => showMethodDialog = val"
+          @select="handleMethodSelect"
+        />
       </div>
     </div>
     <SpaceModify
@@ -86,6 +105,8 @@
       :visible="showGroupModify"
       @on-close-codify="onCloseGroupModify"
     />
+
+
   </div>
 </template>
 
@@ -93,12 +114,14 @@
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import GroupList from './components/GroupList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
+import CreateMethodDialog from './components/CreateMethodDialog.vue'
 import TopNav from '@/management/components/TopNav.vue'
 import { MenuType } from '@/management/utils/workSpace'
 
@@ -144,6 +167,14 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
+const showMethodDialog = ref(false)
+const CREATE_METHODS = [
+  { type: 'blank', title: '空白创建', icon: '/imgs/CreateMethod/blank-icon.webp' },
+  { type: 'ai', title: 'AI生成', icon: '/imgs/CreateMethod/ai-icon.webp' },
+  { type: 'excel', title: 'Excel导入', icon: '/imgs/CreateMethod/excel-icon.webp' },
+  { type: 'text', title: '文本导入', icon: '/imgs/CreateMethod/text-icon.webp' }
+]
+
 
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -253,6 +284,15 @@ const onCloseSpaceModify = (type: string) => {
     spaceListRef.value.onCloseModify()
   }
 }
+
+const handleMethodSelect = (type: string) => {
+  if (type === 'blank') {
+    onCreate() // 调用原有路由跳转方法
+  } else {
+    ElMessage.info('功能开发中，敬请期待')
+  }
+}
+
 const onSpaceCreate = () => {
   modifyType.value = 'add'
   showSpaceModify.value = true
@@ -272,6 +312,12 @@ const onGroupCreate = () => {
 const onCreate = () => {
   router.push('/create')
 }
+
+const onCreateMethod = () => {
+  showMethodDialog.value = true
+}
+
+
 </script>
 
 <style lang="scss" scoped>

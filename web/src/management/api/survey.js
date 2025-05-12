@@ -51,6 +51,12 @@ export const deleteSurvey = (surveyId) => {
   })
 }
 
+export const recoverSurvey = (surveyId) => {
+  return axios.post('/survey/recoverSurvey', {
+    surveyId
+  })
+}
+
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
 }

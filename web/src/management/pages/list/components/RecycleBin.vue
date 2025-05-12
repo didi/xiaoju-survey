@@ -78,7 +78,6 @@
 
 <script setup>
 import { ref, computed, unref } from 'vue'
-import { useRouter } from 'vue-router'
 import { get, map } from 'lodash-es'
 import { storeToRefs } from 'pinia'
 

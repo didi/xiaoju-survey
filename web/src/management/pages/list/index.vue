@@ -287,7 +287,9 @@ const onCloseSpaceModify = (type: string) => {
 
 const handleMethodSelect = (type: string) => {
   if (type === 'blank') {
-    onCreate() // 调用原有路由跳转方法
+    onCreate()
+  } else if (type === 'ai') {
+    router.push({ name: 'ai-generate' })  // 改为新的路由名称
   } else {
     ElMessage.info('功能开发中，敬请期待')
   }

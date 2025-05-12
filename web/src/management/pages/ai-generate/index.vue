@@ -51,6 +51,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+// import AIChatInput from './components/AIChatInput.vue'
+// import PreviewPanel from './components/PreviewPanel.vue'
+
 
 const router = useRouter()
 const prompt = ref('')
@@ -97,42 +100,15 @@ const handleGenerate = () => {
       color: #333;
     }
   }
+}
 
-  .generate-content {
-    flex: 1;
+.generate-content {
+  flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     padding: 24px;
 
-    .config-panel,
-    .preview-panel {
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
-      padding: 20px;
-    }
-
-    .preview-placeholder {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #999;
-      
-      .icon-ai {
-        font-size: 48px;
-        margin-bottom: 16px;
-      }
-      
-      .generate-btn {
-        margin-top: 24px;
-      }
-    }
-  }
-}
-
-.generate-content {
   .config-panel {
     border: 1px solid #e8e8e8;
     border-radius: 8px;
@@ -162,7 +138,7 @@ const handleGenerate = () => {
         position: relative;
         display: flex;  // 新增
         background: #f2f4f7;  // 外层容器灰色背景
-        padding: 20px;
+        padding: 0px;
             .custom-input {
                 width: 100%;
                 :deep(.el-textarea__inner) {
@@ -188,12 +164,6 @@ const handleGenerate = () => {
       }
       
 
-
-
-
-
-
-
     }
   }
 
@@ -201,6 +171,23 @@ const handleGenerate = () => {
     border: 1px solid #e8e8e8;
     border-radius: 8px;
     padding: 20px;
+    .preview-placeholder {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      
+      .icon-ai {
+        font-size: 48px;
+        margin-bottom: 16px;
+      }
+      
+      .generate-btn {
+        margin-top: 24px;
+      }
+    }
   }
 }
 </style>

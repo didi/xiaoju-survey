@@ -42,6 +42,9 @@ import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
+import { RecycleBinController } from './controllers/recyclebin.controller';
+import { SurveyRecycleBin } from '../../models/surveyRecycleBin.entity';
+import { SurveyRecycleBinService } from './services/surveyRecycleBin.service';
 
 @Module({
   imports: [
@@ -56,6 +59,7 @@ import { Session } from 'src/models/session.entity';
       DownloadTask,
       Session,
       SurveyGroup,
+      SurveyRecycleBin,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -73,6 +77,7 @@ import { Session } from 'src/models/session.entity';
     DownloadTaskController,
     SessionController,
     SurveyGroupController,
+    RecycleBinController,
   ],
   providers: [
     DataStatisticService,
@@ -88,6 +93,7 @@ import { Session } from 'src/models/session.entity';
     FileService,
     SessionService,
     SurveyGroupService,
+    SurveyRecycleBinService,
   ],
 })
 export class SurveyModule {}

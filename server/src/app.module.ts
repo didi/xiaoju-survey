@@ -46,6 +46,7 @@ import { Logger } from './logger';
 import { Channel } from './models/channel.entity';
 import { ChannelModule } from './modules/channel/channel.module';
 import { AppManagerModule } from './modules/appManager/appManager.module';
+import { SurveyRecycleBin } from './models/surveyRecycleBin.entity';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
             SurveyHistory,
             SurveyResponse,
             SurveyGroup,
+            SurveyRecycleBin,
             Counter,
             ResponseSchema,
             ClientEncrypt,

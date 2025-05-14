@@ -125,16 +125,16 @@ export default defineConfig({
     open: false, // 是否自动打开浏览器
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true
       },
       '/exportfile': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true
       },
       // 静态文件的默认存储文件夹
       '/userUpload': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true
       }
     }

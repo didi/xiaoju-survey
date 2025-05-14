@@ -144,6 +144,7 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
+const recycleBinLoading = ref(false)
 
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -157,6 +158,13 @@ const fetchGroupList = async (params?: any) => {
   workSpaceStore.changeWorkSpace('')
   await workSpaceStore.getGroupList(params)
   groupLoading.value = false
+}
+
+const fetchRecycleBin = async () => {
+  recycleBinLoading.value = true
+  workSpaceStore.changeWorkSpace('')
+  await workSpaceStore.getRecycleBin()
+  recycleBinLoading.value = false
 }
 
 const handleSpaceSelect = async (id: string) => {
@@ -174,6 +182,11 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      break
+    case MenuType.Recyclebin:
+      workSpaceStore.changeMenuType(MenuType.Recyclebin)
+      workSpaceStore.changeWorkSpace('')
+      await fetchRecycleBin()
       break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>

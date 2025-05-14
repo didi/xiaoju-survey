@@ -20,6 +20,7 @@
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
             <span>{{ menu.name }}</span>
+            <span style="margin-left: 77px">{{ menu.total || 0 }}</span>
           </div>
         </template>
       </el-menu-item>

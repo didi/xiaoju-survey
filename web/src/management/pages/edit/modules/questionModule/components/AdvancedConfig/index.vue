@@ -40,6 +40,9 @@ switch (props.moduleConfig.type) {
   case QUESTION_TYPE.RADIO_NPS:
     advancedComponent.value = defineAsyncComponent(() => import('./RateConfig.vue'))
     break
+  case QUESTION_TYPE.CASCADER:
+    advancedComponent.value = defineAsyncComponent(() => import('./CascaderConfig.vue'))
+    break
   default:
     break
 }

@@ -1,7 +1,7 @@
 <template>
-  <el-button type="primary" :loading="isPublishing" class="publish-btn" @click="handlePublish">
+  <span type="primary" :loading="isPublishing" class="publish-btn" @click="handlePublish">
     发布
-  </el-button>
+  </span>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -113,7 +113,7 @@ const handlePublish = async () => {
     if (publishRes.code === 200) {
       ElMessage.success('发布成功')
       getSchemaFromRemote()
-      router.push({ name: 'publish' })
+      router.push({ name: 'channel' })
     } else {
       ElMessage.error(`发布失败 ${publishRes.errmsg}`)
     }
@@ -124,12 +124,31 @@ const handlePublish = async () => {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style>
 .publish-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  color: #fff;
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  transition: .1s;
+  font-weight: 500;
+  vertical-align: middle;
+  background-color: #ffa600;
+  border: #ffa600;
+  border-color: #ffa600;
+  border-radius: 5px;
   width: 100px;
   font-size: 14px;
   height: 36px;
   line-height: 36px;
   padding: 0;
+  font-size: 14px;
+  user-select: auto!important;
 }
 </style>

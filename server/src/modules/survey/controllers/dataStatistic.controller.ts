@@ -84,6 +84,9 @@ export class DataStatisticController {
 
   @Get('/aggregationStatis')
   @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'query.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_RESPONSE_MANAGE])
   @UseGuards(Authentication)
   async aggregationStatis(@Query() queryInfo: AggregationStatisDto) {
     // 聚合统计
@@ -108,6 +111,7 @@ export class DataStatisticController {
       QUESTION_TYPE.RADIO_STAR,
       QUESTION_TYPE.RADIO_NPS,
       QUESTION_TYPE.VOTE,
+      QUESTION_TYPE.CASCADER,
     ];
     const fieldList = responseSchema.code.dataConf.dataList
       .filter((item) => allowQuestionType.includes(item.type as QUESTION_TYPE))

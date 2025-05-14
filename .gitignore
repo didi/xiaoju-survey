@@ -32,3 +32,6 @@ components.d.ts
 userUpload
 exportfile
 yarn.lock
+.yarn
+lib
+.expo

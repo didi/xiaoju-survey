@@ -120,7 +120,9 @@ export default defineConfig({
     }
   },
   server: {
+    host: '0.0.0.0',
     port: 8080,
+    open: false, // 是否自动打开浏览器
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:3000',

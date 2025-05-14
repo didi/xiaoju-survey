@@ -22,6 +22,20 @@ export interface NPS {
   rightText: string;
 }
 
+export interface CascaderItem {
+  hash: string;
+  text: string;
+  children?: CascaderItem[];
+}
+
+export interface CascaderDate {
+  placeholder: Array<{
+    hash: string;
+    text: string;
+  }>;
+  children: Array<CascaderItem>;
+}
+
 export interface TextRange {
   min: {
     placeholder: string;
@@ -60,6 +74,7 @@ export interface DataItem {
   rangeConfig?: any;
   starStyle?: string;
   innerType?: string;
+  cascaderData: CascaderDate;
 }
 
 export interface Option {

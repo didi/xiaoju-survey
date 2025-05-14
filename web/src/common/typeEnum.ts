@@ -7,7 +7,8 @@ export enum QUESTION_TYPE {
   BINARY_CHOICE = 'binary-choice',
   RADIO_STAR = 'radio-star',
   RADIO_NPS = 'radio-nps',
-  VOTE = 'vote'
+  VOTE = 'vote',
+  CASCADER = 'cascader',
 }
 
 // 题目类型标签映射对象
@@ -19,7 +20,8 @@ export const typeTagLabels: Record<QUESTION_TYPE, string> = {
   [QUESTION_TYPE.BINARY_CHOICE]: '判断',
   [QUESTION_TYPE.RADIO_STAR]: '评分',
   [QUESTION_TYPE.RADIO_NPS]: 'NPS评分',
-  [QUESTION_TYPE.VOTE]: '投票'
+  [QUESTION_TYPE.VOTE]: '投票',
+  [QUESTION_TYPE.CASCADER]: '多级联动'
 }
 
 // 输入类题型
@@ -38,3 +40,6 @@ export const CHOICES = [
 
 // 评分题题型分类
 export const RATES = [QUESTION_TYPE.RADIO_STAR, QUESTION_TYPE.RADIO_NPS]
+
+// 高级题型分类
+export const ADVANCED = [QUESTION_TYPE.CASCADER]

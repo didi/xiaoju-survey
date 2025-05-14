@@ -22,6 +22,8 @@ import { WorkspaceModule } from '../workspace/workspace.module';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
+import { AppManagerService } from '../appManager/services/appManager.service';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { ConfigModule } from '@nestjs/config';
     CounterService,
     ClientEncryptService,
     LoggerProvider,
+    AppManagerService,
+    OpenAuthGuard,
     // RedisService,
   ],
   exports: [

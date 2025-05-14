@@ -138,6 +138,9 @@ describe('SurveyController', () => {
       const reqBody = {
         surveyId: surveyId.toString(),
         configData: {
+          dataConf: {
+            dataList: [{ question: 'Test Question' }],
+          },
           /* ... your config data here ... */
         },
         sessionId: 'mock-session-id',
@@ -158,6 +161,28 @@ describe('SurveyController', () => {
       await expect(
         controller.updateConf(reqBody, { user: {} }),
       ).rejects.toThrow(HttpException);
+    });
+    it('should throw an error when missing question data', async () => {
+      const surveyId = new ObjectId();
+      const reqBody = {
+        surveyId: surveyId.toString(),
+        configData: {
+          dataConf: {
+            dataList: [], // Empty dataList
+          },
+        },
+        sessionId: 'mock-session-id',
+      };
+  
+      try {
+        await controller.updateConf(reqBody, {
+          user: { username: 'testUser', _id: 'testUserId' },
+          surveyMeta: { _id: surveyId },
+        });
+      } catch (error) {
+        expect(error).toBeInstanceOf(HttpException);
+        expect(error.message).toBe('请添加题目后重新保存问卷');
+      }
     });
   });
 

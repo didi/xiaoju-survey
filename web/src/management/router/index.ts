@@ -150,6 +150,15 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/publish/PublishPage.vue')
   },
   {
+    path: '/survey/:id/channel',
+    name: 'channel',
+    meta: {
+      needLogin: true,
+      permissions: [SurveyPermissions.SurveyManage]
+    },
+    component: () => import('../pages/publish/ChannelPage.vue')
+  },
+  {
     path: '/create',
     name: 'create',
     meta: {

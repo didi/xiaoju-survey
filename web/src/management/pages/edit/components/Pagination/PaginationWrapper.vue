@@ -48,6 +48,7 @@ const props = defineProps({
 
 const editStore = useEditStore()
 const { pageCount, schema, newQuestionIndex } = storeToRefs(editStore)
+const { getSorter } = editStore
 
 const {
   updatePageEditOne,
@@ -82,7 +83,10 @@ const addPageControls = () => {
   updatePageEditOne(pageCount.value + 1)
   setCurrentEditOne(null)
   addQuestion({ question: newQuestion, index: newQuestionIndex.value })
-  setCurrentEditOne(newQuestionIndex.value)
+  setTimeout(() => {
+    const { endIndex } = getSorter();
+    setCurrentEditOne(endIndex - 1);
+  });
   addPage()
 }
 </script>

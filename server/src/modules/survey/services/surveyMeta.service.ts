@@ -8,9 +8,6 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { GROUP_STATE } from 'src/enums/surveyGroup';
-import { update } from 'lodash';
-import { log } from 'console';
-
 @Injectable()
 export class SurveyMetaService {
   constructor(

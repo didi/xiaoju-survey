@@ -24,7 +24,7 @@ const generateHash = (hashList) => {
   return hash
 }
 
-export const getNewField = (fields) => {
+export const getNewField = (fields = []) => {
   let field = generateQuestionField()
   let isFieldExists = fields.includes(field)
 

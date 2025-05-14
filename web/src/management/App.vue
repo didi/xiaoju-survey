@@ -75,6 +75,7 @@ onBeforeUnmount(() => {
 
 html {
   font-size: 50px;
+  color: rgb(74, 76, 91);
 }
 
 html,

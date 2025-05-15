@@ -98,7 +98,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
-import { deleteSurvey, pausingSurvey } from '@/management/api/survey'
+import { deleteSurvey, pausingSurvey, recoverSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
@@ -187,49 +187,30 @@ const onRefresh = async () => {
 const getToolConfig = (row) => {
   return [
     {
-      key: 'analysis',
+      key: 'recover',
       label: '恢复'
     },
     {
-      key: 'release',
+      key: 'foreverDelete',
       label: '彻底删除'
     },
   ]
 }
 const handleClick = (key, data) => {
   switch (key) {
-    case 'analysis':
-      router.push({
-        name: 'analysisPage',
-        params: {
-          id: data._id
-        }
-      })
+    case 'recover':
+      onRecover(data)
       return
-    case 'release':
-      router.push({
-        name: 'publish',
-        params: {
-          id: data._id
-        }
-      })
-      return
-    case 'delete':
-      onDelete(data)
-      return
-    case 'cooper':
+    case 'foreverDelete':
       onCooper(data)
-      return
-    case 'pausing':
-      onPausing(data)
       return
     default:
       return
   }
 }
-const onDelete = async (row) => {
+const onRecover = async (row) => {
   try {
-    await ElMessageBox.confirm('是否确认删除？', '提示', {
+    await ElMessageBox.confirm('是否确认恢复？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -238,14 +219,15 @@ const onDelete = async (row) => {
     return
   }
 
-  const res = await deleteSurvey(row._id)
+  const res = await recoverSurvey(row.pageId)
   if (res.code === CODE_MAP.SUCCESS) {
-    ElMessage.success('删除成功')
+    ElMessage.success('恢复成功')
     onRefresh()
     workSpaceStore.getGroupList()
     workSpaceStore.getSpaceList()
+    workSpaceStore.getRecycleBin()
   } else {
-    ElMessage.error(res.errmsg || '删除失败')
+    ElMessage.error(res.errmsg || '恢复失败')
   }
 }
 

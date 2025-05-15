@@ -20,4 +20,16 @@ export class SurveyRecycle extends BaseEntity {
 
   @Column()
   foreverDeleted: boolean;
+
+  @Column()
+  isRecovered: boolean;
+
+  @Column()
+  operator: string;
+
+  @Column()
+  operatorId: string;
+
+  @Column({ type: 'timestamp', precision: 3 })
+  recoveredAt: Date;
 }

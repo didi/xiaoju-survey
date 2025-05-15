@@ -139,6 +139,21 @@ export class SurveyMetaService {
     );
   }
 
+  async recoverSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: false,
+          operator,
+          operatorId,
+        },
+      },
+    );
+  }
+
   async getSurveyMetaList(condition: {
     pageNum: number;
     pageSize: number;

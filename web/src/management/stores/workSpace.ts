@@ -222,7 +222,6 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       const res: any = await getRecycleBinReq()
       if (res.code === CODE_MAP.SUCCESS) {
         const total = res.data
-        console.log(total)
         spaceMenus.value[2].total = total.total;
       } else {
         ElMessage.error('getRecycleBin ' + res.errmsg)

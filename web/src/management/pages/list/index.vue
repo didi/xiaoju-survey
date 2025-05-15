@@ -225,6 +225,7 @@ const fetchRecycleBinList = async (params?: any) => {
   recycleBinLoading.value = true
   await surveyListStore.getSurveyRecycleList(params)
   recycleBinLoading.value = false
+  await surveyListStore.getSurveyList(params)
 }
 
 const fetchSurveyList = async (params?: any) => {

@@ -89,4 +89,18 @@ export class ResponseSchemaService {
       },
     );
   }
+
+  async recoverResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: false,
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
 }

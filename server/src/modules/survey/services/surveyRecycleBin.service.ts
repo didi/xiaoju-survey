@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, MongoRepository, ObjectLiteral } from 'typeorm';
 
@@ -19,6 +19,7 @@ export class SurveyRecycleBinService {
     const count = await this.surveyRecycleRepository.count({
       ownerId: ownerId,
       foreverDeleted: false,
+      isRecovered: false,
     });
     return count;
   }
@@ -32,15 +33,52 @@ export class SurveyRecycleBinService {
     if (!surveyMeta) {
       return null;
     }
-    const newSurveyRecycle = this.surveyRecycleRepository.create({
-      title: surveyMeta.title,
-      surveyMetaCreateAt: surveyMeta.createdAt,
-      ownerId: surveyMeta.ownerId,
-      owner: surveyMeta.owner,
-      pageId: pageId,
-      foreverDeleted: false,
+
+    const result = await this.surveyRecycleRepository.findOne({
+      where: {
+        pageId: pageId,
+      },
     });
-    return await this.surveyRecycleRepository.save(newSurveyRecycle);
+
+    if (result === null || result === undefined) {
+      const newSurveyRecycle = this.surveyRecycleRepository.create({
+        title: surveyMeta.title,
+        surveyMetaCreateAt: surveyMeta.createdAt,
+        ownerId: surveyMeta.ownerId,
+        owner: surveyMeta.owner,
+        pageId: pageId,
+        foreverDeleted: false,
+        isRecovered: false,
+      });
+      return await this.surveyRecycleRepository.save(newSurveyRecycle);
+    } else {
+      return this.surveyRecycleRepository.updateOne(
+        {
+          pageId: pageId,
+        },
+        {
+          $set: {
+            isRecovered: false,
+          },
+        },
+      );
+    }
+  }
+
+  async recoverSurvey({ pageId, operator, operatorId }) {
+    return this.surveyRecycleRepository.updateOne(
+      {
+        pageId: pageId,
+      },
+      {
+        $set: {
+          isRecovered: true,
+          operator,
+          operatorId,
+          recoveredAt: new Date(),
+        },
+      },
+    );
   }
 
   async getSurveyRecycleList(condition: {
@@ -60,6 +98,7 @@ export class SurveyRecycleBinService {
           ownerId: {
             $eq: userId,
           },
+          isRecovered: false,
         },
         condition.filter,
       );

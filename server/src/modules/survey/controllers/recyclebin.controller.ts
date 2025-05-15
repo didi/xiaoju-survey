@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, HttpCode, Query, Request, SetMetadata, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Query, Request, SetMetadata, UseGuards } from '@nestjs/common';
 import { Authentication } from '../../../guards/authentication.guard';
 import { SurveyMetaService } from '../services/surveyMeta.service';
 import { Logger } from '../../../logger';
@@ -13,6 +13,9 @@ import { getFilter, getOrder } from '../../../utils/surveyUtil';
 import { GROUP_STATE } from '../../../enums/surveyGroup';
 import moment from 'moment/moment';
 import { GetSurveyRecycleListDto } from '../dto/getSurveyRecycleList.dto';
+import { ResponseSchemaService } from '../../surveyResponse/services/responseScheme.service';
+import { SurveyGuard } from '../../../guards/survey.guard';
+import { SURVEY_PERMISSION } from '../../../enums/surveyPermission';
 
 @ApiTags('recycleBin')
 @ApiBearerAuth()
@@ -23,12 +26,12 @@ export class RecycleBinController {
     private readonly surveyMetaService: SurveyMetaService,
     private readonly surveyRecycleBinService: SurveyRecycleBinService,
     private readonly logger: Logger,
-    private readonly collaboratorService: CollaboratorService,
+    private readonly responseSchemaService: ResponseSchemaService,
   ) {}
 
   @Get()
   @HttpCode(200)
-  async count(@Request() req) {
+  async countSurvey(@Request() req) {
     const userId = req.user._id.toString();
     const total = await this.surveyRecycleBinService.countSurveyRecycle(userId);
     return {
@@ -36,6 +39,39 @@ export class RecycleBinController {
       data: {
         total,
       },
+    };
+  }
+
+  @Post('/recoverSurvey')
+  @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async recoverSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const recoverMetaRes = await this.surveyMetaService.recoverSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const recoverResponseRes =
+      await this.responseSchemaService.recoverResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+    const delRecycleBinRes = await this.surveyRecycleBinService.recoverSurvey({
+      pageId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+
+    this.logger.info(JSON.stringify(recoverMetaRes));
+    this.logger.info(JSON.stringify(recoverResponseRes));
+    this.logger.info(JSON.stringify(delRecycleBinRes));
+
+    return {
+      code: 200,
     };
   }
 

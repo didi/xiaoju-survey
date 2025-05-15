@@ -6,6 +6,7 @@ import 'element-plus/theme-chalk/src/message.scss'
 
 import { CODE_MAP } from '@/management/api/base'
 import { getSurveyList as getSurveyListReq } from '@/management/api/survey'
+import { getSurveyRecycleList as getSurveyRecycleListReq} from '@/management/api/survey'
 import { useWorkSpaceStore } from './workSpace'
 
 import { curStatus, subStatus, curStatusKey, subStatusKey } from '@/management/config/listConfig'
@@ -116,6 +117,8 @@ function useSearchSurvey() {
 export const useSurveyListStore = defineStore('surveyList', () => {
   const surveyList = ref([])
   const surveyTotal = ref(0)
+  const surveyRecycleList = ref([])
+  const surveyRecycleTotal = ref(0)
 
   const {
     searchVal,
@@ -160,9 +163,38 @@ export const useSurveyListStore = defineStore('surveyList', () => {
     }
   }
 
+  async function getSurveyRecycleList(payload: { curPage?: number; pageSize?: number }) {
+    const filterString = JSON.stringify(
+      listFilter.value.filter((item) => {
+        return item.condition[0].value
+      })
+    )
+    try {
+      const params = {
+        curPage: payload?.curPage || 1,
+        pageSize: payload?.pageSize || 10,
+        filter: filterString,
+      }
+
+      const res: any = await getSurveyRecycleListReq(params)
+      console.log(res)
+
+      if (res.code === CODE_MAP.SUCCESS) {
+        surveyRecycleList.value = res.data.data
+        surveyRecycleTotal.value = res.data.count
+      } else {
+        ElMessage.error(res.errmsg)
+      }
+    } catch (error) {
+      ElMessage.error('getSurveyList status' + error)
+    }
+  }
+
   return {
     surveyList,
     surveyTotal,
+    surveyRecycleList,
+    surveyRecycleTotal,
     searchVal,
     selectValueMap,
     buttonValueMap,
@@ -170,6 +202,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
     listOrder,
     resetSearch,
     getSurveyList,
+    getSurveyRecycleList,
     resetSelectValueMap,
     resetButtonValueMap,
     changeSelectValueMap,

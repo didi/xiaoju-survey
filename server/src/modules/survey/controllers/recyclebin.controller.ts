@@ -82,7 +82,7 @@ export class RecycleBinController {
         data: data.data.map((item) => {
           const fmt = 'YYYY-MM-DD HH:mm:ss';
           item.createdAt = moment(item.createdAt).format(fmt);
-          item.updatedAt = moment(item.updatedAt).format(fmt);
+          item.surveyMetaCreateAt = moment(item.surveyMetaCreateAt).format(fmt);
           return item;
         }),
       },

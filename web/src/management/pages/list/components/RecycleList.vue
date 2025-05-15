@@ -1,30 +1,7 @@
 <template>
   <div class="tableview-root">
     <div class="filter-wrap">
-      <div class="select">
-        <TextSelect
-          v-for="item in Object.keys(selectOptionsDict)"
-          :key="item"
-          :options="selectOptionsDict[item]"
-          :value="selectValueMap[item]"
-          @change="(value) => onSelectChange(item, value)"
-        />
-      </div>
-      <div class="search">
-        <TextButton
-          v-for="item in Object.keys(buttonOptionsDict)"
-          :key="item"
-          @change="(value) => onButtonChange(item, value)"
-          :option="buttonOptionsDict[item]"
-          :icon="
-            buttonOptionsDict[item].icons.find(
-              (iconItem) => iconItem.effectValue === buttonValueMap[item]
-            ).icon
-          "
-          link
-        />
         <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
-      </div>
     </div>
     <div class="list-wrapper" v-if="total">
       <el-table
@@ -72,7 +49,7 @@
               :data="scope.row"
               type="list"
               :tools="getToolConfig(scope.row)"
-              :tool-width="50"
+              :tool-width="60"
               @click="handleClick"
             />
           </template>
@@ -140,7 +117,7 @@ import {
   selectOptionsDict,
   buttonOptionsDict,
   curStatus,
-  subStatus
+  subStatus, recycleFieldConfig
 } from '@/management/config/listConfig'
 
 const surveyListStore = useSurveyListStore()
@@ -162,12 +139,12 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
+const fields = ['title', 'surveyMetaCreateAt', 'createdAt', 'owner']
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
 const currentPage = ref(1)
-const { searchVal, selectValueMap, buttonValueMap } = storeToRefs(surveyListStore)
+const { searchVal } = storeToRefs(surveyListStore)
 
 const currentComponent = computed(() => {
   return (componentName) => {
@@ -184,7 +161,7 @@ const currentComponent = computed(() => {
 
 const fieldList = computed(() => {
   return map(fields, (f) => {
-    return get(fieldConfig, f, null)
+    return get(recycleFieldConfig, f, null)
   })
 })
 const data = computed(() => {
@@ -194,30 +171,12 @@ const total = computed(() => {
   return props.total
 })
 const dataList = computed(() => {
-  return data.value.map((item) => {
-    return {
-      ...item,
-      'curStatus.date': item.curStatus.date,
-      'subStatus.date': item.subStatus.date
-    }
-  })
-})
-
-const order = computed(() => {
-  const formatOrder = Object.entries(buttonValueMap.value)
-    .filter(([, effectValue]) => effectValue)
-    .reduce((prev, item) => {
-      const [effectKey, effectValue] = item
-      prev.push({ field: effectKey, value: effectValue })
-      return prev
-    }, [])
-  return JSON.stringify(formatOrder)
+  return data.value;
 })
 
 const onRefresh = async () => {
   let params = {
     curPage: currentPage.value,
-    order: order.value
   }
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
@@ -226,112 +185,19 @@ const onRefresh = async () => {
 }
 
 const getToolConfig = (row) => {
-  let funcList = []
-  const permissionsBtn = [
-    {
-      key: QOP_MAP.EDIT,
-      label: '修改'
-    },
-    {
-      key: 'delete',
-      label: '删除',
-      icon: 'icon-shanchu'
-    },
-    {
-      key: QOP_MAP.COPY,
-      label: '复制',
-      icon: 'icon-shanchu'
-    },
+  return [
     {
       key: 'analysis',
-      label: '数据'
+      label: '恢复'
     },
     {
       key: 'release',
-      label: '投放'
+      label: '彻底删除'
     },
-    {
-      key: subStatus.pausing.value,
-      label: '暂停'
-    },
-    {
-      key: 'cooper',
-      label: '协作'
-    }
   ]
-  if (!workSpaceId.value) {
-    if (!row.isCollaborated) {
-      // 创建人显示协作按钮
-      funcList = funcList.concat(permissionsBtn)
-    } else {
-      if (row.currentPermissions.includes(SurveyPermissions.DataManage)) {
-        // 协作人判断权限显示数据分析按钮
-        funcList.push({
-          key: 'analysis',
-          label: '数据'
-        })
-      }
-      if (row.currentPermissions.includes(SurveyPermissions.SurveyManage)) {
-        // 协作人判断权限显示投放按钮
-        funcList.push(
-          {
-            key: subStatus.pausing.value,
-            label: '暂停'
-          },
-          {
-            key: QOP_MAP.EDIT,
-            label: '修改'
-          },
-          {
-            key: 'delete',
-            label: '删除',
-            icon: 'icon-shanchu'
-          },
-          {
-            key: QOP_MAP.COPY,
-            label: '复制',
-            icon: 'icon-shanchu'
-          },
-          {
-            key: 'release',
-            label: '投放'
-          }
-        )
-      }
-      if (row.currentPermissions.includes(SurveyPermissions.CollaboratorManage)) {
-        // 协作人判断权限显示协作按钮
-        funcList.push({
-          key: 'cooper',
-          label: '协作'
-        })
-      }
-    }
-  } else {
-    // 团队空间没有开放协作功能，不需要判断按钮状态
-    permissionsBtn.splice(-1)
-    funcList = permissionsBtn
-  }
-  const order = ['edit', 'analysis', 'release', 'pausing', 'delete', 'copy', 'cooper']
-  if (
-    row.curStatus.status === curStatus.new.value ||
-    row.subStatus.status === subStatus.pausing.value
-  ) {
-    // 去掉暂停按钮
-    order.splice(3, 1)
-    funcList = funcList.filter((item) => item.key !== subStatus.pausing.value)
-  }
-  const result = funcList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
-
-  return result
 }
 const handleClick = (key, data) => {
   switch (key) {
-    case QOP_MAP.EDIT:
-      onModify(data, QOP_MAP.EDIT)
-      return
-    case QOP_MAP.COPY:
-      onModify(data, QOP_MAP.COPY)
-      return
     case 'analysis':
       router.push({
         name: 'analysisPage',
@@ -378,7 +244,6 @@ const onDelete = async (row) => {
     onRefresh()
     workSpaceStore.getGroupList()
     workSpaceStore.getSpaceList()
-    workSpaceStore.getRecycleBin()
   } else {
     ElMessage.error(res.errmsg || '删除失败')
   }
@@ -434,16 +299,7 @@ const onSearchText = (e) => {
   currentPage.value = 1
   onRefresh()
 }
-const onSelectChange = (selectKey, selectValue) => {
-  surveyListStore.changeSelectValueMap(selectKey, selectValue)
-  currentPage.value = 1
-  onRefresh()
-}
-const onButtonChange = (effectKey, effectValue) => {
-  surveyListStore.resetButtonValueMap()
-  surveyListStore.changeButtonValueMap(effectKey, effectValue)
-  onRefresh()
-}
+
 
 const cooperModify = ref(false)
 const cooperId = ref('')

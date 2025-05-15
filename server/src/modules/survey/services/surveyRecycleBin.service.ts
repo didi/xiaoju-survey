@@ -57,9 +57,9 @@ export class SurveyRecycleBinService {
           foreverDeleted: {
             $ne: true,
           },
-          // userId: {
-          //   $eq: userId,
-          // },
+          ownerId: {
+            $eq: userId,
+          },
         },
         condition.filter,
       );

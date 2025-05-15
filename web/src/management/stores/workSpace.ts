@@ -48,7 +48,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       icon: 'icon-tuanduikongjian',
       name: '回收站',
       id: MenuType.Recyclebin,
-      children: []
+      total: 0,
     },
   ])
   const menuType = ref(MenuType.PersonalGroup)
@@ -223,6 +223,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       if (res.code === CODE_MAP.SUCCESS) {
         const total = res.data
         console.log(total)
+        spaceMenus.value[2].total = total.total;
       } else {
         ElMessage.error('getRecycleBin ' + res.errmsg)
       }

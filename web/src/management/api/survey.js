@@ -13,6 +13,16 @@ export const getSurveyList = ({ curPage, filter, order, workspaceId, groupId }) 
   })
 }
 
+export const getSurveyRecycleList = ({ curPage, pageSize, filter }) => {
+  return axios.get('/recyclebin/getList', {
+    params: {
+      curPage: curPage,
+      pageSize: pageSize,
+      filter: filter,
+    }
+  })
+}
+
 export const getSurveyById = (id) => {
   return axios.get('/survey/getSurvey', {
     params: {

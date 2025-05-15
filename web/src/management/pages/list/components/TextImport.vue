@@ -35,7 +35,7 @@ import { debounce } from 'lodash-es'
 import { textToSchema } from '@/management/utils/textToSchema';
 import { filterQuestionPreviewData } from '@/management/utils/index'
 import textImportExample from '@/management/config/textImportExample'
-// import copy from 'copy-to-clipboard'
+import copy from 'copy-to-clipboard'
 import { ElMessage } from 'element-plus';
 
 

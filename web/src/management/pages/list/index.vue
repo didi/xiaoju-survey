@@ -36,7 +36,7 @@
               <i class="iconfont icon-shujuliebiao"></i>
               <span>团队管理</span>
             </el-button>
-            <!-- <el-button
+            <el-button
               class="btn create-btn"
               type="default"
               @click="onCreate"
@@ -44,19 +44,7 @@
             >
               <i class="iconfont icon-chuangjian"></i>
               <span>创建问卷</span>
-            </el-button> -->
-            <el-button
-              class="btn create-btn"
-              type="default"
-              @click="onCreateMethod"
-              v-if="workSpaceId || groupId"
-            >
-              <i class="iconfont icon-chuangjian"></i>
-              <span>创建问卷</span>
-           </el-button>
-
-
-
+            </el-button>
           </div>
         </div>
         <BaseList
@@ -84,12 +72,6 @@
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
   
-        <CreateMethodDialog 
-          :visible="showMethodDialog"
-          :methods="CREATE_METHODS"
-          @update:visible="val => showMethodDialog = val"
-          @select="handleMethodSelect"
-        />
       </div>
     </div>
     <SpaceModify
@@ -126,7 +108,7 @@
           </div>
           <span>文本导入</span>
         </div>
-        <div class="create-method-item" @click="commingSoon">
+        <div class="create-method-item" @click="aiGenerate">
           <div class="icon">
             <i class="iconfont icon-AIshengcheng"></i>
           </div>
@@ -173,7 +155,6 @@ import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
 
-import CreateMethodDialog from './components/CreateMethodDialog.vue'
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
 import { MenuType } from '@/management/utils/workSpace'
@@ -221,14 +202,6 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
-const showMethodDialog = ref(false)
-const CREATE_METHODS = [
-  { type: 'blank', title: '空白创建', icon: '/imgs/CreateMethod/blank-icon.webp' },
-  { type: 'ai', title: 'AI生成', icon: '/imgs/CreateMethod/ai-icon.webp' },
-  { type: 'excel', title: 'Excel导入', icon: '/imgs/CreateMethod/excel-icon.webp' },
-  { type: 'text', title: '文本导入', icon: '/imgs/CreateMethod/text-icon.webp' }
-]
-
 
 const showCreateMethod = ref(false)
 const showTextImport = ref(false)
@@ -344,16 +317,6 @@ const onCloseSpaceModify = (type: string) => {
   }
 }
 
-const handleMethodSelect = (type: string) => {
-  if (type === 'blank') {
-    onCreate()
-  } else if (type === 'ai') {
-    router.push({ name: 'ai-generate' })  // 改为新的路由名称
-  } else {
-    ElMessage.info('功能开发中，敬请期待')
-  }
-}
-
 const onSpaceCreate = () => {
   modifyType.value = 'add'
   showSpaceModify.value = true
@@ -382,9 +345,6 @@ const toCreate = () => {
   router.push('/create')
 }
 
-const onCreateMethod = () => {
-  showMethodDialog.value = true
-}
 
 
 const openTextImport = () => {
@@ -393,6 +353,9 @@ const openTextImport = () => {
   createMethod.value = 'textImport'
 }
 
+const aiGenerate  = () => { 
+  router.push('/ai-generate')
+}
 const commingSoon = () => {
   ElMessage.warning('功能暂未开放，敬请期待～')
 }

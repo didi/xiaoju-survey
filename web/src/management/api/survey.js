@@ -66,6 +66,12 @@ export const recoverSurvey = (surveyId) => {
   })
 }
 
+export const foreverDeleteSurvey = (surveyId) => {
+  return axios.post('/recyclebin/foreverDeleteSurvey', {
+    surveyId
+  })
+}
+
 export const updateSurvey = (data) => {
   return axios.post('/survey/updateMeta', data)
 }

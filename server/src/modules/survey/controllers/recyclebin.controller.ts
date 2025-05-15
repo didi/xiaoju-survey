@@ -50,6 +50,15 @@ export class RecycleBinController {
   @UseGuards(Authentication)
   async recoverSurvey(@Request() req) {
     const surveyMeta = req.surveyMeta;
+    if (
+      await this.surveyRecycleBinService.isForeverDeleted(
+        surveyMeta._id.toString(),
+      )
+    ) {
+      return {
+        code: 200,
+      };
+    }
 
     const recoverMetaRes = await this.surveyMetaService.recoverSurveyMeta({
       surveyId: surveyMeta._id.toString(),
@@ -69,6 +78,29 @@ export class RecycleBinController {
     this.logger.info(JSON.stringify(recoverMetaRes));
     this.logger.info(JSON.stringify(recoverResponseRes));
     this.logger.info(JSON.stringify(delRecycleBinRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @Post('/foreverDeleteSurvey')
+  @HttpCode(200)
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async foreverDeleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const foreverDeleteSurveyRes =
+      await this.surveyRecycleBinService.foreverDeleteSurvey({
+        pageId: surveyMeta._id.toString(),
+        operator: req.user.username,
+        operatorId: req.user._id.toString(),
+      });
+
+    this.logger.info(JSON.stringify(foreverDeleteSurveyRes));
 
     return {
       code: 200,

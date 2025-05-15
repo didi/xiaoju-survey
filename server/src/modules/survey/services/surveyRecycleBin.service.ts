@@ -65,6 +65,15 @@ export class SurveyRecycleBinService {
     }
   }
 
+  async isForeverDeleted(pageId) {
+    const surveyRecycle = await this.surveyRecycleRepository.findOne({
+      where: {
+        pageId: pageId,
+      },
+    });
+    return surveyRecycle.foreverDeleted === true;
+  }
+
   async recoverSurvey({ pageId, operator, operatorId }) {
     return this.surveyRecycleRepository.updateOne(
       {
@@ -76,6 +85,21 @@ export class SurveyRecycleBinService {
           operator,
           operatorId,
           recoveredAt: new Date(),
+        },
+      },
+    );
+  }
+
+  async foreverDeleteSurvey({ pageId, operator, operatorId }) {
+    return this.surveyRecycleRepository.updateOne(
+      {
+        pageId: pageId,
+      },
+      {
+        $set: {
+          foreverDeleted: true,
+          operator,
+          operatorId,
         },
       },
     );

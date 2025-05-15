@@ -98,7 +98,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
-import { deleteSurvey, pausingSurvey, recoverSurvey } from '@/management/api/survey'
+import { deleteSurvey, foreverDeleteSurvey, pausingSurvey, recoverSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
@@ -202,7 +202,7 @@ const handleClick = (key, data) => {
       onRecover(data)
       return
     case 'foreverDelete':
-      onCooper(data)
+      onForeverDelete(data)
       return
     default:
       return
@@ -231,25 +231,27 @@ const onRecover = async (row) => {
   }
 }
 
-const onPausing = async (row) => {
+const onForeverDelete = async (row) => {
   try {
-    await ElMessageBox.confirm('“暂停回收”后问卷将不能填写，是否继续？', '提示', {
+    await ElMessageBox.confirm('将从回收站中永久删除该问卷, 是否确认删除？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
   } catch (error) {
-    console.log('取消暂停')
     return
   }
-  const res = await pausingSurvey(row._id)
+
+  const res = await foreverDeleteSurvey(row.pageId)
   if (res.code === CODE_MAP.SUCCESS) {
-    ElMessage.success('暂停成功')
+    ElMessage.success('永久删除成功')
     onRefresh()
+    workSpaceStore.getRecycleBin()
   } else {
-    ElMessage.error(res.errmsg || '暂停失败')
+    ElMessage.error(res.errmsg || '永久删除失败')
   }
 }
+
 const handleCurrentChange = (current) => {
   currentPage.value = current
   onRefresh()

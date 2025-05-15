@@ -43,7 +43,7 @@ import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
 import { RecycleBinController } from './controllers/recyclebin.controller';
-import { SurveyRecycleBin } from '../../models/surveyRecycleBin.entity';
+import { SurveyRecycle } from '../../models/surveyRecycleBin.entity';
 import { SurveyRecycleBinService } from './services/surveyRecycleBin.service';
 
 @Module({
@@ -59,7 +59,7 @@ import { SurveyRecycleBinService } from './services/surveyRecycleBin.service';
       DownloadTask,
       Session,
       SurveyGroup,
-      SurveyRecycleBin,
+      SurveyRecycle,
     ]),
     ConfigModule,
     SurveyResponseModule,

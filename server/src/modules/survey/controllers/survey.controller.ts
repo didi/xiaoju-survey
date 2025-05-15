@@ -33,6 +33,7 @@ import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 import { SessionService } from '../services/session.service';
 import { UserService } from 'src/modules/auth/services/user.service';
+import { SurveyRecycleBinService } from '../services/surveyRecycleBin.service';
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -46,6 +47,7 @@ export class SurveyController {
     private readonly logger: Logger,
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
+    private readonly surveyRecycleBinService: SurveyRecycleBinService,
   ) {}
 
   @Get('/getBannerData')
@@ -209,9 +211,14 @@ export class SurveyController {
       await this.responseSchemaService.deleteResponseSchema({
         surveyPath: surveyMeta.surveyPath,
       });
+    const addRecycleBinRes =
+      await this.surveyRecycleBinService.addSurveyRecycle(
+        surveyMeta._id.toString(),
+      );
 
     this.logger.info(JSON.stringify(delMetaRes));
     this.logger.info(JSON.stringify(delResponseRes));
+    this.logger.info(JSON.stringify(addRecycleBinRes));
 
     return {
       code: 200,
@@ -266,6 +273,18 @@ export class SurveyController {
 
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+
+    // const responseSchema =
+    //   await this.responseSchemaService.getResponseSchemaByPath(
+    //     surveyMeta.surveyPath,
+    //   );
+    // if (!responseSchema || responseSchema.isDeleted) {
+    //   throw new HttpException(
+    //     '问卷不存在或已删除',
+    //     EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
+    //   );
+    // }
+
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 

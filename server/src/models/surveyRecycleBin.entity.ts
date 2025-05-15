@@ -1,8 +1,14 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
-@Entity({ name: 'surveyRecycleBin' })
-export class SurveyRecycleBin extends BaseEntity {
+@Entity({ name: 'surveyRecycle' })
+export class SurveyRecycle extends BaseEntity {
+  @Column()
+  title: string;
+
+  @Column({ type: 'timestamp', precision: 3 })
+  surveyMetaCreateAt: Date;
+
   @Column()
   ownerId: string;
 
@@ -10,5 +16,8 @@ export class SurveyRecycleBin extends BaseEntity {
   owner: string;
 
   @Column()
-  surveyTotal: number;
+  pageId: string;
+
+  @Column()
+  foreverDeleted: boolean;
 }

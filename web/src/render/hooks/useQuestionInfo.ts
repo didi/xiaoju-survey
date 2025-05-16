@@ -3,9 +3,9 @@ import { cleanRichText } from '@/common/xss'
 export const useQuestionInfo = (field: string) => {
   const questionstore = useQuestionStore()
 
-  const questionTitle = cleanRichText(questionstore.questionData[field]?.title)
+  const questionTitle = cleanRichText(questionstore?.questionData?.[field]?.title)
   const getOptionTitle = (value: any) => {
-    const options = questionstore.questionData[field]?.options || []
+    const options = questionstore?.questionData?.[field]?.options || []
     if (value instanceof Array) {
       return options
         .filter((item: any) => value.includes(item.hash))

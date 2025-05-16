@@ -2,10 +2,11 @@ import { useQuestionStore } from '@/render/stores/question'
 import { cleanRichText } from '@/common/xss'
 export const useQuestionInfo = (field: string) => {
   const questionstore = useQuestionStore()
-
-  const questionTitle = cleanRichText(questionstore?.questionData?.[field]?.title)
+  const questionData: Record<string, any> = questionstore?.questionData || {}
+  const questionTitle = cleanRichText(questionData?.[field]?.title)
   const getOptionTitle = (value: any) => {
-    const options = questionstore?.questionData?.[field]?.options || []
+    
+    const options = questionData?.[field]?.options || []
     if (value instanceof Array) {
       return options
         .filter((item: any) => value.includes(item.hash))

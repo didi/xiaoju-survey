@@ -15,10 +15,7 @@ const prompt = ref('')
 </script>
 <style lang="scss" scoped>
   .preview-panel {
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
-    padding: 20px;
-    height: 100%; 
+    height: calc(100vh - 56px); //减掉导航条
     .preview-placeholder {
       height: 100%;
       display: flex;

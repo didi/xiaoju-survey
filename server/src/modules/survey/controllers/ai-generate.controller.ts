@@ -12,7 +12,7 @@ export class AIGenerateController {
     // private readonly surveyConfService: SurveyConfService
   ) {}
 
-  @Post('test-deepseek')
+@Post('test-deepseek')
   async testDeepSeek(
     @Body() body: { prompt: string },
     @Res() res: Response
@@ -22,6 +22,7 @@ export class AIGenerateController {
       res.status(200).json({
         code: 200,
         data: {
+          rawContent: result.rawContent,  // 新增该字段
           title: result.title,
           questions: result.questions
         }

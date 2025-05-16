@@ -54,7 +54,7 @@ const handleCreate = () => {
     padding: 0 24px;
     height: 56px;
     border-bottom: 1px solid #eee;
-
+ 
     .nav-left {
       display: flex;
       align-items: center;
@@ -76,8 +76,6 @@ const handleCreate = () => {
   flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    // gap: 24px;
-    // padding: 24px;
 
 }
 

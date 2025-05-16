@@ -15,7 +15,8 @@ export class AIGenerateService {
      B) 选项2
      C) 选项3
      D) 选项4
-  （不加限制的化，默认保持问题数为5个，选项使用大写字母+右括号格式）`;
+  （不加限制的化，默认保持问题数为5个，题目都是单选题，选项使用大写字母+右括号格式）
+  `;
   
   constructor(
     private readonly httpService: HttpService,
@@ -48,7 +49,7 @@ export class AIGenerateService {
       }
   
       // 修改选项匹配规则（兼容 -、* 等符号开头的情况）
-      const optionMatch = line.match(/^[-\*]?\s*([A-E])[\.\u3001]\s*(.+)/);
+      const optionMatch = line.match(/^\s*([A-E])[\)\.\u3001]\s*(.+)/);
       if (optionMatch && currentQuestion) {
         const optionLetter = optionMatch[1].toUpperCase();
         currentQuestion.options.push(`${optionLetter}. ${optionMatch[2].trim()}`);
@@ -59,7 +60,7 @@ export class AIGenerateService {
     console.log('解析结果:', JSON.stringify(result, null, 2));
     // 添加中间日志 ↓↓↓
     console.log('原始内容:', content);
-    console.log('解析后的标题:', result.title);
+    // console.log('解析后的标题:', result.title);
     if (result.questions.length === 0) {
       throw new Error('未解析到有效问卷问题');
     }
@@ -70,9 +71,10 @@ export class AIGenerateService {
   async callDeepSeekAPI(prompt: string) {
     const messages = [
       { role: "system", content: this.systemPrompt },
-      { role: "user", content: `请根据以下主题生成问卷：${prompt}` }
+      { role: "user", content: `下面我将开始描述问题，请根据该内容生成问卷：${prompt}` }
     ];
     try {
+      console.log('当前完整的prompt:', messages);  
       const apiUrl = this.configService.get('AImodel_API_URL');
       console.log('当前使用的API地址:', apiUrl);  // 添加这行
       
@@ -88,7 +90,7 @@ export class AIGenerateService {
         this.httpService.post(
           apiUrl,
           {
-            model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+            model: this.configService.get('AImodel_MODEL'),
             messages: [
               { role: "system", content: this.systemPrompt },
               { role: "user", content: prompt }
@@ -106,11 +108,16 @@ export class AIGenerateService {
         
       );
       
-      console.log('DeepSeek原始响应:', JSON.stringify(response.data, null, 2));
-    //   return this.parseAIData(JSON.parse(response.data.choices[0].message.content));
-    // 修改后：直接使用消息内容，无需二次解析
-    return this.parseAIData(response.data.choices[0].message.content);// 添加错误日志
-    } catch (error) {
+    // console.log('DeepSeek原始响应:', JSON.stringify(response.data, null, 2));
+    const parsedData = this.parseAIData(response.data.choices[0].message.content);
+    return {
+      title: parsedData.title,
+      questions: parsedData.questions,
+      rawContent: response.data.choices[0].message.content
+    };
+
+    } 
+    catch (error) {
       console.error('DeepSeek调用失败:', error.stack);
       throw new Error(`AI服务调用失败: ${error.message}`);
     }

@@ -2,16 +2,15 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { set } from 'lodash-es'
 import { useSurveyStore } from '@/render/stores/survey'
-import { queryVote } from '@/render/api/survey'
-import { QUESTION_TYPE } from '@/common/typeEnum'
-
-import { getVoteData, setVoteData, clearVoteData } from '@/render/utils/storage'
+import { queryOptionCountInfo } from '@/render/api/survey'
+import { NORMAL_CHOICES, QUESTION_TYPE } from '@/common/typeEnum'
 
 // 投票进度逻辑聚合
-const useVoteMap = (questionData) => {
+const useOptionCountMap = (questionData) => {
   const voteMap = ref({})
+  const quotaMap = ref({})
   //初始化投票题的数据
-  const initVoteData = async () => {
+  const initOptionCountInfo = async () => {
     const surveyStore = useSurveyStore()
     const surveyPath = surveyStore.surveyPath
 
@@ -22,22 +21,28 @@ const useVoteMap = (questionData) => {
       if (type.includes(QUESTION_TYPE.VOTE)) {
         fieldList.push(field)
       }
+      if (NORMAL_CHOICES.includes(type)) {
+        fieldList.push(field)
+      }
     }
 
     if (fieldList.length <= 0) {
       return
     }
     try {
-      clearVoteData()
-      const voteRes = await queryVote({
+      const countRes = await queryOptionCountInfo({
         surveyPath,
         fieldList: fieldList.join(',')
       })
 
-      if (voteRes.code === 200) {
-        setVoteData(voteRes.data)
-        setVoteMap(voteRes.data)
+      if (countRes.code === 200) {
+        setVoteMap(countRes.data)
       }
+      Object.keys(countRes.data).forEach(field => {
+        Object.keys(countRes.data[field]).forEach((optionHash) => {
+          updateQuotaMapByKey({ questionKey: field, optionKey: optionHash, data: countRes.data[field][optionHash] })
+        })
+      })
     } catch (error) {
       console.log(error)
     }
@@ -56,10 +61,9 @@ const useVoteMap = (questionData) => {
   const updateVoteData = (data) => {
     const { key: questionKey, value: questionVal } = data
     // 更新前获取接口缓存在localstorage中的数据
-    const voteInfo = getVoteData()
     const currentQuestion = questionData.value[questionKey]
     const options = currentQuestion.options
-    const voteTotal = voteInfo?.[questionKey]?.total || 0
+    const voteTotal = voteMap[questionKey]?.total || 0
     let totalPayload = {
       questionKey,
       voteKey: 'total',
@@ -67,7 +71,7 @@ const useVoteMap = (questionData) => {
     }
     options.forEach((option) => {
       const optionHash = option.hash
-      const voteCount = voteInfo?.[questionKey]?.[optionHash] || 0
+      const voteCount = voteMap?.[questionKey]?.[optionHash] || 0
       // 如果选中值包含该选项，对应voteCount 和 voteTotal  + 1
       if (
         Array.isArray(questionVal) ? questionVal.includes(optionHash) : questionVal === optionHash
@@ -90,10 +94,20 @@ const useVoteMap = (questionData) => {
       updateVoteMapByKey(totalPayload)
     })
   }
+  const updateQuotaMapByKey = ({ questionKey, optionKey, data }) =>{
+    // 兼容为空的情况
+    if (!quotaMap.value[questionKey]) {
+      quotaMap.value[questionKey] = {}
+    }
+    quotaMap.value[questionKey][optionKey] = data
+  }
   return {
     voteMap,
-    initVoteData,
-    updateVoteData
+    quotaMap,
+    setVoteMap,
+    initOptionCountInfo,
+    updateVoteData,
+    updateQuotaMapByKey,
   }
 }
 
@@ -177,7 +191,7 @@ export const useQuestionStore = defineStore('question', () => {
   const setQuestionData = (data) => {
     questionData.value = data
   }
-  const { voteMap, setVoteMap, initVoteData, updateVoteData } = useVoteMap(questionData)
+  const { voteMap, quotaMap, setVoteMap, initOptionCountInfo, updateVoteData } = useOptionCountMap(questionData)
 
   const changeSelectMoreData = (data) => {
     const { key, value, field } = data
@@ -226,8 +240,9 @@ export const useQuestionStore = defineStore('question', () => {
     changeSelectMoreData,
     setQuestionSeq,
     voteMap,
+    quotaMap,
     setVoteMap,
-    initVoteData,
+    initOptionCountInfo,
     updateVoteData,
     changeField,
     changeIndex,

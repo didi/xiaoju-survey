@@ -13,7 +13,12 @@ import { DOWNLOAD_TASK_STATUS } from 'src/enums/downloadTaskStatus';
 
 describe('DownloadTaskService', () => {
   let service: DownloadTaskService;
+  let responseSchemaService: ResponseSchemaService;
+  let dataStatisticService: DataStatisticService;
+  let fileService: FileService;
   let downloadTaskRepository: MongoRepository<DownloadTask>;
+  let surveyResponseRepository: MongoRepository<SurveyResponse>;
+  let logger: Logger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,8 +61,18 @@ describe('DownloadTaskService', () => {
     }).compile();
 
     service = module.get<DownloadTaskService>(DownloadTaskService);
+    responseSchemaService = module.get<ResponseSchemaService>(
+      ResponseSchemaService,
+    );
+    dataStatisticService =
+      module.get<DataStatisticService>(DataStatisticService);
+    fileService = module.get<FileService>(FileService);
+    logger = module.get<Logger>(Logger);
     downloadTaskRepository = module.get<MongoRepository<DownloadTask>>(
       getRepositoryToken(DownloadTask),
+    );
+    surveyResponseRepository = module.get<MongoRepository<SurveyResponse>>(
+      getRepositoryToken(SurveyResponse),
     );
   });
 
@@ -216,29 +231,157 @@ describe('DownloadTaskService', () => {
     });
   });
 
+  describe('handleDownloadTask', () => {
+    let mockTaskInfo;
+    let mockResponseSchema;
+    let mockListHead;
+    let mockListBody;
+    let mockUploadResult;
+
+    beforeEach(() => {
+      mockTaskInfo = {
+        _id: new ObjectId(),
+        surveyId: 'survey1',
+        filename: 'test.xlsx',
+      };
+
+      mockResponseSchema = {
+        title: 'Test Survey',
+        surveyPath: '/test/path',
+      };
+
+      mockListHead = [
+        { title: '<div>姓名</div>', field: 'name' },
+        { title: '<div>年龄</div>', field: 'age' },
+      ];
+
+      mockListBody = [
+        { name: '<div>张三</div>', age: '20' },
+        { name: '<div>李四</div>', age: '30' },
+      ];
+
+      mockUploadResult = { url: 'http://test.com/file', key: 'test-key' };
+
+      jest
+        .spyOn(downloadTaskRepository, 'updateOne')
+        .mockResolvedValue({ matchedCount: 1 });
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPageId')
+        .mockResolvedValue(mockResponseSchema);
+      jest.spyOn(surveyResponseRepository, 'count').mockResolvedValue(2);
+      jest.spyOn(dataStatisticService, 'getDataTable').mockResolvedValue({
+        listHead: mockListHead,
+        listBody: mockListBody,
+        total: 2,
+      });
+      jest.spyOn(fileService, 'upload').mockResolvedValue(mockUploadResult);
+    });
+
+    it('should successfully process download task', async () => {
+      await service.handleDownloadTask({ taskInfo: mockTaskInfo });
+
+      // 验证状态更新为计算中
+      expect(downloadTaskRepository.updateOne).toHaveBeenCalledWith(
+        { _id: mockTaskInfo._id },
+        {
+          $set: {
+            status: DOWNLOAD_TASK_STATUS.COMPUTING,
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+
+      // 验证获取数据
+      expect(
+        responseSchemaService.getResponseSchemaByPageId,
+      ).toHaveBeenCalledWith(mockTaskInfo.surveyId);
+      expect(surveyResponseRepository.count).toHaveBeenCalled();
+      expect(dataStatisticService.getDataTable).toHaveBeenCalled();
+
+      // 验证文件上传
+      expect(fileService.upload).toHaveBeenCalledWith({
+        configKey: 'SERVER_LOCAL_CONFIG',
+        file: expect.any(Object),
+        pathPrefix: 'exportfile',
+        filename: mockTaskInfo.filename,
+      });
+
+      // 验证最终状态更新
+      expect(downloadTaskRepository.updateOne).toHaveBeenCalledWith(
+        { _id: mockTaskInfo._id },
+        {
+          $set: {
+            status: DOWNLOAD_TASK_STATUS.SUCCEED,
+            url: mockUploadResult.url,
+            fileKey: mockUploadResult.key,
+            fileSize: expect.any(Number),
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+    });
+
+    it('should handle task processing error', async () => {
+      const error = new Error('Processing failed');
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPageId')
+        .mockRejectedValue(error);
+
+      await service.handleDownloadTask({ taskInfo: mockTaskInfo });
+
+      expect(downloadTaskRepository.updateOne).toHaveBeenCalledWith(
+        { _id: mockTaskInfo._id },
+        {
+          $set: {
+            status: DOWNLOAD_TASK_STATUS.FAILED,
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+      expect(logger.error).toHaveBeenCalled();
+    });
+  });
+
   describe('executeTask', () => {
-    it('should process and execute tasks in queue', async () => {
+    it('should skip deleted tasks', async () => {
       const mockTaskId = new ObjectId().toString();
       DownloadTaskService.taskList.push(mockTaskId);
 
       jest.spyOn(service, 'getDownloadTaskById').mockResolvedValue({
         _id: new ObjectId(mockTaskId),
-        isDeleted: false,
+        isDeleted: true,
       } as any);
 
+      jest.spyOn(service, 'handleDownloadTask');
+
+      await service.executeTask();
+
+      expect(service.handleDownloadTask).not.toHaveBeenCalled();
+      expect(DownloadTaskService.isExecuting).toBe(false);
+    });
+
+    it('should handle multiple tasks in queue', async () => {
+      const mockTaskIds = [
+        new ObjectId().toString(),
+        new ObjectId().toString(),
+      ];
+      DownloadTaskService.taskList.push(...mockTaskIds);
+
+      const mockTasks = mockTaskIds.map((id) => ({
+        _id: new ObjectId(id),
+        isDeleted: false,
+      })) as Array<DownloadTask>;
+
+      let taskIndex = 0;
+      jest
+        .spyOn(service, 'getDownloadTaskById')
+        .mockImplementation(async () => mockTasks[taskIndex++]);
       jest.spyOn(service, 'handleDownloadTask').mockResolvedValue(undefined);
 
       await service.executeTask();
 
-      expect(service.getDownloadTaskById).toHaveBeenCalledWith({
-        taskId: mockTaskId,
-      });
-      expect(service.handleDownloadTask).toHaveBeenCalled();
-    });
-
-    it('should stop executing when queue is empty', async () => {
-      DownloadTaskService.taskList = [];
-      await service.executeTask();
+      expect(service.handleDownloadTask).toHaveBeenCalledTimes(2);
+      expect(DownloadTaskService.taskList).toHaveLength(0);
       expect(DownloadTaskService.isExecuting).toBe(false);
     });
   });

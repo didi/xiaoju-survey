@@ -108,7 +108,7 @@ const meta = {
             {
               label: '横排',
               value: 'horizontal'
-            }
+            },
           ]
         },
         {
@@ -117,9 +117,7 @@ const meta = {
           key: 'minNum',
           value: 0,
           min: 0,
-          max: (moduleConfig) => {
-            return moduleConfig?.maxNum || 0
-          },
+          max: moduleConfig => { return  moduleConfig?.maxNum || 0 },
           contentClass: 'input-number-config'
         },
         {
@@ -127,15 +125,30 @@ const meta = {
           type: 'InputNumber',
           key: 'maxNum',
           value: 0,
-          min: (moduleConfig) => {
-            return moduleConfig?.minNum || 0
-          },
-          max: (moduleConfig) => {
-            return moduleConfig?.options?.length
-          },
+          min: moduleConfig => { return moduleConfig?.minNum || 0 },
+          max: moduleConfig => { return moduleConfig?.options?.length },
           contentClass: 'input-number-config'
         }
       ]
+    },
+    {
+      name: 'optionQuota',
+      label: '选项配额',
+      labelStyle: {
+        'font-weight': 'bold'
+      },
+      type: 'QuotaConfig',
+      // 输出转换
+      valueSetter({ options, quotaDisplay}) {
+        return [{
+          key: 'options',
+          value: options
+        },
+        {
+          key: 'quotaDisplay',
+          value: quotaDisplay
+        }]
+      }
     }
   ],
   editConfigure: {

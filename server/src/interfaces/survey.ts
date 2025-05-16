@@ -75,6 +75,7 @@ export interface DataItem {
   starStyle?: string;
   innerType?: string;
   cascaderData: CascaderDate;
+  quotaDisplay?: boolean;
 }
 
 export interface Option {
@@ -84,6 +85,7 @@ export interface Option {
   othersKey?: string;
   placeholderDesc: string;
   hash: string;
+  quota?: number;
 }
 
 export interface DataConf {

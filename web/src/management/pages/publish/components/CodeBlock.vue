@@ -2,20 +2,20 @@
     <div>
       <div class="header">
         <h3>方式一： API调用</h3>
-        <el-button plain @click="copyCode('api')" id="api-code" :data-clipboard-text="code">{{ buttonLabel  }}</el-button>
+        <el-button plain @click="copyCode(code, 'api')" >{{ buttonLabel  }}</el-button>
       </div>
       <pre><code>{{ code }}</code></pre>
       <div class="header">
         <h3>方式二： 组件调用</h3>
-        <el-button plain  @click="copyCode('component')" id="component-code" :data-clipboard-text="code1">{{ buttonLabel1 }}</el-button>
+        <el-button plain  @click="copyCode(code1, 'component')" >{{ buttonLabel1 }}</el-button>
       </div>
       <pre><code>{{ code1 }}</code></pre>
     </div>
   </template>
   
   <script lang="ts" setup>
-  import { ref, onMounted, toRefs } from 'vue';
-  import ClipboardJS from 'clipboard';
+  import { ref, toRefs } from 'vue';
+  import copy from 'copy-to-clipboard';
 
   const buttonLabel =ref('复制代码')
 
@@ -66,27 +66,18 @@ Survey.init({
   onError={(error) => { console.log(error.message) }}
 />
 `
-  const copyCode = (type: string) => {
-    
-    const clipboard = new ClipboardJS(`#${type}-code`);
-    clipboard.on('success', (e) => {
-      console.log('代码已复制到剪贴板');
-      e.clearSelection();
+  const copyCode = (content: string, type: string) => {
+
+    const data = copy(content)
+
+    if (data) {
       if(type === 'api') {
         buttonLabel.value = '已复制'
       } else {
         buttonLabel1.value = '已复制'
       }
-    });
-    clipboard.on('error', () => {
-      console.error('复制代码失败');
-    });
+    }
   };
-
-onMounted(() => {
-  // 初始化 clipboard
-  new ClipboardJS('.el-button');
-});
 
   </script>
   

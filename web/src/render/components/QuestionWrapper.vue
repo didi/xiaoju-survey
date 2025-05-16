@@ -19,7 +19,7 @@ import QuestionRuleContainer from '@/materials/questions/QuestionRuleContainer'
 import { useVoteMap } from '@/render/hooks/useVoteMap'
 import { useOthersData } from '@/render/hooks/useOthersData'
 import { useInputData } from '@/render/hooks/useInputData'
-
+import { useOptionsQuota } from '@/render/hooks/useOptionsQuota'
 import { useQuestionStore } from '@/render/stores/question'
 import { useSurveyStore } from '@/render/stores/survey'
 
@@ -60,6 +60,13 @@ const questionConfig = computed(() => {
     const voteOptions = unref(options)
     allOptions = allOptions.map((obj, index) => Object.assign(obj, voteOptions[index]))
     moduleConfig.voteTotal = unref(voteTotal)
+  }
+  if(NORMAL_CHOICES.includes(type) &&
+    options.some(option => option.quota > 0)) {
+    // 处理普通选择题的选项配额
+    let { options: optionWithQuota } = useOptionsQuota(field)
+    
+    allOptions = allOptions.map((obj, index) => Object.assign(obj, optionWithQuota[index]))
   }
   if (NORMAL_CHOICES.includes(type) && options.some((option) => option.others)) {
     // 处理普通选择题的填写更多

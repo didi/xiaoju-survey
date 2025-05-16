@@ -60,7 +60,7 @@ export default defineConfig({
       '@wangeditor/editor-for-vue',
       'element-plus/es/components/*/style/index',
       'element-plus/dist/locale/zh-cn.mjs',
-      'clipboard',
+      'copy-to-clipboard',
       'qrcode',
       'moment',
       'moment/locale/zh-cn',

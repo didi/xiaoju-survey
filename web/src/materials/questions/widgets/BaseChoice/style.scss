@@ -56,7 +56,7 @@
     .choice-item {
       position: relative;
       display: inline-flex;
-      align-items: center;
+      align-items: flex-start;
       width: 100%;
       box-sizing: border-box;
       vertical-align: top;
@@ -71,7 +71,7 @@
         vertical-align: top;
         width: 0.32rem;
         height: 0.32rem;
-        margin: 11px 0.24rem 0 0;
+        margin: 0.24rem 0.24rem 0 0;
         border: 1px solid $border-color;
         border-radius: 2px;
         background-color: #fff;

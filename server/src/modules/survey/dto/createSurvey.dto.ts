@@ -23,6 +23,9 @@ export class CreateSurveyDto {
   @ApiProperty({ description: '问卷创建在哪个分组下', required: false })
   groupId?: string;
 
+  @ApiProperty({ description: '题目列表', required: false })
+  questionList?: Array<any>;
+
   static validate(data) {
     return Joi.object({
       title: Joi.string().required(),
@@ -32,7 +35,10 @@ export class CreateSurveyDto {
         then: Joi.allow(null),
         otherwise: Joi.required(),
       }),
-      createMethod: Joi.string().allow(null).valid('copy').default('basic'),
+      createMethod: Joi.string()
+        .allow(null)
+        .valid('copy', 'textImport')
+        .default('basic'),
       createFrom: Joi.string().when('createMethod', {
         is: 'copy',
         then: Joi.required(),
@@ -40,6 +46,7 @@ export class CreateSurveyDto {
       }),
       workspaceId: Joi.string().allow(null, ''),
       groupId: Joi.string().allow(null, ''),
+      questionList: Joi.allow(null),
     }).validate(data);
   }
 }

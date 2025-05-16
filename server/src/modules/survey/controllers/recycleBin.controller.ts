@@ -28,7 +28,7 @@ export class RecycleBinController {
         let isRecycleBin = true;
         let cooperationList = []
         cooperationList =
-        await this.collaboratorService.getCollaboratorListByUserId({ userId, isRecycleBin });
+        await this.collaboratorService.getManageListByUserId({ userId });
         const surveyIdList1 = cooperationList.map((item) => item.surveyId);
         const surveyIdList2 = (await this.workspaceService.getAdminSurveyIdList(userId, isRecycleBin)).data.surveyIdList
         const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];

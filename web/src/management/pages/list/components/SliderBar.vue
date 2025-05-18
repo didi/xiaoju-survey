@@ -9,12 +9,12 @@
     <template v-for="(menu, index) in props.menus" :key="menu.id">
       <el-menu-item
         :class="[
-          index === 0 ? 'bottom' : '',
+          index === 0 ? 'bottom my-space-item' : '',
           index > 2 ? 'sub-item' : 'main-item',
           activeValue == menu.id ? 'check-item' : ''
         ]"
         :index="menu.id.toString()"
-        v-if="!menu.children?.length"
+        v-if="menu.id !== MenuType.RecycleBin && !menu.children?.length"
       >
         <template #title>
           <div class="title-content">
@@ -24,13 +24,13 @@
         </template>
       </el-menu-item>
       <el-sub-menu
-        v-else
+        v-else-if="menu.id !== MenuType.RecycleBin"
         :index="menu.id.toString()"
         :class="[activeValue == menu.id ? 'check-item' : '']"
         default-opened
       >
         <template #title>
-          <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
+          <div class="title-content sub-title" @click.stop="handleMenu(menu.id)">
             <i :class="['iconfont', menu.icon]"></i>
             <span>{{ menu.name }}</span>
           </div>
@@ -47,6 +47,19 @@
           </div>
         </el-menu-item>
       </el-sub-menu>
+      <el-menu-item
+        v-else
+        :class="['bottom', activeValue == menu.id ? 'check-item' : '']"
+        :index="menu.id.toString()"
+        class="recycle-bin-item"
+      >
+        <template #title>
+          <div class="title-content">
+            <i :class="['iconfont', menu.icon]"></i>
+            <span>{{ menu.name }}</span>
+          </div>
+        </template>
+      </el-menu-item>
     </template>
   </el-menu>
 </template>
@@ -97,6 +110,9 @@ const handleMenu = (id: string) => {
   overflow-x: hidden;
   overflow-y: auto;
   box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  
   :deep(.el-menu-item) {
     width: 200px;
     height: 36px;
@@ -128,6 +144,7 @@ const handleMenu = (id: string) => {
       display: flex;
       align-items: center;
       font-weight: 400;
+      font-size: 14px;
     }
 
     .title-box {
@@ -141,37 +158,36 @@ const handleMenu = (id: string) => {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 12px;
     }
 
     .title-total {
-      font-size: 14px;
+      font-size: 12px;
       color: #92949d;
       text-align: right;
       font-weight: 400;
     }
   }
-  :deep(.el-menu-item-group) {
-    > ul {
-      > li {
-        padding-left: 45px !important;
-      }
+
+  .my-space-item {
+    font-size: 32px;
+  }
+
+  .recycle-bin-item {
+    margin-top: auto;
+    .title-content span {
+      font-size: 14px;
     }
   }
-  :deep(.el-menu-item-group__title) {
-    cursor: pointer;
-    padding: 0 !important;
+  
+  .iconfont {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #faa600;
   }
-  .sub-title {
-    width: 100%;
-    width: 100%;
+  
+  .check-item {
+    background: #fef6e6 100%;
   }
-}
-.iconfont {
-  font-size: 16px;
-  margin-right: 10px;
-  color: #faa600 !important;
-}
-.check-item {
-  background: #fef6e6 100% !important;
 }
 </style>

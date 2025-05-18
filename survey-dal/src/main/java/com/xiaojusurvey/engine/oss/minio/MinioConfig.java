@@ -28,7 +28,7 @@ public class MinioConfig {
      * @return {@link MinioClient}
      */
     @Bean
-    @ConditionalOnExpression("'${xiaoju.survey.file.provider:}' == 'minio' || '${xiaoju.survey.file.minio.enabled:false}' == 'true'")
+    @ConditionalOnExpression("'${xiaoju.survey.file.provider}' == 'minio' || '${xiaoju.survey.file.minio.enabled}' == 'true'")
     public MinioClient minioClient() {
         if (Objects.isNull(minioProperties)) {
             throw new FileException("Minio 实例化失败：配置参数为空", RespErrorCode.OSS_CLIENT_ERROR.getCode());

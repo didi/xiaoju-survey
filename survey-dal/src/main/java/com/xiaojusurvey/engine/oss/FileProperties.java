@@ -11,5 +11,13 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class FileProperties {
+    /**
+     * 文件处理器，默认本地文件处理器
+     */
     private FileProviderEnum provider = FileProviderEnum.LOCAL_OSS;
+
+    /**
+     * 是否需要验证身份
+     */
+    private Boolean needAuth = true;
 }

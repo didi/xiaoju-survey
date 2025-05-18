@@ -3,13 +3,9 @@ package com.xiaojusurvey.engine.common.util;
 
 import org.springframework.util.StringUtils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FileUtil {
 
@@ -93,18 +89,12 @@ public class FileUtil {
         if (paths == null || paths.length == 0) {
             return "";
         }
-        // 创建基础路径
-        Path result = Paths.get(paths[0]);
-        // 拼接并规范化剩余路径片段
-        for (int i = 1; i < paths.length; i++) {
-            if (paths[i] == null || paths[i].trim().isEmpty()) {
-                // 跳过空路径片段
-                continue;
-            }
-            result = result.resolve(paths[i]);
-        }
-        // 规范化路径 (处理 . 和 ..)
-        return result.normalize().toString();
+
+        return Arrays.stream(paths)
+                .filter(p -> p != null && !p.trim().isEmpty())
+                .map(p -> p.startsWith("/") ? p.substring(1) : p)
+                .map(p -> p.endsWith("/") ? p.substring(0, p.length() - 1) : p)
+                .collect(Collectors.joining("/"));
     }
 
     /**

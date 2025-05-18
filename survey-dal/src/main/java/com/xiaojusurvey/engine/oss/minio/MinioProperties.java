@@ -27,11 +27,6 @@ public class MinioProperties {
     private String pathPrefix = "userUpload";
 
     /**
-     * 是否需要验证身份
-     */
-    private Boolean needAuth = true;
-
-    /**
      * minio账号
      */
     private String accessKey;

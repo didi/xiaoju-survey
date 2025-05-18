@@ -36,6 +36,7 @@
         <jwt.version>4.4.0</jwt.version>
         <dozer.version>5.5.1</dozer.version>
         <minio.version>8.5.4</minio.version>
+        <aliyun.oss.version>3.18.2</aliyun.oss.version>
     </properties>
 
     <dependencyManagement>
@@ -94,6 +95,11 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.oss.version}</version>
             </dependency>
         </dependencies>
 

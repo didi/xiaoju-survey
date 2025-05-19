@@ -16,17 +16,20 @@ export class HttpExceptionsFilter implements ExceptionFilter {
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal Server Error';
     let code = 500;
+    let data;
 
     if (exception instanceof HttpException) {
       status = HttpStatus.OK; // 非系统报错状态码为200
       message = exception.message;
       code = exception.code;
+      data = exception.data;
     }
 
     response.status(status).json({
       message,
       code,
       errmsg: exception.message,
+      data,
     });
   }
 }

@@ -1,5 +1,4 @@
-import { defaultQuestionConfig } from '../config/questionConfig'
-import { map as _map, cloneDeep } from 'lodash-es'
+import { map as _map } from 'lodash-es'
 import questionLoader from '@/materials/questions/questionLoader'
 
 const generateQuestionField = () => {
@@ -38,30 +37,25 @@ export const getNewField = (fields = []) => {
 export const getQuestionByType = (type, fields) => {
   const questionMeta = questionLoader.getMeta(type)
   const { attrs } = questionMeta
-  let newQuestion = defaultQuestionConfig
-  if (attrs) {
-    let questionSchema = {}
-    attrs.forEach((element) => {
-      questionSchema[element.name] = element.defaultValue
-    })
-    newQuestion = questionSchema
-  } else {
-    newQuestion = defaultQuestionConfig
-    newQuestion.type = type
+  if (!attrs) {
+    throw new Error('该题目配置不存在')
   }
-
-  newQuestion.field = getNewField(fields) // 动态生成题目id
-  if ('options' in newQuestion) {
+  const questionSchema = {}
+  attrs.forEach((element) => {
+    questionSchema[element.name] = element.defaultValue
+  })
+  questionSchema.field = getNewField(fields) // 动态生成题目id
+  if ('options' in questionSchema) {
     // 动态更新选项的hash-id
     const hashList = []
-    for (const option of newQuestion.options) {
+    for (const option of questionSchema.options) {
       const hash = generateHash(hashList)
       hashList.push(hash)
       option.hash = hash
     }
   }
 
-  return cloneDeep(newQuestion)
+  return questionSchema
 }
 
 export function filterQuestionPreviewData(data, currentEditOne = '') {

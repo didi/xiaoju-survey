@@ -57,16 +57,17 @@ public class QiniuYunService {
      * @return 文件访问链接
      */
     public String getObjectUrl(String filename, String expiredTime) {
-        if (!qiniuYunProperties.getNeedPrivateRead()) {
-            return (qiniuYunProperties.getUseSSL() ? "https" : "http") + "://" + qiniuYunProperties.getEndpoint() + "/" + filename;
-        }
         if (!StringUtils.hasText(expiredTime)) {
             expiredTime = qiniuYunProperties.getExpiredTime();
         }
         try {
             DownloadUrl url = new DownloadUrl(qiniuYunProperties.getEndpoint(), qiniuYunProperties.getUseSSL(), filename);
-            long deadline = System.currentTimeMillis() / 1000 + FileUtil.parseExpiryTimeToSeconds(expiredTime);
-            return url.buildURL(auth, deadline);
+            if (qiniuYunProperties.getNeedPrivateRead()) {
+                long deadline = System.currentTimeMillis() / 1000 + FileUtil.parseExpiryTimeToSeconds(expiredTime);
+                return url.buildURL(auth, deadline);
+            } else {
+                return url.buildURL();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

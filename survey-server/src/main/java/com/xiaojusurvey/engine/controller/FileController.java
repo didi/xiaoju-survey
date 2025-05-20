@@ -4,6 +4,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.exception.FileException;
+import com.xiaojusurvey.engine.common.exception.ServiceException;
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import com.xiaojusurvey.engine.core.auth.util.JwtTokenUtil;
@@ -51,11 +52,11 @@ public class FileController {
             throw new FileException("文件上传参数为空", RespErrorCode.UPLOAD_FILE_ERROR.getCode());
         }
         // 检查登录状态
-        /*if (fileProperties.getNeedAuth()) {
+        if (fileProperties.getNeedAuth()) {
             if (!isLogin()) {
                 throw new ServiceException(RespErrorCode.USER_CREDENTIALS_ERROR.getMessage(), RespErrorCode.USER_CREDENTIALS_ERROR.getCode());
             }
-        }*/
+        }
         return RpcResultUtil.createSuccessResult(fileService.upload(fileReq));
     }
 

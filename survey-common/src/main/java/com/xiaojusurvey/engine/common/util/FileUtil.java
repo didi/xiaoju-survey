@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class FileUtil {
 
-    private final static SecureRandom secureRandom = new SecureRandom();
+    private final static SecureRandom SECURE_RANDOM = new SecureRandom();
     /**
      * 时间单位与秒的映射关系
      * s: 秒
@@ -56,13 +56,13 @@ public class FileUtil {
     private static String generateSecureRandomString() {
         // 生成 128 位随机数 (16 字节) 并转换为 UUID 格式
         byte[] randomBytes = new byte[16];
-        secureRandom.nextBytes(randomBytes);
+        SECURE_RANDOM.nextBytes(randomBytes);
 
         // 设置 UUID 版本和变体
         randomBytes[6] &= 0x0F;  // 清除版本
         randomBytes[6] |= 0x40;  // 设置版本为 4 (随机生成)
         randomBytes[8] &= 0x3F;  // 清除变体
-        randomBytes[8] |= 0x80;  // 设置变体为 RFC 4122
+        randomBytes[8] |= (byte) 0x80;  // 设置变体为 RFC 4122
 
         // 转换为 UUID 字符串
         long mostSignificantBits = 0;

@@ -5,17 +5,69 @@ import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AIGenerateService {
-  private readonly systemPrompt = `你是专业问卷设计专家，请严格按以下格式生成：
-  【问卷标题】
-  [生成的问卷标题，标题不要带空格]
-  
-  【问卷问题】
-  1. 问题内容
-     A) 选项1
-     B) 选项2
-     C) 选项3
-     D) 选项4
-  （不加限制的化，默认保持问题数为5个，题目都是单选题，选项使用大写字母+右括号格式）
+  private readonly systemPrompt = `你是专业问卷设计专家，请严格按以下格式生成各种题型：
+  【格式要求】
+
+  问题内容[单行输入框]
+
+  问题内容[多行输入框]
+
+  问题内容[单选]
+  选项1
+  选项2
+
+  问题内容[多选]
+  选项1
+  选项2
+
+  问题内容[判断题]
+  肯定判断设定
+  否定判断设定
+
+
+  问题内容[评分]
+
+  问题内容[NPS评分]
+  低分设定-高分设定
+
+
+  问题内容[投票]
+  选型1
+  选项2
+
+【样例】
+
+  1.您今天早上的早餐是什么？[单行输入框]
+
+  2.您对本频道都有什么建议？[多行输入框]
+
+  3.您对以下哪一种改善心理健康的方法最感兴趣？[单选]
+  选项1：心理咨询服务
+  选项2：组织心理健康活动
+  选项3：加强团队建设
+  选项4：调整工作时间安排
+
+  4.您认为早上吃汉堡对身体有益这个观点是对是错？[判断题]
+  对
+  错
+
+  5.您对本次团建的评价[评分]
+
+  6.您对本次团建的评价[NPS评分]
+  很不满意-非常满意
+
+  7.您对班长竞选的投票对象[投票]
+  小明
+  小红
+  小王
+
+【其他要求】
+
+  1.你输出的第一句话可以是本次为您生成n个问题，默认保持问题数为5个，如果用户有设置题目数量预期.请严格按照用户的来！
+  2.仿照样例，每个问题题目紧后面必须按照样式添加题型标注，如[单选]、[单行输入框]、[多行输入框]，不要在题型下边再出现题型标注！
+  3.仿照样例，题目前面不要标上“问题内容”这几个字，题目前面加上数字序号
+  4.单个题目中不能有换行，否则就不算是一个题目了
+  5.每道题之间至少要有一行间距
   `;
   
   constructor(
@@ -23,50 +75,6 @@ export class AIGenerateService {
     private readonly configService: ConfigService
   ) {}
 
-  private parseAIData(content: string) {
-    // 解析示例文本结构
-    const lines = content.split('\n').filter(line => line.trim());
-    const titleLine = lines.find(line => line.startsWith('【问卷标题】'));
-    const result = {
-      title: titleLine ? 
-        titleLine.replace(/【问卷标题】\s*/, '').trim().replace(/\s+/g, ' ') : 
-        '默认问卷标题',
-      questions: [] as Array<{title: string, options: string[]}>
-    };
-  
-    let currentQuestion: {title: string, options: string[]} | null = null;
-  
-    lines.forEach(line => {
-      // 修改题目匹配规则（兼容数字后带点或括号的情况）
-      const questionMatch = line.match(/^\d+[\.\u3001]\s*(.+)/);
-      if (questionMatch) {
-        currentQuestion = {
-          title: questionMatch[1].replace(/^[-—]\s*/, '').trim(),
-          options: []
-        };
-        result.questions.push(currentQuestion);
-        return;
-      }
-  
-      // 修改选项匹配规则（兼容 -、* 等符号开头的情况）
-      const optionMatch = line.match(/^\s*([A-E])[\)\.\u3001]\s*(.+)/);
-      if (optionMatch && currentQuestion) {
-        const optionLetter = optionMatch[1].toUpperCase();
-        currentQuestion.options.push(`${optionLetter}. ${optionMatch[2].trim()}`);
-      }
-    });
-  
-    // 添加调试日志
-    console.log('解析结果:', JSON.stringify(result, null, 2));
-    // 添加中间日志 ↓↓↓
-    console.log('原始内容:', content);
-    // console.log('解析后的标题:', result.title);
-    if (result.questions.length === 0) {
-      throw new Error('未解析到有效问卷问题');
-    }
-  
-    return result;
-  }
 
   async callDeepSeekAPI(prompt: string) {
     const messages = [
@@ -109,10 +117,8 @@ export class AIGenerateService {
       );
       
     // console.log('DeepSeek原始响应:', JSON.stringify(response.data, null, 2));
-    const parsedData = this.parseAIData(response.data.choices[0].message.content);
+    console.log(response.data.choices[0].message.content);
     return {
-      title: parsedData.title,
-      questions: parsedData.questions,
       rawContent: response.data.choices[0].message.content
     };
 

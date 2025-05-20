@@ -15,8 +15,8 @@
 
     <!-- 主体内容区 -->
     <div class="generate-content">
-      <AIChatInput />
-      <PreviewPanel />
+      <AIChatInput @generate="handleAIGenerate"  />
+      <PreviewPanel :ai-content="aiContent" />
     </div>
   </div>
 </template>
@@ -29,10 +29,14 @@ import PreviewPanel from './components/PreviewPanel.vue'
 
 
 const router = useRouter()
-const prompt = ref('')
+const aiContent = ref('') // 新增状态
 
 const goBack = () => {
   router.go(-1)
+}
+
+const handleAIGenerate = (rawContent: string) => {
+  aiContent.value = rawContent
 }
 
 const handleCreate = () => {

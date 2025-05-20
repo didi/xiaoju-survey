@@ -9,7 +9,6 @@ import type { Response } from 'express';
 export class AIGenerateController {
   constructor(
     private readonly aiService: AIGenerateService,
-    // private readonly surveyConfService: SurveyConfService
   ) {}
 
 @Post('test-deepseek')
@@ -23,8 +22,6 @@ export class AIGenerateController {
         code: 200,
         data: {
           rawContent: result.rawContent,  // 新增该字段
-          title: result.title,
-          questions: result.questions
         }
       });
     } catch (e) {

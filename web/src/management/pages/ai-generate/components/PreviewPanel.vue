@@ -1,38 +1,64 @@
 <template>
-    <div class="preview-panel">
-        <div class="preview-placeholder">
-            <i class="iconfont icon-ai"></i>
-            <p>AI生成结果将在此处预览</p>
-            <el-button type="primary" class="generate-btn">立即生成</el-button>
-        </div>
+    <div class="right-panel">
+      <MultiSourcePreviewPanel 
+      :questionDataList="questionList"
+      mode="preview"
+    />
     </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
+import MultiSourcePreviewPanel from '@/management/components/MultiSourcePreviewPanel.vue'
+import { textToSchema } from '@/management/utils/textToSchema'
 
-const prompt = ref('')
+// 修复：添加 props 声明和引用
+const props = defineProps<{
+  aiContent: string
+}>()
 
+const questionList = computed(() => {
+  try {
+    return textToSchema(props.aiContent) // 现在可以正确访问 props
+  } catch (e) {
+    return []
+  }
+})
 </script>
 <style lang="scss" scoped>
-  .preview-panel {
-    height: calc(100vh - 56px); //减掉导航条
-    .preview-placeholder {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #999;
+  .right-panel {
+    height: calc(100vh - 56px);
+    display: flex;
+    background: #fff; // 添加背景色
+  
+    :deep(.multi-source-list) {
+      flex-direction: column;  // 修改布局方向
       
-      .icon-ai {
-        font-size: 48px;
-        margin-bottom: 16px;
+      .left-panel {
+        display: none !important;  // 隐藏左侧空白面板
       }
       
-      .generate-btn {
-        margin-top: 24px;
+      .right-panel {
+        align-items: flex-start !important;  // 顶部对齐
+        width: 100% !important;  // 强制右侧面板全宽
+        height: 100%;
+        .questions-preview-wrapper {
+          width: 100% !important;  // 解除宽度限制
+          max-width: none;
+          height: 100%;
+          margin: auto 0 !important;  // 上下自动间距
+        }
       }
     }
+    :deep(.material-group .question-title) {
+    &::before {
+      content: "" !important;
+      display: none !important;
+    }
+    
+    // 调整标题间距
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
   }
 
 </style>

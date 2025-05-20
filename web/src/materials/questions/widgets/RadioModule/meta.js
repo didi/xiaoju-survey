@@ -53,20 +53,20 @@ const meta = {
       description: '这是用于描述选项',
       defaultValue: [
         {
-          text: '选项1',
+          text: "选项1",
           others: false,
           mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          hash: '115019'
+          othersKey: "",
+          placeholderDesc: "",
+          hash: "115019"
         },
         {
-          text: '选项2',
+          text: "选项2",
           others: false,
           mustOthers: false,
-          othersKey: '',
-          placeholderDesc: '',
-          hash: '115020'
+          othersKey: "",
+          placeholderDesc: "",
+          hash: "115020"
         }
       ]
     },
@@ -75,34 +75,55 @@ const meta = {
       propType: String,
       description: '排列方式',
       defaultValue: 'vertical'
-    }
-  ],
-  formConfig: [
-    basicConfig,
+    },
     {
-      name: 'optionConfig',
-      title: '选项配置',
-      type: 'Customed',
-      content: [
-        {
-          label: '排列方式',
-          type: 'RadioGroup',
-          key: 'layout',
-          value: 'vertical',
-          options: [
-            {
-              label: '竖排',
-              value: 'vertical'
-            },
-            {
-              label: '横排',
-              value: 'horizontal'
-            }
-          ]
-        }
-      ]
+      name: 'quotaDisplay',
+      propType: Boolean,
+      description: '展示配额剩余数量',
+      defaultValue: true
     }
   ],
+  formConfig: [basicConfig, {
+    name: 'optionConfig',
+    title: '选项配置',
+    type: 'Customed',
+    content: [
+      {
+        label: '排列方式',
+        type: 'RadioGroup',
+        key: 'layout',
+        value: 'vertical',
+        options: [
+          {
+            label: '竖排',
+            value: 'vertical'
+          },
+          {
+            label: '横排',
+            value: 'horizontal'
+          },
+        ]
+      },
+    ]
+  },{
+    name: 'optionQuota',
+    label: '选项配额',
+    labelStyle: {
+      'font-weight': 'bold'
+    },
+    type: 'QuotaConfig',
+    // 输出转换
+    valueSetter({ options, quotaDisplay}) {
+      return [{
+        key: 'options',
+        value: options
+      },
+      {
+        key: 'quotaDisplay',
+        value: quotaDisplay
+      }]
+    }
+  }],
   editConfigure: {
     optionEdit: {
       show: true

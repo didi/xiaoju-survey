@@ -138,6 +138,10 @@ const submitSurvey = async () => {
       alert({
         title: res.errmsg || '提交失败'
       })
+      if (res.code === 9003 && res.data) {
+        surveyStore.changeData({ key: res.data.field, value: null })
+        questionStore.initOptionCountInfo()
+      }
     }
   } catch (error) {
     console.log(error)

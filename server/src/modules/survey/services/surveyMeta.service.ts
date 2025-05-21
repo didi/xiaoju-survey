@@ -139,6 +139,40 @@ export class SurveyMetaService {
     );
   }
 
+  async removeSurveyMeta({ surveyId, operator, operatorId }) {
+    console.log('removeSurveyMeta', surveyId, operator, operatorId);
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.REMOVED, date: new Date() }, 
+          updatedAt: new Date(),
+          operator,
+          operatorId
+        },
+      },
+    );
+  }
+
+  // 恢复问卷，转入编辑状态
+  async restoreSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.EDITING, date: new Date() }, 
+          updatedAt: new Date(),
+          operator,
+          operatorId
+        },
+      },
+    );
+  }
+
   async getSurveyMetaList(condition: {
     pageNum: number;
     pageSize: number;
@@ -192,6 +226,9 @@ export class SurveyMetaService {
           {
             workspaceId: null,
           },
+          {   
+            "curStatus.status": { $ne: RECORD_STATUS.REMOVED },
+          }
         ];
         if (groupId && groupId !== GROUP_STATE.ALL) {
           if (groupId === GROUP_STATE.UNCLASSIFIED) {

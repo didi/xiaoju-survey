@@ -115,6 +115,35 @@ describe('ResponseSchemaController', () => {
       );
     });
 
+    it('should throw HttpException with RESPONSE_CURRENT_TIME_NOT_ALLOW code when survey is in recycle bin', async () => {
+      const mockQueryInfo = { surveyPath: 'recycleBinSurveyPath' };
+      const mockResponseSchema = {
+        surveyPath: 'testSurveyPath',
+        curStatus: { status: 'removed', date: Date.now() },
+        subStatus: { status: RECORD_SUB_STATUS.DEFAULT, date: Date.now() },
+        code: {
+          baseConf: {
+            passwordSwitch: false,
+            password: null,
+            whitelist: [],
+          },
+        },
+      } as ResponseSchema;
+
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue({
+          isDeleted: false,
+        } as ResponseSchema);
+
+      await expect(controller.getSchema(mockQueryInfo)).rejects.toThrow(
+        new HttpException(
+          '问卷不存在或已删除',
+          EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
+        ),
+      );
+    })
+
     it('should throw HttpException with RESPONSE_PAUSING code when survey is paused', async () => {
       const mockQueryInfo = { surveyPath: 'pausedSurveyPath' };
 

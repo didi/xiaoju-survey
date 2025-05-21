@@ -42,6 +42,12 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       name: '团队空间',
       id: MenuType.SpaceGroup,
       children: []
+    },
+    {
+      icon: 'icon-huishouzhan', 
+      name: '回收站', 
+      id: MenuType.RecycleBin, 
+      children: []
     }
   ])
   const menuType = ref(MenuType.PersonalGroup)

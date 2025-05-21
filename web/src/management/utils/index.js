@@ -1,6 +1,10 @@
 import { map as _map } from 'lodash-es'
 import questionLoader from '@/materials/questions/questionLoader'
+import { questionTypeList } from '@/management/config/questionMenuConfig'
 
+questionLoader.init({
+  typeList: questionTypeList.map((item) => item.type)
+})
 const generateQuestionField = () => {
   const num = Math.floor(Math.random() * 1000)
   return `data${num}`

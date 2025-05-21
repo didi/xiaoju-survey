@@ -17,7 +17,7 @@
 import { onMounted, watch } from 'vue'
 import { useEditStore } from '@/management/stores/edit'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
 
 import LeftMenu from '@/management/components/LeftMenu.vue'
@@ -66,11 +66,16 @@ onMounted(async () => {
   try {
     await init()
   } catch (err: any) {
-    ElMessage.error(err.message)
-
-    setTimeout(() => {
+    // ElMessage.error(err.message)
+    try {
+      await ElMessageBox.alert('该问卷已被删除，无法继续访问', '提示', {
+        confirmButtonText: '返回问卷列表',
+        type: 'warning'
+      })
       router.replace({ name: 'survey' })
-    }, 1000)
+    } catch (error) {
+      return
+    }
   }
 })
 </script>

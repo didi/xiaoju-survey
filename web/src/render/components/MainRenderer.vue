@@ -32,11 +32,12 @@ const handleChangeData = (data: any) => {
 
 // 在适当的地方调用 updatePageIndex 方法
 watch(() => renderData.value, (value: any) => {
-  if(value.length ){
-  const displaylist = value[0].filter((item: any) => !needHideFields.value.includes(item.field))
-  if(displaylist.length === 0 && !isFinallyPage.value){
-    questionStore.addPageIndex()
-  }
+  if (value.length) {
+    const arr = needHideFields.value as Array<string>
+    const displaylist = value[0].filter((item: any) => !arr.includes(item.field))
+    if(displaylist.length === 0 && !isFinallyPage.value){
+      questionStore.addPageIndex()
+    }
   }
 })
 watch(() => { return needHideFields.value.concat(showLogicHideFields.value) }, (value: any)=> {

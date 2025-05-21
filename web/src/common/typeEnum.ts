@@ -17,11 +17,11 @@ export const typeTagLabels: Record<QUESTION_TYPE, string> = {
   [QUESTION_TYPE.TEXTAREA]: '多行输入框',
   [QUESTION_TYPE.RADIO]: '单选',
   [QUESTION_TYPE.CHECKBOX]: '多选',
-  [QUESTION_TYPE.BINARY_CHOICE]: '判断',
+  [QUESTION_TYPE.BINARY_CHOICE]: '判断题',
   [QUESTION_TYPE.RADIO_STAR]: '评分',
   [QUESTION_TYPE.RADIO_NPS]: 'NPS评分',
   [QUESTION_TYPE.VOTE]: '投票',
-  [QUESTION_TYPE.CASCADER]: '多级联动'
+  [QUESTION_TYPE.CASCADER]: '多级联动',
 }
 
 // 输入类题型

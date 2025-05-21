@@ -29,8 +29,6 @@ import { AppManagerService } from 'src/modules/appManager/services/appManager.se
 import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 import { APPList } from 'src/modules/appManager/appConfg';
 
-
-
 const mockDecryptErrorBody = {
   surveyPath: 'EBzdmnSp',
   data: [
@@ -102,6 +100,7 @@ describe('SurveyResponseController', () => {
           useValue: {
             get: jest.fn().mockResolvedValue(null),
             set: jest.fn(),
+            checkAndUpdateOptionCount: jest.fn(),
           },
         },
         {
@@ -159,10 +158,11 @@ describe('SurveyResponseController', () => {
           },
         },
       ],
-    })
-    .compile();
+    }).compile();
 
-    controller = testingModule.get<SurveyResponseController>(SurveyResponseController);
+    controller = testingModule.get<SurveyResponseController>(
+      SurveyResponseController,
+    );
     responseSchemaService = testingModule.get<ResponseSchemaService>(
       ResponseSchemaService,
     );
@@ -286,7 +286,7 @@ describe('SurveyResponseController', () => {
         .mockResolvedValueOnce(null);
 
       await expect(controller.createResponse(reqBody)).rejects.toThrow(
-        new SurveyNotFoundException("该问卷不存在,无法提交"),
+        new SurveyNotFoundException('该问卷不存在,无法提交'),
       );
     });
 
@@ -375,9 +375,10 @@ describe('SurveyResponseController', () => {
     let openAuthGuard: OpenAuthGuard;
 
     beforeEach(() => {
-      appManagerService = testingModule.get<AppManagerService>(AppManagerService);
+      appManagerService =
+        testingModule.get<AppManagerService>(AppManagerService);
       openAuthGuard = testingModule.get<OpenAuthGuard>(OpenAuthGuard);
-      
+
       // Make sure to mock getResponseSchemaByPath to return a valid schema before each test
       jest.spyOn(responseSchemaService, 'getResponseSchemaByPath').mockReset();
     });
@@ -386,14 +387,15 @@ describe('SurveyResponseController', () => {
       // 准备测试数据
       const reqBody = {
         ...cloneDeep(mockSubmitData),
-        channelId: '67cecfb37b4d3ae83aea1bdb' // 添加channelId
+        channelId: '67cecfb37b4d3ae83aea1bdb', // 添加channelId
       };
       const mockContext = {
         switchToHttp: () => ({
           getRequest: () => ({
             headers: {
               'x-app-id': APPList[0].appId,
-              'x-app-token': 'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
+              'x-app-token':
+                'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
             },
             body: reqBody,
           }),
@@ -401,11 +403,14 @@ describe('SurveyResponseController', () => {
       };
 
       // Mock 服务响应
-      jest.spyOn(responseSchemaService, 'getResponseSchemaByPath')
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
         .mockResolvedValueOnce(mockResponseSchema);
-      jest.spyOn(surveyResponseService, 'getSurveyResponseTotalByPath')
+      jest
+        .spyOn(surveyResponseService, 'getSurveyResponseTotalByPath')
         .mockResolvedValueOnce(0);
-      jest.spyOn(surveyResponseService, 'createSurveyResponse')
+      jest
+        .spyOn(surveyResponseService, 'createSurveyResponse')
         .mockResolvedValueOnce({
           _id: new ObjectId('65fc2dd77f4520858046e129'),
           clientTime: 1711025112552,
@@ -431,7 +436,7 @@ describe('SurveyResponseController', () => {
     it('should reject request without auth headers', async () => {
       const reqBody = {
         ...cloneDeep(mockSubmitData),
-        channelId: '67cecfb37b4d3ae83aea1bdb'
+        channelId: '67cecfb37b4d3ae83aea1bdb',
       };
       const mockContext = {
         switchToHttp: () => ({
@@ -442,34 +447,45 @@ describe('SurveyResponseController', () => {
         }),
       };
 
-      jest.spyOn(openAuthGuard, 'canActivate').mockImplementationOnce(async (context) => {
-        const request = context.switchToHttp().getRequest();
-        const appId = request.headers['x-app-id'];
-        const token = request.headers['x-app-token'];
-    
-        if (!appId || !token) {
-          throw new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR);
-        }
-        return true;
-      });
-    
+      jest
+        .spyOn(openAuthGuard, 'canActivate')
+        .mockImplementationOnce(async (context) => {
+          const request = context.switchToHttp().getRequest();
+          const appId = request.headers['x-app-id'];
+          const token = request.headers['x-app-token'];
+
+          if (!appId || !token) {
+            throw new HttpException(
+              'Missing required parameters',
+              EXCEPTION_CODE.PARAMETER_ERROR,
+            );
+          }
+          return true;
+        });
+
       // 验证抛出异常
-      await expect(openAuthGuard.canActivate(mockContext as any)).rejects.toThrow(
-        new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR),
+      await expect(
+        openAuthGuard.canActivate(mockContext as any),
+      ).rejects.toThrow(
+        new HttpException(
+          'Missing required parameters',
+          EXCEPTION_CODE.PARAMETER_ERROR,
+        ),
       );
     });
 
     it('should reject request with invalid auth token', async () => {
       const reqBody = {
         ...cloneDeep(mockSubmitData),
-        channelId: '67cecfb37b4d3ae83aea1bdb'
+        channelId: '67cecfb37b4d3ae83aea1bdb',
       };
       const mockContext = {
         switchToHttp: () => ({
           getRequest: () => ({
             headers: {
               'x-app-id': APPList[0].appId,
-              'x-app-token': 'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
+              'x-app-token':
+                'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
             },
             body: reqBody,
           }),
@@ -477,29 +493,44 @@ describe('SurveyResponseController', () => {
       };
 
       // Mock AppManagerService 验证失败
-      jest.spyOn(appManagerService, 'checkAppManager').mockResolvedValueOnce(false);
+      jest
+        .spyOn(appManagerService, 'checkAppManager')
+        .mockResolvedValueOnce(false);
 
       // Mock OpenAuthGuard 的行为
-      jest.spyOn(openAuthGuard, 'canActivate').mockImplementationOnce(async (context) => {
-        const request = context.switchToHttp().getRequest();
-        const appId = request.headers['x-app-id'];
-        const token = request.headers['x-app-token'];
+      jest
+        .spyOn(openAuthGuard, 'canActivate')
+        .mockImplementationOnce(async (context) => {
+          const request = context.switchToHttp().getRequest();
+          const appId = request.headers['x-app-id'];
+          const token = request.headers['x-app-token'];
 
-        if (!appId || !token) {
-          throw new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR);
-        }
+          if (!appId || !token) {
+            throw new HttpException(
+              'Missing required parameters',
+              EXCEPTION_CODE.PARAMETER_ERROR,
+            );
+          }
 
-        const isValid = await appManagerService.checkAppManager(appId, token);
-        if (!isValid) {
-          throw new HttpException('Invalid appId or token', EXCEPTION_CODE.PARAMETER_ERROR);
-        }
+          const isValid = await appManagerService.checkAppManager(appId, token);
+          if (!isValid) {
+            throw new HttpException(
+              'Invalid appId or token',
+              EXCEPTION_CODE.PARAMETER_ERROR,
+            );
+          }
 
-        return true;
-      });
+          return true;
+        });
 
       // 验证抛出异常
-      await expect(openAuthGuard.canActivate(mockContext as any)).rejects.toThrow(
-        new HttpException('Invalid appId or token', EXCEPTION_CODE.PARAMETER_ERROR),
+      await expect(
+        openAuthGuard.canActivate(mockContext as any),
+      ).rejects.toThrow(
+        new HttpException(
+          'Invalid appId or token',
+          EXCEPTION_CODE.PARAMETER_ERROR,
+        ),
       );
     });
 
@@ -508,7 +539,7 @@ describe('SurveyResponseController', () => {
     //     ...cloneDeep(mockSubmitData),
     //     channelId: '67cecfb37b4d3ae83aea1bdb'
     //   };
-      
+
     //   // Mock 认证通过
     //   jest.spyOn(openAuthGuard, 'canActivate')
     //     .mockResolvedValueOnce(true);
@@ -527,7 +558,7 @@ describe('SurveyResponseController', () => {
     //     ...cloneDeep(mockSubmitData),
     //     channelId: '67cecfb37b4d3ae83aea1bdb'
     //   };
-      
+
     //   // Mock 认证通过
     //   jest.spyOn(openAuthGuard, 'canActivate')
     //     .mockResolvedValueOnce(true);

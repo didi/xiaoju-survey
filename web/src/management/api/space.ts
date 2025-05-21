@@ -98,5 +98,5 @@ export const deleteGroup = (id: string) => {
 }
 
 export const getRecycleBin = () => {
-  return axios.get('/recyclebin')
+  return axios.get('/survey/getRecycleTotal')
 }

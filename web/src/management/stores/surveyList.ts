@@ -169,15 +169,18 @@ export const useSurveyListStore = defineStore('surveyList', () => {
         return item.condition[0].value
       })
     )
+    const orderString = JSON.stringify(listOrder.value)
     try {
       const params = {
         curPage: payload?.curPage || 1,
-        pageSize: payload?.pageSize || 10,
+        pageSize: payload?.pageSize || 10, // 默认一页10条
         filter: filterString,
+        order: orderString,
+        workspaceId: workSpaceStore.workSpaceId,
+        groupId: workSpaceStore.groupId
       }
 
       const res: any = await getSurveyRecycleListReq(params)
-      console.log(res)
 
       if (res.code === CODE_MAP.SUCCESS) {
         surveyRecycleList.value = res.data.data

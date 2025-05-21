@@ -96,19 +96,20 @@ export const fieldConfig = {
 }
 
 export const recycleFieldConfig = {
+  type: {
+    title: '类型',
+    key: 'type',
+    width: 150,
+    comp: 'TagModule'
+  },
   title: {
     title: '标题',
     key: 'title',
     width: 240,
     tip: true
   },
-  surveyMetaCreateAt: {
-    title: '创建时间',
-    key: 'surveyMetaCreateAt',
-    minWidth: 200
-  },
   createdAt: {
-    title: '删除时间',
+    title: '创建时间',
     key: 'createdAt',
     minWidth: 200
   },
@@ -116,6 +117,11 @@ export const recycleFieldConfig = {
     title: '所有者',
     key: 'owner',
     width: 140
+  },
+  deletedAt: {
+    title: '删除时间',
+    key: 'deletedAt',
+    minWidth: 200
   },
 }
 

@@ -281,10 +281,13 @@ const fetchRecycleBinList = async (params?: any) => {
       curPage: 1
     }
   }
+  if (workSpaceId.value) {
+    params.workspaceId = workSpaceId.value
+  }
   recycleBinLoading.value = true
   await surveyListStore.getSurveyRecycleList(params)
   recycleBinLoading.value = false
-  await surveyListStore.getSurveyList(params)
+  await fetchSurveyList()
 }
 
 const fetchSurveyList = async (params?: any) => {

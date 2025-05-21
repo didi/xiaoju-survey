@@ -157,4 +157,110 @@ export class SurveyMetaController {
       },
     };
   }
+
+  @UseGuards(WorkspaceGuard)
+  @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.READ_SURVEY])
+  @SetMetadata('workspaceId', { optional: true, key: 'query.workspaceId' })
+  @UseGuards(Authentication)
+  @Get('/getRecycleTotal')
+  @HttpCode(200)
+  async getRecycleTotal(
+    @Request()
+    req,
+  ) {
+    const userId = req.user._id.toString();
+    const total = await this.surveyMetaService.getRecycleTotal(userId);
+    return {
+      code: 200,
+      data: {
+        total: total,
+      },
+    };
+  }
+
+  @UseGuards(WorkspaceGuard)
+  @SetMetadata('workspacePermissions', [WORKSPACE_PERMISSION.READ_SURVEY])
+  @SetMetadata('workspaceId', { optional: true, key: 'query.workspaceId' })
+  @UseGuards(Authentication)
+  @Get('/getRecycleList')
+  @HttpCode(200)
+  async getRecycleList(
+    @Query()
+    queryInfo: GetSurveyListDto,
+    @Request()
+    req,
+  ) {
+    const { value, error } = GetSurveyListDto.validate(queryInfo);
+    if (error) {
+      this.logger.error(error.message);
+      throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+    const { curPage, pageSize, workspaceId, groupId } = value;
+    let filter = {},
+      order = {};
+    if (value.filter) {
+      try {
+        filter = getFilter(JSON.parse(decodeURIComponent(value.filter)));
+      } catch (error) {
+        this.logger.error(error.message);
+      }
+    }
+    if (value.order) {
+      try {
+        order = order = getOrder(JSON.parse(decodeURIComponent(value.order)));
+      } catch (error) {
+        this.logger.error(error.message);
+      }
+    }
+    const userId = req.user._id.toString();
+    let cooperationList = [];
+    if (groupId === GROUP_STATE.ALL) {
+      cooperationList =
+        await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    }
+    const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
+      pre[cur.surveyId] = cur;
+      return pre;
+    }, {});
+    const surveyIdList = cooperationList.map((item) => item.surveyId);
+    const username = req.user.username;
+    const data = await this.surveyMetaService.getSurveyRecycleList({
+      pageNum: curPage,
+      pageSize: pageSize,
+      userId,
+      username,
+      filter,
+      order,
+      workspaceId,
+      groupId,
+      surveyIdList,
+    });
+    return {
+      code: 200,
+      data: {
+        count: data.count,
+        data: data.data.map((item) => {
+          const fmt = 'YYYY-MM-DD HH:mm:ss';
+          if (!item.surveyType) {
+            item.surveyType = item.questionType || 'normal';
+          }
+          item.createdAt = moment(item.createdAt).format(fmt);
+          item.curStatus.date = moment(item.curStatus.date).format(fmt);
+          item.subStatus.date = moment(item.subStatus.date).format(fmt);
+          item.updatedAt = moment(item.updatedAt).format(fmt);
+          item.deletedAt = moment(item.deletedAt).format(fmt);
+          const surveyId = item._id.toString();
+          if (cooperSurveyIdMap[surveyId]) {
+            item.isCollaborated = true;
+            item.currentPermissions = cooperSurveyIdMap[surveyId].permissions;
+          } else {
+            item.isCollaborated = false;
+            item.currentPermissions = [];
+          }
+          item.currentUserId = userId;
+          return item;
+        }),
+      },
+    };
+  }
 }

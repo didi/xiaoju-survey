@@ -1,7 +1,9 @@
 <template>
   <div class="tableview-root">
     <div class="filter-wrap">
+      <div class="search">
         <TextSearch placeholder="请输入问卷标题" :value="searchVal" @search="onSearchText" />
+      </div>
     </div>
     <div class="list-wrapper" v-if="total">
       <el-table
@@ -139,7 +141,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['title', 'surveyMetaCreateAt', 'createdAt', 'owner']
+const fields = ['type', 'title', 'owner', 'createdAt', 'deletedAt']
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
@@ -171,7 +173,13 @@ const total = computed(() => {
   return props.total
 })
 const dataList = computed(() => {
-  return data.value;
+  return data.value.map((item) => {
+    return {
+      ...item,
+      'curStatus.date': item.curStatus.date,
+      'subStatus.date': item.subStatus.date
+    }
+  })
 })
 
 const onRefresh = async () => {
@@ -219,7 +227,7 @@ const onRecover = async (row) => {
     return
   }
 
-  const res = await recoverSurvey(row.pageId)
+  const res = await recoverSurvey(row._id)
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('恢复成功')
     onRefresh()
@@ -242,7 +250,7 @@ const onForeverDelete = async (row) => {
     return
   }
 
-  const res = await foreverDeleteSurvey(row.pageId)
+  const res = await foreverDeleteSurvey(row._id)
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('永久删除成功')
     onRefresh()

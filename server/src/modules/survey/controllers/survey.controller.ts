@@ -33,7 +33,6 @@ import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 import { SessionService } from '../services/session.service';
 import { UserService } from 'src/modules/auth/services/user.service';
-import { SurveyRecycleBinService } from '../services/surveyRecycleBin.service';
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -47,7 +46,6 @@ export class SurveyController {
     private readonly logger: Logger,
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
-    private readonly surveyRecycleBinService: SurveyRecycleBinService,
   ) {}
 
   @Get('/getBannerData')
@@ -213,14 +211,9 @@ export class SurveyController {
       await this.responseSchemaService.deleteResponseSchema({
         surveyPath: surveyMeta.surveyPath,
       });
-    const addRecycleBinRes =
-      await this.surveyRecycleBinService.addSurveyRecycle(
-        surveyMeta._id.toString(),
-      );
 
     this.logger.info(JSON.stringify(delMetaRes));
     this.logger.info(JSON.stringify(delResponseRes));
-    this.logger.info(JSON.stringify(addRecycleBinRes));
 
     return {
       code: 200,
@@ -400,6 +393,60 @@ export class SurveyController {
         username,
       },
     });
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/recoverSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async recoverSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const revMetaRes = await this.surveyMetaService.recoverSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const revResponseRes =
+      await this.responseSchemaService.recoverResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(revMetaRes));
+    this.logger.info(JSON.stringify(revResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/foreverDeleteSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async foreverDeleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const delMetaRes = await this.surveyMetaService.foreverDeleteSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const delResponseRes =
+      await this.responseSchemaService.foreverDeleteResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(delMetaRes));
+    this.logger.info(JSON.stringify(delResponseRes));
+
     return {
       code: 200,
     };

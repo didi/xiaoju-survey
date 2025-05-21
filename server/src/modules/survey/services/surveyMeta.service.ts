@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository, FindOptionsOrder, ObjectLiteral } from 'typeorm';
+import { FindOptionsOrder, MongoRepository, ObjectLiteral } from 'typeorm';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
@@ -134,6 +134,24 @@ export class SurveyMetaService {
           operator,
           operatorId,
           deletedAt: new Date(),
+          isForeverDeleted: false,
+        },
+      },
+    );
+  }
+
+  async foreverDeleteSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: true,
+          operator,
+          operatorId,
+          deletedAt: new Date(),
+          isForeverDeleted: true,
         },
       },
     );
@@ -252,6 +270,135 @@ export class SurveyMetaService {
           : ({
               createdAt: -1,
             } as FindOptionsOrder<SurveyMeta>);
+      const [data, count] = await this.surveyRepository.findAndCount({
+        where: query,
+        skip,
+        take: pageSize,
+        order,
+      });
+      return { data, count };
+    } catch (error) {
+      return { data: [], count: 0 };
+    }
+  }
+
+  async getRecycleTotal(userId: string) {
+    try {
+      const query: ObjectLiteral = Object.assign({
+        ownerId: {
+          $eq: userId,
+        },
+        isDeleted: {
+          $eq: true,
+        },
+        isForeverDeleted: {
+          $ne: true,
+        },
+      });
+      return await this.surveyRepository.countBy(query);
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  async getSurveyRecycleList(condition: {
+    pageNum: number;
+    pageSize: number;
+    username: string;
+    userId: string;
+    filter: Record<string, any>;
+    order: Record<string, any>;
+    workspaceId?: string;
+    groupId?: string;
+    surveyIdList?: Array<string>;
+  }): Promise<{ data: any[]; count: number }> {
+    const {
+      pageNum,
+      pageSize,
+      userId,
+      // username,
+      workspaceId,
+      groupId,
+      surveyIdList,
+    } = condition;
+    const skip = (pageNum - 1) * pageSize;
+    try {
+      const query: ObjectLiteral = Object.assign(
+        {
+          isDeleted: {
+            $eq: true,
+          },
+          isForeverDeleted: {
+            $ne: true,
+          },
+        },
+        condition.filter,
+      );
+      const otherQuery: ObjectLiteral = {};
+      if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+        query.$or = [];
+        query.$or.push({
+          _id: {
+            $in: surveyIdList.map((item) => new ObjectId(item)),
+          },
+        });
+      }
+
+      if (condition.filter['curStatus.status']) {
+        otherQuery['subStatus.status'] = RECORD_SUB_STATUS.DEFAULT;
+      }
+      if (workspaceId) {
+        otherQuery.workspaceId = workspaceId;
+      } else {
+        otherQuery.$and = [
+          {
+            workspaceId: { $exists: false },
+          },
+          {
+            workspaceId: null,
+          },
+        ];
+        if (groupId && groupId !== GROUP_STATE.ALL) {
+          if (groupId === GROUP_STATE.UNCLASSIFIED) {
+            if (!otherQuery.$or) {
+              otherQuery.$or = [];
+            }
+            otherQuery.$or.push(
+              ...[
+                {
+                  groupId: {
+                    $exists: false,
+                  },
+                },
+                {
+                  groupId: null,
+                },
+              ],
+            );
+          } else {
+            otherQuery.groupId = groupId;
+          }
+        }
+        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用owenrId字段进行关联更加合理，此处做了兼容
+        // query.$or = [
+        //   {
+        //     owner: username,
+        //   },
+        //   {
+        //     ownerId: userId,
+        //   },
+        // ];
+        otherQuery.ownerId = userId;
+      }
+
+      if (Array.isArray(query.$or)) {
+        query.$or.push(otherQuery);
+      } else {
+        Object.assign(query, otherQuery);
+      }
+      const order = {
+        deletedAt: -1,
+      } as FindOptionsOrder<SurveyMeta>;
       const [data, count] = await this.surveyRepository.findAndCount({
         where: query,
         skip,

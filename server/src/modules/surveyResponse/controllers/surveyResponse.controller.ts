@@ -5,7 +5,7 @@ import { checkSign } from 'src/utils/checkSign';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
-import { RECORD_SUB_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
@@ -51,26 +51,24 @@ export class SurveyResponseController {
   async createResponse(@Body() reqBody) {
     const value = await this.validateParams(reqBody);
     const { encryptType, data, sessionId } = value;
-    
+
     // 检查签名
     checkSign(reqBody);
-    
 
     // 解密数据
     let result = data;
     let formValues: Record<string, any> = {};
     if (encryptType === ENCRYPT_TYPE.RSA && Array.isArray(data)) {
-      result =  await this.getDecryptedDataRSA(data, sessionId);
+      result = await this.getDecryptedDataRSA(data, sessionId);
     }
     formValues = JSON.parse(JSON.stringify(result));
     try {
-      await this.createResponseProcess({...value, data:formValues});
+      await this.createResponseProcess({ ...value, data: formValues });
       return {
         code: 200,
         msg: '提交成功',
       };
-    }
-    catch (error) {
+    } catch (error) {
       this.logger.error(`createResponse error: ${error.message}`);
       throw error;
     }
@@ -79,7 +77,7 @@ export class SurveyResponseController {
   @UseGuards(OpenAuthGuard)
   @HttpCode(200)
   async createResponseWithOpen(@Body() reqBody) {
-    if(!reqBody.channelId) {
+    if (!reqBody.channelId) {
       throw new HttpException('缺少渠道参数', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     const value = await this.validateParams(reqBody);
@@ -89,19 +87,25 @@ export class SurveyResponseController {
     // 解密数据
     let formValues: Record<string, any> = {};
 
-    formValues = typeof data === "string" ? JSON.parse(data) : JSON.parse(JSON.stringify(data));
+    formValues =
+      typeof data === 'string'
+        ? JSON.parse(data)
+        : JSON.parse(JSON.stringify(data));
     try {
-      await this.createResponseProcess({...value, data:formValues, channelId }, false);
+      await this.createResponseProcess(
+        { ...value, data: formValues, channelId },
+        false,
+      );
       return {
         code: 200,
         msg: '提交成功',
       };
     } catch (error) {
       this.logger.error(`createResponse error: ${error.message}`);
-      throw error; 
+      throw error;
     }
   }
-  private async validateParams(reqBody) { 
+  private async validateParams(reqBody) {
     // 校验参数
     const { value, error } = Joi.object({
       surveyPath: Joi.string().required(),
@@ -120,28 +124,28 @@ export class SurveyResponseController {
     }
     return value;
   }
-  private async getDecryptedDataRSA (data, sessionId) {
+  private async getDecryptedDataRSA(data, sessionId) {
     const sessionData =
-        await this.clientEncryptService.getEncryptInfoById(sessionId);
-      try {
-        const privateKeyObject = forge.pki.privateKeyFromPem(
-          sessionData.data.privateKey,
-        );
-        let concatStr = '';
-        for (const item of data) {
-          concatStr += privateKeyObject.decrypt(
-            forge.util.decode64(item),
-            'RSA-OAEP',
-          );
-        }
-
-        return JSON.parse(decodeURIComponent(concatStr));
-      } catch (error) {
-        throw new HttpException(
-          '数据解密失败',
-          EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
+      await this.clientEncryptService.getEncryptInfoById(sessionId);
+    try {
+      const privateKeyObject = forge.pki.privateKeyFromPem(
+        sessionData.data.privateKey,
+      );
+      let concatStr = '';
+      for (const item of data) {
+        concatStr += privateKeyObject.decrypt(
+          forge.util.decode64(item),
+          'RSA-OAEP',
         );
       }
+
+      return JSON.parse(decodeURIComponent(concatStr));
+    } catch (error) {
+      throw new HttpException(
+        '数据解密失败',
+        EXCEPTION_CODE.RESPONSE_DATA_DECRYPT_ERROR,
+      );
+    }
   }
   async createResponseProcess(params, canPush = true) {
     const {
@@ -157,7 +161,11 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!responseSchema || responseSchema.isDeleted) {
+    if (
+      !responseSchema ||
+      responseSchema.isDeleted ||
+      responseSchema.curStatus.status === RECORD_STATUS.REMOVED
+    ) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
     if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {
@@ -262,7 +270,6 @@ export class SurveyResponseController {
       }
     }
 
-
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
     const optionTextAndId = dataList
@@ -334,12 +341,12 @@ export class SurveyResponseController {
       diffTime,
       surveyId: responseSchema.pageId,
       optionTextAndId,
-      channelId: params.channelId
-    }
+      channelId: params.channelId,
+    };
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse(model);
 
-    if(canPush) {
+    if (canPush) {
       const sendData = getPushingData({
         surveyResponse,
         questionList: responseSchema?.code?.dataConf?.dataList || [],
@@ -356,7 +363,5 @@ export class SurveyResponseController {
 
     // 入库成功后，要把密钥删掉，防止被重复使用
     if (sessionId) this.clientEncryptService.deleteEncryptInfo(sessionId);
-
-    
   }
 }

@@ -45,7 +45,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       children: []
     },
     {
-      icon: 'icon-tuanduikongjian',
+      icon: 'icon-icon_shanchu',
       name: '回收站',
       id: MenuType.Recyclebin,
       total: 0,

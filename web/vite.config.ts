@@ -12,7 +12,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-import './report'
+// import './report'
 
 const isProd = process.env.NODE_ENV === 'production'
 

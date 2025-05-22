@@ -210,6 +210,54 @@ describe('SurveyController', () => {
     });
   });
 
+  describe('recoverSurvey', () => {
+    it('should recover a survey and its related data', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'exam',
+        owner: 'testUser',
+      };
+
+      jest
+        .spyOn(surveyMetaService, 'recoverSurveyMeta')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(responseSchemaService, 'recoverResponseSchema')
+        .mockResolvedValue(undefined);
+
+      const result = await controller.recoverSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+      expect(result).toEqual({ code: 200 });
+    });
+  });
+
+  describe('foreverDeleteSurvey', () => {
+    it('should forever delete a survey and its related data', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'exam',
+        owner: 'testUser',
+      };
+
+      jest
+        .spyOn(surveyMetaService, 'foreverDeleteSurveyMeta')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(responseSchemaService, 'foreverDeleteResponseSchema')
+        .mockResolvedValue(undefined);
+
+      const result = await controller.recoverSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+      expect(result).toEqual({ code: 200 });
+    });
+  });
+
   describe('getSurvey', () => {
     it('should return survey metadata and configuration', async () => {
       const surveyId = new ObjectId();

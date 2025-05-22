@@ -26,6 +26,7 @@ describe('SurveyMetaService', () => {
             save: jest.fn(),
             updateOne: jest.fn(),
             findAndCount: jest.fn(),
+            countBy: jest.fn(),
           },
         },
         PluginManager,
@@ -180,6 +181,72 @@ describe('SurveyMetaService', () => {
     });
   });
 
+  describe('recoverSurveyMeta', () => {
+    it('should recover a survey', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'recoverer';
+      const operatorId = 'recovererId';
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue({
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      });
+
+      const result = await service.recoverSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: false,
+            operator,
+            operatorId,
+          },
+        },
+      );
+      expect(result.matchedCount).toBe(1);
+    });
+  });
+
+  describe('foreverDeleteSurveyMeta', () => {
+    it('should mark a survey as isForeverDeleted', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'deleter';
+      const operatorId = 'deleterId';
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue({
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      });
+
+      const result = await service.foreverDeleteSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: true,
+            operator,
+            operatorId,
+            deletedAt: expect.any(Date),
+            isForeverDeleted: true,
+          },
+        },
+      );
+      expect(result.matchedCount).toBe(1);
+    });
+  });
+
   describe('getSurveyMetaList', () => {
     it('should return a list of survey metadata', async () => {
       const mockData = [
@@ -201,6 +268,48 @@ describe('SurveyMetaService', () => {
       };
 
       const result = await service.getSurveyMetaList(condition);
+
+      expect(result).toEqual({ data: mockData, count: mockCount });
+      expect(surveyRepository.findAndCount).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getRecycleTotal', () => {
+    it('should return the number of recycled survey metadata', async () => {
+      const mockCount = 1;
+
+      jest.spyOn(surveyRepository, 'countBy').mockResolvedValue(mockCount);
+
+      const userId = 'testUserId';
+
+      const result = await service.getRecycleTotal(userId);
+
+      expect(result).toEqual(mockCount);
+      expect(surveyRepository.countBy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getSurveyRecycleList', () => {
+    it('should return a list of survey metadata', async () => {
+      const mockData = [
+        { _id: 1, title: 'Survey 1' },
+      ] as unknown as Array<SurveyMeta>;
+      const mockCount = 1;
+
+      jest
+        .spyOn(surveyRepository, 'findAndCount')
+        .mockResolvedValue([mockData, mockCount]);
+
+      const condition = {
+        pageNum: 1,
+        pageSize: 10,
+        userId: 'testUserId',
+        username: 'testUser',
+        filter: {},
+        order: {},
+      };
+
+      const result = await service.getSurveyRecycleList(condition);
 
       expect(result).toEqual({ data: mockData, count: mockCount });
       expect(surveyRepository.findAndCount).toHaveBeenCalledTimes(1);

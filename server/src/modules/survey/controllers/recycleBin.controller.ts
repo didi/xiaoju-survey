@@ -30,7 +30,7 @@ export class RecycleBinController {
         cooperationList =
         await this.collaboratorService.getManageListByUserId({ userId });
         const surveyIdList1 = cooperationList.map((item) => item.surveyId);
-        const surveyIdList2 = (await this.workspaceService.getAdminSurveyIdList(userId, isRecycleBin)).data.surveyIdList
+        const surveyIdList2 = (await this.workspaceService.getAllSurveyIdListByUserId(userId, isRecycleBin)).data.surveyIdList
         const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];
         const allSurveyTotal =
           await this.surveyMetaService.countSurveyMetaByGroupId({

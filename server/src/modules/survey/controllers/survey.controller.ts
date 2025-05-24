@@ -248,6 +248,33 @@ export class SurveyController {
   }
 
   @HttpCode(200)
+  @Post('/completeDeleteSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async completeDeleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const delMetaRes = await this.surveyMetaService.completeDeleteSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const delResponseRes =
+      await this.responseSchemaService.completeDeleteResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(delMetaRes));
+    this.logger.info(JSON.stringify(delResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
   @Post('/pausingSurvey')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')

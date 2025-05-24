@@ -103,4 +103,18 @@ export class ResponseSchemaService {
       },
     );
   }
+
+  async completeDeleteResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isCompleteDeleted: true,
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
 }

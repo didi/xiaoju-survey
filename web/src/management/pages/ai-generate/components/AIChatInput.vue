@@ -92,9 +92,13 @@ const handleGenerate = async () => {
   display: flex;
   flex-direction: column;
   min-height: 0;
-}
-
-.panel-background {
+  .chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 12px 120px 12px; // 增加底部内边距，为dialog-area留出空间
+  position: relative;
+  z-index: 1;
+  .panel-background {
   height: 20%;
   background: url('/imgs/AI/Gradual_Background.webp') no-repeat;
   background-size: cover;
@@ -104,14 +108,6 @@ const handleGenerate = async () => {
   right: 0;
   z-index: 0;
 }
-
-.chat-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 40px 12px 120px 12px; // 增加底部内边距，为dialog-area留出空间
-  position: relative;
-  z-index: 1;
-
   .message {
     display: flex;
     margin-bottom: 16px;
@@ -152,8 +148,8 @@ const handleGenerate = async () => {
       }
     }
   }
-}
 
+}
 .dialog-area {
   position: absolute;
   bottom: 0;
@@ -187,5 +183,6 @@ const handleGenerate = async () => {
 
 
   }
+}
 }
 </style>

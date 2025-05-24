@@ -19,6 +19,16 @@
       <PreviewPanel :ai-content="aiContent" />
     </div>
   </div>
+  <el-dialog
+  v-model="showAICreateForm"
+  title="确定创建"
+  width="500"
+>
+  <CreateForm 
+    @cancel="showAICreateForm = false" 
+    @confirm="handleAIConfirm"
+  />
+</el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -26,22 +36,52 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AIChatInput from './components/AIChatInput.vue'
 import PreviewPanel from './components/PreviewPanel.vue'
-
+import { textToSchema } from '@/management/utils/textToSchema'
+import { ElMessage } from 'element-plus' // 添加消息组件导入
+import { createSurvey } from '@/management/api/survey' // 确保导入创建接口
+import CreateForm from '@/management/components/CreateForm.vue';
 
 const router = useRouter()
 const aiContent = ref('') // 新增状态
-
+// 在脚本部分新增状态和方法
+const showAICreateForm = ref(false)
+const aiQuestions = ref<Array<any>>([]) // 存储AI生成的题目
 const goBack = () => {
   router.go(-1)
 }
 
 const handleAIGenerate = (rawContent: string) => {
   aiContent.value = rawContent
+    aiQuestions.value = textToSchema(rawContent) // 复用转换逻辑
 }
 
 const handleCreate = () => {
-  // 后续补充创建逻辑
+  if (aiQuestions.value.length === 0) {
+    ElMessage.error('请先生成有效问卷内容')
+    return
+  }
+  showAICreateForm.value = true
 }
+
+
+const handleAIConfirm = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
+  try {
+    const payload = {
+      ...formValue,
+      createMethod: 'aiGenerate',
+      questionList: aiQuestions.value
+    }
+    const res = await createSurvey(payload)
+    if (res?.data?.id) {
+      router.push({ name: 'QuestionEditIndex', params: { id: res.data.id } })
+    }
+  } catch (e) {
+    ElMessage.error('创建失败')
+  } finally {
+    showAICreateForm.value = false
+  }
+}
+
 
 </script>
 

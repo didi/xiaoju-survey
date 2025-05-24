@@ -6,7 +6,7 @@ const textTypeMap = (Object.keys(typeTagLabels) as Array<QUESTION_TYPE>).reduce(
   pre[label] = key
   return pre
 }, {} as Record<string, string>)
-export const textToSchema = (text: string) => {
+export const textToSchema = (text: string, options: { showIndex?: boolean } = {}) => {
   const blocks = text.trim().split(/\n\s*\n/);
   const questions = []
 
@@ -25,8 +25,8 @@ export const textToSchema = (text: string) => {
 
     const question: Record<string, any> = getQuestionByType(textTypeMap[type]);
     question.title = title
-    question.showIndex = true
-
+    question.showIndex = options.showIndex ?? true  // 改为从配置读取
+    // question.showIndex = false
     // 根据类型创建题目对象
     switch (type) {
       case "单行输入框":

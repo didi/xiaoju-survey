@@ -108,7 +108,7 @@
           </div>
           <span>文本导入</span>
         </div>
-        <div class="create-method-item" @click="aiGenerate">
+        <div class="create-method-item" @click="opemAIGenerate">
           <div class="icon">
             <i class="iconfont icon-AIshengcheng"></i>
           </div>
@@ -132,6 +132,21 @@
       </div>
       <TextImport @change="onTextImportChange"></TextImport>
     </div>
+    <div class="fiexed-ai-generate-wrapper" v-if="showAIGenerate">
+      <div class="ai-generate-header">
+        
+        <div class="nav-left">
+         <img src="/imgs/s-logo.webp" class="logo" />
+          <el-button link  @click="showAIGenerate = false">
+            <i class="iconfont icon-fanhui"></i>
+            返回
+          </el-button>
+        </div>
+      <h2 class="nav-title">AI智能生成问卷</h2>
+      <el-button type="primary"  class="publish-btn"  @click="onShowCreateForm">确定创建</el-button>
+      </div>
+      <AIGenerate @change="onTextImportChange"></AIGenerate>
+    </div>
     <el-dialog
       v-model="showCreateForm"
       title="确定创建"
@@ -154,6 +169,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
+import AIGenerate from './components/AIGenerate.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
@@ -208,6 +224,7 @@ const showTextImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
+const showAIGenerate = ref(false)
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
   workSpaceStore.changeWorkSpace('')
@@ -356,6 +373,13 @@ const openTextImport = () => {
 const aiGenerate  = () => { 
   router.push('/ai-generate')
 }
+
+const opemAIGenerate = () => { 
+  showCreateMethod.value = false;
+  showAIGenerate.value = true;
+  createMethod.value = 'AIGenerate'
+}
+
 const commingSoon = () => {
   ElMessage.warning('功能暂未开放，敬请期待～')
 }
@@ -496,7 +520,6 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
     }
   }
 }
-
 .fiexed-text-import-wrapper {
   position: fixed;
   left: 0;
@@ -532,6 +555,40 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
     }
     .title {
       font-size: 16px;
+    }
+  }
+}
+.fiexed-ai-generate-wrapper{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  .ai-generate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 56px;
+    border-bottom: 1px solid #eee;
+ 
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .logo {
+        height: 32px;
+      }
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #333;
     }
   }
 }

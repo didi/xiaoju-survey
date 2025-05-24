@@ -18,7 +18,7 @@ const props = defineProps<{
 
 const questionList = computed(() => {
   try {
-    return textToSchema(props.aiContent) // 现在可以正确访问 props
+    return textToSchema(props.aiContent, { showIndex: false }) // 现在可以正确访问 props
   } catch (e) {
     return []
   }

@@ -145,7 +145,7 @@
       <h2 class="nav-title">AI智能生成问卷</h2>
       <el-button type="primary"  class="publish-btn"  @click="onShowCreateForm">确定创建</el-button>
       </div>
-      <AIGenerate @change="onTextImportChange"></AIGenerate>
+      <AIGenerate @change="onAIGenerteChange"></AIGenerate>
     </div>
     <el-dialog
       v-model="showCreateForm"
@@ -398,6 +398,40 @@ const onShowCreateForm = () => {
 const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
   switch(createMethod.value) {
     case 'textImport':{
+      // console.log('文本导入请求参数:', JSON.parse(JSON.stringify({
+      //   ...formValue,
+      //   createMethod: createMethod.value,
+      //   questionList: questionList.value,
+      // })))
+      const payload: any = {
+        ...formValue,
+        createMethod: createMethod.value,
+        questionList: questionList.value,
+      }
+      if (workSpaceId.value) {
+        payload.workspaceId = workSpaceId.value
+      }
+      const res: any = await createSurvey(payload)
+      if (res?.code === 200 && res?.data?.id) {
+        const id = res.data.id
+        router.push({
+          name: 'QuestionEditIndex',
+          params: {
+            id
+          }
+        })
+        showCreateForm.value = false
+      } else {
+        ElMessage.error(res?.errmsg || '创建失败')
+      }
+      break;
+    }
+    case 'AIGenerate':{
+      // console.log('AI生成请求参数:', JSON.parse(JSON.stringify({
+      //   ...formValue,
+      //   createMethod: createMethod.value,
+      //   questionList: questionList.value, 
+      // })))
       const payload: any = {
         ...formValue,
         createMethod: createMethod.value,
@@ -429,6 +463,11 @@ const onConfirmCreate = async (formValue: { title: string; remark?: string; surv
 const onTextImportChange = (newQuestionList: Array<any>) => {
   questionList.value = newQuestionList
 }
+
+const onAIGenerteChange = (newQuestionList: Array<any>) => {
+  questionList.value = newQuestionList
+}
+
 </script>
 
 <style lang="scss" scoped>

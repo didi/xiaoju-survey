@@ -89,7 +89,11 @@ const handleGenerate = async () => {
       
       const aiContent = response.data.data.rawContent.replace(/^\n+/, '')
       messages.value.push({ sender: 'ai', content: aiContent })
-      emit('change', aiContent)
+      // 将原始文本转换为 schema 格式
+      // console.log('看看AI生成了什么aiContent:', JSON.parse(JSON.stringify(aiContent)))
+      const generatedQuestions = textToSchema(aiContent)
+      // console.log('AI生成的题目:', JSON.parse(JSON.stringify( generatedQuestions)))
+      emit('change', generatedQuestions)  // 传递结构化数据
     } catch (error) {
       messages.value.push({ sender: 'ai', content: '生成失败，请稍后再试' })
     }

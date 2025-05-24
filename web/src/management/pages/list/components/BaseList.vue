@@ -378,6 +378,7 @@ const onDelete = async (row) => {
     onRefresh()
     workSpaceStore.getGroupList()
     workSpaceStore.getSpaceList()
+    workSpaceStore.getRecycleBinCount()
   } else {
     ElMessage.error(res.errmsg || '删除失败')
   }

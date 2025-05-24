@@ -111,15 +111,6 @@ export class WorkspaceMemberService {
     });
   }
 
-  async findAdminAllByUserId({ userId }): Promise<WorkspaceMember[]> {
-    return this.workspaceMemberRepository.find({
-      where: {
-        userId,
-        role: 'admin',
-      },
-    });
-  }
-
   async findAllByWorkspaceId({ workspaceId }): Promise<WorkspaceMember[]> {
     return this.workspaceMemberRepository.find({
       where: {

@@ -188,9 +188,9 @@ export class WorkspaceService {
     });
   }
 
-    async getAdminSurveyIdList(userId: string, isRecycleBin: boolean) {
+    async getAllSurveyIdListByUserId(userId: string, isRecycleBin: boolean) {
       // 查询当前用户参与的空间
-      const workspaceInfoList = await this.workspaceMemberService.findAdminAllByUserId(
+      const workspaceInfoList = await this.workspaceMemberService.findAllByUserId(
         { userId },
       );
       const workspaceIdList = workspaceInfoList.map((item) => item.workspaceId);

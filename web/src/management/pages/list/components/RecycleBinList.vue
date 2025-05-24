@@ -102,7 +102,7 @@ import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import CooperModify from '@/management/components/CooperModify/ModifyDialog.vue'
 import { CODE_MAP } from '@/management/api/base'
 import { QOP_MAP } from '@/management/utils/constant.ts'
-import { deleteSurvey, pausingSurvey, recoverSurvey } from '@/management/api/survey'
+import { deleteSurvey, pausingSurvey, recoverSurvey, completeDeleteSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
@@ -325,6 +325,8 @@ const onCompleteDelete = async (row) => {
   if (res.code === CODE_MAP.SUCCESS) {
     ElMessage.success('删除成功')
     onRefresh()
+    workSpaceStore.getGroupList()
+    workSpaceStore.getSpaceList()
     workSpaceStore.getRecycleBinCount()
   } else {
     ElMessage.error(res.errmsg || '删除失败')

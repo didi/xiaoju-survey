@@ -8,6 +8,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { GROUP_STATE } from 'src/enums/surveyGroup';
+import { is } from 'cheerio/lib/api/traversing';
 
 @Injectable()
 export class SurveyMetaService {
@@ -155,6 +156,21 @@ export class SurveyMetaService {
     );
   }
 
+  async completeDeleteSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          operator,
+          operatorId,
+          isCompleteDeleted: true,
+        },
+      }
+    );
+  }
+
   async getSurveyMetaList(condition: {
     pageNum: number;
     pageSize: number;
@@ -186,6 +202,9 @@ export class SurveyMetaService {
             isDeleted: {
               $eq: true,
             },
+            isCompleteDeleted: {
+              $ne: true,
+            }
           },
           condition.filter,
         );
@@ -208,6 +227,7 @@ export class SurveyMetaService {
               $in: surveyIdList.map((item) => new ObjectId(item)),
             },
             isDeleted: {$eq: true},
+            isCompleteDeleted: {$ne: true},
           });
         } else {
           query.$or.push({
@@ -323,6 +343,7 @@ export class SurveyMetaService {
         $in: workspaceIdList,
       },
       isDeleted: isDeleted? {$eq: true}:{$ne: true},
+      isCompleteDeleted: {$ne: true},
     });
     return surveyMetaList;
   }
@@ -347,6 +368,7 @@ export class SurveyMetaService {
           $in: surveyIdList.map((item) => new ObjectId(item)),
         },
         isDeleted: isRecycleBin? {$eq: true}:{$ne: true},
+        isCompleteDeleted: {$ne: true}
       });
     }
     var otherQuery: ObjectLiteral
@@ -357,6 +379,7 @@ export class SurveyMetaService {
         isDeleted: {
           $eq: true,
         },
+        isCompleteDeleted: {$ne: true},
       };
     } else {
       otherQuery = {

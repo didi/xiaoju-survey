@@ -130,7 +130,7 @@ export class SurveyMetaController {
     const surveyIdList1 = cooperationList.map((item) => item.surveyId);
     let surveyIdList2 = []
     if (isRecycleBin) {
-      surveyIdList2 = (await this.workspaceService.getAdminSurveyIdList(userId, isRecycleBin)).data.surveyIdList
+      surveyIdList2 = (await this.workspaceService.getAllSurveyIdListByUserId(userId, isRecycleBin)).data.surveyIdList
     }
     const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];
     const username = req.user.username;

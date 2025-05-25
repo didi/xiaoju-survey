@@ -5,6 +5,7 @@ import { Collaborator } from 'src/models/collaborator.entity';
 import { MongoRepository } from 'typeorm';
 import { Logger } from 'src/logger';
 import { InsertManyResult, ObjectId } from 'mongodb';
+import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 describe('CollaboratorService', () => {
   let service: CollaboratorService;
@@ -370,6 +371,26 @@ describe('CollaboratorService', () => {
       expect(result).toEqual([
         { _id: '1', surveyId: '1', userId, permissions: [] },
       ]);
+    });
+
+    describe('getManageListByUserId', () => {
+      it('should return a list of collaborators who has manage permission by user id', async () => {
+        const userId = new ObjectId().toString();
+        const findSpy = jest.spyOn(repository, 'find').mockResolvedValue([
+          {
+            _id: '1',
+            surveyId: '1',
+            userId: userId,
+            permissions: [SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE],
+          } as unknown as Collaborator,
+        ]);
+  
+        const result = await service.getManageListByUserId({ userId });
+  
+        expect(result).toEqual([
+          { _id: '1', surveyId: '1', userId, permissions: [SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE] },
+        ]);
+      });
     });
 
     it('should return a list of collaborators by their IDs', async () => {

@@ -6,6 +6,8 @@ import { ObjectId } from 'mongodb';
 import { WorkspaceService } from '../services/workspace.service';
 import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
+import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 
 jest.mock('src/guards/authentication.guard');
 jest.mock('src/guards/survey.guard');
@@ -15,6 +17,14 @@ describe('WorkspaceService', () => {
   let service: WorkspaceService;
   let workspaceRepository: MongoRepository<Workspace>;
   let surveyMetaRepository: MongoRepository<SurveyMeta>;
+
+  const mockWorkspaceMemberService = {
+    findAllByUserId: jest.fn(),
+  };
+  
+  const mockSurveyMetaService = {
+    getSurveyMetaListByWorkspaceIdList: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +38,14 @@ describe('WorkspaceService', () => {
           provide: getRepositoryToken(SurveyMeta),
           useClass: MongoRepository,
         },
+        {
+          provide: WorkspaceMemberService,
+          useValue: mockWorkspaceMemberService,
+        },
+        {
+          provide: SurveyMetaService,
+          useValue: mockSurveyMetaService,
+        }
       ],
     }).compile();
 
@@ -165,6 +183,28 @@ describe('WorkspaceService', () => {
 
       expect(result).toEqual(workspaces);
       expect(workspaceRepository.find).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getAllSurveyIdListByUserId', () => {
+    it('should return all survey id list of work space under a user', async () => {
+      const workspaceMemberList = [
+        { userId: '1', workSpaceId: 'f'}
+      ]
+      const surveyMetaList = [
+        { workSpaceId: 'f', isDeleted: false, _id: 666 },
+      ];
+
+      jest
+        .spyOn(mockWorkspaceMemberService, 'findAllByUserId')
+        .mockResolvedValue(workspaceMemberList as any);
+      jest
+        .spyOn(mockSurveyMetaService, 'getSurveyMetaListByWorkspaceIdList')
+        .mockResolvedValue(surveyMetaList as any)
+
+      const result = await service.getAllSurveyIdListByUserId('1', false);
+
+      expect(result).toEqual({code: 200, data: {surveyIdList: ['666']}});
     });
   });
 

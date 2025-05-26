@@ -41,10 +41,12 @@ public class RequestLogAspect {
      * @return true-二进制数据
      */
     private boolean isBinaryData(String contentType) {
-        return contentType != null && (
-                contentType.contains("image/") ||
-                        contentType.contains("video/") ||
-                        contentType.contains("application/octet-stream")
+        return contentType != null
+                && (contentType.contains("image/")
+                || contentType.contains("video/")
+                || contentType.contains("application/octet-stream")
+                || contentType.contains("application/zip")
+                || contentType.contains("audio/")
         );
     }
 
@@ -80,11 +82,11 @@ public class RequestLogAspect {
         } catch (Exception e) {
             // 记录异常信息
             long endTime = System.currentTimeMillis();
-            log.error("[REQUEST-ERROR] : {} {} | Time: {}ms | Error: {}",
+            log.error("[REQUEST-ERROR] : {} {} | Time: {}ms",
                     request.getMethod(),
                     request.getRequestURI(),
                     endTime - startTime,
-                    e.getMessage());
+                    e);
             throw e;
         }
     }

@@ -13,10 +13,10 @@ import java.io.IOException;
 public class TraceIdFilter implements Filter {
 
     private static final String TRACE_ID_KEY = "traceId";
+
     @Resource
     TraceIdGeneratorUtil traceIdGeneratorUtil;
-    @Resource
-    private HttpServletRequest request;
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -31,7 +31,7 @@ public class TraceIdFilter implements Filter {
                 traceId = httpRequest.getParameter(TRACE_ID_KEY);
                 if (traceId == null || traceId.isEmpty()) {
                     // 生成新的traceId（使用客户端IP）
-                    String clientIp = getClientIp();
+                    String clientIp = getClientIp(httpRequest);
                     traceId = traceIdGeneratorUtil.generate(clientIp);
                 }
             }
@@ -45,7 +45,7 @@ public class TraceIdFilter implements Filter {
         }
     }
 
-    private String getClientIp() {
+    private String getClientIp(HttpServletRequest request) {
         String xffHeader = request.getHeader("X-Forwarded-For");
         if (xffHeader == null) {
             return request.getRemoteAddr();

@@ -552,7 +552,6 @@ defineExpose({
   font-size: 10px;
   line-height: 16px;
   color: #FAA600;
-
 }
 
 

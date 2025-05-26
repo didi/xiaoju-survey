@@ -61,7 +61,13 @@
               />
             </template>
             <template v-else>
-              <span class="cell-span">{{ scope.row[field.key] }}</span>
+              <div class="title-wrapper">
+                <span class="cell-span">{{ scope.row[field.key] }}</span>
+                <span 
+                  v-if="field.key === 'title' && scope.row.createMethod === 'AIGenerate'"
+                  class="ai-tag"
+                >AI生成</span>
+              </div>
             </template>
           </template>
         </el-table-column>
@@ -530,4 +536,24 @@ defineExpose({
 .el-select-dropdown__item.hover {
   background: #fff;
 }
+
+.title-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-tag {
+  padding: 0 4px;
+  border-radius: 2px;
+  background: #FEF6E6;
+  border: 1px solid #FAA600;
+  font-family: PingFangSC;
+  font-size: 10px;
+  line-height: 16px;
+  color: #FAA600;
+
+}
+
+
 </style>

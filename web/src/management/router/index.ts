@@ -159,15 +159,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../pages/publish/ChannelPage.vue')
   },
   {
-    path: '/ai-generate',
-    name: 'ai-generate',
-    meta: {
-      needLogin: true,
-      title: 'AI生成问卷'
-    },
-    component: () => import('../pages/ai-generate/index.vue')
-  },
-  {
     path: '/create',
     name: 'create',
     meta: {

@@ -47,7 +47,8 @@
                 <div 
                   v-if="msg.sender === 'ai' && 
                         msg.content !== 'loading' && 
-                        index === lastAIMessageIndex" 
+                        index === lastAIMessageIndex &&
+                        !isTyping"  
                   class="action-buttons"
                 >
                   <div class="action-item" @click="handleRegenerate">
@@ -124,12 +125,22 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import MultiSourcePreviewPanel from '@/management/components/MultiSourcePreviewPanel.vue'
 import { textToSchema } from '@/management/utils/textToSchema'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
+import { onUnmounted } from 'vue'
+
+onUnmounted(() => {
+  typingInterval && clearInterval(typingInterval)
+})
+const typingIndex = ref(-1) // 当前正在输入的消息索引
+const typingContent = ref('') // 当前输入的内容缓存
+let typingInterval: ReturnType<typeof setInterval> | null = null
 
 const prompt = ref('')
 const lastPrompt = ref('')
 const messages = ref<Array<{sender: 'user'|'ai', content: string}>>([])
 const emit = defineEmits(['change'])
+const isTyping = ref(false)
+
 
 // 生成题目列表
 const questionList = computed(() => {
@@ -164,15 +175,37 @@ const handleGenerate = async () => {
       
       const aiContent = response.data.data.rawContent.replace(/^\n+/, '')
       
-      // 替换加载状态
       const index = messages.value.findIndex(m => m.content === 'loading')
       if (index > -1) {
-        messages.value.splice(index, 1, { sender: 'ai', content: aiContent })
-        emit('change', textToSchema(aiContent, { showIndex: false })) 
+        // 替换为初始空内容
+        messages.value.splice(index, 1, { 
+          sender: 'ai', 
+          content: '' // 初始化为空字符串
+        })
+        
+        // 开始逐字输入
+        typingIndex.value = index
+        typingContent.value = aiContent
+        let charIndex = 0
+        
+        typingInterval = setInterval(() => {
+          if (charIndex < aiContent.length) {
+            messages.value[typingIndex.value].content = aiContent.slice(0, charIndex + 1)
+            charIndex++
+            // 实时更新预览
+            isTyping.value = true  // 开始输入时设置为 true
+            emit('change', textToSchema(messages.value[typingIndex.value].content, { showIndex: false }))
+          } else {
+            clearInterval(typingInterval!)
+            typingInterval = null
+            isTyping.value = false  // 输入完成时设置为 false
+          }
+        }, 50) // 调整这个数值控制输入速度
       }
     } catch (error) {
       // 更新加载状态为错误信息
       const index = messages.value.findIndex(m => m.content === 'loading')
+      typingInterval && clearInterval(typingInterval)
       if (index > -1) {
         messages.value.splice(index, 1, { sender: 'ai', content: '生成失败，请稍后再试' })
       }

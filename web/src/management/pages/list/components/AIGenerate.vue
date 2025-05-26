@@ -36,6 +36,18 @@
               class="avatar"
             />
               <div class="bubble" style="white-space: pre-wrap;">
+                <div 
+                  v-if="msg.sender === 'ai' && 
+                        isTyping && 
+                        index === lastAIMessageIndex"
+                  class="generating-notice"
+                >
+                  <span style="color: #6E707C;">请稍后，生成问卷努力敲击中....</span>
+                  <span 
+                    style="color: #FAA600; margin-left: 8px; cursor: pointer;"
+                    @click="handleStopGenerating"
+                  >停止生成</span>
+                </div>
                 <template v-if="msg.content === 'loading'">
                   <span class="dot"></span>
                   <span class="dot"></span>
@@ -268,6 +280,14 @@ const lastAIMessageIndex = computed(() => {
   return -1
 })
 
+const handleStopGenerating = () => {
+  if (typingInterval) {
+    clearInterval(typingInterval)
+    typingInterval = null
+    typingIndex.value = -1
+    isTyping.value = false
+  }
+}
 </script>
 
 <!-- 合并后的样式 -->
@@ -455,7 +475,17 @@ const lastAIMessageIndex = computed(() => {
               }
             }
           }
-
+          .generating-notice {
+            position: absolute;
+            left: 0;
+            bottom: -28px;
+            font-family: PingFangSC;
+            font-size: 12px;
+            font-weight: normal;
+            line-height: 18px;
+            letter-spacing: normal;
+            white-space: nowrap;
+          }
         }
       }
       .template-header {

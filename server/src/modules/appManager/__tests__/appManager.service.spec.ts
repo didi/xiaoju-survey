@@ -7,12 +7,10 @@ describe('AppManagerService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AppManagerService,
-      ],
+      providers: [AppManagerService],
     }).compile();
 
-    service = module.get<AppManagerService>(AppManagerService)
+    service = module.get<AppManagerService>(AppManagerService);
   });
 
   afterEach(() => {
@@ -28,7 +26,7 @@ describe('AppManagerService', () => {
 
       expect(token).toBeDefined();
       expect(typeof token).toBe('string');
-      
+
       // 验证token是否被正确存储
       const isValid = await service.checkAppManager(appId, token);
       expect(isValid).toBe(true);
@@ -42,7 +40,7 @@ describe('AppManagerService', () => {
 
       // 先生成token
       const token = await service.generateToken(appId, appSecret);
-      
+
       // 验证token
       const result = await service.checkAppManager(appId, token);
       expect(result).toBe(true);
@@ -64,4 +62,4 @@ describe('AppManagerService', () => {
     //   expect(result).toBe(false);
     // });
   });
-}); 
+});

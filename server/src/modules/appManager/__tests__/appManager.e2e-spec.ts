@@ -3,17 +3,14 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppManagerModule } from '../appManager.module';
 import { ConfigModule } from '@nestjs/config';
-import { APPList } from '../appConfg'
+import { APPList } from '../appConfg';
 
 describe('AppManager (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot(),
-        AppManagerModule,
-      ],
+      imports: [ConfigModule.forRoot(), AppManagerModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -33,7 +30,7 @@ describe('AppManager (e2e)', () => {
           appSecret: 'test-app-secret',
         })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body.code).toBe(200);
           expect(res.body.data).toBeDefined();
         });
@@ -60,10 +57,10 @@ describe('AppManager (e2e)', () => {
           appToken: token,
         })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body.code).toBe(200);
           expect(res.body.data).toBe(true);
         });
     });
   });
-}); 
+});

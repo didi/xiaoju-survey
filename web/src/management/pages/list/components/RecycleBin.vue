@@ -237,7 +237,7 @@ const handleCurrentChange = (current) => {
   currentPage.value = current
   onRefresh()
 }
-const onRowClick = (row) => {
+const onRowClick = () => {
   try {
     ElMessageBox.alert('该问卷已被删除，无法继续访问。', '提示', {
       confirmButtonText: '确定',

@@ -193,6 +193,7 @@ describe('SurveyController', () => {
         _id: surveyId,
         surveyType: 'exam',
         owner: 'testUser',
+        curStatus: { status: 'published', date: Date.now() },
       };
 
       jest
@@ -218,6 +219,7 @@ describe('SurveyController', () => {
         _id: surveyId,
         surveyType: 'exam',
         owner: 'testUser',
+        curStatus: { status: 'removed', date: Date.now() },
       };
 
       jest
@@ -242,6 +244,7 @@ describe('SurveyController', () => {
         _id: surveyId,
         surveyType: 'exam',
         owner: 'testUser',
+        curStatus: { status: 'removed', date: Date.now() },
       };
 
       jest
@@ -282,6 +285,32 @@ describe('SurveyController', () => {
 
       expect(result?.data?.surveyMetaRes).toBeDefined();
       expect(result?.data?.surveyConfRes).toBeDefined();
+    });
+  });
+
+
+  describe('getSurvey', () => {
+    it('should return an error when getting a deleted survey', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'exam',
+        owner: 'testUser',
+        curStatus: { status: 'removed', date: Date.now() },
+      };
+
+      jest
+        .spyOn(surveyConfService, 'getSurveyConfBySurveyId')
+        .mockResolvedValue({} as any);
+      await expect(
+        controller.getSurvey(
+          { surveyId: surveyId.toString() },
+          {
+            surveyMeta,
+            user: { username: 'testUser', _id: new ObjectId() },
+          },
+        ),
+      ).rejects.toThrow(HttpException);
     });
   });
 

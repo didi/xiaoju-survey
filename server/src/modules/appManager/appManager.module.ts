@@ -5,12 +5,7 @@ import { OpenAuthGuard } from 'src/guards/openAuth.guard';
 
 @Module({
   controllers: [AppManagerController],
-  providers: [
-    AppManagerService,
-    OpenAuthGuard
-  ],
-  exports: [
-    AppManagerService
-  ]
+  providers: [AppManagerService, OpenAuthGuard],
+  exports: [AppManagerService],
 })
 export class AppManagerModule {}

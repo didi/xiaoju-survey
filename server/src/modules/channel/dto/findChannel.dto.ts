@@ -7,7 +7,7 @@ export class FindChannelDto {
 
   static validate(data) {
     return Joi.object({
-        channelId: Joi.string().required(),
+      channelId: Joi.string().required(),
     }).validate(data, { allowUnknown: true });
   }
 }

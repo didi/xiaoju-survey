@@ -175,9 +175,7 @@ export function handleAggretionData({ dataMap, item }) {
       },
     };
   } else if (type == QUESTION_TYPE.CASCADER) {
-    const aggregation = getTextPaths(
-      dataMap[item.field].cascaderData.children,
-    );
+    const aggregation = getTextPaths(dataMap[item.field].cascaderData.children);
     return {
       ...item,
       title: dataMap[item.field].title,

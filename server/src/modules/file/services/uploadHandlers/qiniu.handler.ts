@@ -70,10 +70,6 @@ export class QiniuHandler implements FileUploadHandler {
   }
 
   getUrl(key: string): string {
-    if (!this.isPrivateRead) {
-      return `${this.useSSL ? 'https' : 'http'}://${this.endPoint}/${key}`;
-    }
-
     const config = new qiniu.conf.Config({
       useHttpsDomain: this.useSSL,
     });

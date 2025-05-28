@@ -45,7 +45,7 @@ export class SurveyResponseService {
     });
     return (data || []).length;
   }
-  async getSurveyResponseTotalByChannel({  channelId }) {
+  async getSurveyResponseTotalByChannel({ channelId }) {
     const data = await this.surveyResponseRepository.find({
       where: {
         channelId: channelId,

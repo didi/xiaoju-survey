@@ -266,6 +266,7 @@ describe('SurveyController', () => {
         _id: surveyId,
         surveyType: 'exam',
         owner: 'testUser',
+        curStatus: { status: 'published', date: Date.now() },
       };
 
       jest

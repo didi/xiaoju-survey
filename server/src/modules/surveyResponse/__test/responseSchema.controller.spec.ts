@@ -132,9 +132,7 @@ describe('ResponseSchemaController', () => {
 
       jest
         .spyOn(responseSchemaService, 'getResponseSchemaByPath')
-        .mockResolvedValue({
-          isDeleted: false,
-        } as ResponseSchema);
+        .mockResolvedValue(mockResponseSchema);
 
       await expect(controller.getSchema(mockQueryInfo)).rejects.toThrow(
         new HttpException(

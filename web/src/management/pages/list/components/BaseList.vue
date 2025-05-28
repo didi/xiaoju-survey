@@ -541,18 +541,33 @@ defineExpose({
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  max-width: 100%; // 新增限制最大宽度
+  .cell-span {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; // 限制两行
+    line-clamp: 2; // 添加标准属性
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; // 允许换行
+    flex: 1; // 新增
+    min-width: 0; // 新增 (解决flex布局下的截断问题)
+    // max-width: calc(100% - 60px); // 给AI标签留出空间
+  }
+  .ai-tag {
+    padding: 0 4px;
+    border-radius: 2px;
+    background: #FEF6E6;
+    border: 1px solid #FAA600;
+    font-family: PingFangSC;
+    font-size: 10px;
+    line-height: 16px;
+    color: #FAA600;
+  }
 }
 
-.ai-tag {
-  padding: 0 4px;
-  border-radius: 2px;
-  background: #FEF6E6;
-  border: 1px solid #FAA600;
-  font-family: PingFangSC;
-  font-size: 10px;
-  line-height: 16px;
-  color: #FAA600;
-}
+
 
 
 </style>

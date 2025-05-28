@@ -4,7 +4,7 @@
     <div class="generate-content">
       <!-- 左侧聊天输入区域 -->
       <div class="left-panel">      
-        <div class="chat-container">
+        <div class="chat-container" ref="chatContainerRef">
           <div class="panel-background"></div>
           <div v-if="messages.length === 0" class="initial-state">
             <div class="welcome-title">您好，我叫XIAOJU</div>
@@ -99,13 +99,12 @@
         </div>
         <div class="dialog-area">
           <div class="input-section">
-
-
             <el-input
               v-model="prompt"
               type="textarea"
               :rows="5"
-              placeholder="请输入您想生成的问卷相关描述（目前暂不支持通过对话修改已生成的问卷）"
+              :placeholder="(isLoading || isTyping)? 'AI正在生成中...' : '请输入您想生成的问卷相关描述（目前暂不支持通过对话修改已生成的问卷）'"
+              :disabled="isLoading || isTyping"
               @keydown.enter="handleKeydown"
             />
             <img 
@@ -133,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import axios from 'axios'
 import MultiSourcePreviewPanel from '@/management/components/MultiSourcePreviewPanel.vue'
 import { textToSchema } from '@/management/utils/textToSchema'
@@ -143,18 +142,17 @@ import { onUnmounted } from 'vue'
 onUnmounted(() => {
   typingInterval && clearInterval(typingInterval)
 })
-const typingIndex = ref(-1) // 当前正在输入的消息索引
-const typingContent = ref('') // 当前输入的内容缓存
+const typingIndex = ref(-1) 
+const typingContent = ref('') 
 let typingInterval: ReturnType<typeof setInterval> | null = null
-
+const messages = ref<Array<{sender: 'user'|'ai', content: string}>>([])
+const chatContainerRef = ref<HTMLElement | null>(null)
 const prompt = ref('')
 const lastPrompt = ref('')
-const messages = ref<Array<{sender: 'user'|'ai', content: string}>>([])
-const emit = defineEmits(['change'])
 const isTyping = ref(false)
+const isLoading = ref(false) 
+const emit = defineEmits(['change'])
 
-
-// 生成题目列表
 const questionList = computed(() => {
   try {
     const lastAIMessage = [...messages.value].reverse().find(m => m.sender === 'ai')
@@ -174,12 +172,15 @@ const handleKeydown = (e: KeyboardEvent) => {
 const handleGenerate = async () => {
   const currentPrompt = prompt.value.trim()
   if (currentPrompt) {
+    isLoading.value = true
     lastPrompt.value = currentPrompt 
     messages.value.push({ sender: 'user', content: currentPrompt })
     prompt.value = ''
+    scrollToBottom() // 用户发送后立即滚动
 
     const loadingMessage = { sender: 'ai' as const, content: 'loading' }
     messages.value.push(loadingMessage)
+    scrollToBottom() 
     try {
       const response = await axios.post('/api/ai-generate/test-deepseek', {
         prompt: currentPrompt
@@ -204,6 +205,7 @@ const handleGenerate = async () => {
           if (charIndex < aiContent.length) {
             messages.value[typingIndex.value].content = aiContent.slice(0, charIndex + 1)
             charIndex++
+            scrollToBottom() 
             // 实时更新预览
             isTyping.value = true  // 开始输入时设置为 true
             emit('change', textToSchema(messages.value[typingIndex.value].content, { showIndex: false }))
@@ -221,6 +223,8 @@ const handleGenerate = async () => {
       if (index > -1) {
         messages.value.splice(index, 1, { sender: 'ai', content: '生成失败，请稍后再试' })
       }
+    }finally {
+      isLoading.value = false 
     }
   }
 }
@@ -289,6 +293,14 @@ const handleStopGenerating = () => {
     isTyping.value = false
   }
 }
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (chatContainerRef.value) {
+      chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight
+    }
+  })
+}
+
 </script>
 
 <!-- 合并后的样式 -->
@@ -315,6 +327,7 @@ const handleStopGenerating = () => {
         flex: 1;
         overflow-y: auto;
         padding: 40px 12px 120px 12px;
+        scroll-behavior: smooth;
         position: relative;
         
         .panel-background {

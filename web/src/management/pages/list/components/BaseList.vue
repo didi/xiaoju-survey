@@ -553,7 +553,6 @@ defineExpose({
     white-space: normal; // 允许换行
     flex: 1; // 新增
     min-width: 0; // 新增 (解决flex布局下的截断问题)
-    // max-width: calc(100% - 60px); // 给AI标签留出空间
   }
   .ai-tag {
     padding: 0 4px;

@@ -126,11 +126,6 @@
 
   前后端分离，提供 Docker 化方案，提供了完善的部署指导手册。
 
-# 快速使用
-
-快速试用：https://xiaojuwenjuan.com/render/LWpBOxRx
-
-在线平台：https://xiaojuwenjuan.com
 
 # 本地开发
 

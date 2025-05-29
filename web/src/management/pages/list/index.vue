@@ -53,7 +53,7 @@
           :total="surveyTotal"
           @refresh="fetchSurveyList"
           ref="listRef"
-          v-if="workSpaceId || groupId"
+          v-if="workSpaceId || groupId && menuType !== MenuType.RecycleBin"
         ></BaseList>
         <SpaceList
           ref="spaceListRef"
@@ -71,6 +71,14 @@
           :total="groupListTotal"
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
+        <RecycleBinList
+          ref="recycleBinListRef"
+          :loading="loading"
+          :data="surveyList"
+          :total="surveyTotal"
+          @refresh="fetchRecycleList"
+          v-if="menuType === MenuType.RecycleBin"
+        ></RecycleBinList>
       </div>
     </div>
     <SpaceModify
@@ -149,6 +157,7 @@ import GroupList from './components/GroupList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
+import RecycleBinList from './components/RecycleBin.vue'
 import TextImport from './components/TextImport.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
@@ -181,8 +190,10 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.RecycleBin) {
+    return '回收站'
   } else {
-    return currentTeamSpace.value?.name || '问卷列表'
+    return currentTeamSpace.value?.name || '问卷列表';
   }
 })
 
@@ -233,6 +244,11 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
       break
+    case MenuType.RecycleBin:
+      workSpaceStore.changeMenuType(MenuType.RecycleBin)
+      workSpaceStore.changeWorkSpace('')
+      await fetchRecycleList()
+      break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>
         parent.children.find((children: any) => children.id.toString() === id)
@@ -245,7 +261,8 @@ const handleSpaceSelect = async (id: string) => {
           workSpaceStore.changeWorkSpace(id)
         }
       }
-      listRef?.value?.resetCurrentPage()
+      await fetchSurveyList()
+      listRef?.value?.resetCurrentPage();
       break
     }
   }
@@ -258,6 +275,29 @@ const fetchSurveyList = async (params?: any) => {
       curPage: 1
     }
   }
+  if (workSpaceId.value) {
+    params.workspaceId = workSpaceId.value
+  }
+  loading.value = true
+  await surveyListStore.getSurveyList(params)
+  loading.value = false
+}
+
+const fetchRecycleList = async (params?: any) => {
+  if (!params) {
+    params = {
+      pageSize: 10,
+      curPage: 1
+    }
+  }
+  const extraOrder = [
+    {
+      field: 'curStatus.date',
+      value: -1
+    }
+  ];
+  params.recycle = true;
+  params.extraOrder = extraOrder;
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }

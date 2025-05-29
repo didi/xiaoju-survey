@@ -28,6 +28,11 @@ export function getFilter(filterList: Array<FilterItem>) {
         .filter((item) => allowFilterField.includes(item.field))
         .reduce((pre, cur) => {
           switch (cur.comparator) {
+            case '$eq':
+              pre[cur.field] = {
+                $eq: cur.value,
+              }
+              break;
             case '$ne':
               pre[cur.field] = {
                 $ne: cur.value,

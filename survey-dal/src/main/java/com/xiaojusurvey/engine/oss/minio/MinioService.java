@@ -85,7 +85,7 @@ public class MinioService {
                         .method(Method.GET)
                         .build());
             } else {
-                if (minioProperties.getUseSSL()) {
+                if (minioProperties.getUseSsl()) {
                     return "https://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + filename;
                 } else {
                     return "http://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + filename;

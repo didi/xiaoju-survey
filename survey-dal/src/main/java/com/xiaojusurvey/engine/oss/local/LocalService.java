@@ -13,6 +13,10 @@ public class LocalService {
     @Resource
     private LocalProperties localProperties;
 
+    private static final String NGINX = "nginx";
+
+    private static final String PUBLIC_PHYSICAL_ROOT_PATH = "public";
+
     /**
      * 获取文件存储前缀
      *
@@ -30,11 +34,11 @@ public class LocalService {
     public String getPhysicalRootPath() {
         String staticType = localProperties.getLocalStaticRenderType();
         String physicalRootPath = "";
-        if ("nginx".equals(staticType)) {
+        if (NGINX.equals(staticType)) {
             physicalRootPath = localProperties.getNginxStaticPath();
         }
         if (!StringUtils.hasText(physicalRootPath)) {
-            physicalRootPath = "public";
+            physicalRootPath = PUBLIC_PHYSICAL_ROOT_PATH;
         }
         return physicalRootPath;
     }

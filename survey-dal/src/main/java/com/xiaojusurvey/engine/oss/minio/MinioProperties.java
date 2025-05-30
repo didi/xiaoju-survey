@@ -54,7 +54,7 @@ public class MinioProperties {
     /**
      * 是否使用ssl
      */
-    private Boolean useSSL = true;
+    private Boolean useSsl = true;
 
     /**
      * 过期时间

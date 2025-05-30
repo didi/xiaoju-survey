@@ -74,7 +74,7 @@ public class AliYunService {
             }
             return url.toString();
         } else {
-            return (aliYunProperties.getUseSSL() ? "https" : "http") + "://" + aliYunProperties.getEndpoint() + "/" + filename;
+            return (aliYunProperties.getUseSsl() ? "https" : "http") + "://" + aliYunProperties.getEndpoint() + "/" + filename;
         }
     }
 

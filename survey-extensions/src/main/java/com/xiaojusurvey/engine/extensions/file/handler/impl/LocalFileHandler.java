@@ -4,7 +4,7 @@ import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.enums.FileProviderEnum;
 import com.xiaojusurvey.engine.common.exception.FileException;
 import com.xiaojusurvey.engine.common.util.FileUtil;
-import com.xiaojusurvey.engine.extensions.file.handler.FileHandler;
+import com.xiaojusurvey.engine.extensions.file.handler.BaseFileHandler;
 import com.xiaojusurvey.engine.extensions.file.model.FileReq;
 import com.xiaojusurvey.engine.extensions.file.model.FileResp;
 import com.xiaojusurvey.engine.oss.local.LocalService;
@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-public class LocalFileHandler extends FileHandler {
+public class LocalFileHandler extends BaseFileHandler {
 
     @Resource
     private LocalService localService;

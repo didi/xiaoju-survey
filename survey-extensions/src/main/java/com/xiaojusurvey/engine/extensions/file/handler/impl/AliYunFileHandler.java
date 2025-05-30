@@ -5,11 +5,12 @@ import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.enums.FileProviderEnum;
 import com.xiaojusurvey.engine.common.exception.FileException;
 import com.xiaojusurvey.engine.common.util.FileUtil;
-import com.xiaojusurvey.engine.extensions.file.handler.FileHandler;
+import com.xiaojusurvey.engine.extensions.file.handler.BaseFileHandler;
 import com.xiaojusurvey.engine.extensions.file.model.FileReq;
 import com.xiaojusurvey.engine.extensions.file.model.FileResp;
 import com.xiaojusurvey.engine.oss.aliyun.AliYunService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,8 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-public class AliYunFileHandler extends FileHandler {
+@ConditionalOnBean(AliYunService.class)
+public class AliYunFileHandler extends BaseFileHandler {
     @Resource
     private AliYunService aliYunService;
 

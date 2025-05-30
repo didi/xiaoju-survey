@@ -7,7 +7,7 @@ import com.xiaojusurvey.engine.extensions.file.model.FileResp;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public abstract class FileHandler {
+public abstract class BaseFileHandler {
 
     /**
      * 获取文件处理器对应的枚举类

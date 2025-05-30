@@ -23,7 +23,7 @@ public class AliYunConfig {
     private AliYunProperties aliYunProperties;
 
     @Bean
-    @ConditionalOnExpression("'${xiaoju.survey.file.provider}' == 'ali-oss' || '${xiaoju.survey.file.aliyun.enabled}' == 'true'")
+    @ConditionalOnExpression("'${xiaoju.survey.file.provider}' == 'ali_oss' || '${xiaoju.survey.file.aliyun.enabled}' == 'true'")
     public OSS ossClient() {
         if (Objects.isNull(aliYunProperties)) {
             throw new FileException("AliYun OSS 实例化失败：配置参数为空", RespErrorCode.OSS_CLIENT_ERROR.getCode());

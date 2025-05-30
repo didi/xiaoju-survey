@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 
 @Component
-@ConditionalOnBean({QiniuYunConfig.class})
+@ConditionalOnBean({Auth.class, UploadManager.class})
 public class QiniuYunService {
 
     @Resource
@@ -61,7 +61,7 @@ public class QiniuYunService {
             expiredTime = qiniuYunProperties.getExpiredTime();
         }
         try {
-            DownloadUrl url = new DownloadUrl(qiniuYunProperties.getEndpoint(), qiniuYunProperties.getUseSSL(), filename);
+            DownloadUrl url = new DownloadUrl(qiniuYunProperties.getEndpoint(), qiniuYunProperties.getUseSsl(), filename);
             if (qiniuYunProperties.getNeedPrivateRead()) {
                 long deadline = System.currentTimeMillis() / 1000 + FileUtil.parseExpiryTimeToSeconds(expiredTime);
                 return url.buildURL(auth, deadline);

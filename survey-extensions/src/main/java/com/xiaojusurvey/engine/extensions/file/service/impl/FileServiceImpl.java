@@ -3,7 +3,7 @@ package com.xiaojusurvey.engine.extensions.file.service.impl;
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.enums.FileProviderEnum;
 import com.xiaojusurvey.engine.common.exception.FileException;
-import com.xiaojusurvey.engine.extensions.file.handler.FileHandler;
+import com.xiaojusurvey.engine.extensions.file.handler.BaseFileHandler;
 import com.xiaojusurvey.engine.extensions.file.model.FileReq;
 import com.xiaojusurvey.engine.extensions.file.model.FileResp;
 import com.xiaojusurvey.engine.extensions.file.service.FileService;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public class FileServiceImpl implements FileService {
 
     @Resource
-    private List<FileHandler> fileHandlers;
+    private List<BaseFileHandler> baseFileHandlers;
 
     @Resource
     private FileProperties fileProperties;
@@ -35,7 +35,7 @@ public class FileServiceImpl implements FileService {
      * @param channel 文件处理器的标识符
      * @return 文件处理器实例
      */
-    private FileHandler getHandler(String channel) {
+    private BaseFileHandler getHandler(String channel) {
         if (!StringUtils.hasText(channel)) {
             if (Objects.nonNull(fileProperties.getProvider())) {
                 channel = fileProperties.getProvider().getDescription();
@@ -43,10 +43,10 @@ public class FileServiceImpl implements FileService {
                 channel = FileProviderEnum.LOCAL_OSS.getDescription();
             }
         }
-        for (FileHandler fileHandler : fileHandlers) {
-            if (Objects.nonNull(fileHandler)
-                    && Objects.equals(channel, fileHandler.getProvider().getDescription())) {
-                return fileHandler;
+        for (BaseFileHandler baseFileHandler : baseFileHandlers) {
+            if (Objects.nonNull(baseFileHandler)
+                    && Objects.equals(channel, baseFileHandler.getProvider().getDescription())) {
+                return baseFileHandler;
             }
         }
         throw new FileException("参数有误，channel不正确：" + channel + "，请检查channel或对应oss是否正确配置", RespErrorCode.UPLOAD_FILE_ERROR.getCode());

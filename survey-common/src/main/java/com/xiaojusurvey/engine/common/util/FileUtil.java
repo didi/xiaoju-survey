@@ -48,6 +48,16 @@ public class FileUtil {
         return randomPart + "." + extension;
     }
 
+    private static final int UUID_BYTE_LENGTH = 16;
+    private static final int VERSION_BYTE_INDEX = 6;
+    private static final int VARIANT_BYTE_INDEX = 8;
+    private static final int VERSION_MASK = 0x0F;
+    private static final int VERSION_4 = 0x40;
+    private static final int VARIANT_MASK = 0x3F;
+    private static final int RFC_4122_VARIANT = 0x80;
+    private static final int UUID_HIGH_BYTES_END = 8;
+    private static final String UUID_DASH = "-";
+
     /**
      * 生成安全随机字符串
      *
@@ -55,27 +65,27 @@ public class FileUtil {
      */
     private static String generateSecureRandomString() {
         // 生成 128 位随机数 (16 字节) 并转换为 UUID 格式
-        byte[] randomBytes = new byte[16];
+        byte[] randomBytes = new byte[UUID_BYTE_LENGTH];
         SECURE_RANDOM.nextBytes(randomBytes);
 
         // 设置 UUID 版本和变体
-        randomBytes[6] &= 0x0F;  // 清除版本
-        randomBytes[6] |= 0x40;  // 设置版本为 4 (随机生成)
-        randomBytes[8] &= 0x3F;  // 清除变体
-        randomBytes[8] |= (byte) 0x80;  // 设置变体为 RFC 4122
+        randomBytes[VERSION_BYTE_INDEX] &= VERSION_MASK;  // 清除版本
+        randomBytes[VERSION_BYTE_INDEX] |= VERSION_4;  // 设置版本为 4 (随机生成)
+        randomBytes[VARIANT_BYTE_INDEX] &= VARIANT_MASK;  // 清除变体
+        randomBytes[VARIANT_BYTE_INDEX] |= (byte) RFC_4122_VARIANT;  // 设置变体为 RFC 4122
 
         // 转换为 UUID 字符串
         long mostSignificantBits = 0;
         long leastSignificantBits = 0;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < UUID_HIGH_BYTES_END; i++) {
             mostSignificantBits = (mostSignificantBits << 8) | (randomBytes[i] & 0xff);
         }
-        for (int i = 8; i < 16; i++) {
+        for (int i = UUID_HIGH_BYTES_END; i < UUID_BYTE_LENGTH; i++) {
             leastSignificantBits = (leastSignificantBits << 8) | (randomBytes[i] & 0xff);
         }
 
         UUID uuid = new UUID(mostSignificantBits, leastSignificantBits);
-        return uuid.toString().replace("-", "");
+        return uuid.toString().replace(UUID_DASH, "");
     }
 
     /**

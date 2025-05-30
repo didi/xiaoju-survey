@@ -8,6 +8,7 @@ import com.qiniu.util.Auth;
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.exception.FileException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.StringUtils;
 
@@ -22,6 +23,7 @@ public class QiniuYunConfig {
     private QiniuYunProperties qiniuYunProperties;
 
     @Bean
+    @ConditionalOnExpression("'${xiaoju.survey.file.provider}' == 'qiniu_oss' || '${xiaoju.survey.file.qiniu-yun.enabled}' == 'true'")
     public Auth getAuth() {
         if (Objects.isNull(qiniuYunProperties)) {
             throw new FileException("QiniuYun OSS 实例化失败：配置参数为空", RespErrorCode.OSS_CLIENT_ERROR.getCode());
@@ -49,6 +51,7 @@ public class QiniuYunConfig {
     }
 
     @Bean
+    @ConditionalOnExpression("'${xiaoju.survey.file.provider}' == 'qiniu_oss' || '${xiaoju.survey.file.qiniu-yun.enabled}' == 'true'")
     public UploadManager getUploadManager() {
         return new UploadManager(getConfiguration());
     }

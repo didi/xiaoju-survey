@@ -68,7 +68,7 @@ public class FileController {
      * @return 文件的访问链接
      */
     @GetMapping("/getUrl")
-    public RpcResult<String> getUrl(@RequestParam("channel") String channel, @RequestParam("key") String key) {
+    public RpcResult<String> getUrl(@RequestParam(value = "channel", required = false) String channel, @RequestParam("key") String key) {
         if (!StringUtils.hasText(key)) {
             throw new FileException("文件唯一标识符为空", RespErrorCode.UPLOAD_FILE_ERROR.getCode());
         }

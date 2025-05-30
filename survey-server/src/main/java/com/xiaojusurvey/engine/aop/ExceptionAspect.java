@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.aop;
 
 import com.xiaojusurvey.engine.common.exception.DaoException;
+import com.xiaojusurvey.engine.common.exception.FileException;
 import com.xiaojusurvey.engine.common.exception.ServiceException;
 import com.xiaojusurvey.engine.common.util.RpcResultUtil;
 import lombok.extern.log4j.Log4j2;
@@ -27,8 +28,8 @@ public class ExceptionAspect {
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) {
         try {
             return proceedingJoinPoint.proceed();
-        } catch (DaoException | ServiceException e) {
-            log.error("dao or service error：", e);
+        } catch (DaoException | ServiceException | FileException e) {
+            log.error("dao or service or file error：", e);
             return RpcResultUtil.createFailedResult(e.getCode(), e.getErrorMsg());
         } catch (Throwable t) {
             log.error("unkown error:", t);

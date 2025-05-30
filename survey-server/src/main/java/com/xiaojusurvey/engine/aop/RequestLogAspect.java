@@ -98,7 +98,8 @@ public class RequestLogAspect {
      * @return 方法参数及其值
      */
     private Map<String, Object> getRequestParams(ProceedingJoinPoint joinPoint) {
-        Map<String, Object> requestParams = new HashMap<>();
+        // 预估计初始容量 (通常包含"query"和"method"两个键)
+        Map<String, Object> requestParams = new HashMap<>(4);
         // 1. 获取URL参数
         Map<String, String[]> parameterMap = request.getParameterMap();
         if (!parameterMap.isEmpty()) {
@@ -109,7 +110,8 @@ public class RequestLogAspect {
         String[] parameterNames = signature.getParameterNames();
         Object[] args = joinPoint.getArgs();
         if (parameterNames != null && parameterNames.length > 0) {
-            Map<String, Object> methodParams = new HashMap<>();
+            // 使用参数数量计算初始容量，添加7以避免扩容
+            Map<String, Object> methodParams = new HashMap<>(parameterNames.length + 7);
             for (int i = 0; i < parameterNames.length; i++) {
                 methodParams.put(parameterNames[i], args[i]);
             }

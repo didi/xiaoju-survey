@@ -44,6 +44,16 @@ public class TraceIdGeneratorUtil {
         return processedIp + timestamp + countStr + processIdPart;
     }
 
+    private static final String IPV6_COMPRESSED_MARKER = "::";
+    private static final String IPV6_PREFIX = "::ffff:";
+    private static final String IPV6_LOCALHOST = "::1";
+    private static final String IPV4_SEPARATOR = "\\.";
+    private static final String IPV6_SEPARATOR = ":";
+    private static final String IPV4_FORMAT = "%02x";
+    private static final String IPV6_FORMAT = "%04x";
+    private static final int IPV6_RADIX = 16;
+
+
     /**
      * 处理IP地址
      *
@@ -56,27 +66,27 @@ public class TraceIdGeneratorUtil {
         }
 
         // 处理IPv4和IPv6地址
-        ip = ip.replace("::ffff:", "").replace("::1", "");
+        ip = ip.replace(IPV6_PREFIX, "").replace(IPV6_LOCALHOST, "");
 
-        if (ip.contains(":")) {
+        if (ip.contains(IPV6_SEPARATOR)) {
             // 处理IPv6
-            String[] segments = ip.split(":");
+            String[] segments = ip.split(IPV6_SEPARATOR);
             StringBuilder sb = new StringBuilder();
             for (String segment : segments) {
                 if (!segment.isEmpty()) {
-                    int value = Integer.parseInt(segment, 16);
-                    sb.append(String.format("%04x", value));
+                    int value = Integer.parseInt(segment, IPV6_RADIX);
+                    sb.append(String.format(IPV6_FORMAT, value));
                 }
             }
             return sb.toString();
         } else {
             // 处理IPv4
-            String[] parts = ip.split("\\.");
+            String[] parts = ip.split(IPV4_SEPARATOR);
             StringBuilder sb = new StringBuilder();
             for (String part : parts) {
                 if (!part.isEmpty()) {
                     int value = Integer.parseInt(part);
-                    sb.append(String.format("%02x", value));
+                    sb.append(String.format(IPV4_FORMAT, value));
                 }
             }
             return sb.toString();

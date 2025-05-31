@@ -17,7 +17,7 @@ import static com.xiaojusurvey.engine.extensions.utils.SecurityUtils.isPrimitive
  * 安全场景
  */
 @Slf4j
-public abstract class SecurityScenario {
+public abstract class BaseSecurityScenario {
     /**
      * 递归对象，并对其中的String进行指定操作dataSecurityFunction（加密、解密、脱敏）
      * <p>对于{@link Collection}类型数据，支持：{@link ArrayList}、{@link LinkedList}、{@link TreeSet}、{@link HashSet}</p>
@@ -83,9 +83,15 @@ public abstract class SecurityScenario {
             }
             return;
         }
+        complexObjectOperationProperties(obj, str, dataSecurityFunction);
+    }
 
+    /**
+     * 复杂对象的{@link BaseSecurityScenario#securityOperationProperties(Object, String, DataSecurityFunction)}
+     */
+    private static void complexObjectOperationProperties(Object obj, String str, DataSecurityFunction dataSecurityFunction) {
         // 如果对象为复杂对象，则对于每个属性都遍历一次
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = obj.getClass().getDeclaredFields();
         for (Field field : fields) {
             try {
                 field.setAccessible(true);

@@ -1,9 +1,9 @@
 package com.xiaojusurvey.engine.extensions.security.scenario.impl;
 
 import com.xiaojusurvey.engine.common.enums.SecurityScenarioEnum;
+import com.xiaojusurvey.engine.extensions.security.scenario.BaseSecurityScenario;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataSecurityInvocation;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataWrapper;
-import com.xiaojusurvey.engine.extensions.security.scenario.SecurityScenario;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 @Component
 @Slf4j
-public class DataWarehousing extends SecurityScenario {
+public class DataWarehousing extends BaseSecurityScenario {
     /**
      * 数据加密
      */

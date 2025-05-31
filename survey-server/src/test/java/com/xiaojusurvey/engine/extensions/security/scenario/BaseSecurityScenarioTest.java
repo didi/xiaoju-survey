@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 @SpringBootTest
 @Slf4j
-public class SecurityScenarioTest {
+public class BaseSecurityScenarioTest {
 
     /**
      * 敏感数据

@@ -61,46 +61,8 @@ public class SecurityUtils {
      */
     private static final ThreadLocal<Cipher> DECRYPT_CIPHER_THREAD_LOCAL = new ThreadLocal<>();
 
-    /**
-     * 获取线程安全的加密Cipher
-     *
-     * @param secretKey 密钥
-     * @return
-     * @throws Exception
-     */
-    private static Cipher getEncryptCipher(String secretKey) throws Exception {
-        Cipher cipher = ENCRYPT_CIPHER_THREAD_LOCAL.get();
-        if (cipher == null) {
-            // 获取 Cipher 实例，用于执行加密操作
-            cipher = Cipher.getInstance(ALGORITHM);
-            // 获取密钥规范
-            SecretKeySpec secretKeySpec = getSecretKeySpec(secretKey);
-            // 初始化 Cipher 为加密模式，并传入生成的密钥
-            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(getIV()));
-            ENCRYPT_CIPHER_THREAD_LOCAL.set(cipher);
-        }
-        return cipher;
-    }
-
-    /**
-     * 获取线程安全的解密Cipher
-     *
-     * @param secretKey 密钥
-     * @return
-     */
-    private static Cipher getDecryptCipher(String secretKey) throws Exception {
-        Cipher cipher = DECRYPT_CIPHER_THREAD_LOCAL.get();
-        if (cipher == null) {
-            // 获取 Cipher 实例，用于执行加密操作
-            cipher = Cipher.getInstance(ALGORITHM);
-            // 获取密钥规范
-            SecretKeySpec secretKeySpec = getSecretKeySpec(secretKey);
-            // 初始化 Cipher 为加密模式，并传入生成的密钥
-            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(getIV()));
-            DECRYPT_CIPHER_THREAD_LOCAL.set(cipher);
-        }
-        return cipher;
-    }
+    private static final Integer SECRET_KEY_LENGTH = 16;
+    private static final Integer TOW_INT = 2;
 
     /**
      * 检查数据是否敏感
@@ -121,13 +83,67 @@ public class SecurityUtils {
         return PHONE_PATTERN.asPredicate().test(str) || ID_CARD_PATTERN.asPredicate().test(str) || ADDRESS_PATTERN.asPredicate().test(str) || EMAIL_PATTERN.asPredicate().test(str) || GENDER_LIST.contains(str);
     }
 
+    /**
+     * 获取线程安全的加密Cipher
+     *
+     * @param secretKey 密钥
+     * @return
+     * @throws Exception
+     */
+    private static Cipher getEncryptCipher(String secretKey) throws Exception {
+        Cipher cipher = ENCRYPT_CIPHER_THREAD_LOCAL.get();
+        if (cipher == null) {
+            // 获取 Cipher 实例，用于执行加密操作
+            cipher = Cipher.getInstance(ALGORITHM);
+            // 获取密钥规范
+            SecretKeySpec secretKeySpec = getSecretKeySpec(secretKey);
+            // 初始化 Cipher 为加密模式，并传入生成的密钥
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(getIv()));
+            ENCRYPT_CIPHER_THREAD_LOCAL.set(cipher);
+        }
+        return cipher;
+    }
+
+    /**
+     * 获取线程安全的解密Cipher
+     *
+     * @param secretKey 密钥
+     * @return
+     */
+    private static Cipher getDecryptCipher(String secretKey) throws Exception {
+        Cipher cipher = DECRYPT_CIPHER_THREAD_LOCAL.get();
+        if (cipher == null) {
+            // 获取 Cipher 实例，用于执行加密操作
+            cipher = Cipher.getInstance(ALGORITHM);
+            // 获取密钥规范
+            SecretKeySpec secretKeySpec = getSecretKeySpec(secretKey);
+            // 初始化 Cipher 为加密模式，并传入生成的密钥
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(getIv()));
+            DECRYPT_CIPHER_THREAD_LOCAL.set(cipher);
+        }
+        return cipher;
+    }
+
     /***
      * 初始化向量（IV）用于增加加密和解密的安全性
      * @return 初始化向量
      */
-    public static byte[] getIV() {
+    public static byte[] getIv() {
         String str = getSecretKey();
         return str.getBytes(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 获取加密Key
+     *
+     * @param key 密钥
+     * @return
+     */
+    public static SecretKeySpec getSecretKeySpec(String key) {
+        if (!StringUtils.hasText(key)) {
+            return null;
+        }
+        return new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
     }
 
     /**
@@ -146,27 +162,14 @@ public class SecurityUtils {
         if (!StringUtils.hasText(aesSecretKey)) {
             aesSecretKey = "EncryptSecretKey";
         }
-        if (aesSecretKey.length() < 16) {
-            log.warn("密钥长度为{}，小于16字节，将返回默认密钥", aesSecretKey.length());
+        if (aesSecretKey.length() < SECRET_KEY_LENGTH) {
+            log.warn("密钥长度为{}，小于{}字节，将返回默认密钥", aesSecretKey.length(), SECRET_KEY_LENGTH);
             aesSecretKey = "EncryptSecretKey";
-        } else if (aesSecretKey.length() > 16) {
-            log.warn("密钥长度为{}，大于16字节，将取前16字节作为密钥", aesSecretKey.length());
-            aesSecretKey = aesSecretKey.substring(0, 16);
+        } else if (aesSecretKey.length() > SECRET_KEY_LENGTH) {
+            log.warn("密钥长度为{}，大于{}字节，将取前16字节作为密钥", aesSecretKey.length(), SECRET_KEY_LENGTH);
+            aesSecretKey = aesSecretKey.substring(0, SECRET_KEY_LENGTH);
         }
         return aesSecretKey;
-    }
-
-    /**
-     * 获取加密Key
-     *
-     * @param key 密钥
-     * @return
-     */
-    public static SecretKeySpec getSecretKeySpec(String key) {
-        if (!StringUtils.hasText(key)) {
-            return null;
-        }
-        return new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
     }
 
     /**
@@ -210,6 +213,8 @@ public class SecurityUtils {
         } catch (Exception e) {
             log.error("未知错误 ", e);
             return value;
+        } finally {
+            ENCRYPT_CIPHER_THREAD_LOCAL.remove();
         }
     }
 
@@ -249,6 +254,8 @@ public class SecurityUtils {
         } catch (Exception e) {
             log.error("未知错误 ", e);
             return value;
+        } finally {
+            DECRYPT_CIPHER_THREAD_LOCAL.remove();
         }
     }
 
@@ -279,7 +286,7 @@ public class SecurityUtils {
         }
         if (!StringUtils.hasText(str) || str.length() == 1) {
             return placeHolder;
-        } else if (str.length() == 2) {
+        } else if (str.length() == TOW_INT) {
             return str.charAt(0) + placeHolder;
         } else {
             return str.charAt(0) + placeHolder + placeHolder + placeHolder + str.charAt(str.length() - 1);

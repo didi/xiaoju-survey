@@ -1,9 +1,9 @@
 package com.xiaojusurvey.engine.extensions.security.scenario.aop;
 
 import com.xiaojusurvey.engine.common.enums.SecurityScenarioEnum;
+import com.xiaojusurvey.engine.extensions.security.scenario.BaseSecurityScenario;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataSecurityInvocation;
 import com.xiaojusurvey.engine.extensions.security.scenario.DataWrapper;
-import com.xiaojusurvey.engine.extensions.security.scenario.SecurityScenario;
 import com.xiaojusurvey.engine.extensions.security.scenario.annotation.DataSecurity;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -27,9 +27,9 @@ import java.util.Objects;
 @Slf4j
 public class SecurityScenarioAspect implements InitializingBean {
 
-    private final Map<SecurityScenarioEnum, SecurityScenario> securityScenarioMap = new LinkedHashMap<>();
+    private final Map<SecurityScenarioEnum, BaseSecurityScenario> securityScenarioMap = new LinkedHashMap<>();
     @Resource
-    private List<SecurityScenario> securityScenarios;
+    private List<BaseSecurityScenario> securityScenarios;
 
     @Pointcut("@annotation(com.xiaojusurvey.engine.extensions.security.scenario.annotation.DataSecurity)")
     public void pointcut() {
@@ -44,17 +44,17 @@ public class SecurityScenarioAspect implements InitializingBean {
                 && Objects.nonNull(annotation.securityScenario())
                 && securityScenarioMap.containsKey(annotation.securityScenario())) {
             // 获取指定场景的处理器
-            SecurityScenario securityScenario = securityScenarioMap.get(annotation.securityScenario());
+            BaseSecurityScenario baseSecurityScenario = securityScenarioMap.get(annotation.securityScenario());
             DataSecurityInvocation invocation = new DataSecurityInvocation(method.getName(), method.getParameterTypes(), pjp.getArgs(), annotation);
             // 方法进入前处理
             DataWrapper dataWrapper = DataWrapper.builder().value(invocation.getArguments()).build();
-            securityScenario.before(invocation, dataWrapper);
+            baseSecurityScenario.before(invocation, dataWrapper);
             invocation.setArguments((Object[]) dataWrapper.getValue());
             // 方法执行
             Object proceed = pjp.proceed(pjp.getArgs());
             DataWrapper proceedWrapper = DataWrapper.builder().value(proceed).build();
             // 方法结束处理
-            securityScenario.after(invocation, proceedWrapper);
+            baseSecurityScenario.after(invocation, proceedWrapper);
             return proceedWrapper.getValue();
         }
         return pjp.proceed();

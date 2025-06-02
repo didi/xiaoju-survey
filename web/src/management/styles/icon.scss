@@ -1,4 +1,3 @@
-
 @font-face {
   font-family: 'iconfont';  /* Project id 4263849 */
   src: url('//at.alicdn.com/t/c/font_4263849_tg31n0imr7.woff2?t=1737635806358') format('woff2'),
@@ -140,6 +139,10 @@
 
 .icon-tuanduikongjian::before {
   content: '\e6ec';
+}
+
+.icon-icon_shanchu::before {
+  content: '\e634';
 }
 
 .icon-shujuliebiao:before {

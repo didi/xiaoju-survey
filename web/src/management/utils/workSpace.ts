@@ -65,9 +65,19 @@ export type GroupItem = {
   surveyTotal: number
 }
 
+// 回收站问卷类型
+export type RecycleBinItem = {
+  _id: string
+  title: string
+  createdAt: string
+  deletedAt: string
+  ownerId: string
+}
+
 export enum MenuType {
   PersonalGroup = 'personalGroup',
-  SpaceGroup = 'spaceGroup'
+  SpaceGroup = 'spaceGroup',
+  RecycleBin = 'recycleBin'
 }
 
 export enum UserRole {

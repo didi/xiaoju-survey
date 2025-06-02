@@ -116,11 +116,7 @@ export class SurveyMetaController {
         await this.collaboratorService.getCollaboratorListByUserId({ userId });
     }
     if (isRecycleBin) {
-      cooperationList = 
-        await this.collaboratorService.getManageListByUserId({ userId });
-    }
-    if (isRecycleBin) {
-      cooperationList = 
+      cooperationList =
         await this.collaboratorService.getManageListByUserId({ userId });
     }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {

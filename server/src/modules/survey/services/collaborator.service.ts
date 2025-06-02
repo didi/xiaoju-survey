@@ -172,20 +172,7 @@ export class CollaboratorService {
       },
     });
   }
-  
-  getManageListByUserId({ userId }) {
-    return this.collaboratorRepository.find({
-      where: {
-        userId,
-        permissions: {
-          $elemMatch: {
-            $eq: SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
-          },
-        },
-      },
-    });
-  }
-  
+
   getManageListByUserId({ userId }) {
     return this.collaboratorRepository.find({
       where: {

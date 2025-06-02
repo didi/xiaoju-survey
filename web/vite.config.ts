@@ -12,8 +12,6 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-import './report'
-
 const isProd = process.env.NODE_ENV === 'production'
 
 const pages = createPages([
@@ -60,7 +58,7 @@ export default defineConfig({
       '@wangeditor/editor-for-vue',
       'element-plus/es/components/*/style/index',
       'element-plus/dist/locale/zh-cn.mjs',
-      'clipboard',
+      'copy-to-clipboard',
       'qrcode',
       'moment',
       'moment/locale/zh-cn',

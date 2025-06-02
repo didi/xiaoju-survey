@@ -53,6 +53,6 @@ export class MaterialLoader extends ComponentLoader {
   }
 }
 
-const quetsionLoader = new MaterialLoader()
+const questionLoader = new MaterialLoader()
 
-export default quetsionLoader
+export default questionLoader

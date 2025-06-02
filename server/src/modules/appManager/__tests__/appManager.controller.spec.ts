@@ -4,7 +4,7 @@ import { AppManagerService } from '../services/appManager.service';
 import { Logger } from '@nestjs/common';
 // import { EXCEPTION_CODE } from '../../../enums/exceptionCode';
 // import { HttpException } from 'src/exceptions/httpException';
-import { APPList } from '../appConfg'
+import { APPList } from '../appConfg';
 
 describe('AppManagerController', () => {
   let controller: AppManagerController;
@@ -43,7 +43,8 @@ describe('AppManagerController', () => {
         appId: APPList[0].appId,
         appSecret: APPList[0].appSecret,
       };
-      const mockToken = 'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM';
+      const mockToken =
+        'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM';
 
       // Mock service response
       mockAppManagerService.generateToken.mockResolvedValue(mockToken);
@@ -68,7 +69,8 @@ describe('AppManagerController', () => {
       // 准备测试数据
       const mockBody = {
         appId: '2bAppid',
-        appToken: 'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
+        appToken:
+          'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM',
       };
 
       // Mock service response
@@ -96,10 +98,8 @@ describe('AppManagerController', () => {
       };
 
       // 执行测试
-     await expect(controller.verifySignature(mockBody)).rejects.toThrow(
-        Error,
-      );
-    //   expect(service.checkAppManager).not.toHaveBeenCalled();
+      await expect(controller.verifySignature(mockBody)).rejects.toThrow(Error);
+      //   expect(service.checkAppManager).not.toHaveBeenCalled();
     });
   });
-}); 
+});

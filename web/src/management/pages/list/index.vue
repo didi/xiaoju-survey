@@ -94,6 +94,56 @@
       :visible="showGroupModify"
       @on-close-codify="onCloseGroupModify"
     />
+    <el-dialog
+      title="请选择创建方式"
+      v-model="showCreateMethod"
+      :before-close="handleCloseCreateDialog"
+      :width="515"
+    >
+      <div class="create-method-list">
+        <div class="create-method-item" @click="toCreate">
+          <div class="icon">
+            <i class="iconfont icon-kongbaichuangjian"></i>
+          </div>
+          <span>空白创建</span>
+        </div>
+        <div class="create-method-item" @click="openTextImport">
+          <div class="icon">
+            <i class="iconfont icon-wenbendaoru"></i>
+          </div>
+          <span>文本导入</span>
+        </div>
+        <div class="create-method-item" @click="commingSoon">
+          <div class="icon">
+            <i class="iconfont icon-AIshengcheng"></i>
+          </div>
+          <span>AI生成</span>
+        </div>
+        <div class="create-method-item" @click="commingSoon">
+          <div class="icon">
+            <i class="iconfont icon-Exceldaoru"></i>
+          </div>
+          <span>Excel导入</span>
+        </div>
+      </div>
+    </el-dialog>
+    <div class="fiexed-text-import-wrapper" v-if="showTextImport">
+      <div class="text-import-header">
+        <div class="return no-logo-return icon-fanhui" @click="showTextImport = false">返回</div>
+        <div class="title">文本导入</div>
+        <el-button type="primary" class="publish-btn" @click="onShowCreateForm">
+          创建
+        </el-button>
+      </div>
+      <TextImport @change="onTextImportChange"></TextImport>
+    </div>
+    <el-dialog
+      v-model="showCreateForm"
+      title="确定创建"
+      width="500"
+    >
+      <CreateForm @cancel="showCreateForm = false" @confirm="onConfirmCreate"></CreateForm>
+    </el-dialog>
   </div>
 </template>
 
@@ -108,13 +158,17 @@ import RecycleBinList from './components/RecycleBinList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
-import TopNav from '@/management/components/TopNav.vue'
-import { MenuType } from '@/management/utils/workSpace'
+import TextImport from './components/TextImport.vue'
 
+import TopNav from '@/management/components/TopNav.vue'
+import CreateForm from '@/management/components/CreateForm.vue';
+import { MenuType } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import { useRecycleBinStore } from '@/management/stores/recycleBin'
 import { type IWorkspace } from '@/management/utils/workSpace'
+import { ElMessage } from 'element-plus'
+import { createSurvey } from '@/management/api/survey'
 
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
@@ -160,7 +214,11 @@ const recycleBinLoading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
-
+const showCreateMethod = ref(false)
+const showTextImport = ref(false)
+const showCreateForm = ref(false)
+const questionList = ref<Array<any>>([])
+const createMethod = ref('')
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
   workSpaceStore.changeWorkSpace('')
@@ -299,7 +357,71 @@ const onGroupCreate = () => {
 }
 
 const onCreate = () => {
+  showCreateMethod.value = true
+}
+
+const handleCloseCreateDialog = () => {
+  showCreateMethod.value = false
+}
+
+const toCreate = () => {
   router.push('/create')
+}
+
+const openTextImport = () => {
+  showCreateMethod.value = false;
+  showTextImport.value = true;
+  createMethod.value = 'textImport'
+}
+
+const commingSoon = () => {
+  ElMessage.warning('功能暂未开放，敬请期待～')
+}
+
+const onShowCreateForm = () => {
+  if (questionList.value.length <= 0) {
+    ElMessage({
+      type: 'error',
+      message: '请导入题目'
+    })
+    return
+  }
+  showCreateForm.value = true
+}
+
+const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
+  switch(createMethod.value) {
+    case 'textImport':{
+      const payload: any = {
+        ...formValue,
+        createMethod: createMethod.value,
+        questionList: questionList.value,
+      }
+      if (workSpaceId.value) {
+        payload.workspaceId = workSpaceId.value
+      }
+      const res: any = await createSurvey(payload)
+      if (res?.code === 200 && res?.data?.id) {
+        const id = res.data.id
+        router.push({
+          name: 'QuestionEditIndex',
+          params: {
+            id
+          }
+        })
+        showCreateForm.value = false
+      } else {
+        ElMessage.error(res?.errmsg || '创建失败')
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+const onTextImportChange = (newQuestionList: Array<any>) => {
+  questionList.value = newQuestionList
 }
 </script>
 
@@ -345,6 +467,78 @@ const onCreate = () => {
           margin-right: 6px;
         }
       }
+    }
+  }
+}
+.create-method-list {
+  display: grid;
+  grid-template-columns: 210px 210px;
+  grid-template-rows: 60px 60px;
+  grid-gap: 20px;
+  width: 100%;
+  padding: 10px 20px 30px 20px;
+  .create-method-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+    background-color: #f6f7f9;
+    border-radius: 4px;
+    cursor: pointer;
+    .icon {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      background-color: #fff;
+      margin-right: 15px;
+      box-shadow: 1px 1px 5px 0 $primary-color;
+      .iconfont {
+        color: $primary-color;
+      }
+    }
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+.fiexed-text-import-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  .text-import-header {
+    width: 100%;
+    padding: 0 30px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px 0 rgba(74, 76, 91, 0.08);
+    .return {
+      margin-left: 20px;
+      line-height: 56px;
+      font-size: 16px;
+      color: #6e707c;
+      position: relative;
+      cursor: pointer;
+      &::before {
+        position: absolute;
+        left: -20px;
+        bottom: 2px;
+        font-weight: 600;
+        content: '<';
+      }
+    }
+    .title {
+      font-size: 16px;
     }
   }
 }

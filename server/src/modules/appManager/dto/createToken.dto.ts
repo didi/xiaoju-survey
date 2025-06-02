@@ -6,12 +6,12 @@ export class CreateTokenDto {
   appId: string;
 
   @ApiProperty({ description: 'appSecret' })
-  appSecret: string; 
+  appSecret: string;
 
   static validate(data) {
     return Joi.object({
-        appId: Joi.string(),
-        appSecret: Joi.string(),
+      appId: Joi.string(),
+      appSecret: Joi.string(),
     }).validate(data, { allowUnknown: true });
   }
 }

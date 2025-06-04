@@ -28,7 +28,7 @@ export class ChannelService {
   ) {}
 
   async create(channel: Partial<Channel>): Promise<Channel> {
-    channel.status = CHANNEL_STATUS.RECYCLING
+    channel.status = CHANNEL_STATUS.RECYCLING;
     const newChannel = this.channelRepository.create({
       ...channel,
     });
@@ -50,12 +50,12 @@ export class ChannelService {
   }: {
     id: string;
     channel: Partial<Channel>;
-    operatorId: string,
+    operatorId: string;
   }) {
     return this.channelRepository.update(id, {
       name: channel.name,
       operatorId,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     });
   }
 
@@ -66,7 +66,7 @@ export class ChannelService {
   }: {
     id: string;
     status: CHANNEL_STATUS;
-    operatorId: string,
+    operatorId: string;
   }) {
     const channel = await this.channelRepository.findOne({
       where: {
@@ -77,21 +77,15 @@ export class ChannelService {
         },
       },
     });
-    if(!channel) {
-      throw new HttpException(
-        '渠道不存在',
-        EXCEPTION_CODE.PARAMETER_ERROR,
-      );
+    if (!channel) {
+      throw new HttpException('渠道不存在', EXCEPTION_CODE.PARAMETER_ERROR);
     }
     if (channel?.status === status) {
-      throw new HttpException(
-        '状态操作异常',
-        EXCEPTION_CODE.PARAMETER_ERROR,
-      );
+      throw new HttpException('状态操作异常', EXCEPTION_CODE.PARAMETER_ERROR);
     } else {
-      channel.status = status
-      channel.operatorId = operatorId
-      channel.updatedAt = new Date()
+      channel.status = status;
+      channel.operatorId = operatorId;
+      channel.updatedAt = new Date();
 
       return this.channelRepository.save(channel);
     }
@@ -114,7 +108,7 @@ export class ChannelService {
       workspaceRes,
     };
   }
-  
+
   // 用户下的所有渠道
   async findAllByUserId(userId: string) {
     return await this.channelRepository.find({
@@ -127,13 +121,7 @@ export class ChannelService {
       order: {
         _id: -1,
       },
-      select: [
-        '_id',
-        'status',
-        'name',
-        'ownerId',
-        'createdAt',
-      ],
+      select: ['_id', 'status', 'name', 'ownerId', 'createdAt'],
     });
   }
 
@@ -149,13 +137,7 @@ export class ChannelService {
       order: {
         _id: -1,
       },
-      select: [
-        '_id',
-        'status',
-        'name',
-        'ownerId',
-        'createdAt',
-      ],
+      select: ['_id', 'status', 'name', 'ownerId', 'createdAt'],
     });
   }
   // 分页查询

@@ -33,7 +33,8 @@ describe('OpenAuthGuard', () => {
 
   describe('canActivate', () => {
     it('should return true for valid credentials', async () => {
-      const validateToken = 'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM';
+      const validateToken =
+        'eyJhbGciOiJIUzI1NiJ9.MmJBcHBpZA.0y_-HxkRGCDEFNkdQ1xsi41mH5u8J22836I5BWhibdM';
       const mockContext = {
         switchToHttp: () => ({
           getRequest: () => ({
@@ -63,7 +64,10 @@ describe('OpenAuthGuard', () => {
       } as ExecutionContext;
 
       await expect(guard.canActivate(mockContext)).rejects.toThrow(
-        new HttpException('Missing required parameters', EXCEPTION_CODE.PARAMETER_ERROR)
+        new HttpException(
+          'Missing required parameters',
+          EXCEPTION_CODE.PARAMETER_ERROR,
+        ),
       );
       expect(appManagerService.checkAppManager).not.toHaveBeenCalled();
     });
@@ -80,10 +84,12 @@ describe('OpenAuthGuard', () => {
         }),
       } as ExecutionContext;
 
-      jest.spyOn(appManagerService, 'checkAppManager').mockResolvedValueOnce(false);
+      jest
+        .spyOn(appManagerService, 'checkAppManager')
+        .mockResolvedValueOnce(false);
 
       await expect(guard.canActivate(mockContext)).rejects.toThrow(
-        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR)
+        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR),
       );
       expect(appManagerService.checkAppManager).not.toHaveBeenCalled();
     });
@@ -100,11 +106,13 @@ describe('OpenAuthGuard', () => {
         }),
       } as ExecutionContext;
 
-      jest.spyOn(appManagerService, 'checkAppManager').mockRejectedValueOnce(new Error('Test error'));
+      jest
+        .spyOn(appManagerService, 'checkAppManager')
+        .mockRejectedValueOnce(new Error('Test error'));
 
       await expect(guard.canActivate(mockContext)).rejects.toThrow(
-        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR)
+        new HttpException('Invalid appId', EXCEPTION_CODE.PARAMETER_ERROR),
       );
     });
   });
-}); 
+});

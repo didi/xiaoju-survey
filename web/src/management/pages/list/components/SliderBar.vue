@@ -19,7 +19,7 @@
         <template #title>
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
+            <span class="title-text">{{ menu.name }}</span>
           </div>
         </template>
       </el-menu-item>
@@ -32,7 +32,7 @@
         <template #title>
           <div class="title-content sub-title" @click.stop="handleMenu(menu.id)">
             <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
+            <span class="title-text">{{ menu.name }}</span>
           </div>
         </template>
         <el-menu-item
@@ -48,7 +48,7 @@
         </el-menu-item>
       </el-sub-menu>
       <el-menu-item
-        v-else
+        v-if="menu.id === MenuType.RecycleBin"
         :class="['bottom', activeValue == menu.id ? 'check-item' : '']"
         :index="menu.id.toString()"
         class="recycle-bin-item"
@@ -56,13 +56,15 @@
         <template #title>
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
+            <span class="title-text">{{ menu.name }}</span>
+            <span class="title-total">{{ removedTotal }}</span>
           </div>
         </template>
       </el-menu-item>
     </template>
   </el-menu>
 </template>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { type MenuItem } from '@/management/utils/workSpace'
@@ -70,14 +72,16 @@ import { MenuType } from '@/management/utils/workSpace'
 const menuRef = ref()
 const props = withDefaults(
   defineProps<{
-    menus: Array<MenuItem>
-    activeValue: string
+    menus: Array<MenuItem>;
+    activeValue: string;
+    removedTotal: number;
   }>(),
   {
     menus: () => [],
-    activeValue: MenuType.PersonalGroup
+    activeValue: MenuType.PersonalGroup,
+    removedTotal: 0
   }
-)
+);
 
 const emit = defineEmits(['select'])
 const handleMenu = (id: string) => {
@@ -112,7 +116,6 @@ const handleMenu = (id: string) => {
   box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  
   :deep(.el-menu-item) {
     width: 200px;
     height: 36px;
@@ -145,12 +148,7 @@ const handleMenu = (id: string) => {
       align-items: center;
       font-weight: 400;
       font-size: 14px;
-    }
-
-    .title-box {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
     }
 
     .title-text {
@@ -158,7 +156,8 @@ const handleMenu = (id: string) => {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 12px;
+      font-size: 14px;
+      flex: 1; /* 添加此行，使标题文字占据剩余空间 */
     }
 
     .title-total {
@@ -166,11 +165,16 @@ const handleMenu = (id: string) => {
       color: #92949d;
       text-align: right;
       font-weight: 400;
+      margin-left: auto; /* 添加此行，将数字推向最右边 */
+      width: 40px; /* 添加此行，设置数字的固定宽度 */
     }
-  }
 
-  .my-space-item {
-    font-size: 32px;
+    .title-box {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   }
 
   .recycle-bin-item {
@@ -179,13 +183,11 @@ const handleMenu = (id: string) => {
       font-size: 14px;
     }
   }
-  
   .iconfont {
     font-size: 14px;
     margin-right: 10px;
     color: #faa600;
   }
-  
   .check-item {
     background: #fef6e6 100%;
   }

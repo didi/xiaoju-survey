@@ -130,10 +130,15 @@ export class SurveyMetaController {
       groupId,
       surveyIdList,
     });
+    const removedCount = await this.surveyMetaService.countRemovedSurveyMeta({
+      userId,
+      surveyIdList,
+    });
     return {
       code: 200,
       data: {
         count: data.count,
+        removedCount: removedCount, 
         data: data.data.map((item) => {
           const fmt = 'YYYY-MM-DD HH:mm:ss';
           if (!item.surveyType) {

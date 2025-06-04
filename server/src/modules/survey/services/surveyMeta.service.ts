@@ -371,4 +371,47 @@ export class SurveyMetaService {
     const total = await this.surveyRepository.count(query);
     return total;
   }
+
+  async countRemovedSurveyMeta({
+    userId,
+    surveyIdList,
+  }: {
+    userId: string;
+    surveyIdList?: Array<string>;
+  }) {
+    const query: ObjectLiteral = {};
+    if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+      query.$or = [];
+      query.$or.push({
+        _id: {
+          $in: surveyIdList.map((item) => new ObjectId(item)),
+        },
+      });
+    }
+
+    const otherQuery: ObjectLiteral = {
+      ownerId: userId,
+      isDeleted: {
+        $ne: true,
+      },
+    };
+    otherQuery.$and = [
+      {
+        workspaceId: { $exists: false },
+      },
+      {
+        workspaceId: null,
+      },
+      {   
+        "curStatus.status": { $eq: RECORD_STATUS.REMOVED },
+      }
+    ];
+    if (Array.isArray(query.$or)) {
+      query.$or.push(otherQuery);
+    } else {
+      Object.assign(query, otherQuery);
+    }
+    const total = await this.surveyRepository.count(query);
+    return total;
+  }
 }

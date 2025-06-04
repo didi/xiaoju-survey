@@ -116,6 +116,7 @@ function useSearchSurvey() {
 export const useSurveyListStore = defineStore('surveyList', () => {
   const surveyList = ref([])
   const surveyTotal = ref(0)
+  const removedTotal = ref(0)
 
   const {
     searchVal,
@@ -168,6 +169,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
       if (res.code === CODE_MAP.SUCCESS) {
         surveyList.value = res.data.data
         surveyTotal.value = res.data.count
+        removedTotal.value = res.data.removedCount
       } else {
         ElMessage.error(res.errmsg)
       }
@@ -180,6 +182,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   return {
     surveyList,
     surveyTotal,
+    removedTotal,
     searchVal,
     selectValueMap,
     buttonValueMap,

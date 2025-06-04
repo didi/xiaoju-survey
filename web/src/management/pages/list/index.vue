@@ -2,7 +2,7 @@
   <div class="question-list-root">
     <TopNav></TopNav>
     <div class="content-wrap">
-      <SliderBar :menus="spaceMenus" :activeValue="activeValue" @select="handleSpaceSelect" />
+      <SliderBar :menus="sliderBarProps.menus" :activeValue="sliderBarProps.activeValue" :removedTotal="sliderBarProps.removedTotal" @select="handleSpaceSelect" />
       <div class="list-content">
         <div class="top">
           <h2>
@@ -172,7 +172,16 @@ import { createSurvey } from '@/management/api/survey'
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
-const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
+const { surveyList, surveyTotal, removedTotal } = storeToRefs(surveyListStore)
+
+const sliderBarProps = computed(() => {
+  return {
+    menus: spaceMenus.value,
+    activeValue: activeValue.value,
+    removedTotal: removedTotal.value // 传递 removedTotal 参数
+  };
+});
+
 const {
   spaceMenus,
   workSpaceId,

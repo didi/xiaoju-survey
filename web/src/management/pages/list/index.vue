@@ -111,7 +111,7 @@
           </div>
           <span>AI生成</span>
         </div>
-        <div class="create-method-item" @click="commingSoon">
+        <div class="create-method-item" @click="openExcelImport">
           <div class="icon">
             <i class="iconfont icon-Exceldaoru"></i>
           </div>
@@ -136,6 +136,13 @@
     >
       <CreateForm @cancel="showCreateForm = false" @confirm="onConfirmCreate"></CreateForm>
     </el-dialog>
+    <ExcelImport
+      v-if="showExcelImport"
+      :visible="showExcelImport"
+      @on-close-excel-import="onCloseExcelImport"
+      @on-excel-upload-success="onExcelUploadSuccess"
+      @on-show-create-form-excel-import="onShowCreateFormExcelImport"
+    />
   </div>
 </template>
 
@@ -150,6 +157,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
+import ExcelImport from './components/ExcelImport.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
@@ -200,6 +208,7 @@ const spaceLoading = ref(false)
 const groupLoading = ref(false)
 const showCreateMethod = ref(false)
 const showTextImport = ref(false)
+const showExcelImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
@@ -362,6 +371,7 @@ const onShowCreateForm = () => {
 
 const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
   switch(createMethod.value) {
+    case 'ExcelImport':
     case 'textImport':{
       const payload: any = {
         ...formValue,
@@ -393,6 +403,24 @@ const onConfirmCreate = async (formValue: { title: string; remark?: string; surv
 
 const onTextImportChange = (newQuestionList: Array<any>) => {
   questionList.value = newQuestionList
+}
+
+const openExcelImport = () => {
+  showCreateMethod.value = false;
+  showExcelImport.value = true;
+  createMethod.value = 'ExcelImport'
+}
+
+const onCloseExcelImport = () => {
+  showExcelImport.value = false
+}
+
+const onExcelUploadSuccess = (newQuestionList: Array<any>) => {
+  questionList.value = newQuestionList
+}
+
+const onShowCreateFormExcelImport = () => {
+  showCreateForm.value = true
 }
 </script>
 

@@ -48,12 +48,15 @@ const showExample = ref(false)
 const questionList = reactive([] as Array<Record<string, any>>)
 
 const debouncedTransform = debounce(() => {
+  console.log('看看传进去了什么text.value:', JSON.parse(JSON.stringify(text.value)))
   if (questionList.length === 0) {
     questionList.push(...textToSchema(text.value))
+    // console.log('ListLength=0转换后的题目数据:', JSON.parse(JSON.stringify(questionList)))
     emit('change', [...questionList])
     return
   }
   questionList.splice(0, questionList.length, ...textToSchema(text.value))
+  // console.log('ListLength！=0转换后的题目数据:', JSON.parse(JSON.stringify(questionList)))
   emit('change', [...questionList])
 }, 500)
 

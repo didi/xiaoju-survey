@@ -15,6 +15,8 @@
         ]"
         :index="menu.id.toString()"
         v-if="!menu.children?.length"
+        :style="menu.name === '回收站' ?
+          { position: 'absolute', bottom: '0', width: '100%' } : {}"
       >
         <template #title>
           <div class="title-content">

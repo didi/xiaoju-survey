@@ -109,6 +109,11 @@ export class SurveyGroupController {
         surveyIdList,
         groupId: 'all',
       });
+    const removedSurveyTotal =
+      await this.surveyMetaService.countRemovedSurveyMeta({
+        userId,
+        surveyIdList,
+      });
     return {
       code: 200,
       data: {
@@ -124,6 +129,7 @@ export class SurveyGroupController {
         allList,
         unclassifiedSurveyTotal,
         allSurveyTotal,
+        removedSurveyTotal,
       },
     };
   }

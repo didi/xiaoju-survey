@@ -76,6 +76,34 @@ export class ResponseSchemaService {
     }
   }
 
+  async removeResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          curStatus: {status: RECORD_STATUS.REMOVED, date: Date.now()},
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
+
+  async restoreResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          curStatus: {status: RECORD_STATUS.EDITING, date: Date.now()},
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
+
   async deleteResponseSchema({ surveyPath }) {
     return this.responseSchemaRepository.updateOne(
       {

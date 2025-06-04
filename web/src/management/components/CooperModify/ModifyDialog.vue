@@ -180,7 +180,8 @@ const handleMemberSelect = (val: string, label: string) => {
     role: [
       SurveyPermissions.SurveyManage,
       SurveyPermissions.DataManage,
-      SurveyPermissions.CollaboratorManage
+      SurveyPermissions.CollaboratorManage, 
+      SurveyPermissions.RecyclebinManage,
     ]
   })
 }

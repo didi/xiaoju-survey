@@ -186,6 +186,55 @@ describe('SurveyController', () => {
     });
   });
 
+  describe('removeSurvey', () => {
+    it('should remove a survey', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'exam',
+        owner: 'testUser',
+      };
+      
+      jest
+        .spyOn(surveyMetaService, 'removeSurveyMeta')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(responseSchemaService, 'removeResponseSchema')
+        .mockResolvedValue(undefined);
+
+      const result = await controller.removeSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+      expect(result).toEqual({ code: 200 });
+    });
+  });
+
+
+  describe('restoreSurvey', () => {
+    it('should restore a survey', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyType: 'exam',
+        owner: 'testUser',
+      };
+      
+      jest
+        .spyOn(surveyMetaService, 'restoreSurveyMeta')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(responseSchemaService, 'restoreResponseSchema')
+        .mockResolvedValue(undefined);
+
+      const result = await controller.restoreSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+      expect(result).toEqual({ code: 200 });
+    });
+  });
+
   describe('deleteSurvey', () => {
     it('should delete a survey and its related data', async () => {
       const surveyId = new ObjectId();

@@ -116,6 +116,7 @@ function useSearchSurvey() {
 export const useSurveyListStore = defineStore('surveyList', () => {
   const surveyList = ref([])
   const surveyTotal = ref(0)
+  const removedTotal = ref(0)
 
   const {
     searchVal,
@@ -131,13 +132,29 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   } = useSearchSurvey()
 
   const workSpaceStore = useWorkSpaceStore()
-  async function getSurveyList(payload: { curPage?: number; pageSize?: number }) {
-    const filterString = JSON.stringify(
-      listFilter.value.filter((item) => {
-        return item.condition[0].value
-      })
-    )
-    const orderString = JSON.stringify(listOrder.value)
+  async function getSurveyList(payload: { curPage?: number; pageSize?: number; recycle?: boolean; extraOrder?: any }) {
+    const originalListFilter = listFilter.value;
+
+    let tempListFilter = [...originalListFilter];
+
+    const extraFilter = {
+        comparator: payload.recycle ? '$eq' : '$ne',
+        condition: [{
+          field: 'curStatus.status',
+          comparator: payload.recycle ? '$eq' : '$ne',
+          value: 'removed',
+        }]
+    };
+    tempListFilter.push(extraFilter);
+
+    const filteredList = tempListFilter.filter((item) => {
+      return item.condition[0].value;
+    });
+
+    const filterString = JSON.stringify(filteredList);
+    const order = payload.extraOrder || listOrder.value;
+    const orderString = JSON.stringify(order);
+
     try {
       const params = {
         curPage: payload?.curPage || 1,
@@ -152,9 +169,11 @@ export const useSurveyListStore = defineStore('surveyList', () => {
       if (res.code === CODE_MAP.SUCCESS) {
         surveyList.value = res.data.data
         surveyTotal.value = res.data.count
+        removedTotal.value = res.data.removedCount
       } else {
         ElMessage.error(res.errmsg)
       }
+      
     } catch (error) {
       ElMessage.error('getSurveyList status' + error)
     }
@@ -163,6 +182,7 @@ export const useSurveyListStore = defineStore('surveyList', () => {
   return {
     surveyList,
     surveyTotal,
+    removedTotal,
     searchVal,
     selectValueMap,
     buttonValueMap,

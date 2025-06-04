@@ -8,7 +8,6 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { GROUP_STATE } from 'src/enums/surveyGroup';
-
 @Injectable()
 export class SurveyMetaService {
   constructor(
@@ -121,6 +120,40 @@ export class SurveyMetaService {
     survey.operator = operator;
     survey.operatorId = operatorId;
     return this.surveyRepository.save(survey);
+  }
+
+  async removeSurveyMeta({ surveyId, operator, operatorId }) {
+    console.log('removeSurveyMeta', surveyId, operator, operatorId);
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.REMOVED, date: new Date() }, 
+          updatedAt: new Date(),
+          operator,
+          operatorId
+        },
+      },
+    );
+  }
+
+  // 恢复问卷，转入编辑状态
+  async restoreSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          curStatus: { status: RECORD_STATUS.EDITING, date: new Date() }, 
+          updatedAt: new Date(),
+          operator,
+          operatorId
+        },
+      },
+    );
   }
 
   async deleteSurveyMeta({ surveyId, operator, operatorId }) {
@@ -309,6 +342,9 @@ export class SurveyMetaService {
       {
         workspaceId: null,
       },
+      {   
+        "curStatus.status": { $ne: RECORD_STATUS.REMOVED },
+      }
     ];
     if (groupId) {
       if (groupId !== 'all') {
@@ -327,6 +363,49 @@ export class SurveyMetaService {
       ];
       // otherQuery.groupId = null;
     }
+    if (Array.isArray(query.$or)) {
+      query.$or.push(otherQuery);
+    } else {
+      Object.assign(query, otherQuery);
+    }
+    const total = await this.surveyRepository.count(query);
+    return total;
+  }
+
+  async countRemovedSurveyMeta({
+    userId,
+    surveyIdList,
+  }: {
+    userId: string;
+    surveyIdList?: Array<string>;
+  }) {
+    const query: ObjectLiteral = {};
+    if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
+      query.$or = [];
+      query.$or.push({
+        _id: {
+          $in: surveyIdList.map((item) => new ObjectId(item)),
+        },
+      });
+    }
+
+    const otherQuery: ObjectLiteral = {
+      ownerId: userId,
+      isDeleted: {
+        $ne: true,
+      },
+    };
+    otherQuery.$and = [
+      {
+        workspaceId: { $exists: false },
+      },
+      {
+        workspaceId: null,
+      },
+      {   
+        "curStatus.status": { $eq: RECORD_STATUS.REMOVED },
+      }
+    ];
     if (Array.isArray(query.$or)) {
       query.$or.push(otherQuery);
     } else {

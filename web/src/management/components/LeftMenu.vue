@@ -58,6 +58,13 @@ const tabArr = [
     to: {
       name: 'analysisPage'
     }
+  }, 
+  {
+    text: '回收站', 
+    icon: 'icon-huishouzhan',
+    to: {
+      name: 'recycleBin'
+    }
   }
 ]
 const tabs = ref([])
@@ -73,6 +80,10 @@ watch(
     // 如果有数据分析权限，则加入数据分析菜单
     if (newVal.includes(SurveyPermissions.DataManage)) {
       tabs.value.push(tabArr[2])
+    }
+    // 如果有回收站权限，则加入回收站菜单
+    if (newVal.includes(SurveyPermissions.RecyclebinManage)) {
+      tabs.value.push(tabArr[3])
     }
   },
   { immediate: true }

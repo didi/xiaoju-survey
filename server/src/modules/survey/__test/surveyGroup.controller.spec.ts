@@ -100,6 +100,7 @@ describe('SurveyGroupController', () => {
         list: [],
         allList: [],
         allSurveyTotal: 0,
+        removedSurveyTotal: 0,
       };
       jest.spyOn(service, 'findAll').mockResolvedValue(result);
       const mockReq = { user: { _id: new ObjectId() } };

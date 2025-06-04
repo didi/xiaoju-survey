@@ -88,6 +88,11 @@ export const fieldConfig = {
     key: 'updatedAt',
     minWidth: 200
   },
+  deleteAt: {
+    title: '删除时间',
+    key: 'deleteAt',
+    minWidth: 200
+  },
   createdAt: {
     title: '创建时间',
     key: 'createdAt',
@@ -129,6 +134,10 @@ export const noSearchDataConfig = {
 export const noDownloadTaskConfig = {
   title: '没有下载任务',
   desc: '可以在数据分析进行下载',
+  img: '/imgs/icons/list-empty.webp'
+}
+export const noRemovedData = {
+  title: '没有被回收问卷', 
   img: '/imgs/icons/list-empty.webp'
 }
 

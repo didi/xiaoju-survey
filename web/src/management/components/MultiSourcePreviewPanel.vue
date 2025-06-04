@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, withDefaults, defineProps } from 'vue'
+import { ref, defineProps } from 'vue'
 import MaterialGroup from '@/management/pages/edit/components/MaterialGroup.vue'
 
 const currentEditOne = ref('')

@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
 import { Channel } from 'src/models/channel.entity';
-import { SurveyResponse } from 'src/models/surveyResponse.entity'
+import { SurveyResponse } from 'src/models/surveyResponse.entity';
 import { SurveyResponseService } from 'src/modules/surveyResponse/services/surveyResponse.service';
-import { User } from 'src/models/user.entity'
+import { User } from 'src/models/user.entity';
 
-import { ChannelService } from './services/channel.service'
+import { ChannelService } from './services/channel.service';
 import { ChannelController } from './controllers/channel.controller';
 
 import { AuthModule } from '../auth/auth.module';
@@ -23,17 +23,25 @@ import { SurveyConfService } from 'src/modules/survey/services/surveyConf.servic
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
-import { AppManagerService } from 'src/modules/appManager/services/appManager.service'; 
+import { AppManagerService } from 'src/modules/appManager/services/appManager.service';
 import { WorkspaceMember } from 'src/models/workspaceMember.entity';
 import { SurveyModule } from 'src/modules/survey/survey.module';
 import { WorkspaceModule } from 'src/modules/workspace/workspace.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, User, SurveyResponse, SurveyMeta, SurveyConf, Collaborator,WorkspaceMember]),
+    TypeOrmModule.forFeature([
+      Channel,
+      User,
+      SurveyResponse,
+      SurveyMeta,
+      SurveyConf,
+      Collaborator,
+      WorkspaceMember,
+    ]),
     ConfigModule,
     AuthModule,
-    WorkspaceModule
+    WorkspaceModule,
   ],
   controllers: [ChannelController],
   providers: [

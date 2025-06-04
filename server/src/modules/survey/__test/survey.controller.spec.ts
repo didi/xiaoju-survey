@@ -173,7 +173,7 @@ describe('SurveyController', () => {
         },
         sessionId: 'mock-session-id',
       };
-  
+
       try {
         await controller.updateConf(reqBody, {
           user: { username: 'testUser', _id: 'testUserId' },

@@ -6,12 +6,12 @@ export class VerifyTokenDto {
   appId: string;
 
   @ApiProperty({ description: 'appToken', required: true })
-  appToken: string; 
+  appToken: string;
 
   static validate(data) {
     return Joi.object({
-        appId: Joi.string().required(),
-        appToken: Joi.string().required(),
+      appId: Joi.string().required(),
+      appToken: Joi.string().required(),
     }).validate(data, { allowUnknown: true });
   }
 }

@@ -16,6 +16,7 @@ import moment from 'moment';
 import * as Joi from 'joi';
 import * as forge from 'node-forge';
 import { ApiTags } from '@nestjs/swagger';
+import { pick } from 'lodash';
 
 import { CounterService } from '../services/counter.service';
 import { Logger } from 'src/logger';
@@ -268,7 +269,11 @@ export class SurveyResponseController {
 
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
-    const optionTextAndId = dataList
+    const optionTextAndId: Record<
+      string,
+      Array<{ hash: string; text: string }>
+    > = {};
+    const optionInfoWithId = dataList
       .filter((questionItem) => {
         return (
           optionQuestionType.includes(questionItem.type) &&
@@ -279,55 +284,25 @@ export class SurveyResponseController {
       })
       .reduce((pre, cur) => {
         const arr = cur.options.map((optionItem) => ({
+          title: cur.title,
           hash: optionItem.hash,
           text: optionItem.text,
+          quota: optionItem.quota ? Number(optionItem.quota) : 0,
         }));
         pre[cur.field] = arr;
+        optionTextAndId[cur.field] = arr.map((item) =>
+          pick(item, ['hash', 'text']),
+        );
         return pre;
       }, {});
 
-    const surveyId = responseSchema.pageId;
-    try {
-      const successParams = [];
-      for (const field in formValues) {
-        const value = formValues[field];
-        const values = Array.isArray(value) ? value : [value];
-        if (field in optionTextAndId) {
-          const optionCountData =
-            (await this.counterService.get({
-              key: field,
-              surveyPath,
-              type: 'option',
-            })) || {};
+    await this.counterService.checkAndUpdateOptionCount({
+      optionInfoWithId,
+      userAnswer: formValues,
+      surveyPath,
+    });
 
-          //遍历选项hash值
-          for (const val of values) {
-            if (!optionCountData[val]) {
-              optionCountData[val] = 0;
-            }
-            optionCountData[val]++;
-          }
-          if (!optionCountData['total']) {
-            optionCountData['total'] = 1;
-          } else {
-            optionCountData['total']++;
-          }
-          successParams.push({
-            key: field,
-            surveyPath,
-            type: 'option',
-            data: optionCountData,
-          });
-        }
-      }
-      // 校验通过后统一更新
-      await Promise.all(
-        successParams.map((item) => this.counterService.set(item)),
-      );
-    } catch (error) {
-      this.logger.error(error.message);
-      throw error;
-    }
+    const surveyId = responseSchema.pageId;
 
     // 入库
     const model: any = {
@@ -358,6 +333,8 @@ export class SurveyResponseController {
     }
 
     // 入库成功后，要把密钥删掉，防止被重复使用
-    if (sessionId) this.clientEncryptService.deleteEncryptInfo(sessionId);
+    if (sessionId) {
+      this.clientEncryptService.deleteEncryptInfo(sessionId);
+    }
   }
 }

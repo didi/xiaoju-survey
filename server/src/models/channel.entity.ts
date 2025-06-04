@@ -15,10 +15,10 @@ export class Channel extends BaseEntity {
 
   @Column()
   name: string;
-  
+
   @Column()
   type: CHANNEL_TYPE;
-  
+
   @Column()
   status: CHANNEL_STATUS;
 }

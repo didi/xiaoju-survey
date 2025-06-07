@@ -89,4 +89,32 @@ export class ResponseSchemaService {
       },
     );
   }
+
+  async recoverResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: null,
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
+
+  async completeDeleteResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isCompleteDeleted: true,
+          updatedAt: new Date(),
+        },
+      },
+    );
+  }
 }

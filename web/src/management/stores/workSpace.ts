@@ -14,7 +14,8 @@ import {
   createGroup,
   getGroupList as getGroupListReq,
   updateGroup as updateGroupReq,
-  deleteGroup as deleteGroupReq
+  deleteGroup as deleteGroupReq,
+  getRecycleBinCount as getRecycleBinCountReq
 } from '@/management/api/space'
 
 import { GroupState, MenuType } from '@/management/utils/workSpace'
@@ -41,6 +42,13 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       icon: 'icon-tuanduikongjian',
       name: '团队空间',
       id: MenuType.SpaceGroup,
+      children: []
+    },
+    {
+      icon: 'icon-huishouzhan',
+      name: '回收站',
+      id: MenuType.RecycleBin,
+      count: 0,
       children: []
     }
   ])
@@ -241,6 +249,21 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     }
   }
 
+
+  async function getRecycleBinCount(params?:  any) {
+    try {
+      const res: any = await getRecycleBinCountReq(params)
+      if (res.code === CODE_MAP.SUCCESS) {
+        const { count } = res.data
+        spaceMenus.value[2].count = count
+      } else {
+        ElMessage.error('getRecycleBinCount' + res.errmsg)
+      }
+    } catch (err) {
+      ElMessage.error('getRecycleBinCount' + err)
+    }
+  }
+
   return {
     menuType,
     spaceMenus,
@@ -267,6 +290,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     getGroupList,
     getGroupDetail,
     setGroupDetail,
-    deleteGroup
+    deleteGroup,
+    getRecycleBinCount: getRecycleBinCount
   }
 })

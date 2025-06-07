@@ -31,4 +31,7 @@ export class ResponseSchema extends BaseEntity {
 
   @Column()
   isDeleted: boolean;
+
+  @Column()
+  isCompleteDeleted: boolean;
 }

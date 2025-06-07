@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SurveyMetaController } from '../controllers/surveyMeta.controller';
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { WorkspaceService } from 'src/modules/workspace/services/workspace.service';
 import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
@@ -40,6 +41,12 @@ describe('SurveyMetaController', () => {
             getCollaboratorListByUserId: jest.fn().mockResolvedValue([]),
           },
         },
+        {
+          provide: WorkspaceService,
+          useValue: {
+            getAllSurveyIdListByUserId: jest.fn().mockResolvedValue([]),
+          },
+        }
       ],
     }).compile();
 

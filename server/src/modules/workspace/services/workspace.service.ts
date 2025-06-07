@@ -4,6 +4,8 @@ import { MongoRepository } from 'typeorm';
 
 import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { WorkspaceMemberService } from './workspaceMember.service';
+import { SurveyMetaService } from 'src/modules/survey/services/surveyMeta.service';
 
 import { ObjectId } from 'mongodb';
 
@@ -25,6 +27,8 @@ export class WorkspaceService {
     private workspaceRepository: MongoRepository<Workspace>,
     @InjectRepository(SurveyMeta)
     private surveyMetaRepository: MongoRepository<SurveyMeta>,
+    private readonly workspaceMemberService: WorkspaceMemberService,
+    private readonly surveyMetaService: SurveyMetaService,
   ) {}
 
   async create(workspace: {
@@ -183,4 +187,26 @@ export class WorkspaceService {
       ],
     });
   }
+
+    async getAllSurveyIdListByUserId(userId: string, isRecycleBin: boolean) {
+      // 查询当前用户参与的空间
+      const workspaceInfoList = await this.workspaceMemberService.findAllByUserId(
+        { userId },
+      );
+      const workspaceIdList = workspaceInfoList.map((item) => item.workspaceId);
+      const isDeleted = isRecycleBin
+      const surveyList = await this.surveyMetaService.getSurveyMetaListByWorkspaceIdList({
+        workspaceIdList,
+        isDeleted,
+      });
+      const surveyIdList = surveyList.map((item) => item._id.toString());
+  
+      return {
+        code: 200,
+        data: {
+          surveyIdList,
+        },
+      };
+    }
+
 }

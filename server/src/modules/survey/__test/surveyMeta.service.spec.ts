@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
+import { is } from 'cheerio/lib/api/traversing';
 
 describe('SurveyMetaService', () => {
   let service: SurveyMetaService;
@@ -26,6 +27,7 @@ describe('SurveyMetaService', () => {
             save: jest.fn(),
             updateOne: jest.fn(),
             findAndCount: jest.fn(),
+            find: jest.fn(),
           },
         },
         PluginManager,
@@ -180,6 +182,71 @@ describe('SurveyMetaService', () => {
     });
   });
 
+  describe('recoverSurveyMeta', () => {
+    it('should recover a survey', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'test';
+      const operatorId = 'testId';
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue({
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      });
+
+      const result = await service.recoverSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: null,
+            operator,
+            operatorId,
+            deletedAt: null,
+          },
+        },
+      );
+      expect(result.matchedCount).toBe(1);
+    });
+  });
+
+  describe('completeDeleteSurveyMeta', () => {
+    it('should complete delete a survey', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'test';
+      const operatorId = 'testId';
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue({
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      });
+
+      const result = await service.completeDeleteSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            operator,
+            operatorId,
+            isCompleteDeleted: true,
+          },
+        },
+      );
+      expect(result.matchedCount).toBe(1);
+    });
+  });
+
   describe('getSurveyMetaList', () => {
     it('should return a list of survey metadata', async () => {
       const mockData = [
@@ -204,6 +271,25 @@ describe('SurveyMetaService', () => {
 
       expect(result).toEqual({ data: mockData, count: mockCount });
       expect(surveyRepository.findAndCount).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getSurveyMetaListByWorkspaceIdList', () => {
+    it('should return a list of survey metadata by work space id', async () => {
+      const mockData = [
+        { _id: 1, title: 'Survey 1', workSpaceId: 'wk1', isDeleted: true, isCompleteDeleted: null },
+      ] as unknown as Array<SurveyMeta>;
+
+      jest
+        .spyOn(surveyRepository, 'find')
+        .mockResolvedValue(mockData);
+
+        const workspaceIdList = ['wk1'];
+        const isDeleted = true;
+
+      const result = await service.getSurveyMetaListByWorkspaceIdList({workspaceIdList, isDeleted});
+
+      expect(result).toEqual(mockData);
     });
   });
 

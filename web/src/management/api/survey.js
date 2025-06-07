@@ -1,6 +1,6 @@
 import axios from './base'
 
-export const getSurveyList = ({ curPage, filter, order, workspaceId, groupId }) => {
+export const getSurveyList = ({ curPage, filter, order, workspaceId, groupId, isRecycleBin }) => {
   return axios.get('/survey/getList', {
     params: {
       pageSize: 10,
@@ -8,7 +8,8 @@ export const getSurveyList = ({ curPage, filter, order, workspaceId, groupId }) 
       filter,
       order,
       workspaceId,
-      groupId
+      groupId,
+      isRecycleBin
     }
   })
 }
@@ -46,6 +47,18 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
 
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
+    surveyId
+  })
+}
+
+export const recoverSurvey = (surveyId) => {
+  return axios.post('/survey/recoverSurvey', {
+    surveyId
+  })
+}
+
+export const completeDeleteSurvey = (surveyId) => {
+  return axios.post('/survey/completeDeleteSurvey', {
     surveyId
   })
 }

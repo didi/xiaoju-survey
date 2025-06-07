@@ -1,17 +1,20 @@
 <template>
   <div class="tool-root" @click.stop="onClick">
-    <span class="tool-root-btn-text" :style="{ width: width + 'px' }">{{ label }}</span>
+    <span class="tool-root-btn-text" :style="{ width: width + 'px', color: color }">{{ label }}</span>
   </div>
 </template>
 
 <script>
+import { color } from 'echarts';
+
 export default {
   name: 'ToolModule',
   props: {
     value: String,
     label: String,
     type: String,
-    width: Number
+    width: Number,
+    color: String
   },
   methods: {
     onClick() {

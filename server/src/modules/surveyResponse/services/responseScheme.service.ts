@@ -27,6 +27,7 @@ export class ResponseSchemaService {
         status: RECORD_SUB_STATUS.DEFAULT,
         date: Date.now(),
       };
+      clientSurvey.isDeleted = false;
       return this.responseSchemaRepository.save(clientSurvey);
     } else {
       const curStatus = {
@@ -44,6 +45,7 @@ export class ResponseSchemaService {
         pageId,
         curStatus,
         subStatus,
+        isDeleted: false,
       });
       return this.responseSchemaRepository.save(newClientSurvey);
     }
@@ -51,7 +53,10 @@ export class ResponseSchemaService {
 
   async getResponseSchemaByPath(surveyPath: string) {
     return this.responseSchemaRepository.findOne({
-      where: { surveyPath },
+      where: { 
+        surveyPath,
+        isDeleted: false 
+      },
     });
   }
 

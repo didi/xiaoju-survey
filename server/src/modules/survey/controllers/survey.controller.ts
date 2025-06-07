@@ -325,6 +325,12 @@ export class SurveyController {
 
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+    if (surveyMeta.isDeleted) {
+      throw new HttpException(
+        '问卷不存在或已删除',
+        EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
+      );
+    }
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 

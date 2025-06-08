@@ -20,9 +20,13 @@ export class RecycleBinItemDto {
   @ApiProperty({ description: '问卷ID', required: true })
   id: string;
 
+  @ApiProperty({ description: '问卷路径', required: true })
+  surveyPath: string;
+
   static validate(data) {
     return Joi.object({
       id: Joi.string().required(),
+      surveyPath: Joi.string().required(),
     }).validate(data);
   }
-} 
+}

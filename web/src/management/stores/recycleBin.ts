@@ -39,10 +39,10 @@ export const useRecycleBinStore = defineStore('recycleBin', () => {
   }
   
   // 恢复问卷
-  async function restoreSurveyById(id: string) {
+  async function restoreSurveyById(id: string, surveyPath: string) {
     try {
-      const res: any = await restoreSurvey(id)
-      
+      const res: any = await restoreSurvey(id, surveyPath)
+      // console.log('恢复问卷响应:', res.code)
       if (res.code === CODE_MAP.SUCCESS) {
         ElMessage.success('问卷已恢复')
         // 从列表中移除该问卷
@@ -55,11 +55,11 @@ export const useRecycleBinStore = defineStore('recycleBin', () => {
         
         return true
       } else {
-        ElMessage.error('恢复问卷失败: ' + res.errmsg)
+        ElMessage.error('恢复问卷失败1: ' + res.errmsg)
         return false
       }
     } catch (err) {
-      ElMessage.error('恢复问卷失败: ' + err)
+      ElMessage.error('恢复问卷失败2: ' + err)
       return false
     }
   }
@@ -91,10 +91,10 @@ export const useRecycleBinStore = defineStore('recycleBin', () => {
   }
   
   // 将问卷移至回收站
-  async function moveSurveyToRecycleBin(id: string) {
+  async function moveSurveyToRecycleBin(id: string, surveyPath: string) {
     try {
-      console.log('移动问卷至回收站，问卷ID:', id)
-      const res: any = await moveToRecycleBin(id)
+      console.log('移动问卷至回收站，问卷ID:', id, '问卷路径:', surveyPath)
+      const res: any = await moveToRecycleBin(id, surveyPath)
       console.log('移动问卷至回收站响应:', res)
       
       if (res.code === CODE_MAP.SUCCESS) {

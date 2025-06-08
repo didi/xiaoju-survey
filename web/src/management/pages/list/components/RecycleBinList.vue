@@ -24,7 +24,7 @@
       <el-table-column label="操作" min-width="150">
         <template #default="{ row }">
           <div class="operation">
-            <el-button type="primary" text @click="onRestore(row._id)">恢复</el-button>
+            <el-button type="primary" text @click="onRestore(row._id, row.surveyPath)">恢复</el-button>
             <el-button type="danger" text @click="onDelete(row._id)">彻底删除</el-button>
           </div>
         </template>
@@ -79,13 +79,13 @@ const formatDate = (date: string) => {
 }
 
 // 恢复问卷
-const onRestore = (id: string) => {
+const onRestore = (id: string, surveyPath: string) => {
   ElMessageBox.confirm('确定要恢复这份问卷吗？', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   }).then(async () => {
-    const success = await recycleBinStore.restoreSurveyById(id)
+    const success = await recycleBinStore.restoreSurveyById(id, surveyPath)
     if (success) {
       // 刷新列表
       emit('refresh')

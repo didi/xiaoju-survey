@@ -61,7 +61,7 @@ export class RecycleBinController {
     }
     
     const userId = req.user._id.toString();
-    await this.recycleBinService.restoreSurvey(userId, value.id);
+    await this.recycleBinService.restoreSurvey(userId, value.id, value.surveyPath);
     
     return {
       code: 200,
@@ -116,7 +116,7 @@ export class RecycleBinController {
       console.log(`[RecycleBin] 处理移动问卷: userId=${userId}, surveyId=${value.id}`);
       this.logger.info(`moveToRecycleBin_processing: userId=${userId}, surveyId=${value.id}`);
       
-      await this.recycleBinService.moveToRecycleBin(userId, value.id);
+      await this.recycleBinService.moveToRecycleBin(userId, value.id, value.surveyPath);
       
       console.log(`[RecycleBin] 成功移动问卷: surveyId=${value.id}`);
       this.logger.info(`moveToRecycleBin_success: userId=${userId}, surveyId=${value.id}`);

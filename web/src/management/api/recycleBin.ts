@@ -6,8 +6,8 @@ export function getRecycleBinList(params = {}) {
 }
 
 // 恢复问卷
-export function restoreSurvey(id: string) {
-  return axios.post('/survey/recyclebin/restore', { id })
+export function restoreSurvey(id: string, surveyPath: string) {
+  return axios.post('/survey/recyclebin/restore', { id, surveyPath })
 }
 
 // 永久删除问卷
@@ -16,6 +16,6 @@ export function permanentDeleteSurvey(id: string) {
 }
 
 // 将问卷移至回收站
-export function moveToRecycleBin(id: string) {
-  return axios.post('/survey/recyclebin/move', { id })
-} 
+export function moveToRecycleBin(id: string, surveyPath: string) {
+  return axios.post('/survey/recyclebin/move', { id, surveyPath })
+}

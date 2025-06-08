@@ -375,7 +375,7 @@ const onDelete = async (row) => {
   }
 
   // 调用移至回收站API
-  const success = await recycleBinStore.moveSurveyToRecycleBin(row._id)
+  const success = await recycleBinStore.moveSurveyToRecycleBin(row._id, row.surveyPath)
   if (success) {
     ElMessage.success('问卷已移至回收站')
     onRefresh()

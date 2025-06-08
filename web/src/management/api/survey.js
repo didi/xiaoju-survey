@@ -71,3 +71,7 @@ export const getSessionId = ({ surveyId }) => {
 export const seizeSession = ({ sessionId }) => {
   return axios.post('/session/seize', { sessionId })
 }
+
+export const getSurveyMeta = (surveyId) => {
+  return axios.get(`/survey/meta/${surveyId}`)
+}

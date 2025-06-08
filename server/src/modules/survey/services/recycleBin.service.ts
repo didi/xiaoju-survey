@@ -63,7 +63,7 @@ export class RecycleBinService {
 
     const [list, count] = await this.surveyMetaRepository.findAndCount({
       where: query,
-      select: ['_id', 'title', 'createdAt', 'deletedAt', 'ownerId'],
+      select: ['_id', 'title', 'createdAt', 'deletedAt', 'ownerId', 'surveyPath'],
       skip,
       take: pageSize,
       order: {
@@ -74,7 +74,7 @@ export class RecycleBinService {
     return { list, count };
   }
 
-  async restoreSurvey(userId: string, id: string) {
+  async restoreSurvey(userId: string, id: string, surveyPath: string) {
     const survey = await this.checkPermission(userId, id);
 
     const dbSurvey = await this.surveyMetaRepository.findOne({
@@ -133,7 +133,8 @@ export class RecycleBinService {
     return { success: true };
   }
 
-  async moveToRecycleBin(userId: string, id: string) {
+  async moveToRecycleBin(userId: string, id: string, surveyPath: string){
+    
     await this.checkPermission(userId, id);
 
     let objectId: ObjectId;
@@ -165,12 +166,12 @@ export class RecycleBinService {
 
     // 同步 C 端状态
     const surveyC = await this.responseSchemaRepository.findOne({
-      where: { _id: new ObjectId(id) }
+      where: { surveyPath: surveyPath}
     });
 
     if (surveyC && !surveyC.isDeleted) {
       await this.responseSchemaRepository.update(
-        { _id: new ObjectId(id) },
+        { surveyPath: surveyPath },
         {
           isDeleted: true,  // C 端的删除状态字段为 isDeleted
           updatedAt: new Date() 

@@ -119,4 +119,4 @@ public class TraceIdGeneratorUtil {
         }
         return String.valueOf(current);
     }
-}    
+}

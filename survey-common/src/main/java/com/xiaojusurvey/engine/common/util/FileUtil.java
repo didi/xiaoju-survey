@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class FileUtil {
 
-    private final static SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     /**
      * 时间单位与秒的映射关系
      * s: 秒

@@ -84,12 +84,8 @@ public class FileController {
         //1:获取token jwt
         DecodedJWT jwt = jwtTokenUtil.getTokenStrByRequest(request);
         //2:判断token是否有效 && 是否过期
-        if (ObjectUtils.isEmpty(jwt)) {
-            //token找不到
-            return false;
-        }
-        if (jwt.getExpiresAt().getTime() < System.currentTimeMillis()) {
-            //token超时
+        if (ObjectUtils.isEmpty(jwt) || jwt.getExpiresAt().getTime() < System.currentTimeMillis()) {
+            //token找不到或者超时
             return false;
         }
         //查询用户信息
@@ -102,13 +98,12 @@ public class FileController {
         if (!ObjectUtils.isEmpty(claims.get(USER_ID))) {
             userId = claims.get(USER_ID).asString();
         }
-        //判空
+        // 判空
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(userId)) {
             //token超时
             return false;
         }
         return true;
     }
-
 
 }

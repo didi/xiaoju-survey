@@ -1,5 +1,7 @@
 package com.xiaojusurvey.engine.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xiaojusurvey.engine.common.constants.RespErrorCode;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyConf;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyHistory;
@@ -13,6 +15,9 @@ import com.xiaojusurvey.engine.core.reslut.IdResult;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.dto.FilterItem;
+import com.xiaojusurvey.engine.core.survey.dto.OrderItem;
+import com.xiaojusurvey.engine.core.survey.dto.SurveyListParamDTO;
 import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.param.SurveyMetaUpdateParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
@@ -25,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,11 +154,34 @@ public class SurveyController {
     }
 
 
-    @PostMapping("/getList")
-    public RpcResult getList(@RequestBody @Validated SurveyListParam param) {
-        log.info("[publishSurvey] 发布问卷,param={}", param);
+    @GetMapping("/getList")
+    public RpcResult getList(SurveyListParamDTO paramDTO) throws JsonProcessingException {
+        SurveyListParam param = convert(paramDTO);
         SurveyListVO surveyListVO = surveyService.getSurveyList(param);
         return RpcResultUtil.createSuccessResult(surveyListVO);
+    }
+
+    private SurveyListParam convert(SurveyListParamDTO paramDTO) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        FilterItem[] filterItems = new FilterItem[0];
+        if (paramDTO.getFilter() != null && !paramDTO.getFilter().isEmpty()) {
+            String decodedFilter = java.net.URLDecoder.decode(paramDTO.getFilter(), StandardCharsets.UTF_8);
+            filterItems = mapper.readValue(decodedFilter, FilterItem[].class);
+        }
+        OrderItem[] orderItems = new OrderItem[0];
+        if (paramDTO.getOrder() != null && !paramDTO.getOrder().isEmpty()) {
+            String decodedOrder = java.net.URLDecoder.decode(paramDTO.getOrder(), StandardCharsets.UTF_8);
+            orderItems = mapper.readValue(decodedOrder, OrderItem[].class);
+        }
+        SurveyListParam param = new SurveyListParam();
+        param.setCurPage(paramDTO.getCurPage());
+        param.setPageSize(paramDTO.getPageSize());
+        param.setFilter(filterItems);
+        param.setOrder(orderItems);
+        param.setWorkspaceId(paramDTO.getWorkspaceId());
+        param.setUserId(paramDTO.getUserId());
+        param.setUsername(paramDTO.getUsername());
+        return param;
     }
 
 }

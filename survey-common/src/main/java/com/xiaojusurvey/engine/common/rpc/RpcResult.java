@@ -1,5 +1,6 @@
 package com.xiaojusurvey.engine.common.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,7 +12,10 @@ public class RpcResult<T> implements Serializable {
 
     private Integer code = -1;
 
+    @JsonProperty("message")
     private String msg;
+
+    private String errmsg;
 
     private T data;
 

@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyHistory;
 import com.xiaojusurvey.engine.common.entity.survey.SurveyMeta;
 import com.xiaojusurvey.engine.common.entity.user.User;
@@ -9,6 +10,7 @@ import com.xiaojusurvey.engine.config.BannerDataConfig;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.SurveyHistoryService;
 import com.xiaojusurvey.engine.core.survey.SurveyService;
+import com.xiaojusurvey.engine.core.survey.dto.SurveyListParamDTO;
 import com.xiaojusurvey.engine.core.survey.param.SurveyListParam;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoInVO;
 import com.xiaojusurvey.engine.core.survey.vo.SurveyInfoOutVO;
@@ -66,7 +68,7 @@ public class SurveyControllerTest {
         Mockito.when(bannerDataConfig.getBannerData()).thenReturn(new JSONObject());
         RpcResult<Object> bannerData = surveyController.getBannerData();
         Assert.assertTrue(bannerData.getSuccess());
-        Assert.assertEquals(new Integer(200), bannerData.getCode());
+        Assert.assertEquals(Integer.valueOf(200), bannerData.getCode());
     }
 
     @Test
@@ -75,7 +77,7 @@ public class SurveyControllerTest {
         Mockito.when(surveyHistoryService.addHistory(Mockito.any())).thenReturn(new SurveyHistory());
         RpcResult<Boolean> updateConf = surveyController.updateConf(httpServletRequest, new SurveyInfoInVO());
         Assert.assertTrue(updateConf.getSuccess());
-        Assert.assertEquals(new Integer(200), updateConf.getCode());
+        Assert.assertEquals(Integer.valueOf(200), updateConf.getCode());
     }
 
     @Test
@@ -84,13 +86,13 @@ public class SurveyControllerTest {
         Mockito.when(surveyHistoryService.addHistory(Mockito.any())).thenReturn(new SurveyHistory());
         RpcResult<SurveyInfoOutVO> surveyResult = surveyController.getSurvey("112133");
         Assert.assertFalse(surveyResult.getSuccess());
-        Assert.assertEquals(new Integer(3004), surveyResult.getCode());
+        Assert.assertEquals(Integer.valueOf(3004), surveyResult.getCode());
 
         Mockito.when(surveyService.getSurveyMeta(Mockito.anyString())).thenReturn(new SurveyMeta());
         Mockito.when(surveyHistoryService.addHistory(Mockito.any())).thenReturn(new SurveyHistory());
         RpcResult<SurveyInfoOutVO> surveyResult2 = surveyController.getSurvey("112133");
         Assert.assertTrue(surveyResult2.getSuccess());
-        Assert.assertEquals(new Integer(200), surveyResult2.getCode());
+        Assert.assertEquals(Integer.valueOf(200), surveyResult2.getCode());
     }
 
 
@@ -103,11 +105,11 @@ public class SurveyControllerTest {
 
 
     @Test
-    public void getListTest() {
+    public void getListTest() throws JsonProcessingException {
         SurveyListVO vo = new SurveyListVO();
         Mockito.when(surveyService.getSurveyList(Mockito.any())).thenReturn(vo);
 
-        RpcResult rs =  surveyController.getList(new SurveyListParam());
+        RpcResult rs =  surveyController.getList(new SurveyListParamDTO());
 
         Assert.assertEquals(vo,rs.getData());
     }

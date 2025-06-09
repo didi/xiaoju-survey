@@ -233,17 +233,24 @@ public class SurveyServiceImpl implements SurveyService {
         }
         if (param.getFilter() != null) {
             Arrays.stream(param.getFilter()).forEach(r -> {
-                FilterItem.FilterCondition ff = r.getCondition();
-                Criteria crt = null;
-                if (SurveyConstant.OPT_NE.equals(ff.getComparator())) {
-                    crt = Criteria.where(ff.getField()).ne(ff.getValue());
-                } else if (SurveyConstant.OPT_REGEX.equals(ff.getComparator())) {
-                    crt = Criteria.where(ff.getField()).regex(ff.getValue());
-                }
-                if (StringUtils.hasLength(r.getComparator()) && SurveyConstant.OPT_OR.equals(r.getComparator())) {
-                    listOr.add(crt);
-                } else {
-                    listOr.add(crt);
+                if (r.getCondition() != null) {
+                    for (FilterItem.FilterCondition ff : r.getCondition()) {
+                        Criteria crt = null;
+                        if (SurveyConstant.OPT_NE.equals(ff.getComparator())) {
+                            crt = Criteria.where(ff.getField()).ne(ff.getValue());
+                        } else if (SurveyConstant.OPT_REGEX.equals(ff.getComparator())) {
+                            crt = Criteria.where(ff.getField()).regex(ff.getValue());
+                        } else {
+                            crt = Criteria.where(ff.getField()).is(ff.getValue()); // 默认处理
+                        }
+                        if (crt != null) {
+                            if (StringUtils.hasLength(r.getComparator()) && SurveyConstant.OPT_OR.equals(r.getComparator())) {
+                                listOr.add(crt);
+                            } else {
+                                listOr.add(crt);
+                            }
+                        }
+                    }
                 }
             });
         }

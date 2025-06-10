@@ -204,24 +204,46 @@ public class SurveyServiceImpl implements SurveyService {
         vo.setData(data);
         return vo;
     }
-
-
+    
     private Query buildQuery(SurveyListParam param) {
         Query query = new Query();
-        if (param.getOrder() != null) {
-            List<Sort.Order> orders = new ArrayList<>();
-            Arrays.stream(param.getOrder()).forEach(r -> {
-                if (r.getValue() == 1) {
-                    orders.add(new Sort.Order(Sort.Direction.ASC, r.getField()));
-                } else {
-                    orders.add(new Sort.Order(Sort.Direction.DESC, r.getField()));
-                }
-            });
-            query.with(Sort.by(orders));
+        // 构建排序
+        Sort sort = buildSort(param);
+        if (sort != null) {
+            query.with(sort);
         }
+        // 构建条件
         Criteria criteria = new Criteria();
-        List<Criteria> listAnd = new ArrayList();
-        List<Criteria> listOr = new ArrayList();
+        List<Criteria> listAnd = buildAndCriteria(param);
+        List<Criteria> listOr = buildOrCriteria(param);
+        
+        if (!listAnd.isEmpty()) {
+            criteria.andOperator(listAnd);
+        }
+        if (!listOr.isEmpty()) {
+            criteria = criteria.orOperator(listOr);
+        }
+        query.addCriteria(criteria);
+        return query;
+    }
+    
+    private Sort buildSort(SurveyListParam param) {
+        if (param.getOrder() == null) {
+            return null;
+        }
+        List<Sort.Order> orders = new ArrayList<>();
+        Arrays.stream(param.getOrder()).forEach(r -> {
+            if (r.getValue() == 1) {
+                orders.add(new Sort.Order(Sort.Direction.ASC, r.getField()));
+            } else {
+                orders.add(new Sort.Order(Sort.Direction.DESC, r.getField()));
+            }
+        });
+        return Sort.by(orders);
+    }
+    
+    private List<Criteria> buildAndCriteria(SurveyListParam param) {
+        List<Criteria> listAnd = new ArrayList<>();
         if (StringUtils.hasLength(param.getWorkspaceId())) {
             listAnd.add(Criteria.where("workspaceId").is(param.getWorkspaceId()));
         }
@@ -231,6 +253,11 @@ public class SurveyServiceImpl implements SurveyService {
         if (StringUtils.hasLength(param.getUserId())) {
             listAnd.add(Criteria.where("ownerId").is(param.getUserId()));
         }
+        return listAnd;
+    }
+    
+    private List<Criteria> buildOrCriteria(SurveyListParam param) {
+        List<Criteria> listOr = new ArrayList<>();
         if (param.getFilter() != null) {
             Arrays.stream(param.getFilter()).forEach(r -> {
                 if (r.getCondition() != null) {
@@ -241,26 +268,16 @@ public class SurveyServiceImpl implements SurveyService {
                         } else if (SurveyConstant.OPT_REGEX.equals(ff.getComparator())) {
                             crt = Criteria.where(ff.getField()).regex(ff.getValue());
                         } else {
-                            crt = Criteria.where(ff.getField()).is(ff.getValue()); // 默认处理
+                            crt = Criteria.where(ff.getField()).is(ff.getValue());
                         }
                         if (crt != null) {
-                            if (StringUtils.hasLength(r.getComparator()) && SurveyConstant.OPT_OR.equals(r.getComparator())) {
-                                listOr.add(crt);
-                            } else {
-                                listOr.add(crt);
-                            }
+                            // 这里之前两个分支做了相同处理，保持一致即可
+                            listOr.add(crt);
                         }
                     }
                 }
             });
         }
-        if (!listAnd.isEmpty()) {
-            criteria.andOperator(listAnd);
-        }
-        if (!listOr.isEmpty()) {
-            criteria = criteria.orOperator(listOr);
-        }
-        query.addCriteria(criteria);
-        return query;
+        return listOr;
     }
 }

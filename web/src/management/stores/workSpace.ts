@@ -27,6 +27,7 @@ import {
 } from '@/management/utils/workSpace'
 
 import { useSurveyListStore } from './surveyList'
+import { useRecycleBinStore } from './recycleBin'
 
 export const useWorkSpaceStore = defineStore('workSpace', () => {
   // list空间
@@ -42,6 +43,12 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       name: '团队空间',
       id: MenuType.SpaceGroup,
       children: []
+    },
+    {
+      icon: 'icon-icon_shanchu',
+      name: '回收站',
+      id: MenuType.RecycleBin,
+      total: 0
     }
   ])
   const menuType = ref(MenuType.PersonalGroup)
@@ -52,6 +59,18 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   const workSpaceListTotal = ref(0)
 
   const surveyListStore = useSurveyListStore()
+  const recycleBinStore = useRecycleBinStore()
+
+  // 更新回收站数量
+  async function updateRecycleBinCount() {
+    try {
+      const { count } = await recycleBinStore.getRecycleList({ curPage: 1, pageSize: 1 })
+      // 更新回收站菜单中的问卷数量
+      spaceMenus.value[2].total = count
+    } catch (err) {
+      console.error('获取回收站数量失败:', err)
+    }
+  }
 
   async function getSpaceList(params = { curPage: 1 }) {
     try {
@@ -69,6 +88,9 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
         workSpaceList.value = list
         workSpaceListTotal.value = count
         spaceMenus.value[1].children = workSpace
+        
+        // 更新回收站数量
+        updateRecycleBinCount()
       } else {
         ElMessage.error('getSpaceList' + res.errmsg)
       }
@@ -202,6 +224,9 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
         groupListTotal.value = total
         spaceMenus.value[0].children = group
         groupAllList.value = allList
+        
+        // 更新回收站数量
+        updateRecycleBinCount()
       } else {
         ElMessage.error('getGroupList' + res.errmsg)
       }
@@ -267,6 +292,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     getGroupList,
     getGroupDetail,
     setGroupDetail,
-    deleteGroup
+    deleteGroup,
+    updateRecycleBinCount
   }
 })

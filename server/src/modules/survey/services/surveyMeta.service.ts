@@ -75,6 +75,7 @@ export class SurveyMetaService {
       createFrom,
       workspaceId,
       groupId: groupId && groupId !== '' ? groupId : null,
+      isDeleted: false,
     });
 
     return await this.surveyRepository.save(newSurvey);
@@ -242,6 +243,7 @@ export class SurveyMetaService {
         skip,
         take: pageSize,
         order,
+        select: ['_id', 'title', 'remark', 'owner', 'createdAt', 'updatedAt', 'curStatus', 'subStatus', 'surveyPath', 'ownerId', 'isDeleted', 'isPermanentDeleted', 'deletedAt'],
       });
       return { data, count };
     } catch (error) {

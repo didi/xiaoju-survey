@@ -139,6 +139,47 @@ export class SurveyMetaService {
     );
   }
 
+  async restoreSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: false,
+          operator,
+          operatorId,
+          deletedAt: null,
+          curStatus: {
+            status: RECORD_STATUS.NEW,
+            date: Date.now(),
+          },
+          subStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
+            date: Date.now(),
+          },
+        },
+      },
+    );
+  }
+
+  async completelyDeleteSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: true,
+          isCompletelyDeleted: true,
+          operator,
+          operatorId,
+          deletedAt: new Date(),
+        },
+      },
+    );
+  }
+
   async getSurveyMetaList(condition: {
     pageNum: number;
     pageSize: number;
@@ -149,6 +190,7 @@ export class SurveyMetaService {
     workspaceId?: string;
     groupId?: string;
     surveyIdList?: Array<string>;
+    recycleId?: boolean;
   }): Promise<{ data: any[]; count: number }> {
     const {
       pageNum,
@@ -158,14 +200,14 @@ export class SurveyMetaService {
       workspaceId,
       groupId,
       surveyIdList,
+      recycleId,
     } = condition;
     const skip = (pageNum - 1) * pageSize;
     try {
       const query: ObjectLiteral = Object.assign(
         {
-          isDeleted: {
-            $ne: true,
-          },
+          isDeleted: recycleId ? true : { $ne: true },
+          isCompletelyDeleted: { $ne: true },
         },
         condition.filter,
       );
@@ -184,7 +226,7 @@ export class SurveyMetaService {
       }
       if (workspaceId) {
         otherQuery.workspaceId = workspaceId;
-      } else {
+      } else if (!recycleId){
         otherQuery.$and = [
           {
             workspaceId: { $exists: false },
@@ -223,6 +265,8 @@ export class SurveyMetaService {
         //     ownerId: userId,
         //   },
         // ];
+        otherQuery.ownerId = userId;
+      } else {
         otherQuery.ownerId = userId;
       }
 

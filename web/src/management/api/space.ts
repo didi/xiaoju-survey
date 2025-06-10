@@ -96,3 +96,7 @@ export const getGroupList = (params: any) => {
 export const deleteGroup = (id: string) => {
   return axios.post(`/surveyGroup/delete`, { groupId: id })
 }
+
+export function getRecycleTotal() {
+  return axios.get('/survey/getRecycleTotal')
+}

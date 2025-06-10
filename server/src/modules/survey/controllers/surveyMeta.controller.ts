@@ -8,12 +8,18 @@ import {
   UseGuards,
   Request,
   SetMetadata,
+  Injectable,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MongoRepository } from 'typeorm';
+import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { ObjectId } from 'mongodb';
 
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { WorkspaceService } from '../../workspace/services/workspace.service';
 
 import { getFilter, getOrder } from 'src/utils/surveyUtil';
 import { HttpException } from 'src/exceptions/httpException';
@@ -36,6 +42,9 @@ export class SurveyMetaController {
     private readonly surveyMetaService: SurveyMetaService,
     private readonly logger: Logger,
     private readonly collaboratorService: CollaboratorService,
+    private readonly workspaceService: WorkspaceService,
+    @InjectRepository(SurveyMeta)
+    private surveyMetaRepository: MongoRepository<SurveyMeta>,
   ) {}
 
   @Post('/updateMeta')
@@ -90,7 +99,7 @@ export class SurveyMetaController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { curPage, pageSize, workspaceId, groupId } = value;
+    const { curPage, pageSize, workspaceId, groupId ,recycleId} = value;
     let filter = {},
       order = {};
     if (value.filter) {
@@ -109,15 +118,25 @@ export class SurveyMetaController {
     }
     const userId = req.user._id.toString();
     let cooperationList = [];
+    let workspaceList = [];
     if (groupId === GROUP_STATE.ALL) {
       cooperationList =
         await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    }
+    if (value.recycleId) {
+      cooperationList =
+        await this.collaboratorService.getCollaboratorListByUserId({ userId });
+      const getWorkspaceListResult = 
+        await this.workspaceService.getWorkspaceListByUserId(userId);
+      workspaceList = getWorkspaceListResult.surveys;
     }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
       pre[cur.surveyId] = cur;
       return pre;
     }, {});
-    const surveyIdList = cooperationList.map((item) => item.surveyId);
+    const surveyIdList1 = cooperationList.map((item) => item.surveyId);
+    const surveyIdList2 = workspaceList.map((item) => item._id.toString());
+    const surveyIdList = [...surveyIdList1, ...surveyIdList2];
     const username = req.user.username;
     const data = await this.surveyMetaService.getSurveyMetaList({
       pageNum: curPage,
@@ -129,6 +148,7 @@ export class SurveyMetaController {
       workspaceId,
       groupId,
       surveyIdList,
+      recycleId
     });
     return {
       code: 200,
@@ -143,6 +163,7 @@ export class SurveyMetaController {
           item.curStatus.date = moment(item.curStatus.date).format(fmt);
           item.subStatus.date = moment(item.subStatus.date).format(fmt);
           item.updatedAt = moment(item.updatedAt).format(fmt);
+          item.deletedAt = moment(item.deletedAt).format(fmt);
           const surveyId = item._id.toString();
           if (cooperSurveyIdMap[surveyId]) {
             item.isCollaborated = true;
@@ -157,4 +178,65 @@ export class SurveyMetaController {
       },
     };
   }
+  
+  @Get('/getRecycleTotal')
+  @HttpCode(200)
+  @UseGuards(Authentication)
+  async getRecycleTotal(@Request() req) {
+    const userId = req.user._id.toString();
+    let cooperationList = [];
+    let workspaceList = [];
+    cooperationList =
+      await this.collaboratorService.getCollaboratorListByUserId({ userId });
+    const getWorkspaceListResult = 
+      await this.workspaceService.getWorkspaceListByUserId(userId);
+    workspaceList = getWorkspaceListResult.surveys;
+    const surveyIdList1 = cooperationList.map((item) => item.surveyId);
+    const surveyIdList2 = workspaceList.map((item) => item._id.toString());
+    const surveyIdList = [...surveyIdList1, ...surveyIdList2]; 
+    
+    const surveys = await this.surveyMetaRepository.find({
+      where: {
+        _id: {
+          $in: surveyIdList1.map(id => new ObjectId(id))
+        },
+        isDeleted: true,
+        isCompletelyDeleted: { $ne: true }
+      }
+    });
+    const surveytotal1 = surveys.length; // 直接获取数组长度
+    
+    const surveys2 = await this.surveyMetaRepository.find({
+      where: {
+        _id: {
+          $in: surveyIdList2.map(id => new ObjectId(id))
+        },
+        isDeleted: true,
+        isCompletelyDeleted: { $ne: true }
+      }
+    });
+    const surveytotal2 = surveys2.length;
+    const surveys3 = await this.surveyMetaRepository.find({
+      where: {
+        ownerId: userId,
+        isDeleted: true,
+        isCompletelyDeleted: { $ne: true },
+        $and: [
+          {
+            workspaceId: { $exists: false },
+          },
+          {
+            workspaceId: null,
+          },
+        ],
+      }
+    });
+    const surveytotal3 = surveys3.length;
+    return {
+      code: 200,
+      total: surveytotal1 + surveytotal2 + surveytotal3
+    };
+  }
 }
+
+

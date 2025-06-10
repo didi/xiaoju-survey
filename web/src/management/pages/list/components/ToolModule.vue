@@ -1,6 +1,14 @@
 <template>
   <div class="tool-root" @click.stop="onClick">
-    <span class="tool-root-btn-text" :style="{ width: width + 'px' }">{{ label }}</span>
+    <span
+      class="tool-root-btn-text"
+      :style="{
+        width: width + 'px',
+        color: isCompletelyDelete ? '#EB505C ' : undefined,
+        marginLeft: isCompletelyDelete ? '12px' : undefined,
+        whiteSpace: 'nowrap',
+      }"
+    >{{ label }}</span>
   </div>
 </template>
 
@@ -12,6 +20,11 @@ export default {
     label: String,
     type: String,
     width: Number
+  },
+  computed: {
+    isCompletelyDelete() {
+      return this.value === 'completelyDelete' || this.label === '彻底删除';
+    }
   },
   methods: {
     onClick() {

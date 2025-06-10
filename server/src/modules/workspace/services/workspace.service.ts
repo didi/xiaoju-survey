@@ -4,6 +4,7 @@ import { MongoRepository } from 'typeorm';
 
 import { Workspace } from 'src/models/workspace.entity';
 import { SurveyMeta } from 'src/models/surveyMeta.entity';
+import { WorkspaceMember} from 'src/models/workspaceMember.entity';
 
 import { ObjectId } from 'mongodb';
 
@@ -25,6 +26,8 @@ export class WorkspaceService {
     private workspaceRepository: MongoRepository<Workspace>,
     @InjectRepository(SurveyMeta)
     private surveyMetaRepository: MongoRepository<SurveyMeta>,
+    @InjectRepository(WorkspaceMember)
+    private workspaceMemberRepository: MongoRepository<WorkspaceMember>,
   ) {}
 
   async create(workspace: {
@@ -182,5 +185,31 @@ export class WorkspaceService {
         'createdAt',
       ],
     });
+  }
+
+  async getWorkspaceListByUserId(userId: string) {
+    // 1. 获取用户的工作空间成员记录
+    const workspaceMembers = await this.workspaceMemberRepository.find({
+      where: {
+        userId,
+        workspaceId:{$ne:null}
+      },
+    });
+    
+    // 2. 提取工作空间ID
+    const workspaceIds = workspaceMembers.map(m => m.workspaceId);
+
+    // 4. 获取这些工作空间下的所有问卷
+    const surveys = await this.surveyMetaRepository.find({
+      where: {
+        workspaceId: {
+          $in: workspaceIds,
+        },
+      },
+    });
+
+    return {
+      surveys,
+    };
   }
 }

@@ -33,6 +33,6 @@ import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider
     SurveyMetaService,
     PluginManagerProvider,
   ],
-  exports: [WorkspaceMemberService],
+  exports: [WorkspaceMemberService, WorkspaceService],
 })
 export class WorkspaceModule {}

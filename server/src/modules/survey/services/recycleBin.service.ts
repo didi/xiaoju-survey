@@ -80,6 +80,7 @@ export class RecycleBinService {
     const dbSurvey = await this.surveyMetaRepository.findOne({
       where: {
         _id: new ObjectId(id),
+        surveyPath: surveyPath,
         isDeleted: true,
         ownerId: survey.ownerId,
       },

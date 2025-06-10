@@ -89,4 +89,42 @@ export class ResponseSchemaService {
       },
     );
   }
+
+  async restoreResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: false,
+          updatedAt: new Date(),
+          deletedAt: null,
+          curStatus: {
+            status: RECORD_STATUS.NEW,
+            date: Date.now(),
+          },
+          subStatus: {
+            status: RECORD_SUB_STATUS.DEFAULT,
+            date: Date.now(),
+          },
+        },
+      },
+    );
+  }
+
+  async completelyDeleteResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isCompletelyDeleted: true,
+          isDeleted: true,
+          deletedAt: new Date(),
+        },
+      },
+    );
+  }
 }

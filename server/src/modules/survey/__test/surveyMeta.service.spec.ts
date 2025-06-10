@@ -242,4 +242,83 @@ describe('SurveyMetaService', () => {
       });
     });
   });
+  
+  describe('restoreSurveyMeta', () => {
+    it('should restore a survey and update its status', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'restorer';
+      const operatorId = 'restorerId';
+
+      const mockUpdateResult = {
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      };
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue(mockUpdateResult);
+
+      const result = await service.restoreSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: false,
+            operator,
+            operatorId,
+            deletedAt: null,
+            curStatus: {
+              status: RECORD_STATUS.NEW,
+              date: expect.any(Number),
+            },
+            subStatus: {
+              status: RECORD_SUB_STATUS.DEFAULT,
+              date: expect.any(Number),
+            },
+          },
+        },
+      );
+      expect(result).toEqual(mockUpdateResult);
+    });
+  });
+
+  describe('completelyDeleteSurveyMeta', () => {
+    it('should completely delete a survey', async () => {
+      const surveyId = new ObjectId().toString();
+      const operator = 'deleter';
+      const operatorId = 'deleterId';
+
+      const mockUpdateResult = {
+        matchedCount: 1,
+        modifiedCount: 1,
+        acknowledged: true,
+      };
+
+      jest.spyOn(surveyRepository, 'updateOne').mockResolvedValue(mockUpdateResult);
+
+      const result = await service.completelyDeleteSurveyMeta({
+        surveyId,
+        operator,
+        operatorId,
+      });
+
+      expect(surveyRepository.updateOne).toHaveBeenCalledWith(
+        { _id: new ObjectId(surveyId) },
+        {
+          $set: {
+            isDeleted: true,
+            isCompletelyDeleted: true,
+            operator,
+            operatorId,
+            deletedAt: expect.any(Date),
+          },
+        },
+      );
+      expect(result).toEqual(mockUpdateResult);
+    });
+  });
 });

@@ -67,7 +67,8 @@ export type GroupItem = {
 
 export enum MenuType {
   PersonalGroup = 'personalGroup',
-  SpaceGroup = 'spaceGroup'
+  SpaceGroup = 'spaceGroup',
+  RecycleBin = 'recycle' 
 }
 
 export enum UserRole {

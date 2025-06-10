@@ -315,4 +315,68 @@ describe('SurveyController', () => {
       expect(result.code).toBe(200);
     });
   });
+  
+  describe('restoreSurvey', () => {
+    it('should restore a survey successfully', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyPath: 'test/path',
+      };
+
+      jest
+        .spyOn(surveyMetaService, 'restoreSurveyMeta')
+        .mockResolvedValue({ success: true });
+      jest
+        .spyOn(responseSchemaService, 'restoreResponseSchema')
+        .mockResolvedValue({ success: true });
+
+      const result = await controller.restoreSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+
+      expect(result).toEqual({ code: 200 });
+      expect(surveyMetaService.restoreSurveyMeta).toHaveBeenCalledWith({
+        surveyId: surveyId.toString(),
+        operator: 'testUser',
+        operatorId: expect.any(String),
+      });
+      expect(responseSchemaService.restoreResponseSchema).toHaveBeenCalledWith({
+        surveyPath: 'test/path',
+      });
+    });
+  });
+
+  describe('completelyDeleteSurvey', () => {
+    it('should completely delete a survey successfully', async () => {
+      const surveyId = new ObjectId();
+      const surveyMeta = {
+        _id: surveyId,
+        surveyPath: 'test/path',
+      };
+
+      jest
+        .spyOn(surveyMetaService, 'completelyDeleteSurveyMeta')
+        .mockResolvedValue({ success: true });
+      jest
+        .spyOn(responseSchemaService, 'completelyDeleteResponseSchema')
+        .mockResolvedValue({ success: true });
+
+      const result = await controller.completelyDeleteSurvey({
+        surveyMeta,
+        user: { username: 'testUser', _id: new ObjectId() },
+      });
+
+      expect(result).toEqual({ code: 200 });
+      expect(surveyMetaService.completelyDeleteSurveyMeta).toHaveBeenCalledWith({
+        surveyId: surveyId.toString(),
+        operator: 'testUser',
+        operatorId: expect.any(String),
+      });
+      expect(responseSchemaService.completelyDeleteResponseSchema).toHaveBeenCalledWith({
+        surveyPath: 'test/path',
+      });
+    });
+  });
 });

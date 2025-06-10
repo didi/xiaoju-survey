@@ -14,7 +14,8 @@ import {
   createGroup,
   getGroupList as getGroupListReq,
   updateGroup as updateGroupReq,
-  deleteGroup as deleteGroupReq
+  deleteGroup as deleteGroupReq,
+  getRecycleTotal as getRecycleTotalReq
 } from '@/management/api/space'
 
 import { GroupState, MenuType } from '@/management/utils/workSpace'
@@ -42,11 +43,19 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
       name: '团队空间',
       id: MenuType.SpaceGroup,
       children: []
+    },
+    {
+      icon: 'icon-icon_shanchu',
+      name: '回收站',
+      id: MenuType.RecycleBin,
+      total: 10,
+      children: []
     }
   ])
   const menuType = ref(MenuType.PersonalGroup)
   const groupId = ref('')
   const workSpaceId = ref('')
+  const recycleId = ref(false)
   const spaceDetail = ref<SpaceDetail | null>(null)
   const workSpaceList = ref<SpaceItem[]>([])
   const workSpaceListTotal = ref(0)
@@ -98,11 +107,20 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
   function changeWorkSpace(id: string) {
     workSpaceId.value = id
     groupId.value = ''
+    recycleId.value = false
     surveyListStore.resetSearch()
   }
 
   function changeGroup(id: string) {
     groupId.value = id
+    workSpaceId.value = ''
+    recycleId.value = false
+    surveyListStore.resetSearch()
+  }
+
+  function changeRecycle() {
+    recycleId.value = true
+    groupId.value = ''
     workSpaceId.value = ''
     surveyListStore.resetSearch()
   }
@@ -241,11 +259,27 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     }
   }
 
+  async function getRecycleTotal() {
+    try {
+      const res: any = await getRecycleTotalReq()
+      if (res.code === CODE_MAP.SUCCESS) {
+        const total = res.total
+        spaceMenus.value[2].total = total
+      } else {
+        ElMessage.error('getRecycleTotal' + res.errmsg)
+      }
+    } catch (err) {
+      ElMessage.error('getRecycleTotal' + err)
+    }
+  }
+
+
   return {
     menuType,
     spaceMenus,
     groupId,
     workSpaceId,
+    recycleId,
     spaceDetail,
     workSpaceList,
     workSpaceListTotal,
@@ -254,6 +288,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     changeMenuType,
     changeWorkSpace,
     changeGroup,
+    changeRecycle,
     addSpace,
     deleteSpace,
     updateSpace,
@@ -267,6 +302,7 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
     getGroupList,
     getGroupDetail,
     setGroupDetail,
-    deleteGroup
+    deleteGroup,
+    getRecycleTotal
   }
 })

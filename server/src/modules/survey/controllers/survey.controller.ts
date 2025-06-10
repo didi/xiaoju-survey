@@ -224,6 +224,60 @@ export class SurveyController {
   }
 
   @HttpCode(200)
+  @Post('/restoreSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async restoreSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const resMetaRes = await this.surveyMetaService.restoreSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const resResponseRes =
+      await this.responseSchemaService.restoreResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(resMetaRes));
+    this.logger.info(JSON.stringify(resResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/completelyDeleteSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async completelyDeleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const completelyDelMetaRes = await this.surveyMetaService.completelyDeleteSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const completelyDelResponseRes =
+      await this.responseSchemaService.completelyDeleteResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(completelyDelMetaRes));
+    this.logger.info(JSON.stringify(completelyDelResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
   @Post('/pausingSurvey')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')

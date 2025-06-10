@@ -71,6 +71,14 @@
           :total="groupListTotal"
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
+        <RecycleList
+          ref="recycleListRef"
+          @refresh="fetchSurveyList"
+          :loading="recycleloading"
+          :data="surveyList"
+          :total="surveyTotal"
+          v-if="menuType === MenuType.RecycleBin"
+        ></RecycleList>
       </div>
     </div>
     <SpaceModify
@@ -150,6 +158,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
+import RecycleList from './components/RecycleList.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
@@ -168,6 +177,7 @@ const {
   spaceMenus,
   workSpaceId,
   groupId,
+  recycleId,
   menuType,
   workSpaceList,
   workSpaceListTotal,
@@ -181,6 +191,8 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.RecycleBin) {
+    return '回收站'
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }
@@ -194,6 +206,7 @@ const activeValue = ref('')
 const listRef = ref<BaseListInstance | null>(null)
 
 const loading = ref(false)
+const recycleloading = ref(false)
 
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
@@ -233,6 +246,11 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
       break
+    case MenuType.RecycleBin:
+      workSpaceStore.changeMenuType(MenuType.RecycleBin)
+      workSpaceStore.changeRecycle()
+      await fetchSurveyList()
+      break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>
         parent.children.find((children: any) => children.id.toString() === id)
@@ -245,6 +263,7 @@ const handleSpaceSelect = async (id: string) => {
           workSpaceStore.changeWorkSpace(id)
         }
       }
+      await fetchSurveyList()
       listRef?.value?.resetCurrentPage()
       break
     }
@@ -261,7 +280,11 @@ const fetchSurveyList = async (params?: any) => {
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }
+  if (menuType.value === MenuType.RecycleBin) {
+    params.recycleId = true
+  }
   loading.value = true
+  await workSpaceStore.getRecycleTotal()
   await surveyListStore.getSurveyList(params)
   loading.value = false
 }

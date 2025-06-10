@@ -68,6 +68,9 @@ export class SurveyMeta extends BaseEntity {
   isDeleted: boolean;
 
   @Column()
+  isCompletelyDeleted: boolean;
+
+  @Column()
   deletedAt: Date;
 
   @BeforeInsert()

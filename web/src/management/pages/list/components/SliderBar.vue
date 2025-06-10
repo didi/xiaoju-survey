@@ -11,7 +11,8 @@
         :class="[
           index === 0 ? 'bottom' : '',
           index > 2 ? 'sub-item' : 'main-item',
-          activeValue == menu.id ? 'check-item' : ''
+          activeValue == menu.id ? 'check-item' : '',
+          menu.id == 'recycle' ? 'recycle-item' : ''
         ]"
         :index="menu.id.toString()"
         v-if="!menu.children?.length"
@@ -20,6 +21,7 @@
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
             <span>{{ menu.name }}</span>
+            <span v-if="menu.total !== undefined" class="recycle-total">{{menu.total}}</span> 
           </div>
         </template>
       </el-menu-item>
@@ -149,6 +151,14 @@ const handleMenu = (id: string) => {
       text-align: right;
       font-weight: 400;
     }
+
+    .recycle-total{
+      font-size: 14px;
+      color: #92949d;
+      text-align: right;
+      font-weight: 400;
+      margin-left: 78px
+    }
   }
   :deep(.el-menu-item-group) {
     > ul {
@@ -173,5 +183,13 @@ const handleMenu = (id: string) => {
 }
 .check-item {
   background: #fef6e6 100% !important;
+}
+.recycle-item {
+  position: absolute;
+  bottom: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #292a36;
+  height: 48px;
 }
 </style>

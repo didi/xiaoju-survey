@@ -47,6 +47,8 @@ import { Channel } from './models/channel.entity';
 import { ChannelModule } from './modules/channel/channel.module';
 import { AppManagerModule } from './modules/appManager/appManager.module';
 
+import { AiModule } from './modules/ai/ai.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -120,6 +122,7 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
     UpgradeModule,
     ChannelModule,
     AppManagerModule,
+    AiModule
   ],
   controllers: [],
   providers: [

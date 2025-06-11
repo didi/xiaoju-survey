@@ -16,10 +16,11 @@
   "dependencies": {
     "@logicflow/core": "2.0.0",
     "@logicflow/extension": "2.0.0",
+    "@nestjs/axios": "^4.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "async-validator": "^4.2.5",
-    "axios": "^1.4.0",
+    "axios": "^1.9.0",
     "copy-to-clipboard": "^3.3.3",
     "crypto-js": "^4.2.0",
     "default-passive-events": "^2.0.0",

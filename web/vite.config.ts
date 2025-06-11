@@ -126,6 +126,10 @@ export default defineConfig({
         target: 'http://127.0.0.1:3000',
         changeOrigin: true
       },
+      '/ai': {
+       target: 'http://127.0.0.1:3000',
+       changeOrigin: true
+     },
       '/exportfile': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true

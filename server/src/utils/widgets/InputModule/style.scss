@@ -1,0 +1,19 @@
+@import '@materials/questions/common/css/default.scss';
+
+.text-number-tip {
+  font-size: 0.24rem;
+  color: $font-color;
+  float: right;
+  margin-right: 0.1rem;
+  margin-top: 0.1rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}

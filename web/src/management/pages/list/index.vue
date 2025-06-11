@@ -105,7 +105,7 @@
           </div>
           <span>文本导入</span>
         </div>
-        <div class="create-method-item" @click="commingSoon">
+        <div class="create-method-item" @click="openAIImport">
           <div class="icon">
             <i class="iconfont icon-AIshengcheng"></i>
           </div>
@@ -119,7 +119,7 @@
         </div>
       </div>
     </el-dialog>
-    <div class="fiexed-text-import-wrapper" v-if="showTextImport">
+    <div class="fixed-text-import-wrapper" v-if="showTextImport">
       <div class="text-import-header">
         <div class="return no-logo-return icon-fanhui" @click="showTextImport = false">返回</div>
         <div class="title">文本导入</div>
@@ -128,6 +128,16 @@
         </el-button>
       </div>
       <TextImport @change="onTextImportChange"></TextImport>
+    </div>
+    <div class="fixed-ai-import-wrapper" v-if="showAIImport">
+      <div class="ai-import-header">
+        <div class="return no-logo-return icon-fanhui" @click="showAIImport = false">返回</div>
+        <div class="title">AI生成</div>
+        <el-button type="primary" class="publish-btn" @click="onShowCreateForm">
+          创建
+        </el-button>
+      </div>
+      <AIImport @change="onAIImportChange"></AIImport>
     </div>
     <el-dialog
       v-model="showCreateForm"
@@ -150,6 +160,7 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
+import AIImport from './components/AIImport.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
@@ -200,6 +211,7 @@ const spaceLoading = ref(false)
 const groupLoading = ref(false)
 const showCreateMethod = ref(false)
 const showTextImport = ref(false)
+const showAIImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
@@ -345,6 +357,13 @@ const openTextImport = () => {
   createMethod.value = 'textImport'
 }
 
+
+const openAIImport = () => {
+  showCreateMethod.value = false;
+  showAIImport.value = true; 
+  createMethod.value = 'aiImport'
+}
+
 const commingSoon = () => {
   ElMessage.warning('功能暂未开放，敬请期待～')
 }
@@ -386,12 +405,40 @@ const onConfirmCreate = async (formValue: { title: string; remark?: string; surv
       }
       break;
     }
+    case 'aiImport':{
+      const payload: any = {
+        ...formValue,
+        createMethod: createMethod.value,
+        questionList: questionList.value,
+      }
+      if (workSpaceId.value) {
+        payload.workspaceId = workSpaceId.value
+      }
+      const res: any = await createSurvey(payload)
+      if (res?.code === 200 && res?.data?.id) {
+        const id = res.data.id
+        router.push({
+          name: 'QuestionEditIndex',
+          params: {
+            id
+          }
+        })
+        showCreateForm.value = false
+      } else {
+        ElMessage.error(res?.errmsg || '创建失败')
+      }
+      break;
+    }
     default:
       break;
   }
 }
 
 const onTextImportChange = (newQuestionList: Array<any>) => {
+  questionList.value = newQuestionList
+}
+
+const onAIImportChange = (newQuestionList: Array<any>) => {
   questionList.value = newQuestionList
 }
 </script>
@@ -486,7 +533,7 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
   }
 }
 
-.fiexed-text-import-wrapper {
+.fixed-text-import-wrapper {
   position: fixed;
   left: 0;
   right: 0;
@@ -497,6 +544,44 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
   display: flex;
   flex-direction: column;
   .text-import-header {
+    width: 100%;
+    padding: 0 30px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px 0 rgba(74, 76, 91, 0.08);
+    .return {
+      margin-left: 20px;
+      line-height: 56px;
+      font-size: 16px;
+      color: #6e707c;
+      position: relative;
+      cursor: pointer;
+      &::before {
+        position: absolute;
+        left: -20px;
+        bottom: 2px;
+        font-weight: 600;
+        content: '<';
+      }
+    }
+    .title {
+      font-size: 16px;
+    }
+  }
+}
+.fixed-ai-import-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  .ai-import-header {
     width: 100%;
     padding: 0 30px;
     height: 55px;

@@ -1,3 +1,11 @@
+import * as dotenv from 'dotenv';
+import { resolve } from 'path';
+
+// 这一行，改成：
+dotenv.config({
+  path: resolve(process.cwd(), '.env'),
+});
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';

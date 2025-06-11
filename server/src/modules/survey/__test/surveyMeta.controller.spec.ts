@@ -26,6 +26,10 @@ describe('SurveyMetaController', () => {
             getSurveyMetaList: jest
               .fn()
               .mockResolvedValue({ count: 0, data: [] }),
+            getSurveyRecycleList: jest
+              .fn()
+              .mockResolvedValue({ count: 0, data: [] }),
+            getRecycleTotal: jest.fn().mockResolvedValue(0),
           },
         },
         {
@@ -166,6 +170,109 @@ describe('SurveyMetaController', () => {
     });
 
     expect(surveyMetaService.getSurveyMetaList).toHaveBeenCalledWith({
+      pageNum: queryInfo.curPage,
+      pageSize: queryInfo.pageSize,
+      username: req.user.username,
+      filter: {},
+      order: {},
+      surveyIdList: [],
+      userId,
+      workspaceId: undefined,
+    });
+  });
+
+  it('should get the number of recycle survey', async () => {
+    const userId = new ObjectId().toString();
+    const req = {
+      user: {
+        username: 'test-user',
+        _id: new ObjectId(userId),
+      },
+    };
+
+    jest.spyOn(surveyMetaService, 'getRecycleTotal').mockImplementation(() => {
+      return Promise.resolve(10);
+    });
+
+    const result = await controller.getRecycleTotal(req);
+
+    expect(result).toEqual({
+      code: 200,
+      data: {
+        total: 10,
+      },
+    });
+
+    expect(surveyMetaService.getRecycleTotal).toHaveBeenCalledWith(userId);
+  });
+
+  it('should get survey meta recycle list', async () => {
+    const queryInfo = {
+      curPage: 1,
+      pageSize: 10,
+    };
+    const userId = new ObjectId().toString();
+    const req = {
+      user: {
+        username: 'test-user',
+        _id: new ObjectId(userId),
+      },
+    };
+
+    jest
+      .spyOn(surveyMetaService, 'getSurveyRecycleList')
+      .mockImplementation(() => {
+        const date = new Date().getTime();
+        return Promise.resolve({
+          count: 10,
+          data: [
+            {
+              _id: new ObjectId(),
+              createdAt: date,
+              updatedAt: date,
+              curStatus: {
+                date: date,
+              },
+              subStatus: {
+                date: date,
+              },
+              surveyType: 'normal',
+            },
+          ],
+        });
+      });
+
+    const result = await controller.getRecycleList(queryInfo, req);
+
+    expect(result).toEqual({
+      code: 200,
+      data: {
+        count: 10,
+        data: expect.arrayContaining([
+          expect.objectContaining({
+            createdAt: expect.stringMatching(
+              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+            ),
+            deletedAt: expect.stringMatching(
+              /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+            ),
+            curStatus: expect.objectContaining({
+              date: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+              ),
+            }),
+            subStatus: expect.objectContaining({
+              date: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+              ),
+            }),
+            surveyType: 'normal',
+          }),
+        ]),
+      },
+    });
+
+    expect(surveyMetaService.getSurveyRecycleList).toHaveBeenCalledWith({
       pageNum: queryInfo.curPage,
       pageSize: queryInfo.pageSize,
       username: req.user.username,

@@ -46,7 +46,7 @@ export class ResponseSchemaController {
       );
     if (!responseSchema || responseSchema.isDeleted) {
       throw new HttpException(
-        '问卷不存在或已删除',
+        '该问卷已被删除，无法继续访问',
         EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
       );
     }

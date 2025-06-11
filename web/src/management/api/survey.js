@@ -13,6 +13,19 @@ export const getSurveyList = ({ curPage, filter, order, workspaceId, groupId }) 
   })
 }
 
+export const getSurveyRecycleList = ({ curPage, filter, order, workspaceId, groupId }) => {
+  return axios.get('/survey/getRecycleList', {
+    params: {
+      pageSize: 10,
+      curPage,
+      filter,
+      order,
+      workspaceId,
+      groupId
+    }
+  })
+}
+
 export const getSurveyById = (id) => {
   return axios.get('/survey/getSurvey', {
     params: {
@@ -46,6 +59,18 @@ export const getSurveyHistory = ({ surveyId, historyType }) => {
 
 export const deleteSurvey = (surveyId) => {
   return axios.post('/survey/deleteSurvey', {
+    surveyId
+  })
+}
+
+export const recoverSurvey = (surveyId) => {
+  return axios.post('/survey/recoverSurvey', {
+    surveyId
+  })
+}
+
+export const foreverDeleteSurvey = (surveyId) => {
+  return axios.post('/survey/foreverDeleteSurvey', {
     surveyId
   })
 }

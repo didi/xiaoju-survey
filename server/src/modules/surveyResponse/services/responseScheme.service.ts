@@ -85,6 +85,36 @@ export class ResponseSchemaService {
         $set: {
           isDeleted: true,
           updatedAt: new Date(),
+          isForeverDeleted: false,
+        },
+      },
+    );
+  }
+
+  async foreverDeleteResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: true,
+          updatedAt: new Date(),
+          isForeverDeleted: true,
+        },
+      },
+    );
+  }
+
+  async recoverResponseSchema({ surveyPath }) {
+    return this.responseSchemaRepository.updateOne(
+      {
+        surveyPath,
+      },
+      {
+        $set: {
+          isDeleted: false,
+          updatedAt: new Date(),
         },
       },
     );

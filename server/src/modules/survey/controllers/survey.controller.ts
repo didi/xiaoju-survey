@@ -271,6 +271,18 @@ export class SurveyController {
 
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+
+    const responseSchema =
+      await this.responseSchemaService.getResponseSchemaByPath(
+        surveyMeta.surveyPath,
+      );
+    if (!responseSchema || responseSchema.isDeleted) {
+      throw new HttpException(
+        '该问卷已被删除，无法继续访问',
+        EXCEPTION_CODE.RESPONSE_SCHEMA_REMOVED,
+      );
+    }
+
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 
@@ -384,6 +396,60 @@ export class SurveyController {
         username,
       },
     });
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/recoverSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async recoverSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const revMetaRes = await this.surveyMetaService.recoverSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const revResponseRes =
+      await this.responseSchemaService.recoverResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(revMetaRes));
+    this.logger.info(JSON.stringify(revResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/foreverDeleteSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async foreverDeleteSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+
+    const delMetaRes = await this.surveyMetaService.foreverDeleteSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const delResponseRes =
+      await this.responseSchemaService.foreverDeleteResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(delMetaRes));
+    this.logger.info(JSON.stringify(delResponseRes));
+
     return {
       code: 200,
     };

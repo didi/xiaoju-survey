@@ -15,11 +15,14 @@
         ]"
         :index="menu.id.toString()"
         v-if="!menu.children?.length"
+        :style="menu.name === '回收站' ?
+          { position: 'absolute', bottom: '0', width: '100%' } : {}"
       >
         <template #title>
           <div class="title-content">
             <i :class="['iconfont', menu.icon]"></i>
             <span>{{ menu.name }}</span>
+            <span style="margin-left: 77px">{{ menu.total || 0 }}</span>
           </div>
         </template>
       </el-menu-item>

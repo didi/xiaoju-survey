@@ -53,8 +53,16 @@
           :total="surveyTotal"
           @refresh="fetchSurveyList"
           ref="listRef"
-          v-if="workSpaceId || groupId"
+          v-if="menuType !== MenuType.Recyclebin && (workSpaceId || groupId)"
         ></BaseList>
+        <RecycleList
+          :loading="recycleBinLoading"
+          :data="surveyRecycleList"
+          :total="surveyRecycleTotal"
+          @refresh="fetchRecycleBinList"
+          ref="recycleBinListRef"
+          v-if="menuType === MenuType.Recyclebin"
+        ></RecycleList>
         <SpaceList
           ref="spaceListRef"
           @refresh="fetchSpaceList"
@@ -159,11 +167,12 @@ import { useSurveyListStore } from '@/management/stores/surveyList'
 import { type IWorkspace } from '@/management/utils/workSpace'
 import { ElMessage } from 'element-plus'
 import { createSurvey } from '@/management/api/survey'
+import RecycleList from '@/management/pages/list/components/RecycleList.vue'
 
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
 
-const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
+const { surveyList, surveyTotal, surveyRecycleList, surveyRecycleTotal } = storeToRefs(surveyListStore)
 const {
   spaceMenus,
   workSpaceId,
@@ -181,6 +190,8 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.Recyclebin) {
+    return '回收站'
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }
@@ -198,6 +209,8 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
+const recycleBinLoading = ref(false)
+
 const showCreateMethod = ref(false)
 const showTextImport = ref(false)
 const showCreateForm = ref(false)
@@ -217,6 +230,11 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
+const fetchRecycleBin = async () => {
+  workSpaceStore.changeWorkSpace('')
+  await workSpaceStore.getRecycleBin()
+}
+
 const handleSpaceSelect = async (id: string) => {
   if (activeValue.value === id) {
     return void 0
@@ -232,6 +250,11 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      break
+    case MenuType.Recyclebin:
+      workSpaceStore.changeMenuType(MenuType.Recyclebin)
+      workSpaceStore.changeWorkSpace('')
+      await fetchRecycleBinList()
       break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>
@@ -251,6 +274,22 @@ const handleSpaceSelect = async (id: string) => {
   }
 }
 
+const fetchRecycleBinList = async (params?: any) => {
+  if (!params) {
+    params = {
+      pageSize: 10,
+      curPage: 1
+    }
+  }
+  if (workSpaceId.value) {
+    params.workspaceId = workSpaceId.value
+  }
+  recycleBinLoading.value = true
+  await surveyListStore.getSurveyRecycleList(params)
+  recycleBinLoading.value = false
+  await fetchSurveyList()
+}
+
 const fetchSurveyList = async (params?: any) => {
   if (!params) {
     params = {
@@ -267,7 +306,7 @@ const fetchSurveyList = async (params?: any) => {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchGroupList(), fetchSpaceList()])
+  await Promise.all([fetchGroupList(), fetchSpaceList(), fetchRecycleBin()])
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

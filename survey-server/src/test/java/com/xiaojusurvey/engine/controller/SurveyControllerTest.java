@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.ModelExtensionsKt;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -99,13 +100,13 @@ public class SurveyControllerTest {
     @Test
     public void publishSurveyTest() {
 
-        Mockito.when(surveyService.publishSurvey(Mockito.any())).thenReturn(true);
+        Mockito.when(surveyService.publishSurvey(Mockito.any())).thenReturn(Boolean.valueOf(true));
         surveyController.publishSurvey("11111");
     }
 
 
     @Test
-    public void getListTest() throws JsonProcessingException {
+    public void getListTest() throws JsonProcessingException, UnsupportedEncodingException {
         SurveyListVO vo = new SurveyListVO();
         Mockito.when(surveyService.getSurveyList(Mockito.any())).thenReturn(vo);
 

@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,22 +155,22 @@ public class SurveyController {
 
 
     @GetMapping("/getList")
-    public RpcResult getList(SurveyListParamDTO paramDTO) throws JsonProcessingException {
+    public RpcResult getList(SurveyListParamDTO paramDTO) throws JsonProcessingException, UnsupportedEncodingException {
         SurveyListParam param = convert(paramDTO);
         SurveyListVO surveyListVO = surveyService.getSurveyList(param);
         return RpcResultUtil.createSuccessResult(surveyListVO);
     }
 
-    private SurveyListParam convert(SurveyListParamDTO paramDTO) throws JsonProcessingException {
+    private SurveyListParam convert(SurveyListParamDTO paramDTO) throws JsonProcessingException, UnsupportedEncodingException {
         ObjectMapper mapper = new ObjectMapper();
         FilterItem[] filterItems = new FilterItem[0];
         if (paramDTO.getFilter() != null && !paramDTO.getFilter().isEmpty()) {
-            String decodedFilter = java.net.URLDecoder.decode(paramDTO.getFilter(), StandardCharsets.UTF_8);
+            String decodedFilter = java.net.URLDecoder.decode(paramDTO.getFilter(), "UTF-8");
             filterItems = mapper.readValue(decodedFilter, FilterItem[].class);
         }
         OrderItem[] orderItems = new OrderItem[0];
         if (paramDTO.getOrder() != null && !paramDTO.getOrder().isEmpty()) {
-            String decodedOrder = java.net.URLDecoder.decode(paramDTO.getOrder(), StandardCharsets.UTF_8);
+            String decodedOrder = java.net.URLDecoder.decode(paramDTO.getOrder(), "UTF-8");
             orderItems = mapper.readValue(decodedOrder, OrderItem[].class);
         }
         SurveyListParam param = new SurveyListParam();

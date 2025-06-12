@@ -129,11 +129,13 @@ public class SurveyServiceImplTest {
         param.setWorkspaceId("1");
         FilterItem item = new FilterItem();
 //        item.setComparator("$regex");
+        List<FilterItem.FilterCondition> conditions = new ArrayList<>();
         FilterItem.FilterCondition condition = new FilterItem.FilterCondition();
+        conditions.add(condition);
         condition.setComparator("$regex");
         condition.setField("title");
         condition.setValue("newTime3");
-        item.setCondition(condition);
+        item.setCondition(conditions);
         param.setFilter(new FilterItem[]{item});
         List<BaseEntity> list = new ArrayList<>();
 

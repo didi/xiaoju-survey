@@ -70,6 +70,7 @@ export class SurveyMeta extends BaseEntity {
   @Column()
   deletedAt: Date;
 
+  
   @BeforeInsert()
   initDefaultInfo() {
     const now = Date.now();
@@ -81,6 +82,10 @@ export class SurveyMeta extends BaseEntity {
     if (!this.subStatus) {
       const subStatus = { status: RECORD_SUB_STATUS.DEFAULT, date: now };
       this.subStatus = subStatus;
+    }
+    
+    if (this.isDeleted === undefined || this.isDeleted === null) {
+      this.isDeleted = false;
     }
   }
 }

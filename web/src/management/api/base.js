@@ -18,7 +18,8 @@ const instance = axios.create({
 instance.interceptors.response.use(
   (response) => {
     if (response.status !== 200) {
-      throw new Error('http请求出错')
+      console.error('HTTP请求非200状态码:', response.status)
+      throw new Error(`HTTP请求出错: ${response.status}`)
     }
     const res = response.data
     if (res.code === CODE_MAP.NO_AUTH || res.code === CODE_MAP.ERR_AUTH) {
@@ -31,7 +32,22 @@ instance.interceptors.response.use(
     }
   },
   (err) => {
-    throw new Error(err)
+    console.error('HTTP请求失败:', err)
+    
+    // 提取更详细的错误信息
+    if (err.response) {
+      console.error('错误响应:', err.response)
+      
+      // 如果服务器返回了错误信息
+      if (err.response.data && err.response.data.errmsg) {
+        console.error('服务器错误信息:', err.response.data.errmsg)
+        err.message = err.response.data.errmsg
+      } else {
+        err.message = `请求失败 (${err.response.status}): ${err.message}`
+      }
+    }
+    
+    throw err
   }
 )
 

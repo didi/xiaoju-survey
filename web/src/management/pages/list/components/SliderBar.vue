@@ -6,52 +6,75 @@
     @select="handleMenu"
     :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup]"
   >
-    <template v-for="(menu, index) in props.menus" :key="menu.id">
+    <!-- 修改：增加可滚动容器 -->
+    <div class="menu-main-list">
+      <template v-for="(menu, index) in regularMenus" :key="menu.id">
+        <el-menu-item
+          :class="[
+            index === 0 ? 'bottom' : '',
+            index > 2 ? 'sub-item' : 'main-item',
+            activeValue == menu.id ? 'check-item' : ''
+          ]"
+          :index="menu.id.toString()"
+          v-if="!menu.children?.length"
+        >
+          <template #title>
+            <div class="title-content">
+              <i :class="['iconfont', menu.icon]"></i>
+              <span>{{ menu.name }}</span>
+            </div>
+          </template>
+        </el-menu-item>
+        <el-sub-menu
+          v-else
+          :index="menu.id.toString()"
+          :class="[activeValue == menu.id ? 'check-item' : '']"
+          default-opened
+        >
+          <template #title>
+            <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
+              <i :class="['iconfont', menu.icon]"></i>
+              <span>{{ menu.name }}</span>
+            </div>
+          </template>
+          <el-menu-item
+            v-for="item in menu.children"
+            :key="item.id"
+            :index="item.id.toString()"
+            :class="[activeValue == item.id ? 'check-item' : '']"
+          >
+            <div class="title-box">
+              <p class="title-text">{{ item.name }}</p>
+              <p class="title-total">{{ item.total }}</p>
+            </div>
+          </el-menu-item>
+        </el-sub-menu>
+      </template>
+    </div>
+
+    <!-- 回收站固定底部 -->
+    <template v-if="recycleBinMenu">
       <el-menu-item
-        :class="[
-          index === 0 ? 'bottom' : '',
-          index > 2 ? 'sub-item' : 'main-item',
-          activeValue == menu.id ? 'check-item' : ''
-        ]"
-        :index="menu.id.toString()"
-        v-if="!menu.children?.length"
+        class="recycle-bin-item main-item"
+        :class="[activeValue == recycleBinMenu.id ? 'check-item' : '']"
+        :index="recycleBinMenu.id.toString()"
       >
         <template #title>
-          <div class="title-content">
-            <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
+          <div class="title-content title-box">
+            <div class="recycle-bin-icon">
+              <i :class="['iconfont', recycleBinMenu.icon]"></i>
+              <span>{{ recycleBinMenu.name }}</span>
+            </div>
+            <span class="title-total" v-if="typeof recycleBinMenu.total === 'number'">{{ recycleBinMenu.total }}</span>
           </div>
         </template>
       </el-menu-item>
-      <el-sub-menu
-        v-else
-        :index="menu.id.toString()"
-        :class="[activeValue == menu.id ? 'check-item' : '']"
-        default-opened
-      >
-        <template #title>
-          <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
-            <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
-          </div>
-        </template>
-        <el-menu-item
-          v-for="item in menu.children"
-          :key="item.id"
-          :index="item.id.toString()"
-          :class="[activeValue == item.id ? 'check-item' : '']"
-        >
-          <div class="title-box">
-            <p class="title-text">{{ item.name }}</p>
-            <p class="title-total">{{ item.total }}</p>
-          </div>
-        </el-menu-item>
-      </el-sub-menu>
     </template>
   </el-menu>
 </template>
+
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { type MenuItem } from '@/management/utils/workSpace'
 import { MenuType } from '@/management/utils/workSpace'
 const menuRef = ref()
@@ -65,6 +88,16 @@ const props = withDefaults(
     activeValue: MenuType.PersonalGroup
   }
 )
+
+// Filter out the recycle bin menu
+const regularMenus = computed(() => {
+  return props.menus.filter(menu => menu.id !== MenuType.RecycleBin)
+})
+
+// Get the recycle bin menu
+const recycleBinMenu = computed(() => {
+  return props.menus.find(menu => menu.id === MenuType.RecycleBin)
+})
 
 const emit = defineEmits(['select'])
 const handleMenu = (id: string) => {
@@ -86,17 +119,17 @@ const handleMenu = (id: string) => {
   }
 }
 .el-menu-vertical {
-  border: none;
-  width: 200px;
-  min-height: 400px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  width: 200px;
+  border: none;
   position: absolute;
   top: 1px;
   bottom: 0px;
   z-index: 999;
-  overflow-x: hidden;
-  overflow-y: auto;
   box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+  overflow: hidden; // 控制滚动区域只出现在中间部分
   :deep(.el-menu-item) {
     width: 200px;
     height: 36px;
@@ -166,6 +199,25 @@ const handleMenu = (id: string) => {
     width: 100%;
   }
 }
+.menu-main-list {
+  flex: 1;
+  overflow-y: auto;
+}
+.recycle-bin-item {
+  border-top: 1px solid #f6f5f2;
+  background-color: white;
+  margin-top: auto !important;
+  position: sticky !important;
+  bottom: 0;
+}
+.recycle-bin-icon {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .iconfont {
   font-size: 16px;
   margin-right: 10px;
@@ -173,5 +225,9 @@ const handleMenu = (id: string) => {
 }
 .check-item {
   background: #fef6e6 100% !important;
+}
+.recycle-bin-spacer {
+  flex-grow: 1;
+  min-height: 20px;
 }
 </style>

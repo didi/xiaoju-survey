@@ -75,6 +75,7 @@ export class SurveyMetaService {
       createFrom,
       workspaceId,
       groupId: groupId && groupId !== '' ? groupId : null,
+      isDeleted: false,
     });
 
     return await this.surveyRepository.save(newSurvey);

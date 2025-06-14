@@ -53,7 +53,7 @@
           :total="surveyTotal"
           @refresh="fetchSurveyList"
           ref="listRef"
-          v-if="workSpaceId || groupId"
+          v-if="(workSpaceId || groupId) && menuType !== MenuType.RecycleBin"
         ></BaseList>
         <SpaceList
           ref="spaceListRef"
@@ -71,6 +71,14 @@
           :total="groupListTotal"
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
+        <RecycleBinList
+          ref="recycleBinListRef"
+          @refresh="fetchRecycleBin"
+          :loading="recycleBinLoading"
+          :data="recycleBinList"
+          :total="recycleBinTotal"
+          v-if="menuType === MenuType.RecycleBin"
+        ></RecycleBinList>
       </div>
     </div>
     <SpaceModify
@@ -146,6 +154,7 @@ import { useRouter } from 'vue-router'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import GroupList from './components/GroupList.vue'
+import RecycleBinList from './components/RecycleBinList.vue'
 import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
@@ -156,14 +165,17 @@ import CreateForm from '@/management/components/CreateForm.vue';
 import { MenuType } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
+import { useRecycleBinStore } from '@/management/stores/recycleBin'
 import { type IWorkspace } from '@/management/utils/workSpace'
 import { ElMessage } from 'element-plus'
 import { createSurvey } from '@/management/api/survey'
 
 const workSpaceStore = useWorkSpaceStore()
 const surveyListStore = useSurveyListStore()
+const recycleBinStore = useRecycleBinStore()
 
 const { surveyList, surveyTotal } = storeToRefs(surveyListStore)
+const { recycleBinList, recycleBinTotal } = storeToRefs(recycleBinStore)
 const {
   spaceMenus,
   workSpaceId,
@@ -181,6 +193,8 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.RecycleBin) {
+    return '回收站'
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }
@@ -192,8 +206,10 @@ interface BaseListInstance {
 
 const activeValue = ref('')
 const listRef = ref<BaseListInstance | null>(null)
+const recycleBinListRef = ref<any>(null)
 
 const loading = ref(false)
+const recycleBinLoading = ref(false)
 
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
@@ -217,6 +233,13 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
+// 获取回收站数据
+const fetchRecycleBin = async (params?: any) => {
+  recycleBinLoading.value = true
+  await recycleBinStore.getRecycleList(params)
+  recycleBinLoading.value = false
+}
+
 const handleSpaceSelect = async (id: string) => {
   if (activeValue.value === id) {
     return void 0
@@ -232,6 +255,12 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      break
+    case MenuType.RecycleBin:
+      workSpaceStore.changeMenuType(MenuType.RecycleBin)
+      workSpaceStore.changeWorkSpace('')
+      workSpaceStore.changeGroup('')
+      await fetchRecycleBin()
       break
     default: {
       const parentMenu = spaceMenus.value.find((parent: any) =>
@@ -433,20 +462,9 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
       }
 
       .btn {
-        width: 132px;
-        height: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .icon-shujuliebiao,
-        .icon-chuangjian {
-          padding-right: 5px;
-          font-size: 14px;
-        }
-
-        span {
-          font-size: 14px;
+        margin-left: 10px;
+        i {
+          margin-right: 6px;
         }
       }
     }

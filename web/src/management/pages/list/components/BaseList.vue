@@ -124,6 +124,7 @@ import { QOP_MAP } from '@/management/utils/constant.ts'
 import { deleteSurvey, pausingSurvey } from '@/management/api/survey'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
+import { useRecycleBinStore } from '@/management/stores/recycleBin'
 import ModifyDialog from './ModifyDialog.vue'
 import TagModule from './TagModule.vue'
 import StateModule from './StateModule.vue'
@@ -145,6 +146,7 @@ import {
 
 const surveyListStore = useSurveyListStore()
 const workSpaceStore = useWorkSpaceStore()
+const recycleBinStore = useRecycleBinStore()
 const { workSpaceId, groupAllList, menuType } = storeToRefs(workSpaceStore)
 const router = useRouter()
 const props = defineProps({
@@ -363,7 +365,7 @@ const handleClick = (key, data) => {
 }
 const onDelete = async (row) => {
   try {
-    await ElMessageBox.confirm('是否确认删除？', '提示', {
+    await ElMessageBox.confirm('删除问卷后将移至回收站，是否确认删除？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
@@ -372,20 +374,21 @@ const onDelete = async (row) => {
     return
   }
 
-  const res = await deleteSurvey(row._id)
-  if (res.code === CODE_MAP.SUCCESS) {
-    ElMessage.success('删除成功')
+  // 调用移至回收站API
+  const success = await recycleBinStore.moveSurveyToRecycleBin(row._id)
+  if (success) {
+    ElMessage.success('问卷已移至回收站')
     onRefresh()
     workSpaceStore.getGroupList()
     workSpaceStore.getSpaceList()
-  } else {
-    ElMessage.error(res.errmsg || '删除失败')
+    // 更新回收站数量
+    workSpaceStore.updateRecycleBinCount()
   }
 }
 
 const onPausing = async (row) => {
   try {
-    await ElMessageBox.confirm('“暂停回收”后问卷将不能填写，是否继续？', '提示', {
+    await ElMessageBox.confirm('"暂停回收"后问卷将不能填写，是否继续？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

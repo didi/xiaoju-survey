@@ -26,6 +26,7 @@ public enum RespErrorCode {
     RESPONSE_SCHEMA_REMOVED(9004, "问卷已删除"),
     RESPONSE_DATA_DECRYPT_ERROR(9005, "数据解密失败"),
     UPLOAD_FILE_ERROR(5001, "上传文件错误"),
+    OSS_CLIENT_ERROR(5002, "OSS客户端错误"),
     WHITELIST_ERROR(4002, "白名单校验错误");
 
     private final int code;

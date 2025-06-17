@@ -51,7 +51,7 @@ public class MinioConfig {
             List<Bucket> buckets = minioClient.listBuckets();
             log.info("Minio 连接成功，共有{}个桶", buckets.size());
         } catch (Exception e) {
-            throw new FileException("Minio 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("Minio 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
         return minioClient;
     }

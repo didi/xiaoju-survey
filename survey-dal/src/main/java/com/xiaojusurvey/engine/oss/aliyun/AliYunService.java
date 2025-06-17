@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Objects;
 
@@ -47,7 +48,7 @@ public class AliYunService {
         try {
             return ossClient.putObject(bucket, filename, inputStream);
         } catch (Exception e) {
-            throw new FileException("AliYun OSS 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("AliYun OSS 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
     }
 
@@ -74,7 +75,11 @@ public class AliYunService {
             }
             return url.toString();
         } else {
-            return (aliYunProperties.getUseSsl() ? "https" : "http") + "://" + aliYunProperties.getEndpoint() + "/" + filename;
+            try {
+                return (aliYunProperties.getUseSsl() ? "https" : "http") + "://" + aliYunProperties.getEndpoint() + "/" + URLEncoder.encode(filename, "UTF-8");
+            } catch (Exception e) {
+                throw new FileException("AliYun OSS 发生错误，utf-8编码失败" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
+            }
         }
     }
 

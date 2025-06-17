@@ -47,7 +47,7 @@ public class AliYunFileHandler extends BaseFileHandler {
                 return new FileResp(key, getFileUrl(key));
             }
         } catch (Exception e) {
-            throw new FileException("上传文件失败：" + e.getMessage(), RespErrorCode.UPLOAD_FILE_ERROR.getCode());
+            throw new FileException("上传文件失败：" + e.getMessage(), RespErrorCode.UPLOAD_FILE_ERROR.getCode(), e);
         }
     }
 

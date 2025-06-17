@@ -45,7 +45,7 @@ public class QiniuYunService {
             String token = auth.uploadToken(bucket);
             return uploadManager.put(inputStream, filename, token, null, null);
         } catch (Exception e) {
-            throw new FileException("QiniuYun OSS 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("QiniuYun OSS 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
     }
 

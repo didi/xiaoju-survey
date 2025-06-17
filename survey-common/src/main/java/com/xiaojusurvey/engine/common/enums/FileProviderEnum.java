@@ -9,8 +9,7 @@ public enum FileProviderEnum {
     MINIO("minio-oss"),
     ALI_OSS("ali-oss"),
     QINIU_OSS("qiniu-oss"),
-    LOCAL_OSS("local-oss"),
-    ;
+    LOCAL_OSS("local-oss");
 
     final String description;
 }

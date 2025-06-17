@@ -41,7 +41,7 @@ public class AliYunConfig {
             List<Bucket> buckets = ossClient.listBuckets();
             log.info("AliYun OSS 连接成功，共有{}个桶", buckets.size());
         } catch (Exception e) {
-            throw new FileException("AliYun OSS 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("AliYun OSS 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
         return ossClient;
     }

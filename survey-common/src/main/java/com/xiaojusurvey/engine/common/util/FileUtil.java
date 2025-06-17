@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileUtil {
-
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     /**
      * 时间单位与秒的映射关系
      * s: 秒
@@ -64,9 +62,10 @@ public class FileUtil {
      * @return 随机字符串
      */
     private static String generateSecureRandomString() {
+        SecureRandom secureRandom = new SecureRandom();
         // 生成 128 位随机数 (16 字节) 并转换为 UUID 格式
         byte[] randomBytes = new byte[UUID_BYTE_LENGTH];
-        SECURE_RANDOM.nextBytes(randomBytes);
+        secureRandom.nextBytes(randomBytes);
 
         // 设置 UUID 版本和变体
         randomBytes[VERSION_BYTE_INDEX] &= VERSION_MASK;  // 清除版本
@@ -121,15 +120,18 @@ public class FileUtil {
         }
         // 提取单位部分（最后一个字符）
         String unit = expiryTime.substring(expiryTime.length() - 1).toLowerCase(Locale.ROOT);
-        // 提取数字部分（除最后一个字符外的部分）
-        int time = Integer.parseInt(expiryTime.substring(0, expiryTime.length() - 1));
-
         // 检查是否为支持的时间单位
         if (!UNIT_MAPPING.containsKey(unit)) {
             throw new IllegalArgumentException("Unsupported time unit: " + unit);
         }
-        // 根据单位计算总秒数
-        return UNIT_MAPPING.get(unit) * time;
+        try {
+            // 提取数字部分（除最后一个字符外的部分）
+            int time = Integer.parseInt(expiryTime.substring(0, expiryTime.length() - 1));
+            // 根据单位计算总秒数
+            return UNIT_MAPPING.get(unit) * time;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid time format: " + expiryTime);
+        }
     }
 
 }

@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.InputStream;
+import java.net.URLEncoder;
 
 @Component
 @ConditionalOnBean(MinioClient.class)
@@ -55,7 +56,7 @@ public class MinioService {
                     .stream(inputStream, streamSize, -1)
                     .build());
         } catch (Exception e) {
-            throw new FileException("Minio 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("Minio 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
     }
 
@@ -86,13 +87,13 @@ public class MinioService {
                         .build());
             } else {
                 if (minioProperties.getUseSsl()) {
-                    return "https://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + filename;
+                    return "https://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + URLEncoder.encode(filename, "UTF-8");
                 } else {
-                    return "http://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + filename;
+                    return "http://" + minioProperties.getEndpoint() + "/" + minioProperties.getBucket() + "/" + URLEncoder.encode(filename, "UTF-8");
                 }
             }
         } catch (Exception e) {
-            throw new FileException("Minio 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("Minio 发生错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
     }
 

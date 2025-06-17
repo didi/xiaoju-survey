@@ -41,7 +41,7 @@ public class QiniuYunConfig {
             String[] buckets = bucketManager.buckets();
             log.info("QiniuYun OSS 连接成功，共有{}个桶", buckets.length);
         } catch (Exception e) {
-            throw new FileException("QiniuYun OSS 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode());
+            throw new FileException("QiniuYun OSS 连接失败，错误：" + e.getMessage(), RespErrorCode.OSS_CLIENT_ERROR.getCode(), e);
         }
         return auth;
     }

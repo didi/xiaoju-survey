@@ -49,7 +49,7 @@ public class MinioFileHandler extends BaseFileHandler {
                 return new FileResp(key, getFileUrl(key));
             }
         } catch (IOException e) {
-            throw new FileException("上传文件失败：" + e.getMessage(), RespErrorCode.UPLOAD_FILE_ERROR.getCode());
+            throw new FileException("上传文件失败：" + e.getMessage(), RespErrorCode.UPLOAD_FILE_ERROR.getCode(), e);
         }
     }
 

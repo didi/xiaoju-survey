@@ -28,62 +28,50 @@ public abstract class BaseSecurityScenario {
      * @param dataSecurityFunction 对应{@link SecurityUtils} 中的encryptData、decryptData、maskData
      */
     protected static void securityOperationProperties(Object obj, String str, DataSecurityFunction dataSecurityFunction) {
-        if (Objects.isNull(obj)) {
-            return;
-        }
-        Class<?> clazz = obj.getClass();
-        // 如果对象为基本类型（其包装类型）、接口、枚举类型，则跳过
-        if (SecurityUtils.isPrimitiveOrWrapper(clazz) || clazz.isInterface() || clazz.isEnum()) {
-            return;
-        }
-        if (obj instanceof String) {
-            log.error("{} 基于String的不可变性，不支持修改String {}", obj.getClass().getName(), obj);
-            return;
-        }
-
-        // 如果对象是map，则只操作其value
-        if (obj instanceof Map<?, ?>) {
-            Map<Object, Object> map = (Map<Object, Object>) obj;
-            for (Map.Entry<Object, Object> entry : map.entrySet()) {
-                Object value = entry.getValue();
-                if (Objects.isNull(value)) {
-                    continue;
+        if (Objects.nonNull(obj)) {
+            Class<?> clazz = obj.getClass();
+            // 如果对象为基本类型（其包装类型）、接口、枚举类型，则跳过
+            if (SecurityUtils.isPrimitiveOrWrapper(clazz) || clazz.isInterface() || clazz.isEnum() || obj instanceof String) {
+                if (obj instanceof String) {
+                    log.error("{} 基于String的不可变性，不支持修改String {}", obj.getClass().getName(), obj);
                 }
-                if (isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
-                    continue;
-                }
-                if (value instanceof String) {
-                    Object newValue = dataSecurityFunction.function(value, str);
-                    map.put(entry.getKey(), newValue);
-                } else {
-                    securityOperationProperties(value, str, dataSecurityFunction);
-                }
+                return;
             }
-            return;
-        }
-
-        // 如果对象为普通数组，则其元素都遍历一次
-        if (obj.getClass().isArray()) {
-            int length = Array.getLength(obj);
-            for (int i = 0; i < length; i++) {
-                Object value = Array.get(obj, i);
-                if (Objects.isNull(value)) {
-                    continue;
+            // 如果对象是map，则只操作其value
+            if (obj instanceof Map<?, ?>) {
+                Map<Object, Object> map = (Map<Object, Object>) obj;
+                for (Map.Entry<Object, Object> entry : map.entrySet()) {
+                    Object value = entry.getValue();
+                    if (Objects.isNull(value) || isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
+                        continue;
+                    }
+                    if (value instanceof String) {
+                        Object newValue = dataSecurityFunction.function(value, str);
+                        map.put(entry.getKey(), newValue);
+                    } else {
+                        securityOperationProperties(value, str, dataSecurityFunction);
+                    }
                 }
-                // 如果对象为基本类型（其包装类型）、接口、枚举类型，则跳过
-                if (SecurityUtils.isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
-                    continue;
+            } else if (obj.getClass().isArray()) {
+                // 如果对象为普通数组，则其元素都遍历一次
+                int length = Array.getLength(obj);
+                for (int i = 0; i < length; i++) {
+                    Object value = Array.get(obj, i);
+                    // 如果对象为基本类型（其包装类型）、接口、枚举类型，则跳过
+                    if (Objects.isNull(value) || SecurityUtils.isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
+                        continue;
+                    }
+                    if (value instanceof String) {
+                        Object newValue = dataSecurityFunction.function(value, str);
+                        Array.set(obj, i, newValue);
+                    } else {
+                        securityOperationProperties(value, str, dataSecurityFunction);
+                    }
                 }
-                if (value instanceof String) {
-                    Object newValue = dataSecurityFunction.function(value, str);
-                    Array.set(obj, i, newValue);
-                } else {
-                    securityOperationProperties(value, str, dataSecurityFunction);
-                }
+            } else {
+                complexObjectOperationProperties(obj, str, dataSecurityFunction);
             }
-            return;
         }
-        complexObjectOperationProperties(obj, str, dataSecurityFunction);
     }
 
     /**
@@ -96,44 +84,30 @@ public abstract class BaseSecurityScenario {
             try {
                 field.setAccessible(true);
                 Object fieldValue = field.get(obj);
-                if (Objects.isNull(fieldValue)) {
-                    continue;
-                }
                 // 如果对象为基本类型（其包装类型）、接口、枚举类型，则跳过
-                if (SecurityUtils.isPrimitiveOrWrapper(field.getClass()) || field.getClass().isInterface() || field.getClass().isEnum()) {
+                if (Objects.isNull(fieldValue) || SecurityUtils.isPrimitiveOrWrapper(field.getClass()) || field.getClass().isInterface() || field.getClass().isEnum()) {
                     continue;
                 }
                 // 如果对象为集合，则循环操作其元素（不可修改数组通过这种方式修改）
                 if (fieldValue instanceof Collection<?>) {
                     Collection<Object> originalCollection = (Collection<Object>) fieldValue;
-                    Collection<Object> newCollection;
-                    // 以下根据需要添加初始化集合方式
-                    if (fieldValue instanceof ArrayList) {
-                        newCollection = new ArrayList<>();
-                    } else if (fieldValue instanceof LinkedList) {
-                        newCollection = new LinkedList<>();
-                    } else if (fieldValue instanceof HashSet) {
-                        newCollection = new HashSet<>();
-                    } else if (fieldValue instanceof TreeSet) {
-                        newCollection = new TreeSet<>();
-                    } else {
-                        log.error("{} 无法操作的集合类型：{}", field.getName(), fieldValue.getClass());
-                        continue;
-                    }
-                    for (Object value : originalCollection) {
-                        if (Objects.isNull(value)) {
-                            continue;
-                        }
-                        if (isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
-                            newCollection.add(value);
-                            continue;
-                        }
-                        if (value instanceof String) {
-                            Object newValue = dataSecurityFunction.function(value, str);
-                            newCollection.add(newValue);
-                        } else {
-                            securityOperationProperties(value, str, dataSecurityFunction);
-                            newCollection.add(value);
+                    Collection<Object> newCollection = initCollectionOperationProperties(fieldValue);
+                    if (Objects.nonNull(newCollection)) {
+                        for (Object value : originalCollection) {
+                            if (Objects.isNull(value)) {
+                                continue;
+                            }
+                            if (isPrimitiveOrWrapper(value.getClass()) || value.getClass().isInterface() || value.getClass().isEnum()) {
+                                newCollection.add(value);
+                                continue;
+                            }
+                            if (value instanceof String) {
+                                Object newValue = dataSecurityFunction.function(value, str);
+                                newCollection.add(newValue);
+                            } else {
+                                securityOperationProperties(value, str, dataSecurityFunction);
+                                newCollection.add(value);
+                            }
                         }
                     }
                     field.set(obj, newCollection);
@@ -148,6 +122,29 @@ public abstract class BaseSecurityScenario {
                 return;
             }
         }
+    }
+
+    /**
+     * 根据fieldValue的集合类型返回对应的新集合
+     *
+     * @param fieldValue
+     * @return
+     */
+    private static Collection<Object> initCollectionOperationProperties(Object fieldValue) {
+        Collection<Object> newCollection = null;
+        // 以下根据需要添加初始化集合方式
+        if (fieldValue instanceof ArrayList) {
+            newCollection = new ArrayList<>();
+        } else if (fieldValue instanceof LinkedList) {
+            newCollection = new LinkedList<>();
+        } else if (fieldValue instanceof HashSet) {
+            newCollection = new HashSet<>();
+        } else if (fieldValue instanceof TreeSet) {
+            newCollection = new TreeSet<>();
+        } else {
+            log.error("无法操作的集合类型：{}", fieldValue.getClass());
+        }
+        return newCollection;
     }
 
     /**
@@ -179,21 +176,17 @@ public abstract class BaseSecurityScenario {
      * @param dataSecurityInvocation 数据安全信息
      */
     protected void encryptData(DataWrapper result, DataSecurityInvocation dataSecurityInvocation) {
-        if (Objects.isNull(dataSecurityInvocation) || Objects.isNull(result)) {
-            return;
+        if (Objects.nonNull(dataSecurityInvocation) && Objects.nonNull(result)) {
+            if (Objects.isNull(result.getValue())) {
+                result.setValue(dataSecurityInvocation.getArguments());
+            }
+            if (Objects.nonNull(result.getValue())) {
+                DataSecurity dataSecurity = dataSecurityInvocation.getDataSecurity();
+                if (Objects.nonNull(dataSecurity)) {
+                    securityOperationProperties(result, dataSecurity.secretKey(), SecurityUtils::aesEncryptSensitiveData);
+                }
+            }
         }
-        if (Objects.isNull(result.getValue())) {
-            result.setValue(dataSecurityInvocation.getArguments());
-        }
-        if (Objects.isNull(result.getValue())) {
-            return;
-        }
-        DataSecurity dataSecurity = dataSecurityInvocation.getDataSecurity();
-        if (Objects.isNull(dataSecurity)) {
-            return;
-        }
-        String secretKey = dataSecurity.secretKey();
-        securityOperationProperties(result, secretKey, SecurityUtils::aesEncryptSensitiveData);
     }
 
     /**
@@ -203,21 +196,14 @@ public abstract class BaseSecurityScenario {
      * @param dataSecurityInvocation 数据安全信息
      */
     protected void decryptData(DataWrapper result, DataSecurityInvocation dataSecurityInvocation) {
-        if (Objects.isNull(dataSecurityInvocation) || Objects.isNull(result)) {
-            return;
+        if (Objects.nonNull(dataSecurityInvocation) && Objects.nonNull(result)) {
+            if (Objects.isNull(result.getValue())) {
+                result.setValue(dataSecurityInvocation.getArguments());
+            }
+            if (Objects.nonNull(result.getValue()) && Objects.nonNull(dataSecurityInvocation.getDataSecurity())) {
+                securityOperationProperties(result, dataSecurityInvocation.getDataSecurity().secretKey(), SecurityUtils::aesDecryptData);
+            }
         }
-        if (Objects.isNull(result.getValue())) {
-            result.setValue(dataSecurityInvocation.getArguments());
-        }
-        if (Objects.isNull(result.getValue())) {
-            return;
-        }
-        DataSecurity dataSecurity = dataSecurityInvocation.getDataSecurity();
-        if (Objects.isNull(dataSecurity)) {
-            return;
-        }
-        String secretKey = dataSecurity.secretKey();
-        securityOperationProperties(result, secretKey, SecurityUtils::aesDecryptData);
     }
 
     /**
@@ -227,23 +213,16 @@ public abstract class BaseSecurityScenario {
      * @param dataSecurityInvocation 数据安全信息
      */
     protected void maskData(DataWrapper result, DataSecurityInvocation dataSecurityInvocation) {
-        if (Objects.isNull(dataSecurityInvocation) || Objects.isNull(result)) {
-            return;
+        if (Objects.nonNull(dataSecurityInvocation) && Objects.nonNull(result)) {
+            if (Objects.isNull(result.getValue())) {
+                result.setValue(dataSecurityInvocation.getArguments());
+            }
+            if (Objects.nonNull(result.getValue())) {
+                DataSecurity dataSecurity = dataSecurityInvocation.getDataSecurity();
+                if (Objects.nonNull(dataSecurity) && StringUtils.hasText(dataSecurity.placeHolder())) {
+                    securityOperationProperties(result, dataSecurity.placeHolder(), SecurityUtils::maskSensitiveData);
+                }
+            }
         }
-        if (Objects.isNull(result.getValue())) {
-            result.setValue(dataSecurityInvocation.getArguments());
-        }
-        if (Objects.isNull(result.getValue())) {
-            return;
-        }
-        DataSecurity dataSecurity = dataSecurityInvocation.getDataSecurity();
-        if (Objects.isNull(dataSecurity)) {
-            return;
-        }
-        String placeHolder = dataSecurity.placeHolder();
-        if (!StringUtils.hasText(placeHolder)) {
-            return;
-        }
-        securityOperationProperties(result, placeHolder, SecurityUtils::maskSensitiveData);
     }
 }

@@ -180,22 +180,17 @@ public class SecurityUtils {
      * @return 加密后的数据（Base64 编码的字符串），若不满足加密条件则返回原始值
      */
     public static Object aesEncryptSensitiveData(Object value, String secretKey) {
-        String str;
+        String str = null;
         if (value instanceof String) {
             str = (String) value;
         } else if (Objects.nonNull(value)) {
             str = value.toString();
-        } else {
-            return null;
-        }
-        // 非敏感数据不加密
-        if (!isDataSensitive(str)) {
-            return value;
         }
         if (!StringUtils.hasText(secretKey)) {
             secretKey = getSecretKey();
         }
-        if (!StringUtils.hasText(secretKey)) {
+        // 非敏感数据不加密
+        if (!StringUtils.hasText(secretKey) || !isDataSensitive(str)) {
             return value;
         }
         try {
@@ -206,16 +201,14 @@ public class SecurityUtils {
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (IllegalArgumentException | IllegalBlockSizeException e) {
             log.error("加密参数错误，请检查密文或密钥，错误 {} 待解密串 {} ", e.getMessage(), value);
-            return value;
         } catch (BadPaddingException e) {
             log.error("密钥或填充的初始向量长度不为16字节，请检查密钥以及初始向量", e);
-            return value;
         } catch (Exception e) {
             log.error("未知错误 ", e);
-            return value;
         } finally {
             ENCRYPT_CIPHER_THREAD_LOCAL.remove();
         }
+        return value;
     }
 
     /**
@@ -225,18 +218,16 @@ public class SecurityUtils {
      * @return 解密后的数据，若不满足解密条件则返回原始值
      */
     public static Object aesDecryptData(Object value, String secretKey) {
-        String str;
+        String str = null;
         if (value instanceof String) {
             str = (String) value;
         } else if (Objects.nonNull(value)) {
             str = value.toString();
-        } else {
-            return null;
         }
         if (!StringUtils.hasText(secretKey)) {
             secretKey = getSecretKey();
         }
-        if (!StringUtils.hasText(secretKey)) {
+        if (Objects.isNull(value) || !StringUtils.hasText(secretKey)) {
             return value;
         }
         try {
@@ -247,16 +238,14 @@ public class SecurityUtils {
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (IllegalArgumentException | IllegalBlockSizeException e) {
             log.error("解密参数错误，请检查密文或密钥，错误 {} 待解密串 {} ", e.getMessage(), value);
-            return value;
         } catch (BadPaddingException e) {
             log.error("密钥或填充的初始向量长度不为16字节，请检查密钥以及初始向量", e);
-            return value;
         } catch (Exception e) {
             log.error("未知错误 ", e);
-            return value;
         } finally {
             DECRYPT_CIPHER_THREAD_LOCAL.remove();
         }
+        return value;
     }
 
     /**
@@ -273,23 +262,19 @@ public class SecurityUtils {
         if (!StringUtils.hasText(placeHolder)) {
             placeHolder = "*";
         }
-        String str;
+        String str = null;
         if (value instanceof String) {
             str = (String) value;
         } else if (Objects.nonNull(value)) {
             str = value.toString();
-        } else {
-            return null;
         }
         if (!isDataSensitive(str)) {
             return value;
         }
         if (!StringUtils.hasText(str) || str.length() == 1) {
             return placeHolder;
-        } else if (str.length() == TOW_INT) {
-            return str.charAt(0) + placeHolder;
         } else {
-            return str.charAt(0) + placeHolder + placeHolder + placeHolder + str.charAt(str.length() - 1);
+            return str.length() == TOW_INT ? str.charAt(0) + placeHolder : str.charAt(0) + placeHolder + placeHolder + placeHolder + str.charAt(str.length() - 1);
         }
     }
 

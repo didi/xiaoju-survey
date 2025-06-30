@@ -25,6 +25,7 @@ public class RpcResultUtil {
         RpcResult<T> result = new RpcResult<>();
         result.setCode(errorCode);
         result.setMsg(msg);
+        result.setErrmsg(msg);
         result.setData(failed);
         result.setSuccess(Boolean.FALSE);
         return result;
@@ -34,6 +35,7 @@ public class RpcResultUtil {
         RpcResult<T> result = new RpcResult<>();
         result.setCode(errorCode);
         result.setMsg(msg);
+        result.setErrmsg(msg);
         result.setSuccess(Boolean.FALSE);
         return result;
     }
@@ -42,6 +44,7 @@ public class RpcResultUtil {
         RpcResult<T> result = new RpcResult<>();
         result.setCode(SYSTEM_ERROR);
         result.setMsg(msg);
+        result.setErrmsg(msg);
         result.setSuccess(Boolean.FALSE);
         return result;
     }

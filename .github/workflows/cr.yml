@@ -1,0 +1,39 @@
+# Description:
+#   - DeepSeek code review with GitHub Actions
+
+name: Code Review
+on:
+  pull_request_target:
+    types:
+      - opened      # Triggers when a PR is opened
+      - reopened    # Triggers when a PR is reopened
+      - synchronize # Triggers when a commit is pushed to the PR
+      # - labeled   # Triggers when a label is added to the PR
+
+# fix: GraphQL: Resource not accessible by integration (addComment) error
+permissions:
+  pull-requests: write
+
+jobs:
+  setup-deepseek-review:
+    runs-on: macos-latest
+    name: Code Review
+    # Make sure the code review happens only when the PR has the label 'ai review'
+    # if: contains(github.event.pull_request.labels.*.name, 'ai review')
+    steps:
+      - name: DeepSeek Code Review
+        uses: hustcer/deepseek-review@develop
+        with:
+          max-length: 500000
+          # model: 'deepseek-v3'                            # Infinigence's DeepSeek V3 model
+          # model: 'deepseek-r1'                            # Infinigence's DeepSeek R1 model
+          # base-url: 'https://cloud.infini-ai.com/maas/v1' # Infinigence's API base URL
+          # model: 'deepseek-ai/DeepSeek-V3'                # SiliconFlow's DeepSeek V3 model
+          model: 'deepseek-ai/DeepSeek-R1'                  # SiliconFlow's DeepSeek R1 model
+          base-url: 'https://api.siliconflow.cn/v1'         # SiliconFlow's API base URL
+          # Store the chat token in GitHub Secrets, don't expose it in the workflow file
+          chat-token: ${{ secrets.CHAT_TOKEN }}
+          sys-prompt: >
+            你是一名专业的代码审查助理，负责分析GitHub Pull Requests中的代码更改。
+            识别潜在问题，如代码风格违规、逻辑错误、安全漏洞，并提供
+            改进建议。以简洁的方式清楚地列出问题和建议。```

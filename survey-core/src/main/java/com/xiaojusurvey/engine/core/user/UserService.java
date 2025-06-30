@@ -11,4 +11,6 @@ public interface UserService {
     User loadUserByUsernameAndPassword(String username, String password);
 
     User getUserById(String userId);
+
+    User getUserByUsername(String whitelist);
 }

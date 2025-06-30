@@ -1,6 +1,7 @@
 package com.xiaojusurvey.engine.core.survey.dto;
 
 import lombok.Data;
+import java.util.List;
 
 /**
  * TODO
@@ -15,7 +16,7 @@ public class FilterItem {
      */
     private String comparator;
 
-    private FilterCondition condition;
+    private List<FilterCondition> condition;
 
 
     @Data

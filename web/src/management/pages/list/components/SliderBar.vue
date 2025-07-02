@@ -31,7 +31,6 @@
 
 
       <el-menu-item
-        v-else
         :class="[
           index === 0 ? 'bottom' : '',
           index > 2 ? 'sub-item' : 'main-item',

@@ -1,6 +1,5 @@
 import { Controller, Get, HttpCode, Request, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { data } from "cheerio/lib/api/attributes";
 import { Authentication } from "src/guards/authentication.guard";
 import { CollaboratorService } from '../services/collaborator.service';
 import { SurveyMetaService } from '../services/surveyMeta.service';

@@ -7,7 +7,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException } from 'src/exceptions/httpException';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
-import { is } from 'cheerio/lib/api/traversing';
 
 describe('SurveyMetaService', () => {
   let service: SurveyMetaService;

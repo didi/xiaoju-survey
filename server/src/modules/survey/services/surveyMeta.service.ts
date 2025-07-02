@@ -8,7 +8,6 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { PluginManager } from 'src/securityPlugin/pluginManager';
 import { GROUP_STATE } from 'src/enums/surveyGroup';
-import { is } from 'cheerio/lib/api/traversing';
 
 @Injectable()
 export class SurveyMetaService {

@@ -71,6 +71,7 @@
           :total="groupListTotal"
           v-if="menuType === MenuType.PersonalGroup && !groupId"
         ></GroupList>
+  
       </div>
     </div>
     <SpaceModify
@@ -86,6 +87,8 @@
       :visible="showGroupModify"
       @on-close-codify="onCloseGroupModify"
     />
+
+
     <el-dialog
       title="请选择创建方式"
       v-model="showCreateMethod"
@@ -105,7 +108,7 @@
           </div>
           <span>文本导入</span>
         </div>
-        <div class="create-method-item" @click="commingSoon">
+        <div class="create-method-item" @click="opemAIGenerate">
           <div class="icon">
             <i class="iconfont icon-AIshengcheng"></i>
           </div>
@@ -129,6 +132,21 @@
       </div>
       <TextImport @change="onTextImportChange"></TextImport>
     </div>
+    <div class="fiexed-ai-generate-wrapper" v-if="showAIGenerate">
+      <div class="ai-generate-header">
+        
+        <div class="nav-left">
+         <img src="/imgs/s-logo.webp" class="logo" />
+          <el-button link  @click="showAIGenerate = false">
+            <i class="iconfont icon-fanhui"></i>
+            返回
+          </el-button>
+        </div>
+      <h2 class="nav-title">AI智能生成问卷</h2>
+      <el-button type="primary"  class="publish-btn"  @click="onShowCreateForm">确定创建</el-button>
+      </div>
+      <AIGenerate @change="onAIGenerteChange"></AIGenerate>
+    </div>
     <el-dialog
       v-model="showCreateForm"
       title="确定创建"
@@ -143,6 +161,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import BaseList from './components/BaseList.vue'
 import SpaceList from './components/SpaceList.vue'
 import GroupList from './components/GroupList.vue'
@@ -150,14 +169,15 @@ import SliderBar from './components/SliderBar.vue'
 import SpaceModify from './components/SpaceModify.vue'
 import GroupModify from './components/GroupModify.vue'
 import TextImport from './components/TextImport.vue'
+import AIGenerate from './components/AIGenerate.vue'
 
 import TopNav from '@/management/components/TopNav.vue'
 import CreateForm from '@/management/components/CreateForm.vue';
 import { MenuType } from '@/management/utils/workSpace'
+
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
 import { useSurveyListStore } from '@/management/stores/surveyList'
 import { type IWorkspace } from '@/management/utils/workSpace'
-import { ElMessage } from 'element-plus'
 import { createSurvey } from '@/management/api/survey'
 
 const workSpaceStore = useWorkSpaceStore()
@@ -198,11 +218,13 @@ const loading = ref(false)
 const spaceListRef = ref<any>(null)
 const spaceLoading = ref(false)
 const groupLoading = ref(false)
+
 const showCreateMethod = ref(false)
 const showTextImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
+const showAIGenerate = ref(false)
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
   workSpaceStore.changeWorkSpace('')
@@ -311,6 +333,7 @@ const onCloseSpaceModify = (type: string) => {
     spaceListRef.value.onCloseModify()
   }
 }
+
 const onSpaceCreate = () => {
   modifyType.value = 'add'
   showSpaceModify.value = true
@@ -339,10 +362,22 @@ const toCreate = () => {
   router.push('/create')
 }
 
+
+
 const openTextImport = () => {
   showCreateMethod.value = false;
   showTextImport.value = true;
   createMethod.value = 'textImport'
+}
+
+const aiGenerate  = () => { 
+  router.push('/ai-generate')
+}
+
+const opemAIGenerate = () => { 
+  showCreateMethod.value = false;
+  showAIGenerate.value = true;
+  createMethod.value = 'AIGenerate'
 }
 
 const commingSoon = () => {
@@ -363,6 +398,40 @@ const onShowCreateForm = () => {
 const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
   switch(createMethod.value) {
     case 'textImport':{
+      // console.log('文本导入请求参数:', JSON.parse(JSON.stringify({
+      //   ...formValue,
+      //   createMethod: createMethod.value,
+      //   questionList: questionList.value,
+      // })))
+      const payload: any = {
+        ...formValue,
+        createMethod: createMethod.value,
+        questionList: questionList.value,
+      }
+      if (workSpaceId.value) {
+        payload.workspaceId = workSpaceId.value
+      }
+      const res: any = await createSurvey(payload)
+      if (res?.code === 200 && res?.data?.id) {
+        const id = res.data.id
+        router.push({
+          name: 'QuestionEditIndex',
+          params: {
+            id
+          }
+        })
+        showCreateForm.value = false
+      } else {
+        ElMessage.error(res?.errmsg || '创建失败')
+      }
+      break;
+    }
+    case 'AIGenerate':{
+      // console.log('AI生成请求参数:', JSON.parse(JSON.stringify({
+      //   ...formValue,
+      //   createMethod: createMethod.value,
+      //   questionList: questionList.value, 
+      // })))
       const payload: any = {
         ...formValue,
         createMethod: createMethod.value,
@@ -394,6 +463,11 @@ const onConfirmCreate = async (formValue: { title: string; remark?: string; surv
 const onTextImportChange = (newQuestionList: Array<any>) => {
   questionList.value = newQuestionList
 }
+
+const onAIGenerteChange = (newQuestionList: Array<any>) => {
+  questionList.value = newQuestionList
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -485,7 +559,6 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
     }
   }
 }
-
 .fiexed-text-import-wrapper {
   position: fixed;
   left: 0;
@@ -521,6 +594,40 @@ const onTextImportChange = (newQuestionList: Array<any>) => {
     }
     .title {
       font-size: 16px;
+    }
+  }
+}
+.fiexed-ai-generate-wrapper{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  .ai-generate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 56px;
+    border-bottom: 1px solid #eee;
+ 
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .logo {
+        height: 32px;
+      }
+    }
+
+    .nav-title {
+      font-size: 18px;
+      color: #333;
     }
   }
 }

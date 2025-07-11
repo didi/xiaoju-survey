@@ -57,7 +57,8 @@ import { AppManagerModule } from './modules/appManager/appManager.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const url = await configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
+        const rawUrl = configService.get<string>('XIAOJU_SURVEY_MONGO_URL');
+        const url = rawUrl ? rawUrl.replace(/^"+|"+$/g, '') : '';
         const authSource =
           (await configService.get<string>(
             'XIAOJU_SURVEY_MONGO_AUTH_SOURCE',

@@ -37,7 +37,7 @@ export class CreateSurveyDto {
       }),
       createMethod: Joi.string()
         .allow(null)
-        .valid('copy', 'textImport','ExcelImport')
+        .valid('copy', 'textImport','AIGenerate','ExcelImport')
         .default('basic'),
       createFrom: Joi.string().when('createMethod', {
         is: 'copy',

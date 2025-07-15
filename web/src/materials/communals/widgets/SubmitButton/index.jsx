@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { defineComponent, computed, inject } from 'vue'
 import '@/render/styles/variable.scss'
 import './index.scss'
 
@@ -17,6 +17,12 @@ export default defineComponent({
   },
   emits: ['submit', 'select'],
   setup(props, { emit }) {
+    const surveyStore = inject('surveyStore', null)
+
+    const languageCode = computed(
+      () => surveyStore?.getCurrentSurveySchema?.().baseConf?.languageCode
+    )
+
     const submit = (e) => {
       if (!props.readonly) return
       const validate = props.validate
@@ -37,6 +43,7 @@ export default defineComponent({
 
     return {
       props,
+      languageCode,
       submit,
       handleClick
     }
@@ -46,7 +53,9 @@ export default defineComponent({
     return (
       <div class={['submit-warp', 'preview-submit_wrapper']} onClick={this.handleClick}>
         <button class="submit-btn" type="primary" onClick={this.submit}>
-          {isFinallyPage ? submitConf.submitTitle : '下一页'}
+          {isFinallyPage
+            ? submitConf.submitTitle
+            : this.$t('buttonText.nextPage', {}, { locale: this.languageCode })}
         </button>
       </div>
     )

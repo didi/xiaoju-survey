@@ -11,6 +11,7 @@ import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
 import { ClientEncryptService } from '../services/clientEncrypt.service';
 import { MessagePushingTaskService } from '../../message/services/messagePushingTask.service';
+import { HttpClientService } from 'src/modules/httpClient/service/httpClient.service';
 
 import moment from 'moment';
 import * as Joi from 'joi';
@@ -25,6 +26,7 @@ import { UserService } from 'src/modules/auth/services/user.service';
 import { WorkspaceMemberService } from 'src/modules/workspace/services/workspaceMember.service';
 import { QUESTION_TYPE } from 'src/enums/question';
 import { OpenAuthGuard } from 'src/guards/openAuth.guard';
+import { CHANNEL_TYPE } from 'src/enums/channel';
 
 const optionQuestionType: Array<string> = [
   QUESTION_TYPE.RADIO,
@@ -45,6 +47,7 @@ export class SurveyResponseController {
     private readonly logger: Logger,
     private readonly userService: UserService,
     private readonly workspaceMemberService: WorkspaceMemberService,
+    private readonly httpClientService: HttpClientService,
   ) {}
 
   @Post('/createResponse')
@@ -335,6 +338,24 @@ export class SurveyResponseController {
     // 入库成功后，要把密钥删掉，防止被重复使用
     if (sessionId) {
       this.clientEncryptService.deleteEncryptInfo(sessionId);
+    }
+
+    // 发货回调,TODO:
+    if (responseSchema.code?.baseConf?.webhook) {
+      const res = await this.httpClientService.post(
+        responseSchema.code.baseConf.webhook,
+        {
+          surveyId,
+          surveyPath,
+          source: CHANNEL_TYPE.INJECT_WEB,
+          submitTime: Date.now(),
+          metadata: {},
+        },
+        { Authorization: 'Bearer xxx' },
+        2,
+        'my-secret-key',
+      );
+      console.log('res', res);
     }
   }
 }

@@ -11,7 +11,7 @@ export const CODE_MAP = {
 }
 
 const instance = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/survey',
   timeout: 10000
 })
 

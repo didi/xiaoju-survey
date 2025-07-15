@@ -20,5 +20,10 @@ export default [
       'white_list',
       'team_list'
     ]
+  },
+  {
+    title: '其他设置',
+    key: 'otherConfig',
+    formList: ['webhook']
   }
 ]

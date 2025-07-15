@@ -46,12 +46,38 @@ import { Logger } from './logger';
 import { Channel } from './models/channel.entity';
 import { ChannelModule } from './modules/channel/channel.module';
 import { AppManagerModule } from './modules/appManager/appManager.module';
+import {
+  I18nModule,
+  AcceptLanguageResolver,
+  QueryResolver,
+  HeaderResolver,
+} from 'nestjs-i18n';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV}`, // 根据 NODE_ENV 动态加载对应的 .env 文件
+      // envFilePath: `.env.${process.env.NODE_ENV}`, // 根据 NODE_ENV 动态加载对应的 .env 文件
+      envFilePath: [
+        `.env.${process.env.NODE_ENV}.local`, // 优先级更高
+        `.env.${process.env.NODE_ENV}`, // 默认环境
+        `.env`, // fallback 通用配置
+      ],
       isGlobal: true, // 使配置模块在应用的任何地方可用
+    }),
+    I18nModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        fallbackLanguage: configService.getOrThrow('FALLBACK_LANGUAGE'),
+        loaderOptions: {
+          path: join(__dirname, '/i18n/'),
+          watch: true,
+        },
+      }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
+      inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -149,7 +175,7 @@ export class AppModule {
       new SurveyUtilPlugin(),
     );
     Logger.init({
-      filename: this.configService.get<string>('XIAOJU_SURVEY_LOGGER_FILENAME'),
+      filename: 'stdout',
     });
   }
 }

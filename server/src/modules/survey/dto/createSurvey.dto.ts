@@ -5,6 +5,9 @@ export class CreateSurveyDto {
   @ApiProperty({ description: '问卷标题', required: true })
   title: string;
 
+  @ApiProperty({ description: '语言', required: true })
+  language: string;
+
   @ApiProperty({ description: '问卷备注', required: false })
   remark: string;
 
@@ -29,6 +32,7 @@ export class CreateSurveyDto {
   static validate(data) {
     return Joi.object({
       title: Joi.string().required(),
+      language: Joi.string().required().default('zh-CN'),
       remark: Joi.string().allow(null, '').default(''),
       surveyType: Joi.string().when('createMethod', {
         is: 'copy',

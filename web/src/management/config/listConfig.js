@@ -1,3 +1,5 @@
+import { joinPath } from '@/common/utils/path'
+
 export const type = {
   normal: '基础调查',
   vote: '投票评选',
@@ -66,6 +68,17 @@ export const fieldConfig = {
     width: 240,
     tip: true
   },
+  _id: {
+    title: '问卷id',
+    key: '_id',
+    width: 260,
+    comp: 'CopyText'
+  },
+  language: {
+    title: '语言',
+    key: 'language',
+    width: 120
+  },
   remark: {
     title: '备注',
     key: 'remark',
@@ -95,41 +108,46 @@ export const fieldConfig = {
   }
 }
 
+// console.log(
+//   import.meta.env.VITE_BASE,
+//   joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
+// )
+
 export const noListDataConfig = {
   title: '您还没有创建问卷',
   desc: '赶快点击右上角立即创建问卷吧！',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 
 export const noSpaceDataConfig = {
   title: '您还没有创建团队空间',
   desc: '赶快点击右上角立即创建团队空间吧！',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 export const noSpaceSearchDataConfig = {
   title: '没有满足该查询条件的团队空间',
   desc: '可以更换条件查询试试',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 export const noGroupDataConfig = {
   title: '您还没有创建问卷分组',
   desc: '赶快点击右上角立即创建问卷分组吧！',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 export const noGroupSearchDataConfig = {
   title: '没有满足该查询条件的问卷分组哦',
   desc: '可以更换条件查询试试',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 export const noSearchDataConfig = {
   title: '没有满足该查询条件的问卷',
   desc: '可以更换条件查询试试',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 export const noDownloadTaskConfig = {
   title: '没有下载任务',
   desc: '可以在数据分析进行下载',
-  img: '/imgs/icons/list-empty.webp'
+  img: joinPath(import.meta.env.VITE_BASE, 'imgs/icons/list-empty.webp')
 }
 
 export const curStatus = {

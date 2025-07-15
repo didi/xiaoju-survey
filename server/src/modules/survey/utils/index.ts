@@ -6,6 +6,7 @@ import npsCode from '../template/surveyTemplate/survey/nps.json';
 import registerCode from '../template/surveyTemplate/survey/register.json';
 import voteCode from '../template/surveyTemplate/survey/vote.json';
 import { QUESTION_TYPE } from 'src/enums/question';
+import { VITE_BASE, joinPath } from 'src/utils/path';
 
 const schemaDataMap = {
   normal: normalCode,
@@ -14,13 +15,35 @@ const schemaDataMap = {
   vote: voteCode,
 };
 
+function transformImgPaths(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(transformImgPaths);
+  } else if (typeof obj === 'object' && obj !== null) {
+    const result: Record<string, any> = {};
+    for (const key in obj) {
+      const value = obj[key];
+
+      if (
+        typeof value === 'string' &&
+        value.startsWith('/imgs/') // ✅ 检测是否是图片路径
+      ) {
+        result[key] = joinPath(VITE_BASE, value);
+      } else {
+        result[key] = transformImgPaths(value);
+      }
+    }
+    return result;
+  }
+  return obj;
+}
+
 export async function getSchemaBySurveyType(surveyType: string) {
   // Implement your logic here
   const codeData = get(schemaDataMap, surveyType);
   if (!codeData) {
     throw new Error('问卷类型不存在');
   }
-  const code = Object.assign({}, templateBase, codeData);
+  const code = Object.assign({}, transformImgPaths(templateBase), codeData);
   const nowMoment = moment();
   code.baseConf.beginTime = nowMoment.format('YYYY-MM-DD HH:mm:ss');
   code.baseConf.endTime = nowMoment
@@ -65,6 +88,11 @@ export function getListHeadByDataList(dataList) {
   listHead.push({
     field: 'createdAt',
     title: '提交时间',
+    type: QUESTION_TYPE.TEXT,
+  });
+  listHead.unshift({
+    field: 'metadata',
+    title: '业务扩展数据',
     type: QUESTION_TYPE.TEXT,
   });
   return listHead;

@@ -45,6 +45,12 @@ import {
   clearSurveySubmit,
   setSurveySubmit
 } from '../utils/storage'
+import i18n from '@/i18n'
+import { useRoute } from 'vue-router'
+import { CHANNEL_TYPE } from '@/management/enums/channel'
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/src/base.scss'
+import 'element-plus/theme-chalk/src/message.scss'
 
 interface Props {
   questionInfo?: any
@@ -55,6 +61,9 @@ withDefaults(defineProps<Props>(), {
   questionInfo: {},
   isMobile: false
 })
+
+const route = useRoute()
+console.log('route', route)
 
 const HeaderContent = communalLoader.loadComponent('HeaderContent')
 const MainTitle = communalLoader.loadComponent('MainTitle')
@@ -124,6 +133,19 @@ const normalizationRequestBody = () => {
   return result
 }
 
+const validateSubmit = function() {
+  const { source, token } = route.query || {}
+  if (source !== CHANNEL_TYPE.INJECT_APP) {
+    return true
+  } else {
+    if (!token) {
+      ElMessage.error("缺少token参数,无法提交")
+      return false
+    }
+  }
+  return true
+}
+
 const submitSurvey = async () => {
   if (surveyPath.value.length > 8) {
     router.push({ name: 'successPage' })
@@ -158,8 +180,14 @@ const handleSubmit = () => {
   if (is_again) {
     confirm({
       title: again_text,
+      cancelBtnText: i18n.global.t('buttonText.cancel', {}, { locale: (surveyStore.baseConf as Record<string, any>).languageCode }),
+      confirmBtnText: i18n.global.t('buttonText.confirm', {}, { locale: (surveyStore.baseConf as Record<string, any>).languageCode }),
       onConfirm: async () => {
         try {
+          const valid = validateSubmit()
+          if (!valid) {
+            return
+          }
           submitSurvey()
         } catch (error) {
           console.log(error)

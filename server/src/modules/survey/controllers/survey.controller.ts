@@ -27,12 +27,31 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { Logger } from 'src/logger';
 import { SurveyGuard } from 'src/guards/survey.guard';
+import { OpenAuthGuard } from 'src/guards/openAuth.guard';
+
 import { SURVEY_PERMISSION } from 'src/enums/surveyPermission';
 
 import { WorkspaceGuard } from 'src/guards/workspace.guard';
 import { PERMISSION as WORKSPACE_PERMISSION } from 'src/enums/workspace';
 import { SessionService } from '../services/session.service';
 import { UserService } from 'src/modules/auth/services/user.service';
+import { VITE_BASE, joinPath } from 'src/utils/path';
+import { GetClientSurveyDto } from '../dto/getClientSurvey.dto';
+import { conf } from 'qiniu';
+function transformBannerData(bannerData: Record<string, any>) {
+  const result = {} as typeof bannerData;
+  for (const key in bannerData) {
+    const item = bannerData[key];
+    result[key] = {
+      ...item,
+      list: item.list.map((bannerItem: any) => ({
+        ...bannerItem,
+        src: joinPath(VITE_BASE, bannerItem.src),
+      })),
+    };
+  }
+  return result;
+}
 
 @ApiTags('survey')
 @Controller('/api/survey')
@@ -53,7 +72,7 @@ export class SurveyController {
   async getBannerData() {
     return {
       code: 200,
-      data: BannerData,
+      data: transformBannerData(BannerData),
     };
   }
 
@@ -78,8 +97,15 @@ export class SurveyController {
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
 
-    const { title, remark, createMethod, createFrom, groupId, questionList } =
-      value;
+    const {
+      title,
+      language,
+      remark,
+      createMethod,
+      createFrom,
+      groupId,
+      questionList,
+    } = value;
 
     let surveyType = '',
       workspaceId = null;
@@ -94,6 +120,7 @@ export class SurveyController {
 
     const surveyMeta = await this.surveyMetaService.createSurveyMeta({
       title,
+      language,
       remark,
       surveyType,
       username: req.user.username,
@@ -109,6 +136,7 @@ export class SurveyController {
       createMethod: value.createMethod,
       createFrom: value.createFrom,
       questionList,
+      language: language,
     });
     return {
       code: 200,
@@ -178,6 +206,8 @@ export class SurveyController {
     const username = req.user.username;
 
     const configData = value.configData;
+    const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
+    configData.baseConf.languageCode = surveyMeta.language;
     await this.surveyConfService.saveSurveyConf({
       surveyId,
       schema: configData,
@@ -386,6 +416,92 @@ export class SurveyController {
     });
     return {
       code: 200,
+    };
+  }
+
+  // 授信接口
+  @Post('/client/getList')
+  @HttpCode(200)
+  @UseGuards(OpenAuthGuard)
+  async getListClient(@Body() body: GetClientSurveyDto) {
+    const { value, error } = GetClientSurveyDto.validate(body);
+    if (error) {
+      this.logger.error(error.message);
+      throw new HttpException(
+        '参数有误: ' + error.message,
+        EXCEPTION_CODE.PARAMETER_ERROR,
+      );
+    }
+    const { surveyIds } = value;
+    const [metas, configs] = await Promise.all([
+      this.surveyMetaService.getClientSurveyMetaList({ surveyIds }),
+      this.surveyConfService.getSurveyConfBySurveyIds(surveyIds),
+    ]);
+
+    // 2. 将 config 列表映射为 Map
+    const configMap = new Map(
+      configs.map((item) => [item.pageId.toString(), item]),
+    );
+
+    // 3. 合并数据
+    const merged = metas.map((meta) => ({
+      ...meta,
+      baseConf: configMap.get(meta._id?.toString())?.code.baseConf || null,
+    }));
+
+    return {
+      code: 200,
+      data: merged,
+    };
+  }
+
+  @Post('client/getConfig')
+  @HttpCode(200)
+  @UseGuards(OpenAuthGuard)
+  async getSurveyConfig(
+    @Body()
+    body: {
+      surveyId: string;
+    },
+  ) {
+    // 参数校验
+    const { value, error } = Joi.object({
+      surveyId: Joi.string().required(),
+    }).validate(body);
+
+    if (error) {
+      this.logger.error(`getSurveyConfig 参数错误: ${error.message}`);
+      throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
+    }
+
+    const surveyId = value.surveyId;
+
+    // 查找 meta 信息
+    const surveyMeta = await this.surveyMetaService.getSurveyById({ surveyId });
+    if (!surveyMeta || surveyMeta.isDeleted) {
+      throw new HttpException(
+        '问卷不存在或已删除',
+        EXCEPTION_CODE.SURVEY_NOT_FOUND,
+      );
+    }
+
+    // 查找配置信息
+    const surveyConf = await this.surveyConfService.getSurveyConfBySurveyId(
+      surveyMeta._id.toString(),
+    );
+
+    return {
+      code: 200,
+      data: {
+        meta: {
+          title: surveyMeta.title,
+          language: surveyMeta.language,
+          surveyPath: surveyMeta.surveyPath,
+          remark: surveyMeta.remark,
+          _id: surveyMeta._id.toString(),
+          baseConf: surveyConf?.code?.baseConf || {},
+        },
+      },
     };
   }
 }

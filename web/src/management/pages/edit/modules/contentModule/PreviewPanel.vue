@@ -47,7 +47,7 @@
               <iframe
                 v-loading="loading"
                 id="iframe-preview"
-                :src="`/management/preview/${surveyId}`"
+                :src="joinPath($base, `/management/preview/${surveyId}`)"
                 frameborder="0"
                 width="100%"
                 height="100%"
@@ -71,6 +71,8 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { Switch } from '@element-plus/icons-vue'
+import { joinPath } from '@/common/utils/path'
+
 const route = useRoute()
 
 const dialogTableVisible = ref(false)
@@ -79,10 +81,10 @@ const surveyId = route.params.id
 const loading = ref(true)
 const sdkType = ref(0)
 const sdkImages = [
-  '/imgs/sdk-1.png',
-  '/imgs/sdk-2.png',
-  '/imgs/sdk-3.png'
-  ]
+  joinPath(import.meta.env.VITE_BASE, '/imgs/sdk-1.png'),
+  joinPath(import.meta.env.VITE_BASE, '/imgs/sdk-2.png'),
+  joinPath(import.meta.env.VITE_BASE, '/imgs/sdk-3.png'),
+]
 const changeSdkType = () => {
   sdkType.value = (sdkType.value + 1) % 3
 }

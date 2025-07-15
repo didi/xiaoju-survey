@@ -36,12 +36,13 @@ import 'element-plus/theme-chalk/src/message.scss'
 import EmptyIndex from '@/management/components/EmptyIndex.vue'
 import LeftMenu from '@/management/components/LeftMenu.vue'
 import ChannelRow from './components/ChannelRow.vue'
+import { joinPath } from '@/common/utils/path'
 
-const backgroundImage = '/imgs/phone-bg.webp'
+const backgroundImage = joinPath(import.meta.env.VITE_BASE, '/imgs/phone-bg.webp')
 const defaultConfig = {
   title: '问卷未发布',
   desc: '点击发布后，问卷就可以对外投放了哦！',
-  img: '/imgs/icons/unpublished.webp'
+  img:  joinPath(import.meta.env.VITE_BASE, '/imgs/icons/unpublished.webp')
 }
 
 const editStore = useEditStore()
@@ -52,7 +53,7 @@ const mainChannel = computed(() => {
   let fullUrl = ''
 
   if (metaData.value) {
-    fullUrl = `${location.origin}/render/${(metaData.value as any).surveyPath}?t=${Date.now()}`
+    fullUrl = location.origin + joinPath(import.meta.env.VITE_BASE, `/render/${(metaData.value as any).surveyPath}?t=${Date.now()}`)
   }
 
   return { fullUrl }

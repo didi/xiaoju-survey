@@ -1,0 +1,82 @@
+stages: ["build", "deploy", "notify"]
+include:
+  - project: sre/components
+    file: templates/Workflows/default.gitlab-ci.yml
+
+  - component: $CI_SERVER_FQDN/sre/components/buildkit@main
+    inputs:
+      job_name: xiaoju-survey-web
+      stage: build
+      docker_image: $DOCKER_REGISTRY/${DOCKER_NAMESPACE}/${APP_NAME}
+      docker_context: .
+      dockerfile_dir: docker
+      buildkit_args: |
+        --opt build-arg:APP_NAME=${APP_NAME} \
+        --opt build-arg:SITE_ENV=${SITE_ENV} \
+        --export-cache type=s3,mode=max,endpoint_url=http://minio:9000,access_key_id=${S3_ACCESSKEY},secret_access_key=${S3_SECRETKEY},bucket=buildkit-cache,region=us-east-1,name=cache-prefix,use_path_style=true \
+        --import-cache type=s3,endpoint_url=http://minio:9000,access_key_id=${S3_ACCESSKEY},secret_access_key=${S3_SECRETKEY},bucket=buildkit-cache,region=us-east-1,name=cache-prefix,use_path_style=true
+      extra_before_scripts: |
+        mkdir -p _apps
+        if [[ "x$CI_COMMIT_TAG" = "x" ]]; then
+          image_tag=$CI_COMMIT_SHORT_SHA
+        else
+          image_tag=$CI_COMMIT_TAG
+        fi
+        # image_tag=$(echo "$PUSH_IMAGES" | sed -n 's/.*name=[^:]*:\([^,]*\).*/\1/p')
+        echo $image_tag | tee _apps/$APP_NAME
+
+  - component: $CI_SERVER_FQDN/sre/components/bumpimageversion@main
+    inputs:
+      job_name: xiaoju-survey-web
+      stage: deploy
+      git_token: $GITOPS_RW_TOKEN
+      filepaths: $filepaths
+      dependency: "build image for xiaoju-survey-web"
+
+  - component: $CI_SERVER_FQDN/sre/components/notify_feishu@main
+    inputs:
+      feishu_webhook_url: 'https://open.feishu.cn/open-apis/bot/v2/hook/ca707af3-7b36-439f-bbb6-d92abb76fedc'
+
+.rules: &ci_rules
+- if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  when: never
+- if: '$CI_ALWAYS_RUN == "true"'
+- if: $CI_COMMIT_MESSAGE =~ /SYNC.*nps-prod.*/ || $CI_COMMIT_TAG
+  variables:
+    filepaths: envs/cce-ap-singapore/services/nps/prod.yaml
+    SITE_ENV: prod
+- if: $CI_COMMIT_MESSAGE =~ /SYNC.*nps-dev1.*/
+  variables:
+    filepaths: envs/tke-ap-hongkong/services/nps/dev1.yaml
+    SITE_ENV: dev
+
+# 需要根据项目实际情况修改
+variables:
+  CI_ALWAYS_RUN:
+    description: "运行流水线, 默认false"
+    value: "false"
+  CI_ALWAYS_MESSAGE:
+    value: ""
+    description: "SYNC dev1"
+  CD_APP_STANDARD: "gp"
+  RUNNER_AFTER_SCRIPT_TIMEOUT: 60m
+
+.parallel: &parallel
+  matrix:
+    - APP_NAME: ["xiaoju-survey-web"] 
+      DOCKER_NAMESPACE: ["gp-ied"]
+
+"build image for xiaoju-survey-web":
+  parallel: *parallel
+  rules: *ci_rules
+
+"bump image version for xiaoju-survey-web":
+  variables:
+    GIT_STRATEGY: none
+  rules: *ci_rules
+  artifacts:
+    reports:
+      dotenv: build_status.env
+
+"notify_feishu":
+  rules: *ci_rules

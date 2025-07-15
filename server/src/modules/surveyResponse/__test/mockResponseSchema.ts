@@ -1,6 +1,7 @@
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
+import { VITE_BASE, joinPath } from 'src/utils/path';
 
 export const mockResponseSchema: ResponseSchema = {
   _id: new ObjectId('65f29f8892862d6a9067ad25'),
@@ -30,7 +31,10 @@ export const mockResponseSchema: ResponseSchema = {
         subTitle: '',
       },
       bannerConfig: {
-        bgImage: '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+        bgImage: joinPath(
+          VITE_BASE,
+          '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+        ),
         videoLink: '',
         postImg: '',
       },
@@ -44,7 +48,7 @@ export const mockResponseSchema: ResponseSchema = {
       answerEndTime: '',
     },
     bottomConf: {
-      logoImage: '/imgs/Logo.webp',
+      logoImage: joinPath(VITE_BASE, '/imgs/Logo.webp'),
       logoImageWidth: '60%',
     },
     skinConf: {
@@ -78,8 +82,8 @@ export const mockResponseSchema: ResponseSchema = {
       jumpConfig: {
         type: 'link',
         link: '',
-        buttonText: '',
-      },
+        buttonText: ''
+      }
     },
     dataConf: {
       dataList: [

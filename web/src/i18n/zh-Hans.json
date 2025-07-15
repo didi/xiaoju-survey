@@ -1,0 +1,23 @@
+{
+  "questionType": {
+    "text": "单行输入框",
+    "textarea": "多行输入框",
+    "radio": "单选",
+    "checkbox": "多选",
+    "binaryChoice": "判断题",
+    "radioStar": "评分",
+    "radioNps": "NPS评分",
+    "vote": "投票",
+    "cascader": "多级联动"
+  },
+  "buttonText": {
+    "submit": "提交",
+    "nextPage": "下一页",
+    "retype": "重新填写",
+    "cancel": "取消",
+    "confirm": "确定"
+  },
+  "errors": {
+    "required": "此项未填，请填写完整"
+  }
+}

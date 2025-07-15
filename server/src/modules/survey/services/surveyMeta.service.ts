@@ -41,6 +41,7 @@ export class SurveyMetaService {
 
   async createSurveyMeta(params: {
     title: string;
+    language: string;
     remark: string;
     surveyType: string;
     username: string;
@@ -52,6 +53,7 @@ export class SurveyMetaService {
   }) {
     const {
       title,
+      language,
       remark,
       surveyType,
       username,
@@ -64,6 +66,7 @@ export class SurveyMetaService {
     const surveyPath = await this.getNewSurveyPath();
     const newSurvey = this.surveyRepository.create({
       title,
+      language,
       remark: remark || '',
       surveyType: surveyType,
       surveyPath,
@@ -334,5 +337,17 @@ export class SurveyMetaService {
     }
     const total = await this.surveyRepository.count(query);
     return total;
+  }
+
+  async getClientSurveyMetaList({ surveyIds }: { surveyIds: string[] }) {
+    if (!surveyIds?.length) return [];
+    const objectIds = surveyIds.map((id) => new ObjectId(id));
+    console.log('objectIds', objectIds);
+    return this.surveyRepository.find({
+      where: {
+        _id: { $in: objectIds },
+      },
+      select: ['_id', 'title', 'language', 'remark', 'surveyPath', 'curStatus'],
+    });
   }
 }

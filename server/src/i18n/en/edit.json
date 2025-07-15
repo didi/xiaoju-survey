@@ -1,0 +1,24 @@
+{
+  "surveyConfRes": {
+    "bannerConf": {
+      "titleConfig": {
+        "mainTitle": "<h3 style=\"text-align: center;\">Welcome to our survey</h3><p>To help us serve you better, please take a few minutes to share your thoughts and suggestions.，<span style=\"color: rgb(204, 0, 0);\">We look forward to your participation！</span></p>"
+      }
+    },
+    "submitConf": {
+      "submitTitle": "Submit",
+      "confirmAgain": {
+        "is_again": true,
+        "again_text": "Are you sure you want to submit？"
+      },
+      "msgContent": {
+        "msg_200": "Your response has been submitted successfully",
+        "msg_9001": "The survey has ended. Thank you for your interest~",
+        "msg_9002": "Please do not submit the survey more than once！",
+        "msg_9003": "The survey has reached its response limit. Thank you for your support！",
+        "msg_9004": "Submission failed！"
+      },
+      "link": ""
+    }
+  }
+}

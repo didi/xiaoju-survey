@@ -15,6 +15,7 @@ import { UserService } from 'src/modules/auth/services/user.service';
 import { ResponseSecurityPlugin } from 'src/securityPlugin/responseSecurityPlugin';
 import { AuthService } from 'src/modules/auth/services/auth.service';
 import { HttpException } from 'src/exceptions/httpException';
+import { VITE_BASE, joinPath } from 'src/utils/path';
 
 jest.mock('../services/dataStatistic.service');
 jest.mock('../services/surveyMeta.service');
@@ -225,7 +226,10 @@ describe('DataStatisticController', () => {
               applyTitle: '',
             },
             bannerConfig: {
-              bgImage: '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+              bgImage: joinPath(
+                VITE_BASE,
+                '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+              ),
               bgImageAllowJump: false,
               bgImageJumpLink: '',
               videoLink: '',
@@ -243,7 +247,7 @@ describe('DataStatisticController', () => {
             answerLimitTime: 0,
           },
           bottomConf: {
-            logoImage: '/imgs/Logo.webp',
+            logoImage: joinPath(VITE_BASE, '/imgs/Logo.webp'),
             logoImageWidth: '60%',
           },
           skinConf: {
@@ -275,11 +279,6 @@ describe('DataStatisticController', () => {
               again_text: '确认要提交吗？',
             },
             link: '',
-            jumpConfig: {
-              type: 'link',
-              link: '',
-              buttonText: '',
-            },
           },
           logicConf: {
             showLogicConf: [],

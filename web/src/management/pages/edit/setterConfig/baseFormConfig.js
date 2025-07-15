@@ -1,4 +1,7 @@
 // 问卷设置，定义了字段和对应的设置器
+import { ElMessage } from 'element-plus'
+import { isHttpUrl } from '@/management/utils/url'
+
 export default {
   base_effectTime: {
     keys: ['beginTime', 'endTime'],
@@ -103,7 +106,7 @@ export default {
     type: 'WhiteList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
-      return data.whitelistType == 'CUSTOM'
+      return data.whitelistType === 'CUSTOM'
     }
   },
   team_list: {
@@ -112,7 +115,15 @@ export default {
     type: 'TeamMemberList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
-      return data.whitelistType == 'MEMBER'
+      return data.whitelistType === 'MEMBER'
+    }
+  },
+  webhook: {
+    key: 'webhook',
+    label: '回调地址',
+    type: 'InputSetter',
+    validate: (val) => {
+      return isHttpUrl(val) || ElMessage.warning('请输入正确的回调地址')
     }
   }
 }

@@ -59,11 +59,12 @@ import ChannelRow from './components/ChannelRow.vue'
 import ChannelList from './components/ChannelList.vue'
 import ChannelCards from './components/ChannelCards.vue'
 import Navbar from './components/Navbar.vue'
+import { joinPath } from '@/common/utils/path'
 
 const defaultConfig = {
   title: '问卷未发布',
   desc: '点击发布后，问卷就可以对外投放了哦！',
-  img: '/imgs/icons/unpublished.webp'
+  img: joinPath(import.meta.env.VITE_BASE, '/imgs/icons/unpublished.webp')
 }
 const channelStore = useChannelStore()
 const editStore = useEditStore()
@@ -77,7 +78,7 @@ const mainChannel = computed(() => {
   let fullUrl = ''
 
   if (metaData.value) {
-    fullUrl = `${location.origin}/render/${(metaData.value as any).surveyPath}?t=${Date.now()}`
+    fullUrl = location.origin + joinPath(import.meta.env.VITE_BASE, `/render/${(metaData.value as any).surveyPath}?t=${Date.now()}`)
   }
 
   return { fullUrl }

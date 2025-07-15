@@ -1,6 +1,6 @@
-import { defineComponent, watch, ref, computed } from 'vue'
+import { defineComponent, watch, computed, ref, inject } from 'vue'
 import { filterXSS } from '@/common/xss'
-import { typeTagLabels } from '@/common/typeEnum.ts'
+import { typeTagLabels, getTypeTagLabels } from '@/common/typeEnum.ts'
 
 import './style.scss'
 
@@ -39,6 +39,12 @@ export default defineComponent({
   setup(props, { slots }) {
     const status = ref('')
     const moduleTitleRef = ref()
+    const surveyStore = inject('surveyStore', null)
+
+    const languageCode = computed(
+      () => surveyStore?.getCurrentSurveySchema?.().baseConf?.languageCode
+    )
+
     watch(
       () => props.isSelected,
       () => {
@@ -59,9 +65,16 @@ export default defineComponent({
       const types = props.showType ? [props.type] : []
       if (!types || !types.length) return ''
       let ret = ''
+      // console.log('languageCode', languageCode.value)
+      // console.log('types', types)
       types.forEach((t) => {
         if (ret) return
-        const tv = typeTagLabels && typeTagLabels[t]
+        let tv
+        if (surveyStore) {
+          tv = getTypeTagLabels(languageCode.value)[t]
+        } else {
+          tv = typeTagLabels && typeTagLabels[t]
+        }
         if (tv && typeof tv === 'string') {
           ret = tv.trim()
         }

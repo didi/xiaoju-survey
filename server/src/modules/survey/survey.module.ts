@@ -42,6 +42,7 @@ import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
+import { AppManagerModule } from '../appManager/appManager.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { Session } from 'src/models/session.entity';
     AuthModule,
     WorkspaceModule,
     FileModule,
+    AppManagerModule,
   ],
   controllers: [
     DataStatisticController,

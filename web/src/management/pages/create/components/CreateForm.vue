@@ -18,6 +18,16 @@
         />
         <p class="form-item-tip">该标题可在打开问卷的浏览器顶部展示</p>
       </el-form-item>
+      <el-form-item prop="language" label="语言">
+        <el-select v-model="form.language" placeholder="请选择语言">
+          <el-option
+            v-for="item in languageList"
+            :key="item?.code"
+            :label="item?.name"
+            :value="item?.code"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="remark" label="问卷备注">
         <el-input
           v-model="form.remark"
@@ -55,6 +65,7 @@ import { createSurvey } from '@/management/api/survey'
 import { SURVEY_TYPE_LIST } from '../types'
 import { MenuType, GroupState } from '@/management/utils/workSpace'
 import { useWorkSpaceStore } from '@/management/stores/workSpace'
+import { languageList } from '@/management/constants/language'
 
 interface Props {
   selectType?: string
@@ -72,11 +83,13 @@ const ruleForm = ref<any>(null)
 
 const state = reactive({
   rules: {
-    title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
+    title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],
+    language: [{ required: true, message: '请选择语言', trigger: 'change' }],
   },
   canSubmit: true,
   form: {
     title: '问卷调研',
+    language: 'zh-Hans',
     remark: '问卷调研',
     groupId:
       groupId.value === GroupState.All || groupId.value === GroupState.Not ? '' : groupId.value
@@ -180,3 +193,4 @@ const submit = () => {
   letter-spacing: 0;
 }
 </style>
+

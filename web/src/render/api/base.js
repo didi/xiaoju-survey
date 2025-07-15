@@ -3,7 +3,7 @@ import sha256 from 'crypto-js/sha256'
 
 // 生成axios实例
 const instance = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/survey',
   timeout: 3000
 })
 

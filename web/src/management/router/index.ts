@@ -14,6 +14,7 @@ import 'element-plus/theme-chalk/src/button.scss'
 import 'element-plus/theme-chalk/src/overlay.scss'
 import { useUserStore } from '@/management/stores/user'
 import { useEditStore } from '@/management/stores/edit'
+import { joinPath } from '@/common/utils/path'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -176,9 +177,8 @@ const routes: RouteRecordRaw[] = [
     }
   }
 ]
-
 const router = createRouter({
-  history: createWebHistory('/management'),
+  history: createWebHistory(joinPath(import.meta.env.VITE_BASE, 'management')),
   routes
 })
 

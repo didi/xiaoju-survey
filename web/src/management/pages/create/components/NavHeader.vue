@@ -2,7 +2,7 @@
   <div :class="['nav-header', `${boxShadow ? 'box-shadow' : null}`]">
     <div class="left">
       <div class="logo">
-        <img class="logoImg" :src="img" @click="toHomePage" />
+        <img class="logoImg" src="/imgs/s-logo.webp" @click="toHomePage" />
       </div>
       <div class="return no-logo-return icon-fanhui" @click="onBack">返回</div>
     </div>
@@ -20,7 +20,7 @@ withDefaults(defineProps<Props>(), {
   boxShadow: true
 })
 
-const img = '/imgs/s-logo.webp'
+// const img = '/imgs/s-logo.webp'
 
 const router = useRouter()
 

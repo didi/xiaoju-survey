@@ -16,7 +16,7 @@ export class OpenAuthGuard implements CanActivate {
 
     if (!appId) {
       throw new HttpException(
-        'Missing required parameters',
+        'Missing required appId',
         EXCEPTION_CODE.PARAMETER_ERROR,
       );
     }

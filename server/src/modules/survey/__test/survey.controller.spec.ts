@@ -76,6 +76,7 @@ describe('SurveyController', () => {
     it('should create a survey and return the survey id', async () => {
       const surveyInfo = {
         surveyType: 'normal',
+        language: 'zh-Hans',
         remark: '问卷调研',
         title: '问卷调研',
       };

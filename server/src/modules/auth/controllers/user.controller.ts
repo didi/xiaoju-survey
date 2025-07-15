@@ -1,10 +1,12 @@
 import {
   Controller,
   Get,
+  Post,
   Query,
   HttpCode,
   UseGuards,
   Request,
+  Headers,
 } from '@nestjs/common';
 
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -15,12 +17,16 @@ import { HttpException } from 'src/exceptions/httpException';
 
 import { UserService } from '../services/user.service';
 import { GetUserListDto } from '../dto/getUserList.dto';
+import { AuthService } from '../services/auth.service';
 
 @ApiTags('user')
 @ApiBearerAuth()
 @Controller('/api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(Authentication)
   @Get('/getUserList')
@@ -59,6 +65,32 @@ export class UserController {
       data: {
         userId: req.user._id.toString(),
         username: req.user.username,
+      },
+    };
+  }
+
+  @UseGuards(Authentication)
+  @Post('/getUsers')
+  async getUsers() {
+    return {
+      code: 200,
+      data: await this.userService.findAll(),
+    };
+  }
+
+  // 通过token获取个人信息
+  @UseGuards(Authentication)
+  @Post('/getUserInfoV2')
+  async getUserInfoV2(@Headers('authorization') authHeader: string) {
+    console.log('Authorization Header:', authHeader);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_schema, credential] = authHeader?.split(' ') ?? [];
+    const user = await this.authService.verifyToken(credential);
+    return {
+      code: 200,
+      data: {
+        userId: user._id.toString(),
+        username: user.username,
       },
     };
   }

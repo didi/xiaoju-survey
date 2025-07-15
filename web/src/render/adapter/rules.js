@@ -7,6 +7,7 @@ import {
 } from 'lodash-es'
 import { INPUT, RATES, QUESTION_TYPE } from '@/common/typeEnum.ts'
 import { regexpMap } from '@/common/regexpMap.ts'
+import i18n from '@/i18n'
 
 const msgMap = {
   '*': '必填',
@@ -66,15 +67,16 @@ export function numberMaxValidator(value, numberRangeMax) {
 }
 
 // 根据提醒和题目的配置，生成本题的校验规则
-export function generateValidArr(
+export function generateValidArr({
   isRequired,
   valid,
   minNum,
   textRangeMin,
   type,
   numberRangeMin,
-  numberRangeMax
-) {
+  numberRangeMax,
+  languageCode = 'zh-Hans'
+}) {
   const validArr = []
   const isInput = INPUT.indexOf(type) !== -1
   if (isRequired || valid === '*') {
@@ -82,7 +84,7 @@ export function generateValidArr(
     if (!isInput) {
       validArr.push({
         required: true,
-        message: '此项未填，请填写完整'
+        message: i18n.global.t('errors.required', {}, { locale: languageCode })
         // trigger: 'change|blur'
       })
     } else {
@@ -92,7 +94,7 @@ export function generateValidArr(
           let errors = []
           let tip = ''
           if (value === '' || value?.replace(/\s*/, '') === '') {
-            tip = '此项未填，请填写完整'
+            tip = i18n.global.t('errors.required', {}, { locale: languageCode })
           }
           if (tip) {
             errors = [tip]
@@ -209,6 +211,8 @@ const generateOthersKeyMap = (question) => {
 
 // 生成所有题目的校验规则
 export default function (questionConfig) {
+  console.log('questionConfig', questionConfig)
+  const { languageCode } = questionConfig.baseConf
   const dataList = _get(questionConfig, 'dataConf.dataList')
   const rules = dataList.reduce((pre, current) => {
     const {
@@ -234,15 +238,16 @@ export default function (questionConfig) {
     const numberRangeMin = _get(numberRange, 'min.value')
     const numberRangeMax = _get(numberRange, 'max.value')
 
-    const validArr = generateValidArr(
+    const validArr = generateValidArr({
       isRequired,
       valid,
       minNum,
       textRangeMin,
       type,
       numberRangeMin,
-      numberRangeMax
-    )
+      numberRangeMax,
+      languageCode
+    })
 
     validMap = { [field]: validArr }
 
@@ -252,7 +257,11 @@ export default function (questionConfig) {
         if (rangeConfig) {
           for (const key in rangeConfig) {
             if (rangeConfig[key].isShowInput && rangeConfig[key].required) {
-              _set(validMap, `${field}_${key}`, generateValidArr(true, ''))
+              _set(
+                validMap,
+                `${field}_${key}`,
+                generateValidArr({ isRequired: true, valid: '', languageCode })
+              )
             }
           }
         }
@@ -261,7 +270,11 @@ export default function (questionConfig) {
           const othersKey = `${field}_${item.hash}`
           const { mustOthers } = item
           if (mustOthers) {
-            _set(validMap, othersKey, generateValidArr(true, ''))
+            _set(
+              validMap,
+              othersKey,
+              generateValidArr({ isRequired: true, valid: '', languageCode })
+            )
           }
         })
       }

@@ -1,3 +1,6 @@
+import i18n from '@/i18n'
+import type { SupportedLocale } from '@/i18n'
+
 // 题型枚举
 export enum QUESTION_TYPE {
   TEXT = 'text',
@@ -8,7 +11,7 @@ export enum QUESTION_TYPE {
   RADIO_STAR = 'radio-star',
   RADIO_NPS = 'radio-nps',
   VOTE = 'vote',
-  CASCADER = 'cascader',
+  CASCADER = 'cascader'
 }
 
 // 题目类型标签映射对象
@@ -21,8 +24,24 @@ export const typeTagLabels: Record<QUESTION_TYPE, string> = {
   [QUESTION_TYPE.RADIO_STAR]: '评分',
   [QUESTION_TYPE.RADIO_NPS]: 'NPS评分',
   [QUESTION_TYPE.VOTE]: '投票',
-  [QUESTION_TYPE.CASCADER]: '多级联动',
+  [QUESTION_TYPE.CASCADER]: '多级联动'
 }
+// 改为函数形式，接收language参数
+export const getTypeTagLabels = (language: SupportedLocale) => ({
+  [QUESTION_TYPE.TEXT]: i18n.global.t('questionType.text', {}, { locale: language }),
+  [QUESTION_TYPE.TEXTAREA]: i18n.global.t('questionType.textarea', {}, { locale: language }),
+  [QUESTION_TYPE.RADIO]: i18n.global.t('questionType.radio', {}, { locale: language }),
+  [QUESTION_TYPE.CHECKBOX]: i18n.global.t('questionType.checkbox', {}, { locale: language }),
+  [QUESTION_TYPE.BINARY_CHOICE]: i18n.global.t(
+    'questionType.binaryChoice',
+    {},
+    { locale: language }
+  ),
+  [QUESTION_TYPE.RADIO_STAR]: i18n.global.t('questionType.radioStar', {}, { locale: language }),
+  [QUESTION_TYPE.RADIO_NPS]: i18n.global.t('questionType.radioNps', {}, { locale: language }),
+  [QUESTION_TYPE.VOTE]: i18n.global.t('questionType.vote', {}, { locale: language }),
+  [QUESTION_TYPE.CASCADER]: i18n.global.t('questionType.cascader', {}, { locale: language })
+})
 
 // 输入类题型
 export const INPUT = [QUESTION_TYPE.TEXT, QUESTION_TYPE.TEXTAREA]

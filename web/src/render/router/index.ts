@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { joinPath } from '@/common/utils/path'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,8 +31,10 @@ const routes: RouteRecordRaw[] = [
 ]
 // 兼容预览模式
 const base = window.location.pathname.includes('preview') ? 'management/preview' : 'render'
+const finalBase = joinPath(import.meta.env.VITE_BASE, base)
+
 const router = createRouter({
-  history: createWebHistory(base),
+  history: createWebHistory(finalBase),
   routes
 })
 

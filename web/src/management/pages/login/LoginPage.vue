@@ -2,7 +2,7 @@
   <div
     class="login-page"
     :style="{
-      background: `url('/imgs/create/background.webp') no-repeat bottom right`,
+      background: `url(${joinPath(VITE_BASE, 'imgs/create/background.webp')}) no-repeat bottom right`,
       'background-size': 'cover'
     }"
   >
@@ -82,6 +82,7 @@ import { useUserStore } from '@/management/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const VITE_BASE = import.meta.env.VITE_BASE
 
 interface FormData {
   name: string

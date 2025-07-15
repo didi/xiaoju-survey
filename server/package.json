@@ -19,6 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -41,6 +42,7 @@
     "mongodb": "^5.9.2",
     "ms": "^2.1.3",
     "nanoid": "^3.3.7",
+    "nestjs-i18n": "^10.5.1",
     "node-fetch": "^2.7.0",
     "node-forge": "^1.3.1",
     "node-xlsx": "^0.24.0",

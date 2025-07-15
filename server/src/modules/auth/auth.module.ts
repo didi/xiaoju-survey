@@ -11,11 +11,12 @@ import { Captcha } from 'src/models/captcha.entity';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { LoggerProvider } from 'src/logger/logger.provider';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Captcha]), ConfigModule],
   controllers: [AuthController, UserController],
-  providers: [UserService, AuthService, CaptchaService],
+  providers: [UserService, AuthService, CaptchaService, LoggerProvider],
   exports: [UserService, AuthService],
 })
 export class AuthModule {}

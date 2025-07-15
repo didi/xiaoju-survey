@@ -154,6 +154,10 @@ export interface BaseConf {
   whitelist?: string[];
   // 提示语
   whitelistTip?: string;
+  // 语言
+  languageCode?: string;
+  // 发货回调
+  webhook?: string;
 }
 
 export interface SkinConf {

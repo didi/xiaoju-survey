@@ -16,6 +16,7 @@ import { storeToRefs } from 'pinia'
 import communalLoader from '@materials/communals/communalLoader.js'
 import { useErrorInfo } from '../stores/errorInfo'
 import { useSurveyStore } from '../stores/survey'
+import { joinPath } from '@/common/utils/path'
 
 const LogoIcon = communalLoader.loadComponent('LogoIcon')
 
@@ -23,8 +24,8 @@ const surveyStore = useSurveyStore()
 const errorStore = useErrorInfo()
 const { errorInfo } = storeToRefs(errorStore)
 const imageMap = {
-  overTime: '/imgs/icons/overtime.webp',
-  default: '/imgs/icons/error.webp'
+  overTime: joinPath(import.meta.env.VITE_BASE, '/imgs/icons/overtime.webp'),
+  default: joinPath(import.meta.env.VITE_BASE, '/imgs/icons/error.webp')
 }
 
 const errorImage = computed(() => {

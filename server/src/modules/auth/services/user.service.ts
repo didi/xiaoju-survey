@@ -91,4 +91,10 @@ export class UserService {
     });
     return list;
   }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find({
+      select: ['_id', 'username'],
+    });
+  }
 }

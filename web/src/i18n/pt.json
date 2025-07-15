@@ -1,0 +1,23 @@
+{
+  "questionType": {
+    "text": "Campo de texto (linha única)",
+    "textarea": "Campo de texto (múltiplas linhas)",
+    "radio": "Escolha única",
+    "checkbox": "Múltipla escolha",
+    "binaryChoice": "Verdadeiro ou falso",
+    "radioStar": "Avaliação",
+    "radioNps": "Pontuação NPS",
+    "vote": "Votação",
+    "cascader": "Seleção em cascata"
+  },
+  "buttonText": {
+    "submit": "Enviar",
+    "nextPage": "Próxima página",
+    "retype": "Preencha novamente",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar"
+  },
+  "errors": {
+    "required": "Campo obrigatório. Por favor, preencha."
+  }
+}

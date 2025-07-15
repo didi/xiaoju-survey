@@ -1,0 +1,24 @@
+{
+  "surveyConfRes": {
+    "bannerConf": {
+      "titleConfig": {
+        "mainTitle": "<h3 style=\"text-align: center;\">歡迎填寫問卷</h3><p>爲了給您提供更好的服務，希望您能抽出幾分鐘時間，將您的感受和建議告訴我們，<span style=\"color: rgb(204, 0, 0);\">期待您的參與！</span></p>"
+      }
+    },
+    "submitConf": {
+      "submitTitle": "提交",
+      "confirmAgain": {
+        "is_again": true,
+        "again_text": "確認要提交嗎？"
+      },
+      "msgContent": {
+        "msg_200": "提交成功",
+        "msg_9001": "您來晚了，感謝支持問卷~",
+        "msg_9002": "請勿多次提交！",
+        "msg_9003": "您來晚了，已經滿額！",
+        "msg_9004": "提交失敗！"
+      },
+      "link": ""
+    }
+  }
+}

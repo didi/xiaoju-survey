@@ -1,0 +1,24 @@
+{
+  "surveyConfRes": {
+    "bannerConf": {
+      "titleConfig": {
+        "mainTitle": "<h3 style=\"text-align: center;\"Bem-vindo à nossa pesquisa</h3><p>Para melhor atendê-lo, pedimos que reserve alguns minutos para compartilhar suas opiniões e sugestões，<span style=\"color: rgb(204, 0, 0);\">Aguardamos sua participação！</span></p>"
+      }
+    },
+    "submitConf": {
+      "submitTitle": "Enviar",
+      "confirmAgain": {
+        "is_again": true,
+        "again_text": "Deseja realmente enviar？"
+      },
+      "msgContent": {
+        "msg_200": "Sua resposta foi enviada com sucesso",
+        "msg_9001": "A pesquisa já foi encerrada. Obrigado pelo seu interesse~",
+        "msg_9002": "Por favor, não envie múltiplas vezes！",
+        "msg_9003": "O número máximo de respostas já foi atingido. Obrigado！",
+        "msg_9004": "Falha ao enviar！"
+      },
+      "link": ""
+    }
+  }
+}

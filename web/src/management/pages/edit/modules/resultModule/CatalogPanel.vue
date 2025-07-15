@@ -21,6 +21,7 @@ import { storeToRefs } from 'pinia'
 
 import { EDIT_STATUS_MAP } from './components/enum'
 import { useEditStore } from '@/management/stores/edit'
+import { joinPath } from '@/common/utils/path'
 
 const editStore = useEditStore()
 const { currentEditStatus } = storeToRefs(editStore)
@@ -28,12 +29,12 @@ const statusList = [
   {
     type: EDIT_STATUS_MAP.SUCCESS,
     title: '提交成功',
-    previewImg: '/imgs/icons/success.webp'
+    previewImg: joinPath(import.meta.env.VITE_BASE, '/imgs/icons/success.webp')
   },
   {
     type: EDIT_STATUS_MAP.OVERTIME,
     title: '问卷过期',
-    previewImg: '/imgs/icons/overtime.webp'
+    previewImg: joinPath(import.meta.env.VITE_BASE, '/imgs/icons/overtime.webp')
   }
 ]
 
@@ -97,3 +98,4 @@ const handleChangePreview = (data: any) => {
   }
 }
 </style>
+

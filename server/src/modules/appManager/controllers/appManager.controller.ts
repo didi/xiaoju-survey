@@ -17,11 +17,12 @@ export class AppManagerController {
     if (!appId) {
       throw new Error('Missing required fields');
     }
-    const appSecret = APPList.find((item) => item.appId === appId)?.appSecret;
-    if (!appSecret) {
-      throw new Error('Invalid appId');
+    // 修订：官方代码没有校验appSecret的真实性，形同裸奔
+    const app = APPList.find((item) => item.appId === appId);
+    if (!app || app.appSecret !== body.appSecret) {
+      throw new Error('Invalid appId or appSecret');
     }
-    const token = await this.appManager.generateToken(appId, appSecret);
+    const token = await this.appManager.generateToken(appId, body.appSecret);
     return {
       code: 200,
       data: token,

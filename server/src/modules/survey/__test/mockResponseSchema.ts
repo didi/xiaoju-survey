@@ -1,6 +1,7 @@
 import { ResponseSchema } from 'src/models/responseSchema.entity';
 import { RECORD_STATUS } from 'src/enums';
 import { ObjectId } from 'mongodb';
+import { VITE_BASE, joinPath } from 'src/utils/path';
 
 export const mockSensitiveResponseSchema: ResponseSchema = {
   _id: new ObjectId('65f29f8892862d6a9067ad25'),
@@ -26,7 +27,10 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
         subTitle: '',
       },
       bannerConfig: {
-        bgImage: '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+        bgImage: joinPath(
+          VITE_BASE,
+          '/imgs/skin/17e06b7604a007e1d3e1453b9ddadc3c.webp',
+        ),
         videoLink: '',
         postImg: '',
       },
@@ -40,7 +44,7 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       answerEndTime: '',
     },
     bottomConf: {
-      logoImage: '/imgs/Logo.webp',
+      logoImage: joinPath(VITE_BASE, '/imgs/Logo.webp'),
       logoImageWidth: '60%',
     },
     skinConf: {
@@ -70,11 +74,6 @@ export const mockSensitiveResponseSchema: ResponseSchema = {
       confirmAgain: {
         is_again: true,
         again_text: '确认要提交吗？',
-      },
-      jumpConfig: {
-        type: 'link',
-        link: '',
-        buttonText: '',
       },
     },
     dataConf: {
@@ -339,7 +338,7 @@ export const mockResponseSchema: ResponseSchema = {
       answerEndTime: '',
     },
     bottomConf: {
-      logoImage: '/imgs/Logo.webp',
+      logoImage: joinPath(VITE_BASE, '/imgs/Logo.webp'),
       logoImageWidth: '60%',
     },
     skinConf: {
@@ -369,11 +368,6 @@ export const mockResponseSchema: ResponseSchema = {
       confirmAgain: {
         is_again: true,
         again_text: '确认要提交吗？',
-      },
-      jumpConfig: {
-        type: 'link',
-        link: '',
-        buttonText: '',
       },
     },
     dataConf: {

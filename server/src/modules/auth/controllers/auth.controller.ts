@@ -15,6 +15,7 @@ import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { create } from 'svg-captcha';
 import { ApiTags } from '@nestjs/swagger';
+import { Logger } from 'src/logger';
 
 const passwordReg = /^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
 
@@ -26,6 +27,7 @@ export class AuthController {
     readonly captchaService: CaptchaService,
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
+    private readonly logger: Logger,
   ) {}
 
   @Post('/register')
@@ -158,6 +160,7 @@ export class AuthController {
     code: number;
     data: { id: string; img: string };
   }> {
+    this.logger.info('开始生成验证码');
     const captchaData = create({
       size: 4, // 验证码长度
       ignoreChars: '0o1i', // 忽略字符
@@ -229,5 +232,38 @@ export class AuthController {
         data: false,
       };
     }
+  }
+
+  @Post('/internalLogin')
+  @HttpCode(200)
+  async internalLogin(
+    @Body()
+    userInfo: {
+      username: string;
+      userId: string;
+    },
+  ) {
+    let token;
+    try {
+      token = await this.authService.generateToken({
+        username: userInfo.username,
+        _id: userInfo.userId,
+      });
+    } catch (error) {
+      throw new Error(
+        'generateToken erro:' +
+          error.message +
+          this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET') +
+          this.configService.get<string>('XIAOJU_SURVEY_JWT_EXPIRES_IN'),
+      );
+    }
+
+    return {
+      code: 200,
+      data: {
+        token,
+        username: userInfo.username,
+      },
+    };
   }
 }

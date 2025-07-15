@@ -7,12 +7,16 @@ import { SurveyNotFoundException } from 'src/exceptions/surveyNotFoundException'
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { SurveySchemaInterface } from 'src/interfaces/survey';
 import { getSchemaBySurveyType } from '../utils';
+import { I18nService } from 'nestjs-i18n';
+import { translateI18nKeys } from '../utils/i18n';
+import moment from 'moment';
 
 @Injectable()
 export class SurveyConfService {
   constructor(
     @InjectRepository(SurveyConf)
     private readonly surveyConfRepository: MongoRepository<SurveyConf>,
+    private readonly i18n: I18nService,
   ) {}
 
   async createSurveyConf(params: {
@@ -21,9 +25,16 @@ export class SurveyConfService {
     createMethod: string;
     createFrom: string;
     questionList?: Array<any>;
+    language?: string;
   }) {
-    const { surveyId, surveyType, createMethod, createFrom, questionList } =
-      params;
+    const {
+      surveyId,
+      surveyType,
+      createMethod,
+      createFrom,
+      questionList,
+      language,
+    } = params;
     let schemaData = null;
     if (createMethod === 'copy') {
       const codeInfo = await this.getSurveyConfBySurveyId(createFrom);
@@ -31,6 +42,10 @@ export class SurveyConfService {
     } else {
       try {
         schemaData = await getSchemaBySurveyType(surveyType);
+        schemaData = await translateI18nKeys(schemaData, this.i18n, {
+          lang: language,
+        });
+
         if (questionList && questionList.length > 0) {
           schemaData.dataConf.dataList = questionList;
         }
@@ -41,6 +56,7 @@ export class SurveyConfService {
         );
       }
     }
+    schemaData.baseConf.languageCode = language;
 
     const newCode = this.surveyConfRepository.create({
       pageId: surveyId,
@@ -86,5 +102,31 @@ export class SurveyConfService {
     return {
       text: arr.join('\n'),
     };
+  }
+
+  async getSurveyConfBySurveyIds(surveyIds: string[]) {
+    if (!surveyIds?.length) return [];
+    const list = await this.surveyConfRepository.find({
+      where: {
+        pageId: { $in: surveyIds },
+      },
+      // select: ['_id', 'title', 'language', 'remark', 'surveyPath', 'curStatus'],
+    });
+
+    return list.map((item) => {
+      const baseConf = item?.code?.baseConf;
+
+      if (baseConf) {
+        const toISOString = (val: unknown) => {
+          const m = moment(val);
+          return m.isValid() ? m.toISOString() : null;
+        };
+
+        baseConf.beginTime = toISOString(baseConf.beginTime);
+        baseConf.endTime = toISOString(baseConf.endTime);
+      }
+
+      return item;
+    });
   }
 }

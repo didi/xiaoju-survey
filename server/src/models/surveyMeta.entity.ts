@@ -1,11 +1,23 @@
-import { Entity, Column, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  Column,
+  BeforeInsert,
+  ObjectIdColumn,
+  ObjectId,
+} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { RECORD_STATUS, RECORD_SUB_STATUS } from '../enums';
 
 @Entity({ name: 'surveyMeta' })
 export class SurveyMeta extends BaseEntity {
+  @ObjectIdColumn()
+  _id: ObjectId;
+
   @Column()
   title: string;
+
+  @Column()
+  language: string;
 
   @Column()
   remark: string;

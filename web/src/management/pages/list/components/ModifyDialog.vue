@@ -18,6 +18,24 @@
       <el-form-item label="标题" prop="title">
         <el-input v-model="current.title" />
       </el-form-item>
+      <el-form-item prop="language">
+        <el-select v-model="current.language" placeholder="请选择语言">
+          <el-option
+            v-for="item in languageList"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code"
+          />
+        </el-select>
+        <template #label>
+          <span>语言</span>
+          <el-tooltip content="修改语言不会自动修改答卷某些可编辑内容的多语言文本，请谨慎修改">
+            <el-icon style="margin-left: 4px;">
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
+        </template>
+      </el-form-item>
       <el-form-item label="备注">
         <el-input v-model="current.remark" />
       </el-form-item>
@@ -51,11 +69,14 @@
 import { pick as _pick } from 'lodash-es'
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/src/message.scss'
+import { QuestionFilled } from '@element-plus/icons-vue';
+
 
 import { CODE_MAP } from '@/management/api/base'
 import { updateSurvey, createSurvey } from '@/management/api/survey'
 import { QOP_MAP } from '@/management/utils/constant'
 import { MenuType, GroupState } from '@/management/utils/workSpace'
+import { languageList } from '@/management/constants/language'
 
 export default {
   name: 'ModifyDialog',
@@ -67,13 +88,18 @@ export default {
     groupAllList: Array,
     menuType: String
   },
+  components: {
+    QuestionFilled
+  },
   data() {
     return {
+      languageList,
       QOP_MAP,
       MenuType,
       loadingInstance: null,
       rules: {
-        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入问卷标题', trigger: 'blur' }],
+        language: [{ required: true, message: '请选择语言', trigger: 'change' }],
       },
       current: this.getCurrent(this.questionInfo)
     }
@@ -89,7 +115,7 @@ export default {
   methods: {
     getCurrent(val) {
       return {
-        ..._pick(val, ['title', 'remark', 'isCollaborated']),
+        ..._pick(val, ['title', 'language', 'remark', 'isCollaborated']),
         groupId: val.groupId === null ? '' : val.groupId
       }
     },

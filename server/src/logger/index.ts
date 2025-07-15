@@ -15,19 +15,29 @@ export class Logger {
     if (Logger.inited) {
       return;
     }
+    const useConsole = config.filename === 'stdout';
+
     log4js.configure({
       appenders: {
-        app: {
-          type: 'dateFile',
-          filename: config.filename || './logs/app.log',
-          pattern: 'yyyy-MM-dd',
-          alwaysIncludePattern: true,
-          numBackups: 7,
-          layout: {
-            type: 'pattern',
-            pattern: '%m',
-          },
-        },
+        app: useConsole
+          ? {
+              type: 'stdout', // <-- 标准输出
+              layout: {
+                type: 'pattern',
+                pattern: '%m',
+              },
+            }
+          : {
+              type: 'dateFile',
+              filename: config.filename || './logs/app.log',
+              pattern: 'yyyy-MM-dd',
+              alwaysIncludePattern: true,
+              numBackups: 7,
+              layout: {
+                type: 'pattern',
+                pattern: '%m',
+              },
+            },
       },
       categories: {
         default: { appenders: ['app'], level: 'trace' },

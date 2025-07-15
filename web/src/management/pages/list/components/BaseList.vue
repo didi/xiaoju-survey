@@ -127,6 +127,7 @@ import { useSurveyListStore } from '@/management/stores/surveyList'
 import ModifyDialog from './ModifyDialog.vue'
 import TagModule from './TagModule.vue'
 import StateModule from './StateModule.vue'
+import CopyText from './CopyText.vue'
 import ToolBar from './ToolBar.vue'
 import TextSearch from './TextSearch.vue'
 import TextSelect from './TextSelect.vue'
@@ -162,7 +163,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['refresh'])
-const fields = ['type', 'title', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
+const fields = ['type', '_id', 'title', 'language', 'remark', 'owner', 'state', 'createdAt', 'updatedAt']
 const showModify = ref(false)
 const modifyType = ref('')
 const questionInfo = ref({})
@@ -176,6 +177,8 @@ const currentComponent = computed(() => {
         return TagModule
       case 'StateModule':
         return StateModule
+      case 'CopyText':
+        return CopyText
       default:
         return null
     }

@@ -14,6 +14,7 @@ import moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { SurveyConfService } from '../services/surveyConf.service';
 
 import { getFilter, getOrder } from 'src/utils/surveyUtil';
 import { HttpException } from 'src/exceptions/httpException';
@@ -34,6 +35,7 @@ import { GROUP_STATE } from 'src/enums/surveyGroup';
 export class SurveyMetaController {
   constructor(
     private readonly surveyMetaService: SurveyMetaService,
+    private readonly surveyConfService: SurveyConfService,
     private readonly logger: Logger,
     private readonly collaboratorService: CollaboratorService,
   ) {}
@@ -47,6 +49,7 @@ export class SurveyMetaController {
   async updateMeta(@Body() reqBody, @Request() req) {
     const { value, error } = Joi.object({
       title: Joi.string().required(),
+      language: Joi.string().required().default('zh-CN'),
       remark: Joi.string().allow(null, '').default(''),
       surveyId: Joi.string().required(),
       groupId: Joi.string().allow(null, ''),
@@ -56,8 +59,10 @@ export class SurveyMetaController {
       this.logger.error(`updateMeta_parameter error: ${error.message}`);
       throw new HttpException('参数错误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
+    console.log('req', req);
     const survey = req.surveyMeta;
     survey.title = value.title;
+    survey.language = value.language;
     survey.remark = value.remark;
     survey.groupId =
       value.groupId && value.groupId !== '' ? value.groupId : null;
@@ -67,6 +72,9 @@ export class SurveyMetaController {
       operator: req.user.username,
       operatorId: req.user._id.toString(),
     });
+
+    // TODO:新增多语言，保存文件meta的同时更新所有跟语言有关的文案
+    // await this.surveyConfService.saveSurveyConf({ surveyId: survey.surveyId });
 
     return {
       code: 200,

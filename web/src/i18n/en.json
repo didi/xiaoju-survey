@@ -1,0 +1,23 @@
+{
+  "questionType": {
+    "text": "Single-line text",
+    "textarea": "Multi-line text",
+    "radio": "Single choice",
+    "checkbox": "Multiple choice",
+    "binaryChoice": "True/False",
+    "radioStar": "Rating",
+    "radioNps": "NPS Score",
+    "vote": "Vote",
+    "cascader": "Cascading options"
+  },
+  "buttonText": {
+    "submit": "Submit",
+    "nextPage": "Next",
+    "retype": "Refill",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "errors": {
+    "required": "This field is required. Please complete it"
+  }
+}

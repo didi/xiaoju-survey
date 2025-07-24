@@ -127,10 +127,11 @@ export default {
     },
     async handleCopy() {
       try {
+        const data = _pick(this.current, ['title', 'remark', 'groupId'])
         const res = await createSurvey({
           createFrom: this.questionInfo._id,
           createMethod: QOP_MAP.COPY,
-          ...this.current
+          ...data
         })
 
         if (res.code === CODE_MAP.SUCCESS) {

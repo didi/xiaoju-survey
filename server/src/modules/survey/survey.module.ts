@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
 
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -66,7 +65,6 @@ import { Session } from 'src/models/session.entity';
     AuthModule,
     WorkspaceModule,
     FileModule,
-    HttpModule,
   ],
   controllers: [
     DataStatisticController,

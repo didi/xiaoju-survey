@@ -400,10 +400,10 @@ export class SurveyController {
     };
   }
 
-  @Post('/uploadExcel')
+  @Post('/getExcelQuestions')
   @HttpCode(200)
-  @UseInterceptors(FilesInterceptor('files')) 
-  async uploadExcel(@UploadedFiles() files: Express.Multer.File[]) {
+  @UseInterceptors(FilesInterceptor('files'))
+  async getExcelQuestions(@UploadedFiles() files: Express.Multer.File[]) {
     try {
       let validationError = '';
       const allQuestions: ExcelQuestion[] = [];
@@ -425,33 +425,31 @@ export class SurveyController {
         return {
           code: 400,
           message: '文件不通过校验',
-          error: validationError
+          error: validationError,
         };
       }
-      
+
       // 返回解析结果
       return {
         code: 200,
         message: '上传成功',
         data: {
-          questions: allQuestions
-        }
+          questions: allQuestions,
+        },
       };
-
     } catch (error) {
-      this.logger.error(`uploadExcel error: ${error.message}`);
+      this.logger.error(`getExcelQuestions error: ${error.message}`);
       return {
         code: 500,
         message: '文件处理失败',
-        error: error.message
+        error: error.message,
       };
     }
   }
 
-  private validateExcelFile(file: Express.Multer.File): { 
+  private validateExcelFile(file: Express.Multer.File): {
     errorType?: 'HEADER_FORMAT' | 'MERGED_CELLS' | 'SIZE_LIMIT' | '';
   } {
-
     const workbook = XLSX.read(file.buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
@@ -485,41 +483,45 @@ export class SurveyController {
     const headerB1 = worksheet['B1']?.v?.toString().trim();
     const headerC1 = worksheet['C1']?.v?.toString().trim();
 
-    if (headerA1 !== '题目标题' || headerB1 !== '题型' || headerC1 !== '选项内容') {
+    if (
+      headerA1 !== '题目标题' ||
+      headerB1 !== '题型' ||
+      headerC1 !== '选项内容'
+    ) {
       return {
         errorType: 'HEADER_FORMAT',
       };
     }
 
     return { errorType: '' };
-    } 
+  }
 
   private parseExcelFile(file: Express.Multer.File): ExcelQuestion[] {
     const workbook = XLSX.read(file.buffer, { type: 'buffer' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    
+
     // 将工作表转换为JSON数组
-    const jsonData = XLSX.utils.sheet_to_json<ExcelQuestion>(worksheet, { 
+    const jsonData = XLSX.utils.sheet_to_json<ExcelQuestion>(worksheet, {
       header: ['title', 'type', 'options'],
-      range: 1 // 从第二行开始读取数据
+      range: 1, // 从第二行开始读取数据
     });
 
     const questions: ExcelQuestion[] = [];
 
     for (const row of jsonData) {
       // 过滤空行
-      if (!(row as ExcelQuestion).title && !(row as ExcelQuestion).type && !(row as ExcelQuestion).options) {
+      if (!row.title && !row.type && !row.options) {
         continue;
       }
 
       questions.push({
-        title: ((row as ExcelQuestion).title || '').toString().trim(),
-        type: ((row as ExcelQuestion).type || '').toString().trim(),
-        options: ((row as ExcelQuestion).options || '').toString().trim()
+        title: (row.title || '').toString().trim(),
+        type: (row.type || '').toString().trim(),
+        options: (row.options || '').toString().trim(),
       });
     }
 
     return questions;
-  }  
+  }
 }

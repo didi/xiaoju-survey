@@ -289,7 +289,7 @@ const submitUpload = async () => {
       }
     });
 
-    const response = await axios.post('/api/survey/uploadExcel', formData, {
+    const response = await axios.post('/api/survey/getExcelQuestions', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

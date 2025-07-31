@@ -88,7 +88,6 @@
       @on-close-codify="onCloseGroupModify"
     />
 
-
     <el-dialog
       title="请选择创建方式"
       v-model="showCreateMethod"
@@ -371,26 +370,16 @@ const toCreate = () => {
   router.push('/create')
 }
 
-
-
 const openTextImport = () => {
   showCreateMethod.value = false;
   showTextImport.value = true;
   createMethod.value = 'textImport'
 }
 
-const aiGenerate  = () => { 
-  router.push('/ai-generate')
-}
-
 const opemAIGenerate = () => { 
   showCreateMethod.value = false;
   showAIGenerate.value = true;
   createMethod.value = 'AIGenerate'
-}
-
-const commingSoon = () => {
-  ElMessage.warning('功能暂未开放，敬请期待～')
 }
 
 const onShowCreateForm = () => {
@@ -404,69 +393,70 @@ const onShowCreateForm = () => {
   showCreateForm.value = true
 }
 
-const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }) => {
-  switch(createMethod.value) {
-    case 'ExcelImport':
-    case 'textImport':{
-      // console.log('文本导入请求参数:', JSON.parse(JSON.stringify({
-      //   ...formValue,
-      //   createMethod: createMethod.value,
-      //   questionList: questionList.value,
-      // })))
-      const payload: any = {
-        ...formValue,
-        createMethod: createMethod.value,
-        questionList: questionList.value,
+const onConfirmCreate = async (formValue: { title: string; remark?: string; surveyType: string; groupId?: string }, callback: (success: boolean) => void) => {
+  try {
+    switch(createMethod.value) {
+      case 'ExcelImport':
+      case 'textImport':{
+        const payload: any = {
+          ...formValue,
+          createMethod: createMethod.value,
+          questionList: questionList.value,
+        }
+        if (workSpaceId.value) {
+          payload.workspaceId = workSpaceId.value
+        }
+        const res: any = await createSurvey(payload)
+        if (res?.code === 200 && res?.data?.id) {
+          callback(true)
+          const id = res.data.id
+          router.push({
+            name: 'QuestionEditIndex',
+            params: {
+              id
+            }
+          })
+          showCreateForm.value = false
+        } else {
+          ElMessage.error(res?.errmsg || '创建失败')
+          callback(false)
+        }
+        break;
       }
-      if (workSpaceId.value) {
-        payload.workspaceId = workSpaceId.value
+      case 'AIGenerate':{
+        const payload: any = {
+          ...formValue,
+          createMethod: createMethod.value,
+          questionList: questionList.value,
+        }
+        if (workSpaceId.value) {
+          payload.workspaceId = workSpaceId.value
+        }
+        const res: any = await createSurvey(payload)
+        if (res?.code === 200 && res?.data?.id) {
+          const id = res.data.id
+          callback(true)
+          router.push({
+            name: 'QuestionEditIndex',
+            params: {
+              id
+            }
+          })
+          showCreateForm.value = false
+        } else {
+          ElMessage.error(res?.errmsg || '创建失败')
+          callback(false)
+        }
+        break;
       }
-      const res: any = await createSurvey(payload)
-      if (res?.code === 200 && res?.data?.id) {
-        const id = res.data.id
-        router.push({
-          name: 'QuestionEditIndex',
-          params: {
-            id
-          }
-        })
-        showCreateForm.value = false
-      } else {
-        ElMessage.error(res?.errmsg || '创建失败')
-      }
-      break;
+      default:
+        callback(false)
+        break;
     }
-    case 'AIGenerate':{
-      // console.log('AI生成请求参数:', JSON.parse(JSON.stringify({
-      //   ...formValue,
-      //   createMethod: createMethod.value,
-      //   questionList: questionList.value, 
-      // })))
-      const payload: any = {
-        ...formValue,
-        createMethod: createMethod.value,
-        questionList: questionList.value,
-      }
-      if (workSpaceId.value) {
-        payload.workspaceId = workSpaceId.value
-      }
-      const res: any = await createSurvey(payload)
-      if (res?.code === 200 && res?.data?.id) {
-        const id = res.data.id
-        router.push({
-          name: 'QuestionEditIndex',
-          params: {
-            id
-          }
-        })
-        showCreateForm.value = false
-      } else {
-        ElMessage.error(res?.errmsg || '创建失败')
-      }
-      break;
-    }
-    default:
-      break;
+  } catch (error) {
+    console.error('创建问卷失败:', error)
+    ElMessage.error('创建失败，请稍后重试')
+    callback(false)
   }
 }
 
@@ -626,7 +616,10 @@ const onAIGenerteChange = (newQuestionList: Array<any>) => {
     }
   }
 }
-.fiexed-ai-generate-wrapper{
+.fiexed-ai-generate-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   position: fixed;
   left: 0;
   right: 0;
@@ -634,15 +627,19 @@ const onAIGenerteChange = (newQuestionList: Array<any>) => {
   bottom: 0;
   background-color: #fff;
   z-index: 999;
-  display: flex;
-  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: hidden;
+
   .ai-generate-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 24px;
     height: 56px;
+    min-width: 1280px;
     border-bottom: 1px solid #eee;
+    flex-grow: 0;
+    flex-shrink: 0;
  
     .nav-left {
       display: flex;

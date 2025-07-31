@@ -19,7 +19,6 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
-    "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -31,7 +30,6 @@
     "ali-oss": "^6.20.0",
     "axios": "^1.9.0",
     "cheerio": "1.0.0-rc.12",
-    "copy-to-clipboard": "^3.3.3",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.3.2",
     "fs-extra": "^11.2.0",

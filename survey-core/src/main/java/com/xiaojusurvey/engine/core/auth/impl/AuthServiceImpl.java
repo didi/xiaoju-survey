@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Resource
     private MongoRepository mongoRepository;
 
-    @Resource(name = "simpleCaptchaGenerator")
+    @Resource(name = "svgCaptchaGenerator")
     private CaptchaGenerator captchaGenerator;
 
     @Resource

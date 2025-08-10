@@ -45,8 +45,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public CaptchaVo captcha() {
         Captcha captcha = captchaGenerator.generateRandomText(4);
-        mongoRepository.save(captcha);
-        return captchaGenerator.generateRandomSvg(captcha);
+        Captcha saved = mongoRepository.save(captcha);
+        return captchaGenerator.generateRandomSvg(saved);
     }
 
     @Override
@@ -97,22 +97,20 @@ public class AuthServiceImpl implements AuthService {
 
 
     /**
-     * 判断验证码是否正确
+     * 判断验证码是否正确（大小写不敏感）
      *
      * @param captchaId   验证码id
      * @param captchaText 需要验证的文本
-     * @return
      */
     public void checkCaptchaIsCorrect(String captchaId, String captchaText) {
         if (ObjectUtils.isEmpty(captchaId) || ObjectUtils.isEmpty(captchaText)) {
             throw new ServiceException(RespErrorCode.CAPTCHA_INCORRECT.getMessage(), RespErrorCode.CAPTCHA_INCORRECT.getCode());
         }
         Captcha captcha = mongoRepository.findById(captchaId, Captcha.class);
-        //非空判断
         if (ObjectUtils.isEmpty(captcha)) {
             throw new ServiceException(RespErrorCode.CAPTCHA_INCORRECT.getMessage(), RespErrorCode.CAPTCHA_INCORRECT.getCode());
         }
-        if (!captchaText.equals(captcha.getText())) {
+        if (!captchaText.equalsIgnoreCase(captcha.getText())) {
             throw new ServiceException(RespErrorCode.CAPTCHA_INCORRECT.getMessage(), RespErrorCode.CAPTCHA_INCORRECT.getCode());
         }
     }

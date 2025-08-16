@@ -238,6 +238,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         // 用"-"连接所有级别的文案，例如："北京-北京市-朝阳区"
         data.put(itemKey, String.join("-", textPath));
     }
+
     private void processRadioCustomInput(Map<String, Object> data, String itemConfigKey,
                                          SurveyConfCode.DataItem itemConfig) {
         String type = itemConfig.getType();
@@ -245,7 +246,10 @@ public class DataStatisticServiceImpl implements DataStatisticService {
             Object selectedValue = data.get(itemConfigKey);
             if (selectedValue != null) {
                 String customKey = itemConfigKey + "_" + selectedValue;
-                data.put(itemConfigKey + "_custom", data.get(customKey));
+                Object customValue = data.get(customKey);
+                if (customValue != null) {
+                    data.put(itemConfigKey + "_custom", customValue);
+                }
             }
         }
     }
@@ -269,6 +273,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         Object value = data.get(itemKey);
         if (value instanceof List) {
             // 多选：["id1","id2"] -> "选项1,选项2"
+            @SuppressWarnings("unchecked")
             List<String> valueList = (List<String>) value;
             String convertedValue = valueList.stream()
                     .map(item -> optionTextMap.getOrDefault(item, item))

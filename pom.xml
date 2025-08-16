@@ -35,6 +35,9 @@
         <fastjson.version>1.2.83</fastjson.version>
         <jwt.version>4.4.0</jwt.version>
         <dozer.version>5.5.1</dozer.version>
+        <minio.version>8.5.4</minio.version>
+        <aliyun.oss.version>3.18.2</aliyun.oss.version>
+        <qiniuyun.oss.version>7.18.0</qiniuyun.oss.version>
     </properties>
 
     <dependencyManagement>
@@ -88,6 +91,21 @@
                 <groupId>net.sf.dozer</groupId>
                 <artifactId>dozer</artifactId>
                 <version>${dozer.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun.oss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniuyun.oss.version}</version>
             </dependency>
         </dependencies>
 

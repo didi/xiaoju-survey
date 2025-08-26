@@ -251,11 +251,13 @@ export const useWorkSpaceStore = defineStore('workSpace', () => {
 
 
   async function getRecycleBinCount(params?:  any) {
+    const recycleBinMenu = spaceMenus.value.find(menu => menu.id === MenuType.RecycleBin);
+
     try {
       const res: any = await getRecycleBinCountReq(params)
       if (res.code === CODE_MAP.SUCCESS) {
         const { count } = res.data
-        spaceMenus.value[2].count = count
+        recycleBinMenu && (recycleBinMenu.count = count)
       } else {
         ElMessage.error('getRecycleBinCount' + res.errmsg)
       }

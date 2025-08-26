@@ -376,9 +376,28 @@ describe('CollaboratorService', () => {
     describe('getManageListByUserId', () => {
       it('should return a list of collaborators who has manage permission by user id', async () => {
         const userId = new ObjectId().toString();
-  
+        
+        const findSpy = jest.spyOn(repository, 'find').mockResolvedValue([
+          {
+            _id: '1',
+            surveyId: '1',
+            userId,
+            permissions: [SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE],
+          } as unknown as Collaborator,
+        ]);
+
         const result = await service.getManageListByUserId({ userId });
-  
+
+        expect(findSpy).toHaveBeenCalledWith({
+          where: {
+            userId,
+            permissions: {
+              $elemMatch: {
+                $eq: SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE,
+              },
+            },
+          },
+        });
         expect(result).toEqual([
           { _id: '1', surveyId: '1', userId, permissions: [SURVEY_PERMISSION.SURVEY_COOPERATION_MANAGE] },
         ]);

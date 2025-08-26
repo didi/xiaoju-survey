@@ -243,8 +243,10 @@ const showExcelImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
-const isRecycleBin = ref(false)
+const isRecycleBin = computed(() => menuType.value === MenuType.RecycleBin);
+
 const showAIGenerate = ref(false)
+
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
   workSpaceStore.changeWorkSpace('')
@@ -273,22 +275,22 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.PersonalGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchGroupList()
-      isRecycleBin.value = false
+      // isRecycleBin.value = false
       break
     case MenuType.SpaceGroup:
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
-      isRecycleBin.value = false
+      // isRecycleBin.value = false
       break
     case MenuType.RecycleBin:
       workSpaceStore.changeMenuType(MenuType.RecycleBin)
       workSpaceStore.changeWorkSpace('')
-      isRecycleBin.value = true
+      // isRecycleBin.value = true
       await fetchSurveyList()
       break
     default: {
-      isRecycleBin.value = false
+      // isRecycleBin.value = false
       const parentMenu = spaceMenus.value.find((parent: any) =>
         parent.children.find((children: any) => children.id.toString() === id)
       )

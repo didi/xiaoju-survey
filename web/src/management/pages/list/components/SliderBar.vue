@@ -7,10 +7,9 @@
     :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup]"
   >
     <template v-for="(menu, index) in props.menus" :key="menu.id">
-
-
       <el-menu-item
         :class="[
+          'recycle-bin-item',
           menu.id === MenuType.RecycleBin ? 'bottom-element' : '',
           activeValue == menu.id ? 'check-item' : ''
         ]"
@@ -29,8 +28,8 @@
       </el-menu-item>
 
 
-
-      <el-menu-item
+      <div v-else> 
+        <el-menu-item
         :class="[
           index === 0 ? 'bottom' : '',
           index > 2 ? 'sub-item' : 'main-item',
@@ -47,8 +46,7 @@
           </div>
         </template>
       </el-menu-item>
-
-
+      </div>
       <el-sub-menu
         v-else
         :index="menu.id.toString()"
@@ -204,5 +202,8 @@ const handleMenu = (id: string) => {
 }
 .check-item {
   background: #fef6e6 100% !important;
+}
+.recycle-bin-item {
+  height: 56px!important;
 }
 </style>

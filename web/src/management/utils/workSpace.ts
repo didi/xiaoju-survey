@@ -8,6 +8,7 @@ export interface MenuItem {
   name: string
   icon?: string
   total?: Number
+  count?: Number
   children?: MenuItem[]
 }
 
@@ -67,7 +68,8 @@ export type GroupItem = {
 
 export enum MenuType {
   PersonalGroup = 'personalGroup',
-  SpaceGroup = 'spaceGroup'
+  SpaceGroup = 'spaceGroup',
+  RecycleBin = 'recycleBin'
 }
 
 export enum UserRole {

@@ -14,6 +14,7 @@ import moment from 'moment';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SurveyMetaService } from '../services/surveyMeta.service';
+import { WorkspaceService } from 'src/modules/workspace/services/workspace.service';
 
 import { getFilter, getOrder } from 'src/utils/surveyUtil';
 import { HttpException } from 'src/exceptions/httpException';
@@ -36,6 +37,7 @@ export class SurveyMetaController {
     private readonly surveyMetaService: SurveyMetaService,
     private readonly logger: Logger,
     private readonly collaboratorService: CollaboratorService,
+    private readonly workspaceService: WorkspaceService,
   ) {}
 
   @Post('/updateMeta')
@@ -90,7 +92,7 @@ export class SurveyMetaController {
       this.logger.error(error.message);
       throw new HttpException('参数有误', EXCEPTION_CODE.PARAMETER_ERROR);
     }
-    const { curPage, pageSize, workspaceId, groupId } = value;
+    const { curPage, pageSize, workspaceId, groupId, isRecycleBin } = value;
     let filter = {},
       order = {};
     if (value.filter) {
@@ -113,11 +115,20 @@ export class SurveyMetaController {
       cooperationList =
         await this.collaboratorService.getCollaboratorListByUserId({ userId });
     }
+    if (isRecycleBin) {
+      cooperationList =
+        await this.collaboratorService.getManageListByUserId({ userId });
+    }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
       pre[cur.surveyId] = cur;
       return pre;
     }, {});
-    const surveyIdList = cooperationList.map((item) => item.surveyId);
+    const surveyIdList1 = cooperationList.map((item) => item.surveyId);
+    let surveyIdList2 = []
+    if (isRecycleBin) {
+      surveyIdList2 = (await this.workspaceService.getAllSurveyIdListByUserId(userId, isRecycleBin)).data.surveyIdList
+    }
+    const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];
     const username = req.user.username;
     const data = await this.surveyMetaService.getSurveyMetaList({
       pageNum: curPage,
@@ -129,6 +140,7 @@ export class SurveyMetaController {
       workspaceId,
       groupId,
       surveyIdList,
+      isRecycleBin,
     });
     return {
       code: 200,

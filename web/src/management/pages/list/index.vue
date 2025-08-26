@@ -55,6 +55,14 @@
           ref="listRef"
           v-if="workSpaceId || groupId"
         ></BaseList>
+        <RecycleBinList
+          :loading="loading"
+          :data="surveyList"
+          :total="surveyTotal"
+          @refresh="fetchSurveyList"
+          ref="listRef"
+          v-if="menuType === MenuType.RecycleBin"
+        ></RecycleBinList>
         <SpaceList
           ref="spaceListRef"
           @refresh="fetchSpaceList"
@@ -169,6 +177,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import BaseList from './components/BaseList.vue'
+import RecycleBinList from './components/RecycleBinList.vue'
 import SpaceList from './components/SpaceList.vue'
 import GroupList from './components/GroupList.vue'
 import SliderBar from './components/SliderBar.vue'
@@ -208,6 +217,8 @@ const tableTitle = computed(() => {
     return '我的空间'
   } else if (menuType.value === MenuType.SpaceGroup && !workSpaceId.value) {
     return '团队空间'
+  } else if (menuType.value === MenuType.RecycleBin) {
+    return ''
   } else {
     return currentTeamSpace.value?.name || '问卷列表'
   }
@@ -232,6 +243,7 @@ const showExcelImport = ref(false)
 const showCreateForm = ref(false)
 const questionList = ref<Array<any>>([])
 const createMethod = ref('')
+const isRecycleBin = ref(false)
 const showAIGenerate = ref(false)
 const fetchSpaceList = async (params?: any) => {
   spaceLoading.value = true
@@ -247,6 +259,10 @@ const fetchGroupList = async (params?: any) => {
   groupLoading.value = false
 }
 
+const getRecycleBinCount = async (params?: any) => {
+  await workSpaceStore.getRecycleBinCount(params)
+}
+
 const handleSpaceSelect = async (id: string) => {
   if (activeValue.value === id) {
     return void 0
@@ -257,13 +273,22 @@ const handleSpaceSelect = async (id: string) => {
       workSpaceStore.changeMenuType(MenuType.PersonalGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchGroupList()
+      isRecycleBin.value = false
       break
     case MenuType.SpaceGroup:
       workSpaceStore.changeMenuType(MenuType.SpaceGroup)
       workSpaceStore.changeWorkSpace('')
       await fetchSpaceList()
+      isRecycleBin.value = false
+      break
+    case MenuType.RecycleBin:
+      workSpaceStore.changeMenuType(MenuType.RecycleBin)
+      workSpaceStore.changeWorkSpace('')
+      isRecycleBin.value = true
+      await fetchSurveyList()
       break
     default: {
+      isRecycleBin.value = false
       const parentMenu = spaceMenus.value.find((parent: any) =>
         parent.children.find((children: any) => children.id.toString() === id)
       )
@@ -276,6 +301,7 @@ const handleSpaceSelect = async (id: string) => {
         }
       }
       listRef?.value?.resetCurrentPage()
+      await fetchSurveyList()
       break
     }
   }
@@ -291,6 +317,7 @@ const fetchSurveyList = async (params?: any) => {
   if (workSpaceId.value) {
     params.workspaceId = workSpaceId.value
   }
+  params.isRecycleBin = isRecycleBin.value
   loading.value = true
   await surveyListStore.getSurveyList(params)
   loading.value = false
@@ -298,6 +325,7 @@ const fetchSurveyList = async (params?: any) => {
 
 onMounted(async () => {
   await Promise.all([fetchGroupList(), fetchSpaceList()])
+  await getRecycleBinCount()
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

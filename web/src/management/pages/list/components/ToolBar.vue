@@ -7,7 +7,8 @@
         :type="type"
         :value="t.key"
         :label="t.label"
-        :width="toolWidth"
+        :width="t.width || toolWidth"
+        :color="t.color"
         @call="onCall"
       />
       <MoreTool
@@ -26,6 +27,7 @@ import { computed } from 'vue'
 import { slice } from 'lodash-es'
 import ToolModule from './ToolModule.vue'
 import MoreTool from './MoreTool.vue'
+import { color } from 'echarts'
 
 const props = defineProps({
   data: Object,

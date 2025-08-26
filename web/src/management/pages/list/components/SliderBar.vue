@@ -7,10 +7,34 @@
     :default-openeds="[MenuType.PersonalGroup, MenuType.SpaceGroup]"
   >
     <template v-for="(menu, index) in props.menus" :key="menu.id">
+
+
+      <el-menu-item
+        :class="[
+          menu.id === MenuType.RecycleBin ? 'bottom-element' : '',
+          activeValue == menu.id ? 'check-item' : ''
+        ]"
+        :index="menu.id.toString()"
+        v-if="menu.id === MenuType.RecycleBin"
+      >
+        <template #title>
+          <div class="title-box">
+            <div class="title-content">
+              <i :class="['iconfont', menu.icon]"></i>
+              <span>{{ menu.name }}</span>
+            </div>
+            <p class="title-total" v-if="menu.id === MenuType.RecycleBin">{{ menu.count }}</p>
+          </div>
+        </template>
+      </el-menu-item>
+
+
+
       <el-menu-item
         :class="[
           index === 0 ? 'bottom' : '',
           index > 2 ? 'sub-item' : 'main-item',
+          menu.id === MenuType.RecycleBin ? 'bottom-element' : '',
           activeValue == menu.id ? 'check-item' : ''
         ]"
         :index="menu.id.toString()"
@@ -23,6 +47,8 @@
           </div>
         </template>
       </el-menu-item>
+
+
       <el-sub-menu
         v-else
         :index="menu.id.toString()"
@@ -110,6 +136,11 @@ const handleMenu = (id: string) => {
 
     &.bottom {
       border-bottom: 1px solid #f6f5f2;
+    }
+    &.bottom-element {
+      position: absolute;
+      bottom: 0;
+      border-top: 1px solid #f6f5f2;
     }
     &.main-item {
       // margin: 10px 0;

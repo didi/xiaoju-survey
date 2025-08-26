@@ -70,6 +70,9 @@ export class SurveyMeta extends BaseEntity {
   @Column()
   deletedAt: Date;
 
+  @Column()
+  isCompletedeleted: boolean;
+
   @BeforeInsert()
   initDefaultInfo() {
     const now = Date.now();

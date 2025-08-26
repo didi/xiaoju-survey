@@ -18,6 +18,7 @@ import { CollaboratorController } from './controllers/collaborator.controller';
 import { DownloadTaskController } from './controllers/downloadTask.controller';
 import { SessionController } from './controllers/session.controller';
 import { SurveyGroupController } from './controllers/surveyGroup.controller';
+import { RecycleBinController } from './controllers/recycleBin.controller';
 import { AIGenerateController } from './controllers/ai-generate.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
@@ -45,6 +46,7 @@ import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
 import { Session } from 'src/models/session.entity';
+import { WorkspaceService } from '../workspace/services/workspace.service';
 
 @Module({
   imports: [
@@ -76,6 +78,7 @@ import { Session } from 'src/models/session.entity';
     DownloadTaskController,
     SessionController,
     SurveyGroupController,
+    RecycleBinController,
     AIGenerateController,
   ],
   providers: [
@@ -92,6 +95,7 @@ import { Session } from 'src/models/session.entity';
     FileService,
     SessionService,
     SurveyGroupService,
+    WorkspaceService,
     AIGenerateService,
   ],
 })

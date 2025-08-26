@@ -141,4 +141,52 @@ describe('ResponseSchemaService', () => {
       );
     });
   });
+
+  describe('recoverResponseSchema', () => {
+    it('should recover response schema by survey path', async () => {
+      jest
+        .spyOn(responseSchemaRepository, 'updateOne')
+        .mockResolvedValueOnce(cloneDeep(mockResponseSchema));
+
+      await service.recoverResponseSchema({
+        surveyPath: mockResponseSchema.surveyPath,
+      });
+
+      expect(responseSchemaRepository.updateOne).toHaveBeenCalledWith(
+        {
+          surveyPath: mockResponseSchema.surveyPath,
+        },
+        {
+          $set: {
+            isDeleted: null,
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+    });
+  });
+
+  describe('completeDeleteResponseSchema', () => {
+    it('should complete delete response schema by survey path', async () => {
+      jest
+        .spyOn(responseSchemaRepository, 'updateOne')
+        .mockResolvedValueOnce(cloneDeep(mockResponseSchema));
+
+      await service.completeDeleteResponseSchema({
+        surveyPath: mockResponseSchema.surveyPath,
+      });
+
+      expect(responseSchemaRepository.updateOne).toHaveBeenCalledWith(
+        {
+          surveyPath: mockResponseSchema.surveyPath,
+        },
+        {
+          $set: {
+            isCompleteDeleted: true,
+            updatedAt: expect.any(Date),
+          },
+        },
+      );
+    });
+  });
 });

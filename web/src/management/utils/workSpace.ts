@@ -67,7 +67,8 @@ export type GroupItem = {
 
 export enum MenuType {
   PersonalGroup = 'personalGroup',
-  SpaceGroup = 'spaceGroup'
+  SpaceGroup = 'spaceGroup',
+  RecycleBin = 'recycleBin', 
 }
 
 export enum UserRole {
@@ -89,11 +90,13 @@ export const roleLabels: Record<UserRole, string> = {
 export enum SurveyPermissions {
   SurveyManage = 'SURVEY_CONF_MANAGE',
   DataManage = 'SURVEY_RESPONSE_MANAGE',
-  CollaboratorManage = 'SURVEY_COOPERATION_MANAGE'
+  CollaboratorManage = 'SURVEY_COOPERATION_MANAGE', 
+  RecyclebinManage = 'SURVEY_RECYCLEBIN_MANAGE'
 }
 // 定义协作者权限标签映射对象
 export const surveyPermissionsLabels: Record<SurveyPermissions, string> = {
   [SurveyPermissions.SurveyManage]: '问卷管理',
   [SurveyPermissions.DataManage]: '数据管理',
-  [SurveyPermissions.CollaboratorManage]: '协作管理'
+  [SurveyPermissions.CollaboratorManage]: '协作管理', 
+  [SurveyPermissions.RecyclebinManage]: '回收站'
 }

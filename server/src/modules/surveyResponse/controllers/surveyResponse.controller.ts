@@ -5,7 +5,7 @@ import { checkSign } from 'src/utils/checkSign';
 import { ENCRYPT_TYPE } from 'src/enums/encrypt';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { getPushingData } from 'src/utils/messagePushing';
-import { RECORD_SUB_STATUS } from 'src/enums';
+import { RECORD_STATUS, RECORD_SUB_STATUS } from 'src/enums';
 
 import { ResponseSchemaService } from '../services/responseScheme.service';
 import { SurveyResponseService } from '../services/surveyResponse.service';
@@ -162,7 +162,7 @@ export class SurveyResponseController {
     // 查询schema
     const responseSchema =
       await this.responseSchemaService.getResponseSchemaByPath(surveyPath);
-    if (!responseSchema || responseSchema.isDeleted) {
+    if (!responseSchema || responseSchema.isDeleted || responseSchema.curStatus.status === RECORD_STATUS.REMOVED) {
       throw new SurveyNotFoundException('该问卷不存在,无法提交');
     }
     if (responseSchema?.subStatus?.status === RECORD_SUB_STATUS.PAUSING) {

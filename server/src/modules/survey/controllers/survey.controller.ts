@@ -24,7 +24,7 @@ import BannerData from '../template/banner/index.json';
 import { CreateSurveyDto } from '../dto/createSurvey.dto';
 
 import { Authentication } from 'src/guards/authentication.guard';
-import { HISTORY_TYPE } from 'src/enums';
+import { HISTORY_TYPE, RECORD_STATUS } from 'src/enums';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { Logger } from 'src/logger';
@@ -208,6 +208,58 @@ export class SurveyController {
   }
 
   @HttpCode(200)
+  @Post('/removeSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async removeSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+    const removeMetaRes = await this.surveyMetaService.removeSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const removeResponseRes =
+      await this.responseSchemaService.removeResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(removeMetaRes));
+    this.logger.info(JSON.stringify(removeResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/restoreSurvey')
+  @UseGuards(SurveyGuard)
+  @SetMetadata('surveyId', 'body.surveyId')
+  @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
+  @UseGuards(Authentication)
+  async restoreSurvey(@Request() req) {
+    const surveyMeta = req.surveyMeta;
+    const restoreMetaRes = await this.surveyMetaService.restoreSurveyMeta({
+      surveyId: surveyMeta._id.toString(),
+      operator: req.user.username,
+      operatorId: req.user._id.toString(),
+    });
+    const restoreResponseRes =
+      await this.responseSchemaService.restoreResponseSchema({
+        surveyPath: surveyMeta.surveyPath,
+      });
+
+    this.logger.info(JSON.stringify(restoreMetaRes));
+    this.logger.info(JSON.stringify(restoreResponseRes));
+
+    return {
+      code: 200,
+    };
+  }
+
+  @HttpCode(200)
   @Post('/deleteSurvey')
   @UseGuards(SurveyGuard)
   @SetMetadata('surveyId', 'body.surveyId')
@@ -282,6 +334,12 @@ export class SurveyController {
 
     const surveyId = value.surveyId;
     const surveyMeta = req.surveyMeta;
+
+    if (surveyMeta.curStatus.status == RECORD_STATUS.REMOVED) {
+      this.logger.info("survey is removed");
+      throw new HttpException('问卷已被删除', EXCEPTION_CODE.SURVEY_REMOVED);
+    }
+
     const surveyConf =
       await this.surveyConfService.getSurveyConfBySurveyId(surveyId);
 

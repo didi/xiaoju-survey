@@ -61,7 +61,13 @@
               />
             </template>
             <template v-else>
-              <span class="cell-span">{{ scope.row[field.key] }}</span>
+              <div class="title-wrapper">
+                <span class="cell-span">{{ scope.row[field.key] }}</span>
+                <span 
+                  v-if="field.key === 'title' && scope.row.createMethod === 'AIGenerate'"
+                  class="ai-tag"
+                >AI生成</span>
+              </div>
             </template>
           </template>
         </el-table-column>
@@ -528,4 +534,37 @@ defineExpose({
 .el-select-dropdown__item.hover {
   background: #fff;
 }
+
+.title-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%; // 新增限制最大宽度
+  .cell-span {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; // 限制两行
+    line-clamp: 2; // 添加标准属性
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; // 允许换行
+    flex: 1; // 新增
+    min-width: 0; // 新增 (解决flex布局下的截断问题)
+  }
+  .ai-tag {
+    padding: 0 4px;
+    border-radius: 2px;
+    background: #FEF6E6;
+    border: 1px solid #FAA600;
+    font-family: PingFangSC;
+    font-size: 10px;
+    line-height: 16px;
+    color: #FAA600;
+  }
+}
+
+
+
+
 </style>

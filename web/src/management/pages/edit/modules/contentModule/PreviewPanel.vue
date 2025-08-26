@@ -1,22 +1,12 @@
 <template>
   <div class="preview-panel">
-    <div class="btn preview-btn" @click="dialogTableVisible = true">
+    <div class="btn preview-btn" @click="onPreview">
       <i-ep-view class="view-icon" :size="20" />
       <span class="btn-txt">预览</span>
     </div>
-    <el-dialog
-      :z-index="99999"
-      top="50px"
-      class="preview-config-wrapper"
-      :destroy-on-close="true"
-      :show-close="false"
-      @open="openDialog"
-      @closed="closedDialog"
-      v-model="dialogTableVisible"
-      :width="`${previewTab == 1 ? '398' : '1290'}`"
-    >
-      <div class="ml75">
-        <div class="preview-tab">
+    <div v-if="dialogTableVisible" @click="onClose" class="preview-config-wrapper">
+      <div class="preview-content">
+        <div class="preview-tab" @click.stop="() => {}">
           <div
             :class="`preview-tab-item ${previewTab == 1 ? 'active' : ''}`"
             @click="previewTab = 1"
@@ -38,6 +28,7 @@
         </div>
         <div
           :class="`preview-panel ${previewTab == 1 ? 'phone' : previewTab == 2 ? 'pc' : 'sdk'}`"
+          @click.stop="() => {}"
         >
           <div class="wrapper" v-if="previewTab !== 3 ">
             <div class="tips-wrapper">
@@ -64,11 +55,11 @@
           </div>
         </div>
       </div>
-    </el-dialog>
+    </div>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { Switch } from '@element-plus/icons-vue'
 const route = useRoute()
@@ -86,29 +77,46 @@ const sdkImages = [
 const changeSdkType = () => {
   sdkType.value = (sdkType.value + 1) % 3
 }
-const openDialog = () => {
-  const iframePreview = document.getElementById('iframe-preview')
-  if (!iframePreview) return
-  iframePreview.onload = function () {
-    loading.value = false
-  }
+
+const onPreview = () => {
+  dialogTableVisible.value = true
+  loading.value = true
+  nextTick(() => {
+    const iframePreview = document.getElementById('iframe-preview')
+    if (!iframePreview) return
+    iframePreview.onload = function () {
+      loading.value = false
+    }
+  })
+  
 }
 
-const closedDialog = () => {
-  loading.value = true
+const onClose = () => {
+  dialogTableVisible.value = false
 }
 </script>
 <style lang="scss" scoped>
 @import url('@/management/styles/edit-btn.scss');
 
 .preview-panel {
-  :deep(.preview-config-wrapper) {
-    background-color: transparent;
-    box-shadow: none;
-    padding: 0;
+  .preview-config-wrapper {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
   }
-  .ml75 {
-    margin-left: 75px;
+  .preview-content {
+    width: 100%;
+    height: 100%;
+    min-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
   }
 
   .preview-tab {

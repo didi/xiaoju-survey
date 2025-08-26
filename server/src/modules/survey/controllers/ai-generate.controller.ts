@@ -40,7 +40,7 @@ export class AIGenerateController {
       'Content-Encoding': 'identity',
     };
     res.writeHead(200, responseHeaders);
-    if (contentType === 'text/event-stream') {
+    if (contentType.includes('text/event-stream')) {
       response.body
         .on('error', () => res.end())
         .pipe(res)

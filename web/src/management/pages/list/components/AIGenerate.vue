@@ -105,7 +105,7 @@
 
     <!-- 右侧预览区域 -->
     <div class="right-panel">
-      <div class="questions-preview-wrapper">
+      <div class="questions-preview-wrapper" :style="{backgroundColor: questionList.length > 0 ? '#fff' : 'transparent'}" >
         <div class="questions-preview-box">
           <div class="diabled-edit-mask"></div>
           <MaterialGroup
@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, defineEmits } from 'vue'
 import { textToSchema } from '@/management/utils/textToSchema'
 import { ElMessage } from 'element-plus'
 import copy from 'copy-to-clipboard'
@@ -152,6 +152,8 @@ const currentEditOne = ref('')
 const isUserScrolling = ref(false)
 const shouldAutoScroll = ref(true)
 
+const emit = defineEmits(['change'])
+
 const questionList = computed(() => {
   try {
     const lastAIMessage = [...messages.value].reverse().find(m => m.sender === 'ai')
@@ -173,14 +175,10 @@ const handleKeydown = (event: any) => {
     if (event.metaKey || event.ctrlKey) {
       event.preventDefault()
       const originText = prompt.value
-      console.log(inputEl)
       const textareaEl = inputEl.value.textarea
       const cursorPos = textareaEl.selectionStart
-      console.log(`cursorPos: ${cursorPos}`)
       const textBefore = originText.substring(0, cursorPos)
       const textAfter = originText.substring(cursorPos)
-      console.log(`textBefore: ${textBefore}`)
-      console.log(`textAfter: ${textAfter}`)
       const newText = `${textBefore}\n${textAfter}`
       prompt.value = newText
       textareaEl.selectionStart = cursorPos + 1
@@ -188,25 +186,6 @@ const handleKeydown = (event: any) => {
     } else {
       handleGenerate()
     }
-  }
-}
-
-const getChunkText = (chunk: string) => {
-  // eslint-disable-next-line no-control-regex
-  const resultChunk = chunk.replace('data:', '').replace(new RegExp('\n', 'g'), '')
-  try {
-    console.log(resultChunk)
-    if (resultChunk.indexOf('[DONE]') >= 0) {
-      return { content: '', reasoningContent: '' }
-    }
-    const chunkJSON = JSON.parse(resultChunk)
-    return {
-      content: chunkJSON?.choices?.[0]?.delta?.content || '',
-      reasoningContent: chunkJSON?.choices?.[0]?.delta?.reasoning_content || ''
-    }
-  } catch (error) {
-    console.log(error)
-    return { content: '当前使用人数过多，请稍后再试。', reasoningContent: '' }
   }
 }
 
@@ -233,8 +212,8 @@ const handleGenerate = async (userInput?: string) => {
 
     const loadingMessage = { 
       id: nanoid(),
-      sender: 'ai' as const, 
-      content: 'loading', 
+      sender: 'ai' as const,
+      content: 'loading',
       status: 'generating' as const,
       showReset: false,
       userInput: currentPrompt
@@ -259,7 +238,7 @@ const handleGenerate = async (userInput?: string) => {
         signal: abortController.signal
       })
       const contentType = response.headers.get('content-type');
-      if (contentType === "text/event-stream") {
+      if (contentType && contentType.includes("text/event-stream")) {
         if (!response.body) {
           return
         }
@@ -268,37 +247,28 @@ const handleGenerate = async (userInput?: string) => {
 
         let output = ''
         let reasoningOutput = ''
+        let outputChunk = ''
         await new Promise(resolve => {
-          const handle = async () => {
+          const concatChunkText = async () => {
             try {
               const { done, value }: any = await Promise.race([
                 reader.read(),
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
                     reject(new Error('网络连接超时'))
-                  }, 60000)
+                  }, 100000)
                 }),
               ])
               if (done) {
-                resolve(true)
+                emit('change', [...questionList.value])
                 return
               }
               const chunkText = textDecoder.decode(value)
-              const chunkArr = chunkText.split('\n').filter(item => !!item)
-              for (const chunk of chunkArr) {
-                const text = getChunkText(chunk)
-                output += text.content
-                reasoningOutput += text.reasoningContent
-                messages.value[idx].content = output
-                if (reasoningOutput) {
-                  messages.value[idx].reasoningContent = reasoningOutput
-                }
-              }
+              outputChunk += chunkText
               setTimeout(() => {
-                handle()
-              }, 15)
+                concatChunkText()
+              }, 20)
             } catch (error: any) {
-              console.log(error)
               if (error.name === 'AbortError') {
                 // 用户主动停止生成
                 messages.value[idx].content = '生成已停止'
@@ -312,8 +282,50 @@ const handleGenerate = async (userInput?: string) => {
               resolve(false)
             }
           }
+
+          const handle = async (index: number) => {
+            const chunkArr = outputChunk.split('\n').filter(item => !!item)
+            let newIndex = 0
+            let isDone = false
+            for (let i = index; i < chunkArr.length; i++) {
+              try {
+                const resultChunk = chunkArr[i].replace('data:', '').replace(new RegExp('\xa0', 'g'), '')
+                if (resultChunk.indexOf('[DONE]') >= 0) {
+                  isDone = true
+                  break
+                }
+                // 为了打字效果加了延时
+                await new Promise(forResolve => {
+                  setTimeout(() => {
+                    forResolve(true)
+                  }, 20)
+                })
+                const chunkJSON = JSON.parse(resultChunk)
+                const content = chunkJSON?.choices?.[0]?.delta?.content || ''
+                const reasoningContent = chunkJSON?.choices?.[0]?.delta?.reasoning_content || ''
+                output += content
+                reasoningOutput += reasoningContent
+                messages.value[idx].content = output
+                if (reasoningOutput) {
+                  messages.value[idx].reasoningContent = reasoningOutput
+                }
+                newIndex = i + 1
+              } catch (error) {
+                newIndex = i
+                break
+              }
+            }
+            if (!isDone) {
+              requestIdleCallback(() => {
+                handle(newIndex)
+              })
+            } else {
+              resolve(true)
+            }
+          }
           requestIdleCallback(() => {
-            handle()
+            concatChunkText()
+            handle(0)
           })
         })
         
@@ -329,14 +341,16 @@ const handleGenerate = async (userInput?: string) => {
       // 更新加载状态为错误信息
       const index = messages.value.findIndex(m => m.content === 'loading')
       if (index > -1) {
-        messages.value.splice(index, 1, { 
-          id: nanoid(),
-          sender: 'ai', 
-          content: '生成失败，请稍后再试', 
-          reasoningContent: '',
-          status: 'finished',
-          showReset: true
-        })
+        let content = ''
+        if (messages.value[index].content === 'loading') {
+          content = '生成失败，请稍后再试'
+        } else {
+          content = messages.value[index].content + '\n生成失败，请稍后再试'
+        }
+        messages.value[index].content = content
+        messages.value[index].status = 'finished'
+        messages.value[index].showReset = true
+
       }
     } finally {
       isLoading.value = false 

@@ -139,6 +139,37 @@ export class SurveyMetaService {
     );
   }
 
+  async recoverSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          isDeleted: null,
+          operator,
+          operatorId,
+          deletedAt: null,
+        },
+      },
+    );
+  }
+
+  async completeDeleteSurveyMeta({ surveyId, operator, operatorId }) {
+    return this.surveyRepository.updateOne(
+      {
+        _id: new ObjectId(surveyId),
+      },
+      {
+        $set: {
+          operator,
+          operatorId,
+          isCompleteDeleted: true,
+        },
+      }
+    );
+  }
+
   async getSurveyMetaList(condition: {
     pageNum: number;
     pageSize: number;
@@ -149,6 +180,7 @@ export class SurveyMetaService {
     workspaceId?: string;
     groupId?: string;
     surveyIdList?: Array<string>;
+    isRecycleBin?: boolean;
   }): Promise<{ data: any[]; count: number }> {
     const {
       pageNum,
@@ -158,25 +190,52 @@ export class SurveyMetaService {
       workspaceId,
       groupId,
       surveyIdList,
+      isRecycleBin,
     } = condition;
     const skip = (pageNum - 1) * pageSize;
     try {
-      const query: ObjectLiteral = Object.assign(
-        {
-          isDeleted: {
-            $ne: true,
+      var query: ObjectLiteral
+      if (isRecycleBin) {
+        query = Object.assign(
+          {
+            isDeleted: {
+              $eq: true,
+            },
+            isCompleteDeleted: {
+              $ne: true,
+            }
           },
-        },
-        condition.filter,
-      );
+          condition.filter,
+        );
+      } else {
+        query = Object.assign(
+          {
+            isDeleted: {
+              $ne: true,
+            },
+          },
+          condition.filter,
+        );
+      }
       const otherQuery: ObjectLiteral = {};
       if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
         query.$or = [];
-        query.$or.push({
-          _id: {
-            $in: surveyIdList.map((item) => new ObjectId(item)),
-          },
-        });
+        if (isRecycleBin) {
+          query.$or.push({
+            _id: {
+              $in: surveyIdList.map((item) => new ObjectId(item)),
+            },
+            isDeleted: {$eq: true},
+            isCompleteDeleted: {$ne: true},
+          });
+        } else {
+          query.$or.push({
+            _id: {
+              $in: surveyIdList.map((item) => new ObjectId(item)),
+            },
+            isDeleted: {$ne: true},
+          });
+        }
       }
 
       if (condition.filter['curStatus.status']) {
@@ -231,8 +290,8 @@ export class SurveyMetaService {
       } else {
         Object.assign(query, otherQuery);
       }
-      const order =
-        condition.order && Object.keys(condition.order).length > 0
+      const order = isRecycleBin ? ({deletedAt: -1} as FindOptionsOrder<SurveyMeta>)
+        :condition.order && Object.keys(condition.order).length > 0
           ? (condition.order as FindOptionsOrder<SurveyMeta>)
           : ({
               createdAt: -1,
@@ -277,14 +336,28 @@ export class SurveyMetaService {
     return total;
   }
 
+  async getSurveyMetaListByWorkspaceIdList({ workspaceIdList, isDeleted }: {workspaceIdList: string[]; isDeleted?: boolean;}) {
+    const surveyMetaList = await this.surveyRepository.find({
+      workspaceId: {
+        $in: workspaceIdList,
+      },
+      isDeleted: isDeleted? {$eq: true}:{$ne: true},
+      isCompleteDeleted: {$ne: true},
+    });
+    return surveyMetaList;
+  }
+
+
   async countSurveyMetaByGroupId({
     groupId,
     userId,
     surveyIdList,
+    isRecycleBin = false,
   }: {
     groupId?: string;
     userId: string;
     surveyIdList?: Array<string>;
+    isRecycleBin?: boolean;
   }) {
     const query: ObjectLiteral = {};
     if (Array.isArray(surveyIdList) && surveyIdList.length > 0) {
@@ -293,15 +366,28 @@ export class SurveyMetaService {
         _id: {
           $in: surveyIdList.map((item) => new ObjectId(item)),
         },
+        isDeleted: isRecycleBin? {$eq: true}:{$ne: true},
+        isCompleteDeleted: {$ne: true}
       });
     }
+    var otherQuery: ObjectLiteral
 
-    const otherQuery: ObjectLiteral = {
-      ownerId: userId,
-      isDeleted: {
-        $ne: true,
-      },
-    };
+    if (isRecycleBin) {
+      otherQuery = {
+        ownerId: userId,
+        isDeleted: {
+          $eq: true,
+        },
+        isCompleteDeleted: {$ne: true},
+      };
+    } else {
+      otherQuery = {
+        ownerId: userId,
+        isDeleted: {
+          $ne: true,
+        },
+      };
+    }
     otherQuery.$and = [
       {
         workspaceId: { $exists: false },

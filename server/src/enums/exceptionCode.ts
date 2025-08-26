@@ -25,4 +25,5 @@ export enum EXCEPTION_CODE {
   RESPONSE_PAUSING = 9006, // 问卷已暂停
 
   UPLOAD_FILE_ERROR = 5001, // 上传文件错误
+  SERVER_ERROR = 5002, // 获取数据失败
 }

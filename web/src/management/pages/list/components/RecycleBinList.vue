@@ -312,7 +312,7 @@ const onRecover = async (row) => {
 
 const onCompleteDelete = async (row) => {
   try {
-    await ElMessageBox.confirm('将从回收站中永久删除改问卷，是否确认删除？', '提示', {
+    await ElMessageBox.confirm('将从回收站中永久删除该问卷，是否确认删除？', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'

@@ -116,6 +116,7 @@ export class SurveyMetaController {
         await this.collaboratorService.getCollaboratorListByUserId({ userId });
     }
     if (isRecycleBin) {
+      // 回收站查询当前用户协作的问卷
       cooperationList =
         await this.collaboratorService.getManageListByUserId({ userId });
     }
@@ -126,6 +127,7 @@ export class SurveyMetaController {
     const surveyIdList1 = cooperationList.map((item) => item.surveyId);
     let surveyIdList2 = []
     if (isRecycleBin) {
+      // 回收站查询当前用户参与的空间下的回收站的问卷
       surveyIdList2 = (await this.workspaceService.getAllSurveyIdListByUserId(userId, isRecycleBin)).data.surveyIdList
     }
     const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];

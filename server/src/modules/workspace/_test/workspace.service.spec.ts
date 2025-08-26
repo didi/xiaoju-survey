@@ -188,23 +188,96 @@ describe('WorkspaceService', () => {
 
   describe('getAllSurveyIdListByUserId', () => {
     it('should return all survey id list of work space under a user', async () => {
+      const userId = '1';
+      const isRecycleBin = false;
       const workspaceMemberList = [
-        { userId: '1', workSpaceId: 'f'}
-      ]
+        { userId: '1', workspaceId: 'workspace1' },
+        { userId: '1', workspaceId: 'workspace2' }
+      ];
       const surveyMetaList = [
-        { workSpaceId: 'f', isDeleted: false, _id: 666 },
+        { _id: new ObjectId('507f1f77bcf86cd799439011'), workspaceId: 'workspace1' },
+        { _id: new ObjectId('507f1f77bcf86cd799439012'), workspaceId: 'workspace2' }
       ];
 
-      jest
-        .spyOn(mockWorkspaceMemberService, 'findAllByUserId')
-        .mockResolvedValue(workspaceMemberList as any);
-      jest
-        .spyOn(mockSurveyMetaService, 'getSurveyMetaListByWorkspaceIdList')
-        .mockResolvedValue(surveyMetaList as any)
+      // Mock WorkspaceMemberService.findAllByUserId
+      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(workspaceMemberList);
+      
+      // Mock SurveyMetaService.getSurveyMetaListByWorkspaceIdList
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(surveyMetaList);
 
-      const result = await service.getAllSurveyIdListByUserId('1', false);
+      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
 
-      expect(result).toEqual({code: 200, data: {surveyIdList: ['666']}});
+      // Verify the method calls
+      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({ userId });
+      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+        workspaceIdList: ['workspace1', 'workspace2'],
+        isDeleted: isRecycleBin
+      });
+
+      // Verify the result
+      expect(result).toEqual({
+        code: 200,
+        data: {
+          surveyIdList: [
+            '507f1f77bcf86cd799439011',
+            '507f1f77bcf86cd799439012'
+          ]
+        }
+      });
+    });
+
+    it('should return empty list when user has no workspace memberships', async () => {
+      const userId = '1';
+      const isRecycleBin = true;
+
+      // Mock empty workspace member list
+      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue([]);
+      
+      // Mock empty survey meta list
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue([]);
+
+      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
+
+      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({ userId });
+      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+        workspaceIdList: [],
+        isDeleted: isRecycleBin
+      });
+
+      expect(result).toEqual({
+        code: 200,
+        data: {
+          surveyIdList: []
+        }
+      });
+    });
+
+    it('should handle recycle bin mode correctly', async () => {
+      const userId = '1';
+      const isRecycleBin = true;
+      const workspaceMemberList = [
+        { userId: '1', workspaceId: 'workspace1' }
+      ];
+      const surveyMetaList = [
+        { _id: new ObjectId('507f1f77bcf86cd799439011'), workspaceId: 'workspace1' }
+      ];
+
+      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(workspaceMemberList);
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(surveyMetaList);
+
+      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
+
+      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+        workspaceIdList: ['workspace1'],
+        isDeleted: true
+      });
+
+      expect(result).toEqual({
+        code: 200,
+        data: {
+          surveyIdList: ['507f1f77bcf86cd799439011']
+        }
+      });
     });
   });
 

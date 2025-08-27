@@ -21,7 +21,6 @@ watch(
 
 onMounted(() => {
   const surveyId = route.params.surveyId
-  console.log({ surveyId })
   surveyStore.setSurveyPath(surveyId)
   getDetail(surveyId as string)
 })

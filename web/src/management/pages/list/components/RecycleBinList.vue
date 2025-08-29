@@ -180,8 +180,8 @@ const dataList = computed(() => {
   return data.value.map((item) => {
     return {
       ...item,
-      'curStatus.date': item.curStatus.date,
-      'subStatus.date': item.subStatus.date
+      'curStatus.date': item.curStatus ? item.curStatus.date : '',
+      'subStatus.date': item.subStatus ? item.subStatus.date : ''
     }
   })
 })

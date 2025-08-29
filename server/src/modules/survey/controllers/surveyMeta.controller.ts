@@ -144,30 +144,35 @@ export class SurveyMetaController {
       surveyIdList,
       isRecycleBin,
     });
+    const dataList = data.data.map((item) => {
+      const fmt = 'YYYY-MM-DD HH:mm:ss';
+      if (!item.surveyType) {
+        item.surveyType = item.questionType || 'normal';
+      }
+      item.createdAt = moment(item.createdAt).format(fmt);
+      if (item.curStatus) {
+        item.curStatus.date = moment(item.curStatus.date).format(fmt);
+      }
+      if (item.subStatus) {
+        item.subStatus.date = moment(item.subStatus.date).format(fmt);
+      }
+      item.updatedAt = moment(item.updatedAt).format(fmt);
+      const surveyId = item._id.toString();
+      if (cooperSurveyIdMap[surveyId]) {
+        item.isCollaborated = true;
+        item.currentPermissions = cooperSurveyIdMap[surveyId].permissions;
+      } else {
+        item.isCollaborated = false;
+        item.currentPermissions = [];
+      }
+      item.currentUserId = userId;
+      return item;
+    })
     return {
       code: 200,
       data: {
         count: data.count,
-        data: data.data.map((item) => {
-          const fmt = 'YYYY-MM-DD HH:mm:ss';
-          if (!item.surveyType) {
-            item.surveyType = item.questionType || 'normal';
-          }
-          item.createdAt = moment(item.createdAt).format(fmt);
-          item.curStatus.date = moment(item.curStatus.date).format(fmt);
-          item.subStatus.date = moment(item.subStatus.date).format(fmt);
-          item.updatedAt = moment(item.updatedAt).format(fmt);
-          const surveyId = item._id.toString();
-          if (cooperSurveyIdMap[surveyId]) {
-            item.isCollaborated = true;
-            item.currentPermissions = cooperSurveyIdMap[surveyId].permissions;
-          } else {
-            item.isCollaborated = false;
-            item.currentPermissions = [];
-          }
-          item.currentUserId = userId;
-          return item;
-        }),
+        data: dataList,
       },
     };
   }

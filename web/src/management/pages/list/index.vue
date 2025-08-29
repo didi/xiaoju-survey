@@ -327,7 +327,8 @@ const fetchSurveyList = async (params?: any) => {
 
 onMounted(async () => {
   await Promise.all([fetchGroupList(), fetchSpaceList()])
-  await getRecycleBinCount()
+  // 异步获取回收站数量
+  getRecycleBinCount()
   activeValue.value = 'all'
   workSpaceStore.changeGroup('all')
   await fetchSurveyList()

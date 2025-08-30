@@ -87,6 +87,8 @@ public class SurveyConfCode {
         private Map<String, Object> rangeConfig;
         private String starStyle;
         private String innerType;
+        // 多级联动配置数据
+        private Map<String, Object> cascaderData;
 
     }
 

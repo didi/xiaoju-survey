@@ -30,6 +30,12 @@ import java.util.stream.Collectors;
 public class DataStatisticServiceImpl implements DataStatisticService {
     // 特殊单选题型
     private static final List<String> RADIO_TYPES = Arrays.asList("RADIO_STAR", "RADIO_NPS");
+    private static final String KEY_DATA_CONF = "dataConf";
+    private static final String TYPE_CASCADER = "CASCADER";
+    private static final String SUFFIX_CUSTOM = "_custom";
+    private static final int PHONE_NUMBER_LENGTH = 11;
+    private static final int ID_CARD_LENGTH = 18;
+    private static final int MIN_EMAIL_NAME_VISIBLE_CHARS = 2;
 
     @Resource
     private MongoRepository mongoRepository;
@@ -90,8 +96,8 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     private List<SurveyConfCode.DataItem> extractDataList(SurveyConf surveyConf) {
         try {
             Map<String, Object> code = surveyConf.getCode();
-            if (code != null && code.containsKey("dataConf")) {
-                Object dataConfObj = code.get("dataConf");
+            if (code != null && code.containsKey(KEY_DATA_CONF)) {
+                Object dataConfObj = code.get(KEY_DATA_CONF);
                 String dataConfJson = JSON.toJSONString(dataConfObj);
                 SurveyConfCode.DataConf dataConf = JSON.parseObject(dataConfJson, SurveyConfCode.DataConf.class);
                 return dataConf.getDataList() != null ? dataConf.getDataList() : new ArrayList<>();
@@ -172,53 +178,48 @@ public class DataStatisticServiceImpl implements DataStatisticService {
      * 每一级的选项都依赖于上一级的选择
      */
     private void processCascaderData(Map<String, Object> data, String itemKey,
-                                    SurveyConfCode.DataItem itemConfig) {
-        // 检查是否为多级联动题型
-        if (!"CASCADER".equals(itemConfig.getType()) || itemConfig.getCascaderData() == null) {
+                                     SurveyConfCode.DataItem itemConfig) {
+        boolean isCascader = TYPE_CASCADER.equals(itemConfig.getType());
+        Map<String, Object> cascaderData = itemConfig.getCascaderData();
+        if (!isCascader || cascaderData == null) {
             return;
         }
 
         Object value = data.get(itemKey);
-        if (value == null) return;
-
-        String valueStr = value.toString();
-        if (valueStr.isEmpty()) return;
-
-        // 分割ID路径，例如："省ID,市ID,区ID"
-        String[] ids = valueStr.split(",");
-        List<String> textPath = new ArrayList<>();
-
-        // 从cascaderData中获取根级选项
-        Map<String, Object> cascaderData = itemConfig.getCascaderData();
-        List<Map<String, Object>> currentLevelOptions =
-                (List<Map<String, Object>>) cascaderData.get("children");
-
-        if (currentLevelOptions == null) {
-            return;
+        if (value != null) {
+            String valueStr = value.toString();
+            if (!valueStr.isEmpty()) {
+                String[] ids = valueStr.split(",");
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> currentLevelOptions =
+                        (List<Map<String, Object>>) cascaderData.get("children");
+                if (currentLevelOptions != null) {
+                    fillCascaderTextPath(data, itemKey, ids, currentLevelOptions);
+                }
+            }
         }
+    }
 
-        // 构建当前级别的hash->对象映射
-        Map<String, Map<String, Object>> currentLevelMap = currentLevelOptions.stream()
+    private void fillCascaderTextPath(Map<String, Object> data, String itemKey,
+                                      String[] ids, List<Map<String, Object>> rootOptions) {
+        Map<String, Map<String, Object>> currentLevelMap = rootOptions.stream()
                 .collect(Collectors.toMap(
                         option -> (String) option.get("hash"),
                         option -> option,
                         (existing, replacement) -> existing
                 ));
 
-        // 遍历每一级ID，转换为文案
+        List<String> textPath = new ArrayList<>();
         for (String id : ids) {
             Map<String, Object> currentOption = currentLevelMap.get(id);
             if (currentOption != null) {
-                // 添加当前级别的文案
                 String text = (String) currentOption.get("text");
                 textPath.add(text != null ? text : id);
 
-                // 准备下一级的数据
+                @SuppressWarnings("unchecked")
                 List<Map<String, Object>> nextLevelOptions =
                         (List<Map<String, Object>>) currentOption.get("children");
-
                 if (nextLevelOptions != null && !nextLevelOptions.isEmpty()) {
-                    // 更新下一级的映射
                     currentLevelMap = nextLevelOptions.stream()
                             .collect(Collectors.toMap(
                                     option -> (String) option.get("hash"),
@@ -226,29 +227,26 @@ public class DataStatisticServiceImpl implements DataStatisticService {
                                     (existing, replacement) -> existing
                             ));
                 } else {
-                    // 没有下一级了，但可能还有ID没处理完
                     break;
                 }
             } else {
-                // 找不到对应选项，保持原ID
                 textPath.add(id);
             }
         }
 
-        // 用"-"连接所有级别的文案，例如："北京-北京市-朝阳区"
         data.put(itemKey, String.join("-", textPath));
     }
 
     private void processRadioCustomInput(Map<String, Object> data, String itemConfigKey,
                                          SurveyConfCode.DataItem itemConfig) {
         String type = itemConfig.getType();
-        if (RADIO_TYPES.contains(type) && !data.containsKey(itemConfigKey + "_custom")) {
+        if (RADIO_TYPES.contains(type) && !data.containsKey(itemConfigKey + SUFFIX_CUSTOM)) {
             Object selectedValue = data.get(itemConfigKey);
             if (selectedValue != null) {
                 String customKey = itemConfigKey + "_" + selectedValue;
                 Object customValue = data.get(customKey);
                 if (customValue != null) {
-                    data.put(itemConfigKey + "_custom", customValue);
+                    data.put(itemConfigKey + SUFFIX_CUSTOM, customValue);
                 }
             }
         }
@@ -291,16 +289,12 @@ public class DataStatisticServiceImpl implements DataStatisticService {
             item.forEach((key, value) -> {
                 if (value instanceof String) {
                     String strValue = (String) value;
-                    // 手机号脱敏
+                    // 手机号、身份证、邮箱脱敏
                     if (isPhoneNumber(strValue)) {
                         item.put(key, maskPhoneNumber(strValue));
-                    }
-                    // 身份证脱敏
-                    else if (isIdCard(strValue)) {
+                    } else if (isIdCard(strValue)) {
                         item.put(key, maskIdCard(strValue));
-                    }
-                    // 邮箱脱敏
-                    else if (isEmail(strValue)) {
+                    } else if (isEmail(strValue)) {
                         item.put(key, maskEmail(strValue));
                     }
                 }
@@ -313,7 +307,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     }
 
     private String maskPhoneNumber(String phone) {
-        if (phone.length() == 11) {
+        if (phone.length() == PHONE_NUMBER_LENGTH) {
             return phone.substring(0, 3) + "****" + phone.substring(7);
         }
         return phone;
@@ -324,7 +318,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     }
 
     private String maskIdCard(String idCard) {
-        if (idCard.length() == 18) {
+        if (idCard.length() == ID_CARD_LENGTH) {
             return idCard.substring(0, 6) + "********" + idCard.substring(14);
         }
         return idCard;
@@ -336,14 +330,16 @@ public class DataStatisticServiceImpl implements DataStatisticService {
 
     private String maskEmail(String email) {
         int atIndex = email.indexOf("@");
-        if (atIndex > 2) {
+        if (atIndex > MIN_EMAIL_NAME_VISIBLE_CHARS) {
             return email.substring(0, 2) + "***" + email.substring(atIndex);
         }
         return email;
     }
 
     private String formatDate(Date date) {
-        if (date == null) return "";
+        if (date == null) {
+            return "";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }

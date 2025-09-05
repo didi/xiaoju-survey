@@ -21,7 +21,7 @@ COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 RUN cd /xiaoju-survey/server && npm install && npm run build
 
 # 暴露端口 需要跟nginx的port一致
-EXPOSE 80
+EXPOSE 8080
 
 # docker入口文件,启动nginx和运行pm2启动,并保证监听不断
 CMD ["sh","docker-run.sh"]

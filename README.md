@@ -153,6 +153,22 @@ npm run serve
 
 请查看 [部署指导](https://xiaojusurvey.didi.cn/docs/next/document/%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2/Docker%E9%83%A8%E7%BD%B2) 。
 
+#### Docker 镜像版本选择
+
+我们提供两个 Docker 镜像版本供您选择：
+
+- **slim 版本** (`xiaojusurvey/xiaoju-survey:latest-slim`): 
+  - 基于 `node:18-slim`，镜像体积更小
+  - 适合生产环境部署
+  - 包含运行所需的最小依赖
+
+- **完整版本** (`xiaojusurvey/xiaoju-survey:latest-full`):
+  - 基于 `node:18`，包含完整的开发工具
+  - 适合开发环境或需要调试的场景
+  - 包含 `curl`、`vim`、`git` 等工具
+
+在 `docker-compose.yaml` 中修改镜像标签即可切换版本。
+
 ### 一键部署
 
 _（手册编写中）_

@@ -25,7 +25,10 @@ services:
       - "8080:8080" # API端口
     environment:
       XIAOJU_SURVEY_MONGO_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@xiaoju-survey-mongo:27017 # docker-compose 会根据容器名称自动处理
-      XIAOJU_SURVEY_MONGO_AUTH_SOURCE: # 一般是admin，具体值需要根据数据库的配置决定
+      XIAOJU_SURVEY_MONGO_AUTH_SOURCE: ${XIAOJU_SURVEY_MONGO_AUTH_SOURCE}
+      AImodel_API_URL: ${AImodel_API_URL}
+      AImodel_API_KEY: ${AImodel_API_KEY}
+      AImodel_MODEL: ${AImodel_MODEL}
     links:
       - mongo:mongo
     depends_on:

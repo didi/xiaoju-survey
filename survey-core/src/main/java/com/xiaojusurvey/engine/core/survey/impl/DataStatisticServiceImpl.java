@@ -54,6 +54,9 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     @Resource
     private SurveyConfService surveyConfService;
 
+    private static final int MEDIAN_DIVISOR = 2;
+    private static final int DECIMAL_SCALE = 2;
+
     @Override
     public DataTableVO getDataTable(DataTableParam param) {
         // 1. 获取问卷配置
@@ -368,43 +371,39 @@ public class DataStatisticServiceImpl implements DataStatisticService {
             .collect(Collectors.toList());
 
     @Override
-    public List<AggregationStatisVO> getAggregationStatis(AggregationStatisParam param){
+    public List<AggregationStatisVO> getAggregationStatis(AggregationStatisParam param) {
         // 1. 获取问卷配置
         SurveyConf surveyConf = surveyConfService.getSurveyConfBySurveyId(param.getSurveyId());
-        if(surveyConf == null || surveyConf.getCode() == null){
+        if (surveyConf == null || surveyConf.getCode() == null) {
             return new ArrayList<>();
         }
 
-        //2.解析dataList
+        // 2. 解析 dataList
         List<SurveyConfCode.DataItem> dataList = extractDataList(surveyConf);
-        if(dataList.isEmpty()){
-            return new ArrayList<>();
-        }
 
-        //3.过滤支持聚合统计的字段
+        // 3. 过滤支持聚合统计的字段
         List<String> fieldList = dataList.stream()
                 .filter(item -> AGGREGATION_SUPPORTED_TYPES.contains(item.getType()))
                 .map(SurveyConfCode.DataItem::getField)
                 .collect(Collectors.toList());
-
-        if(fieldList.isEmpty()){
+        if (dataList.isEmpty() || fieldList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        //4.创建dataMap,便于数据处理
-        Map<String,SurveyConfCode.DataItem> dataMap = dataList.stream()
+        // 4. 创建 dataMap, 便于数据处理
+        Map<String, SurveyConfCode.DataItem> dataMap = dataList.stream()
                 .collect(Collectors.toMap(
                         SurveyConfCode.DataItem::getField,
                         item -> item
                 ));
 
-        //5.执行聚合查询
-        List<AggregationResult> aggregationResults = performAggregationQuery(param.getSurveyId(),fieldList);
+        // 5. 执行聚合查询
+        List<AggregationResult> aggregationResults = performAggregationQuery(param.getSurveyId(), fieldList);
 
-        //6.处理聚合结果
+        // 6. 处理聚合结果
         return aggregationResults.stream()
-                .map(result -> processAggregationData(result,dataMap))
-                .collect((Collectors.toList()));
+                .map(result -> processAggregationData(result, dataMap))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -470,37 +469,37 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     /**
      * 处理MongoDB聚合查询结果
      */
-    private List<AggregationResult> processAggregationResults(List<Map> results, List<String> fieldList){
+    private List<AggregationResult> processAggregationResults(List<Map> results, List<String> fieldList) {
         List<AggregationResult> resultList = new ArrayList<>();
-        if (results.isEmpty()){
+        if (results.isEmpty()) {
             return resultList;
         }
         Map<String, Object> facetResults = results.get(0);
-        for(String field : fieldList){
+        for (String field : fieldList) {
             try {
                 @SuppressWarnings("unchecked")
-                List<Map<String,Object>> fieldResults = (List<Map<String, Object>>) facetResults.get(field);
-                if(fieldResults == null){
+                List<Map<String, Object>> fieldResults = (List<Map<String, Object>>) facetResults.get(field);
+                if (fieldResults == null) {
                     continue;
                 }
-                //计算提交总次数
+                // 计算提交总次数
                 long submissionCount = fieldResults.stream()
-                        .mapToLong(item ->{
+                        .mapToLong(item -> {
                             Object countObj = item.get("count");
-                            return countObj instanceof  Number ? ((Number)countObj).longValue() : 0L;
+                            return countObj instanceof Number ? ((Number) countObj).longValue() : 0L;
                         })
                         .sum();
-                //构建聚合项目列表
+                // 构建聚合项目列表
                 List<AggregationStatisVO.AggregationItem> aggregationItems = fieldResults.stream()
-                        .map(item->{
+                        .map(item -> {
                             AggregationStatisVO.AggregationItem aggregationItem = new AggregationStatisVO.AggregationItem();
                             Object idObj = item.get("data." + field);
                             aggregationItem.setId(idObj != null ? String.valueOf(idObj) : "");
                             Object countObj = item.get("count");
-                            aggregationItem.setCount(countObj instanceof Number ? ((Number)countObj).longValue() : 0L);
+                            aggregationItem.setCount(countObj instanceof Number ? ((Number) countObj).longValue() : 0L);
                             return aggregationItem;
                         })
-                        .filter(item->!item.getId().isEmpty() && item.getCount()>0)
+                        .filter(item -> !item.getId().isEmpty() && item.getCount() > 0)
                         .collect(Collectors.toList());
 
                 AggregationResult result = new AggregationResult();
@@ -509,7 +508,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
                 result.setSubmissionCount(submissionCount);
                 resultList.add(result);
             } catch (Exception e) {
-                log.warn("处理字段聚合结果失败，field={}",field,e);
+                log.warn("处理字段聚合结果失败，field={}", field, e);
             }
         }
         return resultList;
@@ -518,10 +517,10 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     /**
      * 处理单个聚合数据结果（对于不同问题类型进行不同处理）
      */
-    private AggregationStatisVO processAggregationData(AggregationResult result,Map<String,SurveyConfCode.DataItem> dataMap){
-        try{
+    private AggregationStatisVO processAggregationData(AggregationResult result, Map<String, SurveyConfCode.DataItem> dataMap) {
+        try {
             SurveyConfCode.DataItem dataItem = dataMap.get(result.getField());
-            if(dataItem == null){
+            if (dataItem == null) {
                 return null;
             }
             QuestionTypeEnum questionType = QuestionTypeEnum.fromType(dataItem.getType());
@@ -533,24 +532,24 @@ public class DataStatisticServiceImpl implements DataStatisticService {
 
             AggregationStatisVO.AggregationData data = new AggregationStatisVO.AggregationData();
             data.setSubmissionCount(result.getSubmissionCount());
-            if(questionType != null && questionType.isOptionType()){
-                //选项类题型（RADIO, CHECKBOX, VOTE, BINARY_CHOICE)
+            if (questionType != null && questionType.isOptionType()) {
+                // 选项类题型（RADIO, CHECKBOX, VOTE, BINARY_CHOICE)
                 data.setAggregation(processOptionTypeAggregation(result, dataItem));
-            } else if(questionType != null && questionType.isRatingType()){
-                //处理评分类题型(RADIO_STAR, RADIO_NPS)
+            } else if (questionType != null && questionType.isRatingType()) {
+                // 处理评分类题型(RADIO_STAR, RADIO_NPS)
                 data.setAggregation(processRatingTypeAggregation(result, questionType));
                 data.setSummary(calculateRatingSummary(result, questionType));
-            } else if (questionType == QuestionTypeEnum.CASCADER){
-                //处理级联
+            } else if (questionType == QuestionTypeEnum.CASCADER) {
+                // 处理级联
                 data.setAggregation(processCascaderTypeAggregation(result, dataItem));
             } else {
-                //其他类型返回原始数据
+                // 其他类型返回原始数据
                 data.setAggregation(result.getAggregationItems());
             }
             vo.setData(data);
             return vo;
-        } catch (Exception e){
-            log.error("处理聚合数据失败，field={}",result.getField(),e);
+        } catch (Exception e) {
+            log.error("处理聚合数据失败，field={}", result.getField(), e);
             return null;
         }
     }
@@ -559,23 +558,23 @@ public class DataStatisticServiceImpl implements DataStatisticService {
      * 处理级联题型的聚合数据
      */
     private List<AggregationStatisVO.AggregationItem> processCascaderTypeAggregation(AggregationResult result, SurveyConfCode.DataItem dataItem) {
-        Map<String,Object> cascaderData = dataItem.getCascaderData();
-        if(cascaderData == null){
+        Map<String, Object> cascaderData = dataItem.getCascaderData();
+        if (cascaderData == null) {
             return result.getAggregationItems();
         }
 
-        //创建聚合数据的映射
-        Map<String,Long> aggregationMap = result.getAggregationItems().stream()
+        // 创建聚合数据的映射
+        Map<String, Long> aggregationMap = result.getAggregationItems().stream()
                 .collect(Collectors.toMap(
                         AggregationStatisVO.AggregationItem::getId,
                         AggregationStatisVO.AggregationItem::getCount,
                         (existing, replacement) -> existing
                 ));
-        //提取所有可能的路径
+        // 提取所有可能的路径
         @SuppressWarnings("unchecked")
-        List<Map<String,Object>> children = (List<Map<String, Object>>) cascaderData.get("children");
-        if(children == null){
-            List<CascaderPath> allPaths = extractAllCascaderPaths(children,"","");
+        List<Map<String, Object>> children = (List<Map<String, Object>>) cascaderData.get("children");
+        if (children == null) {
+            List<CascaderPath> allPaths = extractAllCascaderPaths(children, "", "");
 
             return allPaths.stream()
                     .map(path -> {
@@ -585,7 +584,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
                         item.setCount(aggregationMap.getOrDefault(path.getId(), 0L));
                         return item;
                     })
-                    .filter(item -> item.getCount()>0)
+                    .filter(item -> item.getCount() > 0)
                     .collect(Collectors.toList());
         }
         return result.getAggregationItems();
@@ -593,18 +592,18 @@ public class DataStatisticServiceImpl implements DataStatisticService {
 
     private List<CascaderPath> extractAllCascaderPaths(List<Map<String, Object>> children, String textPrefix, String idPrefix) {
         List<CascaderPath> paths = new ArrayList<>();
-        if(children != null){
-            for(Map<String, Object> child : children){
+        if (children != null) {
+            for (Map<String, Object> child : children) {
                 String text = (String) child.get("text");
                 String hash = (String) child.get("hash");
-                String currentText = textPrefix.isEmpty() ? text:textPrefix+"-"+text;
-                String currentId = idPrefix.isEmpty()?hash:idPrefix+","+hash;
-                paths.add(new CascaderPath(currentId,currentText));
-                //递归处理子级
+                String currentText = textPrefix.isEmpty() ? text : textPrefix + "-" + text;
+                String currentId = idPrefix.isEmpty() ? hash : idPrefix + "," + hash;
+                paths.add(new CascaderPath(currentId, currentText));
+                // 递归处理子级
                 @SuppressWarnings("unchecked")
-                List<Map<String,Object>> subChildren = (List<Map<String, Object>>) child.get("children");
-                if(subChildren != null && !subChildren.isEmpty()){
-                    paths.addAll(extractAllCascaderPaths(subChildren,currentText, currentId));
+                List<Map<String, Object>> subChildren = (List<Map<String, Object>>) child.get("children");
+                if (subChildren != null && !subChildren.isEmpty()) {
+                    paths.addAll(extractAllCascaderPaths(subChildren, currentText, currentId));
                 }
             }
         }
@@ -619,7 +618,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         private String id;
         private String text;
 
-        public CascaderPath(String id, String text) {
+        CascaderPath(String id, String text) {
             this.id = id;
             this.text = text;
         }
@@ -628,32 +627,32 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     /**
      * 处理选项类题型的聚合数据
      */
-    private List<AggregationStatisVO.AggregationItem> processOptionTypeAggregation(AggregationResult result,SurveyConfCode.DataItem dataItem){
+    private List<AggregationStatisVO.AggregationItem> processOptionTypeAggregation(AggregationResult result, SurveyConfCode.DataItem dataItem) {
         List<SurveyConfCode.Option> options = dataItem.getOptions();
-        if(options == null || options.isEmpty()){
+        if (options == null || options.isEmpty()) {
             return result.getAggregationItems();
         }
-        //创建选项ID到文本的映射
-        Map<String,String> optionTextMap = options.stream()
+        // 创建选项ID到文本的映射
+        Map<String, String> optionTextMap = options.stream()
                 .collect(Collectors.toMap(
                         SurveyConfCode.Option::getHash,
                         SurveyConfCode.Option::getText,
-                        (existing,replacement) -> existing
+                        (existing, replacement) -> existing
                 ));
-        //创建聚合数据的映射
-        Map<String,Long> aggregationMap = result.getAggregationItems().stream()
+        // 创建聚合数据的映射
+        Map<String, Long> aggregationMap = result.getAggregationItems().stream()
                 .collect(Collectors.toMap(
                         AggregationStatisVO.AggregationItem::getId,
                         AggregationStatisVO.AggregationItem::getCount,
-                        (existing,replacement) -> existing
+                        (existing, replacement) -> existing
                 ));
-        //为每个选项生成聚合项目
+        // 为每个选项生成聚合项目
         return options.stream()
                 .map(option -> {
                     AggregationStatisVO.AggregationItem item = new AggregationStatisVO.AggregationItem();
                     item.setId(option.getHash());
                     item.setText(option.getText());
-                    item.setCount(aggregationMap.getOrDefault(option.getHash(),0L));
+                    item.setCount(aggregationMap.getOrDefault(option.getHash(), 0L));
                     return item;
                 })
                 .collect(Collectors.toList());
@@ -663,16 +662,16 @@ public class DataStatisticServiceImpl implements DataStatisticService {
      * 处理评分题型的聚合数据
      */
     private List<AggregationStatisVO.AggregationItem> processRatingTypeAggregation(AggregationResult result, QuestionTypeEnum questionType) {
-        //确定评分范围
-        int[] range = questionType == QuestionTypeEnum.RADIO_NPS ? new int[]{0,10}:new int[]{1, 5};
-        //创建聚合数据的映射
+        // 确定评分范围
+        int[] range = questionType == QuestionTypeEnum.RADIO_NPS ? new int[]{0, 10} : new int[]{1, 5};
+        // 创建聚合数据的映射
         Map<String, Long> aggregationMap = result.getAggregationItems().stream()
                 .collect(Collectors.toMap(
                         AggregationStatisVO.AggregationItem::getId,
                         AggregationStatisVO.AggregationItem::getCount,
-                        (existing,replacement) -> (existing)
+                        (existing, replacement) -> (existing)
                 ));
-        //为每个评分值生成聚合项目
+        // 为每个评分值生成聚合项目
         List<AggregationStatisVO.AggregationItem> items = new ArrayList<>();
         for (int i = range[0]; i <= range[1]; i++) {
             AggregationStatisVO.AggregationItem item = new AggregationStatisVO.AggregationItem();
@@ -690,7 +689,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
      * 计算评分题型的统计结果
      */
     private AggregationStatisVO.StatisticSummary calculateRatingSummary(AggregationResult result, QuestionTypeEnum questionType) {
-        if(result.getAggregationItems() == null || result.getAggregationItems().isEmpty()){
+        if (result.getAggregationItems() == null || result.getAggregationItems().isEmpty()) {
             return null;
         }
         //展开数据点
@@ -698,14 +697,14 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         for (AggregationStatisVO.AggregationItem item : result.getAggregationItems()) {
             try {
                 BigDecimal value = new BigDecimal(item.getId());
-                for(int i=0;i<item.getCount();i++){
+                for (int i = 0; i < item.getCount(); i++) {
                     dataPoints.add(value);
                 }
-            } catch(NumberFormatException e){
-                log.warn("评分值转换失败：{}",item.getId(),e);
+            } catch (NumberFormatException e) {
+                log.warn("评分值转换失败：{}", item.getId(), e);
             }
         }
-        if(dataPoints.isEmpty()){
+        if (dataPoints.isEmpty()) {
             return null;
         }
         AggregationStatisVO.StatisticSummary summary = new AggregationStatisVO.StatisticSummary();
@@ -716,10 +715,10 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         //计算中位数
         summary.setMedian(calculateMedian(dataPoints));
         //计算方差
-        summary.setVariance(calculateVariance(dataPoints,average));
+        summary.setVariance(calculateVariance(dataPoints, average));
         //如果是NPS评分，计算NPS值
-        if(questionType == QuestionTypeEnum.RADIO_NPS){
-            summary.setNps(calculateNPS(dataPoints));
+        if (questionType == QuestionTypeEnum.RADIO_NPS) {
+            summary.setNps(calculateNps(dataPoints));
         }
         return summary;
     }
@@ -727,38 +726,39 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     /**
      * 计算平均值
      */
-    private BigDecimal calculateAverage(List<BigDecimal> dataPoints){
+    private BigDecimal calculateAverage(List<BigDecimal> dataPoints) {
         BigDecimal sum = dataPoints.stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return  sum.divide(new BigDecimal(dataPoints.size()),2,BigDecimal.ROUND_HALF_UP);
+        return sum.divide(new BigDecimal(dataPoints.size()), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
      * 计算中位数
      */
-    private BigDecimal calculateMedian(List<BigDecimal> dataPoints){
+    private BigDecimal calculateMedian(List<BigDecimal> dataPoints) {
         List<BigDecimal> sorted = dataPoints.stream()
                 .sorted()
                 .collect(Collectors.toList());
 
         int size = sorted.size();
-        if(size %2 == 0){
-            BigDecimal mid1 = sorted.get(size / 2-1);
-            BigDecimal mid2 = sorted.get(size / 2);
-            return mid1.add(mid2).divide(new BigDecimal(2),2,BigDecimal.ROUND_HALF_UP);
-        }else{
-            return sorted.get(size / 2);
+        if (size % MEDIAN_DIVISOR == 0) {
+            int midIndex = size / MEDIAN_DIVISOR;
+            BigDecimal mid1 = sorted.get(midIndex - 1);
+            BigDecimal mid2 = sorted.get(midIndex);
+            return mid1.add(mid2).divide(new BigDecimal(MEDIAN_DIVISOR), DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
+        } else {
+            return sorted.get(size / MEDIAN_DIVISOR);
         }
     }
 
     /**
      * 计算方差
      */
-    private static BigDecimal calculateVariance(List<BigDecimal> dataPoints, BigDecimal average){
+    private static BigDecimal calculateVariance(List<BigDecimal> dataPoints, BigDecimal average) {
         BigDecimal sumOfSquaredDifferences = dataPoints.stream()
                 .map(point -> point.subtract(average).pow(2))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sumOfSquaredDifferences.divide(new BigDecimal(dataPoints.size()),2, RoundingMode.HALF_UP);
+        return sumOfSquaredDifferences.divide(new BigDecimal(dataPoints.size()), 2, RoundingMode.HALF_UP);
     }
 
     /**
@@ -766,21 +766,21 @@ public class DataStatisticServiceImpl implements DataStatisticService {
      * NPS = (推荐者百分比 - 贬损者百分比)
      * 推荐者：9-10分，中立者：7-8分，贬损者：0-6分
      */
-    private static BigDecimal calculateNPS(List<BigDecimal> dataPoints){
+    private static BigDecimal calculateNps(List<BigDecimal> dataPoints) {
         long total = dataPoints.size();
-        if(total == 0){
+        if (total == 0) {
             return BigDecimal.ZERO;
         }
 
         long promoters = dataPoints.stream()
-                .filter(point -> point.compareTo(new BigDecimal(9))>=0)
+                .filter(point -> point.compareTo(new BigDecimal(9)) >= 0)
                 .count();
 
         long detractors = dataPoints.stream()
-                .filter(point -> point.compareTo(new BigDecimal(6))<=0)
+                .filter(point -> point.compareTo(new BigDecimal(6)) <= 0)
                 .count();
-        BigDecimal promoterPercentage = new BigDecimal(promoters*100).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP);
-        BigDecimal detractorPercentage = new BigDecimal(detractors*100).divide(new BigDecimal(total),2,BigDecimal.ROUND_HALF_UP);
+        BigDecimal promoterPercentage = new BigDecimal(promoters * 100).divide(new BigDecimal(total), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal detractorPercentage = new BigDecimal(detractors * 100).divide(new BigDecimal(total), 2, BigDecimal.ROUND_HALF_UP);
         return promoterPercentage.subtract(detractorPercentage);
     }
 

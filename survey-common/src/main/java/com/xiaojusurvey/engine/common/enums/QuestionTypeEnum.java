@@ -45,7 +45,7 @@ public enum QuestionTypeEnum {
     /**
      * 获取支持聚合统计的问题类型列表
      */
-    public static QuestionTypeEnum[] getAggerationSupportTypes(){
+    public static QuestionTypeEnum[] getAggerationSupportTypes() {
         return new QuestionTypeEnum[]{
                 RADIO, CHECKBOX, BINARY_CHOICE, RADIO_STAR, RADIO_NPS, VOTE, CASCADER
         };
@@ -54,9 +54,9 @@ public enum QuestionTypeEnum {
     /**
      * 根据类型字符串获取枚举
      */
-    public static QuestionTypeEnum fromType(String type){
-        for(QuestionTypeEnum questionType : values()){
-            if(questionType.type.equals(type)){
+    public static QuestionTypeEnum fromType(String type) {
+        for (QuestionTypeEnum questionType : values()) {
+            if (questionType.type.equals(type)) {
                 return questionType;
             }
         }

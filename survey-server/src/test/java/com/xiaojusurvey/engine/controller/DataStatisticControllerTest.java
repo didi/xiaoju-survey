@@ -2,7 +2,9 @@ package com.xiaojusurvey.engine.controller;
 
 import com.xiaojusurvey.engine.common.rpc.RpcResult;
 import com.xiaojusurvey.engine.core.survey.DataStatisticService;
+import com.xiaojusurvey.engine.core.survey.param.AggregationStatisParam;
 import com.xiaojusurvey.engine.core.survey.param.DataTableParam;
+import com.xiaojusurvey.engine.core.survey.vo.AggregationStatisVO;
 import com.xiaojusurvey.engine.core.survey.vo.DataTableVO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -229,5 +232,176 @@ public class DataStatisticControllerTest {
         row.put("data123", phone);
         row.put("data456", idCard);
         return row;
+    }
+
+
+    public void testGetAggregationStatis_Success() {
+        // 准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("test-survey-id");
+
+        //Mock返回数据
+        List<AggregationStatisVO> mockResult = createMockAggregationStatisVO();
+        Mockito.when(dataStatisticService.getAggregationStatis(param)).thenReturn(mockResult);
+
+        //执行测试
+        RpcResult<List<AggregationStatisVO>> result = dataStatisticController.getAggregationStatis(param);
+        //验证结果
+        Assert.assertTrue("结果应该成功", result.getSuccess());
+        Assert.assertEquals("响应码应该是200",Integer.valueOf(200),result.getCode());
+        Assert.assertNotNull("数据不应该为空",result.getData());
+        Assert.assertEquals("应该有两个统计项",2,result.getData().size());
+
+        //验证第一个统计项（单选题）
+        AggregationStatisVO firstItem = result.getData().get(0);
+        Assert.assertEquals("字段应该匹配","data1",firstItem.getField());
+        Assert.assertEquals("标题应该匹配","性别",firstItem.getTitle());
+        Assert.assertEquals("类型应该匹配","radio",firstItem.getType());
+        Assert.assertEquals("聚合数据数量应该匹配",2,firstItem.getData().getAggregation().size());
+    }
+
+    @Test
+    public void testGetAggregationStatis_EmptyResult() {
+        //准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("empty-survey-id");
+
+        //Mock空结果
+        List<AggregationStatisVO> emptyResult = new ArrayList<>();
+        Mockito.when(dataStatisticService.getAggregationStatis(param)).thenReturn(emptyResult);
+
+        //执行测试
+        RpcResult<List<AggregationStatisVO>> result = dataStatisticController.getAggregationStatis(param);
+
+        //验证结果
+        Assert.assertTrue("结果应该成功", result.getSuccess());
+        Assert.assertEquals("响应码应该是200", Integer.valueOf(200), result.getCode());
+        Assert.assertNotNull("数据不应该为空", result.getData());
+        Assert.assertTrue("数据应该为空列表", result.getData().isEmpty());
+    }
+
+    @Test
+    public void testGetAggregationStatis_ValidationFails(){
+        //准备无效参数
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId(""); //空的surveyId应该验证失败
+
+        // 执行验证
+        Set<ConstraintViolation<AggregationStatisParam>> violations = validator.validate(param);
+
+        // 验证结果
+        Assert.assertFalse("应该有验证错误", violations.isEmpty());
+        Assert.assertTrue("应该包含surveyId验证错误",
+                violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("surveyId")));
+    }
+
+    @Test
+    public void testGetAggregationStatis_RatingType(){
+        //准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("rating-survey-id");
+
+        //Mock评分题返回数据
+        AggregationStatisVO ratingItem = createRatingAggregationItem();
+        Mockito.when(dataStatisticService.getAggregationStatis(param)).thenReturn(Arrays.asList(ratingItem));
+
+        // 执行测试
+        RpcResult<List<AggregationStatisVO>> result = dataStatisticController.getAggregationStatis(param);
+
+        // 验证结果
+        Assert.assertTrue("结果应该成功", result.getSuccess());
+        Assert.assertEquals("类型应该是评分", "radio-star", ratingItem.getType());
+        Assert.assertNotNull("应该有统计摘要", ratingItem.getData().getSummary());
+        Assert.assertNotNull("应该有平均值", ratingItem.getData().getSummary().getAverage());
+    }
+
+    private AggregationStatisVO createRatingAggregationItem() {
+        AggregationStatisVO item = new AggregationStatisVO();
+        item.setField("data_rate");
+        item.setTitle("满意度");
+        item.setType("radio-star");
+
+        AggregationStatisVO.AggregationData data = new AggregationStatisVO.AggregationData();
+        data.setSubmissionCount(50L);
+
+        List<AggregationStatisVO.AggregationItem> aggregation = new ArrayList<>();
+        for (Long i = 1L; i <= 5L; i++) {
+            AggregationStatisVO.AggregationItem ai = new AggregationStatisVO.AggregationItem();
+            ai.setId(String.valueOf(i));
+            ai.setText(String.valueOf(i));
+            ai.setCount(i); // 随便给点计数
+            aggregation.add(ai);
+        }
+        data.setAggregation(aggregation);
+
+        AggregationStatisVO.StatisticSummary summary = new AggregationStatisVO.StatisticSummary();
+        summary.setAverage(new BigDecimal("3.40"));
+        summary.setMedian(new BigDecimal("3"));
+        summary.setVariance(new BigDecimal("1.25"));
+        data.setSummary(summary);
+
+        item.setData(data);
+        return item;
+    }
+
+    /**
+     * 创建Mock聚合统计VO
+     */
+    private List<AggregationStatisVO> createMockAggregationStatisVO() {
+        List<AggregationStatisVO> result = new ArrayList<>();
+        //单选题示例
+        AggregationStatisVO radioItem = createRadioAggregationItem();
+        result.add(radioItem);
+
+        //多选题示例
+        AggregationStatisVO checkboxItem = createCheckboxAggregationItem();
+        result.add(checkboxItem);
+
+        return result;
+    }
+
+    private AggregationStatisVO createRadioAggregationItem() {
+        AggregationStatisVO item = new AggregationStatisVO();
+        item.setField("data1");
+        item.setTitle("性别");
+        item.setType("radio");
+
+        AggregationStatisVO.AggregationData data = new AggregationStatisVO.AggregationData();
+        data.setSubmissionCount(100L);
+        List<AggregationStatisVO.AggregationItem> aggregation = Arrays.asList(
+                createAggregationItem("option1","男",60L),
+                createAggregationItem("option2","女",40L)
+        );
+        data.setAggregation(aggregation);
+
+        item.setData(data);
+        return item;
+    }
+
+    private AggregationStatisVO createCheckboxAggregationItem() {
+        AggregationStatisVO item = new AggregationStatisVO();
+        item.setField("data2");
+        item.setTitle("兴趣爱好");
+        item.setType("checkbox");
+        AggregationStatisVO.AggregationData data = new AggregationStatisVO.AggregationData();
+        data.setSubmissionCount(80L);
+
+        List<AggregationStatisVO.AggregationItem> aggregation = Arrays.asList(
+                createAggregationItem("option1","运动",30L),
+                createAggregationItem("option2","阅读",25L),
+                createAggregationItem("option3","音乐",35L)
+        );
+        data.setAggregation(aggregation);
+
+        item.setData(data);
+        return item;
+    }
+
+    private AggregationStatisVO.AggregationItem createAggregationItem(String id, String text, long count) {
+        AggregationStatisVO.AggregationItem item = new AggregationStatisVO.AggregationItem();
+        item.setId(id);
+        item.setText(text);
+        item.setCount(count);
+        return item;
     }
 }

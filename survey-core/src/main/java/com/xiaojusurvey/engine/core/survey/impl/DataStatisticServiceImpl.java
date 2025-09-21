@@ -49,7 +49,6 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     private MongoRepository mongoRepository;
 
     @Resource
-
     private MongoTemplate mongoTemplate;
 
     @Resource
@@ -367,7 +366,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         return result;
     }
 
-    private static final List<String> AGGREGATION_SUPPORTED_TYPES = Arrays.stream(QuestionTypeEnum.getAggerationSupportTypes())
+    private static final List<String> AGGREGATION_SUPPORTED_TYPES = Arrays.stream(QuestionTypeEnum.getAggregationSupportTypes())
             .map(QuestionTypeEnum::getType)
             .collect(Collectors.toList());
 
@@ -730,7 +729,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     private BigDecimal calculateAverage(List<BigDecimal> dataPoints) {
         BigDecimal sum = dataPoints.stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sum.divide(new BigDecimal(dataPoints.size()), 2, BigDecimal.ROUND_HALF_UP);
+        return sum.divide(new BigDecimal(dataPoints.size()), DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP);
     }
 
     /**

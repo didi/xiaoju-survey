@@ -21,7 +21,7 @@ public enum QuestionTypeEnum {
     // 多项选择
     CHECKBOX("checkbox"),
 
-    // 多项选择
+    // 二项选择
     BINARY_CHOICE("binary-choice"),
 
     // 评分
@@ -60,7 +60,7 @@ public enum QuestionTypeEnum {
                 return questionType;
             }
         }
-        return null;
+        throw new IllegalArgumentException("未知的问题类型: " + type);
     }
 
     /**

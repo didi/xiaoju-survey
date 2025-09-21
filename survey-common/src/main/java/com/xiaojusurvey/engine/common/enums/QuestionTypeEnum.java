@@ -45,7 +45,7 @@ public enum QuestionTypeEnum {
     /**
      * 获取支持聚合统计的问题类型列表
      */
-    public static QuestionTypeEnum[] getAggerationSupportTypes() {
+    public static QuestionTypeEnum[] getAggregationSupportTypes() {
         return new QuestionTypeEnum[]{
                 RADIO, CHECKBOX, BINARY_CHOICE, RADIO_STAR, RADIO_NPS, VOTE, CASCADER
         };

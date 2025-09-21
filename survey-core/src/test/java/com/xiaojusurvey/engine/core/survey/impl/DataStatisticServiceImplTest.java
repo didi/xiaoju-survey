@@ -4,7 +4,9 @@ import com.xiaojusurvey.engine.common.entity.survey.SurveyConf;
 import com.xiaojusurvey.engine.common.entity.survey.SurveySubmit;
 import com.xiaojusurvey.engine.core.survey.SurveyConfService;
 import com.xiaojusurvey.engine.core.survey.dto.SurveyConfCode;
+import com.xiaojusurvey.engine.core.survey.param.AggregationStatisParam;
 import com.xiaojusurvey.engine.core.survey.param.DataTableParam;
+import com.xiaojusurvey.engine.core.survey.vo.AggregationStatisVO;
 import com.xiaojusurvey.engine.core.survey.vo.DataTableVO;
 import com.xiaojusurvey.engine.repository.MongoRepository;
 import org.junit.Assert;
@@ -235,29 +237,7 @@ public class DataStatisticServiceImplTest {
     }
 
     /**
-     * 创建Mock的SurveyConf
-     */
-    private SurveyConf createMockSurveyConf() {
-        SurveyConf surveyConf = new SurveyConf();
-        surveyConf.setPageId(testSurveyId);
 
-        Map<String, Object> code = new HashMap<>();
-        Map<String, Object> dataConf = new HashMap<>();
-
-        List<Map<String, Object>> dataList = new ArrayList<>();
-        List<Map<String, Object>> options = new ArrayList<>();
-        options.add(createOption("hash1", "选项1"));
-        options.add(createOption("hash2", "选项2"));
-        dataList.add(createDataItem("data1", "姓名", "radio", options));
-
-        dataConf.put("dataList", dataList);
-        code.put("dataConf", dataConf);
-        surveyConf.setCode(code);
-
-        return surveyConf;
-    }
-
-    /**
      * 创建包含RADIO_STAR类型的Mock SurveyConf
      */
     private SurveyConf createMockSurveyConfWithRadioStar() {
@@ -406,5 +386,144 @@ public class DataStatisticServiceImplTest {
         List<SurveySubmit> submits = new ArrayList<>();
         submits.add(submit);
         return submits;
+    }
+
+    // 添加测试方法
+    @Test
+    public void testGetAggregationStatis_Success() {
+        // 准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("test-survey-id");
+
+        // Mock问卷配置
+        SurveyConf mockSurveyConf = createMockSurveyConf();
+        Mockito.when(surveyConfService.getSurveyConfBySurveyId("test-survey-id"))
+                .thenReturn(mockSurveyConf);
+
+        // 执行测试
+        List<AggregationStatisVO> result = dataStatisticService.getAggregationStatis(param);
+
+        // 验证结果
+        Assert.assertNotNull("结果不应该为空", result);
+        // 由于依赖MongoDB聚合查询，这里主要验证基本逻辑
+    }
+
+    @Test
+    public void testGetAggregationStatis_NoSurveyConf() {
+        // 准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("non-existent-survey-id");
+
+        // Mock问卷配置不存在
+        Mockito.when(surveyConfService.getSurveyConfBySurveyId("non-existent-survey-id"))
+                .thenReturn(null);
+
+        // 执行测试
+        List<AggregationStatisVO> result = dataStatisticService.getAggregationStatis(param);
+
+        // 验证结果
+        Assert.assertNotNull("结果不应该为空", result);
+        Assert.assertTrue("结果应该为空列表", result.isEmpty());
+    }
+
+    @Test
+    public void testGetAggregationStatis_NoSupportedFields() {
+        // 准备测试数据
+        AggregationStatisParam param = new AggregationStatisParam();
+        param.setSurveyId("text-only-survey-id");
+
+        // Mock只有文本题的问卷配置
+        SurveyConf mockSurveyConf = createMockTextOnlySurveyConf();
+        Mockito.when(surveyConfService.getSurveyConfBySurveyId("text-only-survey-id"))
+                .thenReturn(mockSurveyConf);
+
+        // 执行测试
+        List<AggregationStatisVO> result = dataStatisticService.getAggregationStatis(param);
+
+        // 验证结果
+        Assert.assertNotNull("结果不应该为空", result);
+        Assert.assertTrue("结果应该为空列表", result.isEmpty());
+    }
+
+    /**
+     * 创建Mock问卷配置
+     */
+    private SurveyConf createMockSurveyConf() {
+        SurveyConf surveyConf = new SurveyConf();
+        surveyConf.setPageId("test-survey-id");
+
+        Map<String, Object> code = new HashMap<>();
+        Map<String, Object> dataConf = new HashMap<>();
+
+        List<Map<String, Object>> dataList = new ArrayList<>();
+
+        // 单选题
+        Map<String, Object> radioItem = new HashMap<>();
+        radioItem.put("field", "data1");
+        radioItem.put("title", "性别");
+        radioItem.put("type", "radio");
+
+        List<Map<String, Object>> radioOptions = new ArrayList<>();
+        Map<String, Object> option1 = new HashMap<>();
+        option1.put("hash", "hash1");
+        option1.put("text", "选项1");
+        radioOptions.add(option1);
+
+        Map<String, Object> option2 = new HashMap<>();
+        option2.put("hash", "hash2");
+        option2.put("text", "选项2");
+        radioOptions.add(option2);
+
+        radioItem.put("options", radioOptions);
+        dataList.add(radioItem);
+
+        // 多选题
+        Map<String, Object> checkboxItem = new HashMap<>();
+        checkboxItem.put("field", "data2");
+        checkboxItem.put("title", "兴趣爱好");
+        checkboxItem.put("type", "checkbox");
+
+        List<Map<String, Object>> checkboxOptions = new ArrayList<>();
+        Map<String, Object> hobby1 = new HashMap<>();
+        hobby1.put("hash", "hobby1");
+        hobby1.put("text", "运动");
+        checkboxOptions.add(hobby1);
+
+        Map<String, Object> hobby2 = new HashMap<>();
+        hobby2.put("hash", "hobby2");
+        hobby2.put("text", "阅读");
+        checkboxOptions.add(hobby2);
+
+        checkboxItem.put("options", checkboxOptions);
+        dataList.add(checkboxItem);
+
+        dataConf.put("dataList", dataList);
+        code.put("dataConf", dataConf);
+        surveyConf.setCode(code);
+
+        return surveyConf;
+    }
+
+    private SurveyConf createMockTextOnlySurveyConf() {
+        SurveyConf surveyConf = new SurveyConf();
+        surveyConf.setPageId("text-only-survey-id");
+
+        Map<String, Object> code = new HashMap<>();
+        Map<String, Object> dataConf = new HashMap<>();
+
+        List<Map<String, Object>> dataList = new ArrayList<>();
+
+        // 文本题
+        Map<String, Object> textItem = new HashMap<>();
+        textItem.put("field", "data1");
+        textItem.put("title", "姓名");
+        textItem.put("type", "text");
+        dataList.add(textItem);
+
+        dataConf.put("dataList", dataList);
+        code.put("dataConf", dataConf);
+        surveyConf.setCode(code);
+
+        return surveyConf;
     }
 }

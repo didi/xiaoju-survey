@@ -234,6 +234,7 @@ public class DataStatisticControllerTest {
         return row;
     }
 
+
     public void testGetAggregationStatis_Success() {
         // 准备测试数据
         AggregationStatisParam param = new AggregationStatisParam();
@@ -403,6 +404,4 @@ public class DataStatisticControllerTest {
         item.setCount(count);
         return item;
     }
-
-
 }

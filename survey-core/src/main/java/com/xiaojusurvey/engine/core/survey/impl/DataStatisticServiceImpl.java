@@ -49,6 +49,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
     private MongoRepository mongoRepository;
 
     @Resource
+
     private MongoTemplate mongoTemplate;
 
     @Resource
@@ -56,7 +57,7 @@ public class DataStatisticServiceImpl implements DataStatisticService {
 
     private static final int MEDIAN_DIVISOR = 2;
     private static final int DECIMAL_SCALE = 2;
-
+  
     @Override
     public DataTableVO getDataTable(DataTableParam param) {
         // 1. 获取问卷配置
@@ -783,5 +784,4 @@ public class DataStatisticServiceImpl implements DataStatisticService {
         BigDecimal detractorPercentage = new BigDecimal(detractors * 100).divide(new BigDecimal(total), 2, BigDecimal.ROUND_HALF_UP);
         return promoterPercentage.subtract(detractorPercentage);
     }
-
 }

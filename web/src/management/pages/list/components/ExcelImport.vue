@@ -201,16 +201,17 @@ const excelToSchema = (excelQuestions: Array<{title: string, type: string, optio
     const { title, type, options } = excelQuestion
 
     // 检查题型是否支持
-    if (!textTypeMap[type]) {
-      console.warn(`不支持的题型: ${type}，已跳过题目: ${title}`);
+    const transferType = type.replace('题', '')
+    if (!textTypeMap[transferType]) {
+      console.warn(`不支持的题型: ${transferType}，已跳过题目: ${title}`);
       continue;
     }
 
-    const question: Record<string, any> = getQuestionByType(textTypeMap[type]);
+    const question: Record<string, any> = getQuestionByType(textTypeMap[transferType]);
     question.title = title
     question.showIndex = true
 
-    switch (type) {
+    switch (transferType) {
       case "单行输入框":
       case "多行输入框":
       case "评分":

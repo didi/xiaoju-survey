@@ -27,50 +27,49 @@
         </template>
       </el-menu-item>
 
-
       <div v-else> 
         <el-menu-item
-        :class="[
-          index === 0 ? 'bottom' : '',
-          index > 2 ? 'sub-item' : 'main-item',
-          menu.id === MenuType.RecycleBin ? 'bottom-element' : '',
-          activeValue == menu.id ? 'check-item' : ''
-        ]"
-        :index="menu.id.toString()"
-        v-if="!menu.children?.length"
-      >
-        <template #title>
-          <div class="title-content">
-            <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
-          </div>
-        </template>
-      </el-menu-item>
-      </div>
-      <el-sub-menu
-        v-else
-        :index="menu.id.toString()"
-        :class="[activeValue == menu.id ? 'check-item' : '']"
-        default-opened
-      >
-        <template #title>
-          <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
-            <i :class="['iconfont', menu.icon]"></i>
-            <span>{{ menu.name }}</span>
-          </div>
-        </template>
-        <el-menu-item
-          v-for="item in menu.children"
-          :key="item.id"
-          :index="item.id.toString()"
-          :class="[activeValue == item.id ? 'check-item' : '']"
+          :class="[
+            index === 0 ? 'bottom' : '',
+            index > 2 ? 'sub-item' : 'main-item',
+            menu.id === MenuType.RecycleBin ? 'bottom-element' : '',
+            activeValue == menu.id ? 'check-item' : ''
+          ]"
+          :index="menu.id.toString()"
+          v-if="!menu.children?.length"
         >
-          <div class="title-box">
-            <p class="title-text">{{ item.name }}</p>
-            <p class="title-total">{{ item.total }}</p>
-          </div>
+          <template #title>
+            <div class="title-content">
+              <i :class="['iconfont', menu.icon]"></i>
+              <span>{{ menu.name }}</span>
+            </div>
+          </template>
         </el-menu-item>
-      </el-sub-menu>
+        <el-sub-menu
+          :index="menu.id.toString()"
+          :class="[activeValue == menu.id ? 'check-item' : '']"
+          default-opened
+        >
+          <template #title>
+            <div class="title-content sub-title main-item" @click.stop="handleMenu(menu.id)">
+              <i :class="['iconfont', menu.icon]"></i>
+              <span>{{ menu.name }}</span>
+            </div>
+          </template>
+          <el-menu-item
+            v-for="item in menu.children"
+            :key="item.id"
+            :index="item.id.toString()"
+            :class="[activeValue == item.id ? 'check-item' : '']"
+          >
+            <div class="title-box">
+              <p class="title-text">{{ item.name }}</p>
+              <p class="title-total">{{ item.total }}</p>
+            </div>
+          </el-menu-item>
+        </el-sub-menu>
+      </div>
+
     </template>
   </el-menu>
 </template>

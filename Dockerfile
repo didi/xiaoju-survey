@@ -9,7 +9,6 @@ COPY server/ /builder/server/
 
 RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
     npm config set registry https://registry.npmmirror.com && \
-    apt-get update && apt-get install -y build-essential && \
     cd /builder/web && npm install && npm run build-only && \
     cd /builder/server && npm install && npm run build
 
@@ -20,9 +19,8 @@ FROM node:18-slim
 WORKDIR /xiaoju-survey
 
 # 安装nginx
-RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
-    npm config set registry https://registry.npmmirror.com && \
-    apt-get update && apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx curl vim git && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 仅复制运行需要的文件到工作区间
 COPY --from=builder /builder/web/dist/ /xiaoju-survey/web/dist/

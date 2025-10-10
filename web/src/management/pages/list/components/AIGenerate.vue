@@ -260,7 +260,6 @@ const handleGenerate = async (userInput?: string) => {
                 }),
               ])
               if (done) {
-                emit('change', [...questionList.value])
                 return
               }
               const chunkText = textDecoder.decode(value)
@@ -283,11 +282,11 @@ const handleGenerate = async (userInput?: string) => {
             }
           }
 
-          const handle = async (index: number) => {
+          const handle = async () => {
             const chunkArr = outputChunk.split('\n').filter(item => !!item)
-            let newIndex = 0
+            let curOutput = ''
             let isDone = false
-            for (let i = index; i < chunkArr.length; i++) {
+            for (let i = 0; i < chunkArr.length; i++) {
               try {
                 const resultChunk = chunkArr[i].replace('data:', '').replace(new RegExp('\xa0', 'g'), '')
                 if (resultChunk.indexOf('[DONE]') >= 0) {
@@ -303,29 +302,31 @@ const handleGenerate = async (userInput?: string) => {
                 const chunkJSON = JSON.parse(resultChunk)
                 const content = chunkJSON?.choices?.[0]?.delta?.content || ''
                 const reasoningContent = chunkJSON?.choices?.[0]?.delta?.reasoning_content || ''
-                output += content
+                curOutput += content
                 reasoningOutput += reasoningContent
+                if (curOutput.length > output.length) {
+                  output = curOutput
+                }
                 messages.value[idx].content = output
                 if (reasoningOutput) {
                   messages.value[idx].reasoningContent = reasoningOutput
                 }
-                newIndex = i + 1
               } catch (error) {
-                newIndex = i
                 break
               }
             }
             if (!isDone) {
-              requestIdleCallback(() => {
-                handle(newIndex)
+              requestIdleCallback(async () => {
+                await handle()
               })
             } else {
               resolve(true)
+              emit('change', [...questionList.value])
             }
           }
-          requestIdleCallback(() => {
-            concatChunkText()
-            handle(0)
+          requestIdleCallback(async () => {
+            await concatChunkText()
+            await handle()
           })
         })
         

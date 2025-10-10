@@ -16,9 +16,9 @@ services:
 
   xiaoju-survey:
     # 选择镜像版本：
-    # slim版本 (推荐生产环境): xiaojusurvey/xiaoju-survey:1.3.3-slim
-    # 完整版本 (推荐开发环境): xiaojusurvey/xiaoju-survey:1.3.3
-    image: "xiaojusurvey/xiaoju-survey:1.3.3-slim" # 最新版本：https://hub.docker.com/r/xiaojusurvey/xiaoju-survey/tags
+    # slim版本 (推荐生产环境): xiaojusurvey/xiaoju-survey:1.3.4-slim
+    # 完整版本 (推荐开发环境): xiaojusurvey/xiaoju-survey:1.3.4
+    image: "xiaojusurvey/xiaoju-survey:1.3.4-slim" # 最新版本：https://hub.docker.com/r/xiaojusurvey/xiaoju-survey/tags
     container_name: xiaoju-survey
     restart: always
     ports:

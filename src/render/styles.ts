@@ -61,7 +61,7 @@ export default (theme: any) => {
     },
     title: {
       fontSize: scale(32),
-      lineHeight: scale(34),
+      lineHeight: scale(38),
       marginRight: scale(5),
       marginBottom: scale(5),
     },

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    lineHeight: scale(30),
+    lineHeight: scale(34),
     marginLeft: scale(10),
     fontSize: scale(28),
   },

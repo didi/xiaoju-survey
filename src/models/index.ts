@@ -130,6 +130,7 @@ export const CONTROL_TYPES = [
   'text',
   'text-area',
   'textarea',
+  'radio-nps',
   'radio-star',
   'radio-grade',
 ];
@@ -139,7 +140,7 @@ export const QUESTION_CONTROL_TYPES = {
   CHECKBOX: ['checkbox', 'checkbox-v', 'checkbox-h'],
   TEXT: ['text', 'text-area', 'textarea'],
   STAR: ['radio-star'],
-  NPS: ['radio-grade'],
+  NPS: ['radio-nps'],
 };
 
 // 题型枚举

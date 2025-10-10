@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: scale(50),
-    height: scale(70),
+    height: scale(50),
   },
   rate: {
     fontWeight: 'bold',

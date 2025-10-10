@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     borderColor: '#E3E4E8',
     minHeight: scale(200),
     maxHeight: scale(250),
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(10),
+    textAlignVertical: 'top',
   },
 });
 

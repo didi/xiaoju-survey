@@ -69,15 +69,13 @@
 
 **1、Web 端：Vue3 + ElementPlus**
 
-&ensp;&ensp;C 端多端渲染：ReactNative SDK 建设中
+跨端SDK：ReactNaitve
 
 **2、Server 端：NestJS + MongoDB**
 
-&ensp;&ensp;Java 版：建设中，[欢迎加入共建](https://github.com/didi/xiaoju-survey/issues/306)
-
 **3、能力增强**
 
-&ensp;&ensp;智能化问卷：规划中
+智能化问卷：AI 一句话生成问卷
 
 # 项目优势
 
@@ -170,10 +168,6 @@ npm run serve
   - 包含 `curl`、`vim`、`git` 等工具
 
 在 `docker-compose.yaml` 中修改镜像标签即可切换版本。
-
-### 一键部署
-
-_（手册编写中）_
 
 <br />
 

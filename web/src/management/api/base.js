@@ -22,6 +22,9 @@ instance.interceptors.response.use(
     }
     const res = response.data
     if (res.code === CODE_MAP.NO_AUTH || res.code === CODE_MAP.ERR_AUTH) {
+      // 当用户凭证错误或没有权限时退出登录
+      const userStore = useUserStore()
+      userStore.logout()
       router.replace({
         name: 'login'
       })

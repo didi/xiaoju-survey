@@ -20,6 +20,7 @@ import { SessionController } from './controllers/session.controller';
 import { SurveyGroupController } from './controllers/surveyGroup.controller';
 import { RecycleBinController } from './controllers/recycleBin.controller';
 import { AIGenerateController } from './controllers/ai-generate.controller';
+import { SurveyVersionController } from './controllers/surveyVersion.controller';
 
 import { SurveyConf } from 'src/models/surveyConf.entity';
 import { SurveyHistory } from 'src/models/surveyHistory.entity';
@@ -29,6 +30,7 @@ import { SurveyGroup } from 'src/models/surveyGroup.entity';
 import { Word } from 'src/models/word.entity';
 import { Collaborator } from 'src/models/collaborator.entity';
 import { DownloadTask } from 'src/models/downloadTask.entity';
+import { SurveyVersion } from 'src/models/surveyVersion.entity';
 
 import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider';
 import { DataStatisticService } from './services/dataStatistic.service';
@@ -45,6 +47,7 @@ import { FileService } from '../file/services/file.service';
 import { DownloadTaskService } from './services/downloadTask.service';
 import { SessionService } from './services/session.service';
 import { SurveyGroupService } from './services/surveyGroup.service';
+import { SurveyVersionService } from './services/surveyVersion.service';
 import { Session } from 'src/models/session.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 
@@ -61,6 +64,7 @@ import { WorkspaceService } from '../workspace/services/workspace.service';
       DownloadTask,
       Session,
       SurveyGroup,
+      SurveyVersion,
     ]),
     ConfigModule,
     SurveyResponseModule,
@@ -80,6 +84,7 @@ import { WorkspaceService } from '../workspace/services/workspace.service';
     SurveyGroupController,
     RecycleBinController,
     AIGenerateController,
+    SurveyVersionController,
   ],
   providers: [
     DataStatisticService,
@@ -97,6 +102,7 @@ import { WorkspaceService } from '../workspace/services/workspace.service';
     SurveyGroupService,
     WorkspaceService,
     AIGenerateService,
+    SurveyVersionService,
   ],
 })
 export class SurveyModule {}

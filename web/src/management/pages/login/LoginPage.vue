@@ -79,9 +79,19 @@ import { getPasswordStrength, login, register } from '@/management/api/auth'
 import { refreshCaptcha as refreshCaptchaApi } from '@/management/api/captcha'
 import { CODE_MAP } from '@/management/api/base'
 import { useUserStore } from '@/management/stores/user'
+import { getUserInfo } from '@/management/utils/storage'
+import { getUserInfo as userInfoApi } from '@/management/api/auth'
 
 const route = useRoute()
 const router = useRouter()
+
+const userinfo = getUserInfo()
+if (userinfo?.userInfo?.token) {
+  // 如果有《用户凭证》且可以获取用户信息则直接跳转到 survey 页面
+  userInfoApi().then(() => {
+    router.push({ name: 'survey' })
+  })
+}
 
 interface FormData {
   name: string

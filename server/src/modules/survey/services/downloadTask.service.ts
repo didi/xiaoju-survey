@@ -195,6 +195,12 @@ export class DownloadTaskService {
             const $ = load(item.title);
             const text = $.text();
             xlsxHead.push(text);
+            // 处理 othersCode 的数据
+            item?.othersCode?.map((other) => {
+              const $ = load(other.option);
+              const subtext = $.text();
+              xlsxHead.push(`${text}-${subtext}`);
+            });
           }
         }
         for (const bodyItem of listBody) {
@@ -209,6 +215,18 @@ export class DownloadTaskService {
             } else {
               bodyData.push(val);
             }
+            // 处理 othersCode 的数据
+            headItem?.othersCode?.map((other) => {
+              const field = other.code;
+              const val = get(bodyItem, field, '');
+              if (typeof val === 'string') {
+                const $ = load(val);
+                const text = $.text();
+                bodyData.push(text);
+              } else {
+                bodyData.push(val);
+              }
+            });
           }
           xlsxBody.push(bodyData);
         }

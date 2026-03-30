@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(f''''  {k}: {v}''''\\) for k,v in d.get\\(''''scripts'''',{}\\).items\\(\\)]\")",
+      "Bash(ls /Users/zjb/Documents/workspace/open/xiaoju-survey/web/.eslintrc.*)"
+    ]
+  }
+}

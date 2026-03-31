@@ -33,7 +33,8 @@
 | 内容 | 位置 |
 |------|------|
 | 产品定位与场景 | `harness/docs/product/overview.md` |
-| 关键用户路径 | `harness/docs/product/key-flows.md` |
+| 核心业务域 | `harness/docs/product/domains.md` |
+| 核心端到端路径 | `harness/docs/product/key-flows.md` |
 | 功能矩阵（详细） | `docs/document/2-产品手册/1-概述.md` |
 | AI 生成问卷 | `docs/document/3-开发手册/6-智能问卷.md` |
 
@@ -77,12 +78,16 @@
 | 已知问题 | `harness/docs/quality/known-issues.md` |
 | 质量概览 | `harness/docs/quality/quality-score.md` |
 
-### 角色
-| 角色 | 位置 | 适用场景 |
-|------|------|---------|
-| 实现者（Coder） | `harness/roles/coder.md` | 接任务、写代码、自检 |
-| 审查者（Reviewer） | `harness/roles/reviewer.md` | 代码审查、配合 `/review` 命令 |
-| 验证者（QA） | `harness/roles/qa.md` | 交付前验证、配合 `self-check` skill |
+## 角色
+
+角色知识（工具无关）定义在 `harness/roles/`，Claude Code subagent 定义在 `.claude/agents/`。
+
+| 角色 | 角色知识 | Subagent | 职责 |
+|------|---------|----------|------|
+| 架构师（Architect） | `harness/roles/architect.md` | `.claude/agents/architect.md` | 边界、不变量、依赖方向、结构决策 |
+| 实现者（Coder） | `harness/roles/coder.md` | `.claude/agents/coder.md` | 接任务、写代码、遵循约定 |
+| 代码评审（Code Reviewer） | `harness/roles/code-reviewer.md` | `.claude/agents/code-reviewer.md` | 代码审查、正确性、安全性、可维护性 |
+| 验证者（QA） | `harness/roles/qa.md` | `.claude/agents/qa.md` | 交付前验证、边界场景、回归检查 |
 
 ### 外部参考
 | 内容 | 位置 |

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "Cooper": {
+      "baseUrl": "http://10.88.128.45/cooper_mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  }
+}

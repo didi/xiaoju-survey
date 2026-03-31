@@ -1,0 +1,61 @@
+{
+  "skill_name": "cooper",
+  "evals": [
+    {
+      "id": 1,
+      "name": "list-knowledge-bases",
+      "prompt": "列出我的所有石墨知识库",
+      "expected_output": "应该使用 mcporter 调用 Cooper.listKnowledgeBases，参数为 ownType=1（我拥有的）或 ownType=0（全部）",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "read-document",
+      "prompt": "帮我读取这个石墨文档的内容，文档ID是 123456789",
+      "expected_output": "应该使用 mcporter 调用 Cooper.readContent 或 Cooper.getShimoPlainText，使用提供的文档ID",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "edit-spreadsheet",
+      "prompt": "在这个表格的 Sheet1 的 A1 单元格开始，添加这些数据：[['张三', 25, '工程师'], ['李四', 30, '设计师']]。表格ID是 abc123",
+      "expected_output": "应该使用 mcporter 调用 Cooper.writeShimoSheetCell，range 为 Sheet1!A1，content 为 JSON 格式的二维数组",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "search-content",
+      "prompt": "在石墨文档中搜索包含'项目计划'的内容",
+      "expected_output": "应该使用 mcporter 调用 Cooper.search，key 参数为'项目计划'",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "get-recent-docs",
+      "prompt": "显示我最近编辑过的石墨文档",
+      "expected_output": "应该使用 mcporter 调用 Cooper.listRecent，queryType=2（最近编辑），type='coo_doc'",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "get-knowledge-directory",
+      "prompt": "获取这个知识库的目录结构，ID是 kb-001",
+      "expected_output": "应该使用 mcporter 调用 Cooper.getKnowledgeDirectory，使用提供的知识库ID",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "read-sheet-data",
+      "prompt": "读取表格 Sheet1 的 A1 到 C10 区域的数据，表格ID是 sheet456",
+      "expected_output": "应该使用 mcporter 调用 Cooper.getShimoSheetData，range 为 'Sheet1!A1:C10'",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "create-knowledge-page",
+      "prompt": "在我的知识库 space-999 中创建一个新页面，标题是'会议记录'，内容是'<h1>团队周会</h1><p>讨论了项目进度...</p>'，放在根目录下",
+      "expected_output": "应该使用 mcporter 调用 Cooper.createKnowledgePage，使用提供的参数",
+      "files": []
+    }
+  ]
+}

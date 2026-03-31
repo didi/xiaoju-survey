@@ -79,7 +79,7 @@
 
 1. 检查 `harness/plans/active/` 中是否有对应的计划文件
 2. 如有且需求已完成：
-   - 将计划文件从 `harness/plans/active/` 移到 `harness/plans/recent/`
+   - 将计划文件从 `harness/plans/active/` 移到 `harness/plans/recent/`，如果 recent/ 不存在则先创建
    - 更新 `harness/plans/active/README.md`：
      - "当前默认任务"移除或指向下一个任务
      - "最近归档"更新为刚移动的文件

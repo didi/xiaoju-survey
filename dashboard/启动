@@ -1,0 +1,2 @@
+cd "$(dirname "$0")" && python3 -m http.server 8001
+# 打开 http://localhost:8001

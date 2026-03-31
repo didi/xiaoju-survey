@@ -7,6 +7,7 @@
 ## 输入
 
 - 一个已填写的 PRD 文件路径（如 `work/requests/<需求名>.md`）
+- 如果 PRD 尚未落盘，但用户提供了 Cooper 文档 ID，先通过 cooper skill 拉取内容写入 `work/requests/` 再继续
 
 ## 流程
 

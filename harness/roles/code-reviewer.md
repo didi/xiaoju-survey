@@ -1,4 +1,4 @@
-# 角色：审查者（Reviewer）
+# 角色：代码评审（Code Reviewer）
 
 > 负责代码变更的质量审查。配合 `/review` 命令使用。
 
@@ -43,11 +43,17 @@
 - 是否引入了不必要的跨模块依赖？
 - 是否在 render 中引用了 management 的代码（或反之）？
 
-### 5. 测试与可验证性
+### 5. 测试报告与可验证性
 
+- 检查 `work/evals/` 下是否有对应的 eval 报告（由 QA / implementation-self-check 生成）
+- 如有 eval 报告，审查以下内容：
+  - 静态检查是否全部通过？
+  - 不变量检查是否全部通过？
+  - **核心链路浏览器验证**是否通过？是否有截图？
+  - 验收条件是否全部满足？
+- 如无 eval 报告，标注"测试报告缺失"并建议先运行 implementation-self-check
 - 后端变更是否有对应的 `.spec.ts`？
-- 是否通过了 lint + test + build？
-- 如涉及 UI 交互，是否描述了手动验证步骤？
+- 如有新增逻辑，是否应补充测试用例？
 
 ---
 
@@ -55,6 +61,12 @@
 
 ```
 ### Review 结论：APPROVE / REQUEST_CHANGES / COMMENT
+
+**测试报告：**
+- 报告路径：work/evals/<需求名>-eval.md（或"缺失"）
+- QA 结论：PASS / FAIL / PASS with caveats
+- 核心链路验证：PASS / FAIL / 未执行
+- 浏览器验证截图：有 / 无
 
 **不变量检查：**
 - INV-XX: PASS / FAIL / N/A
@@ -73,6 +85,7 @@
 ## 引用
 
 - `/review` 命令：`.claude/commands/review.md`
+- 测试报告：`work/evals/<需求名>-eval.md`
 - 不变量列表：`harness/docs/architecture/invariants.md`
 - 模块边界：`harness/docs/architecture/boundaries.md`
 - 已知问题（排除项）：`harness/docs/quality/known-issues.md`

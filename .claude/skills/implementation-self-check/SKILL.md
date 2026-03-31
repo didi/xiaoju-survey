@@ -49,18 +49,38 @@ cd web && npm run build          # 构建验证
 - INV-05: `grep -rn "mongodb://" server/src/ --include="*.ts" | grep -v ".spec.ts" | grep -v "configService"` 应为空
 - 其他涉及的不变量
 
-### 第四步：验收条件逐条验证
+### 第四步：核心链路验证（最关键的一层）
+
+1. 读取 `harness/docs/product/key-flows.md` — 加载核心端到端路径定义
+2. 读取 `harness/docs/product/domains.md` — 判断本次变更涉及哪些业务域
+3. 确认本地服务已启动（后端 + 前端），未启动则先启动
+4. 对涉及的核心路径执行浏览器验证：
+   - 探测当前可用的浏览器工具（/chrome / Playwright MCP / browser-use / cursor-ide-browser 均可）
+   - 如有浏览器工具 → 按 key-flows.md 中的步骤表逐步执行，每步对比预期结果，截图记录
+   - 如无浏览器工具 → 输出手动验证清单（逐步标注 PASS / FAIL / 需手动确认）
+   - 如有 API 冒烟测试 → 作为辅助验证，但不替代浏览器验证
+
+**核心链路验证不通过 = 整体 FAIL，不管静态检查是否全过。**
+
+| 变更域 | 对应核心路径 |
+|--------|------------|
+| survey 模块、B 端编辑页 | 路径一：问卷全生命周期 |
+| surveyResponse 模块、C 端渲染 | 路径一 |
+| materials/、meta.js、模板 JSON | 路径二：新题型端到端 |
+| survey/ai 相关代码 | 路径三：AI 生成问卷 |
+
+### 第五步：验收条件逐条验证
 
 从 PRD 的验收条件逐条检查，标记 PASS / FAIL。
 如需手动验证（如 UI 交互），记录验证步骤和预期行为，标记为"需手动确认"。
 
-### 第五步：生成 eval 报告
+### 第六步：生成 eval 报告
 
 1. 复制 `work/evals/EVAL_TEMPLATE.md` 为 `work/evals/<需求名>-eval.md`
-2. 填写所有章节：自动化检查结果、验收条件验证、不变量检查、遗留问题
+2. 填写所有章节：自动化检查结果、不变量检查、核心链路验证、验收条件验证、遗留问题
 3. 给出总结论：PASS / FAIL / PASS with caveats
 
-### 第六步：输出
+### 第七步：输出
 
 1. 将报告写入 `work/evals/<需求名>-eval.md`
 2. 更新 `work/tasks/<需求名>-tasks.md` 中验证相关任务的状态

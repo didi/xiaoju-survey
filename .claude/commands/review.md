@@ -2,9 +2,13 @@ Review 当前变更。
 
 请执行以下检查流程：
 
-## 1. 读取变更范围
+## 1. 读取变更范围和测试报告
 
 运行 `git diff --stat` 和 `git diff`（如有暂存则加 `--cached`），确认本次变更涉及哪些文件和模块。
+
+检查 `work/evals/` 下是否有对应的 eval 报告（由 QA / implementation-self-check 生成）：
+- 如有 → 读取报告，将其中的验证结果（静态检查、不变量、核心链路、验收条件）纳入 review 上下文
+- 如无 → 在输出中提示"未找到测试报告，建议先运行 implementation-self-check"
 
 ## 2. Correctness（正确性）
 
@@ -48,6 +52,11 @@ Review 当前变更。
 ### Review 结论：PASS / NEEDS ATTENTION / BLOCK
 
 **变更范围：** <涉及的模块和文件数>
+
+**测试报告：** <引用 work/evals/ 中的 eval 报告路径，或"未找到">
+- QA 结论：PASS / FAIL / PASS with caveats
+- 核心链路验证：PASS / FAIL / 未执行
+- 浏览器验证截图：有 / 无
 
 **发现项：**
 - [severity] 描述（文件:行号）

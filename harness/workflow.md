@@ -17,8 +17,9 @@
 
 ### 理解项目
 ```
-AGENTS.md → harness/docs/product/overview.md → harness/docs/product/key-flows.md
-→ docs/document/4-设计原理/2-协议规范.md → docs/document/3-开发手册/1-工程结构.md
+AGENTS.md → harness/docs/product/overview.md → harness/docs/product/domains.md
+→ harness/docs/product/key-flows.md → docs/document/4-设计原理/2-协议规范.md
+→ docs/document/3-开发手册/1-工程结构.md
 ```
 
 ### 理解当前需求
@@ -29,11 +30,20 @@ work/requests/<当前需求>.md → work/specs/<对应方案>.md（如已有）
 
 ### 写代码前
 ```
-harness/docs/product/key-flows.md（确认涉及的用户路径）
+harness/docs/product/key-flows.md（确认涉及的核心路径）
+→ harness/docs/product/domains.md（确认涉及的业务域）
 → 相关模块源码（server/src/modules/ 或 web/src/）
 → docs/agreement/（如涉及协议层）
 → docs/document/3-开发手册/（如涉及扩展机制）
 → AGENTS.md § 高风险区域（检查是否触及禁区）
+```
+
+### 排查 bug 前
+```
+harness/docs/engineering/pitfalls.md（先看已知坑，避免重复踩）
+→ harness/docs/quality/known-issues.md（排除已知问题）
+→ 相关模块源码
+→ harness/docs/architecture/invariants.md（检查是否不变量被打破）
 ```
 
 ### 做架构判断前
@@ -41,14 +51,17 @@ harness/docs/product/key-flows.md（确认涉及的用户路径）
 docs/document/4-设计原理/2-协议规范.md（Schema 设计原理）
 → docs/document/4-设计原理/3-服务端架构.md（ER 图、双表设计）
 → docs/document/4-设计原理/4-问卷搭建领域化设计.md（五大子领域）
+→ harness/docs/product/domains.md（核心业务域和边界）
 → server/src/app.module.ts（模块注册全景）
 → web/vite.config.ts（MPA 入口配置）
-→ harness/docs/architecture/invariants.md（如已有）
+→ harness/docs/architecture/invariants.md
+→ harness/docs/architecture/boundaries.md
 ```
 
 ### 做验证前
 ```
 AGENTS.md § 常用命令（确认可用的 lint / test 命令）
+→ harness/docs/product/key-flows.md（确认涉及的核心路径）
 → .github/workflows/（了解 CI 会跑什么）
 → 本文件 § Required Checks Before Completion
 ```
@@ -95,37 +108,50 @@ AGENTS.md § 常用命令（确认可用的 lint / test 命令）
 
 ## 4. Required Checks Before Completion（完成前检查）
 
-### 后端变更
+### 第一层：静态检查（必须全通过）
 
 ```bash
+# 后端（如有变更）
 cd server && npm run lint         # ESLint 检查
 cd server && npm run test         # 单元测试
-cd server && npm run test:cov     # 测试覆盖率（可选，CI 会跑）
-```
 
-### 前端变更
-
-```bash
+# 前端（如有变更）
 cd web && npm run type-check      # TypeScript 类型检查
 cd web && npm run lint            # ESLint 检查
 cd web && npm run build           # 构建验证（确保无编译错误）
 ```
 
-### 通用检查
+**一键执行：**
+```bash
+(cd server && npm run lint && npm run test) && (cd web && npm run type-check && npm run lint && npm run build)
+```
 
+### 第二层：不变量检查（涉及对应区域时）
+
+对本次变更涉及的不变量，执行 `harness/docs/architecture/invariants.md` 中每条的 suggested check。
+
+通用检查项（任何变更都应确认）：
 - [ ] 变更是否涉及协议层？如涉及，确认三层 Schema 一致性
 - [ ] 变更是否涉及题型？如涉及，确认前端 `meta.js` + 后端 `template/*.json` + 题型菜单配置已同步
 - [ ] 变更是否涉及环境变量？如涉及，确认 `docker-compose.yaml` 和文档已同步
 - [ ] 变更是否涉及数据库 Entity？如涉及，确认 `app.module.ts` 的 entities 数组已更新
 - [ ] 是否有新增依赖？确认 `package.json` 中版本范围合理
 
-### 一键执行
+### 第三层：核心链路验证（涉及核心域时）
 
-将上述后端 + 前端检查合并执行的推荐方式：
+参考 `harness/docs/product/key-flows.md` 中定义的核心端到端路径：
 
-```bash
-(cd server && npm run lint && npm run test) && (cd web && npm run type-check && npm run lint && npm run build)
-```
+| 变更涉及的域 | 必须验证的路径 |
+|-------------|--------------|
+| 问卷管理域 / 投放域 | 路径一（问卷全生命周期） |
+| 共享层（物料） | 路径一 + 路径二（新题型端到端） |
+| AI 模块 | 路径三（AI 生成问卷） |
+
+验证方式：
+- 如有 API 冒烟测试脚本 → 运行脚本
+- 如无自动化 → 按 key-flows.md 中的手动走查步骤执行，逐步标注 PASS / FAIL / 需手动确认
+
+> 当前状态：尚无自动化 E2E 或 API 冒烟测试。核心链路验证需手动执行。
 
 详见 `harness/docs/engineering/commands.md` § Local Verification Flow。
 
@@ -137,11 +163,13 @@ cd web && npm run build           # 构建验证（确保无编译错误）
 
 | 发现类型 | 回灌目标 | 示例 |
 |---------|---------|------|
-| 架构不变量（Invariant）—— 系统中不能被打破的设计约束 | `harness/docs/architecture/invariants.md` | "投放端永远只读 ResponseSchema 表" |
-| 踩坑经验（Pitfall）—— 开发中容易犯的错误 | `harness/docs/engineering/pitfalls.md` | "新增题型必须同时改 meta.js 和后端模板" |
-| 已知问题（Known Issue）—— 当前存在但暂未修复的问题 | `harness/docs/quality/known-issues.md` | "web 端无自动化测试框架" |
-| 命令变更 —— 新增或修改了可用命令 | `harness/docs/engineering/commands.md` | 新增了检查脚本 |
-| 产品逻辑 —— 发现了文档未记录的产品行为 | `harness/docs/product/` 相关文件 | 发现了隐藏的提交限制规则 |
+| 架构不变量（Invariant） | `harness/docs/architecture/invariants.md` | "投放端永远只读 ResponseSchema 表" |
+| 边界变化 | `harness/docs/architecture/boundaries.md` | 新增模块、依赖方向调整 |
+| 踩坑经验（Pitfall） | `harness/docs/engineering/pitfalls.md` | "新增题型必须同时改 meta.js 和后端模板" |
+| 已知问题（Known Issue） | `harness/docs/quality/known-issues.md` | "web 端无自动化测试框架" |
+| 命令变更 | `harness/docs/engineering/commands.md` | 新增了检查脚本 |
+| 产品逻辑 | `harness/docs/product/` 相关文件 | 发现了隐藏的提交限制规则 |
+| 核心路径变化 | `harness/docs/product/key-flows.md` | 新增了核心路径或验证步骤 |
 
 **回灌原则：**
 - 只回灌对未来 agent 仍有价值的信息

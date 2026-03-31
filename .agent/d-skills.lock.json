@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "cooper": {
+      "name": "cooper",
+      "source": "registry:cooper",
+      "installedAt": "2026-03-31T05:34:11.592Z",
+      "updatedAt": "2026-03-31T05:34:11.592Z"
+    }
+  }
+}

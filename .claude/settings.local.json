@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(f''''  {k}: {v}''''\\) for k,v in d.get\\(''''scripts'''',{}\\).items\\(\\)]\")",
-      "Bash(ls /Users/zjb/Documents/workspace/open/xiaoju-survey/web/.eslintrc.*)"
+      "Bash(ls /Users/zjb/Documents/workspace/open/xiaoju-survey/web/.eslintrc.*)",
+      "Bash(grep -v \"^\\\\.$\")",
+      "Bash(grep -E \"^\\\\s*-\\\\s+\\\\`?[a-zA-Z0-9./\\\\-]+\\\\.md\\\\`?\" /Users/zjb/Documents/workspace/open/xiaoju-survey/.claude/skills/harness-init/template/fullstack.md)",
+      "Bash(grep -oE '\\\\`[^`]+\\\\.md\\\\`' /Users/zjb/Documents/workspace/open/xiaoju-survey/.claude/skills/harness-init/template/fullstack.md)",
+      "Bash(find /Users/zjb/Documents/workspace/open/xiaoju-survey/.claude -type f -name *.md -o -name *.json)",
+      "Bash(find /Users/zjb/Documents/workspace/open/xiaoju-survey/work -type f -name *.md)"
     ]
+  },
+  "enabledPlugins": {
+    "feature-dev@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   }
 }

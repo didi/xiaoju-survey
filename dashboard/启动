@@ -1,2 +1,11 @@
-cd "$(dirname "$0")" && python3 -m http.server 8001
-# 打开 http://localhost:8001
+python3 -m http.server 80001
+http://localhost:80001
+
+
+上传：
+scp /Users/zjb/Documents/workspace/open/xiaoju-survey/dashboard/harness-command-center.jsx root@10.190.35.35:/root/code/dashboard
+scp /Users/zjb/Documents/workspace/open/xiaoju-survey/dashboard/index.html root@10.190.35.35:/root/code/dashboard
+cd /root/code/dashboard
+nohup python3 -m http.server 18082 --bind 0.0.0.0 > /tmp/news-http.log 2>&1 &
+
+http://10.190.35.35:18082/index.html

@@ -143,10 +143,18 @@ const onPreviewImage = (e) => {
 
   .table-row-cell {
     :deep(img) {
-      height: 23px !important;
-      width: auto !important;
+      height: 23px;
+      width: auto;
       object-fit: cover;
       margin-left: 5px;
+    }
+    :deep(img[style*="height:60px"]) {
+      height: 60px !important;
+      width: 60px !important;
+      object-fit: cover !important;
+      margin: 2px !important;
+      border-radius: 4px;
+      cursor: pointer;
     }
     :deep(p) {
       display: flex;

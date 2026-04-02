@@ -61,6 +61,13 @@ export const menuItems = {
     snapshot: '/imgs/question-type-snapshot/cascader.webp',
     icon: 'cascader-select',
     title: '多级联动'
+  },
+  'image-upload': {
+    type: 'image-upload',
+    path: 'ImageUploadModule',
+    snapshot: '/imgs/question-type-snapshot/cascader.webp',
+    icon: 'image-upload',
+    title: '图片上传'
   }
 }
 
@@ -74,7 +81,7 @@ const menuGroup = [
     questionList: ['radio', 'checkbox', 'binary-choice', 'radio-star', 'radio-nps', 'vote']
   }, {
     title: '高级题型',
-    questionList: ['cascader']
+    questionList: ['cascader', 'image-upload']
   }
 ]
 

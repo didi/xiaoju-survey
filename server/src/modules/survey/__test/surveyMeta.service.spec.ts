@@ -276,17 +276,24 @@ describe('SurveyMetaService', () => {
   describe('getSurveyMetaListByWorkspaceIdList', () => {
     it('should return a list of survey metadata by work space id', async () => {
       const mockData = [
-        { _id: 1, title: 'Survey 1', workSpaceId: 'wk1', isDeleted: true, isCompleteDeleted: null },
+        {
+          _id: 1,
+          title: 'Survey 1',
+          workSpaceId: 'wk1',
+          isDeleted: true,
+          isCompleteDeleted: null,
+        },
       ] as unknown as Array<SurveyMeta>;
 
-      jest
-        .spyOn(surveyRepository, 'find')
-        .mockResolvedValue(mockData);
+      jest.spyOn(surveyRepository, 'find').mockResolvedValue(mockData);
 
-        const workspaceIdList = ['wk1'];
-        const isDeleted = true;
+      const workspaceIdList = ['wk1'];
+      const isDeleted = true;
 
-      const result = await service.getSurveyMetaListByWorkspaceIdList({workspaceIdList, isDeleted});
+      const result = await service.getSurveyMetaListByWorkspaceIdList({
+        workspaceIdList,
+        isDeleted,
+      });
 
       expect(result).toEqual(mockData);
     });

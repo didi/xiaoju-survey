@@ -38,4 +38,8 @@ export enum QUESTION_TYPE {
    * 多级联动
    */
   CASCADER = 'cascader',
+  /**
+   * 图片上传
+   */
+  IMAGE_UPLOAD = 'image-upload',
 }

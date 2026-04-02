@@ -2,7 +2,7 @@ const SERVER_LOCAL_CONFIG = {
   LOCAL_STATIC_RENDER_TYPE: 'server', // nginx
   IS_PRIVATE_READ: false,
   FILE_KEY_PREFIX: 'userUpload', // 存储路径
-  NEED_AUTH: true,
+  NEED_AUTH: false,
 };
 
 const QINIU_CONFIG = {

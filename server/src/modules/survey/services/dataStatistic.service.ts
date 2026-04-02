@@ -102,6 +102,16 @@ export class DataStatisticService {
             })
             .join('-');
         }
+        // 将图片上传答案（URL数组）转换为img标签字符串
+        if (itemConfig.type === QUESTION_TYPE.IMAGE_UPLOAD) {
+          const urls = Array.isArray(data[itemKey]) ? data[itemKey] : [];
+          data[itemKey] = urls
+            .map(
+              (url) =>
+                `<img src="${url}" style="height:60px;width:60px;object-fit:cover;margin:2px;border-radius:4px;">`,
+            )
+            .join('');
+        }
       }
       return {
         ...data,

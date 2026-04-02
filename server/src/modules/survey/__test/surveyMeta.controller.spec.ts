@@ -46,7 +46,7 @@ describe('SurveyMetaController', () => {
           useValue: {
             getAllSurveyIdListByUserId: jest.fn().mockResolvedValue([]),
           },
-        }
+        },
       ],
     }).compile();
 

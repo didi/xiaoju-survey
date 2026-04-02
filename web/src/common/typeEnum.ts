@@ -9,6 +9,7 @@ export enum QUESTION_TYPE {
   RADIO_NPS = 'radio-nps',
   VOTE = 'vote',
   CASCADER = 'cascader',
+  IMAGE_UPLOAD = 'image-upload',
 }
 
 // 题目类型标签映射对象
@@ -22,6 +23,7 @@ export const typeTagLabels: Record<QUESTION_TYPE, string> = {
   [QUESTION_TYPE.RADIO_NPS]: 'NPS评分',
   [QUESTION_TYPE.VOTE]: '投票',
   [QUESTION_TYPE.CASCADER]: '多级联动',
+  [QUESTION_TYPE.IMAGE_UPLOAD]: '图片上传',
 }
 
 // 输入类题型
@@ -42,4 +44,4 @@ export const CHOICES = [
 export const RATES = [QUESTION_TYPE.RADIO_STAR, QUESTION_TYPE.RADIO_NPS]
 
 // 高级题型分类
-export const ADVANCED = [QUESTION_TYPE.CASCADER]
+export const ADVANCED = [QUESTION_TYPE.CASCADER, QUESTION_TYPE.IMAGE_UPLOAD]

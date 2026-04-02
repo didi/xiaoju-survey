@@ -12,4 +12,5 @@ export default {
   'matrix-checkbox': 'GroupModule',
   selectMoreModule: 'SelectMoreModule',
   cascader:'CascaderModule',
+  'image-upload': 'ImageUploadModule',
 }

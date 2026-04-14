@@ -1,0 +1,53 @@
+web/src/render/adapter/formValue.js
+  f46313ec9d589c5f 24-26
+server/src/enums/question.ts
+  f46313ec9d589c5f 41-44
+server/src/interfaces/survey.ts
+  f46313ec9d589c5f 79-80
+web/src/materials/questions/widgets/ImageUploadModule/style.scss
+  f46313ec9d589c5f 1-70
+server/src/modules/file/config/index.ts
+  f46313ec9d589c5f 8-12,60,65
+web/src/management/pages/analysis/components/DataTable.vue
+  f46313ec9d589c5f 56,146-147,149-150,155-156
+web/src/render/components/QuestionWrapper.vue
+  f46313ec9d589c5f 174-178
+web/src/render/adapter/rules.js
+  f46313ec9d589c5f 80,83-90
+web/src/materials/questions/common/config/moduleList.js
+  f46313ec9d589c5f 15
+web/src/management/config/questionMenuConfig.js
+  f46313ec9d589c5f 64-70,84
+web/src/materials/questions/widgets/ImageUploadModule/meta.js
+  f46313ec9d589c5f 1-98
+web/src/common/typeEnum.ts
+  f46313ec9d589c5f 12,26,47
+web/src/render/api/upload.js
+  f46313ec9d589c5f 1-14
+server/src/modules/survey/services/dataStatistic.service.ts
+  f46313ec9d589c5f 105-113
+web/src/management/pages/analysis/components/ImagePreview.vue
+  f46313ec9d589c5f 18
+web/src/materials/questions/widgets/ImageUploadModule/index.jsx
+  f46313ec9d589c5f 1-270
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "f60ae51f6385d283a7f5ad63a185aa7d2a11d7a0",
+  "prompts": {
+    "f46313ec9d589c5f": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c12b86fc-d67e-417e-a05e-9531fe4da4a8",
+        "model": "gpt-5.3-codex"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 515,
+      "total_deletions": 13,
+      "accepted_lines": 511,
+      "overriden_lines": 0
+    }
+  }
+}

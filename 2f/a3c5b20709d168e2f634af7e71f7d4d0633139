@@ -1,0 +1,51 @@
+docs/knowledge/api/workspace-api.md
+  0868eeae3c13eb08 1-296
+docs/knowledge/api/data-statistic-api.md
+  0868eeae3c13eb08 1-226
+docs/knowledge/api/collaborator-api.md
+  0868eeae3c13eb08 1-267
+docs/knowledge/api/survey-api.md
+  0868eeae3c13eb08 1-352
+docs/knowledge/api/ai-generate-api.md
+  0868eeae3c13eb08 1-221
+docs/knowledge/api/survey-response-api.md
+  0868eeae3c13eb08 1-193
+docs/knowledge/api/message-pushing-api.md
+  0868eeae3c13eb08 1-252
+docs/knowledge/api/index.md
+  0868eeae3c13eb08 1-67
+docs/knowledge/index.md
+  0868eeae3c13eb08 1-61
+docs/knowledge/api/survey-meta-api.md
+  0868eeae3c13eb08 1-164
+docs/knowledge/api/auth-api.md
+  0868eeae3c13eb08 1-180
+docs/knowledge/api/client-encrypt-api.md
+  0868eeae3c13eb08 1-185
+docs/knowledge/architecture.md
+  0868eeae3c13eb08 1-283
+docs/knowledge/api/user-api.md
+  0868eeae3c13eb08 1-102
+docs/knowledge/api/file-api.md
+  0868eeae3c13eb08 1-184
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "2fa3c5b20709d168e2f634af7e71f7d4d0633139",
+  "prompts": {
+    "0868eeae3c13eb08": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f5155336-0c30-454e-9457-246bfa77e8d6",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 3033,
+      "total_deletions": 0,
+      "accepted_lines": 3033,
+      "overriden_lines": 0
+    }
+  }
+}

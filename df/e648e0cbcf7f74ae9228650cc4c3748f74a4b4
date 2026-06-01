@@ -1,0 +1,36 @@
+server/src/modules/surveyResponse/controllers/surveyResponse.controller.ts
+  647044816f57191b 120-121,162-163,274-288,335
+server/src/models/surveyResponse.entity.ts
+  647044816f57191b 31-34
+server/src/modules/surveyResponse/services/surveyResponse.service.ts
+  647044816f57191b 22,33
+server/src/enums/exceptionCode.ts
+  647044816f57191b 27
+server/src/modules/surveyResponse/__test/surveyResponse.answerTimeLimit.spec.ts
+  647044816f57191b 1-283
+server/src/interfaces/survey.ts
+  647044816f57191b 157-164
+server/src/modules/surveyResponse/__test/surveyResponse.answerTimeLimit.e2e.spec.ts
+  647044816f57191b 1-174
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "dfe648e0cbcf7f74ae9228650cc4c3748f74a4b4",
+  "prompts": {
+    "647044816f57191b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d2712e0e-3240-4923-a65b-b874e4bdf1b2",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 849,
+      "total_deletions": 1497,
+      "accepted_lines": 498,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/5622e242bbc851f5f9251d19c910db5b778940681fe701a50a1cc37afbc4bc58"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+docs/prd/answer-restriction.md
+  6840a506fa886f05 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "4b1c38019a49eed16999e5be60786361fa269ace",
+  "prompts": {
+    "6840a506fa886f05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "be68f923-a143-4a72-86e3-885adc6dac88",
+        "model": "glm-5-external"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 25,
+      "total_deletions": 0,
+      "accepted_lines": 25,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -1,0 +1,42 @@
+web/src/management/pages/edit/setterConfig/baseConfig.js
+  b8338035800cc274 5-10
+web/src/render/utils/storage.ts
+  b8338035800cc274 31-73
+web/src/management/pages/edit/setterConfig/baseFormConfig.js
+  b8338035800cc274 25-84
+web/src/render/components/VerifyDialog/FillDataDialog.vue
+  b8338035800cc274 5,15-16,24
+web/src/render/components/CountdownBadge.vue
+  b8338035800cc274 1-48
+web/src/render/stores/survey.js
+  b8338035800cc274 24-26,30,54,185
+web/src/render/components/AnswerTimeLimitEntryDialog.vue
+  b8338035800cc274 1-51
+web/src/render/components/VerifyDialog/index.vue
+  b8338035800cc274 7-20,28,32-39,46-52,57-60,63,69-71,74,81,83,86-120
+web/src/render/hooks/useAnswerCountdown.ts
+  b8338035800cc274 1-106
+web/src/render/pages/RenderPage.vue
+  b8338035800cc274 6-8,22,27,34,39,51-53,87-92,98-111,134-144,173,189-262,266,271-284,311-318
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "0882784c84e7a8a386f99c85f13f0fe4c6fdda6b",
+  "prompts": {
+    "b8338035800cc274": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e63bb632-bbe2-4f2d-9590-3e1d407ae231",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 1469,
+      "total_deletions": 65,
+      "accepted_lines": 1427,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/a00ca14584bf2349113c6eb6a378aed0cade2807696ac7a957356ed660c1c884"
+    }
+  }
+}

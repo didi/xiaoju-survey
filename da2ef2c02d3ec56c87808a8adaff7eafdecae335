@@ -1,0 +1,24 @@
+docs/specs/active/answer-time-limit/README.md
+  3f82fc8e4a8ddd26 1-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "da2ef2c02d3ec56c87808a8adaff7eafdecae335",
+  "prompts": {
+    "3f82fc8e4a8ddd26": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cda7b40d-cd3e-4315-bf45-a578d6fe6ca1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 1896,
+      "total_deletions": 0,
+      "accepted_lines": 1896,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/1a164fd5e8a04cc3b6316f419da70f913de2c9a123d03b6298c6cea94a1d6865"
+    }
+  }
+}

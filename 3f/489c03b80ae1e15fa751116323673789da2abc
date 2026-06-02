@@ -1,0 +1,27 @@
+docs/specs/active/answer-restriction/proposal.md
+  6840a506fa886f05 1-142
+docs/specs/active/answer-restriction/design.md
+  6840a506fa886f05 1-430
+docs/specs/active/answer-restriction/spec.md
+  6840a506fa886f05 1-403
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "3f489c03b80ae1e15fa751116323673789da2abc",
+  "prompts": {
+    "6840a506fa886f05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "be68f923-a143-4a72-86e3-885adc6dac88",
+        "model": "glm-5-external"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 975,
+      "total_deletions": 0,
+      "accepted_lines": 975,
+      "overriden_lines": 0
+    }
+  }
+}

@@ -1,0 +1,67 @@
+docs/harness/invariants/biz.md
+  6840a506fa886f05 1-61
+docs/knowledge/index.md
+  6840a506fa886f05 1-45
+docs/harness/infrastructure/database.md
+  6840a506fa886f05 1-64
+docs/knowledge/api/auth-api.md
+  6840a506fa886f05 1-191
+docs/hooks/cr-checklist.md
+  6840a506fa886f05 1-38
+docs/knowledge/api/collaborator-api.md
+  6840a506fa886f05 1-272
+docs/knowledge/api/user-api.md
+  6840a506fa886f05 1-84
+docs/harness/infrastructure/api.md
+  6840a506fa886f05 1-72
+docs/knowledge/database/er.md
+  6840a506fa886f05 1-362
+docs/knowledge/database/index.md
+  6840a506fa886f05 1-495
+docs/knowledge/api/index.md
+  6840a506fa886f05 1-62
+docs/knowledge/api/survey-response-api.md
+  6840a506fa886f05 1-144
+docs/knowledge/api/channel-api.md
+  6840a506fa886f05 1-226
+docs/harness/index.md
+  6840a506fa886f05 1-21
+docs/knowledge/project-context.md
+  6840a506fa886f05 1-16
+docs/knowledge/service-meta.yaml
+  6840a506fa886f05 1-26
+docs/hooks/index.md
+  6840a506fa886f05 1-37
+docs/knowledge/api/file-api.md
+  6840a506fa886f05 1-137
+docs/knowledge/api/data-statistic-api.md
+  6840a506fa886f05 1-152
+docs/knowledge/architecture.md
+  6840a506fa886f05 1-308
+docs/knowledge/api/survey-api.md
+  6840a506fa886f05 1-452
+docs/knowledge/api/survey-group-api.md
+  6840a506fa886f05 1-163
+docs/knowledge/api/workspace-api.md
+  6840a506fa886f05 1-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "3d8c75d135d1b391a723c329aec2cfd13efcd74a",
+  "prompts": {
+    "6840a506fa886f05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "be68f923-a143-4a72-86e3-885adc6dac88",
+        "model": "glm-5-external"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 3758,
+      "total_deletions": 57,
+      "accepted_lines": 3701,
+      "overriden_lines": 0
+    }
+  }
+}

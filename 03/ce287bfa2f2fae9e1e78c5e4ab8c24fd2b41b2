@@ -1,0 +1,52 @@
+web/src/render/pages/RenderPage.vue
+  388dca124eba7a38 20-24,29,40,54-57,83,138-150,155,158,160-161,163-171,183-184,188-211,219-222,228,237,240-283
+web/src/render/utils/__tests__/timeLimit.spec.ts
+  388dca124eba7a38 1-115
+web/src/render/components/StartupDialog.vue
+  388dca124eba7a38 1-61
+web/src/render/pages/IndexPage.vue
+  388dca124eba7a38 2-8,11,15,18,22-24,38-43,77-78,89-102
+web/src/management/pages/edit/setterConfig/baseFormConfig.js
+  388dca124eba7a38 25-87
+web/src/materials/setters/widgets/InputNumber.vue
+  388dca124eba7a38 6,9-10,59-69,82-104
+web/src/render/components/__tests__/CountdownOverlay.spec.ts
+  388dca124eba7a38 1-59
+web/src/management/pages/edit/setterConfig/baseConfig.js
+  388dca124eba7a38 5-12
+web/src/render/components/__tests__/StartupDialog.spec.ts
+  388dca124eba7a38 1-38
+web/src/render/components/CountdownOverlay.vue
+  388dca124eba7a38 1-122
+web/src/render/composables/useAnswerLimit.ts
+  388dca124eba7a38 1-240
+web/src/render/utils/timeLimit.ts
+  388dca124eba7a38 1-111
+web/src/render/api/survey.js
+  388dca124eba7a38 19-31
+web/src/management/pages/edit/components/ModuleNavbar.vue
+  388dca124eba7a38 133-150
+docs/specs/active/answer-time-limit/tasks.md
+  388dca124eba7a38 40-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "03ce287bfa2f2fae9e1e78c5e4ab8c24fd2b41b2",
+  "prompts": {
+    "388dca124eba7a38": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "86b01c75-b4a0-4f3a-963d-392b6d6cbf7f",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 2795,
+      "total_deletions": 1820,
+      "accepted_lines": 2766,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/332206c20bc22b75d19edefc21796790b16296f5167c06405b081b89b853613b"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+docs/specs/active/answer-time-limit/proposal.md
+  40f58d34787d4503 227-237
+docs/specs/active/answer-time-limit/design.md
+  40f58d34787d4503 26-32,45-51,53-55,57-59,61,102,104,106-115,117-124,126-129,131,133-135,153,155,157,159-161,163,165-172,205,207-208,210,216-223,228-230,234,240-242,245-251,253-261,278,284-285,297-298,305,307-310,316,318-330,334-336,349,364-365,367-372,374,382-384,386,389-391,394-395,399,404,416-418,422,426-428,432,442-443,447,449-453,455-458,465,468-470,478
+docs/specs/active/answer-time-limit/spec.md
+  40f58d34787d4503 74,78,83-85,88-93,98,100,122-124,126-128,130-132,134,137,139-141,144-146,152,159,161,164-167,170,182,187-188,190,202-203,207,209-212,216-218,220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "f665fee84cf4652d0668919ef5b9d939af22ed11",
+  "prompts": {
+    "40f58d34787d4503": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c874f789-ba9c-401b-947f-0e0433e57df4",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 239,
+      "total_deletions": 207,
+      "accepted_lines": 239,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/2412df801b30a54866aad3b6b8de1cbf52c5246efa109782d9230d11385b0527"
+    }
+  }
+}

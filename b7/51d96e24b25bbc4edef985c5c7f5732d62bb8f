@@ -1,0 +1,48 @@
+web/src/render/__tests__/CountdownHeader.spec.ts
+  a2508cae7888e47a 1-184
+web/src/render/components/MinDurationDialog.vue
+  a2508cae7888e47a 1-53
+web/src/management/pages/edit/setterConfig/baseFormConfig.js
+  a2508cae7888e47a 25-56
+web/src/render/utils/answerTimeStore.ts
+  a2508cae7888e47a 1-97
+web/src/materials/setters/widgets/TimeLimitConfig.vue
+  a2508cae7888e47a 1-171
+web/src/render/__tests__/answerTimeStore.spec.ts
+  a2508cae7888e47a 1-146
+web/src/render/components/AnswerTimeLimitDialog.vue
+  a2508cae7888e47a 1-81
+web/src/render/pages/RenderPage.vue
+  a2508cae7888e47a 4-29,50,63-65,77-87,117,120-217,223,227,237-242,265-280,282-285,289,291,294,297,305-306,317-319,325,334,337-369
+web/src/management/pages/edit/setterConfig/baseConfig.js
+  a2508cae7888e47a 5-10
+web/src/render/__tests__/AnswerTimeLimitDialog.spec.ts
+  a2508cae7888e47a 1-110
+web/src/render/types/answerTimeLimit.ts
+  a2508cae7888e47a 1-38
+web/src/render/components/CountdownHeader.vue
+  a2508cae7888e47a 1-135
+docs/specs/active/answer-time-limit/tasks.md
+  a2508cae7888e47a 42-45,51-56,74-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "b751d96e24b25bbc4edef985c5c7f5732d62bb8f",
+  "prompts": {
+    "a2508cae7888e47a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a9e1436-c4cc-45f2-81d2-80a9499e1499",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 2871,
+      "total_deletions": 42,
+      "accepted_lines": 2860,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/c3951f4593fd690b6c7c26cda0f306f4ade063eae723cae17d4015607427c54b"
+    }
+  }
+}

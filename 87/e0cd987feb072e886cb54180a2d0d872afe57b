@@ -1,0 +1,42 @@
+server/src/modules/survey/__test/normalizeAnswerTime.spec.ts
+  f5843903b9388c03 1-131
+server/src/interfaces/survey.ts
+  f5843903b9388c03 138-145,165-168
+docs/specs/active/answer-time-limit/tasks.md
+  f5843903b9388c03 62-66,72-73,268-274
+server/src/modules/surveyResponse/controllers/surveyResponse.controller.ts
+  f5843903b9388c03 120,162,274-291,336,341-349
+server/src/modules/surveyResponse/__test/surveyResponse.service.spec.ts
+  f5843903b9388c03 67-68
+server/src/modules/surveyResponse/services/surveyResponse.service.ts
+  f5843903b9388c03 21,32
+server/src/modules/survey/controllers/survey.controller.ts
+  f5843903b9388c03 41,193-197
+server/src/modules/surveyResponse/__test/surveyResponse.controller.spec.ts
+  f5843903b9388c03 275-276,376-447,462-463,466-472
+server/src/modules/survey/utils/normalizeAnswerTime.ts
+  f5843903b9388c03 1-38,40-52
+server/src/models/surveyResponse.entity.ts
+  f5843903b9388c03 31-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "87e0cd987feb072e886cb54180a2d0d872afe57b",
+  "prompts": {
+    "f5843903b9388c03": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f977384-070a-40f7-bb98-8e7a957e5b9d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 2464,
+      "total_deletions": 16,
+      "accepted_lines": 1564,
+      "overriden_lines": 2,
+      "messages_url": "https://usegitai.com/cas/58ac872a1ca8383ffef65a01bda3377873007ee957abf53a8834ceec3046d791"
+    }
+  }
+}

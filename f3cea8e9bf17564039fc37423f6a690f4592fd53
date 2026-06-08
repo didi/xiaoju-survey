@@ -1,0 +1,26 @@
+docs/specs/active/answer-time-limit/verification.md
+  40f58d34787d4503 1-514
+docs/specs/active/answer-time-limit/tasks.md
+  40f58d34787d4503 1-269
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "f3cea8e9bf17564039fc37423f6a690f4592fd53",
+  "prompts": {
+    "40f58d34787d4503": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c874f789-ba9c-401b-947f-0e0433e57df4",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 783,
+      "total_deletions": 0,
+      "accepted_lines": 783,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/33bf1fa49668769cb5b89c757c6454f62395ed25b3f854061679ee547a7fde52"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+docs/specs/active/answer-time-limit/tasks.md
+  076975e6073f187d 42-45,51-56,74-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "928b7080643091c0950f30c9723d93c4205af45f",
+  "prompts": {
+    "076975e6073f187d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bec05c89-4742-4467-9f27-72146623371a",
+        "model": "auto-max"
+      },
+      "human_author": "intergation_agent",
+      "messages": [],
+      "total_additions": 3062,
+      "total_deletions": 10,
+      "accepted_lines": 3053,
+      "overriden_lines": 2,
+      "messages_url": "https://usegitai.com/cas/7168b46c26817aa07925c451b45154fe92c5a37881ffef580234823fd21864e1"
+    }
+  }
+}

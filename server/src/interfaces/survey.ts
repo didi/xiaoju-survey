@@ -105,10 +105,34 @@ export interface MsgContent {
   msg_9004: string;
 }
 
+export interface JumpConfig {
+  type: string;
+  link: string;
+  buttonText?: string;
+}
+
 export interface SubmitConf {
   submitTitle: string;
   confirmAgain: ConfirmAgain;
   msgContent: MsgContent;
+  jumpConfig?: JumpConfig;
+}
+
+// 白名单类型
+export enum WhitelistType {
+  ALL = 'ALL',
+  // 空间成员
+  MEMBER = 'MEMBER',
+  // 自定义
+  CUSTOM = 'CUSTOM',
+}
+
+// 白名单用户类型
+export enum MemberType {
+  // 手机号
+  MOBILE = 'MOBILE',
+  // 邮箱
+  EMAIL = 'EMAIL',
 }
 
 // 白名单类型

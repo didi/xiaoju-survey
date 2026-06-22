@@ -16,13 +16,17 @@
         >
           重新填写
         </router-link>
+
+        <a v-if="showJumpButton" :href="jumpConfig.link" class="jump-btn">
+          {{ jumpConfig.buttonText }}
+        </a>
       </div>
       <LogoIcon :logo-conf="logoConf" :readonly="true" />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useSurveyStore } from '../stores/survey'
 // @ts-ignore
 import communalLoader from '@materials/communals/communalLoader.js'
@@ -36,6 +40,20 @@ const logoConf = computed(() => {
 const successMsg = computed(() => {
   const msgContent = (surveyStore?.submitConf as any)?.msgContent || {}
   return msgContent?.msg_200 || '提交成功'
+})
+
+const jumpConfig = computed(() => {
+  return (surveyStore?.submitConf as any)?.jumpConfig || {}
+})
+
+const showJumpButton = ref(false)
+
+watchEffect(() => {
+  const { jumpConfig } = (surveyStore?.submitConf || {}) as any
+  if (jumpConfig?.type === 'link' && jumpConfig?.link) {
+    window.location.href = jumpConfig.link
+  }
+  showJumpButton.value = jumpConfig?.type === 'button' && jumpConfig?.buttonText
 })
 </script>
 <style lang="scss" scoped>
@@ -86,6 +104,21 @@ const successMsg = computed(() => {
     color: #5094f0;
     text-decoration: underline;
     display: block;
+  }
+
+  .jump-btn {
+    background: var(--primary-color);
+    width: 90%;
+    border-radius: 0.08rem;
+    padding: 0.2rem 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.3rem;
+    font-weight: 500;
+    margin: 0.5rem auto 0;
+    border: none;
   }
 }
 </style>

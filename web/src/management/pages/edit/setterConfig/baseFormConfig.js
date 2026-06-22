@@ -103,7 +103,7 @@ export default {
     type: 'WhiteList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
-      return data.whitelistType === 'CUSTOM'
+      return data.whitelistType == 'CUSTOM'
     }
   },
   team_list: {
@@ -112,7 +112,7 @@ export default {
     type: 'TeamMemberList',
     custom: true, // 自定义导入高级组件
     relyFunc: (data) => {
-      return data.whitelistType === 'MEMBER'
+      return data.whitelistType == 'MEMBER'
     }
   }
 }

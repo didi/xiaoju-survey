@@ -18,7 +18,7 @@ import { useEditStore } from '@/management/stores/edit'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/survey'
+    redirect: '/login'
   },
   {
     path: '/survey',

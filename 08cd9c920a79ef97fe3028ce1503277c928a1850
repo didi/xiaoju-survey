@@ -1,0 +1,24 @@
+web/vitest.config.ts
+  a2508cae7888e47a 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "08cd9c920a79ef97fe3028ce1503277c928a1850",
+  "prompts": {
+    "a2508cae7888e47a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a9e1436-c4cc-45f2-81d2-80a9499e1499",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 30,
+      "total_deletions": 0,
+      "accepted_lines": 1602,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/63b9739b14f879fc67462938c2870677ff7b8c01c5b9b818ea9cf4b5430ffae6"
+    }
+  }
+}

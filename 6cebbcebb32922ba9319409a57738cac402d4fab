@@ -1,0 +1,26 @@
+docs/specs/active/answer-time-limit/verify-report.md
+  076975e6073f187d 1-225
+docs/specs/active/answer-time-limit/tasks.md
+  076975e6073f187d 276-279
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "6cebbcebb32922ba9319409a57738cac402d4fab",
+  "prompts": {
+    "076975e6073f187d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bec05c89-4742-4467-9f27-72146623371a",
+        "model": "auto-max"
+      },
+      "human_author": "intergation_agent",
+      "messages": [],
+      "total_additions": 1398,
+      "total_deletions": 125,
+      "accepted_lines": 1288,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/0ee726fc9c1bb2c4b61cafe9d77c24802b7aa6528f1cadd0d7fd658d219b960d"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+web/src/render/__tests__/AnswerTimeLimitDialog.spec.ts
+  6cefe5999521bcc9 98
+web/src/render/components/AnswerTimeLimitDialog.vue
+  6cefe5999521bcc9 4,6,72-76
+web/src/render/components/MinDurationDialog.vue
+  6cefe5999521bcc9 5,46-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "4a9a9817678495f9ea6cede1be96c07e3625839d",
+  "prompts": {
+    "6cefe5999521bcc9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17e31476-cca0-43c1-8621-a66ddfe320da",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 52,
+      "total_deletions": 296,
+      "accepted_lines": 28,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/e4c0ed024d97800e75b546078b49ed24302c34e6fbab9e63693defe2cfe02579"
+    }
+  }
+}

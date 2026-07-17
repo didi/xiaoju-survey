@@ -1,0 +1,23 @@
+web/src/materials/setters/widgets/TimeLimitConfig.vue
+  636dcd51cb5258ce 90-91,100-101,122,183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "046c7cf57088dc4327a0015d08cf3e9206a1ec9a",
+  "prompts": {
+    "636dcd51cb5258ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7587eeed-bc02-4467-985d-b9ba08bea7c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}

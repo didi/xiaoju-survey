@@ -1,0 +1,43 @@
+web/src/materials/setters/widgets/TimeLimitConfig.vue
+  a2508cae7888e47a 1-7,9-14,16-23,25-31,34-36,38-56,63-66,76-78,80-87,89-94,109-110,199-202,205-209,226,228-230,236,238,240,248-249,33,61,74,99,104,117,121,123,133-134,139,143,147,150-153,204,214,232-233,241-247,72-73
+  636dcd51cb5258ce 58,62,75,155-158,160-165,177,179-181,183-184,187,189-198,203,215,217-220,222-225,227,231,237,239,8,15,24,32,37,59,97-98,135-138,148-149,154,159,166-171,173-176,185,216,221,234-235,96
+  h_4270b4b1242c99 178,182,188
+web/src/materials/setters/widgets/__tests__/TimeLimitConfig.spec.ts
+  636dcd51cb5258ce 2-27,36-37,39,42,44,46-47,49-55,57-59,61-69,93-97,100-101,103-105,115-120,122-124,134-139
+web/src/management/pages/edit/setterConfig/baseFormConfig.js
+  a2508cae7888e47a 25-31,33-48,50-53,56-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "1d2f782d7b1633b6aa73bb36f53990bfa82815a5",
+  "prompts": {
+    "636dcd51cb5258ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7587eeed-bc02-4467-985d-b9ba08bea7c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 19,
+      "overriden_lines": 0
+    },
+    "a2508cae7888e47a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a9e1436-c4cc-45f2-81d2-80a9499e1499",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/3d52730aa645cc34ac3412563df1fb6f665dc84432afd5a155d88ef63065d434"
+    }
+  }
+}

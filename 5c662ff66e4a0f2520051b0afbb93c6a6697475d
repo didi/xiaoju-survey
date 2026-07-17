@@ -1,0 +1,28 @@
+docs/specs/active/answer-time-limit/spec.md
+  40f58d34787d4503 204-210
+docs/specs/active/answer-time-limit/design.md
+  40f58d34787d4503 74-76,80-82,88-89,166-167,177-179,199-200,440-446
+docs/specs/active/answer-time-limit/proposal.md
+  40f58d34787d4503 199-225
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "5c662ff66e4a0f2520051b0afbb93c6a6697475d",
+  "prompts": {
+    "40f58d34787d4503": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c874f789-ba9c-401b-947f-0e0433e57df4",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 56,
+      "total_deletions": 30,
+      "accepted_lines": 56,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/dc0569dd5a57cf45020e59478fcb85c2ecb1018b45034de7da29af2d8c17b970"
+    }
+  }
+}

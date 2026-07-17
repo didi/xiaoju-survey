@@ -1,0 +1,29 @@
+docs/specs/active/answer-time-limit/verification.md
+  636dcd51cb5258ce 79,83-90
+web/src/materials/setters/widgets/TimeLimitConfig.vue
+  636dcd51cb5258ce 8,15,24,34-35,39,61-63,69,90-96,98-101,106-149,154,161-171,173,177,180-181,183,185-186,202,208-212,214,219,230-233,239-244
+web/src/materials/setters/widgets/__tests__/TimeLimitConfig.spec.ts
+  636dcd51cb5258ce 1-120
+docs/specs/active/answer-time-limit/spec.md
+  636dcd51cb5258ce 67-68,223-224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "bea8ea7f89cd74098d695f8fa2dba77be4dbf653",
+  "prompts": {
+    "636dcd51cb5258ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7587eeed-bc02-4467-985d-b9ba08bea7c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 333,
+      "total_deletions": 128,
+      "accepted_lines": 243,
+      "overriden_lines": 0
+    }
+  }
+}

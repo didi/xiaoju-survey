@@ -1,7 +1,7 @@
 server/src/modules/surveyResponse/controllers/surveyResponse.controller.ts
-  f5843903b9388c03 308-324
+  f5843903b9388c03 120,162,274,337,342-350
 server/src/modules/surveyResponse/__test/surveyResponse.controller.spec.ts
-  f5843903b9388c03 446-467
+  f5843903b9388c03 275-276,376-445,468-469,484-485,488-494
 ---
 {
   "schema_version": "authorship/3.0.0",
@@ -18,7 +18,7 @@ server/src/modules/surveyResponse/__test/surveyResponse.controller.spec.ts
       "messages": [],
       "total_additions": 767,
       "total_deletions": 34,
-      "accepted_lines": 1301,
+      "accepted_lines": 40,
       "overriden_lines": 0,
       "messages_url": "https://usegitai.com/cas/f2b52e54493af74ae99e158350fe4ce8f023016d0bdeed9fe392577a8599760e"
     }

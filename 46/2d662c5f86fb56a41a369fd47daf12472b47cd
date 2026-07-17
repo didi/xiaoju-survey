@@ -1,0 +1,60 @@
+web/src/render/__tests__/CountdownHeader.spec.ts
+  a2508cae7888e47a 1-184
+web/src/render/utils/answerTimeStore.ts
+  a2508cae7888e47a 1-97
+web/src/render/components/CountdownHeader.vue
+  a2508cae7888e47a 1-119,121-135
+web/src/render/types/answerTimeLimit.ts
+  a2508cae7888e47a 1-38
+web/src/render/__tests__/answerTimeStore.spec.ts
+  a2508cae7888e47a 1-146
+web/src/materials/setters/widgets/TimeLimitConfig.vue
+  a2508cae7888e47a 1-33,35-54,57-60,63-81,89-90,138-141,143-147,159,161-163,165,167,169-171
+  636dcd51cb5258ce 55-56,62,92-95,97-102,107,109-111,120-121,124,128-137,142,148,150-153,155-158,160,164,166,168
+web/src/render/__tests__/AnswerTimeLimitDialog.spec.ts
+  a2508cae7888e47a 1-97,99-110
+web/src/management/pages/edit/setterConfig/baseFormConfig.js
+  a2508cae7888e47a 25-56
+web/src/render/pages/RenderPage.vue
+  a2508cae7888e47a 4-23,25,28-29,50,63-65,77-86,116,118-207,213,217,227-232,255-265,267-270,272-275,279,281,284,287,295-296,307-309,315,324,327-359
+web/src/render/components/AnswerTimeLimitDialog.vue
+  a2508cae7888e47a 1-3,5,7-78,80-81
+web/src/management/pages/edit/setterConfig/baseConfig.js
+  a2508cae7888e47a 5-10
+web/src/render/components/MinDurationDialog.vue
+  a2508cae7888e47a 1-3,6-41,43-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "462d662c5f86fb56a41a369fd47daf12472b47cd",
+  "prompts": {
+    "636dcd51cb5258ce": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7587eeed-bc02-4467-985d-b9ba08bea7c6",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "taoshuang",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    },
+    "a2508cae7888e47a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a9e1436-c4cc-45f2-81d2-80a9499e1499",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 2871,
+      "total_deletions": 42,
+      "accepted_lines": 1133,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/c3951f4593fd690b6c7c26cda0f306f4ade063eae723cae17d4015607427c54b"
+    }
+  }
+}

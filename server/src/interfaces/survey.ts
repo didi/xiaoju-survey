@@ -135,6 +135,14 @@ export enum MemberType {
   EMAIL = 'EMAIL',
 }
 
+export type AnswerTimeUnit = 'minute' | 'second';
+
+export interface AnswerDurationConf {
+  enabled: boolean;
+  duration: number;
+  unit: AnswerTimeUnit;
+}
+
 export interface BaseConf {
   beginTime: string;
   endTime: string;
@@ -154,6 +162,10 @@ export interface BaseConf {
   whitelist?: string[];
   // 提示语
   whitelistTip?: string;
+  // 答题限时（最长时长）配置
+  answerTimeLimit?: AnswerDurationConf;
+  // 最短答题时长配置
+  answerMinDuration?: AnswerDurationConf;
 }
 
 export interface SkinConf {

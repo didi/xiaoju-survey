@@ -271,6 +271,8 @@ describe('SurveyResponseController', () => {
             },
           ],
         },
+        channelId: undefined,
+        autoSubmit: false,
       });
 
       expect(clientEncryptService.deleteEncryptInfo).toHaveBeenCalledWith(
@@ -370,6 +372,100 @@ describe('SurveyResponseController', () => {
     });
   });
 
+  // T-TEST-01: autoSubmit=true 跳过必填、autoSubmit=false/undefined 仍执行必填
+  describe('createResponseProcess autoSubmit (T-TEST-01 / T-BE-03)', () => {
+    const buildParams = (overrides: Record<string, any> = {}) => ({
+      surveyPath: 'EBzdmnSp',
+      clientTime: Date.now(),
+      diffTime: 0,
+      data: {
+        data458: '15000000000',
+        data515: '115019',
+        data450: '450111000000000000',
+        data405: '浙江省杭州市西湖区xxx',
+        data770: '123456@qq.com',
+      },
+      ...overrides,
+    });
+
+    beforeEach(() => {
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue(mockResponseSchema);
+      jest
+        .spyOn(surveyResponseService, 'getSurveyResponseTotalByPath')
+        .mockResolvedValue(0);
+      jest
+        .spyOn(surveyResponseService, 'createSurveyResponse')
+        .mockResolvedValue({
+          _id: new ObjectId('65fc2dd77f4520858046e129'),
+          surveyPath: 'EBzdmnSp',
+        } as unknown as SurveyResponse);
+    });
+
+    it('autoSubmit=true 时跳过必填校验且持久化 autoSubmit:true', async () => {
+      const params = buildParams({
+        autoSubmit: true,
+        data: {}, // 必填全部缺失
+      });
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).resolves.toBeUndefined();
+      expect(surveyResponseService.createSurveyResponse).toHaveBeenCalledWith(
+        expect.objectContaining({ autoSubmit: true }),
+      );
+    });
+
+    it('autoSubmit=false 时必填项缺失抛出 PARAMETER_ERROR', async () => {
+      const params = buildParams({
+        autoSubmit: false,
+        data: {}, // 必填全部缺失
+      });
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).rejects.toThrow(HttpException);
+      expect(surveyResponseService.createSurveyResponse).not.toHaveBeenCalled();
+    });
+
+    it('autoSubmit 缺省（undefined）等价于 false：必填缺失仍抛出', async () => {
+      const params = buildParams({ data: {} });
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).rejects.toThrow(HttpException);
+      expect(surveyResponseService.createSurveyResponse).not.toHaveBeenCalled();
+    });
+
+    it('autoSubmit=false 且必填齐全：写入 autoSubmit:false', async () => {
+      const params = buildParams({ autoSubmit: false });
+      await controller.createResponseProcess(params, false);
+      expect(surveyResponseService.createSurveyResponse).toHaveBeenCalledWith(
+        expect.objectContaining({ autoSubmit: false }),
+      );
+    });
+
+    // TC-INV-01：必填校验必须落在 6 步准入校验链全部完成之后（design §4.4 / FR-030）
+    // 断言 counterService.checkAndUpdateOptionCount 在必填校验抛出之前被调用过
+    it('必填校验在 counterService.checkAndUpdateOptionCount 之后执行（I-BIZ-4 顺序）', async () => {
+      const counterService = testingModule.get<CounterService>(CounterService);
+      const counterSpy = jest.spyOn(counterService, 'checkAndUpdateOptionCount');
+      counterSpy.mockClear();
+
+      const params = buildParams({
+        autoSubmit: false,
+        data: {}, // 必填全部缺失，触发抛出
+      });
+
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).rejects.toThrow(HttpException);
+
+      // counter 必须在必填抛出之前被调用过
+      expect(counterSpy).toHaveBeenCalledTimes(1);
+      // 写入未发生
+      expect(surveyResponseService.createSurveyResponse).not.toHaveBeenCalled();
+    });
+  });
+
   describe('createResponseWithOpen', () => {
     let appManagerService: AppManagerService;
     let openAuthGuard: OpenAuthGuard;
@@ -384,9 +480,17 @@ describe('SurveyResponseController', () => {
     });
 
     it('should create response with valid auth headers', async () => {
-      // 准备测试数据
+      // 准备测试数据（withOpen 不走 RSA 解密路径，data 需是明文 form values，
+      // 必填字段需齐全才能通过 createResponseProcess 中的必填校验）
       const reqBody = {
         ...cloneDeep(mockSubmitData),
+        data: {
+          data458: '15000000000',
+          data515: '115019',
+          data450: '450111000000000000',
+          data405: '浙江省杭州市西湖区xxx',
+          data770: '123456@qq.com',
+        },
         channelId: '67cecfb37b4d3ae83aea1bdb', // 添加channelId
       };
       const mockContext = {

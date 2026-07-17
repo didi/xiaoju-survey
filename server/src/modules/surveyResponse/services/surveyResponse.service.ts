@@ -18,6 +18,7 @@ export class SurveyResponseService {
     surveyPath,
     optionTextAndId,
     channelId = undefined,
+    autoSubmit = false,
   }) {
     const newSubmitData = this.surveyResponseRepository.create({
       surveyPath,
@@ -28,6 +29,7 @@ export class SurveyResponseService {
       pageId: surveyId,
       optionTextAndId,
       channelId,
+      autoSubmit: autoSubmit === true,
     });
 
     // 提交问卷

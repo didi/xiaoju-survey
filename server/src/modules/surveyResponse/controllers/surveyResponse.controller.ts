@@ -117,6 +117,7 @@ export class SurveyResponseController {
       diffTime: Joi.number(),
       password: Joi.string().allow(null, ''),
       whitelist: Joi.string().allow(null, ''),
+      autoSubmit: Joi.boolean().default(false),
     }).validate(reqBody, { allowUnknown: true });
 
     if (error) {
@@ -158,6 +159,7 @@ export class SurveyResponseController {
       whitelist: whitelistValue,
       data: formValues,
     } = params;
+    const autoSubmit = params.autoSubmit === true;
 
     // 查询schema
     const responseSchema =
@@ -269,6 +271,7 @@ export class SurveyResponseController {
 
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
+
     const optionTextAndId: Record<
       string,
       Array<{ hash: string; text: string }>
@@ -302,6 +305,24 @@ export class SurveyResponseController {
       surveyPath,
     });
 
+    // 必填校验：6 步准入校验链全部走完之后、写入之前执行（design §4.4 / FR-030）
+    // 仅在 autoSubmit=false 时执行（autoSubmit=true 由超时自动提交触发，跳过必填）
+    if (!autoSubmit) {
+      const missingField = (dataList || []).find((questionItem) => {
+        if (!questionItem?.isRequired) return false;
+        const v = formValues?.[questionItem.field];
+        if (v === undefined || v === null || v === '') return true;
+        if (Array.isArray(v) && v.length === 0) return true;
+        return false;
+      });
+      if (missingField) {
+        throw new HttpException(
+          `必填项未填写: ${missingField.field}`,
+          EXCEPTION_CODE.PARAMETER_ERROR,
+        );
+      }
+    }
+
     const surveyId = responseSchema.pageId;
 
     // 入库
@@ -313,9 +334,20 @@ export class SurveyResponseController {
       surveyId: responseSchema.pageId,
       optionTextAndId,
       channelId: params.channelId,
+      autoSubmit,
     };
     const surveyResponse =
       await this.surveyResponseService.createSurveyResponse(model);
+
+    if (autoSubmit) {
+      this.logger.info(
+        `autoSubmit: ${JSON.stringify({
+          event: 'autoSubmit',
+          surveyPath,
+          responseId: surveyResponse?._id?.toString?.() ?? null,
+        })}`,
+      );
+    }
 
     if (canPush) {
       const sendData = getPushingData({

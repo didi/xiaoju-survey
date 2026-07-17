@@ -1,0 +1,12 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "adeb7f5b57d30c4970950d605516db6bc44dcd44",
+  "prompts": {},
+  "humans": {
+    "h_4270b4b1242c99": {
+      "author": "taoshuang"
+    }
+  }
+}

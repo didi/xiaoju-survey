@@ -1,0 +1,100 @@
+.claude/settings.json
+  64352e2f509528f4 1-19
+docs/knowledge/api/appManager-api.md
+  64352e2f509528f4 1-63
+docs/knowledge/domain-mapping.md
+  64352e2f509528f4 1-19
+docs/knowledge/api/channel-api.md
+  64352e2f509528f4 1-171
+docs/knowledge/index.md
+  64352e2f509528f4 1-42
+docs/knowledge/api/survey-api.md
+  64352e2f509528f4 1-852
+docs/knowledge/api/index.md
+  64352e2f509528f4 1-78
+docs/knowledge/database/er.md
+  64352e2f509528f4 1-274
+docs/knowledge/api/upgrade-api.md
+  64352e2f509528f4 1-33
+docs/knowledge/service-meta.yaml
+  64352e2f509528f4 1-94
+docs/knowledge/exp/index.md
+  64352e2f509528f4 1-8
+docs/hooks/cr-checklist.md
+  64352e2f509528f4 1-65
+docs/knowledge/api/message-api.md
+  64352e2f509528f4 1-162
+docs/harness/linters/invariant-check.sh
+  64352e2f509528f4 1-66
+docs/harness/index.md
+  64352e2f509528f4 1-39
+docs/knowledge/service/index.md
+  64352e2f509528f4 1-387
+docs/harness/invariants/sec.md
+  64352e2f509528f4 1-55
+docs/harness/infrastructure/security.md
+  64352e2f509528f4 1-54
+docs/knowledge/project-context.md
+  64352e2f509528f4 1-24
+docs/knowledge/api/auth-api.md
+  64352e2f509528f4 1-292
+docs/harness/infrastructure/api.md
+  64352e2f509528f4 1-50
+docs/hooks/index.md
+  64352e2f509528f4 1-17
+docs/knowledge/api/file-api.md
+  64352e2f509528f4 1-68
+docs/harness/infrastructure/database.md
+  64352e2f509528f4 1-50
+docs/harness/architecture/layering.md
+  64352e2f509528f4 1-42
+docs/knowledge/architecture.md
+  64352e2f509528f4 1-307
+docs/knowledge/prd/index.md
+  64352e2f509528f4 1-8
+docs/harness/linters/spec-sync-check.sh
+  64352e2f509528f4 1-48
+docs/hooks/post-action.md
+  64352e2f509528f4 1-32
+docs/knowledge/database/index.md
+  64352e2f509528f4 1-333
+docs/knowledge/api/workspace-api.md
+  64352e2f509528f4 1-317
+docs/harness/infrastructure/logging.md
+  64352e2f509528f4 1-44
+docs/knowledge/service-boundary.md
+  64352e2f509528f4 1-24
+docs/harness/architecture/module-boundary.md
+  64352e2f509528f4 1-40
+CLAUDE.md
+  64352e2f509528f4 92-139
+docs/knowledge/api/ui-api.md
+  64352e2f509528f4 1-42
+docs/specs/README.md
+  64352e2f509528f4 1-6
+docs/knowledge/api/surveyResponse-api.md
+  64352e2f509528f4 1-203
+docs/harness/invariants/biz.md
+  64352e2f509528f4 1-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "08237aceadbb06ae87125133fc67486601f45477",
+  "prompts": {
+    "64352e2f509528f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0f18e095-e8ec-44a6-9ed3-b9854b89b6bd",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "zhengyaolei",
+      "messages": [],
+      "total_additions": 4555,
+      "total_deletions": 1,
+      "accepted_lines": 4555,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/68ae5825829ef2af0bdc11ec3a920e656d774fc69f6f1e1728cd76886abf7be5"
+    }
+  }
+}

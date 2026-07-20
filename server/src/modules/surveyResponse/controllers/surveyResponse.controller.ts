@@ -284,6 +284,26 @@ export class SurveyResponseController {
     // 生成一个optionTextAndId字段，因为选项文本可能会改，该字段记录当前提交的文本
     const dataList = responseSchema.code.dataConf.dataList;
 
+    // 非超时自动提交时，先做必填校验，避免无效提交占用选项配额
+    if (!autoSubmit) {
+      const hiddenFields = this.getHiddenFieldsByLogic({
+        dataList,
+        formValues,
+        logicConf: responseSchema.code?.logicConf,
+      });
+      const missingField = (dataList || []).find((questionItem) => {
+        if (!questionItem?.isRequired) return false;
+        if (hiddenFields.has(questionItem.field)) return false;
+        return this.isEmptyAnswer(formValues?.[questionItem.field]);
+      });
+      if (missingField) {
+        throw new HttpException(
+          `必填项未填写: ${missingField.field}`,
+          EXCEPTION_CODE.PARAMETER_ERROR,
+        );
+      }
+    }
+
     const optionTextAndId: Record<
       string,
       Array<{ hash: string; text: string }>
@@ -316,27 +336,6 @@ export class SurveyResponseController {
       userAnswer: formValues,
       surveyPath,
     });
-
-    // 必填校验：6 步准入校验链全部走完之后、写入之前执行（design §4.4 / FR-030）
-    // 仅在 autoSubmit=false 时执行（autoSubmit=true 由超时自动提交触发，跳过必填）
-    if (!autoSubmit) {
-      const hiddenFields = this.getHiddenFieldsByLogic({
-        dataList,
-        formValues,
-        logicConf: responseSchema.code?.logicConf,
-      });
-      const missingField = (dataList || []).find((questionItem) => {
-        if (!questionItem?.isRequired) return false;
-        if (hiddenFields.has(questionItem.field)) return false;
-        return this.isEmptyAnswer(formValues?.[questionItem.field]);
-      });
-      if (missingField) {
-        throw new HttpException(
-          `必填项未填写: ${missingField.field}`,
-          EXCEPTION_CODE.PARAMETER_ERROR,
-        );
-      }
-    }
 
     const surveyId = responseSchema.pageId;
 

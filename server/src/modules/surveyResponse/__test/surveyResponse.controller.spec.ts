@@ -522,25 +522,23 @@ describe('SurveyResponseController', () => {
       );
     });
 
-    // TC-INV-01：必填校验必须落在 6 步准入校验链全部完成之后（design §4.4 / FR-030）
-    // 断言 counterService.checkAndUpdateOptionCount 在必填校验抛出之前被调用过
-    it('必填校验在 counterService.checkAndUpdateOptionCount 之后执行（I-BIZ-4 顺序）', async () => {
+    it('必填校验失败时不调用 counterService.checkAndUpdateOptionCount', async () => {
       const counterService = testingModule.get<CounterService>(CounterService);
       const counterSpy = jest.spyOn(counterService, 'checkAndUpdateOptionCount');
       counterSpy.mockClear();
 
       const params = buildParams({
         autoSubmit: false,
-        data: {}, // 必填全部缺失，触发抛出
+        data: {
+          data515: '115019',
+        },
       });
 
       await expect(
         controller.createResponseProcess(params, false),
       ).rejects.toThrow(HttpException);
 
-      // counter 必须在必填抛出之前被调用过
-      expect(counterSpy).toHaveBeenCalledTimes(1);
-      // 写入未发生
+      expect(counterSpy).not.toHaveBeenCalled();
       expect(surveyResponseService.createSurveyResponse).not.toHaveBeenCalled();
     });
   });

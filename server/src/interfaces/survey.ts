@@ -135,6 +135,14 @@ export enum MemberType {
   EMAIL = 'EMAIL',
 }
 
+export type AnswerTimeUnit = 'minute' | 'second';
+
+export interface AnswerDurationConf {
+  enabled: boolean;
+  duration: number;
+  unit: AnswerTimeUnit;
+}
+
 export interface BaseConf {
   beginTime: string;
   endTime: string;
@@ -154,6 +162,10 @@ export interface BaseConf {
   whitelist?: string[];
   // 提示语
   whitelistTip?: string;
+  // 答题限时（最长时长）配置
+  answerTimeLimit?: AnswerDurationConf;
+  // 最短答题时长配置
+  answerMinDuration?: AnswerDurationConf;
 }
 
 export interface SkinConf {
@@ -177,6 +189,23 @@ export interface BottomConf {
   logoImageWidth: string;
 }
 
+export interface LogicCondition {
+  field: string;
+  operator: string;
+  value: string | string[];
+}
+
+export interface LogicRule {
+  target: string;
+  scope: string;
+  conditions: LogicCondition[];
+}
+
+export interface LogicConf {
+  showLogicConf?: LogicRule[];
+  jumpLogicConf?: LogicRule[];
+}
+
 export interface SurveySchemaInterface {
   bannerConf: BannerConf;
   dataConf: DataConf;
@@ -184,4 +213,5 @@ export interface SurveySchemaInterface {
   baseConf: BaseConf;
   skinConf: SkinConf;
   bottomConf: BottomConf;
+  logicConf?: LogicConf;
 }

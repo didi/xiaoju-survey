@@ -22,6 +22,40 @@ export default {
     type: 'QuestionTimeHour',
     placement: 'top'
   },
+  limit_answerTimeLimit: {
+    key: 'answerTimeLimit',
+    label: '答题限时',
+    tip: '问卷必须在规定时间内填完，超时自动提交。',
+    tipShow: true,
+    placement: 'top',
+    type: 'TimeLimitConfig',
+    defaultDuration: 30,
+    valueGetter: ({ moduleConfig }) => {
+      const v = moduleConfig?.answerTimeLimit
+      return {
+        enabled: !!v?.enabled,
+        duration: typeof v?.duration === 'number' && v.duration > 0 ? v.duration : 30,
+        unit: v?.unit === 'second' ? 'second' : 'minute'
+      }
+    }
+  },
+  limit_answerMinDuration: {
+    key: 'answerMinDuration',
+    label: '最短答题时长',
+    tip: '问卷仅可在所设置的时间之后才能进行提交。',
+    tipShow: true,
+    placement: 'top',
+    type: 'TimeLimitConfig',
+    defaultDuration: 10,
+    valueGetter: ({ moduleConfig }) => {
+      const v = moduleConfig?.answerMinDuration
+      return {
+        enabled: !!v?.enabled,
+        duration: typeof v?.duration === 'number' && v.duration > 0 ? v.duration : 10,
+        unit: v?.unit === 'minute' ? 'minute' : 'second'
+      }
+    }
+  },
   limit_fillAnswer: {
     key: 'fillAnswer',
     label: '允许断点续答',

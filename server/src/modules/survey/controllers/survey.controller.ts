@@ -38,6 +38,7 @@ import { UserService } from 'src/modules/auth/services/user.service';
 
 import { FilesInterceptor } from '@nestjs/platform-express';
 import * as XLSX from 'xlsx';
+import { normalizeBaseConfAnswerTime } from '../utils/normalizeAnswerTime';
 
 interface ExcelQuestion {
   title: string;
@@ -189,6 +190,11 @@ export class SurveyController {
     const username = req.user.username;
 
     const configData = value.configData;
+    // 防御性 normalize：B 端保存「答题限制 / 最短时长」配置时做参数兜底
+    // unit 缺省 / 非法 → 'minute'；duration 非正整数 → 30；enabled 强制 boolean
+    if (configData?.baseConf) {
+      normalizeBaseConfAnswerTime(configData.baseConf);
+    }
     await this.surveyConfService.saveSurveyConf({
       surveyId,
       schema: configData,

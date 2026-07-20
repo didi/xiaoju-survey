@@ -28,6 +28,9 @@ export class SurveyResponse extends BaseEntity {
   @Column()
   channelId: string;
 
+  @Column({ default: false })
+  autoSubmit?: boolean;
+
   @BeforeInsert()
   async onDataInsert() {
     return await pluginManager.triggerHook('encryptResponseData', this);

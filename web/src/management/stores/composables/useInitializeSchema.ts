@@ -25,13 +25,14 @@ export default function useInitializeSchema(
 
   function initSchema({ metaData, codeData }: { metaData: any; codeData: any }) {
     schema.metaData = metaData
-    schema.bannerConf = merge({}, schema.bannerConf, codeData.bannerConf)
-    schema.bottomConf = merge({}, schema.bottomConf, codeData.bottomConf)
-    schema.skinConf = merge({}, schema.skinConf, codeData.skinConf)
-    schema.baseConf = merge({}, schema.baseConf, codeData.baseConf)
+    // 基于全新对象合并，避免 Pinia 单例下 schema.* 残留上一份问卷的配置跨问卷泄漏
+    schema.bannerConf = merge({}, codeData.bannerConf)
+    schema.bottomConf = merge({}, codeData.bottomConf)
+    schema.skinConf = merge({}, codeData.skinConf)
+    schema.baseConf = merge({}, codeData.baseConf)
     schema.logicConf = codeData.logicConf
     schema.pageConf = codeData.pageConf
-    schema.submitConf = merge({}, schema.submitConf, codeData.submitConf)
+    schema.submitConf = merge({}, codeData.submitConf)
     schema.questionDataList = codeData.questionDataList || []
     schema.pageEditOne = 1
   }

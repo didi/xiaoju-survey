@@ -64,6 +64,8 @@ describe('SurveyResponseService', () => {
       pageId: surveyData.surveyId,
       secretKeys: [],
       optionTextAndId: surveyData.optionTextAndId,
+      channelId: undefined,
+      autoSubmit: false,
     });
   });
 

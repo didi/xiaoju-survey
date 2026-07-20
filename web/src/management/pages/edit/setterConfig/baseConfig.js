@@ -2,7 +2,12 @@ export default [
   {
     title: '时间配置',
     key: 'timeConfig',
-    formList: ['base_effectTime', 'limit_answerTime']
+    formList: [
+      'base_effectTime',
+      'limit_answerTime',
+      'limit_answerTimeLimit',
+      'limit_answerMinDuration'
+    ]
   },
   {
     title: '提交限制',

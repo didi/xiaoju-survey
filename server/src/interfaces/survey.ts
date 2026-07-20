@@ -189,6 +189,23 @@ export interface BottomConf {
   logoImageWidth: string;
 }
 
+export interface LogicCondition {
+  field: string;
+  operator: string;
+  value: string | string[];
+}
+
+export interface LogicRule {
+  target: string;
+  scope: string;
+  conditions: LogicCondition[];
+}
+
+export interface LogicConf {
+  showLogicConf?: LogicRule[];
+  jumpLogicConf?: LogicRule[];
+}
+
 export interface SurveySchemaInterface {
   bannerConf: BannerConf;
   dataConf: DataConf;
@@ -196,4 +213,5 @@ export interface SurveySchemaInterface {
   baseConf: BaseConf;
   skinConf: SkinConf;
   bottomConf: BottomConf;
+  logicConf?: LogicConf;
 }

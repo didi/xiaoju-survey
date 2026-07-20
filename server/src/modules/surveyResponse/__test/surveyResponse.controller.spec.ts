@@ -443,6 +443,85 @@ describe('SurveyResponseController', () => {
       );
     });
 
+    it('显示逻辑隐藏的必填项缺失时不阻断提交', async () => {
+      const schema = cloneDeep(mockResponseSchema);
+      (schema.code as any).logicConf = {
+        showLogicConf: [
+          {
+            target: 'data770',
+            scope: 'question',
+            conditions: [
+              {
+                field: 'data515',
+                operator: 'in',
+                value: ['115020'],
+              },
+            ],
+          },
+        ],
+        jumpLogicConf: [],
+      };
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue(schema);
+
+      const params = buildParams({
+        autoSubmit: false,
+        data: {
+          data458: '15000000000',
+          data515: '115019',
+          data450: '450111000000000000',
+          data405: '浙江省杭州市西湖区xxx',
+        },
+      });
+
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).resolves.toBeUndefined();
+      expect(surveyResponseService.createSurveyResponse).toHaveBeenCalledWith(
+        expect.objectContaining({ autoSubmit: false }),
+      );
+    });
+
+    it('跳转逻辑跳过的必填项缺失时不阻断提交', async () => {
+      const schema = cloneDeep(mockResponseSchema);
+      (schema.code as any).logicConf = {
+        showLogicConf: [],
+        jumpLogicConf: [
+          {
+            target: 'data770',
+            scope: 'question',
+            conditions: [
+              {
+                field: 'data515',
+                operator: 'in',
+                value: ['115019'],
+              },
+            ],
+          },
+        ],
+      };
+      jest
+        .spyOn(responseSchemaService, 'getResponseSchemaByPath')
+        .mockResolvedValue(schema);
+
+      const params = buildParams({
+        autoSubmit: false,
+        data: {
+          data458: '15000000000',
+          data515: '115019',
+          data770: '123456@qq.com',
+        },
+      });
+
+      await expect(
+        controller.createResponseProcess(params, false),
+      ).resolves.toBeUndefined();
+      expect(surveyResponseService.createSurveyResponse).toHaveBeenCalledWith(
+        expect.objectContaining({ autoSubmit: false }),
+      );
+    });
+
     // TC-INV-01：必填校验必须落在 6 步准入校验链全部完成之后（design §4.4 / FR-030）
     // 断言 counterService.checkAndUpdateOptionCount 在必填校验抛出之前被调用过
     it('必填校验在 counterService.checkAndUpdateOptionCount 之后执行（I-BIZ-4 顺序）', async () => {

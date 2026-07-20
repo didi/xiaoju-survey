@@ -33,6 +33,18 @@ const optionQuestionType: Array<string> = [
   QUESTION_TYPE.VOTE,
 ];
 
+type LogicCondition = {
+  field: string;
+  operator: string;
+  value: string | string[];
+};
+
+type LogicRule = {
+  target: string;
+  scope: string;
+  conditions: LogicCondition[];
+};
+
 @ApiTags('surveyResponse')
 @Controller('/api/surveyResponse')
 export class SurveyResponseController {
@@ -308,12 +320,15 @@ export class SurveyResponseController {
     // 必填校验：6 步准入校验链全部走完之后、写入之前执行（design §4.4 / FR-030）
     // 仅在 autoSubmit=false 时执行（autoSubmit=true 由超时自动提交触发，跳过必填）
     if (!autoSubmit) {
+      const hiddenFields = this.getHiddenFieldsByLogic({
+        dataList,
+        formValues,
+        logicConf: responseSchema.code?.logicConf,
+      });
       const missingField = (dataList || []).find((questionItem) => {
         if (!questionItem?.isRequired) return false;
-        const v = formValues?.[questionItem.field];
-        if (v === undefined || v === null || v === '') return true;
-        if (Array.isArray(v) && v.length === 0) return true;
-        return false;
+        if (hiddenFields.has(questionItem.field)) return false;
+        return this.isEmptyAnswer(formValues?.[questionItem.field]);
       });
       if (missingField) {
         throw new HttpException(
@@ -367,6 +382,120 @@ export class SurveyResponseController {
     // 入库成功后，要把密钥删掉，防止被重复使用
     if (sessionId) {
       this.clientEncryptService.deleteEncryptInfo(sessionId);
+    }
+  }
+
+  private isEmptyAnswer(value: any): boolean {
+    if (value === undefined || value === null || value === '') return true;
+    if (Array.isArray(value) && value.length === 0) return true;
+    return false;
+  }
+
+  private getHiddenFieldsByLogic({
+    dataList,
+    formValues,
+    logicConf,
+  }: {
+    dataList: Array<any>;
+    formValues: Record<string, any>;
+    logicConf?: {
+      showLogicConf?: LogicRule[];
+      jumpLogicConf?: LogicRule[];
+    };
+  }): Set<string> {
+    const hiddenFields = new Set<string>();
+    const showRules = this.mergeLogicRules(logicConf?.showLogicConf || []);
+    const jumpRules = logicConf?.jumpLogicConf || [];
+    const fieldIndexMap = (dataList || []).reduce((pre, cur, index) => {
+      pre[cur.field] = index;
+      return pre;
+    }, {});
+
+    (dataList || []).forEach((questionItem, index) => {
+      const showRule = showRules.get(`${questionItem.field}:question`);
+      if (showRule && !this.matchLogicRule(showRule, formValues)) {
+        hiddenFields.add(questionItem.field);
+      }
+
+      const matchedJumpRules = jumpRules.filter((rule) => {
+        if (rule.scope !== 'question') return false;
+        if (!rule.conditions?.some((condition) => condition.field === questionItem.field)) {
+          return false;
+        }
+        return this.matchLogicRule(rule, formValues, 'or');
+      });
+      if (!matchedJumpRules.length) return;
+
+      const maxTargetIndex = matchedJumpRules.reduce((pre, rule) => {
+        if (rule.target === 'end') return Math.max(pre, dataList.length);
+        const targetIndex = fieldIndexMap[rule.target];
+        return typeof targetIndex === 'number' ? Math.max(pre, targetIndex) : pre;
+      }, index);
+      dataList
+        .slice(index + 1, maxTargetIndex)
+        .forEach((item) => hiddenFields.add(item.field));
+    });
+
+    return hiddenFields;
+  }
+
+  private mergeLogicRules(rules: LogicRule[]): Map<string, LogicRule> {
+    return (rules || []).reduce((pre, rule) => {
+      const key = `${rule.target}:${rule.scope}`;
+      const existing = pre.get(key);
+      pre.set(key, {
+        ...rule,
+        conditions: [
+          ...(existing?.conditions || []),
+          ...(Array.isArray(rule.conditions) ? rule.conditions : []),
+        ],
+      });
+      return pre;
+    }, new Map<string, LogicRule>());
+  }
+
+  private matchLogicRule(
+    rule: LogicRule,
+    formValues: Record<string, any>,
+    comparor: 'and' | 'or' = 'and',
+  ): boolean {
+    const conditions = Array.isArray(rule.conditions) ? rule.conditions : [];
+    if (comparor === 'or') {
+      return conditions.some((condition) =>
+        this.matchLogicCondition(condition, formValues),
+      );
+    }
+    return conditions.every((condition) =>
+      this.matchLogicCondition(condition, formValues),
+    );
+  }
+
+  private matchLogicCondition(
+    condition: LogicCondition,
+    formValues: Record<string, any>,
+  ): boolean {
+    const answer = formValues?.[condition.field];
+    if (!answer) return false;
+    const expected = condition.value;
+    switch (condition.operator) {
+      case 'eq':
+        return Array.isArray(expected)
+          ? expected.every((v) => answer.includes(v))
+          : answer.includes(expected);
+      case 'in':
+        return Array.isArray(expected)
+          ? expected.some((v) => answer.includes(v))
+          : answer.includes(expected);
+      case 'nin':
+        return Array.isArray(expected)
+          ? expected.some((v) => !answer.includes(v))
+          : !answer.includes(expected);
+      case 'neq':
+        return Array.isArray(expected)
+          ? expected.every((v) => !answer.includes(v))
+          : answer.toString() !== expected;
+      default:
+        return false;
     }
   }
 }

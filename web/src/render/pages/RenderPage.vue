@@ -83,7 +83,7 @@ import {
 import {
   type AnswerTimeLimitConf,
   getEffectiveAnswerMinDuration,
-  normalizeUnit,
+  normalizeAnswerTimeConf,
   unitToMs
 } from '../types/answerTimeLimit'
 
@@ -125,21 +125,11 @@ const {
 const surveyPath = computed(() => surveyStore.surveyPath || '')
 
 // === 答题限时 / 最短答题时长 ===
-const normalizeConf = (raw: any): AnswerTimeLimitConf | null => {
-  if (!raw || typeof raw !== 'object' || raw.enabled !== true) return null
-  const duration = typeof raw.duration === 'number' && raw.duration > 0 ? raw.duration : 30
-  return {
-    enabled: true,
-    duration,
-    unit: normalizeUnit(raw.unit)
-  }
-}
-
 const answerTimeLimit = computed<AnswerTimeLimitConf | null>(() =>
-  normalizeConf((baseConf.value as any)?.answerTimeLimit)
+  normalizeAnswerTimeConf((baseConf.value as any)?.answerTimeLimit)
 )
 const answerMinDuration = computed<AnswerTimeLimitConf | null>(() =>
-  normalizeConf((baseConf.value as any)?.answerMinDuration)
+  normalizeAnswerTimeConf((baseConf.value as any)?.answerMinDuration)
 )
 const effectiveAnswerMinDuration = computed<AnswerTimeLimitConf | null>(() =>
   getEffectiveAnswerMinDuration(answerMinDuration.value, answerTimeLimit.value)

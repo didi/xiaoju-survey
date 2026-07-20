@@ -27,6 +27,10 @@ export const normalizeUnit = (unit: unknown): AnswerTimeUnit => {
   return unit === 'second' ? 'second' : 'minute'
 }
 
+export const isAnswerTimeUnit = (unit: unknown): unit is AnswerTimeUnit => {
+  return unit === 'minute' || unit === 'second'
+}
+
 export const isValidDuration = (value: unknown): value is number => {
   return typeof value === 'number' && Number.isInteger(value) && value > 0
 }
@@ -35,6 +39,24 @@ export const isWithinBounds = (duration: number, unit: AnswerTimeUnit): boolean 
   if (!isValidDuration(duration)) return false
   if (unit === 'minute') return duration <= MAX_MINUTE
   return duration >= MIN_SECOND
+}
+
+export const validateAnswerTimeConf = (raw: unknown): raw is AnswerTimeLimitConf => {
+  if (!raw || typeof raw !== 'object') return false
+  const conf = raw as Partial<AnswerTimeLimitConf>
+  if (conf.enabled !== true) return false
+  if (!isAnswerTimeUnit(conf.unit)) return false
+  if (!isValidDuration(conf.duration)) return false
+  return isWithinBounds(conf.duration, conf.unit)
+}
+
+export const normalizeAnswerTimeConf = (raw: unknown): AnswerTimeLimitConf | null => {
+  if (!validateAnswerTimeConf(raw)) return null
+  return {
+    enabled: true,
+    duration: raw.duration,
+    unit: raw.unit
+  }
 }
 
 export const getEffectiveAnswerMinDuration = (

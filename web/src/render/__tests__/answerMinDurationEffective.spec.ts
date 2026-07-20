@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest'
 
-import { type AnswerTimeLimitConf, getEffectiveAnswerMinDuration } from '../types/answerTimeLimit'
+import {
+  type AnswerTimeLimitConf,
+  getEffectiveAnswerMinDuration,
+  normalizeAnswerTimeConf
+} from '../types/answerTimeLimit'
 
 const conf = (
   duration: number,
@@ -32,5 +36,37 @@ describe('C-end answerMinDuration runtime effectiveness', () => {
   it('keeps min duration effective when only min duration is enabled', () => {
     const min = conf(5)
     expect(getEffectiveAnswerMinDuration(min, null)).toBe(min)
+  })
+})
+
+describe('C-end answer time config validation', () => {
+  it('does not apply enabled config with invalid duration', () => {
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: null, unit: 'minute' })
+    ).toBeNull()
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: 1.5, unit: 'minute' })
+    ).toBeNull()
+  })
+
+  it('does not apply enabled config outside runtime bounds', () => {
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: 1441, unit: 'minute' })
+    ).toBeNull()
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: 9, unit: 'second' })
+    ).toBeNull()
+  })
+
+  it('does not apply config with invalid unit instead of defaulting it', () => {
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: 30, unit: 'hour' })
+    ).toBeNull()
+  })
+
+  it('keeps valid enabled config as-is', () => {
+    expect(
+      normalizeAnswerTimeConf({ enabled: true, duration: 30, unit: 'minute' })
+    ).toEqual({ enabled: true, duration: 30, unit: 'minute' })
   })
 })

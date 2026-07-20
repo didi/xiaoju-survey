@@ -54,10 +54,6 @@ interface Emit {
 
 const DEFAULT_DURATION = 30
 const MAX_MINUTE = 1440
-const MIN_SECOND = 0
-
-const ERR_INVALID = '请输入数值'
-
 const props = defineProps<Props>()
 const emit = defineEmits<Emit>()
 
@@ -97,18 +93,8 @@ const unit = ref<Unit>(initial.unit)
 const errorMsg = ref<string>('')
 
 
-const validate = (): boolean => {
-  if (!enabled.value) {
-    errorMsg.value = ''
-    return true
-  }
-  errorMsg.value = ''
-  return true
-}
-
-// 校验通过才 emit（写入 store / 触发自动保存）；不通过则阻断保存并提示
 const commit = () => {
-  if (!validate()) return
+  errorMsg.value = ''
   emit(FORM_CHANGE_EVENT_KEY, {
     key: props.formConfig.key,
     value: {
@@ -164,7 +150,7 @@ watch(
 )
 
 const displayUnitLabel = computed(() => (unit.value === 'second' ? '秒' : '分'))
-defineExpose({ displayUnitLabel, validate, errorMsg })
+defineExpose({ displayUnitLabel, errorMsg })
 </script>
 <style lang="scss" scoped>
 .time-limit-config {

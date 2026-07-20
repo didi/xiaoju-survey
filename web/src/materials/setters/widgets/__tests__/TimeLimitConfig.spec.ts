@@ -64,13 +64,18 @@ describe('TimeLimitConfig — 切换单位保留原值、不提示（SUR-37 反�
     })
   })
 
-  it('空态 blur 不会自动回退（保持空 + 报错 + 不落库）', async () => {
+  it('空态 blur 不再在保存侧 validate，按当前值向上 emit', async () => {
     const w = factory(limitConf())
     ;(w.vm as any).duration = null
     ;(w.vm as any).handleDurationBlur()
     expect((w.vm as any).duration).toBeNull()
-    expect((w.vm as any).errorMsg).toBeTruthy()
-    expect(emittedOf(w).length).toBe(0)
+    expect((w.vm as any).errorMsg).toBe('')
+    const emitted = emittedOf(w)
+    expect(emitted.length).toBe(1)
+    expect(emitted[0][0]).toMatchObject({
+      key: 'answerTimeLimit',
+      value: { enabled: true, duration: null, unit: 'minute' }
+    })
   })
 })
 

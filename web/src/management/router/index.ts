@@ -125,7 +125,7 @@ const routes: RouteRecordRaw[] = [
         name: analysisTypeMap.dataTable,
         meta: {
           needLogin: true,
-          premissions: [SurveyPermissions.DataManage]
+          permissions: [SurveyPermissions.DataManage]
         },
         component: () => import('../pages/analysis/pages/DataTablePage.vue')
       },
@@ -134,7 +134,7 @@ const routes: RouteRecordRaw[] = [
         name: analysisTypeMap.separateStatistics,
         meta: {
           needLogin: true,
-          premissions: [SurveyPermissions.DataManage]
+          permissions: [SurveyPermissions.DataManage]
         },
         component: () => import('../pages/analysis/pages/SeparateStatisticsPage.vue')
       }

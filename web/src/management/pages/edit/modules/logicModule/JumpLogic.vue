@@ -387,7 +387,7 @@ watch(
     font-weight: 500;
   }
 
-  .table-feild {
+  .table-field {
     height: 28x;
     padding: 0 10px;
     font-size: 14px;
@@ -398,7 +398,7 @@ watch(
     text-overflow: ellipsis;
   }
 
-  .feild-type {
+  .field-type {
     color: #9f9c9f;
   }
   /* 自定义锚点样式 */

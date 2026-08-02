@@ -28,7 +28,7 @@ describe('CollaboratorController', () => {
   let logger: Logger;
   let userService: UserService;
   let surveyMetaService: SurveyMetaService;
-  let workspaceMemberServie: WorkspaceMemberService;
+  let workspaceMemberService: WorkspaceMemberService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -87,7 +87,7 @@ describe('CollaboratorController', () => {
     logger = module.get<Logger>(Logger);
     userService = module.get<UserService>(UserService);
     surveyMetaService = module.get<SurveyMetaService>(SurveyMetaService);
-    workspaceMemberServie = module.get<WorkspaceMemberService>(
+    workspaceMemberService = module.get<WorkspaceMemberService>(
       WorkspaceMemberService,
     );
   });
@@ -413,7 +413,7 @@ describe('CollaboratorController', () => {
       jest
         .spyOn(surveyMetaService, 'getSurveyById')
         .mockResolvedValue(surveyMeta as SurveyMeta);
-      jest.spyOn(workspaceMemberServie, 'findOne').mockResolvedValue({} as any);
+      jest.spyOn(workspaceMemberService, 'findOne').mockResolvedValue({} as any);
 
       const response = await controller.getUserSurveyPermissions(req, query);
 
@@ -447,7 +447,7 @@ describe('CollaboratorController', () => {
       jest
         .spyOn(surveyMetaService, 'getSurveyById')
         .mockResolvedValue(surveyMeta as SurveyMeta);
-      jest.spyOn(workspaceMemberServie, 'findOne').mockResolvedValue(null);
+      jest.spyOn(workspaceMemberService, 'findOne').mockResolvedValue(null);
       jest
         .spyOn(collaboratorService, 'getCollaborator')
         .mockResolvedValue(collaborator as Collaborator);
@@ -477,7 +477,7 @@ describe('CollaboratorController', () => {
       jest
         .spyOn(surveyMetaService, 'getSurveyById')
         .mockResolvedValue(surveyMeta as SurveyMeta);
-      jest.spyOn(workspaceMemberServie, 'findOne').mockResolvedValue(null);
+      jest.spyOn(workspaceMemberService, 'findOne').mockResolvedValue(null);
       jest
         .spyOn(collaboratorService, 'getCollaborator')
         .mockResolvedValue(null);

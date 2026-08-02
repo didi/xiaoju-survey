@@ -5,7 +5,7 @@
       ref="ruleWrappers"
       :key="item.id"
       :ruleNode="item"
-      @delete="handleDetele"
+      @delete="handleDelete"
     >
     </RuleNodeView>
 
@@ -38,7 +38,7 @@ const handleAdd = () => {
   ruleNode.addCondition(condition)
   showLogicEngine.value.addRule(ruleNode)
 }
-const handleDetele = (id: string) => {
+const handleDelete = (id: string) => {
   showLogicEngine.value.removeRule(id)
 }
 
@@ -49,14 +49,14 @@ const formValidate = () => {
     return item?.submitForm()
   })
 }
-const handleValide = () => {
+const handleValidate = () => {
   const validPass = formValidate()
   const result = !validPass.includes(false)
-  // result 为ture代表校验不通过
+  // result 为true代表校验不通过
   return !result
 }
 defineExpose({
-  handleValide
+  handleValidate
 })
 </script>
 <style lang="scss">

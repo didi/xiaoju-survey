@@ -106,7 +106,7 @@ export function transformAndMergeArrayFields(data) {
   return transformedData;
 }
 
-export function handleAggretionData({ dataMap, item }) {
+export function handleAggregationData({ dataMap, item }) {
   const type = dataMap[item.field].type;
   const aggregationMap = item.data.aggregation.reduce((pre, cur) => {
     pre[cur.id] = cur;
@@ -170,7 +170,7 @@ export function handleAggretionData({ dataMap, item }) {
             count: aggregationMap?.[num]?.count || 0,
           };
         }),
-        submitionCount: item.data.submitionCount,
+        submissionCount: item.data.submissionCount,
         summary,
       },
     };
@@ -279,17 +279,17 @@ function getVariance({ aggregation, average }) {
 function getNps({ aggregation }) {
   // 净推荐值(NPS)=(推荐者数/总样本数)×100%-(贬损者数/总样本数)×100%
   // 0～10分举例子：推荐者（9-10分）；被动者（7-8分）；贬损者（0-6分）
-  let recommand = 0,
+  let recommend = 0,
     derogatory = 0,
     total = 0;
   for (const item of aggregation) {
     const num = parseInt(item.id);
     if (num >= 9) {
-      recommand += item.count;
+      recommend += item.count;
     } else if (num <= 6) {
       derogatory += item.count;
     }
     total += item.count;
   }
-  return ((recommand / total - derogatory / total) * 100).toFixed(2) + '%';
+  return ((recommend / total - derogatory / total) * 100).toFixed(2) + '%';
 }

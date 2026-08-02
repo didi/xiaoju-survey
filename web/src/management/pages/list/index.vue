@@ -115,7 +115,7 @@
           </div>
           <span>文本导入</span>
         </div>
-        <div class="create-method-item" @click="opemAIGenerate">
+        <div class="create-method-item" @click="openAIGenerate">
           <div class="icon">
             <i class="iconfont icon-AIshengcheng"></i>
           </div>
@@ -129,7 +129,7 @@
         </div>
       </div>
     </el-dialog>
-    <div class="fiexed-text-import-wrapper" v-if="showTextImport">
+    <div class="fixed-text-import-wrapper" v-if="showTextImport">
       <div class="text-import-header">
         <div class="return no-logo-return icon-fanhui" @click="showTextImport = false">返回</div>
         <div class="title">文本导入</div>
@@ -139,7 +139,7 @@
       </div>
       <TextImport @change="onTextImportChange"></TextImport>
     </div>
-    <div class="fiexed-ai-generate-wrapper" v-if="showAIGenerate">
+    <div class="fixed-ai-generate-wrapper" v-if="showAIGenerate">
       <div class="ai-generate-header">
         
         <div class="nav-left">
@@ -152,7 +152,7 @@
       <h2 class="nav-title">AI智能生成问卷</h2>
       <el-button type="primary"  class="publish-btn"  @click="onShowCreateForm">确定创建</el-button>
       </div>
-      <AIGenerate @change="onAIGenerteChange"></AIGenerate>
+      <AIGenerate @change="onAIGenerateChange"></AIGenerate>
     </div>
     <el-dialog
       v-model="showCreateForm"
@@ -407,7 +407,7 @@ const openTextImport = () => {
   createMethod.value = 'textImport'
 }
 
-const opemAIGenerate = () => { 
+const openAIGenerate = () => { 
   showCreateMethod.value = false;
   showAIGenerate.value = true;
   createMethod.value = 'AIGenerate'
@@ -514,7 +514,7 @@ const onShowCreateFormExcelImport = () => {
   showCreateForm.value = true
 }
 
-const onAIGenerteChange = (newQuestionList: Array<any>) => {
+const onAIGenerateChange = (newQuestionList: Array<any>) => {
   questionList.value = newQuestionList
 }
 
@@ -609,7 +609,7 @@ const onAIGenerteChange = (newQuestionList: Array<any>) => {
     }
   }
 }
-.fiexed-text-import-wrapper {
+.fixed-text-import-wrapper {
   position: fixed;
   left: 0;
   right: 0;
@@ -647,7 +647,7 @@ const onAIGenerteChange = (newQuestionList: Array<any>) => {
     }
   }
 }
-.fiexed-ai-generate-wrapper {
+.fixed-ai-generate-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;

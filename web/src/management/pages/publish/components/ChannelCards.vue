@@ -14,7 +14,7 @@
         </span>
       </div>
       <div class="content">
-        <div class="desc">{{ CHANNEL_TYPE_DSEC[item] }}</div>
+        <div class="desc">{{ CHANNEL_TYPE_DESC[item] }}</div>
       </div>
     </div>
   </div>
@@ -53,7 +53,7 @@ import { storeToRefs  } from 'pinia'
 const editStore = useEditStore()
 const { surveyId, schema } = storeToRefs(editStore)
 const channelStore = useChannelStore()
-const CHANNEL_TYPE_DSEC = {
+const CHANNEL_TYPE_DESC = {
   [CHANNEL_TYPE.SHORT_LINK]: '方式描述方式描述方式描述方式描述方式描述方式描述方式描述方式描述',
   [CHANNEL_TYPE.INJECT_WEB]: "将问卷通过SDK方式嵌入到网页中，适合弹窗、信息流等。",
   [CHANNEL_TYPE.INJECT_APP]: "将问卷通过SDK方式嵌入到IOS、Android等应用中。",

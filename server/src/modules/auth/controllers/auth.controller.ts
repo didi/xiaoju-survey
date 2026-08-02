@@ -136,7 +136,7 @@ export class AuthController {
       this.captchaService.deleteCaptcha(userInfo.captchaId);
     } catch (error) {
       throw new Error(
-        'generateToken erro:' +
+        'generateToken error:' +
           error.message +
           this.configService.get<string>('XIAOJU_SURVEY_JWT_SECRET') +
           this.configService.get<string>('XIAOJU_SURVEY_JWT_EXPIRES_IN'),

@@ -1,7 +1,7 @@
 <template>
   <el-tabs
     :modelValue="activeName"
-    class="loigc-tabs"
+    class="logic-tabs"
     :before-leave="beforeTabLeave"
     @tab-change="handleChange"
   >
@@ -53,7 +53,7 @@ const handleChange = (name: any) => {
 }
 </script>
 <style lang="scss" scoped>
-.loigc-tabs {
+.logic-tabs {
   width: 98%;
   height: calc(100% - 48px);
   padding: 10px;

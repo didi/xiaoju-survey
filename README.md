@@ -69,7 +69,7 @@
 
 **1、Web 端：Vue3 + ElementPlus**
 
-跨端SDK：ReactNaitve
+跨端SDK：ReactNative
 
 **2、Server 端：NestJS + MongoDB**
 

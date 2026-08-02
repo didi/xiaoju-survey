@@ -31,14 +31,14 @@ class QNode extends HtmlNode {
     for (let i = 0; i < options.length; i++) {
       const item = options[i]
       const itemElement = document.createElement('div')
-      itemElement.className = 'table-feild'
+      itemElement.className = 'table-field'
       const itemKey = document.createElement('span')
       itemKey.innerHTML = item.type
       itemElement.appendChild(itemKey)
       // itemKey.innerText = item.key;
       // const itemType = document.createElement('span');
       // itemType.innerHTML = item.type;
-      // itemType.className = 'feild-type';
+      // itemType.className = 'field-type';
       // itemElement.appendChild(itemType);
       fragment.appendChild(itemElement)
     }
@@ -60,7 +60,7 @@ class QNodeModel extends HtmlNodeModel {
     if (anchorInfo.type === 'left') {
       style.fill = 'red'
       style.hover.fill = 'transparent'
-      style.hover.stroke = 'transpanrent'
+      style.hover.stroke = 'transparent'
       style.className = 'lf-hide-default'
     } else {
       style.fill = 'green'
@@ -113,8 +113,8 @@ class QNodeModel extends HtmlNodeModel {
       }
     ]
 
-    options.forEach((feild, index) => {
-      const anchorId = `${feild.key}_right`
+    options.forEach((field, index) => {
+      const anchorId = `${field.key}_right`
       const { edges } = this.outgoing
       let edgeAddable = true
       if (edges.length) {
@@ -126,7 +126,7 @@ class QNodeModel extends HtmlNodeModel {
         y: y - height / 2 + 60 - 28 + (index + 1) * 30,
         id: anchorId,
         type: 'right',
-        key: feild.key,
+        key: field.key,
         edgeAddable
       })
     })

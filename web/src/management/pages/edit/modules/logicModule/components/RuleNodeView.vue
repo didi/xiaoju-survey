@@ -99,14 +99,14 @@ const submitForm = () => {
   })
 }
 const targetQuestionList = computed(() => {
-  const currntIndexs: number[] = []
+  const currentIndexes: number[] = []
   props.ruleNode.conditions.forEach((el) => {
-    currntIndexs.push(
+    currentIndexes.push(
       renderData.value.findIndex((item: { field: string }) => item.field === el.field)
     )
   })
-  const currntIndex = Math.max(...currntIndexs)
-  let questionList = cloneDeep(renderData.value.slice(currntIndex + 1))
+  const currentIndex = Math.max(...currentIndexes)
+  let questionList = cloneDeep(renderData.value.slice(currentIndex + 1))
   return questionList.map((item: any) => {
     return {
       label: `${item.showIndex ? item.indexNumber + '.' : ''} ${cleanRichText(item.title)}`,

@@ -456,10 +456,10 @@ export class SurveyResponseController {
   private matchLogicRule(
     rule: LogicRule,
     formValues: Record<string, any>,
-    comparor: 'and' | 'or' = 'and',
+    comparator: 'and' | 'or' = 'and',
   ): boolean {
     const conditions = Array.isArray(rule.conditions) ? rule.conditions : [];
-    if (comparor === 'or') {
+    if (comparator === 'or') {
       return conditions.some((condition) =>
         this.matchLogicCondition(condition, formValues),
       );

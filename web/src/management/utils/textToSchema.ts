@@ -21,6 +21,7 @@ export const textToSchema = (text: string, options: { showIndex?: boolean } = {}
 
     const title = match[1].trim();
     const type = match[2].trim();
+    if (!Object.prototype.hasOwnProperty.call(textTypeMap, type)) continue;
     const content = lines.slice(1);
 
     const question: Record<string, any> = getQuestionByType(textTypeMap[type]);

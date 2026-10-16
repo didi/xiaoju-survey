@@ -1,0 +1,71 @@
+name: Tests and Builds
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - releases/**
+    paths:
+      - web/**
+      - server/**
+      - .github/workflows/**
+      - package.json
+      - package-lock.json
+      - .nvmrc
+  pull_request:
+    branches:
+      - develop
+      - main
+      - releases/**
+      - feature/**
+    paths:
+      - web/**
+      - server/**
+      - .github/workflows/**
+      - package.json
+      - package-lock.json
+      - .nvmrc
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: ${{ matrix.project }} tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [web, server]
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: ${{ matrix.project }}/package-lock.json
+
+      - name: Pin npm
+        run: npm install --global npm@10.9.9
+
+      - name: Install dependencies
+        id: install
+        run: npm ci
+
+      - name: Unit tests
+        run: npm run test:ci
+
+      # Run the build even after a test failure, but leave that failure blocking.
+      # web's build script includes its TypeScript check.
+      - name: Build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run build

@@ -1,5 +1,23 @@
 import { AliOssHandler } from '../services/uploadHandlers/alioss.handler';
 
+// ali-oss reads host interfaces while importing its optional cluster support.
+// These tests exercise uploads and URL signing, not host network discovery.
+jest.mock('os', () => ({
+  ...jest.requireActual('os'),
+  networkInterfaces: () => ({
+    lo: [
+      {
+        address: '127.0.0.1',
+        netmask: '255.0.0.0',
+        family: 'IPv4',
+        mac: '00:00:00:00:00:00',
+        internal: true,
+        cidr: '127.0.0.1/8',
+      },
+    ],
+  }),
+}));
+
 describe('AliOssHandler', () => {
   describe('upload', () => {
     it('should upload a file and return the key', async () => {

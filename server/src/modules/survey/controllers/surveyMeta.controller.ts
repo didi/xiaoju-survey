@@ -117,18 +117,24 @@ export class SurveyMetaController {
     }
     if (isRecycleBin) {
       // 回收站查询当前用户协作的问卷
-      cooperationList =
-        await this.collaboratorService.getManageListByUserId({ userId });
+      cooperationList = await this.collaboratorService.getManageListByUserId({
+        userId,
+      });
     }
     const cooperSurveyIdMap = cooperationList.reduce((pre, cur) => {
       pre[cur.surveyId] = cur;
       return pre;
     }, {});
     const surveyIdList1 = cooperationList.map((item) => item.surveyId);
-    let surveyIdList2 = []
+    let surveyIdList2 = [];
     if (isRecycleBin) {
       // 回收站查询当前用户参与的空间下的回收站的问卷
-      surveyIdList2 = (await this.workspaceService.getAllSurveyIdListByUserId(userId, isRecycleBin)).data.surveyIdList
+      surveyIdList2 = (
+        await this.workspaceService.getAllSurveyIdListByUserId(
+          userId,
+          isRecycleBin,
+        )
+      ).data.surveyIdList;
     }
     const surveyIdList = [...new Set([...surveyIdList1, ...surveyIdList2])];
     const username = req.user.username;
@@ -167,7 +173,7 @@ export class SurveyMetaController {
       }
       item.currentUserId = userId;
       return item;
-    })
+    });
     return {
       code: 200,
       data: {

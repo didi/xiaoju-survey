@@ -524,7 +524,10 @@ describe('SurveyResponseController', () => {
 
     it('必填校验失败时不调用 counterService.checkAndUpdateOptionCount', async () => {
       const counterService = testingModule.get<CounterService>(CounterService);
-      const counterSpy = jest.spyOn(counterService, 'checkAndUpdateOptionCount');
+      const counterSpy = jest.spyOn(
+        counterService,
+        'checkAndUpdateOptionCount',
+      );
       counterSpy.mockClear();
 
       const params = buildParams({

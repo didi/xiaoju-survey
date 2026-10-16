@@ -1,10 +1,7 @@
 import { SecurityPlugin } from './interface';
 
 type AllowHooks =
-  | 'encryptResponseData'
-  | 'decryptResponseData'
-  | 'maskData'
-  | 'genSurveyPath';
+  'encryptResponseData' | 'decryptResponseData' | 'maskData' | 'genSurveyPath';
 
 export class PluginManager {
   private plugins: Array<SecurityPlugin> = [];

@@ -418,7 +418,11 @@ export class SurveyResponseController {
 
       const matchedJumpRules = jumpRules.filter((rule) => {
         if (rule.scope !== 'question') return false;
-        if (!rule.conditions?.some((condition) => condition.field === questionItem.field)) {
+        if (
+          !rule.conditions?.some(
+            (condition) => condition.field === questionItem.field,
+          )
+        ) {
           return false;
         }
         return this.matchLogicRule(rule, formValues, 'or');
@@ -428,7 +432,9 @@ export class SurveyResponseController {
       const maxTargetIndex = matchedJumpRules.reduce((pre, rule) => {
         if (rule.target === 'end') return Math.max(pre, dataList.length);
         const targetIndex = fieldIndexMap[rule.target];
-        return typeof targetIndex === 'number' ? Math.max(pre, targetIndex) : pre;
+        return typeof targetIndex === 'number'
+          ? Math.max(pre, targetIndex)
+          : pre;
       }, index);
       dataList
         .slice(index + 1, maxTargetIndex)

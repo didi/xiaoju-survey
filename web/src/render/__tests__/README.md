@@ -1,35 +1,24 @@
 # C 端单测（SUR-29 / answer-time-limit）
 
-QA / 本地开发自跑：
+依赖与 `web/vitest.config.ts` 已纳入仓库，请沿用当前配置；不要重新安装测试框架或覆盖配置。完整要求见 [贡献与验证要求](../../../../CONTRIBUTING.md)。
+
+从仓库根目录执行：
 
 ```bash
-cd web
-npm i -D vitest@^1 @vue/test-utils@^2 jsdom@^24
-cat > vitest.config.ts <<'EOF'
-import { defineConfig } from 'vitest/config'
-import vue from '@vitejs/plugin-vue'
-import { fileURLToPath, URL } from 'node:url'
-
-export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@render': fileURLToPath(new URL('./src/render', import.meta.url))
-    }
-  },
-  test: { environment: 'jsdom', include: ['src/**/__tests__/*.spec.ts'] }
-})
-EOF
-npx vitest run
+npm run install:ci
+npm --prefix web run test:ci
+# 聚焦本目录的回归用例
+npm --prefix web run test:ci -- src/render/__tests__
+# 前端 lint、测试、类型检查和构建
+npm run verify:web
 ```
 
-预期：3 个 spec 文件 / 32 个用例全部通过。
+当前主要用例：
 
-| Spec | 用例 | 覆盖 |
-|------|------|------|
-| `answerTimeStore.spec.ts` | 12 | T-FE-R-01 / FR-036 / C-009 |
-| `AnswerTimeLimitDialog.spec.ts` | 9 | T-FE-R-02 / CL-012 / CL-015 |
-| `CountdownHeader.spec.ts` | 11 | T-FE-R-03 / CL-013 / visibilitychange 校准 |
+- `answerTimeStore.spec.ts`：答题时间状态（T-FE-R-01 / FR-036 / C-009）。
+- `AnswerTimeLimitDialog.spec.ts`：时间限制弹窗（T-FE-R-02 / CL-012 / CL-015）。
+- `CountdownHeader.spec.ts`：倒计时与 `visibilitychange` 校准（T-FE-R-03 / CL-013）。
+- `answerMinDurationEffective.spec.ts`：最短答题时长的生效边界。
+- 设置器的相关测试位于 `src/materials/setters/widgets/__tests__/TimeLimitConfig.spec.ts`，全量前端测试会一并运行。
 
-> `vitest.config.ts` 不入仓避免污染 `tsc` 扫描（vitest 非生产依赖）；按上述命令一次性生成即可。
+用例数量以当前运行结果为准，不以本文中的历史数量作验收。Bug 修复记录同一用例修复前的预期失败和修复后的通过；列出完整 SHA、命令、退出码与未运行检查。涉及页面交互时另做隔离环境的编辑、预览和答题联调。

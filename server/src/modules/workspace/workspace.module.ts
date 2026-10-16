@@ -33,6 +33,10 @@ import { PluginManagerProvider } from 'src/securityPlugin/pluginManager.provider
     SurveyMetaService,
     PluginManagerProvider,
   ],
-  exports: [WorkspaceMemberService, WorkspaceService, TypeOrmModule.forFeature([Workspace, WorkspaceMember, SurveyMeta])],
+  exports: [
+    WorkspaceMemberService,
+    WorkspaceService,
+    TypeOrmModule.forFeature([Workspace, WorkspaceMember, SurveyMeta]),
+  ],
 })
 export class WorkspaceModule {}

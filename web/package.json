@@ -12,8 +12,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "lint:fix": "npm run lint -- --fix",
+    "test:ci": "vitest run --maxWorkers=2 --minWorkers=1",
+    "verify": "npm run lint && npm run test:ci && npm run build"
   },
   "dependencies": {
     "@logicflow/core": "2.0.0",

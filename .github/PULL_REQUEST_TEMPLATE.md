@@ -1,7 +1,49 @@
-<!-- 请严格遵循贡献规范：https://xiaojusurvey.didi.cn/docs/next/share/%E8%B4%A1%E7%8C%AE%E6%B5%81%E7%A8%8B -->
+<!-- 请遵循 CONTRIBUTING.md 与官方贡献流程：https://xiaojusurveysrc.didi.cn/docs/next/share/贡献流程 -->
+<!-- 从 fork 的 develop 创建改动分支，PR 指向主仓库 develop；标题：[Feature]: xxx 或 [Fix]: xxx。 -->
+<!-- 只填写实际执行的检查；不适用/未执行须说明原因。不要贴生产数据或密钥。 -->
+
+### 改动原因
+<!-- 说明待解决的问题、最小复现或需求背景。 -->
 
 ### 改动内容
-<!-- 不同功能拆分成多个PR。简洁记录改动内容，用1、2、3...分序号描述改动点 -->
+<!-- 不同功能拆分成多个 PR，按 1、2、3 列出改动及影响模块。 -->
+
+### 改动验证
+
+#### 验证版本与环境
+
+- 上游 `develop` 完整 SHA：
+- 本次验证完整 SHA（未提交则填基线 SHA + 未提交 diff，提交后更新）：
+- Node / npm / OS：
+- 工作区状态及相关 CI run / 脱敏日志链接：
+
+#### 复现与回归
+<!-- Bug 修复给出同一回归用例修复前的预期失败、修复后的通过；安装失败不算 Bug 复现。 -->
+
+- 最小复现 / 验收步骤、输入与预期结果：
+- 修复前：命令、版本、退出码、关键失败断言或手工观察：
+- 修复后：命令、版本、退出码、关键结果：
+- 新增/更新的测试文件；不适用项及原因：
+
+#### 实际检查结果
+<!-- 每项写通过/失败/未运行、执行目录、精确命令、退出码与统计。不因前一步失败就把后续检查写成通过。 -->
+
+- 安装（`npm run install:ci`）：
+- 统一验证（`npm run verify`）：
+  - Web lint / Vitest / 类型检查与 build：
+  - Server lint / Jest / build：
+- 额外定向测试、后端 `test:e2e`、UI/API/数据库检查（步骤、结果、脱敏截图）：
+- 文档链接 / `git diff --check`：
+- 未运行或失败项目、原有失败的对比证据、阻碍和下一步：
+
+#### 风险与人工交接
+
+- API / 问卷协议 / 数据兼容性影响：
+- 权限、安全、生产运行时、部署或数据迁移影响及授权范围：
+- 回滚方式、剩余风险：
+- [ ] 最终代码改动后重跑了受影响检查，所附结果与验证版本一致
+- [ ] 无生产数据、真实用户信息或密钥；未通过删测试/弱化断言绕过检查
+- [ ] 合并、发布和部署留给维护者人工决定；CLA 由贡献者本人确认
 
 ### Issue
-<!-- 确保大的改动创建一个Issue描述详情：https://github.com/didi/xiaoju-survey/issues/new?assignees=&labels=&projects=&template=pr_report.md&title=[类型]: xxx -->
+<!-- 大改动先创建 Issue：https://github.com/didi/xiaoju-survey/issues/new/choose -->

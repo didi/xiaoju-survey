@@ -1,12 +1,12 @@
 # 贡献与验证要求
 
-本指南补充仓库内的执行和验收要求；产品说明、设计原理及部署手册继续使用 [官方文档](https://xiaojusurveysrc.didi.cn/)，无需复制一套平行文档。请同时遵守 [行为准则](CODE_OF_CONDUCT.md) 和 [许可证](LICENSE)。
+本指南补充仓库内的执行和验收要求；产品说明、设计原理及部署手册继续使用 [官方文档](https://xiaojusurvey.didi.cn/)，无需复制一套平行文档。请同时遵守 [行为准则](CODE_OF_CONDUCT.md) 和 [许可证](LICENSE)。
 
 ## 已有文档
 
-- [贡献流程](https://xiaojusurveysrc.didi.cn/docs/next/share/贡献流程)：分支、Issue、commit 和 PR 约定。
-- [快速开始](https://xiaojusurveysrc.didi.cn/docs/next/document/概述/快速开始)、[工程结构](https://xiaojusurveysrc.didi.cn/docs/next/document/开发手册/工程结构)、[架构](https://xiaojusurveysrc.didi.cn/docs/next/document/设计原理/架构)：本地运行与模块背景。
-- [服务端 API](https://xiaojusurveysrc.didi.cn/docs/next/api/服务端API)、[问卷 Meta 协议](https://xiaojusurveysrc.didi.cn/docs/next/agreement/《问卷Meta协议》)、[数据库](https://xiaojusurveysrc.didi.cn/docs/next/document/概述/数据库)：接口与数据契约。
+- [贡献流程](https://xiaojusurvey.didi.cn/docs/next/share/贡献流程)：分支、Issue、commit 和 PR 约定。
+- [快速开始](https://xiaojusurvey.didi.cn/docs/next/document/概述/快速开始)、[工程结构](https://xiaojusurvey.didi.cn/docs/next/document/开发手册/工程结构)、[架构](https://xiaojusurvey.didi.cn/docs/next/document/设计原理/架构)：本地运行与模块背景。
+- [服务端 API](https://xiaojusurvey.didi.cn/docs/next/api/服务端API)、[问卷 Meta 协议](https://xiaojusurvey.didi.cn/docs/next/agreement/《问卷Meta协议》)、[数据库](https://xiaojusurvey.didi.cn/docs/next/document/概述/数据库)：接口与数据契约。
 
 官方 `next` 文档与仓库提交可能不同步。改动前对照当前源码、配置和测试，遇到差异在 PR 中说明，不直接据旧示例改写现有契约。
 

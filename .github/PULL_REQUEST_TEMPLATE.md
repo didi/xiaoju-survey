@@ -1,4 +1,4 @@
-<!-- 请遵循 CONTRIBUTING.md 与官方贡献流程：https://xiaojusurveysrc.didi.cn/docs/next/share/贡献流程 -->
+<!-- 请遵循 CONTRIBUTING.md 与官方贡献流程：https://xiaojusurvey.didi.cn/docs/next/share/贡献流程 -->
 <!-- 从 fork 的 develop 创建改动分支，PR 指向主仓库 develop；标题：[Feature]: xxx 或 [Fix]: xxx。 -->
 <!-- 只填写实际执行的检查；不适用/未执行须说明原因。不要贴生产数据或密钥。 -->
 

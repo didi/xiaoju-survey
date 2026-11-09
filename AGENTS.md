@@ -1,6 +1,6 @@
 # Agent 任务入口
 
-本文件适用于整个仓库；修改 `web/` 或 `server/` 前，再读对应目录的 `AGENTS.md`。现有产品、架构和协议文档见 [官方文档](https://xiaojusurveysrc.didi.cn/)，本文件只补充任务执行约束。
+本文件适用于整个仓库；修改 `web/` 或 `server/` 前，再读对应目录的 `AGENTS.md`。现有产品、架构和协议文档见 [官方文档](https://xiaojusurvey.didi.cn/)，本文件只补充任务执行约束。
 
 ## 开始任务
 

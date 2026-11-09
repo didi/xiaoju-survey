@@ -14,7 +14,7 @@
 - 根目录 `npm run verify:server` 执行后端验证；`npm --prefix server run test:ci` 可单独运行测试。定向示例：`npm --prefix server test -- --runInBand src/modules/workspace/_test/splitMember.spec.ts`。
 - 按模块现有目录放置 `*.spec.ts` 回归用例，使用 mock 或隔离的测试数据。覆盖正常路径、无效输入和适用的未登录/无权限路径；记录修复前失败、修复后通过的证据。
 - `lint` 不修改源码；仅在有意修复时运行 `lint:fix`。完成后审查 diff 并重跑验证。
-- 如需服务/数据库联调，只使用明确隔离的本地或测试环境。`npm --prefix server run local` 可能下载 MongoDB 二进制并启动临时数据库，不属于纯静态验证；先读 [官方快速开始](https://xiaojusurveysrc.didi.cn/docs/next/document/概述/快速开始)。
+- 如需服务/数据库联调，只使用明确隔离的本地或测试环境。`npm --prefix server run local` 可能下载 MongoDB 二进制并启动临时数据库，不属于纯静态验证；先读 [官方快速开始](https://xiaojusurvey.didi.cn/docs/next/document/概述/快速开始)。
 - `npm --prefix server run test:e2e` 单独运行已有 HTTP 集成用例；它不属于默认 `verify`/CI，运行结果及失败单独记录。不要为了纳入门禁擅自改变鉴权或响应行为。
 - Jest 单元测试、HTTP 集成测试、数据库迁移和端到端验收分别报告，不因单元测试通过而宣称后者已通过；说明真实外部依赖是否参与。
 

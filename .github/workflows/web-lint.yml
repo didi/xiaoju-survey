@@ -5,9 +5,15 @@ on:
   push:
     branches:
       - main
+      - develop
       - releases/**
     paths:
       - web/**
+      - .github/workflows/**
+      - package.json
+      - package-lock.json
+      - .nvmrc
+      - .npmrc
   pull_request:
     branches:
       - develop
@@ -16,12 +22,21 @@ on:
       - feature/**
     paths:
       - web/**
+      - .github/workflows/**
+      - package.json
+      - package-lock.json
+      - .nvmrc
+      - .npmrc
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -30,10 +45,15 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Pin npm
+        run: npm install --global npm@10.9.9
 
       - name: Install dependencies
-        run: cd web && npm install
+        run: cd web && npm ci
 
       - name: Type-Check
         run: cd web && npm run type-check

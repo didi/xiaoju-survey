@@ -12,8 +12,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "lint:fix": "npm run lint -- --fix",
+    "test:ci": "vitest run --maxWorkers=2 --minWorkers=1",
+    "verify": "npm run lint && npm run test:ci && npm run build"
   },
   "dependencies": {
     "@logicflow/core": "2.0.0",
@@ -26,7 +29,7 @@
     "crypto-js": "^4.2.0",
     "default-passive-events": "^2.0.0",
     "echarts": "^5.5.0",
-    "element-plus": "^2.8.5",
+    "element-plus": "2.14.5",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "nanoid": "^5.0.7",
@@ -53,7 +56,7 @@
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
-    "@vue/test-utils": "^2.4.11",
+    "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
@@ -84,7 +87,7 @@
     ]
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.6.0"
+    "node": "^18.20.8 || ^20.20.2 || >=22",
+    "npm": ">=10.9.9"
   }
 }

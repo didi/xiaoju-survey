@@ -12,11 +12,15 @@
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "lint:fix": "npm run lint -- --fix",
+    "test:ci": "jest --runInBand",
+    "verify": "npm run lint && npm run test:ci && npm run build",
+    "test:e2e": "jest --runInBand --testRegex \"\\.e2e-spec\\.ts$\""
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -109,7 +113,7 @@
     }
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.6.0"
+    "node": "^18.20.8 || ^20.20.2 || >=22",
+    "npm": ">=10.9.9"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "xiaoju-survey",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Shared verification commands for the independently installed web and server projects",
+  "packageManager": "npm@10.9.9",
+  "scripts": {
+    "install:ci": "npm ci --prefix web && npm ci --prefix server",
+    "verify": "npm run verify:web && npm run verify:server",
+    "verify:web": "npm run verify --prefix web",
+    "verify:server": "npm run verify --prefix server"
+  },
+  "engines": {
+    "node": "^18.20.8 || ^20.20.2 || >=22",
+    "npm": ">=10.9.9"
+  }
+}

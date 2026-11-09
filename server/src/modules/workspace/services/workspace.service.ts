@@ -188,25 +188,25 @@ export class WorkspaceService {
     });
   }
 
-    async getAllSurveyIdListByUserId(userId: string, isRecycleBin: boolean) {
-      // 查询当前用户参与的空间
-      const workspaceInfoList = await this.workspaceMemberService.findAllByUserId(
-        { userId },
-      );
-      const workspaceIdList = workspaceInfoList.map((item) => item.workspaceId);
-      const isDeleted = isRecycleBin
-      const surveyList = await this.surveyMetaService.getSurveyMetaListByWorkspaceIdList({
+  async getAllSurveyIdListByUserId(userId: string, isRecycleBin: boolean) {
+    // 查询当前用户参与的空间
+    const workspaceInfoList = await this.workspaceMemberService.findAllByUserId(
+      { userId },
+    );
+    const workspaceIdList = workspaceInfoList.map((item) => item.workspaceId);
+    const isDeleted = isRecycleBin;
+    const surveyList =
+      await this.surveyMetaService.getSurveyMetaListByWorkspaceIdList({
         workspaceIdList,
         isDeleted,
       });
-      const surveyIdList = surveyList.map((item) => item._id.toString());
-  
-      return {
-        code: 200,
-        data: {
-          surveyIdList,
-        },
-      };
-    }
+    const surveyIdList = surveyList.map((item) => item._id.toString());
 
+    return {
+      code: 200,
+      data: {
+        surveyIdList,
+      },
+    };
+  }
 }

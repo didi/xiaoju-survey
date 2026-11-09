@@ -1,0 +1,71 @@
+name: Docker Compatibility
+
+on:
+  push:
+    branches: [develop, main, 'releases/**']
+    paths:
+      - Dockerfile
+      - Dockerfile.full
+      - .dockerignore
+      - docker-run.sh
+      - nginx/**
+      - web/**
+      - server/**
+      - .npmrc
+      - package.json
+      - package-lock.json
+      - .github/workflows/**
+      - .github/scripts/**
+  pull_request:
+    branches: [develop, main, 'releases/**', 'feature/**']
+    paths:
+      - Dockerfile
+      - Dockerfile.full
+      - .dockerignore
+      - docker-run.sh
+      - nginx/**
+      - web/**
+      - server/**
+      - .npmrc
+      - package.json
+      - package-lock.json
+      - .github/workflows/**
+      - .github/scripts/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docker:
+    name: ${{ matrix.dockerfile }} / Node 18 build and smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile: [Dockerfile, Dockerfile.full]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare synthetic build context
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/docker-context"
+          tar --exclude='.git' --exclude='node_modules' --exclude='dist' \
+            --exclude='coverage' --exclude='logs' --exclude='.env*' \
+            -cf - . | tar -xf - -C "$RUNNER_TEMP/docker-context"
+          printf '# Synthetic CI environment; values supplied to the disposable container.\n' \
+            > "$RUNNER_TEMP/docker-context/server/.env.production"
+
+      - name: Build complete image
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
+        run: |
+          docker build --platform linux/amd64 --progress plain \
+            --file "$RUNNER_TEMP/docker-context/$DOCKERFILE" \
+            --tag xiaoju-survey:compatibility "$RUNNER_TEMP/docker-context"
+
+      - name: Verify runtime and HTTP smoke
+        run: bash .github/scripts/docker-smoke.sh xiaoju-survey:compatibility

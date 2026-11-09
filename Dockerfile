@@ -1,5 +1,5 @@
 # 镜像集成
-FROM node:18-slim AS builder
+FROM node:18.20.8-bookworm-slim AS builder
 
 WORKDIR /builder
 
@@ -7,19 +7,21 @@ WORKDIR /builder
 COPY web/ /builder/web/
 COPY server/ /builder/server/
 
-RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
+RUN npm install --global npm@10.9.9 && \
+    sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
     npm config set registry https://registry.npmmirror.com && \
-    cd /builder/web && npm install && npm run build-only && \
-    cd /builder/server && npm install && npm run build
+    cd /builder/web && npm ci && npm run build-only && \
+    cd /builder/server && npm ci && npm run build
 
 
-FROM node:18-slim
+FROM node:18.20.8-bookworm-slim
 
 # 设置工作区间
 WORKDIR /xiaoju-survey
 
 # 安装nginx
-RUN apt-get update && apt-get install -y nginx curl vim git && \
+RUN npm install --global npm@10.9.9 && \
+    apt-get update && apt-get install -y nginx curl vim git && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 仅复制运行需要的文件到工作区间
@@ -27,7 +29,7 @@ COPY --from=builder /builder/web/dist/ /xiaoju-survey/web/dist/
 COPY --from=builder /builder/server/dist/ /xiaoju-survey/server/dist/
 COPY --from=builder /builder/server/node_modules/ /xiaoju-survey/server/node_modules/
 COPY --from=builder /builder/server/public/ /xiaoju-survey/server/public/
-COPY --from=builder /builder/server/package*.json /builder/server/.env* /xiaoju-survey/server/
+COPY --from=builder /builder/server/package*.json /builder/server/.npmrc /builder/server/.env* /xiaoju-survey/server/
 COPY docker-run.sh /xiaoju-survey/docker-run.sh
 # 覆盖nginx配置文件
 COPY nginx/nginx.conf /etc/nginx/nginx.conf

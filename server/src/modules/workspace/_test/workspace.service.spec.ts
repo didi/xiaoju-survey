@@ -21,7 +21,7 @@ describe('WorkspaceService', () => {
   const mockWorkspaceMemberService = {
     findAllByUserId: jest.fn(),
   };
-  
+
   const mockSurveyMetaService = {
     getSurveyMetaListByWorkspaceIdList: jest.fn(),
   };
@@ -45,7 +45,7 @@ describe('WorkspaceService', () => {
         {
           provide: SurveyMetaService,
           useValue: mockSurveyMetaService,
-        }
+        },
       ],
     }).compile();
 
@@ -192,26 +192,43 @@ describe('WorkspaceService', () => {
       const isRecycleBin = false;
       const workspaceMemberList = [
         { userId: '1', workspaceId: 'workspace1' },
-        { userId: '1', workspaceId: 'workspace2' }
+        { userId: '1', workspaceId: 'workspace2' },
       ];
       const surveyMetaList = [
-        { _id: new ObjectId('507f1f77bcf86cd799439011'), workspaceId: 'workspace1' },
-        { _id: new ObjectId('507f1f77bcf86cd799439012'), workspaceId: 'workspace2' }
+        {
+          _id: new ObjectId('507f1f77bcf86cd799439011'),
+          workspaceId: 'workspace1',
+        },
+        {
+          _id: new ObjectId('507f1f77bcf86cd799439012'),
+          workspaceId: 'workspace2',
+        },
       ];
 
       // Mock WorkspaceMemberService.findAllByUserId
-      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(workspaceMemberList);
-      
-      // Mock SurveyMetaService.getSurveyMetaListByWorkspaceIdList
-      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(surveyMetaList);
+      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(
+        workspaceMemberList,
+      );
 
-      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
+      // Mock SurveyMetaService.getSurveyMetaListByWorkspaceIdList
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(
+        surveyMetaList,
+      );
+
+      const result = await service.getAllSurveyIdListByUserId(
+        userId,
+        isRecycleBin,
+      );
 
       // Verify the method calls
-      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({ userId });
-      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({
+        userId,
+      });
+      expect(
+        mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList,
+      ).toHaveBeenCalledWith({
         workspaceIdList: ['workspace1', 'workspace2'],
-        isDeleted: isRecycleBin
+        isDeleted: isRecycleBin,
       });
 
       // Verify the result
@@ -220,9 +237,9 @@ describe('WorkspaceService', () => {
         data: {
           surveyIdList: [
             '507f1f77bcf86cd799439011',
-            '507f1f77bcf86cd799439012'
-          ]
-        }
+            '507f1f77bcf86cd799439012',
+          ],
+        },
       });
     });
 
@@ -232,51 +249,70 @@ describe('WorkspaceService', () => {
 
       // Mock empty workspace member list
       mockWorkspaceMemberService.findAllByUserId.mockResolvedValue([]);
-      
+
       // Mock empty survey meta list
-      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue([]);
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(
+        [],
+      );
 
-      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
+      const result = await service.getAllSurveyIdListByUserId(
+        userId,
+        isRecycleBin,
+      );
 
-      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({ userId });
-      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+      expect(mockWorkspaceMemberService.findAllByUserId).toHaveBeenCalledWith({
+        userId,
+      });
+      expect(
+        mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList,
+      ).toHaveBeenCalledWith({
         workspaceIdList: [],
-        isDeleted: isRecycleBin
+        isDeleted: isRecycleBin,
       });
 
       expect(result).toEqual({
         code: 200,
         data: {
-          surveyIdList: []
-        }
+          surveyIdList: [],
+        },
       });
     });
 
     it('should handle recycle bin mode correctly', async () => {
       const userId = '1';
       const isRecycleBin = true;
-      const workspaceMemberList = [
-        { userId: '1', workspaceId: 'workspace1' }
-      ];
+      const workspaceMemberList = [{ userId: '1', workspaceId: 'workspace1' }];
       const surveyMetaList = [
-        { _id: new ObjectId('507f1f77bcf86cd799439011'), workspaceId: 'workspace1' }
+        {
+          _id: new ObjectId('507f1f77bcf86cd799439011'),
+          workspaceId: 'workspace1',
+        },
       ];
 
-      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(workspaceMemberList);
-      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(surveyMetaList);
+      mockWorkspaceMemberService.findAllByUserId.mockResolvedValue(
+        workspaceMemberList,
+      );
+      mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList.mockResolvedValue(
+        surveyMetaList,
+      );
 
-      const result = await service.getAllSurveyIdListByUserId(userId, isRecycleBin);
+      const result = await service.getAllSurveyIdListByUserId(
+        userId,
+        isRecycleBin,
+      );
 
-      expect(mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList).toHaveBeenCalledWith({
+      expect(
+        mockSurveyMetaService.getSurveyMetaListByWorkspaceIdList,
+      ).toHaveBeenCalledWith({
         workspaceIdList: ['workspace1'],
-        isDeleted: true
+        isDeleted: true,
       });
 
       expect(result).toEqual({
         code: 200,
         data: {
-          surveyIdList: ['507f1f77bcf86cd799439011']
-        }
+          surveyIdList: ['507f1f77bcf86cd799439011'],
+        },
       });
     });
   });

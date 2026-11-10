@@ -5,7 +5,7 @@
         placement="top"
         width="400"
         trigger="hover"
-        :disabled="!titlePoppverShow"
+        :disabled="!titlePopoverShow"
         :content="cleanRichText(StatisticsData.title)"
       >
         <template #reference>
@@ -66,7 +66,7 @@ const questionTypeDesc = computed(() => {
 const separateItemListBody = computed(() => {
   try {
     const aggregation = _cloneDeep(props?.StatisticsData?.data?.aggregation)
-    const submitionCount = props?.StatisticsData?.data?.submitionCount
+    const submissionCount = props?.StatisticsData?.data?.submissionCount
     const summaryList = summaryItemConfig[questionType.value]
     // 增加聚合信息
     if (summaryList?.length) {
@@ -90,7 +90,7 @@ const separateItemListBody = computed(() => {
     return (
       aggregation?.map((item) => {
         const { id, count, text } = item
-        const percent = submitionCount ? `${((count / submitionCount) * 100).toFixed(1)}%` : '0%'
+        const percent = submissionCount ? `${((count / submissionCount) * 100).toFixed(1)}%` : '0%'
         return {
           id,
           count,
@@ -116,14 +116,14 @@ const separateItemState = reactive({
 
 const { tableData, tableMinHeight } = toRefs(separateItemState)
 
-const titlePoppverShow = ref(false)
+const titlePopoverShow = ref(false)
 const titleRef = ref(null)
 
 const titleResize = () => {
   if (titleRef.value?.scrollWidth > titleRef.value?.offsetWidth) {
-    titlePoppverShow.value = true
+    titlePopoverShow.value = true
   } else {
-    titlePoppverShow.value = false
+    titlePopoverShow.value = false
   }
 }
 

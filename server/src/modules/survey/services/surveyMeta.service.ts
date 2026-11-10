@@ -273,7 +273,7 @@ export class SurveyMetaService {
             otherQuery.groupId = groupId;
           }
         }
-        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用owenrId字段进行关联更加合理，此处做了兼容
+        // 引入空间之前，新建的问卷只有owner字段，引入空间之后，新建的问卷多了ownerId字段，使用ownerId字段进行关联更加合理，此处做了兼容
         // query.$or = [
         //   {
         //     owner: username,

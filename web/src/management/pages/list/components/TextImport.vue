@@ -20,7 +20,7 @@
           <p class="example-title">示例：{{item.title}}</p>
           <div class="example-content">
             <p :class='`copy-${item.type}-example`' v-html="item.content"></p>
-            <span class="copy-text" @click="coypText(item)">复制文本</span>
+            <span class="copy-text" @click="copyText(item)">复制文本</span>
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@ const onInput = () => {
   debouncedTransform()
 }
 
-const coypText = (item: { content: string }) => {
+const copyText = (item: { content: string }) => {
   const data = copy(item.content)
   if (data) {
     ElMessage({

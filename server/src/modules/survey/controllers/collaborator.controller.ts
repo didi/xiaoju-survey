@@ -43,7 +43,7 @@ export class CollaboratorController {
     private readonly logger: Logger,
     private readonly userService: UserService,
     private readonly surveyMetaService: SurveyMetaService,
-    private readonly workspaceMemberServie: WorkspaceMemberService,
+    private readonly workspaceMemberService: WorkspaceMemberService,
   ) {}
 
   @Get('getPermissionList')
@@ -344,7 +344,7 @@ export class CollaboratorController {
     }
     // 有空间权限，默认也有所有权限
     if (surveyMeta.workspaceId) {
-      const memberInfo = await this.workspaceMemberServie.findOne({
+      const memberInfo = await this.workspaceMemberService.findOne({
         workspaceId: surveyMeta.workspaceId,
         userId,
       });
@@ -363,7 +363,7 @@ export class CollaboratorController {
       }
     }
 
-    const colloborator = await this.collaboratorService.getCollaborator({
+    const collaborator = await this.collaboratorService.getCollaborator({
       surveyId,
       userId,
     });
@@ -371,7 +371,7 @@ export class CollaboratorController {
       code: 200,
       data: {
         isOwner: false,
-        permissions: colloborator?.permissions || [],
+        permissions: collaborator?.permissions || [],
       },
     };
   }

@@ -107,7 +107,7 @@
     <div class="right-panel">
       <div class="questions-preview-wrapper" :style="{backgroundColor: questionList.length > 0 ? '#fff' : 'transparent'}" >
         <div class="questions-preview-box">
-          <div class="diabled-edit-mask"></div>
+          <div class="disabled-edit-mask"></div>
           <MaterialGroup
             :current-edit-one="parseInt(currentEditOne)"
             :questionDataList="questionList"
@@ -689,7 +689,7 @@ const onInput = () => {
   .questions-preview-box {
     position: relative;
   }
-  .diabled-edit-mask {
+  .disabled-edit-mask {
     position: absolute;
     z-index: 999999;
     left: 0;

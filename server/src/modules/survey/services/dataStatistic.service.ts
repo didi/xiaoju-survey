@@ -149,7 +149,7 @@ export class DataStatisticService {
       { maxTimeMS: 30000, allowDiskUse: true },
     );
     const res = await aggregation.next();
-    const submitionCountMap: Record<string, number> = {};
+    const submissionCountMap: Record<string, number> = {};
     for (const field in res) {
       let count = 0;
       if (Array.isArray(res[field])) {
@@ -157,7 +157,7 @@ export class DataStatisticService {
           count += optionItem.count;
         }
       }
-      submitionCountMap[field] = count;
+      submissionCountMap[field] = count;
     }
     const transformedData = transformAndMergeArrayFields(res);
     return fieldList.map((field) => {
@@ -170,7 +170,7 @@ export class DataStatisticService {
               count: optionItem.count,
             };
           }),
-          submitionCount: submitionCountMap?.[field] || 0,
+          submissionCount: submissionCountMap?.[field] || 0,
         },
       };
     });

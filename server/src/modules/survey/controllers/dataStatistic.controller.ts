@@ -20,7 +20,7 @@ import { Logger } from 'src/logger';
 import { HttpException } from 'src/exceptions/httpException';
 import { EXCEPTION_CODE } from 'src/enums/exceptionCode';
 import { AggregationStatisDto } from '../dto/aggregationStatis.dto';
-import { handleAggretionData } from '../utils';
+import { handleAggregationData } from '../utils';
 import { QUESTION_TYPE } from 'src/enums/question';
 
 @ApiTags('survey')
@@ -127,7 +127,7 @@ export class DataStatisticController {
     return {
       code: 200,
       data: res.map((item) => {
-        return handleAggretionData({ item, dataMap });
+        return handleAggregationData({ item, dataMap });
       }),
     };
   }

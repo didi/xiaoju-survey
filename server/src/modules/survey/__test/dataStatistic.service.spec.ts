@@ -384,7 +384,7 @@ describe('DataStatisticService', () => {
                   count: 1,
                 },
               ],
-              submitionCount: 2,
+              submissionCount: 2,
             },
           },
           {
@@ -400,7 +400,7 @@ describe('DataStatisticService', () => {
                   count: 1,
                 },
               ],
-              submitionCount: 2,
+              submissionCount: 2,
             },
           },
           {
@@ -412,7 +412,7 @@ describe('DataStatisticService', () => {
                   count: 1,
                 },
               ],
-              submitionCount: 1,
+              submissionCount: 1,
             },
           },
           {
@@ -424,7 +424,7 @@ describe('DataStatisticService', () => {
                   count: 1,
                 },
               ],
-              submitionCount: 1,
+              submissionCount: 1,
             },
           },
         ]),
@@ -450,14 +450,14 @@ describe('DataStatisticService', () => {
             field: 'data458',
             data: {
               aggregation: [],
-              submitionCount: 0,
+              submissionCount: 0,
             },
           },
           {
             field: 'data515',
             data: {
               aggregation: [],
-              submitionCount: 0,
+              submissionCount: 0,
             },
           },
         ]),

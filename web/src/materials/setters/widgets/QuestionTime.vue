@@ -8,7 +8,7 @@
         format="YYYY-MM-DD HH:mm:ss"
         @change="handleDatePickerChange(formConfig.keys[0], $event)"
       />
-      <span class="seporator">至</span>
+      <span class="separator">至</span>
       <el-date-picker
         v-model="endModelTime"
         type="datetime"
@@ -75,7 +75,7 @@ watch(
   display: flex;
   justify-content: space-between;
 
-  .seporator {
+  .separator {
     margin: 0 10px;
   }
 }

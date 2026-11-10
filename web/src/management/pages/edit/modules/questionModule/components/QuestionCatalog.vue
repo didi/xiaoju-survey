@@ -79,7 +79,7 @@ watch(
 .question-catalog-wrapper {
   padding-bottom: 400px; // 考试题有个上拉框会盖住，改成和题型一致的
 
-  .catelog-first-page {
+  .catalog-first-page {
     font-size: 12px;
     color: #999999;
     padding-bottom: 8px;

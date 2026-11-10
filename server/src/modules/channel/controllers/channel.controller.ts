@@ -206,14 +206,14 @@ export class ChannelController {
   @SetMetadata('surveyPermission', [SURVEY_PERMISSION.SURVEY_CONF_MANAGE])
   @HttpCode(200)
   async updateStatus(
-    @Body() parama: Partial<{ status: CHANNEL_STATUS }>,
+    @Body() param: Partial<{ status: CHANNEL_STATUS }>,
     @Request() req,
   ) {
     const id = req.body.channelId;
     const operatorId = req.user._id.toString();
     const updateRes = await this.channelService.updateStatus({
       id,
-      status: parama.status,
+      status: param.status,
       operatorId,
     });
     this.logger.info(`updateRes: ${JSON.stringify(updateRes)}`);

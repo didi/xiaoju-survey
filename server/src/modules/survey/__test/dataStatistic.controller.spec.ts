@@ -570,7 +570,7 @@ describe('DataStatisticController', () => {
                 count: 1,
               },
             ],
-            submitionCount: 2,
+            submissionCount: 2,
           },
         },
         {
@@ -586,7 +586,7 @@ describe('DataStatisticController', () => {
                 count: 1,
               },
             ],
-            submitionCount: 2,
+            submissionCount: 2,
           },
         },
         {
@@ -598,7 +598,7 @@ describe('DataStatisticController', () => {
                 count: 1,
               },
             ],
-            submitionCount: 1,
+            submissionCount: 1,
           },
         },
         {
@@ -610,7 +610,7 @@ describe('DataStatisticController', () => {
                 count: 1,
               },
             ],
-            submitionCount: 1,
+            submissionCount: 1,
           },
         },
       ];

@@ -6,7 +6,7 @@
     <div class="right-panel">
       <div class="questions-preview-wrapper">
         <div class="questions-preview-box">
-          <div class="diabled-edit-mask"></div>
+          <div class="disabled-edit-mask"></div>
           <MaterialGroup
             :current-edit-one="parseInt(currentEditOne)"
             :questionDataList="props.questionDataList"
@@ -69,7 +69,7 @@ const props = defineProps({
     .questions-preview-box {
       position: relative;
     }
-    .diabled-edit-mask {
+    .disabled-edit-mask {
       position: absolute;
       z-index: 999999;
       left: 0;

@@ -83,9 +83,9 @@ export class RuleNode {
   }
 
   // 匹配条件规则
-  match(fact: Fact, comparor?: any) {
+  match(fact: Fact, comparator?: any) {
     let res: boolean | undefined = undefined
-    if (comparor === 'or') {
+    if (comparator === 'or') {
       res = Array.from(this.conditions.entries()).some(([, value]) => {
         const res = value.match(fact)
         if (res) {
@@ -175,12 +175,12 @@ export class RuleMatch {
   }
 
   // 特定目标题规则匹配
-  match(target: string, scope: string, fact: Fact, comparor?: any) {
+  match(target: string, scope: string, fact: Fact, comparator?: any) {
     const hash = this.calculateHash(target, scope)
 
     const rule = this.rules.get(hash)
     if (rule) {
-      const result = rule.match(fact, comparor)
+      const result = rule.match(fact, comparator)
       return result
     } else {
       // 默认显示

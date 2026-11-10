@@ -205,6 +205,6 @@ export class UpgradeService {
       }
       this.logger.info(`finish upgrade ${name}`);
     }
-    this.logger.info(`upgrad finished...`);
+    this.logger.info(`upgrade finished...`);
   }
 }

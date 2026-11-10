@@ -4,14 +4,14 @@
       <el-tab-pane label="修改历史" name="daily" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in dailyList" :key="index">
           <span class="operator">{{ his.operator }}</span>
-          <span class="seperator">|</span>
+          <span class="separator">|</span>
           <span>{{ his.time }}</span>
         </div>
       </el-tab-pane>
       <el-tab-pane label="发布历史" name="publish" class="custom-tab-pane">
         <div class="line" v-for="(his, index) in publishList" :key="index">
           <span class="operator">{{ his.operator }}</span>
-          <span class="seperator">|</span>
+          <span class="separator">|</span>
           <span>{{ his.time }}</span>
         </div>
       </el-tab-pane>
@@ -123,7 +123,7 @@ watch(
   transition: all 0.2s;
   color: $font-color;
 
-  .seperator {
+  .separator {
     padding: 0 10px;
   }
 }
